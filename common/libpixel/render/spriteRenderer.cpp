@@ -1,0 +1,222 @@
+#include "libpixel/os/definitions.h"
+#include "libpixel/render/spriteRenderer.h"
+#include "libpixel/render/sprite.h"
+
+namespace libpixel
+{
+
+SpriteInstance::SpriteInstance(Sprite* sprite) :
+	  _Sprite(sprite)
+{
+	_Sprite->_Sheet->_RefCount++;
+}
+    
+SpriteInstance::~SpriteInstance()
+{
+    _Sprite->_Sheet->_RefCount--;
+}
+
+SpriteRenderer::SpriteRenderer()
+{
+    GLfloat glVertices[8] = { -0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f };
+    
+    glGenBuffers(1, &_VertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, _VertexBuffer);
+	
+    Vertex* vertexBuffer = _Vertices;
+
+    for (int i=0; i<4; i++)
+    {
+        vertexBuffer[i]._Position[0] = glVertices[i*2];
+        vertexBuffer[i]._Position[1] = glVertices[(i*2)+1];
+        vertexBuffer[i]._Position[2] = 0.f;
+    }
+    
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    
+    GLushort indexBuffer[6] = {0, 1, 2, 0, 2, 3};
+    glGenBuffers(1, &_IndexBuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _IndexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * 6, indexBuffer, GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+SpriteRenderer::~SpriteRenderer()
+{
+}
+    
+void SpriteRenderer::Render()
+{
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glEnable(GL_TEXTURE_2D);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, _VertexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _IndexBuffer);
+    
+    GLsizei stride = sizeof(Vertex);
+    glVertexPointer(3, GL_FLOAT, stride, (void*)offsetof(Vertex, _Position));
+    glTexCoordPointer(2, GL_FLOAT, stride, (void*)offsetof(Vertex, _UV));
+    
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    
+    Vertex* vertexBuffer = _Vertices;
+    
+    for (InstanceList::iterator it = _Instances.begin(); it != _Instances.end(); ++it)
+    {
+        switch (it->_BlendMode)
+        {
+            case kBlendModeMultiply:
+                glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA);
+                break;
+            case kBlendModeScreen:
+                glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR);
+                break;
+            case kBlendModeAdd:
+                glBlendFunc(GL_ONE, GL_ONE);
+                break;
+            case kBlendModeOverlay:
+                glBlendFunc(GL_DST_COLOR, GL_ONE);
+                break;
+            case kBlendModeNormal:
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                break;
+        }
+                
+        if (!it->_Sprite->_Rotated)
+        {
+            Vec2 min = it->_Sprite->_Position;
+            Vec2 max = it->_Sprite->_Position + it->_Sprite->_Size;
+            
+            vertexBuffer[0]._UV[0] = min[0];
+            vertexBuffer[0]._UV[1] = max[1],
+            vertexBuffer[1]._UV[0] = min[0];
+            vertexBuffer[1]._UV[1] = min[1];
+            vertexBuffer[2]._UV[0] = max[0];
+            vertexBuffer[2]._UV[1] = min[1];
+            vertexBuffer[3]._UV[0] = max[0];
+            vertexBuffer[3]._UV[1] = max[1];
+        } else {
+            Vec2 min = it->_Sprite->_Position + Vec2(it->_Sprite->_Size[1], 0);
+            Vec2 max = it->_Sprite->_Position + Vec2(0, it->_Sprite->_Size[0]);
+
+            vertexBuffer[0]._UV[0] = max[0];
+            vertexBuffer[0]._UV[1] = min[1];
+            vertexBuffer[1]._UV[0] = min[0];
+            vertexBuffer[1]._UV[1] = min[1];
+            vertexBuffer[2]._UV[0] = min[0];
+            vertexBuffer[2]._UV[1] = max[1];
+            vertexBuffer[3]._UV[0] = max[0];
+            vertexBuffer[3]._UV[1] = max[1];
+        }
+        
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 4, _Vertices, GL_DYNAMIC_DRAW);
+        glBindTexture(GL_TEXTURE_2D, it->_Sprite->_Sheet->_Texture);
+        
+        glPushMatrix();
+        
+        glTranslatef(it->_Position[0], it->_Position[1], 0.f);
+        glScalef(it->_Scale[0], it->_Scale[1], 1.f);        
+        glTranslatef(it->_Offset[0], it->_Offset[1], 0.f);
+        glRotatef(it->_Rotation[0], 1, 0, 0);
+        glRotatef(it->_Rotation[1], 0, 1, 0);
+        glRotatef(it->_Rotation[2], 0, 0, 1);
+        
+        glScalef(it->_Sprite->_Dimension[0], it->_Sprite->_Dimension[1], 1.f);
+        
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, (void*)0);
+        
+        glPopMatrix();
+    }
+    
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    
+    glDisable(GL_BLEND);
+    glDisable(GL_TEXTURE_2D);
+    
+    _Instances.clear();
+}
+  
+bool SpriteRenderer::Load(const std::string& spriteSheet)
+{
+    SheetMap::iterator it = _SpriteSheets.find(spriteSheet);
+    
+    if (it != _SpriteSheets.end())
+        return true;
+    
+    SpriteSheet* sheet = new SpriteSheet();
+    
+    sheet->Load(spriteSheet);
+    
+    _SpriteSheets[spriteSheet] = sheet;
+
+    return true;
+}
+    
+bool SpriteRenderer::Unload(const std::string& spriteSheet)
+{
+    SheetMap::iterator it = _SpriteSheets.find(spriteSheet);
+    
+    if (it == _SpriteSheets.end())
+        return false;
+    
+    delete it->second;
+    
+    _SpriteSheets.erase(it);
+    
+    return true;
+}
+
+bool SpriteRenderer::AttachToRenderer(const std::string& sheetName, const std::string& spriteName, Vec2 position, Vec3 rotation, Vec2 scale, BlendMode blendMode, Vec2 offset)
+{
+    SpriteSheet* spriteSheet = GetSpriteSheet(sheetName);
+    
+    if (!spriteSheet)
+        return false;
+    
+    Sprite* sprite = spriteSheet->GetSprite(spriteName);
+    
+    if (!sprite)
+        return false;
+
+    SpriteInstance instance(sprite);
+    
+    instance._Position = position;
+    instance._Rotation = rotation;
+    instance._Scale = scale;
+    instance._Offset = offset;
+    instance._BlendMode = blendMode;
+    
+    _Instances.push_back(instance);
+    
+    Render();
+    
+    return true;
+}
+    
+Sprite* SpriteRenderer::GetSprite(const std::string &sheetName, const std::string &spriteName) const
+{
+    SpriteSheet* sheet = GetSpriteSheet(sheetName);
+    
+    if (!sheet)
+        return 0;
+    
+    return sheet->GetSprite(spriteName);
+}
+
+SpriteSheet* SpriteRenderer::GetSpriteSheet(const std::string& spriteSheet) const
+{
+    SheetMap::const_iterator it = _SpriteSheets.find(spriteSheet);
+    
+    if (it == _SpriteSheets.end())
+        return 0;
+    
+    return it->second;
+}
+
+}
