@@ -19,6 +19,7 @@ float GetAspectRatio();
 float NativeScale();
 Vec2 GetScreenResolution();
 Vec2 GetWorldScale();
+float GetDpu();
 
 }
     

@@ -92,21 +92,33 @@ float NativeScale()
 Vec2 GetScreenResolution()
 {
     if ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad))
-        return Vec2(768.f, 1024.f);
+        if (!IsLandscape())
+            return Vec2(768.f, 1024.f);
+        else
+            return Vec2(1024.f, 768.f);
     else
-        return Vec2(320.f, 480.f);
+    {
+        if (!IsLandscape())
+            return Vec2(320.f, 480.f);
+        else
+            return Vec2(480.f, 320.f);
+    }
+        
 }
     
 Vec2 GetWorldScale()
 {
-    float dpu = 15.f;
-    
-    float worldScale = 1.f/dpu;
+    float worldScale = 1.f/GetDpu();
     
     if (!UseNativeAspect() && (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad))
         return Vec2(worldScale * 0.833333f, worldScale * 0.9375f);
     
     return Vec2(worldScale, worldScale);
+}
+    
+float GetDpu()
+{
+    return 15.f;
 }
     
 }
