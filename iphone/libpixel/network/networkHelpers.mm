@@ -4,7 +4,7 @@
 #include <sys/socket.h>
 #include <ifaddrs.h>
 
-#include "libpixel/file/fileHelpers.h"
+#include "libpixel/network/networkHelpers.h"
 
 namespace libpixel
 {

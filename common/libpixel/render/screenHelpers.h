@@ -9,6 +9,7 @@ namespace libpixel
 namespace ScreenHelpers
 {
 
+bool UseNativeAspect();
 bool IsLandscape();
 bool DoesNeedBorder();
 bool IsFastDevice();

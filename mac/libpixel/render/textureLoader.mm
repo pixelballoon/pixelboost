@@ -43,4 +43,4 @@ GLuint LoadTexture(const std::string& path)
 
 }
 
-#endif LIBPIXEL__PLATFORM__MACOSX
+#endif
