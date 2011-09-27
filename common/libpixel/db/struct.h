@@ -1,7 +1,7 @@
 #ifndef LIBPIXEL__DB__STRUCT__H
 #define LIBPIXEL__DB__STRUCT__H
 
-#include "json/reader.h"
+#include "libpixel/json/reader.h"
 
 namespace libpixeldb
 {

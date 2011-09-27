@@ -4,7 +4,7 @@
 #include "libpixel/render/sprite.h"
 #include "libpixel/render/textureLoader.h"
 
-#include "json/reader.h"
+#include "libpixel/json/reader.h"
 
 namespace libpixel
 {
