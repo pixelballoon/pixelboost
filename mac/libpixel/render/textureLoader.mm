@@ -1,3 +1,5 @@
+#ifdef LIBPIXEL__PLATFORM__MACOSX
+
 #include "libpixel/render/textureLoader.h"
 
 namespace libpixel
@@ -40,3 +42,5 @@ GLuint LoadTexture(const std::string& path)
 }
 
 }
+
+#endif LIBPIXEL__PLATFORM__MACOSX
