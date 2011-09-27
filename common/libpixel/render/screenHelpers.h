@@ -1,7 +1,7 @@
 #ifndef LIBPIXEL__RENDER__SCREENHELPERS__H
 #define LIBPIXEL__RENDER__SCREENHELPERS__H
 
-#include "svl/SVL.h"
+#include "libpixel/math/maths.h"
 
 namespace libpixel
 {

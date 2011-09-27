@@ -4,8 +4,7 @@
 #include <map>
 #include <string>
 
-#include "svl/SVL.h"
-
+#include "libpixel/math/maths.h"
 #include "libpixel/render/renderer.h"
 #include "libpixel/render/textureLoader.h"
 

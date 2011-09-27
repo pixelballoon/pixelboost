@@ -1,7 +1,7 @@
 #ifndef LIBPIXEL__IPHONE__INPUT__TOUCHMANAGER__H
 #define LIBPIXEL__IPHONE__INPUT__TOUCHMANAGER__H
 
-#include "SVL.h"
+#include "libpixel/math/maths.h"
 #include <map>
 #include <vector>
 

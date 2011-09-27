@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "svl/SVL.h"
+#include "libpixel/math/maths.h"
 
 namespace libpixel
 {

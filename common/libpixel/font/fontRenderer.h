@@ -5,7 +5,7 @@
 #include <map>
 #include <string>
 
-#include "svl/SVL.h"
+#include "libpixel/math/maths.h"
 
 class Font;
 

@@ -1,7 +1,7 @@
 #ifndef LIBPIXEL__COMMON__RENDER__CAMERA__H
 #define LIBPIXEL__COMMON__RENDER__CAMERA__H
 
-#include "svl/SVL.h"
+#include "libpixel/math/maths.h"
 
 namespace libpixel
 {

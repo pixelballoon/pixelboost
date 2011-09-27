@@ -2,7 +2,7 @@
 #define LIBPIXEL__DB__ENTITY__H
 
 #include "libpixel/db/struct.h"
-#include "svl/SVL.h"
+#include "libpixel/math/maths.h"
 
 namespace libpixeldb
 {
