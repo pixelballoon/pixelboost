@@ -50,7 +50,7 @@ public:
     
     void Render();
 	
-	bool Load(const std::string& spriteSheet);
+	bool Load(const std::string& spriteSheet, bool generateMips);
     bool Unload(const std::string& spriteSheet);
     
     bool AttachToRenderer(const std::string& sheetName, const std::string& spriteName, Vec2 position, Vec3 rotation = Vec3(0.f, 0.f, 0.f), Vec2 scale = Vec2(1.f, 1.f), BlendMode blendMode = kBlendModeNormal, Vec2 offset = Vec2(0.f, 0.f));

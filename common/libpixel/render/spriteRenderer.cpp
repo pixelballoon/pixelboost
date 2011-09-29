@@ -142,7 +142,7 @@ void SpriteRenderer::Render()
     _Instances.clear();
 }
   
-bool SpriteRenderer::Load(const std::string& spriteSheet)
+bool SpriteRenderer::Load(const std::string& spriteSheet, bool generateMips)
 {
     SheetMap::iterator it = _SpriteSheets.find(spriteSheet);
     
@@ -151,7 +151,7 @@ bool SpriteRenderer::Load(const std::string& spriteSheet)
     
     SpriteSheet* sheet = new SpriteSheet();
     
-    sheet->Load(spriteSheet);
+    sheet->Load(spriteSheet, generateMips);
     
     _SpriteSheets[spriteSheet] = sheet;
 

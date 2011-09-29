@@ -17,7 +17,7 @@ SpriteSheet::~SpriteSheet()
 {
 }
 
-bool SpriteSheet::Load(const std::string& name)
+bool SpriteSheet::Load(const std::string& name, bool generateMips)
 {
     std::string fileRoot = FileHelpers::GetRootPath();
     
@@ -71,7 +71,7 @@ bool SpriteSheet::Load(const std::string& name)
         _Sprites[name.substr(0, name.length()-4)] = sprite;
     }
     
-    _Texture = LoadTexture(fileRoot + "/data/spritesheets/images/" + name + (ScreenHelpers::IsHighResolution() && ScreenHelpers::UseHdGraphics() ? "-hd" : "") + ".png");
+    _Texture = LoadTexture(fileRoot + "/data/spritesheets/images/" + name + (ScreenHelpers::IsHighResolution() && ScreenHelpers::UseHdGraphics() ? "-hd" : "") + ".png", generateMips);
     
     return (_Texture != 0);
 }

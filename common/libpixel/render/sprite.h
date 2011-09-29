@@ -18,7 +18,7 @@ public:
     SpriteSheet();
     virtual ~SpriteSheet();
     
-    bool Load(const std::string& name);
+    bool Load(const std::string& name, bool generateMips);
     
     Sprite* GetSprite(const std::string& name);
     
