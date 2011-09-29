@@ -62,6 +62,8 @@ void PrimitiveRenderer::RenderLine(Vec2 start, Vec2 end, Vec3 colour)
     
     glDrawArrays(GL_LINES, 0, 2);
     
+    glColor4f(1.f, 1.f, 1.f, 1.f);
+    
     glPopMatrix();
 }
     
