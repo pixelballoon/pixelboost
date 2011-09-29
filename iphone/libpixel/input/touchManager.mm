@@ -46,16 +46,18 @@ void TouchHandler::OnTouchEnd(Touch* touch)
 }
     
 TouchManager::TouchManager()
-    : _Handler(0)
 {
     
 }
 
-void TouchManager::SetHandler(TouchHandler* handler)
+void TouchManager::AddTouchHandler(TouchHandler* handler)
 {
-    _Handler = handler;
-    if (_Handler)
-        _Handler->_Manager = this;
+    _Handlers.insert(handler);
+}
+    
+void TouchManager::RemoveTouchHandler(TouchHandler* handler)
+{
+    _Handlers.erase(handler);
 }
 
 void TouchManager::AddTouch(void* uiTouch, Vec2 position)
@@ -109,20 +111,26 @@ Touch* TouchManager::GetTouch(int index)
 
 void TouchManager::OnTouchBegin(Touch* touch)
 {
-    if (_Handler)
-        _Handler->OnTouchBegin(touch);
+    for (TouchHandlerList::iterator it = _Handlers.begin(); it != _Handlers.end(); ++it)
+    {
+        (*it)->OnTouchBegin(touch);
+    }
 }
 
 void TouchManager::OnTouchUpdate(Touch* touch)
 {
-	if (_Handler)
-		_Handler->OnTouchUpdate(touch);
+	for (TouchHandlerList::iterator it = _Handlers.begin(); it != _Handlers.end(); ++it)
+    {
+        (*it)->OnTouchUpdate(touch);
+    }
 }
 
 void TouchManager::OnTouchEnd(Touch* touch)
 {
-	if (_Handler)
-		_Handler->OnTouchEnd(touch);
+	for (TouchHandlerList::iterator it = _Handlers.begin(); it != _Handlers.end(); ++it)
+    {
+        (*it)->OnTouchEnd(touch);
+    }
 }
 
 }

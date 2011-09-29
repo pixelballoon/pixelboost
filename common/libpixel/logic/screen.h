@@ -5,7 +5,6 @@ namespace libpixel
 {
 
 class Game;
-class TouchHandler;
 
 class Screen
 {
@@ -16,18 +15,12 @@ public:
 	virtual void Update(float time);
 	virtual void Render();
     
-    void SetTouchActive();
-    
-    void SetTouchHandler(TouchHandler* touchHandler);
-    TouchHandler* GetTouchHandler();
+    void SetActive(bool active);
     
     Game* GetGame();
     
 protected:
     Game* _Game;
-    
-private:
-    TouchHandler* _TouchHandler;
 };
 
 }

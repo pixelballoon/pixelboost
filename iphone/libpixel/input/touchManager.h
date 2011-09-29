@@ -3,12 +3,14 @@
 
 #include "libpixel/math/maths.h"
 #include <map>
+#include <set>
 #include <vector>
 
 namespace libpixel
 {
 
 class Camera;
+class TouchHandler;
 class TouchManager;
 
 class Touch
@@ -50,7 +52,8 @@ class TouchManager
 public:
     TouchManager();
     
-	void SetHandler(TouchHandler* handler);
+	void AddTouchHandler(TouchHandler* handler);
+    void RemoveTouchHandler(TouchHandler* handler);
 	
 	void AddTouch(void* touch, Vec2 position);
 	void RemoveTouch(void* touch);
@@ -60,11 +63,13 @@ public:
 	Touch* GetTouch(int index);
 	
 private:
+    typedef std::set<TouchHandler*> TouchHandlerList;
+    
 	void OnTouchBegin(Touch* touch);
 	void OnTouchUpdate(Touch* touch);
 	void OnTouchEnd(Touch* touch);
 	
-	TouchHandler* _Handler;
+	TouchHandlerList _Handlers;
 	std::map<void*, Touch*> _Touches;
 };
     
