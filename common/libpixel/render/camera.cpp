@@ -20,10 +20,11 @@ void Camera::ApplyTransform()
     glLoadIdentity();
     
     glScalef(ScreenHelpers::GetWorldScale()[0] * ScreenHelpers::GetAspectRatio(), ScreenHelpers::GetWorldScale()[1], 0.f);
-	glTranslatef(Position[0], Position[1], 0.f);
-    
+	
     if (Game::Instance()->IsLandscape())
         glRotatef(90, 0, 0, 1);
+    
+    glTranslatef(Position[0], Position[1], 0.f);
 }
 
 }
