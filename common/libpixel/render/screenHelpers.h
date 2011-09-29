@@ -9,14 +9,11 @@ namespace libpixel
 namespace ScreenHelpers
 {
 
-bool UseNativeAspect();
 bool IsLandscape();
-bool DoesNeedBorder();
 bool IsFastDevice();
 bool UseHdGraphics();
 bool IsHighResolution();
 float GetAspectRatio();
-float NativeScale();
 Vec2 GetScreenResolution();
 Vec2 GetWorldScale();
 float GetDpu();

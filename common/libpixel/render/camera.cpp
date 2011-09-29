@@ -1,4 +1,3 @@
-#include "libpixel/logic/game.h"
 #include "libpixel/render/camera.h"
 #include "libpixel/render/gl.h"
 #include "libpixel/render/screenHelpers.h"
@@ -19,11 +18,11 @@ void Camera::ApplyTransform()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
-    glScalef(ScreenHelpers::GetWorldScale()[0] * ScreenHelpers::GetAspectRatio(), ScreenHelpers::GetWorldScale()[1], 0.f);
-	
-    if (Game::Instance()->IsLandscape())
+    if (ScreenHelpers::IsLandscape())
         glRotatef(90, 0, 0, 1);
     
+    glScalef(ScreenHelpers::GetWorldScale()[0] * ScreenHelpers::GetAspectRatio(), ScreenHelpers::GetWorldScale()[1], 1.f);
+	
     glTranslatef(Position[0], Position[1], 0.f);
 }
 

@@ -10,22 +10,9 @@ namespace libpixel
 namespace ScreenHelpers
 {
     
-bool UseNativeAspect()
-{
-    return false;
-}
-    
 bool IsLandscape()
 {
     return Game::Instance()->IsLandscape();
-}
-    
-bool DoesNeedBorder()
-{
-    if ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad))
-        return true;
-    else
-        return false;
 }
     
 bool IsFastDevice()
@@ -75,18 +62,7 @@ bool IsHighResolution()
     
 float GetAspectRatio()
 {
-    if (UseNativeAspect() && UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-        return 1024.f/768.f;
-    else
-        return 480.f/320.f;
-}
-    
-float NativeScale()
-{
-    if ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad))
-        return 2.f;
-    else
-        return 1.f;
+    return GetScreenResolution()[1]/GetScreenResolution()[0];
 }
     
 Vec2 GetScreenResolution()
@@ -96,29 +72,34 @@ Vec2 GetScreenResolution()
             return Vec2(768.f, 1024.f);
         else
             return Vec2(1024.f, 768.f);
-    else
+    else if (IsHighResolution())
+    {
+        if (!IsLandscape())
+            return Vec2(640.f, 960.f);
+        else
+            return Vec2(960.f, 640.f);
+    }
     {
         if (!IsLandscape())
             return Vec2(320.f, 480.f);
         else
             return Vec2(480.f, 320.f);
     }
-        
 }
     
 Vec2 GetWorldScale()
 {
-    float worldScale = 1.f/GetDpu();
-    
-    if (!UseNativeAspect() && (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad))
-        return Vec2(worldScale * 0.833333f, worldScale * 0.9375f);
+    float worldScale = 1.f/(GetScreenResolution()[1]/(GetDpu()*2.f));
     
     return Vec2(worldScale, worldScale);
 }
     
 float GetDpu()
 {
-    return 15.f;
+    if (IsHighResolution())
+        return 32.f;
+    else
+        return 16.f;
 }
     
 }
