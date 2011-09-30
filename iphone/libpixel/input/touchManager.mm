@@ -7,7 +7,23 @@ namespace libpixel
 
 Vec2 Touch::GetScreenPosition()
 {
-	return _Position;
+    Vec2 position;
+    
+    if (ScreenHelpers::IsLandscape())
+    {
+        position[0] = 240 - _Position[1];
+        position[1] = -(_Position[0] - 160);
+    }
+    else
+    {
+        position[0] = _Position[0] - 160;
+        position[1] = 240 - _Position[1];
+    }
+    
+	position[0] /= 15.f;
+	position[1] /= 15.f;
+	
+	return position;
 }
 
 Vec2 Touch::GetWorldPosition(Camera* camera)
@@ -25,10 +41,10 @@ Vec2 Touch::GetWorldPosition(Camera* camera)
         position[1] = 240 - _Position[1];
     }
 	
-	position -= camera->Position;	
-
-	position[0] /= libpixel::ScreenHelpers::GetWorldScale()[0] * (480.f/320.f) * 160.f;
-	position[1] /= libpixel::ScreenHelpers::GetWorldScale()[1] * 240.f;
+	position[0] /= 15.f;
+	position[1] /= 15.f;
+    
+    position -= camera->Position;
 	
 	return position;
 }
