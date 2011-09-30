@@ -7,42 +7,32 @@ namespace libpixel
 
 Vec2 Touch::GetScreenPosition()
 {
-    Vec2 position;
+   	Vec2 position = _Position;
     
-    if (ScreenHelpers::IsLandscape())
-    {
-        position[0] = 240 - _Position[1];
-        position[1] = -(_Position[0] - 160);
-    }
-    else
-    {
-        position[0] = _Position[0] - 160;
-        position[1] = 240 - _Position[1];
-    }
+    // Specifically handle retina displays where the input co-ordinates aren't scaled
+    float inputScale = ScreenHelpers::IsHighResolution() ? 2 : 1;
     
-	position[0] /= 15.f;
-	position[1] /= 15.f;
+    position[0] = position[0] - ScreenHelpers::GetScreenResolution()[0]/(2*inputScale);
+    position[1] = ScreenHelpers::GetScreenResolution()[1]/(2*inputScale) - position[1];
+    
+	position[0] /= (ScreenHelpers::GetDpu()/inputScale);
+	position[1] /= (ScreenHelpers::GetDpu()/inputScale);
 	
 	return position;
 }
 
 Vec2 Touch::GetWorldPosition(Camera* camera)
 {
-	Vec2 position;
+	Vec2 position = _Position;
     
-    if (ScreenHelpers::IsLandscape())
-    {
-        position[0] = 240 - _Position[1];
-        position[1] = -(_Position[0] - 160);
-    }
-    else
-    {
-        position[0] = _Position[0] - 160;
-        position[1] = 240 - _Position[1];
-    }
-	
-	position[0] /= 15.f;
-	position[1] /= 15.f;
+    // Specifically handle retina displays where the input co-ordinates aren't scaled
+    float inputScale = ScreenHelpers::IsHighResolution() ? 2 : 1;
+    
+    position[0] = position[0] - ScreenHelpers::GetScreenResolution()[0]/(2*inputScale);
+    position[1] = ScreenHelpers::GetScreenResolution()[1]/(2*inputScale) - position[1];
+
+	position[0] /= (ScreenHelpers::GetDpu()/inputScale);
+	position[1] /= (ScreenHelpers::GetDpu()/inputScale);
     
     position -= camera->Position;
 	

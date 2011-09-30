@@ -89,7 +89,7 @@ Vec2 GetScreenResolution()
     
 Vec2 GetWorldScale()
 {
-    float worldScale = 1.f/(GetScreenResolution()[1]/(GetDpu()*2.f));
+    float worldScale = 1.f/((GetScreenResolution()[1]/2)/GetDpu());
     
     return Vec2(worldScale, worldScale);
 }
