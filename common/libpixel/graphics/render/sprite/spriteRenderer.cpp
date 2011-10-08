@@ -1,6 +1,6 @@
+#include "libpixel/graphics/render/sprite/spriteRenderer.h"
+#include "libpixel/graphics/render/sprite/sprite.h"
 #include "libpixel/os/definitions.h"
-#include "libpixel/render/spriteRenderer.h"
-#include "libpixel/render/sprite.h"
 
 namespace libpixel
 {

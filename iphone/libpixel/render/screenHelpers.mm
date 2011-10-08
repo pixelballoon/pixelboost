@@ -1,5 +1,5 @@
+#include "libpixel/graphics/helper/screenHelpers.h"
 #include "libpixel/logic/game.h"
-#include "libpixel/render/screenHelpers.h"
 
 #include <sys/sysctl.h>
 #include <string>

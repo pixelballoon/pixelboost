@@ -1,15 +1,15 @@
+#include "libpixel/audio/soundManager.h"
 #include "libpixel/debug/debugNetworkManager.h"
 #include "libpixel/debug/debugVariableManager.h"
-#include "libpixel/font/fontRenderer.h"
+#include "libpixel/graphics/render/font/fontRenderer.h"
+#include "libpixel/graphics/render/model/modelRenderer.h"
+#include "libpixel/graphics/render/primitive/primitiveRenderer.h"
+#include "libpixel/graphics/render/sprite/spriteRenderer.h"
 #include "libpixel/input/touchManager.h"
 #include "libpixel/logic/game.h"
 #include "libpixel/logic/screen.h"
 #include "libpixel/network/gameCenter.h"
 #include "libpixel/resource/resourceManager.h"
-#include "libpixel/render/modelRenderer.h"
-#include "libpixel/render/primitiveRenderer.h"
-#include "libpixel/render/spriteRenderer.h"
-#include "libpixel/sound/soundManager.h"
 
 namespace libpixel
 {

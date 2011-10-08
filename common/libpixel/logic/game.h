@@ -1,5 +1,5 @@
-#ifndef COMMON__LOGIC__GAME__H
-#define COMMON__LOGIC__GAME__H
+#ifndef LIBPIXEL__COMMON__LOGIC__GAME__H
+#define LIBPIXEL__COMMON__LOGIC__GAME__H
 
 #include <vector>
 

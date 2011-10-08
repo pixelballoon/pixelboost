@@ -1,6 +1,6 @@
-#include "libpixel/render/camera.h"
-#include "libpixel/render/gl.h"
-#include "libpixel/render/screenHelpers.h"
+#include "libpixel/graphics/camera/camera.h"
+#include "libpixel/graphics/device/device.h"
+#include "libpixel/graphics/helper/screenHelpers.h"
 
 namespace libpixel
 {

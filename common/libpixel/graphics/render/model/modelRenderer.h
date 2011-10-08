@@ -1,12 +1,12 @@
-#ifndef LIBPIXEL__COMMON__RENDER__MODELRENDERER__H
-#define LIBPIXEL__COMMON__RENDER__MODELRENDERER__H
+#ifndef LIBPIXEL__COMMON__GRAPHICS__RENDER__MODEL__MODELRENDERER__H
+#define LIBPIXEL__COMMON__GRAPHICS__RENDER__MODEL__MODELRENDERER__H
 
 #include <map>
 #include <string>
 
+#include "libpixel/graphics/device/texture.h"
+#include "libpixel/graphics/render/renderer.h"
 #include "libpixel/math/maths.h"
-#include "libpixel/render/renderer.h"
-#include "libpixel/render/textureLoader.h"
 
 namespace libpixel
 {

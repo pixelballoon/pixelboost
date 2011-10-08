@@ -1,6 +1,6 @@
 #import "ObjectAL.h"
 
-#include "libpixel/sound/soundManager.h"
+#include "libpixel/audio/soundManager.h"
 #include "libpixel/file/fileHelpers.h"
 
 namespace libpixel

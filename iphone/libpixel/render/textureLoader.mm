@@ -1,4 +1,4 @@
-#include "libpixel/render/textureLoader.h"
+#include "libpixel/graphics/device/texture.h"
 
 namespace libpixel
 {

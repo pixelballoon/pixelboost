@@ -1,14 +1,12 @@
-#ifndef LIBPIXEL_DISABLE_MODEL_RENDERER
 #include <fstream>
 #include <sstream>
-#endif
 
 #include <vector>
 
 #include "libpixel/file/fileHelpers.h"
-#include "libpixel/render/gl.h"
-#include "libpixel/render/modelRenderer.h"
-#include "libpixel/render/textureLoader.h"
+#include "libpixel/graphics/device/device.h"
+#include "libpixel/graphics/device/texture.h"
+#include "libpixel/graphics/render/model/modelRenderer.h"
 
 namespace libpixel
 {
@@ -26,7 +24,6 @@ Model::~Model()
     
 bool Model::Load(const std::string& modelName)
 {
-#ifndef LIBPIXEL_DISABLE_MODEL_RENDERER
     std::string objFilename = FileHelpers::GetRootPath() + "/data/models/" + modelName + ".obj";
     
     std::fstream file;
@@ -140,14 +137,10 @@ bool Model::Load(const std::string& modelName)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     
 	return true;
-#else
-    return false;
-#endif
 }
     
 void Model::ParseVert(std::vector<Vertex>& verts, const std::string& vert, const std::vector<Vec3>& vertices, const std::vector<Vec2>& uvs, const std::vector<Vec3>& normals)
 {
-#ifndef LIBPIXEL_DISABLE_MODEL_RENDERER
     std::vector<std::string> vertIndices = SplitPath(vert);
     
     if (vertIndices.size() < 3)
@@ -172,18 +165,15 @@ void Model::ParseVert(std::vector<Vertex>& verts, const std::string& vert, const
     vertex._Normal[2] = normal[2];
     
     verts.push_back(vertex);
-#endif
 }
     
 std::vector<std::string>& Model::SplitString(const std::string &string, char delim, std::vector<std::string> &items)
 {
-#ifndef LIBPIXEL_DISABLE_MODEL_RENDERER
     std::stringstream stream(string);
     std::string item;
     while(std::getline(stream, item, delim)) {
         items.push_back(item);
     }
-#endif
     return items;
 }
 
@@ -306,7 +296,6 @@ bool ModelRenderer::UnloadTexture(const std::string& textureName)
     
 bool ModelRenderer::Render(const std::string& modelName, const std::string& textureName, Vec3 position, Vec3 rotation, Vec3 scale, Vec3 offset)
 {
-#ifndef LIBPIXEL_DISABLE_MODEL_RENDERER
     Model* model = GetModel(modelName);
     Texture* texture = GetTexture(textureName);
     
@@ -354,9 +343,6 @@ bool ModelRenderer::Render(const std::string& modelName, const std::string& text
     glDisable(GL_TEXTURE_2D);
 
     return true;
-#else
-    return false;
-#endif
 }
     
 Model* ModelRenderer::GetModel(const std::string& modelName)

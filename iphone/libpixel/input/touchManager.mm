@@ -1,5 +1,5 @@
-#include "libpixel/render/camera.h"
-#include "libpixel/render/screenHelpers.h"
+#include "libpixel/graphics/camera/camera.h"
+#include "libpixel/graphics/helper/screenHelpers.h"
 #include "libpixel/input/touchManager.h"
 
 namespace libpixel

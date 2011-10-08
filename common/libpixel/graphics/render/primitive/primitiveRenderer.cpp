@@ -1,6 +1,6 @@
+#include "libpixel/graphics/device/device.h"
+#include "libpixel/graphics/render/primitive/primitiveRenderer.h"
 #include "libpixel/os/definitions.h"
-#include "libpixel/render/primitiveRenderer.h"
-#include "libpixel/render/gl.h"
 
 namespace libpixel
 {

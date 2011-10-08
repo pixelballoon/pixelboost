@@ -1,10 +1,9 @@
 #include "libpixel/file/fileHelpers.h"
-#include "libpixel/logic/game.h"
-#include "libpixel/render/screenHelpers.h"
-#include "libpixel/render/sprite.h"
-#include "libpixel/render/textureLoader.h"
-
+#include "libpixel/graphics/device/texture.h"
+#include "libpixel/graphics/helper/screenHelpers.h"
+#include "libpixel/graphics/render/sprite/sprite.h"
 #include "libpixel/json/reader.h"
+#include "libpixel/logic/game.h"
 
 namespace libpixel
 {

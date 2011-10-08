@@ -1,13 +1,13 @@
-#ifndef LIBPIXEL__COMMON__RENDER__SPRITERENDERER__H
-#define LIBPIXEL__COMMON__RENDER__SPRITERENDERER__H
+#ifndef LIBPIXEL__COMMON__GRAPHICS__RENDER__SPRITE__SPRITERENDERER__H
+#define LIBPIXEL__COMMON__GRAPHICS__RENDER__SPRITE__SPRITERENDERER__H
 
 #include <list>
 #include <map>
 #include <string>
 #include <vector>
 
+#include "libpixel/graphics/render/renderer.h"
 #include "libpixel/math/maths.h"
-#include "libpixel/render/renderer.h"
 
 namespace libpixel
 {

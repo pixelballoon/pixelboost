@@ -1,11 +1,11 @@
-#ifndef LIBPIXEL__COMMON__RENDER__SPRITE__H
-#define LIBPIXEL__COMMON__RENDER__SPRITE__H
+#ifndef LIBPIXEL__COMMON__GRAPHICS__RENDER__SPRITE__SPRITE__H
+#define LIBPIXEL__COMMON__GRAPHICS__RENDER__SPRITE__SPRITE__H
 
 #include <map>
 #include <string>
 
+#include "libpixel/graphics/device/texture.h"
 #include "libpixel/math/maths.h"
-#include "libpixel/render/textureLoader.h"
 
 namespace libpixel
 {

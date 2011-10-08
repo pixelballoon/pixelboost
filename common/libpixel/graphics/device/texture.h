@@ -1,9 +1,9 @@
-#ifndef LIBPIXEL__COMMON__RENDER__SPRITELOADER__H
-#define LIBPIXEL__COMMON__RENDER__SPRITELOADER__H
+#ifndef LIBPIXEL__COMMON__GRAPHICS__DEVICE__TEXTURE__H
+#define LIBPIXEL__COMMON__GRAPHICS__DEVICE__TEXTURE__H
 
 #include <string>
 
-#include "libpixel/render/gl.h"
+#include "libpixel/graphics/device/device.h"
 
 namespace libpixel
 {

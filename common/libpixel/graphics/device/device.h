@@ -1,5 +1,5 @@
-#ifndef LIBPIXEL__RENDER__GL__H
-#define LIBPIXEL__RENDER__GL__H
+#ifndef LIBPIXEL__GRAPHICS__DEVICE__DEVICE__H
+#define LIBPIXEL__GRAPHICS__DEVICE__DEVICE__H
 
 #ifdef __APPLE__
     #include "TargetConditionals.h"
