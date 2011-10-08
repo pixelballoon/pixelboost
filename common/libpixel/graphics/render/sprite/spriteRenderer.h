@@ -6,7 +6,8 @@
 #include <string>
 #include <vector>
 
-#include "libpixel/graphics/render/renderer.h"
+#include "libpixel/graphics/device/device.h"
+#include "libpixel/graphics/device/vertexBuffer.h"
 #include "libpixel/math/maths.h"
 
 namespace libpixel
@@ -68,7 +69,7 @@ private:
 	SheetMap _SpriteSheets;
     
 private:
-    Vertex _Vertices[4];
+    Vertex_PXYZ_UV _Vertices[4];
     GLuint _VertexBuffer;
     GLuint _IndexBuffer;
 };

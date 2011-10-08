@@ -5,6 +5,7 @@
 #include <string>
 
 #include "libpixel/graphics/device/texture.h"
+#include "libpixel/graphics/device/vertexBuffer.h"
 #include "libpixel/graphics/render/renderer.h"
 #include "libpixel/math/maths.h"
 
@@ -27,7 +28,7 @@ public:
     GLuint _IndexBuffer;
     
 private:
-    void ParseVert(std::vector<Vertex>& verts, const std::string& vert, const std::vector<Vec3>& vertices, const std::vector<Vec2>& uvs, const std::vector<Vec3>& normals);
+    void ParseVert(std::vector<Vertex_NPXYZ_UV>& verts, const std::string& vert, const std::vector<Vec3>& vertices, const std::vector<Vec2>& uvs, const std::vector<Vec3>& normals);
     
     std::vector<std::string>& SplitString(const std::string& string, char delim, std::vector<std::string> &items);
     std::vector<std::string> SplitLine(const std::string& string);

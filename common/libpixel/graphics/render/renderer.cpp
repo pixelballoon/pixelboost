@@ -1,6 +1,1 @@
-#include "Renderer.h"
-
-namespace libpixel
-{
-
-}
+#include "libpixel/graphics/render/renderer.h"

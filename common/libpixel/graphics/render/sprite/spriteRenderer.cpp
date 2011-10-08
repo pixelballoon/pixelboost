@@ -23,13 +23,13 @@ SpriteRenderer::SpriteRenderer()
     glGenBuffers(1, &_VertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, _VertexBuffer);
 	
-    Vertex* vertexBuffer = _Vertices;
+    Vertex_PXYZ_UV* vertexBuffer = _Vertices;
 
     for (int i=0; i<4; i++)
     {
-        vertexBuffer[i]._Position[0] = glVertices[i*2];
-        vertexBuffer[i]._Position[1] = glVertices[(i*2)+1];
-        vertexBuffer[i]._Position[2] = 0.f;
+        vertexBuffer[i].position[0] = glVertices[i*2];
+        vertexBuffer[i].position[1] = glVertices[(i*2)+1];
+        vertexBuffer[i].position[2] = 0.f;
     }
     
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -54,14 +54,14 @@ void SpriteRenderer::Render()
     glBindBuffer(GL_ARRAY_BUFFER, _VertexBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _IndexBuffer);
     
-    GLsizei stride = sizeof(Vertex);
-    glVertexPointer(3, GL_FLOAT, stride, (void*)offsetof(Vertex, _Position));
-    glTexCoordPointer(2, GL_FLOAT, stride, (void*)offsetof(Vertex, _UV));
+    GLsizei stride = sizeof(Vertex_PXYZ_UV);
+    glVertexPointer(3, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_UV, position));
+    glTexCoordPointer(2, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_UV, uv));
     
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     
-    Vertex* vertexBuffer = _Vertices;
+    Vertex_PXYZ_UV* vertexBuffer = _Vertices;
     
     for (InstanceList::iterator it = _Instances.begin(); it != _Instances.end(); ++it)
     {
@@ -89,29 +89,29 @@ void SpriteRenderer::Render()
             Vec2 min = it->_Sprite->_Position;
             Vec2 max = it->_Sprite->_Position + it->_Sprite->_Size;
             
-            vertexBuffer[0]._UV[0] = min[0];
-            vertexBuffer[0]._UV[1] = max[1],
-            vertexBuffer[1]._UV[0] = min[0];
-            vertexBuffer[1]._UV[1] = min[1];
-            vertexBuffer[2]._UV[0] = max[0];
-            vertexBuffer[2]._UV[1] = min[1];
-            vertexBuffer[3]._UV[0] = max[0];
-            vertexBuffer[3]._UV[1] = max[1];
+            vertexBuffer[0].uv[0] = min[0];
+            vertexBuffer[0].uv[1] = max[1],
+            vertexBuffer[1].uv[0] = min[0];
+            vertexBuffer[1].uv[1] = min[1];
+            vertexBuffer[2].uv[0] = max[0];
+            vertexBuffer[2].uv[1] = min[1];
+            vertexBuffer[3].uv[0] = max[0];
+            vertexBuffer[3].uv[1] = max[1];
         } else {
             Vec2 min = it->_Sprite->_Position + Vec2(it->_Sprite->_Size[1], 0);
             Vec2 max = it->_Sprite->_Position + Vec2(0, it->_Sprite->_Size[0]);
 
-            vertexBuffer[0]._UV[0] = max[0];
-            vertexBuffer[0]._UV[1] = min[1];
-            vertexBuffer[1]._UV[0] = min[0];
-            vertexBuffer[1]._UV[1] = min[1];
-            vertexBuffer[2]._UV[0] = min[0];
-            vertexBuffer[2]._UV[1] = max[1];
-            vertexBuffer[3]._UV[0] = max[0];
-            vertexBuffer[3]._UV[1] = max[1];
+            vertexBuffer[0].uv[0] = max[0];
+            vertexBuffer[0].uv[1] = min[1];
+            vertexBuffer[1].uv[0] = min[0];
+            vertexBuffer[1].uv[1] = min[1];
+            vertexBuffer[2].uv[0] = min[0];
+            vertexBuffer[2].uv[1] = max[1];
+            vertexBuffer[3].uv[0] = max[0];
+            vertexBuffer[3].uv[1] = max[1];
         }
         
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 4, _Vertices, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_PXYZ_UV) * 4, _Vertices, GL_DYNAMIC_DRAW);
         glBindTexture(GL_TEXTURE_2D, it->_Sprite->_Sheet->_Texture);
         
         glPushMatrix();

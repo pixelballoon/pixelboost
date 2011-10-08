@@ -1,4 +1,4 @@
-#ifdef LIBPIXEL__PLATFORM__MACOSX
+#ifdef LIBPIXEL_PLATFORM_MACOSX
 
 #include "libpixel/render/textureLoader.h"
 

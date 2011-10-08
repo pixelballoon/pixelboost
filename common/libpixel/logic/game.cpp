@@ -1,6 +1,7 @@
 #include "libpixel/audio/soundManager.h"
 #include "libpixel/debug/debugNetworkManager.h"
 #include "libpixel/debug/debugVariableManager.h"
+#include "libpixel/graphics/device/device.h"
 #include "libpixel/graphics/render/font/fontRenderer.h"
 #include "libpixel/graphics/render/model/modelRenderer.h"
 #include "libpixel/graphics/render/primitive/primitiveRenderer.h"
@@ -32,6 +33,7 @@ Game::Game(void* viewController)
     
     _GameCenter = new GameCenter();
     
+    _GraphicsDevice = GraphicsDevice::Create();
     _FontRenderer = new FontRenderer();
     _ModelRenderer  = new ModelRenderer();
     _PrimitiveRenderer = new PrimitiveRenderer();

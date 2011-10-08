@@ -1,17 +1,38 @@
 #ifndef LIBPIXEL__GRAPHICS__DEVICE__DEVICE__H
 #define LIBPIXEL__GRAPHICS__DEVICE__DEVICE__H
 
-#ifdef __APPLE__
-    #include "TargetConditionals.h"
+namespace libpixel
+{
+
+class GraphicsDevice;
+class VertexBuffer;
+
+class GraphicsDevice
+{
+protected:
+    GraphicsDevice();
     
-    #if TARGET_OS_IPHONE
-        #include <OpenGLES/ES1/gl.h>
-        #include <OpenGLES/ES1/glext.h>
-    #else
-        #include <OpenGL/gl.h>
-    #endif
-#else
-	#include <GLES/gl.h>
+public:
+    static GraphicsDevice* Create();
+    virtual ~GraphicsDevice();
+    
+    // This does not take ownership of the VerteBuffer
+    virtual void AddVertexBuffer(VertexBuffer* buffer);
+    virtual void RemoveVertexBuffer(VertexBuffer* buffer);
+    virtual void BindVertexBuffer(VertexBuffer* buffer);
+    
+    // This will return 0 if the device has been lost
+    // The vertex buffer will receive a RefillVertexBuffer callback once the context is regained
+    // Always check for null before using
+    virtual void* LockVertexBuffer(VertexBuffer* buffer);
+    virtual void UnlockVertexBuffer(VertexBuffer* buffer);
+};
+    
+}
+
+#ifdef LIBPIXEL_PLATFORM_IOS
+    #define LIBPIXEL_GRAPHICS_OPENGLES1
+    #include "libpixel/graphics/device/gles1/deviceGLES1.h"
 #endif
 
 #endif

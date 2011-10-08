@@ -12,6 +12,7 @@ class DebugNetworkManager;
 
 class FontRenderer;
 class GameCenter;
+class GraphicsDevice;
 class ModelRenderer;
 class PrimitiveRenderer;
 class ResourceManager;
@@ -63,6 +64,7 @@ private:
 
     FontRenderer* _FontRenderer;
     GameCenter* _GameCenter;
+    GraphicsDevice* _GraphicsDevice;
     ModelRenderer* _ModelRenderer;
     PrimitiveRenderer* _PrimitiveRenderer;
 	ResourceManager* _ResourceManager;

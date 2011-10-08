@@ -37,7 +37,7 @@ bool Model::Load(const std::string& modelName)
     std::vector<Vec2> uvs;
     std::vector<Vec3> normals;
     
-    std::vector<Vertex> verts;
+    std::vector<Vertex_NPXYZ_UV> verts;
     
     enum ReadMode
     {
@@ -109,18 +109,18 @@ bool Model::Load(const std::string& modelName)
 
 	glGenBuffers(1, &_VertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, _VertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * _NumVertices, 0, GL_STATIC_DRAW);
-	Vertex* vertexBuffer = (Vertex*)glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_NPXYZ_UV) * _NumVertices, 0, GL_STATIC_DRAW);
+	Vertex_NPXYZ_UV* vertexBuffer = (Vertex_NPXYZ_UV*)glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
     for (int i=0; i<_NumVertices; i++)
     {
-        vertexBuffer[i]._Position[0] = verts[i]._Position[0];
-        vertexBuffer[i]._Position[1] = verts[i]._Position[1];
-        vertexBuffer[i]._Position[2] = verts[i]._Position[2];
-        vertexBuffer[i]._UV[0] = verts[i]._UV[0];
-        vertexBuffer[i]._UV[1] = verts[i]._UV[1];
-        vertexBuffer[i]._Normal[0] = verts[i]._Normal[0];
-        vertexBuffer[i]._Normal[1] = verts[i]._Normal[1];
-        vertexBuffer[i]._Normal[2] = verts[i]._Normal[2];
+        vertexBuffer[i].position[0] = verts[i].position[0];
+        vertexBuffer[i].position[1] = verts[i].position[1];
+        vertexBuffer[i].position[2] = verts[i].position[2];
+        vertexBuffer[i].uv[0] = verts[i].uv[0];
+        vertexBuffer[i].uv[1] = verts[i].uv[1];
+        vertexBuffer[i].normal[0] = verts[i].normal[0];
+        vertexBuffer[i].normal[1] = verts[i].normal[1];
+        vertexBuffer[i].normal[2] = verts[i].normal[2];
     }
 	glUnmapBufferOES(GL_ARRAY_BUFFER);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -139,7 +139,7 @@ bool Model::Load(const std::string& modelName)
 	return true;
 }
     
-void Model::ParseVert(std::vector<Vertex>& verts, const std::string& vert, const std::vector<Vec3>& vertices, const std::vector<Vec2>& uvs, const std::vector<Vec3>& normals)
+void Model::ParseVert(std::vector<Vertex_NPXYZ_UV>& verts, const std::string& vert, const std::vector<Vec3>& vertices, const std::vector<Vec2>& uvs, const std::vector<Vec3>& normals)
 {
     std::vector<std::string> vertIndices = SplitPath(vert);
     
@@ -154,15 +154,15 @@ void Model::ParseVert(std::vector<Vertex>& verts, const std::string& vert, const
     Vec2 uv = uvs[uvIndex-1];
     Vec3 normal = normals[normalIndex-1];
     
-    Vertex vertex;
-    vertex._Position[0] = pos[0];
-    vertex._Position[1] = pos[1];
-    vertex._Position[2] = pos[2];
-    vertex._UV[0] = uv[0];
-    vertex._UV[1] = 1.f-uv[1];
-    vertex._Normal[0] = normal[0];
-    vertex._Normal[1] = normal[1];
-    vertex._Normal[2] = normal[2];
+    Vertex_NPXYZ_UV vertex;
+    vertex.position[0] = pos[0];
+    vertex.position[1] = pos[1];
+    vertex.position[2] = pos[2];
+    vertex.uv[0] = uv[0];
+    vertex.uv[1] = 1.f-uv[1];
+    vertex.normal[0] = normal[0];
+    vertex.normal[1] = normal[1];
+    vertex.normal[2] = normal[2];
     
     verts.push_back(vertex);
 }
@@ -323,10 +323,10 @@ bool ModelRenderer::Render(const std::string& modelName, const std::string& text
     glBindBuffer(GL_ARRAY_BUFFER, model->_VertexBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model->_IndexBuffer);
     
-    GLsizei stride = sizeof(Vertex);
-    glVertexPointer(3, GL_FLOAT, stride, (void*)offsetof(Vertex, _Position));
-    glNormalPointer(GL_FLOAT, stride, (void*)offsetof(Vertex, _Normal));
-    glTexCoordPointer(2, GL_FLOAT, stride, (void*)offsetof(Vertex, _UV));
+    GLsizei stride = sizeof(Vertex_NPXYZ_UV);
+    glVertexPointer(3, GL_FLOAT, stride, (void*)offsetof(Vertex_NPXYZ_UV, position));
+    glNormalPointer(GL_FLOAT, stride, (void*)offsetof(Vertex_NPXYZ_UV, normal));
+    glTexCoordPointer(2, GL_FLOAT, stride, (void*)offsetof(Vertex_NPXYZ_UV, uv));
     
     glDrawElements(GL_TRIANGLES, model->_NumVertices, GL_UNSIGNED_SHORT, (void*)0);
     
