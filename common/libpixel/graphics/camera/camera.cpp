@@ -20,7 +20,7 @@ void Camera::ApplyTransform()
     
     glScalef(ScreenHelpers::GetWorldScale()[0] * ScreenHelpers::GetAspectRatio(), ScreenHelpers::GetWorldScale()[1], 1.f);
 	
-    glTranslatef(Position[0], Position[1], 0.f);
+    glTranslatef(-Position[0], -Position[1], 0.f);
 }
 
 }
