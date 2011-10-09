@@ -15,7 +15,7 @@ PrimitiveRenderer::~PrimitiveRenderer()
     
 }
     
-void PrimitiveRenderer::RenderEllipse(Vec2 position, Vec2 size, Vec3 rotation, Vec3 colour)
+void PrimitiveRenderer::RenderEllipse(Vec2 position, Vec2 size, Vec3 rotation, Vec3 colour, int segments)
 {
     glPushMatrix();
     
@@ -26,12 +26,12 @@ void PrimitiveRenderer::RenderEllipse(Vec2 position, Vec2 size, Vec3 rotation, V
     glRotatef(rotation[2], 0, 0, 1);
     glColor4f(colour[0], colour[1], colour[2], 1.f);
     
-    GLfloat glVertices[64];
+    GLfloat glVertices[segments*2];
     
     float angle = 0;
-    for (int i=0; i<64; i+=2)
+    for (int i=0; i<segments*2; i+=2)
     {
-        angle += M_PI/16;
+        angle += M_PI/(segments/2);
         
         glVertices[i] = cos(angle);
         glVertices[i+1] = sin(angle);
@@ -42,7 +42,7 @@ void PrimitiveRenderer::RenderEllipse(Vec2 position, Vec2 size, Vec3 rotation, V
     glEnableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     
-    glDrawArrays(GL_LINE_LOOP, 0, 32);
+    glDrawArrays(GL_LINE_LOOP, 0, segments);
     
     glPopMatrix();
 }
