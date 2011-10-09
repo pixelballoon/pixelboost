@@ -153,6 +153,15 @@ template<class Value>
     };
 
 template<class Value>
+    inline Value Mod(Value x, Value divider)
+    {
+        int d;
+        d = x / divider;
+        
+        return(x - d * divider);
+    };
+
+template<class Value>
     inline Value sqr(Value x)
     {
         return(x * x);
