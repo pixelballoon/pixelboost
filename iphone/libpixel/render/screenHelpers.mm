@@ -45,11 +45,6 @@ bool IsFastDevice()
     
     return true;
 }
-    
-bool UseHdGraphics()
-{
-    return Game::Instance()->UseHdGraphics();
-}
 
 bool IsHighResolution()
 {

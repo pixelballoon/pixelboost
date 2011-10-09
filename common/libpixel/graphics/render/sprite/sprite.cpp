@@ -20,7 +20,7 @@ bool SpriteSheet::Load(const std::string& name, bool generateMips)
 {
     std::string fileRoot = FileHelpers::GetRootPath();
     
-    std::string jsonFilename = fileRoot + "/data/spritesheets/" + name + (ScreenHelpers::IsHighResolution() && ScreenHelpers::UseHdGraphics() ? "-hd" : "") + ".json";
+    std::string jsonFilename = fileRoot + "/data/spritesheets/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".json";
     
     std::string rootData = FileHelpers::FileToString(jsonFilename);
     
@@ -65,12 +65,10 @@ bool SpriteSheet::Load(const std::string& name, bool generateMips)
         
         sprite->_Rotated = rotated.Value();
         
-        sprite->_Scale = (ScreenHelpers::IsHighResolution() && !ScreenHelpers::UseHdGraphics()) ? Vec2(2, 2) : Vec2(1,1);
-        
         _Sprites[name.substr(0, name.length()-4)] = sprite;
     }
     
-    _Texture = LoadTexture(fileRoot + "/data/spritesheets/images/" + name + (ScreenHelpers::IsHighResolution() && ScreenHelpers::UseHdGraphics() ? "-hd" : "") + ".png", generateMips);
+    _Texture = LoadTexture(fileRoot + "/data/spritesheets/images/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".png", generateMips);
     
     return (_Texture != 0);
 }

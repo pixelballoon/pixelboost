@@ -143,11 +143,6 @@ float Game::GetTotalTime()
     return _TotalTime;
 }
     
-bool Game::UseHdGraphics()
-{
-    return true;
-}
-    
 bool Game::IsLandscape()
 {
     return false;

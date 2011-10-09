@@ -42,8 +42,6 @@ public:
     Vec2 _Size;
     Vec2 _Position;
     bool _Rotated;
-    
-    Vec2 _Scale;
 };
     
 }

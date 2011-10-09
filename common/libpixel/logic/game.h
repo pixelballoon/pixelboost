@@ -47,7 +47,6 @@ public:
     float GetGameTime();
     float GetTotalTime();
     
-    virtual bool UseHdGraphics();
     virtual bool IsLandscape();
 	
 	virtual void Update(float time);

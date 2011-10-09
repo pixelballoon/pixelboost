@@ -11,7 +11,6 @@ namespace ScreenHelpers
 
 bool IsLandscape();
 bool IsFastDevice();
-bool UseHdGraphics();
 bool IsHighResolution();
 float GetAspectRatio();
 Vec2 GetScreenResolution();
