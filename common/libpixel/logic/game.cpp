@@ -47,7 +47,9 @@ Game::Game(void* viewController)
     _DebugNetworkManager->StartServer(6996, 1);
 #endif
     
+#ifndef LIBPIXEL_DISABLE_GAMECENTER
     _GameCenter->Connect();
+#endif
 }
 
 Game::~Game()
