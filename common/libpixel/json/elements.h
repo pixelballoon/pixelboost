@@ -13,8 +13,6 @@ Author: Terry Caton
 #include <stdexcept>
 #include <vector>
 
-#include "libpixel/os/definitions.h"
-
 /*  
 
 TODO:

@@ -8,8 +8,6 @@ Author: Terry Caton
 
 #include <set>
 
-#include "libpixel/os/definitions.h"
-
 /*  
 
 TODO:

@@ -1,5 +1,4 @@
 #include "libpixel/file/fileHelpers.h"
-#include "libpixel/os/definitions.h"
 
 namespace libpixel
 {
