@@ -1327,11 +1327,11 @@ static int64_t push(FILE *fp, SOCKET sock, SSL *ssl, const char *buf,
     if (ssl != NULL) {
       n = SSL_write(ssl, buf + sent, k);
     } else if (fp != NULL) {
-      n = fwrite(buf + sent, 1, (size_t)k, fp);
+      n = (int)fwrite(buf + sent, 1, (size_t)k, fp);
       if (ferror(fp))
         n = -1;
     } else {
-      n = send(sock, buf + sent, (size_t)k, 0);
+      n = (int)send(sock, buf + sent, (size_t)k, 0);
     }
 
     if (n < 0)
@@ -1354,11 +1354,11 @@ static int pull(FILE *fp, SOCKET sock, SSL *ssl, char *buf, int len) {
     // Use read() instead of fread(), because if we're reading from the CGI
     // pipe, fread() may block until IO buffer is filled up. We cannot afford
     // to block and must pass all read bytes immediately to the client.
-    nread = read(fileno(fp), buf, (size_t) len);
+    nread = (int)read(fileno(fp), buf, (size_t) len);
     if (ferror(fp))
       nread = -1;
   } else {
-    nread = recv(sock, buf, (size_t) len, 0);
+    nread = (int)recv(sock, buf, (size_t) len, 0);
   }
 
   return nread;
@@ -1390,7 +1390,7 @@ int mg_read(struct mg_connection *conn, void *buf, size_t len) {
     if (conn->consumed_content < (int64_t) buffered_len) {
       buffered_len -= (int) conn->consumed_content;
       if (len < (size_t) buffered_len) {
-        buffered_len = len;
+        buffered_len = (int)len;
       }
       memcpy(buf, buffered, (size_t)buffered_len);
       len -= buffered_len;
@@ -1499,7 +1499,7 @@ int mg_get_var(const char *buf, size_t buf_len, const char *name,
     }
   }
 
-  return len;
+  return (int)len;
 }
 
 int mg_get_cookie(const struct mg_connection *conn, const char *cookie_name,
@@ -1512,7 +1512,7 @@ int mg_get_cookie(const struct mg_connection *conn, const char *cookie_name,
     return 0;
   }
 
-  name_len = strlen(cookie_name);
+  name_len = (int)strlen(cookie_name);
   end = s + strlen(s);
 
   for (; (s = strstr(s, cookie_name)) != NULL; s += name_len)
@@ -1527,7 +1527,7 @@ int mg_get_cookie(const struct mg_connection *conn, const char *cookie_name,
         p--;
       }
       if ((size_t) (p - s) < dst_size) {
-        len = (p - s) + 1;
+        len = (int)(p - s) + 1;
         mg_strlcpy(dst, s, (size_t)len);
       }
       break;
@@ -1552,7 +1552,7 @@ static int get_document_root(const struct mg_connection *conn,
   while ((root = next_option(root, &uri_vec, &path_vec)) != NULL) {
     if (memcmp(uri, uri_vec.ptr, uri_vec.len) == 0) {
       *document_root = path_vec;
-      len_of_matched_uri = uri_vec.len;
+      len_of_matched_uri = (int)uri_vec.len;
       break;
     }
   }
@@ -2487,7 +2487,7 @@ static void send_file_data(struct mg_connection *conn, FILE *fp, int64_t len) {
       to_read = (int) len;
 
     // Read from file, exit the loop on error
-    if ((num_read = fread(buf, 1, (size_t)to_read, fp)) == 0)
+    if ((num_read = (int)fread(buf, 1, (size_t)to_read, fp)) == 0)
       break;
 
     // Send read bytes to the client, exit the loop on error
@@ -3229,7 +3229,7 @@ static void handle_request(struct mg_connection *conn) {
   if ((conn->request_info.query_string = strchr(ri->uri, '?')) != NULL) {
     * conn->request_info.query_string++ = '\0';
   }
-  uri_len = strlen(ri->uri);
+  uri_len = (int)strlen(ri->uri);
   (void) url_decode(ri->uri, (size_t)uri_len, ri->uri, (size_t)(uri_len + 1), 0);
   remove_double_dots_and_double_slashes(ri->uri);
   convert_uri_to_file_name(conn, ri->uri, path, sizeof(path));
