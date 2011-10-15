@@ -10,7 +10,7 @@ namespace libpixel
 DebugVariableManager* DebugVariableManager::_Instance = 0;
 
 DebugVariableManager::DebugVariableManager()
-    : DebugNetworkHandler('dbvs')
+    : NetworkHandler('dbvs')
 {
     
 }
@@ -44,9 +44,9 @@ void DebugVariableManager::VariableChanged(DebugVariable* variable)
     
 void DebugVariableManager::SendValue(DebugVariable* variable)
 {
-    DebugNetworkManager* networkManager = DebugNetworkManager::Instance();
+    NetworkServer* networkServer = NetworkServer::Instance();
     
-    if (!networkManager)
+    if (!networkServer)
         return;
     
     NetworkMessage message;
@@ -95,7 +95,7 @@ void DebugVariableManager::SendValue(DebugVariable* variable)
             break;
     }
     
-    networkManager->SendMessage(message);
+    networkServer->SendMessage(message);
 }
     
 const DebugVariableManager::VariableMap& DebugVariableManager::GetVariables() const
@@ -103,7 +103,7 @@ const DebugVariableManager::VariableMap& DebugVariableManager::GetVariables() co
     return _Variables;
 }
 
-void DebugVariableManager::OnReceive(DebugConnection& connection, NetworkMessage& message)
+void DebugVariableManager::OnReceive(NetworkConnection& connection, NetworkMessage& message)
 {
     const char* command;
     if (!message.ReadString(command))

@@ -1,5 +1,5 @@
-#ifndef LIBPIXEL__DEBUG__DEBUGNETWORKMANAGER__H
-#define LIBPIXEL__DEBUG__DEBUGNETWORKMANAGER__H
+#ifndef LIBPIXEL__NETWORK__NETWORKSERVER__H
+#define LIBPIXEL__NETWORK__NETWORKSERVER__H
 
 #include <map>
 #include <queue>
@@ -7,32 +7,32 @@
 
 namespace libpixel
 {
-    class DebugConnection;
-    class DebugNetworkManager;
+    class NetworkConnection;
     class NetworkMessage;
+    class NetworkServer;
     
-    class DebugNetworkHandler
+    class NetworkHandler
     {
     public:
-        DebugNetworkHandler(int protocol);
-        virtual ~DebugNetworkHandler();
+        NetworkHandler(int protocol);
+        virtual ~NetworkHandler();
         
         int GetProtocol();
-
-        virtual void OnConnectionOpened(DebugConnection& connection);
-        virtual void OnConnectionClosed(DebugConnection& connection);
         
-        virtual void OnReceive(DebugConnection& connection, NetworkMessage& message);
+        virtual void OnConnectionOpened(NetworkConnection& connection);
+        virtual void OnConnectionClosed(NetworkConnection& connection);
+        
+        virtual void OnReceive(NetworkConnection& connection, NetworkMessage& message);
         
     private:
         int _Protocol;
     };
     
-    class DebugConnection
+    class NetworkConnection
     {
     public:
-        DebugConnection(DebugNetworkManager* networkManager);
-        ~DebugConnection();
+        NetworkConnection(NetworkServer* networkManager);
+        ~NetworkConnection();
         
         void Close();
         
@@ -50,7 +50,7 @@ namespace libpixel
         
         void SetConnection(int connection);
         
-        DebugNetworkManager* _NetworkManager;
+        NetworkServer* _NetworkManager;
         
         bool _IsReading;
         bool _IsOpen;
@@ -67,16 +67,16 @@ namespace libpixel
         int _RecvOffset;
         int _RecvLength;
         
-        friend class DebugNetworkManager;
+        friend class NetworkServer;
     };
     
-    class DebugNetworkManager
+    class NetworkServer
     {
     public:
-        DebugNetworkManager();
-        ~DebugNetworkManager();
+        NetworkServer();
+        ~NetworkServer();
         
-        static DebugNetworkManager* Instance();
+        static NetworkServer* Instance();
         
         void StartServer(int port, int maxConnections=8);
         void StopServer();
@@ -84,22 +84,22 @@ namespace libpixel
         void OpenClient(const char* host, int port);
         void CloseClient();
         
-        DebugConnection& GetClientConnection();
+        NetworkConnection& GetClientConnection();
         
         void Update();
         
-        bool RegisterHandler(DebugNetworkHandler* handler);
+        bool RegisterHandler(NetworkHandler* handler);
         
         void SendMessage(NetworkMessage& message);
         
     private:
-        void ConnectionOpened(DebugConnection& connection);
-        void ConnectionClosed(DebugConnection& connection);
-        void HandleMessage(DebugConnection& connection, NetworkMessage& message);
+        void ConnectionOpened(NetworkConnection& connection);
+        void ConnectionClosed(NetworkConnection& connection);
+        void HandleMessage(NetworkConnection& connection, NetworkMessage& message);
         
     private:
-        typedef std::map<int, DebugNetworkHandler*> HandlerMap;
-        typedef std::vector<DebugConnection*> ConnectionList;
+        typedef std::map<int, NetworkHandler*> HandlerMap;
+        typedef std::vector<NetworkConnection*> ConnectionList;
         
     private:
         enum State
@@ -126,14 +126,14 @@ namespace libpixel
         char* _ClientHost;
         int _ClientPort;
         
-        DebugConnection* _ClientConnection;
+        NetworkConnection* _ClientConnection;
         ConnectionList _ServerConnections;
         
         int _MaxConnections;
         
-        static DebugNetworkManager* _Instance;
+        static NetworkServer* _Instance;
         
-        friend class DebugConnection;
+        friend class NetworkConnection;
     };
     
 }

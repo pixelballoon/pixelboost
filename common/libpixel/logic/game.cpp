@@ -1,5 +1,4 @@
 #include "libpixel/audio/soundManager.h"
-#include "libpixel/debug/debugNetworkManager.h"
 #include "libpixel/debug/debugVariableManager.h"
 #include "libpixel/graphics/device/device.h"
 #include "libpixel/graphics/render/font/fontRenderer.h"
@@ -10,6 +9,7 @@
 #include "libpixel/logic/game.h"
 #include "libpixel/logic/screen.h"
 #include "libpixel/network/gameCenter.h"
+#include "libpixel/network/networkServer.h"
 #include "libpixel/resource/resourceManager.h"
 
 namespace libpixel
@@ -23,10 +23,6 @@ Game::Game(void* viewController)
     , _ViewController(viewController)
 {
     _Instance = this;
-    
-#ifndef LIBPIXEL_DISABLE_DEBUG
-    _DebugNetworkManager = new DebugNetworkManager();
-#endif
 
     _ResourceManager = new ResourceManager();
     _TouchManager = new TouchManager();
@@ -40,12 +36,6 @@ Game::Game(void* viewController)
     _SpriteRenderer = new SpriteRenderer();
     
     _SoundManager = new SoundManager();
-
-#ifndef LIBPIXEL_DISABLE_DEBUG
-    _DebugNetworkManager->RegisterHandler(DebugVariableManager::Instance());
-
-    _DebugNetworkManager->StartServer(6996, 1);
-#endif
     
 #ifndef LIBPIXEL_DISABLE_GAMECENTER
     _GameCenter->Connect();
@@ -54,17 +44,7 @@ Game::Game(void* viewController)
 
 Game::~Game()
 {
-#ifndef LIBPIXEL_DISABLE_DEBUG
-    _DebugNetworkManager->StopServer();
-    
-    delete DebugVariableManager::Instance();
-#endif
-
     _Instance = 0;
-	
-#ifndef LIBPIXEL_DISABLE_DEBUG
-    delete _DebugNetworkManager;
-#endif
 
     delete _FontRenderer;
     delete _GameCenter;
@@ -85,13 +65,6 @@ void Game::Initialise()
 {
 
 }
-
-#ifndef LIBPIXEL_DISABLE_DEBUG
-DebugNetworkManager* Game::GetDebugNetworkManager() const
-{
-    return _DebugNetworkManager;
-}
-#endif
     
 FontRenderer* Game::GetFontRenderer() const
 {
@@ -152,10 +125,6 @@ void Game::Update(float time)
 {
     _GameTime += time;
     _TotalTime += time;
-    
-#ifndef LIBPIXEL_DISABLE_DEBUG
-    _DebugNetworkManager->Update();
-#endif
 }
 
 void Game::Render()

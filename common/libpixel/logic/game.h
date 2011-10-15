@@ -6,10 +6,6 @@
 namespace libpixel
 {
 
-#ifndef LIBPIXEL_DISABLE_DEBUG
-class DebugNetworkManager;
-#endif
-
 class FontRenderer;
 class GameCenter;
 class GraphicsDevice;
@@ -30,10 +26,6 @@ public:
 	static Game* Instance();
 	
 	virtual void Initialise();
-
-#ifndef LIBPIXEL_DISABLE_DEBUG
-    DebugNetworkManager* GetDebugNetworkManager() const;
-#endif
 
     FontRenderer* GetFontRenderer() const;
     GameCenter* GetGameCenter() const;
@@ -56,10 +48,6 @@ public:
 	
 private:
 	static Game* _Instance;
-	
-#ifndef LIBPIXEL_DISABLE_DEBUG
-    DebugNetworkManager* _DebugNetworkManager;
-#endif
 
     FontRenderer* _FontRenderer;
     GameCenter* _GameCenter;

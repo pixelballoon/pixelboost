@@ -4,14 +4,14 @@
 #include <map>
 #include <string>
 
-#include "libpixel/debug/debugNetworkManager.h"
+#include "libpixel/network/networkServer.h"
 
 namespace libpixel
 {
     
 class DebugVariable;
 
-class DebugVariableManager : public DebugNetworkHandler
+class DebugVariableManager : public NetworkHandler
 {
 public:
     DebugVariableManager();
@@ -27,7 +27,7 @@ private:
     void VariableChanged(DebugVariable* variable);
     void SendValue(DebugVariable* variable);
     
-    virtual void OnReceive(DebugConnection& connection, NetworkMessage& message);
+    virtual void OnReceive(NetworkConnection& connection, NetworkMessage& message);
     
     const VariableMap& GetVariables() const;
 #endif
