@@ -149,7 +149,7 @@ bool NetworkMessage::WriteFloat(float value)
 
 bool NetworkMessage::WriteString(const char* value)
 {
-    int length = strlen(value);
+    int length = static_cast<int>(strlen(value));
     
     if (!HasRemaining(length + 5))
         return false;

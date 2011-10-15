@@ -124,7 +124,7 @@ namespace libpixel
             
             if (_SendLength)
             {
-                int sendLength = send(_Connection, &_SendBuffer[_SendOffset], _SendLength, 0);
+                int sendLength = static_cast<int>(send(_Connection, &_SendBuffer[_SendOffset], _SendLength, 0));
                 
                 if (sendLength <= 0)
                     return;
@@ -157,7 +157,7 @@ namespace libpixel
                 maxRecv = 4;
             }
             
-            int recvLength = recv(_Connection, &_RecvBuffer[_RecvOffset], maxRecv, 0);
+            int recvLength = static_cast<int>(recv(_Connection, &_RecvBuffer[_RecvOffset], maxRecv, 0));
             
             if (recvLength == 0)
             {
