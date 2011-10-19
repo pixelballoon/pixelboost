@@ -14,8 +14,6 @@
 
 #define LIBPIXEL__MATH__COMPILEGUARD
 
-using namespace std;
-
 #include "basics.h"
 #include "constants.h"
 #include "utils.h"
