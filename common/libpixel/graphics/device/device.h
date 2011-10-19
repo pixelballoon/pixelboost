@@ -4,7 +4,6 @@
 namespace libpixel
 {
 
-class GraphicsDevice;
 class VertexBuffer;
 
 class GraphicsDevice
