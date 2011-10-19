@@ -1,8 +1,9 @@
-#ifndef LIBPIXEL__GRAPHICS__DEVICE__GLES1__VERTEXBUFFERGLES1__H
-#define LIBPIXEL__GRAPHICS__DEVICE__GLES1__VERTEXBUFFERGLES1__H
+#pragma once
 
 namespace libpixel
 {
+    
+class GraphicsDevice;
 
 enum BufferFormat
 {
@@ -32,9 +33,10 @@ struct Vertex_NPXYZ_UV
 
 class VertexBuffer
 {
-public:
-    VertexBuffer(BufferFormat bufferFormat, VertexFormat vertexFormat, int numElements);
+protected:
+    VertexBuffer(GraphicsDevice* device, BufferFormat bufferFormat, VertexFormat vertexFormat, int numElements);
     
+public:    
     void* Lock();
     void Unlock();
     
@@ -42,13 +44,14 @@ public:
     virtual void RefillVertexBuffer();
     
 private:
+    GraphicsDevice* _Device;
+    
     BufferFormat _BufferFormat;
     VertexFormat _VertexFormat;
     int _NumElements;    
     
-    friend class Device;
+    friend class GraphicsDevice;
+    friend class GraphicsDeviceGLES1;
 };
 
 }
-
-#endif

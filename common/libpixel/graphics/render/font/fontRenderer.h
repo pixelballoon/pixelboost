@@ -11,6 +11,8 @@ class Font;
 
 namespace libpixel
 {
+    
+class Texture;
 
 enum FontAlign
 {
@@ -40,6 +42,23 @@ public:
     bool AttachToRenderer(const std::string& fontName, const std::string& string, Vec2 position, FontAlign alignment = kFontAlignCenter, float rotation = 0.f, float scale = 1.f);
     
 private:
+    struct Font
+    {
+        Font();
+        ~Font();
+        
+        struct Character
+        {
+            float size;
+            float offset;
+        };
+        
+        typedef std::map<char, Character> CharacterMap;
+        
+        CharacterMap characterMap;
+        Texture* texture;
+    };
+    
     typedef std::map<std::string, Font*> FontMap;
     typedef std::list<FontInstance> InstanceList;
     

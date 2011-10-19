@@ -3,7 +3,8 @@
 namespace libpixel
 {
 
-VertexBuffer::VertexBuffer(BufferFormat bufferFormat, VertexFormat vertexFormat, int numElements)
+VertexBuffer::VertexBuffer(GraphicsDevice* device, BufferFormat bufferFormat, VertexFormat vertexFormat, int numElements)
+    : _Device(device)
 {
     
 }
