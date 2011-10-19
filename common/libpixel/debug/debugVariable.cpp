@@ -87,7 +87,7 @@ DebugString::operator const char*() const
     
 void DebugString::SetValue(const char* value)
 {
-    int len = strlen(value);
+    int len = static_cast<int>(strlen(value));
     
     delete[] _Value;
     _Value = new char[len+1];

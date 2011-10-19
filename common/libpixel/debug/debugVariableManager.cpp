@@ -114,7 +114,7 @@ void DebugVariableManager::OnReceive(NetworkConnection& connection, NetworkMessa
         NetworkMessage reply;
         reply.SetProtocol('dbvr');
         reply.WriteString("varlist");
-        reply.WriteInt(_Variables.size());
+        reply.WriteInt(static_cast<int>(_Variables.size()));
         
         for (VariableMap::const_iterator it = _Variables.begin(); it != _Variables.end(); ++it)
         {
