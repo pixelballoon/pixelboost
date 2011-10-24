@@ -4,17 +4,22 @@
 #include <map>
 #include <string>
 
-#include "libpixel/network/networkServer.h"
+#include "libpixel/network/http/httpServer.h"
+
+namespace json
+{
+    class Object;
+}
 
 namespace libpixel
 {
     
 class DebugVariable;
 
-class DebugVariableManager : public NetworkHandler
+class DebugVariableManager : public HttpServer
 {
 public:
-    DebugVariableManager();
+    DebugVariableManager(const std::string& htmlLocation = "libpixel/debug/html");
     ~DebugVariableManager();
     
     static DebugVariableManager* Instance();
@@ -24,10 +29,12 @@ private:
     typedef std::map<std::string, DebugVariable*> VariableMap;
     
     void AddVariable(DebugVariable* variable);
-    void VariableChanged(DebugVariable* variable);
     void SendValue(DebugVariable* variable);
     
-    virtual void OnReceive(NetworkConnection& connection, NetworkMessage& message);
+    virtual bool OnHttpRequest(RequestType type, const std::string& uri, const std::string& query, const std::string& data, HttpConnection& connection);
+    
+    void OnGetVariables(HttpConnection& connection);
+    void OnSetVariable(HttpConnection& connection, DebugVariable* variable, json::Object& params);
     
     const VariableMap& GetVariables() const;
 #endif

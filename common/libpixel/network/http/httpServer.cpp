@@ -23,16 +23,25 @@ static void* MongooseCallback(enum mg_event event, struct mg_connection *conn, c
                 requestType = HttpServer::kRequestTypePost;
             else if (strcmp(requestInfo->request_method, "DELETE") == 0)
                 requestType = HttpServer::kRequestTypeDelete;
+      
+            char dataString[8192];
+            int read = mg_read(conn, dataString, 8192);
+            dataString[read] = 0;
+            
             
             HttpConnection connection(conn);
-            server->OnHttpRequest(requestType, requestInfo->uri, requestInfo->query_string, connection);
+            if (server->OnHttpRequest(requestType, requestInfo->uri, requestInfo->query_string ? requestInfo->query_string : "", dataString, connection))
+                return (void*)1;
             
             break;
         }
             
+        case MG_EVENT_LOG:
+            printf("%s", requestInfo->log_message);
+            break;
+            
         // Don't handle these for now
         case MG_HTTP_ERROR: 
-        case MG_EVENT_LOG:
         case MG_INIT_SSL:
             break;
     }
@@ -43,7 +52,7 @@ static void* MongooseCallback(enum mg_event event, struct mg_connection *conn, c
 libpixel::HttpConnection::HttpConnection(mg_connection* connection)
     : _Connection(connection)
 {
-
+    _Data = "HTTP/1.1 200 OK\r\n";
 }
 
 libpixel::HttpConnection::~HttpConnection()
@@ -51,14 +60,14 @@ libpixel::HttpConnection::~HttpConnection()
     
 }
 
-void libpixel::HttpConnection::SetHeader(const std::string& contentType)
+void libpixel::HttpConnection::AddHeader(const std::string& headerName, const std::string& headerValue)
 {
-    _Data += "HTTP/1.1 200 OK\n";
-    _Data += "Content-Type: " + contentType + "\n";
+    _Data += headerName + ": " + headerValue + "\r\n";
 }
 
-void libpixel::HttpConnection::Write(const std::string& data)
+void libpixel::HttpConnection::SetContent(const std::string& data)
 {
+    _Data += "\r\n";
     _Data += data;
 }
 
@@ -78,17 +87,31 @@ libpixel::HttpServer::~HttpServer()
 
 }
 
-void libpixel::HttpServer::Start(int port)
+void libpixel::HttpServer::Start(int port, const std::string& documentRoot)
 {
     if (_Context != 0)
         return;
     
-    const char *options[] = {
-        "listening_ports", "80,443s",
-        0
-    };
+    char portString[128]; // "80,443s"
+    sprintf(portString, "%d", port);
     
-    _Context = mg_start(&MongooseCallback, this, options);    
+    if (documentRoot == "")
+    {
+        const char *options[] = {
+            "listening_ports", portString,
+            0
+        };
+    
+        _Context = mg_start(&MongooseCallback, this, options);
+    } else {
+        const char *options[] = {
+            "listening_ports", portString,
+            "document_root", documentRoot.c_str(),
+            0
+        };
+        
+        _Context = mg_start(&MongooseCallback, this, options);
+    }
 }
                         
 void libpixel::HttpServer::Stop()
@@ -102,9 +125,7 @@ void libpixel::HttpServer::Update()
     
 }
 
-void libpixel::HttpServer::OnHttpRequest(RequestType type, const std::string& uri, const std::string& query, HttpConnection connection)
+bool libpixel::HttpServer::OnHttpRequest(RequestType type, const std::string& uri, const std::string& query, const std::string& data, HttpConnection& connection)
 {
-    connection.SetHeader("text/json");
-    connection.Write("{ \"type\" : \"hello\" }");
-    connection.Send();
+    return false;
 }

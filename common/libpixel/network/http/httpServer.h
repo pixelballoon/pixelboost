@@ -14,8 +14,8 @@ namespace libpixel
         HttpConnection(mg_connection* connection);
         ~HttpConnection();
         
-        void SetHeader(const std::string& contentType);
-        void Write(const std::string& data);
+        void AddHeader(const std::string& headerName, const std::string& headerValue);
+        void SetContent(const std::string& data);
         
         void Send();
         
@@ -39,12 +39,12 @@ namespace libpixel
         HttpServer();
         ~HttpServer();
         
-        void Start(int port);
+        void Start(int port, const std::string& documentRoot = "");
         void Stop();
         
         void Update();
         
-        virtual void OnHttpRequest(RequestType type, const std::string& uri, const std::string& query, HttpConnection connection);
+        virtual bool OnHttpRequest(RequestType type, const std::string& uri, const std::string& query, const std::string& data, HttpConnection& connection);
         
     private:
         mg_context* _Context;

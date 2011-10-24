@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+	<head>
+  	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <link type="text/css" href="css/smoothness/jquery-ui-1.8.16.custom.css" rel="Stylesheet" />	
+    <link type="text/css" href="css/theme.css" rel="Stylesheet"/>
+    <script type="text/javascript" src="js/jquery-1.6.4.min.js"></script>
+    <script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
+    <script type="text/javascript" src="js/debugscope.js"></script>
+    <script type="text/javascript">
+      var ajaxPrefix = 'http://127.0.0.1:9091/'; // For development
+      //var ajaxPrefix = ''; // For deployment
+      
+      function sendVariable(type, name)
+      {
+        var data = "{}";
+      
+      	switch (type)
+      	{
+      		case 'bool':
+            data = '{ "value" : ' + $("#"+name+"_button").val() + ' }';
+            break;
+              	
+          case 'int':
+          case 'float':
+            data = '{ "value" : ' + $("#"+name+"_value").val() + ' }';
+            break;
+          		
+          case 'color':
+            data = '{ "value" : { "r" : ' + $("#"+name+"_r").val() + ', "g" : ' + $("#"+name+"_g").val() + ', "b" : ' + $("#"+name+"_b").val() + ', "a" : ' + $("#"+name+"_a").val() + '} }';
+            break;
+          		
+          case 'string':
+            data = '{ "value" : "' + $("#"+name+"_value").val() + '" }';
+            break;
+        }
+      
+        jQuery.ajax({
+          type: 'PUT',
+          url: ajaxPrefix+'setVariable/'+name+'/',
+          contentType: 'application/json',
+          data: data,
+          processData: false       	
+        });
+      }
+    
+      $(function(){
+        $.getJSON(ajaxPrefix+'getVariables/', function(data) {
+          var items = [];
+          
+          var strings = [];
+          var numbers = [];
+          var bools = [];
+          var functions = [];
+          var colors = [];
+        
+          $.each(data, function(key, val) {
+          	var variable = val["name"];
+          	
+          	var contents = "<p class='variableTitle'>" + variable + "</p>";
+            
+            switch (val["type"])
+            {
+            case 'bool':
+            	bools.push({key: key, value: val["value"]});
+            	contents += "<input type='checkbox' class='variableButton' id='"+variable+"_button'/><label for='"+variable+"_button'>Check</label>";
+            	break;
+          	case 'function':
+          		functions.push(key);
+          		contents += "<button class='variableButton' id='"+variable+"_button'>Activate</button>";
+          		break;
+            case 'string':
+              strings.push(key);
+              contents += "<textarea class='stringText' rows='1' id='"+variable+"_value'>"+val["value"]+"</textarea>";
+              break;
+            case 'int':
+            case 'float':
+              numbers.push(key);
+              // Round to 3 s.f.
+            	var value = val["type"] == "float" ? Math.round(val["value"]*1000)/1000 : val["value"];
+              contents += "<textarea class ='variableText' id='"+variable+"_value' rows='1'>"+value+"</textarea>";
+              contents += "<div class='variableSlider' id='"+variable+"_slider'></div>";
+              break;
+            case 'color':
+            	colors.push(key);
+            	contents += "<textarea class ='variableText' id='"+variable+"_r' rows='1'>"+val["value"]["r"]+"</textarea>";
+            	contents += "<textarea class ='variableText' id='"+variable+"_g' rows='1'>"+val["value"]["g"]+"</textarea>";
+            	contents += "<textarea class ='variableText' id='"+variable+"_b' rows='1'>"+val["value"]["b"]+"</textarea>";
+            	contents += "<textarea class ='variableText' id='"+variable+"_a' rows='1'>"+val["value"]["a"]+"</textarea>";
+           		break;
+            }
+            
+            items.push('<li class="variableItem" id="' + variable + '">' + contents + '</li>');
+          });
+        
+          $('<ul/>', {
+          	'class': 'variables',
+            html: items.join('')
+          }).appendTo('#content');
+          
+          $.each(strings, function(key, val) {
+            $("#"+data[val]["name"]+"_value").keyup(function() {sendVariable(data[val]["type"], data[val]["name"]);});
+          });
+          
+          $.each(numbers, function(key, val) {
+          	var step = 1;
+          	if (data[val]["type"] == "float")
+              	step = 0.001;
+              	
+          	var slider = $("#"+data[val]["name"]+"_slider");
+          	var text = $("#"+data[val]["name"]+"_value");
+          	
+            slider.slider({
+            	min : data[val]["min"],
+            	max : data[val]["max"],
+            	step : step,
+            	value : data[val]["value"],
+                slide : function(event, ui) {
+                	sendVariable(data[val]["type"], data[val]["name"]);
+                	$('#'+data[val]["name"]+"_value").val(ui.value);
+                },
+            	change : function(event, ui) {
+                	sendVariable(data[val]["type"], data[val]["name"]);
+                	$('#'+data[val]["name"]+"_value").val(ui.value);
+            	}
+            	});
+            	
+        	text.keyup(function() {
+        		sendVariable(data[val]["type"], data[val]["name"]);
+        		$('body').append($("#"+data[val]["name"]+"_value").val() + "<br/>");
+        		slider.slider('value', $("#"+data[val]["name"]+"_value").val());
+        	});
+          });
+          
+          $.each(colors, function(key, val) {
+              $("#"+data[val]["name"]+"_r").keyup(function() {sendVariable(data[val]["type"], data[val]["name"]);})
+              $("#"+data[val]["name"]+"_g").keyup(function() {sendVariable(data[val]["type"], data[val]["name"]);})
+              $("#"+data[val]["name"]+"_b").keyup(function() {sendVariable(data[val]["type"], data[val]["name"]);})
+              $("#"+data[val]["name"]+"_a").keyup(function() {sendVariable(data[val]["type"], data[val]["name"]);})
+          });
+          
+          $.each(bools, function(key, val) {
+            var but = $("#"+data[val.key]["name"]+"_button");
+          	but.prop('checked', val.value).button({icons: {primary: val.value ? "ui-icon-check" : "ui-icon-close"}, text: false}).val(val.value ? "true" : "false").change(function() {
+          		if (but.val() == "true")
+          		{
+              		but.button({icons: {primary: "ui-icon-close"}, text: false});
+              		but.val("false");
+          		}
+          		else
+          		{
+              		but.button({icons: {primary: "ui-icon-check"}, text: false});
+              		but.val("true");
+          		}
+              		
+          		sendVariable(data[val.key]["type"], data[val.key]["name"]);
+          	});
+          });
+          
+          $.each(functions, function(key, val) {
+          	$("#"+data[val]["name"]+"_button").button({icons: {primary: "ui-icon-play"}, text: true}).click(function() {sendVariable(data[val]["type"], data[val]["name"]);});
+          });
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <p class='header'>DebugScope</p>
+    <div id='content'></div>
+    <p class='footer'>DebugScope developed by <a href="http://www.pixelballoon.com/">Pixel Balloon</a></p>
+  </body>
+</html>

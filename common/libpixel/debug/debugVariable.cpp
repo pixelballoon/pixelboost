@@ -28,7 +28,6 @@ const char* DebugVariable::GetName() const
     
 void DebugVariable::VariableChanged()
 {
-    DebugVariableManager::Instance()->VariableChanged(this);
 }
 
 DebugBool::DebugBool(const char* name, bool value)
@@ -146,7 +145,7 @@ DebugFloat::operator float() const
     return _Value;
 }
     
-DebugColour::DebugColour(const char* name, float r, float g, float b, float a)
+DebugColor::DebugColor(const char* name, float r, float g, float b, float a)
     : DebugVariable(name)
     , _R(r)
     , _G(g)
@@ -156,32 +155,32 @@ DebugColour::DebugColour(const char* name, float r, float g, float b, float a)
     
 }
 
-DebugVariable::VariableType DebugColour::GetVariableType()
+DebugVariable::VariableType DebugColor::GetVariableType()
 {
-    return kVariableTypeColour;
+    return kVariableTypeColor;
 }
 
-float DebugColour::R()
+float DebugColor::R()
 {
     return _R;
 }
     
-float DebugColour::G()
+float DebugColor::G()
 {
     return _G;
 }
     
-float DebugColour::B()
+float DebugColor::B()
 {
     return _B;
 }
     
-float DebugColour::A()
+float DebugColor::A()
 {
     return _A;
 }
     
-void DebugColour::SetColour(float r, float g, float b, float a)
+void DebugColor::SetColor(float r, float g, float b, float a)
 {
     _R = r;
     _G = g;
@@ -190,25 +189,25 @@ void DebugColour::SetColour(float r, float g, float b, float a)
     VariableChanged();
 }
 
-void DebugColour::R(float r)
+void DebugColor::R(float r)
 {
     _R = r;
     VariableChanged();
 }
     
-void DebugColour::G(float g)
+void DebugColor::G(float g)
 {
     _G = g;
     VariableChanged();
 }
     
-void DebugColour::B(float b)
+void DebugColor::B(float b)
 {
     _B = b;
     VariableChanged();
 }
     
-void DebugColour::A(float a)
+void DebugColor::A(float a)
 {
     _A = a;
     VariableChanged();

@@ -23,7 +23,7 @@ public:
         kVariableTypeString,
         kVariableTypeInteger,
         kVariableTypeFloat,
-        kVariableTypeColour,
+        kVariableTypeColor,
         kVariableTypeFunction,
     };
     
@@ -114,10 +114,10 @@ private:
     friend class DebugVariableHandler;
 };
 
-class DebugColour : public DebugVariable
+class DebugColor : public DebugVariable
 {
 public:
-    DebugColour(const char* name, float r, float g, float b, float a);
+    DebugColor(const char* name, float r, float g, float b, float a);
     
     virtual VariableType GetVariableType();
     
@@ -126,7 +126,7 @@ public:
     float B();
     float A();
     
-    void SetColour(float r, float g, float b, float a);
+    void SetColor(float r, float g, float b, float a);
     void R(float r);
     void G(float g);
     void B(float b);
@@ -162,10 +162,10 @@ private:
     
 #else
     
-class DebugColour
+class DebugColor
 {
 public:
-    DebugColour(float r, float g, float b, float a)
+    DebugColor(float r, float g, float b, float a)
     {
         _R = r;
         _G = g;
@@ -193,7 +193,7 @@ public:
         return _A;
     }
     
-    void SetColour(float r, float g, float b, float a)
+    void SetColor(float r, float g, float b, float a)
     {
         _R = r;
         _G = g;
@@ -244,14 +244,14 @@ public:
 #define DEFINE_DEBUG_BOOL(name, location, value) libpixel::DebugBool name(location, value)
 #define DEFINE_DEBUG_INTEGER(name, location, value, min, max) libpixel::DebugInteger name(location, value, min, max)
 #define DEFINE_DEBUG_FLOAT(name, location, value, min, max) libpixel::DebugFloat name(location, value, min, max)
-#define DEFINE_DEBUG_COLOUR(name, location, r, g, b, a) libpixel::DebugColour name(location, r, g, b, a)
+#define DEFINE_DEBUG_COLOR(name, location, r, g, b, a) libpixel::DebugColor name(location, r, g, b, a)
 #define DEFINE_DEBUG_FUNCTION(name, location, callback) libpixel::DebugFunction name(location, callback)
 
 #define EXTERN_DEBUG_STRING(name) extern libpixel::DebugString name
 #define EXTERN_DEBUG_BOOL(name) extern libpixel::DebugBool name
 #define EXTERN_DEBUG_INTEGER(name) extern libpixel::DebugInteger name
 #define EXTERN_DEBUG_FLOAT(name) extern libpixel::DebugFloat name
-#define EXTERN_DEBUG_COLOUR(name) extern libpixel::DebugColour name
+#define EXTERN_DEBUG_COLOR(name) extern libpixel::DebugColor name
 #define EXTERN_DEBUG_FUNCTION(name) extern libpixel::DebugFunction name
 
 #else
@@ -260,14 +260,14 @@ public:
 #define DEFINE_DEBUG_BOOL(name, value, location) bool name=value;
 #define DEFINE_DEBUG_INTEGER(name, value, location, min, max) int name=value
 #define DEFINE_DEBUG_FLOAT(name, value, location, min, max) float name=value
-#define DEFINE_DEBUG_COLOUR(name, location, r, g, b, a) libpixel::DebugColour name(location, r, g, b, a)
+#define DEFINE_DEBUG_COLOR(name, location, r, g, b, a) libpixel::DebugColor name(location, r, g, b, a)
 #define DEFINE_DEBUG_FUNCTION(name, location, callback) libpixel::DebugFunction name()
 
 #define EXTERN_DEBUG_STRING(name) extern const char* name
 #define EXTERN_DEBUG_BOOL(name) extern bool name
 #define EXTERN_DEBUG_INTEGER(name) extern int name
 #define EXTERN_DEBUG_FLOAT(name) extern float name
-#define EXTERN_DEBUG_COLOUR(name) extern libpixel::DebugColour name
+#define EXTERN_DEBUG_COLOR(name) extern libpixel::DebugColor name
 #define EXTERN_DEBUG_FUNCTION(name) extern libpixel::DebugFunction name
 
 #endif
