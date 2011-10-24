@@ -1,9 +1,10 @@
-#ifndef LIBPIXEL__GRAPHICS__DEVICE__GLES1__DEVICEGLES1__H
-#define LIBPIXEL__GRAPHICS__DEVICE__GLES1__DEVICEGLES1__H
+#pragma once
 
 #include "libpixel/graphics/device/device.h"
 
 #ifdef LIBPIXEL_GRAPHICS_OPENGLES1
+
+#include "libpixel/graphics/device/vertexBuffer.h"
 
 #include <OpenGLES/ES1/gl.h>
 #include <OpenGLES/ES1/glext.h>
@@ -13,20 +14,25 @@
 namespace libpixel
 {
 
+class Texture;
 class VertexBuffer;
     
-class GLES1Device : public GraphicsDevice
+class GraphicsDeviceGLES1 : public GraphicsDevice
 {
 public:
-    GLES1Device();
-    virtual ~GLES1Device();
+    GraphicsDeviceGLES1();
+    virtual ~GraphicsDeviceGLES1();
     
-    virtual void AddVertexBuffer(VertexBuffer* buffer);
+    virtual VertexBuffer* CreateVertexBuffer(BufferFormat bufferFormat, VertexFormat vertexFormat, int numElements);
     virtual void RemoveVertexBuffer(VertexBuffer* buffer);
     virtual void BindVertexBuffer(VertexBuffer* buffer);
     
     virtual void* LockVertexBuffer(VertexBuffer* vertexBuffer);
     virtual void UnlockVertexBuffer(VertexBuffer* vertexBuffer);
+    
+    virtual Texture* CreateTexture();
+    virtual void RemoveTexture(Texture* texture);
+    virtual void BindTexture(Texture* texture);
     
 private:
     GLuint _BoundVertexBuffer;
@@ -35,7 +41,5 @@ private:
 };
 
 }
-
-#endif
 
 #endif

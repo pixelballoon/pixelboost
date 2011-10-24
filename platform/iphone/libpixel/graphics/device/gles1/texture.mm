@@ -1,9 +1,8 @@
 #include "libpixel/graphics/device/texture.h"
 
-namespace libpixel
-{
-    
-GLuint LoadTexture(void* image, bool createMips)
+using namespace libpixel;
+
+GLuint libpixel::LoadTexture(void* image, bool createMips)
 {
     UIImage* uiImage = (UIImage*)image;
     
@@ -44,7 +43,7 @@ GLuint LoadTexture(void* image, bool createMips)
     return handle;
 }
 
-GLuint LoadTexture(const std::string& path, bool createMips)
+GLuint libpixel::LoadTexture(const std::string& path, bool createMips)
 {
 	UIImage* image = [[UIImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:path.c_str()]];
     
@@ -58,4 +57,7 @@ GLuint LoadTexture(const std::string& path, bool createMips)
 	return handle;
 }
 
+void libpixel::TextureGLES1::Load(const std::string& image, bool createMips)
+{
+    _Texture = LoadTexture(image);
 }

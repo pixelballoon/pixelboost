@@ -1,5 +1,4 @@
-#ifndef LIBPIXEL__COMMON__GRAPHICS__DEVICE__TEXTURE__H
-#define LIBPIXEL__COMMON__GRAPHICS__DEVICE__TEXTURE__H
+#pragma once
 
 #include <string>
 
@@ -10,7 +9,21 @@ namespace libpixel
 
 GLuint LoadTexture(void* image, bool createMips = false);
 GLuint LoadTexture(const std::string& path, bool createMips = false);
+    
+class Texture
+{
+protected:
+    Texture();
+    
+public:
+    virtual ~Texture();
+    
+    virtual void Load(const std::string& image, bool createMips) = 0;
+    virtual void Bind(int unit) = 0;
+};
 
 }
 
+#ifdef LIBPIXEL_GRAPHICS_OPENGLES1
+#include "libpixel/graphics/device/gles1/texture.h"
 #endif

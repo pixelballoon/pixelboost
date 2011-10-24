@@ -1,10 +1,8 @@
-#ifndef LIBPIXEL__GRAPHICS__DEVICE__DEVICE__H
-#define LIBPIXEL__GRAPHICS__DEVICE__DEVICE__H
+#pragma once
 
 namespace libpixel
 {
 
-class GraphicsDevice;
 class VertexBuffer;
 
 class GraphicsDevice
@@ -32,7 +30,5 @@ public:
 
 #ifdef LIBPIXEL_PLATFORM_IOS
     #define LIBPIXEL_GRAPHICS_OPENGLES1
-    #include "libpixel/graphics/device/gles1/deviceGLES1.h"
-#endif
-
+    #include "libpixel/graphics/device/gles1/device.h"
 #endif

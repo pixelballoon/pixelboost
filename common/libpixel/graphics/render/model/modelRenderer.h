@@ -35,11 +35,11 @@ private:
     std::vector<std::string> SplitPath(const std::string& string);
 };
     
-class Texture
+class ModelTexture
 {
 public:
-    Texture();
-    virtual ~Texture();
+    ModelTexture();
+    virtual ~ModelTexture();
     
     bool Load(const std::string& textureName);
     
@@ -65,10 +65,10 @@ public:
     
 private:
     Model* GetModel(const std::string& modelName);
-    Texture* GetTexture(const std::string& textureName);
+    ModelTexture* GetTexture(const std::string& textureName);
     
     typedef std::map<std::string, Model*> ModelMap;
-    typedef std::map<std::string, Texture*> TextureMap;
+    typedef std::map<std::string, ModelTexture*> TextureMap;
     
     ModelMap _Models;
     TextureMap _Textures;

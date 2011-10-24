@@ -190,17 +190,17 @@ std::vector<std::string> Model::SplitPath(const std::string &string)
     return SplitString(string, '/', items);
 }
     
-Texture::Texture()
+ModelTexture::ModelTexture()
 {
     
 }
 
-Texture::~Texture()
+ModelTexture::~ModelTexture()
 {
     // TODO: Release texture
 }
 
-bool Texture::Load(const std::string& textureName)
+bool ModelTexture::Load(const std::string& textureName)
 {
     std::string texFilename = FileHelpers::GetRootPath() + "/data/models/" + textureName + ".png";
     
@@ -268,7 +268,7 @@ bool ModelRenderer::LoadTexture(const std::string& textureName)
         return true;
     }
     
-    Texture* texture = new Texture();
+    ModelTexture* texture = new ModelTexture();
     texture->Load(textureName);
     
     _Textures[textureName] = texture;
@@ -297,7 +297,7 @@ bool ModelRenderer::UnloadTexture(const std::string& textureName)
 bool ModelRenderer::Render(const std::string& modelName, const std::string& textureName, Vec3 position, Vec3 rotation, Vec3 scale, Vec3 offset)
 {
     Model* model = GetModel(modelName);
-    Texture* texture = GetTexture(textureName);
+    ModelTexture* texture = GetTexture(textureName);
     
     if (!model || !texture)
         return false;
@@ -355,7 +355,7 @@ Model* ModelRenderer::GetModel(const std::string& modelName)
     return it->second;
 }
     
-Texture* ModelRenderer::GetTexture(const std::string& textureName)
+ModelTexture* ModelRenderer::GetTexture(const std::string& textureName)
 {
     TextureMap::iterator it = _Textures.find(textureName);
     
