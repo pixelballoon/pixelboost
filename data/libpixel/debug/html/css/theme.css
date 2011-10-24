@@ -5,7 +5,9 @@ ul
 
 .ui-button .ui-button-text
 {
-	line-height: 0.6;
+	line-height: 0.5;
+	width:  100px;
+	display: inline-block;
 }
 
 .ui-slider
@@ -44,7 +46,7 @@ ul
 
 .variableButton
 {
-	display: inline-block;
+	display: inline;
 	color: #878787;
 }
 
@@ -59,7 +61,7 @@ ul
 	color: #707070;
 	text-shadow: 2px 2px 6px #a4a4a4;
 	display: inline-block;
-	width: 150px;
+	width: 222px;
 }
 
 body
@@ -100,9 +102,21 @@ body
 	color: #000000;
 }
 
+.reset
+{
+  display: inline-block;
+  margin-right: 30px;
+}
+
 .modified
 {
   color: #ca3838;
   text-align: left;
   text-indent: 20px;
+  width: 150px;
+}
+
+.modified button
+{
+  visibility: collapse;
 }

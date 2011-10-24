@@ -43,14 +43,18 @@
           success: function() {
             $.getJSON(ajaxPrefix+'getVariable/'+name+'/', function(data) {
               if (data["modified"])
+              {
                 $('#'+name+'_title').addClass('modified');
+                $('#'+name+'_reset').show();
+              }
               else
+              {
                 $('#'+name+'_title').removeClass('modified');
+                $('#'+name+'_reset').hide();
+              }
             });
           }
         });
-        
-        
       }
     
       $(function(){
@@ -68,6 +72,8 @@
           	var variable = val["name"];
           	
           	var contents = "<p class='variableTitle' id='"+variable+"_title'>" + variable + "</p>";
+          	
+          	contents += "<button class='reset' id='"+variable+"_reset'>Reset</button>";
             
             switch (val["type"])
             {
@@ -110,6 +116,17 @@
           	'class': 'variables',
             html: items.join('')
           }).appendTo('#content');
+          
+          $.each(data, function(key, val) {
+            $("#"+val["name"]+"_reset").button(
+              {icons: {primary: "ui-icon-pencil"}, text: false}).val(val.value ? "true" : "false").change(function() {
+              });
+            
+            if (val["modified"])
+              $('#'+val["name"]+"_title").addClass('modified');
+            else
+              $('#'+val["name"]+"_reset").hide();
+          });
           
           $.each(strings, function(key, val) {
             $("#"+data[val]["name"]+"_value").keyup(function() { sendVariable(data[val]["type"], data[val]["name"]); $("#"+data[val]["name"]+"_value").addClass('modified'); });
@@ -174,10 +191,6 @@
           
           $.each(functions, function(key, val) {
           	$("#"+data[val]["name"]+"_button").button({icons: {primary: "ui-icon-play"}, text: true}).click(function() {sendVariable(data[val]["type"], data[val]["name"]);});
-          });
-          
-          $.each(modified, function(key, val) {
-            $('#'+data[val]["name"]+'_title').addClass('modified');
           });
         });
       });
