@@ -114,13 +114,13 @@ inline bool Reader::TokenStream::EOS() const {
 // Reader (finally)
 
 
-inline void Reader::Read(Object& object, const std::string& str)                { Read_i(object, str); }
-inline void Reader::Read(Array& array, const std::string& str)                  { Read_i(array, str); }
-inline void Reader::Read(String& string, const std::string& str)                { Read_i(string, str); }
-inline void Reader::Read(Number& number, const std::string& str)                { Read_i(number, str); }
-inline void Reader::Read(Boolean& boolean, const std::string& str)              { Read_i(boolean, str); }
-inline void Reader::Read(Null& null, const std::string& str)                    { Read_i(null, str); }
-inline void Reader::Read(UnknownElement& unknown, const std::string& str)       { Read_i(unknown, str); }
+inline bool Reader::Read(Object& object, const std::string& str)                { try { Read_i(object, str); } catch (json::Exception& e) { return false; } return true; }
+inline bool Reader::Read(Array& array, const std::string& str)                  { try { Read_i(array, str); } catch (json::Exception& e) { return false; } return true; }
+inline bool Reader::Read(String& string, const std::string& str)                { try { Read_i(string, str); } catch (json::Exception& e) { return false; } return true; }
+inline bool Reader::Read(Number& number, const std::string& str)                { try { Read_i(number, str); } catch (json::Exception& e) { return false; } return true; }
+inline bool Reader::Read(Boolean& boolean, const std::string& str)              { try { Read_i(boolean, str); } catch (json::Exception& e) { return false; } return true; }
+inline bool Reader::Read(Null& null, const std::string& str)                    { try { Read_i(null, str); } catch (json::Exception& e) { return false; } return true; }
+inline bool Reader::Read(UnknownElement& unknown, const std::string& str)       { try { Read_i(unknown, str); } catch (json::Exception& e) { return false; } return true; }
 
 
 template <typename ElementTypeT>   

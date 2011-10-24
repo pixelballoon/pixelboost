@@ -56,15 +56,15 @@ public:
 
 
    // if you know what the document looks like, call one of these...
-   static void Read(Object& object, const std::string& str);
-   static void Read(Array& array, const std::string& str);
-   static void Read(String& string, const std::string& str);
-   static void Read(Number& number, const std::string& str);
-   static void Read(Boolean& boolean, const std::string& str);
-   static void Read(Null& null, const std::string& str);
+   static bool Read(Object& object, const std::string& str);
+   static bool Read(Array& array, const std::string& str);
+   static bool Read(String& string, const std::string& str);
+   static bool Read(Number& number, const std::string& str);
+   static bool Read(Boolean& boolean, const std::string& str);
+   static bool Read(Null& null, const std::string& str);
 
    // ...otherwise, if you don't know, call this & visit it
-   static void Read(UnknownElement& elementRoot, const std::string& str);
+   static bool Read(UnknownElement& elementRoot, const std::string& str);
 
 private:
    struct Token
