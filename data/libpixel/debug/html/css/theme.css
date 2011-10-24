@@ -99,3 +99,10 @@ body
 {
 	color: #000000;
 }
+
+.modified
+{
+  color: #ca3838;
+  text-align: left;
+  text-indent: 20px;
+}

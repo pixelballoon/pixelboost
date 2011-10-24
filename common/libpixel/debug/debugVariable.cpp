@@ -26,12 +26,18 @@ const char* DebugVariable::GetName() const
     return _Name;
 }
     
-void DebugVariable::VariableChanged()
+bool DebugVariable::HasVariableChanged()
+{
+    return false;
+}
+    
+void DebugVariable::OnVariableChanged()
 {
 }
 
 DebugBool::DebugBool(const char* name, bool value)
     : DebugVariable(name)
+    , _Original(value)
     , _Value(value)
 {
     
@@ -45,7 +51,7 @@ DebugVariable::VariableType DebugBool::GetVariableType()
 DebugBool& DebugBool::operator=(bool value)
 {
     _Value = value;
-    VariableChanged();
+    OnVariableChanged();
     return *this;
 }
     
@@ -54,16 +60,20 @@ DebugBool::operator bool() const
     return _Value;
 }
     
+bool DebugBool::HasVariableChanged()
+{
+    return _Original != _Value;
+}
+    
 DebugString::DebugString(const char* name, const char* value)
     : DebugVariable(name)
-    , _Value(0)
+    , _Original(value)
+    , _Value(value)
 {
-    SetValue(value);
 }
     
 DebugString::~DebugString()
 {
-    delete[] _Value;
 }
     
 DebugVariable::VariableType DebugString::GetVariableType()
@@ -73,28 +83,25 @@ DebugVariable::VariableType DebugString::GetVariableType()
     
 DebugString& DebugString::operator=(const char* value)
 {
-    SetValue(value);
+    _Value = value;
     
-    VariableChanged();
+    OnVariableChanged();
     return *this;
 }
 
 DebugString::operator const char*() const
 {
-    return _Value;
+    return _Value.c_str();
 }
     
-void DebugString::SetValue(const char* value)
+bool DebugString::HasVariableChanged()
 {
-    int len = static_cast<int>(strlen(value));
-    
-    delete[] _Value;
-    _Value = new char[len+1];
-    strcpy(_Value, value);
+    return _Original != _Value;
 }
 
 DebugInteger::DebugInteger(const char* name, int value, int min, int max)
     : DebugVariable(name)
+    , _Original(value)
     , _Value(value)
     , _Min(min)
     , _Max(max)
@@ -110,7 +117,7 @@ DebugVariable::VariableType DebugInteger::GetVariableType()
 DebugInteger& DebugInteger::operator=(int value)
 {
     _Value = value;
-    VariableChanged();
+    OnVariableChanged();
     return *this;
 }
     
@@ -118,12 +125,18 @@ DebugInteger::operator int() const
 {
     return _Value;
 }
+    
+bool DebugInteger::HasVariableChanged()
+{
+    return _Original != _Value;
+}
 
 DebugFloat::DebugFloat(const char* name, float value, float min, float max)
     : DebugVariable(name)
-, _Value(value)
-, _Min(min)
-, _Max(max)
+    , _Original(value)
+    , _Value(value)
+    , _Min(min)
+    , _Max(max)
 {
     
 }
@@ -136,7 +149,7 @@ DebugVariable::VariableType DebugFloat::GetVariableType()
 DebugFloat& DebugFloat::operator=(float value)
 {
     _Value = value;
-    VariableChanged();
+    OnVariableChanged();
     return *this;
 }
     
@@ -145,12 +158,21 @@ DebugFloat::operator float() const
     return _Value;
 }
     
+bool DebugFloat::HasVariableChanged()
+{
+    return _Original != _Value;
+}
+    
 DebugColor::DebugColor(const char* name, float r, float g, float b, float a)
     : DebugVariable(name)
     , _R(r)
     , _G(g)
     , _B(b)
     , _A(a)
+    , _OriginalR(r)
+    , _OriginalG(g)
+    , _OriginalB(b)
+    , _OriginalA(a)
 {
     
 }
@@ -186,31 +208,36 @@ void DebugColor::SetColor(float r, float g, float b, float a)
     _G = g;
     _B = b;
     _A = a;
-    VariableChanged();
+    OnVariableChanged();
 }
 
 void DebugColor::R(float r)
 {
     _R = r;
-    VariableChanged();
+    OnVariableChanged();
 }
     
 void DebugColor::G(float g)
 {
     _G = g;
-    VariableChanged();
+    OnVariableChanged();
 }
     
 void DebugColor::B(float b)
 {
     _B = b;
-    VariableChanged();
+    OnVariableChanged();
 }
     
 void DebugColor::A(float a)
 {
     _A = a;
-    VariableChanged();
+    OnVariableChanged();
+}
+    
+bool DebugColor::HasVariableChanged()
+{
+    return _OriginalR != _R || _OriginalG != _G || _OriginalB != _B || _OriginalA != _A;
 }
     
 DebugFunction::DebugFunction(const char* name, void(*callback)(void*))

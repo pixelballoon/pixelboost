@@ -6,7 +6,6 @@
     <link type="text/css" href="css/theme.css" rel="Stylesheet"/>
     <script type="text/javascript" src="js/jquery-1.6.4.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
-    <script type="text/javascript" src="js/debugscope.js"></script>
     <script type="text/javascript">
       var ajaxPrefix = 'http://127.0.0.1:9091/'; // For development
       //var ajaxPrefix = ''; // For deployment
@@ -35,18 +34,29 @@
             break;
         }
       
-        jQuery.ajax({
+        $.ajax({
           type: 'PUT',
           url: ajaxPrefix+'setVariable/'+name+'/',
           contentType: 'application/json',
           data: data,
-          processData: false       	
+          processData: false,
+          success: function() {
+            $.getJSON(ajaxPrefix+'getVariable/'+name+'/', function(data) {
+              if (data["modified"])
+                $('#'+name+'_title').addClass('modified');
+              else
+                $('#'+name+'_title').removeClass('modified');
+            });
+          }
         });
+        
+        
       }
     
       $(function(){
         $.getJSON(ajaxPrefix+'getVariables/', function(data) {
           var items = [];
+          var modified = [];
           
           var strings = [];
           var numbers = [];
@@ -57,7 +67,7 @@
           $.each(data, function(key, val) {
           	var variable = val["name"];
           	
-          	var contents = "<p class='variableTitle'>" + variable + "</p>";
+          	var contents = "<p class='variableTitle' id='"+variable+"_title'>" + variable + "</p>";
             
             switch (val["type"])
             {
@@ -90,6 +100,9 @@
            		break;
             }
             
+            if (val["modified"])
+              modified.push(key);
+            
             items.push('<li class="variableItem" id="' + variable + '">' + contents + '</li>');
           });
         
@@ -99,7 +112,7 @@
           }).appendTo('#content');
           
           $.each(strings, function(key, val) {
-            $("#"+data[val]["name"]+"_value").keyup(function() {sendVariable(data[val]["type"], data[val]["name"]);});
+            $("#"+data[val]["name"]+"_value").keyup(function() { sendVariable(data[val]["type"], data[val]["name"]); $("#"+data[val]["name"]+"_value").addClass('modified'); });
           });
           
           $.each(numbers, function(key, val) {
@@ -115,21 +128,23 @@
             	max : data[val]["max"],
             	step : step,
             	value : data[val]["value"],
-                slide : function(event, ui) {
+              slide : function(event, ui) {
+              	sendVariable(data[val]["type"], data[val]["name"]);
+              	$('#'+data[val]["name"]+"_value").val(ui.value);
+              },
+          	  change : function(event, ui) {
+          	    if (event.originalEvent != undefined)
+          	    {
                 	sendVariable(data[val]["type"], data[val]["name"]);
                 	$('#'+data[val]["name"]+"_value").val(ui.value);
-                },
-            	change : function(event, ui) {
-                	sendVariable(data[val]["type"], data[val]["name"]);
-                	$('#'+data[val]["name"]+"_value").val(ui.value);
+              	}
             	}
             	});
             	
-        	text.keyup(function() {
-        		sendVariable(data[val]["type"], data[val]["name"]);
-        		$('body').append($("#"+data[val]["name"]+"_value").val() + "<br/>");
-        		slider.slider('value', $("#"+data[val]["name"]+"_value").val());
-        	});
+          	text.keyup(function() {
+          		sendVariable(data[val]["type"], data[val]["name"]);
+          		slider.slider('value', $("#"+data[val]["name"]+"_value").val());
+          	});
           });
           
           $.each(colors, function(key, val) {
@@ -152,13 +167,17 @@
               		but.button({icons: {primary: "ui-icon-check"}, text: false});
               		but.val("true");
           		}
-              		
+          		
           		sendVariable(data[val.key]["type"], data[val.key]["name"]);
           	});
           });
           
           $.each(functions, function(key, val) {
           	$("#"+data[val]["name"]+"_button").button({icons: {primary: "ui-icon-play"}, text: true}).click(function() {sendVariable(data[val]["type"], data[val]["name"]);});
+          });
+          
+          $.each(modified, function(key, val) {
+            $('#'+data[val]["name"]+'_title').addClass('modified');
           });
         });
       });

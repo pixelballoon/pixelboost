@@ -34,7 +34,10 @@ private:
     virtual bool OnHttpRequest(RequestType type, const std::string& uri, const std::string& query, const std::string& data, HttpConnection& connection);
     
     void OnGetVariables(HttpConnection& connection);
+    void OnGetVariable(HttpConnection& connection, DebugVariable* variable);
     void OnSetVariable(HttpConnection& connection, DebugVariable* variable, json::Object& params);
+    
+    void PopulateVariable(DebugVariable* variable, json::Object& o);
     
     const VariableMap& GetVariables() const;
 #endif

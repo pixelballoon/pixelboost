@@ -87,6 +87,18 @@ bool DebugVariableManager::OnHttpRequest(HttpServer::RequestType type, const std
     {
         OnGetVariables(connection);
         return true;
+    } else if (command == "getVariable" && type == kRequestTypeGet)
+    {
+        if (arguments.size())
+        {
+            DebugVariableManager::VariableMap::const_iterator it = _Variables.find(arguments[0]);
+            
+            if (it != _Variables.end())
+            {
+                OnGetVariable(connection, it->second);
+                return true;
+            }
+        }
     } else if (command == "setVariable" && type == kRequestTypePut)
     {
         if (arguments.size() && data != "")
@@ -118,62 +130,8 @@ void DebugVariableManager::OnGetVariables(HttpConnection& connection)
     for (VariableMap::iterator it = _Variables.begin(); it != _Variables.end(); ++it)
     {
         json::Object variable;
-        variable["name"] = json::String(it->first);
         
-        std::string type;
-        
-        switch (it->second->GetVariableType())
-        {
-            case DebugVariable::kVariableTypeBool:
-            {
-                DebugBool* debugVariable = static_cast<DebugBool*>(it->second);
-                variable["type"] = json::String("bool");
-                variable["value"] = json::Boolean(debugVariable->_Value);
-                break;
-            }
-            case DebugVariable::kVariableTypeString:
-            {
-                DebugString* debugVariable = static_cast<DebugString*>(it->second);
-                variable["type"] = json::String("string");
-                variable["value"] = json::String(debugVariable->_Value);
-                break;
-            }
-            case DebugVariable::kVariableTypeInteger:
-            {
-                DebugInteger* debugVariable = static_cast<DebugInteger*>(it->second);
-                variable["type"] = json::String("int");
-                variable["min"] = json::Number(debugVariable->_Min);
-                variable["max"] = json::Number(debugVariable->_Max);
-                variable["value"] = json::Number(debugVariable->_Value);
-                break;
-            }
-            case DebugVariable::kVariableTypeFloat:
-            {
-                DebugFloat* debugVariable = static_cast<DebugFloat*>(it->second);
-                variable["type"] = json::String("float");
-                variable["min"] = json::Number(debugVariable->_Min);
-                variable["max"] = json::Number(debugVariable->_Max);
-                variable["value"] = json::Number(debugVariable->_Value);
-                break;
-            }
-            case DebugVariable::kVariableTypeColor:
-            {
-                DebugColor* debugVariable = static_cast<DebugColor*>(it->second);
-                variable["type"] = json::String("color");
-                json::Object value;
-                value["r"] = json::Number(debugVariable->_R);
-                value["g"] = json::Number(debugVariable->_G);
-                value["b"] = json::Number(debugVariable->_B);
-                value["a"] = json::Number(debugVariable->_A);
-                variable["value"] = value;
-                break;
-            }
-            case DebugVariable::kVariableTypeFunction:
-            {
-                variable["type"] = json::String("function");
-                break;
-            }
-        }
+        PopulateVariable(it->second, variable);
         
         variables.Insert(variable);
     }
@@ -210,7 +168,7 @@ void DebugVariableManager::OnSetVariable(HttpConnection& connection, DebugVariab
             
         case DebugVariable::kVariableTypeString:
         {
-            static_cast<DebugString*>(variable)->SetValue(static_cast<json::String>(params["value"]).Value().c_str());
+            static_cast<DebugString*>(variable)->_Value = static_cast<json::String>(params["value"]).Value();
             break;
         }
             
@@ -240,6 +198,97 @@ void DebugVariableManager::OnSetVariable(HttpConnection& connection, DebugVariab
         default:
             break;
     }
+}
+
+void DebugVariableManager::OnGetVariable(HttpConnection& connection, DebugVariable* variable)
+{
+    json::Object json;
+    
+    PopulateVariable(variable, json);
+    
+    std::stringstream contentStream;
+    json::Writer::Write(json, contentStream);
+    
+    std::string content = contentStream.str();
+    
+    connection.AddHeader("Content-Type", "application/json;charset=utf-8");
+    
+    char contentLength[64];
+    sprintf(contentLength, "%d", static_cast<int>(content.length()));
+    connection.AddHeader("Content-Length", contentLength);
+    connection.SetContent(content);
+    connection.Send();
+}
+    
+void DebugVariableManager::PopulateVariable(DebugVariable* variable, json::Object& o)
+{
+    o["name"] = json::String(variable->GetName());
+    
+    std::string type;
+    
+    switch (variable->GetVariableType())
+    {
+        case DebugVariable::kVariableTypeBool:
+        {
+            DebugBool* debugVariable = static_cast<DebugBool*>(variable);
+            o["type"] = json::String("bool");
+            o["originalValue"] = json::Boolean(debugVariable->_Original);
+            o["value"] = json::Boolean(debugVariable->_Value);
+            break;
+        }
+        case DebugVariable::kVariableTypeString:
+        {
+            DebugString* debugVariable = static_cast<DebugString*>(variable);
+            o["type"] = json::String("string");
+            o["originalValue"] = json::String(debugVariable->_Original);
+            o["value"] = json::String(debugVariable->_Value);
+            break;
+        }
+        case DebugVariable::kVariableTypeInteger:
+        {
+            DebugInteger* debugVariable = static_cast<DebugInteger*>(variable);
+            o["type"] = json::String("int");
+            o["min"] = json::Number(debugVariable->_Min);
+            o["max"] = json::Number(debugVariable->_Max);
+            o["value"] = json::Number(debugVariable->_Value);
+            break;
+        }
+        case DebugVariable::kVariableTypeFloat:
+        {
+            DebugFloat* debugVariable = static_cast<DebugFloat*>(variable);
+            o["type"] = json::String("float");
+            o["min"] = json::Number(debugVariable->_Min);
+            o["max"] = json::Number(debugVariable->_Max);
+            o["originalValue"] = json::Number(debugVariable->_Original);
+            o["value"] = json::Number(debugVariable->_Value);
+            break;
+        }
+        case DebugVariable::kVariableTypeColor:
+        {
+            DebugColor* debugVariable = static_cast<DebugColor*>(variable);
+            o["type"] = json::String("color");
+            json::Object original;
+            original["r"] = json::Number(debugVariable->_OriginalR);
+            original["g"] = json::Number(debugVariable->_OriginalG);
+            original["b"] = json::Number(debugVariable->_OriginalB);
+            original["a"] = json::Number(debugVariable->_OriginalA);
+            o["originalValue"] = original;
+            json::Object value;
+            value["r"] = json::Number(debugVariable->_R);
+            value["g"] = json::Number(debugVariable->_G);
+            value["b"] = json::Number(debugVariable->_B);
+            value["a"] = json::Number(debugVariable->_A);
+            o["value"] = value;
+            break;
+        }
+        case DebugVariable::kVariableTypeFunction:
+        {
+            o["type"] = json::String("function");
+            break;
+        }
+    }
+    
+    o["modified"] = json::Boolean(variable->HasVariableChanged());
 }
     
 #endif

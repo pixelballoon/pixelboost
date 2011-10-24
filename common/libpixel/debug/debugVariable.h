@@ -29,8 +29,10 @@ public:
     
     virtual VariableType GetVariableType() = 0;
     
+    virtual bool HasVariableChanged();
+    
 protected:
-    void VariableChanged();
+    void OnVariableChanged();
     
 private:
     char* _Name;
@@ -49,7 +51,10 @@ public:
     DebugBool& operator =(bool value);
     operator bool() const;
     
+    virtual bool HasVariableChanged();
+    
 private:
+    bool _Original;
     bool _Value;
     
     friend class DebugVariableManager;
@@ -67,10 +72,11 @@ public:
     DebugString& operator =(const char* value);
     operator const char*() const;
     
-private:
-    void SetValue(const char* value);
+    virtual bool HasVariableChanged();
     
-    char* _Value;
+private:
+    std::string _Original;
+    std::string _Value;
     
     friend class DebugVariableManager;
     friend class DebugVariableHandler;
@@ -86,7 +92,10 @@ public:
     DebugInteger& operator =(int value);
     operator int() const;
     
+    virtual bool HasVariableChanged();
+    
 private:
+    int _Original;
     int _Value;
     int _Min;
     int _Max;
@@ -105,7 +114,10 @@ public:
     DebugFloat& operator =(float value);
     operator float() const;
     
+    virtual bool HasVariableChanged();
+    
 private:
+    float _Original;
     float _Value;
     float _Min;
     float _Max; 
@@ -132,7 +144,13 @@ public:
     void B(float b);
     void A(float a);
     
+    virtual bool HasVariableChanged();
+    
 private:
+    float _OriginalR;
+    float _OriginalG;
+    float _OriginalB;
+    float _OriginalA;
     float _R;
     float _G;
     float _B;
