@@ -30,5 +30,6 @@ public:
 
 #ifdef LIBPIXEL_PLATFORM_IOS
     #define LIBPIXEL_GRAPHICS_OPENGLES1
+    #define LIBPIXEL_GRAPHICS_PREMULTIPLIED_ALPHA
     #include "libpixel/graphics/device/gles1/device.h"
 #endif

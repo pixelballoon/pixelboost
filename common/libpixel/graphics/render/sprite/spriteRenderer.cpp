@@ -1,3 +1,4 @@
+#include "libpixel/graphics/device/device.h"
 #include "libpixel/graphics/render/sprite/spriteRenderer.h"
 #include "libpixel/graphics/render/sprite/sprite.h"
 
@@ -79,7 +80,11 @@ void SpriteRenderer::Render()
                 glBlendFunc(GL_DST_COLOR, GL_ONE);
                 break;
             case kBlendModeNormal:
-                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                #ifdef LIBPIXEL_GRAPHICS_PREMULTIPLIED_ALPHA
+                    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+                #else
+                    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                #endif
                 break;
         }
                 
