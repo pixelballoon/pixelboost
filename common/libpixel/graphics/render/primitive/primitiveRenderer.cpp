@@ -14,8 +14,10 @@ PrimitiveRenderer::~PrimitiveRenderer()
     
 }
     
-void PrimitiveRenderer::RenderEllipse(Vec2 position, Vec2 size, Vec3 rotation, Vec3 colour, int segments)
+void PrimitiveRenderer::RenderEllipse(Vec2 position, Vec2 size, Vec3 rotation, Vec4 color, int segments)
 {
+    glEnable(GL_BLEND);
+    
     glPushMatrix();
     
     glTranslatef(position[0], position[1], 0.f);
@@ -23,7 +25,8 @@ void PrimitiveRenderer::RenderEllipse(Vec2 position, Vec2 size, Vec3 rotation, V
     glRotatef(rotation[0], 1, 0, 0);
     glRotatef(rotation[1], 0, 1, 0);
     glRotatef(rotation[2], 0, 0, 1);
-    glColor4f(colour[0], colour[1], colour[2], 1.f);
+    
+    glColor4f(color[0], color[1], color[2], color[3]);
     
     GLfloat glVertices[segments*2];
     
@@ -44,13 +47,17 @@ void PrimitiveRenderer::RenderEllipse(Vec2 position, Vec2 size, Vec3 rotation, V
     glDrawArrays(GL_LINE_LOOP, 0, segments);
     
     glPopMatrix();
+    
+    glDisable(GL_BLEND);
 }
     
-void PrimitiveRenderer::RenderLine(Vec2 start, Vec2 end, Vec3 colour)
+void PrimitiveRenderer::RenderLine(Vec2 start, Vec2 end, Vec4 color)
 {
+    glEnable(GL_BLEND);
+    
     glPushMatrix();
     
-    glColor4f(colour[0], colour[1], colour[2], 1.f);
+    glColor4f(color[0], color[1], color[2], color[3]);
     
     GLfloat glVertices[] = { start[0], start[1], end[0], end[1] };
     
@@ -64,11 +71,15 @@ void PrimitiveRenderer::RenderLine(Vec2 start, Vec2 end, Vec3 colour)
     glColor4f(1.f, 1.f, 1.f, 1.f);
     
     glPopMatrix();
+    
+    glDisable(GL_BLEND);
 }
     
-void PrimitiveRenderer::RenderBox(Vec2 position, Vec2 size, Vec3 colour)
+void PrimitiveRenderer::RenderBox(Vec2 position, Vec2 size, Vec4 color)
 {
-    glColor4f(colour[0], colour[1], colour[2], 1.f);
+    glEnable(GL_BLEND);
+    
+    glColor4f(color[0], color[1], color[2], color[3]);
     
     glEnableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -81,6 +92,8 @@ void PrimitiveRenderer::RenderBox(Vec2 position, Vec2 size, Vec3 colour)
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
         
     glDisableClientState(GL_VERTEX_ARRAY);
+    
+    glDisable(GL_BLEND);
 }
     
 }
