@@ -180,11 +180,11 @@ void DebugVariableManager::OnSetVariable(HttpConnection& connection, DebugVariab
             
         case DebugVariable::kVariableTypeColor:
         {
-            DebugColor* colour = static_cast<DebugColor*>(variable);
-            colour->_R = static_cast<json::Number>(params["value"]["r"]).Value();
-            colour->_G = static_cast<json::Number>(params["value"]["g"]).Value();
-            colour->_B = static_cast<json::Number>(params["value"]["b"]).Value();
-            colour->_A = static_cast<json::Number>(params["value"]["a"]).Value();
+            DebugColor* color = static_cast<DebugColor*>(variable);
+            color->_R = static_cast<json::Number>(params["value"]["r"]).Value();
+            color->_G = static_cast<json::Number>(params["value"]["g"]).Value();
+            color->_B = static_cast<json::Number>(params["value"]["b"]).Value();
+            color->_A = static_cast<json::Number>(params["value"]["a"]).Value();
             break;
         }
             
