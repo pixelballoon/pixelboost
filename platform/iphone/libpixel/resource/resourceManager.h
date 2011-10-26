@@ -1,5 +1,4 @@
-#ifndef LIBPIXEL__RESOURCE__RESOURCEMANAGER__H
-#define LIBPIXEL__RESOURCE__RESOURCEMANAGER__H
+#pragma once
 
 #include <string>
 
@@ -31,5 +30,3 @@ class ResourceManager
 };
     
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef LIBPIXEL__GRAPHICS__RENDER__BOX2D__BOX2DRENDERER__H
-#define LIBPIXEL__GRAPHICS__RENDER__BOX2D__BOX2DRENDERER__H
+#pragma once
 
 #ifndef LIBPIXEL_DISABLE_BOX2D
 
@@ -23,7 +22,5 @@ public:
 };
     
 }
-
-#endif
 
 #endif

@@ -1,5 +1,4 @@
-#ifndef LIBPIXEL__GRAPHICS__RENDER__FONT__FONTRENDERER__H
-#define LIBPIXEL__GRAPHICS__RENDER__FONT__FONTRENDERER__H
+#pragma once
 
 #include <list>
 #include <map>
@@ -67,5 +66,3 @@ private:
 };
     
 }
-
-#endif

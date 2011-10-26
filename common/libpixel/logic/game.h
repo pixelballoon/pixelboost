@@ -1,5 +1,4 @@
-#ifndef LIBPIXEL__COMMON__LOGIC__GAME__H
-#define LIBPIXEL__COMMON__LOGIC__GAME__H
+#pragma once
 
 #include <vector>
 
@@ -66,5 +65,3 @@ private:
 };
     
 }
-
-#endif

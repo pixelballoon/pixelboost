@@ -1,5 +1,4 @@
-#ifndef LIBPIXEL__DB__ENTITY__H
-#define LIBPIXEL__DB__ENTITY__H
+#pragma once
 
 #include "libpixel/db/struct.h"
 #include "libpixel/math/maths.h"
@@ -24,5 +23,3 @@ public:
 };
     
 }
-
-#endif

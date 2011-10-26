@@ -1,5 +1,4 @@
-#ifndef LIBPIXEL__DB__STRUCT__H
-#define LIBPIXEL__DB__STRUCT__H
+#pragma once
 
 #include "libpixel/json/reader.h"
 
@@ -23,5 +22,3 @@ public:
 };
     
 }
-
-#endif

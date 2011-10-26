@@ -1,5 +1,4 @@
-#ifndef LIBPIXEL__IPHONE__INPUT__TOUCHMANAGER__H
-#define LIBPIXEL__IPHONE__INPUT__TOUCHMANAGER__H
+#pragma once
 
 #include "libpixel/math/maths.h"
 #include <map>
@@ -74,5 +73,3 @@ private:
 };
     
 }
-
-#endif

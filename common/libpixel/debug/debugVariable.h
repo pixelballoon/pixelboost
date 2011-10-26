@@ -1,5 +1,4 @@
-#ifndef LIBPIXEL__DEBUG__DEBUGVARIABLE__H
-#define LIBPIXEL__DEBUG__DEBUGVARIABLE__H
+#pragma once
 
 #include <string>
 
@@ -290,7 +289,5 @@ public:
 #define EXTERN_DEBUG_FLOAT(name) extern float name
 #define EXTERN_DEBUG_COLOR(name) extern libpixel::DebugColor name
 #define EXTERN_DEBUG_FUNCTION(name) extern libpixel::DebugFunction name
-
-#endif
 
 #endif

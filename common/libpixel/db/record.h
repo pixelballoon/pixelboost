@@ -1,5 +1,4 @@
-#ifndef LIBPIXEL__DB__RECORD__H
-#define LIBPIXEL__DB__RECORD__H
+#pragma once
 
 #include <map>
 #include <vector>
@@ -60,5 +59,3 @@ protected:
 };
     
 }
-
-#endif

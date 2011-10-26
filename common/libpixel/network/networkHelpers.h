@@ -1,5 +1,4 @@
-#ifndef LIBPIXEL__NETWORK__HELPERS__H
-#define LIBPIXEL__NETWORK__HELPERS__H
+#pragma once
 
 #include <string>
 
@@ -14,5 +13,3 @@ std::string GetWifiAddress();
 }
     
 }
-
-#endif

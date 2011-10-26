@@ -1,5 +1,4 @@
-#ifndef LIBPIXEL__FILE__HELPERS__H
-#define LIBPIXEL__FILE__HELPERS__H
+#pragma once
 
 #include <string>
 
@@ -16,5 +15,3 @@ void StringToFile(const std::string& filename, const std::string& string);
 }
     
 }
-
-#endif

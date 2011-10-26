@@ -1,5 +1,4 @@
-#ifndef LIBPIXEL__NETWORK__NETWORKMESSAGE__H
-#define LIBPIXEL__NETWORK__NETWORKMESSAGE__H
+#pragma once
 
 #define NETWORK_MAX_MESSAGE_LENGTH 65535
 
@@ -48,5 +47,3 @@ private:
 };
 
 }
-
-#endif

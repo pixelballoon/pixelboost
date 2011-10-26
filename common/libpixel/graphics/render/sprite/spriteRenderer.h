@@ -1,5 +1,4 @@
-#ifndef LIBPIXEL__COMMON__GRAPHICS__RENDER__SPRITE__SPRITERENDERER__H
-#define LIBPIXEL__COMMON__GRAPHICS__RENDER__SPRITE__SPRITERENDERER__H
+#pragma once
 
 #include <list>
 #include <map>
@@ -75,5 +74,3 @@ private:
 };
     
 }
-
-#endif

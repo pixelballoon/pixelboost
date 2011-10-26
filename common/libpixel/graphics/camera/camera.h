@@ -1,5 +1,4 @@
-#ifndef LIBPIXEL__COMMON__GRAPHICS__CAMERA__CAMERA__H
-#define LIBPIXEL__COMMON__GRAPHICS__CAMERA__CAMERA__H
+#pragma once
 
 #include "libpixel/math/maths.h"
 
@@ -16,5 +15,3 @@ public:
 };
 
 }
-
-#endif

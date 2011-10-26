@@ -1,5 +1,4 @@
-#ifndef LIBPIXEL__COMMON__GRAPHICS__RENDER__SPRITE__SPRITE__H
-#define LIBPIXEL__COMMON__GRAPHICS__RENDER__SPRITE__SPRITE__H
+#pragma once
 
 #include <map>
 #include <string>
@@ -45,5 +44,3 @@ public:
 };
     
 }
-
-#endif

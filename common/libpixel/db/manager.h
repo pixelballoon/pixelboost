@@ -1,5 +1,4 @@
-#ifndef LIBPIXEL__DB__MANAGER__H
-#define LIBPIXEL__DB__MANAGER__H
+#pragma once
 
 #include <map>
 #include <vector>
@@ -49,5 +48,3 @@ private:
 };
     
 }
-
-#endif

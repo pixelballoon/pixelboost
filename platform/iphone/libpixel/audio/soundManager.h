@@ -1,5 +1,4 @@
-#ifndef LIBPIXEL__AUDIO__SOUNDMANAGER__H
-#define LIBPIXEL__AUDIO__SOUNDMANAGER__H
+#pragma once
 
 #include <string>
 
@@ -33,5 +32,3 @@ private:
 };
     
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef LIBPIXEL__COMMON__GRAPHICS__RENDER__PRIMITIVE__PRIMITIVERENDERER__H
-#define LIBPIXEL__COMMON__GRAPHICS__RENDER__PRIMITIVE__PRIMITIVERENDERER__H
+#pragma once
 
 #include <list>
 #include <map>
@@ -23,5 +22,3 @@ public:
 };
     
 }
-
-#endif

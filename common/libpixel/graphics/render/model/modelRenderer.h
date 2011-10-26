@@ -1,5 +1,4 @@
-#ifndef LIBPIXEL__COMMON__GRAPHICS__RENDER__MODEL__MODELRENDERER__H
-#define LIBPIXEL__COMMON__GRAPHICS__RENDER__MODEL__MODELRENDERER__H
+#pragma once
 
 #include <map>
 #include <string>
@@ -75,5 +74,3 @@ private:
 };
     
 }
-
-#endif

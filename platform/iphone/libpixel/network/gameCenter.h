@@ -1,5 +1,4 @@
-#ifndef LIBPIXEL__IPHONE__NETWORK__GAMECENTER__H
-#define LIBPIXEL__IPHONE__NETWORK__GAMECENTER__H
+#pragma once
 
 #include <string>
 
@@ -57,5 +56,3 @@ private:
 };
     
 }
-
-#endif

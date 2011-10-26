@@ -1,5 +1,4 @@
-#ifndef LIBPIXEL__GRAPHICS__HELPER__SCREENHELPERS__H
-#define LIBPIXEL__GRAPHICS__HELPER__SCREENHELPERS__H
+#pragma once
 
 #include "libpixel/math/maths.h"
 
@@ -20,5 +19,3 @@ float GetDpu();
 }
     
 }
-
-#endif

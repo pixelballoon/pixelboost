@@ -1,5 +1,4 @@
-#ifndef LIBPIXEL__NETWORK__NETWORKSERVER__H
-#define LIBPIXEL__NETWORK__NETWORKSERVER__H
+#pragma once
 
 #include <map>
 #include <queue>
@@ -137,5 +136,3 @@ namespace libpixel
     };
     
 }
-
-#endif

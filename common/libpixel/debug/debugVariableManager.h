@@ -1,5 +1,4 @@
-#ifndef LIBPIXEL__DEBUG__DEBUGVARIABLEMANAGER__H
-#define LIBPIXEL__DEBUG__DEBUGVARIABLEMANAGER__H
+#pragma once
 
 #include <map>
 #include <string>
@@ -53,5 +52,3 @@ private:
 };
     
 }
-
-#endif
