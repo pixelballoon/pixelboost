@@ -7,8 +7,8 @@
     <script type="text/javascript" src="js/jquery-1.6.4.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
     <script type="text/javascript">
-      var ajaxPrefix = 'http://127.0.0.1:9091/'; // For development
-      //var ajaxPrefix = ''; // For deployment
+      //var ajaxPrefix = 'http://127.0.0.1:9091/'; // For development
+      var ajaxPrefix = '/'; // For deployment
       
       function sendVariable(type, name)
       {
@@ -39,8 +39,7 @@
           url: ajaxPrefix+'setVariable/'+name+'/',
           contentType: 'application/json',
           data: data,
-          processData: false,
-          success: function() {
+          complete : function() {
             $.getJSON(ajaxPrefix+'getVariable/'+name+'/', function(data) {
               if (data["modified"])
               {
@@ -60,8 +59,7 @@
       $(function(){
         $.getJSON(ajaxPrefix+'getVariables/', function(data) {
           var items = [];
-          var modified = [];
-          
+
           var strings = [];
           var numbers = [];
           var bools = [];
@@ -69,9 +67,9 @@
           var colors = [];
         
           $.each(data, function(key, val) {
-          	var variable = val["name"];
+          	var variable = val["id"];
           	
-          	var contents = "<p class='variableTitle' id='"+variable+"_title'>" + variable + "</p>";
+          	var contents = "<p class='variableTitle' id='"+variable+"_title'>" + val["name"] + "</p>";
           	
           	contents += "<button class='reset' id='"+variable+"_reset'>Reset</button>";
             
@@ -106,9 +104,6 @@
            		break;
             }
             
-            if (val["modified"])
-              modified.push(key);
-            
             items.push('<li class="variableItem" id="' + variable + '">' + contents + '</li>');
           });
         
@@ -118,18 +113,18 @@
           }).appendTo('#content');
           
           $.each(data, function(key, val) {
-            $("#"+val["name"]+"_reset").button(
+            $("#"+val["id"]+"_reset").button(
               {icons: {primary: "ui-icon-pencil"}, text: false}).val(val.value ? "true" : "false").change(function() {
               });
             
             if (val["modified"])
-              $('#'+val["name"]+"_title").addClass('modified');
+              $('#'+val["id"]+"_title").addClass('modified');
             else
-              $('#'+val["name"]+"_reset").hide();
+              $('#'+val["id"]+"_reset").hide();
           });
           
           $.each(strings, function(key, val) {
-            $("#"+data[val]["name"]+"_value").keyup(function() { sendVariable(data[val]["type"], data[val]["name"]); $("#"+data[val]["name"]+"_value").addClass('modified'); });
+            $("#"+data[val]["id"]+"_value").keyup(function() { sendVariable(data[val]["type"], data[val]["id"]); });
           });
           
           $.each(numbers, function(key, val) {
@@ -137,8 +132,8 @@
           	if (data[val]["type"] == "float")
               	step = 0.001;
               	
-          	var slider = $("#"+data[val]["name"]+"_slider");
-          	var text = $("#"+data[val]["name"]+"_value");
+          	var slider = $("#"+data[val]["id"]+"_slider");
+          	var text = $("#"+data[val]["id"]+"_value");
           	
             slider.slider({
             	min : data[val]["min"],
@@ -146,33 +141,33 @@
             	step : step,
             	value : data[val]["value"],
               slide : function(event, ui) {
-              	sendVariable(data[val]["type"], data[val]["name"]);
-              	$('#'+data[val]["name"]+"_value").val(ui.value);
+              	$('#'+data[val]["id"]+"_value").val(ui.value);
+              	sendVariable(data[val]["type"], data[val]["id"]);
               },
           	  change : function(event, ui) {
           	    if (event.originalEvent != undefined)
           	    {
-                	sendVariable(data[val]["type"], data[val]["name"]);
-                	$('#'+data[val]["name"]+"_value").val(ui.value);
+            	    $('#'+data[val]["id"]+"_value").val(ui.value);
+                	sendVariable(data[val]["type"], data[val]["id"]);
               	}
             	}
             	});
             	
           	text.keyup(function() {
-          		sendVariable(data[val]["type"], data[val]["name"]);
-          		slider.slider('value', $("#"+data[val]["name"]+"_value").val());
+          		sendVariable(data[val]["type"], data[val]["id"]);
+          		slider.slider('value', $("#"+data[val]["id"]+"_value").val());
           	});
           });
           
           $.each(colors, function(key, val) {
-              $("#"+data[val]["name"]+"_r").keyup(function() {sendVariable(data[val]["type"], data[val]["name"]);})
-              $("#"+data[val]["name"]+"_g").keyup(function() {sendVariable(data[val]["type"], data[val]["name"]);})
-              $("#"+data[val]["name"]+"_b").keyup(function() {sendVariable(data[val]["type"], data[val]["name"]);})
-              $("#"+data[val]["name"]+"_a").keyup(function() {sendVariable(data[val]["type"], data[val]["name"]);})
+              $("#"+data[val]["id"]+"_r").keyup(function() {sendVariable(data[val]["type"], data[val]["id"]);})
+              $("#"+data[val]["id"]+"_g").keyup(function() {sendVariable(data[val]["type"], data[val]["id"]);})
+              $("#"+data[val]["id"]+"_b").keyup(function() {sendVariable(data[val]["type"], data[val]["id"]);})
+              $("#"+data[val]["id"]+"_a").keyup(function() {sendVariable(data[val]["type"], data[val]["id"]);})
           });
           
           $.each(bools, function(key, val) {
-            var but = $("#"+data[val.key]["name"]+"_button");
+            var but = $("#"+data[val.key]["id"]+"_button");
           	but.prop('checked', val.value).button({icons: {primary: val.value ? "ui-icon-check" : "ui-icon-close"}, text: false}).val(val.value ? "true" : "false").change(function() {
           		if (but.val() == "true")
           		{
@@ -185,12 +180,12 @@
               		but.val("true");
           		}
           		
-          		sendVariable(data[val.key]["type"], data[val.key]["name"]);
+          		sendVariable(data[val.key]["type"], data[val.key]["id"]);
           	});
           });
           
           $.each(functions, function(key, val) {
-          	$("#"+data[val]["name"]+"_button").button({icons: {primary: "ui-icon-play"}, text: true}).click(function() {sendVariable(data[val]["type"], data[val]["name"]);});
+          	$("#"+data[val]["id"]+"_button").button({icons: {primary: "ui-icon-play"}, text: true}).click(function() {sendVariable(data[val]["type"], data[val]["id"]);});
           });
         });
       });

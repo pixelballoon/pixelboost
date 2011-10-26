@@ -14,6 +14,7 @@ public:
     DebugVariable(const char* name);
     virtual ~DebugVariable();
     
+    int GetId() const;
     const char* GetName() const;
     
 public:
@@ -35,6 +36,8 @@ protected:
     void OnVariableChanged();
     
 private:
+    int _Id;
+    
     char* _Name;
     
     friend class DebugVariableManager;

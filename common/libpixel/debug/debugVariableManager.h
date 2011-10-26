@@ -26,7 +26,7 @@ public:
     
 private:
 #ifndef PIXELBALLOON_BUILD_RELEASE    
-    typedef std::map<std::string, DebugVariable*> VariableMap;
+    typedef std::map<int, DebugVariable*> VariableMap;
     
     void AddVariable(DebugVariable* variable);
     void SendValue(DebugVariable* variable);

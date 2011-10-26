@@ -10,6 +10,9 @@ namespace libpixel
 
 DebugVariable::DebugVariable(const char* name)
 {
+    static int freeId = 0;
+    
+    _Id = freeId++;
     _Name = new char[strlen(name)+1];
     strcpy(_Name, name);
     
@@ -19,6 +22,11 @@ DebugVariable::DebugVariable(const char* name)
 DebugVariable::~DebugVariable()
 {
     delete[] _Name;
+}
+    
+int DebugVariable::GetId() const
+{
+    return _Id;
 }
 
 const char* DebugVariable::GetName() const

@@ -38,7 +38,7 @@ DebugVariableManager* DebugVariableManager::Instance()
 
 void DebugVariableManager::AddVariable(DebugVariable* variable)
 {
-    _Variables[variable->GetName()] = variable;
+    _Variables[variable->GetId()] = variable;
 }
     
 const DebugVariableManager::VariableMap& DebugVariableManager::GetVariables() const
@@ -91,7 +91,7 @@ bool DebugVariableManager::OnHttpRequest(HttpServer::RequestType type, const std
     {
         if (arguments.size())
         {
-            DebugVariableManager::VariableMap::const_iterator it = _Variables.find(arguments[0]);
+            DebugVariableManager::VariableMap::const_iterator it = _Variables.find(atoi(arguments[0].c_str()));
             
             if (it != _Variables.end())
             {
@@ -103,7 +103,7 @@ bool DebugVariableManager::OnHttpRequest(HttpServer::RequestType type, const std
     {
         if (arguments.size() && data != "")
         {
-            DebugVariableManager::VariableMap::const_iterator it = _Variables.find(arguments[0]);
+            DebugVariableManager::VariableMap::const_iterator it = _Variables.find(atoi(arguments[0].c_str()));
             
             if (it != _Variables.end())
             {
@@ -223,6 +223,7 @@ void DebugVariableManager::OnGetVariable(HttpConnection& connection, DebugVariab
 void DebugVariableManager::PopulateVariable(DebugVariable* variable, json::Object& o)
 {
     o["name"] = json::String(variable->GetName());
+    o["id"] = json::Number(variable->GetId());
     
     std::string type;
     
