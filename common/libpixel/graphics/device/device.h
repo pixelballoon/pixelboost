@@ -1,8 +1,12 @@
 #pragma once
 
+#include "libpixel/graphics/device/bufferFormats.h"
+
 namespace libpixel
 {
 
+class Texture;
+class IndexBuffer;
 class VertexBuffer;
 
 class GraphicsDevice
@@ -14,16 +18,23 @@ public:
     static GraphicsDevice* Create();
     virtual ~GraphicsDevice();
     
-    // This does not take ownership of the VerteBuffer
-    virtual void AddVertexBuffer(VertexBuffer* buffer);
-    virtual void RemoveVertexBuffer(VertexBuffer* buffer);
+    virtual VertexBuffer* CreateVertexBuffer(BufferFormat bufferFormat, VertexFormat vertexFormat, int length);
+    virtual void DestroyVertexBuffer(VertexBuffer* buffer);
     virtual void BindVertexBuffer(VertexBuffer* buffer);
     
-    // This will return 0 if the device has been lost
-    // The vertex buffer will receive a RefillVertexBuffer callback once the context is regained
-    // Always check for null before using
-    virtual void* LockVertexBuffer(VertexBuffer* buffer);
+    virtual void LockVertexBuffer(VertexBuffer* buffer);
     virtual void UnlockVertexBuffer(VertexBuffer* buffer);
+    
+    virtual IndexBuffer* CreateIndexBuffer(BufferFormat bufferFormat, int length);
+    virtual void DestroyIndexBuffer(IndexBuffer* buffer);
+    virtual void BindIndexBuffer(IndexBuffer* buffer);
+    
+    virtual void LockIndexBuffer(IndexBuffer* vertexBuffer);
+    virtual void UnlockIndexBuffer(IndexBuffer* vertexBuffer);
+    
+    virtual Texture* CreateTexture() = 0;
+    virtual void RemoveTexture(Texture* texture) = 0;
+    virtual void BindTexture(Texture* texture) = 0;
 };
     
 }

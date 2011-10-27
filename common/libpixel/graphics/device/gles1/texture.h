@@ -13,7 +13,7 @@ namespace libpixel
 class TextureGLES1 : Texture
 {
 protected:
-    TextureGLES1();
+    TextureGLES1(GraphicsDeviceGLES1* _Device);
     
 public:
     virtual ~TextureGLES1();
@@ -22,6 +22,7 @@ public:
     void Bind(int unit);
     
 private:
+    GraphicsDeviceGLES1* _Device;
     GLuint _Texture;
     
     friend class GraphicsDeviceGLES1;

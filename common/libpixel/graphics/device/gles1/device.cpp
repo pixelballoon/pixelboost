@@ -1,10 +1,27 @@
 #include "libpixel/graphics/device/device.h"
+#include "libpixel/graphics/device/indexBuffer.h"
 #include "libpixel/graphics/device/texture.h"
+#include "libpixel/graphics/device/vertexBuffer.h"
+
+using namespace libpixel;
 
 #ifdef LIBPIXEL_GRAPHICS_OPENGLES1
 
-namespace libpixel
+#include <OpenGLES/ES1/gl.h>
+
+struct libpixel::DeviceState
 {
+    DeviceState()
+    {
+        boundIndexBuffer = 0;
+        boundTexture = 0;
+        boundVertexBuffer = 0;
+    }
+    
+    GLuint boundIndexBuffer;
+    GLuint boundTexture;
+    GLuint boundVertexBuffer;
+};
 
 GraphicsDevice* GraphicsDevice::Create()
 {
@@ -13,56 +30,136 @@ GraphicsDevice* GraphicsDevice::Create()
 
 GraphicsDeviceGLES1::GraphicsDeviceGLES1()
 {
-    _BoundVertexBuffer = 0;
+    _State = new DeviceState();
 }
 
 GraphicsDeviceGLES1::~GraphicsDeviceGLES1()
 {
-    
+    delete _State;
 }
 
-VertexBuffer* GraphicsDeviceGLES1::CreateVertexBuffer(BufferFormat bufferFormat, VertexFormat vertexFormat, int numElements)
+VertexBuffer* GraphicsDeviceGLES1::CreateVertexBuffer(BufferFormat bufferFormat, VertexFormat vertexFormat, int length)
 {
-    VertexBuffer* vertexBuffer = new VertexBuffer(this, bufferFormat, vertexFormat, numElements);
-    _VertexBuffers[vertexBuffer] = 0;
+    VertexBuffer* vertexBuffer = GraphicsDevice::CreateVertexBuffer(bufferFormat, vertexFormat, length);
+    
+    GLuint buffer = 0;
+    glGenBuffers(1, &buffer);
+    
+    _VertexBuffers[vertexBuffer] = buffer;
+    
     return vertexBuffer;
 }
 
-void GraphicsDeviceGLES1::RemoveVertexBuffer(VertexBuffer* vertexBuffer)
+void GraphicsDeviceGLES1::DestroyVertexBuffer(VertexBuffer* vertexBuffer)
 {
+    GLuint buffer = _VertexBuffers[vertexBuffer];
+    glDeleteBuffers(1, &buffer);
     
+    GraphicsDevice::DestroyVertexBuffer(vertexBuffer);
 }
 
 void GraphicsDeviceGLES1::BindVertexBuffer(VertexBuffer* vertexBuffer)
 {
+    GLuint vertexBufferId = _VertexBuffers[vertexBuffer];
     
+    if (vertexBufferId != _State->boundVertexBuffer)
+    {
+        _State->boundVertexBuffer = vertexBufferId;
+        
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
+        switch (vertexBuffer->GetVertexFormat())
+        {
+            case kVertexFormat_P_XYZ_UV:
+            {
+                GLsizei stride = sizeof(Vertex_PXYZ_UV);
+                glTexCoordPointer(2, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_UV, uv));
+                glVertexPointer(3, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_UV, position));
+                break;
+            }
+            case kVertexFormat_NP_XYZ_UV:
+            {
+                GLsizei stride = sizeof(Vertex_NPXYZ_UV);
+                glNormalPointer(GL_FLOAT, stride, (void*)offsetof(Vertex_NPXYZ_UV, normal));
+                glTexCoordPointer(2, GL_FLOAT, stride, (void*)offsetof(Vertex_NPXYZ_UV, uv));
+                glVertexPointer(3, GL_FLOAT, stride, (void*)offsetof(Vertex_NPXYZ_UV, position));
+                break;
+            }
+        }
+     }
 }
 
-void* GraphicsDeviceGLES1::LockVertexBuffer(VertexBuffer* vertexBuffer)
+void GraphicsDeviceGLES1::LockVertexBuffer(VertexBuffer* vertexBuffer)
 {
-    return 0;
+    GraphicsDevice::LockVertexBuffer(vertexBuffer);
 }
 
 void GraphicsDeviceGLES1::UnlockVertexBuffer(VertexBuffer* vertexBuffer)
+{
+    glBindBuffer(GL_ARRAY_BUFFER, _VertexBuffers[vertexBuffer]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_PXYZ_UV) * vertexBuffer->GetLength(), vertexBuffer->GetData(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+    
+IndexBuffer* GraphicsDeviceGLES1::CreateIndexBuffer(BufferFormat bufferFormat, int length)
+{
+    IndexBuffer* indexBuffer = GraphicsDevice::CreateIndexBuffer(bufferFormat, length);
+    
+    GLuint buffer = 0;
+    glGenBuffers(1, &buffer);
+    
+    _IndexBuffers[indexBuffer] = buffer;
+    
+    return indexBuffer;
+}
+
+void GraphicsDeviceGLES1::DestroyIndexBuffer(IndexBuffer* indexBuffer)
+{
+    GLuint buffer = _IndexBuffers[indexBuffer];
+    glDeleteBuffers(1, &buffer);
+    
+    GraphicsDevice::DestroyIndexBuffer(indexBuffer);
+}
+
+void GraphicsDeviceGLES1::BindIndexBuffer(IndexBuffer* indexBuffer)
+{
+    GLuint indexBufferId = _IndexBuffers[indexBuffer];
+    
+    if (indexBufferId != _State->boundIndexBuffer)
+    {
+        _State->boundVertexBuffer = indexBufferId;
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferId);
+    }
+}
+
+void GraphicsDeviceGLES1::LockIndexBuffer(IndexBuffer* indexBuffer)
+{
+    
+}
+
+void GraphicsDeviceGLES1::UnlockIndexBuffer(IndexBuffer* indexBuffer)
 {
     
 }
     
 Texture* GraphicsDeviceGLES1::CreateTexture()
 {
-    return new TextureGLES1();
+    return new TextureGLES1(this);
 }
 
 void GraphicsDeviceGLES1::RemoveTexture(Texture* texture)
 {
-    
+    delete texture;
 }
     
 void GraphicsDeviceGLES1::BindTexture(Texture* texture)
 {
+    GLuint textureId = static_cast<TextureGLES1*>(texture)->_Texture;
     
+    if (textureId != _State->boundTexture)
+    {
+        _State->boundTexture = textureId;
+        glBindTexture(GL_TEXTURE_2D, textureId);
+    }
 }
     
-}
-
 #endif

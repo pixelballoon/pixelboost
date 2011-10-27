@@ -4,8 +4,6 @@
 
 #ifdef LIBPIXEL_GRAPHICS_OPENGLES1
 
-#include "libpixel/graphics/device/vertexBuffer.h"
-
 #include <OpenGLES/ES1/gl.h>
 #include <OpenGLES/ES1/glext.h>
 
@@ -14,6 +12,8 @@
 namespace libpixel
 {
 
+struct DeviceState;
+class IndexBuffer;
 class Texture;
 class VertexBuffer;
     
@@ -23,20 +23,28 @@ public:
     GraphicsDeviceGLES1();
     virtual ~GraphicsDeviceGLES1();
     
-    virtual VertexBuffer* CreateVertexBuffer(BufferFormat bufferFormat, VertexFormat vertexFormat, int numElements);
-    virtual void RemoveVertexBuffer(VertexBuffer* buffer);
+    virtual VertexBuffer* CreateVertexBuffer(BufferFormat bufferFormat, VertexFormat vertexFormat, int length);
+    virtual void DestroyVertexBuffer(VertexBuffer* buffer);
     virtual void BindVertexBuffer(VertexBuffer* buffer);
     
-    virtual void* LockVertexBuffer(VertexBuffer* vertexBuffer);
+    virtual void LockVertexBuffer(VertexBuffer* vertexBuffer);
     virtual void UnlockVertexBuffer(VertexBuffer* vertexBuffer);
+    
+    virtual IndexBuffer* CreateIndexBuffer(BufferFormat bufferFormat, int length);
+    virtual void DestroyIndexBuffer(IndexBuffer* buffer);
+    virtual void BindIndexBuffer(IndexBuffer* buffer);
+    
+    virtual void LockIndexBuffer(IndexBuffer* vertexBuffer);
+    virtual void UnlockIndexBuffer(IndexBuffer* vertexBuffer);
     
     virtual Texture* CreateTexture();
     virtual void RemoveTexture(Texture* texture);
     virtual void BindTexture(Texture* texture);
     
 private:
-    GLuint _BoundVertexBuffer;
+    DeviceState* _State;
     
+    std::map<IndexBuffer*, GLuint> _IndexBuffers;
     std::map<VertexBuffer*, GLuint> _VertexBuffers;
 };
 

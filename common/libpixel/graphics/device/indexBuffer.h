@@ -7,30 +7,15 @@ namespace libpixel
     
 class GraphicsDevice;
 
-struct Vertex_PXYZ_UV
-{
-    float position[3];
-    float uv[2];
-    float __padding[3]; // for 32-byte alignment
-};
-
-struct Vertex_NPXYZ_UV
-{
-    float position[3];
-    float normal[3];
-    float uv[2];
-};
-
-class VertexBuffer
+class IndexBuffer
 {
 protected:
-    VertexBuffer(GraphicsDevice* device, BufferFormat bufferFormat, VertexFormat vertexFormat, int length);
-    ~VertexBuffer();
+    IndexBuffer(GraphicsDevice* device, BufferFormat bufferFormat, int length);
+    ~IndexBuffer();
     
 public:    
     BufferFormat GetBufferFormat();
     int GetLength();
-    VertexFormat GetVertexFormat();
     
     void* GetData();
     
@@ -43,7 +28,6 @@ private:
     GraphicsDevice* _Device;
     
     BufferFormat _BufferFormat;
-    VertexFormat _VertexFormat;
     int _Length;
     
     void* _Data;

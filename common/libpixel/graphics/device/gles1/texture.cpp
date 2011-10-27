@@ -4,7 +4,7 @@
 
 #include "libpixel/graphics/device/gles1/texture.h"
 
-libpixel::TextureGLES1::TextureGLES1()
+libpixel::TextureGLES1::TextureGLES1(GraphicsDeviceGLES1* device)
 {
     
 }
@@ -16,7 +16,7 @@ libpixel::TextureGLES1::~TextureGLES1()
 
 void libpixel::TextureGLES1::Bind(int unit)
 {
-    
+    _Device->BindTexture(this);
 }
 
 #endif
