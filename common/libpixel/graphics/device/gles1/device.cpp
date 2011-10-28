@@ -62,11 +62,10 @@ void GraphicsDeviceGLES1::BindVertexBuffer(VertexBuffer* vertexBuffer)
 {
     GLuint vertexBufferId = _VertexBuffers[vertexBuffer];
     
-    if (vertexBufferId != _State->boundVertexBuffer)
+//    if (vertexBufferId != _State->boundVertexBuffer)
     {
         _State->boundVertexBuffer = vertexBufferId;
         
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
         switch (vertexBuffer->GetVertexFormat())
         {
             case kVertexFormat_P_XYZ_UV:
@@ -85,6 +84,7 @@ void GraphicsDeviceGLES1::BindVertexBuffer(VertexBuffer* vertexBuffer)
                 break;
             }
         }
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
      }
 }
 
@@ -96,7 +96,15 @@ void GraphicsDeviceGLES1::LockVertexBuffer(VertexBuffer* vertexBuffer)
 void GraphicsDeviceGLES1::UnlockVertexBuffer(VertexBuffer* vertexBuffer)
 {
     glBindBuffer(GL_ARRAY_BUFFER, _VertexBuffers[vertexBuffer]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_PXYZ_UV) * vertexBuffer->GetLength(), vertexBuffer->GetData(), GL_STATIC_DRAW);
+    switch (vertexBuffer->GetVertexFormat())
+    {
+        case kVertexFormat_P_XYZ_UV:
+            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_PXYZ_UV) * vertexBuffer->GetLength(), vertexBuffer->GetData(), GL_DYNAMIC_DRAW);
+            break;
+        case kVertexFormat_NP_XYZ_UV:
+            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_NPXYZ_UV) * vertexBuffer->GetLength(), vertexBuffer->GetData(), GL_DYNAMIC_DRAW);
+            break;
+    }
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
     
@@ -124,21 +132,25 @@ void GraphicsDeviceGLES1::BindIndexBuffer(IndexBuffer* indexBuffer)
 {
     GLuint indexBufferId = _IndexBuffers[indexBuffer];
     
-    if (indexBufferId != _State->boundIndexBuffer)
+    //if (indexBufferId != _State->boundIndexBuffer)
     {
-        _State->boundVertexBuffer = indexBufferId;
+        _State->boundIndexBuffer = indexBufferId;
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferId);
     }
 }
 
 void GraphicsDeviceGLES1::LockIndexBuffer(IndexBuffer* indexBuffer)
 {
-    
+    GraphicsDevice::LockIndexBuffer(indexBuffer);
 }
 
 void GraphicsDeviceGLES1::UnlockIndexBuffer(IndexBuffer* indexBuffer)
 {
+    GLuint indexBufferId = _IndexBuffers[indexBuffer];
     
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferId);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * indexBuffer->GetLength(), indexBuffer->GetData(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
     
 Texture* GraphicsDeviceGLES1::CreateTexture()

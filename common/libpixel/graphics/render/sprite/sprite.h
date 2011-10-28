@@ -24,7 +24,7 @@ public:
 public:
     unsigned long _RefCount;
     
-    GLuint _Texture;
+    Texture* _Texture;
     
 private:
     typedef std::map<std::string, Sprite*> SpriteMap;
@@ -33,6 +33,9 @@ private:
 
 class Sprite
 {
+public:
+    Vec4 GetUV();
+    
 public:
     SpriteSheet* _Sheet;
 

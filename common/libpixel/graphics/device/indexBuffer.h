@@ -17,7 +17,7 @@ public:
     BufferFormat GetBufferFormat();
     int GetLength();
     
-    void* GetData();
+    unsigned short* GetData();
     
     void Lock();
     void Unlock();
@@ -30,7 +30,7 @@ private:
     BufferFormat _BufferFormat;
     int _Length;
     
-    void* _Data;
+    unsigned short* _Data;
     
     int _Locked;
     

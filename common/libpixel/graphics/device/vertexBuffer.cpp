@@ -9,6 +9,7 @@ VertexBuffer::VertexBuffer(GraphicsDevice* device, BufferFormat bufferFormat, Ve
     , _VertexFormat(vertexFormat)
     , _Length(length)
 {
+    _Data = 0;
     _Locked = 0;
     
     switch (vertexFormat)

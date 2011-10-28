@@ -8,6 +8,7 @@ IndexBuffer::IndexBuffer(GraphicsDevice* device, BufferFormat bufferFormat, int 
     , _BufferFormat(bufferFormat)
     , _Length(length)
 {
+    _Data = new unsigned short[length];
     _Locked = 0;
 }
     
@@ -36,7 +37,7 @@ void IndexBuffer::Lock()
     _Locked++;
 }
     
-void* IndexBuffer::GetData()
+unsigned short* IndexBuffer::GetData()
 {
     if (_Locked)
     {

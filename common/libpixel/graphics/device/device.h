@@ -13,9 +13,10 @@ class GraphicsDevice
 {
 protected:
     GraphicsDevice();
+    static GraphicsDevice* Create();
     
 public:
-    static GraphicsDevice* Create();
+    static GraphicsDevice* Instance();
     virtual ~GraphicsDevice();
     
     virtual VertexBuffer* CreateVertexBuffer(BufferFormat bufferFormat, VertexFormat vertexFormat, int length);

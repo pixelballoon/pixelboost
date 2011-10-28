@@ -50,7 +50,6 @@ private:
 
     FontRenderer* _FontRenderer;
     GameCenter* _GameCenter;
-    GraphicsDevice* _GraphicsDevice;
     ModelRenderer* _ModelRenderer;
     PrimitiveRenderer* _PrimitiveRenderer;
 	ResourceManager* _ResourceManager;

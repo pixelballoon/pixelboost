@@ -29,7 +29,6 @@ Game::Game(void* viewController)
     
     _GameCenter = new GameCenter();
     
-    _GraphicsDevice = GraphicsDevice::Create();
     _FontRenderer = new FontRenderer();
     _ModelRenderer  = new ModelRenderer();
     _PrimitiveRenderer = new PrimitiveRenderer();

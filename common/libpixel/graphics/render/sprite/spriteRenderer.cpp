@@ -116,7 +116,7 @@ void SpriteRenderer::Render()
         }
         
         glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_PXYZ_UV) * 4, _Vertices, GL_DYNAMIC_DRAW);
-        glBindTexture(GL_TEXTURE_2D, it->_Sprite->_Sheet->_Texture);
+        it->_Sprite->_Sheet->_Texture->Bind(0);
         
         glPushMatrix();
         

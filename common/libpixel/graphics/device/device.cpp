@@ -13,6 +13,12 @@ GraphicsDevice::~GraphicsDevice()
 {
     
 }
+
+GraphicsDevice* GraphicsDevice::Instance()
+{
+    static GraphicsDevice* instance = GraphicsDevice::Create();
+    return instance;
+}
     
 VertexBuffer* GraphicsDevice::CreateVertexBuffer(BufferFormat bufferFormat, VertexFormat vertexFormat, int length)
 {

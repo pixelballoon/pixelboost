@@ -68,7 +68,8 @@ bool SpriteSheet::Load(const std::string& name, bool generateMips)
         _Sprites[name.substr(0, name.length()-4)] = sprite;
     }
     
-    _Texture = LoadTexture(fileRoot + "/data/spritesheets/images/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".png", generateMips);
+    _Texture = GraphicsDevice::Instance()->CreateTexture();
+    _Texture->Load(fileRoot + "/data/spritesheets/images/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".png", generateMips);
     
     return (_Texture != 0);
 }
@@ -83,4 +84,9 @@ Sprite* SpriteSheet::GetSprite(const std::string& name)
     return it->second;
 }
 
+Vec4 Sprite::GetUV()
+{
+    return Vec4(0, 0, 1, 1);
+}
+    
 }
