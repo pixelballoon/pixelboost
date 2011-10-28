@@ -18,6 +18,8 @@ void PrimitiveRenderer::RenderEllipse(Vec2 position, Vec2 size, Vec3 rotation, V
 {
     glEnable(GL_BLEND);
     
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
     glPushMatrix();
     
     glTranslatef(position[0], position[1], 0.f);
@@ -48,12 +50,16 @@ void PrimitiveRenderer::RenderEllipse(Vec2 position, Vec2 size, Vec3 rotation, V
     
     glPopMatrix();
     
+    glColor4f(1.f, 1.f, 1.f, 1.f);
+    
     glDisable(GL_BLEND);
 }
     
 void PrimitiveRenderer::RenderLine(Vec2 start, Vec2 end, Vec4 color)
 {
     glEnable(GL_BLEND);
+    
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     glPushMatrix();
     
@@ -79,10 +85,11 @@ void PrimitiveRenderer::RenderBox(Vec2 position, Vec2 size, Vec4 color)
 {
     glEnable(GL_BLEND);
     
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
     glColor4f(color[0], color[1], color[2], color[3]);
     
     glEnableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     
     Vec2 tl(position[0] - size[0]/2.f, position[1] - size[1]/2.f);
     Vec2 br(position[0] + size[0]/2.f, position[1] + size[1]/2.f);
@@ -92,6 +99,8 @@ void PrimitiveRenderer::RenderBox(Vec2 position, Vec2 size, Vec4 color)
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
         
     glDisableClientState(GL_VERTEX_ARRAY);
+    
+    glColor4f(1.f, 1.f, 1.f, 1.f);
     
     glDisable(GL_BLEND);
 }
