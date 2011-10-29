@@ -14,7 +14,7 @@ IndexBuffer::IndexBuffer(GraphicsDevice* device, BufferFormat bufferFormat, int 
     
 IndexBuffer::~IndexBuffer()
 {
-    
+    delete[] _Data;
 }
 
 BufferFormat IndexBuffer::GetBufferFormat()
@@ -39,12 +39,7 @@ void IndexBuffer::Lock()
     
 unsigned short* IndexBuffer::GetData()
 {
-    if (_Locked)
-    {
-        return _Data;
-    }
-    
-    return 0;
+    return _Data;
 }
 
 void IndexBuffer::Unlock()

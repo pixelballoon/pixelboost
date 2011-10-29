@@ -64,6 +64,8 @@ void GraphicsDeviceGLES1::BindVertexBuffer(VertexBuffer* vertexBuffer)
     
 //    if (vertexBufferId != _State->boundVertexBuffer)
     {
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
+        
         _State->boundVertexBuffer = vertexBufferId;
         
         switch (vertexBuffer->GetVertexFormat())
@@ -75,6 +77,14 @@ void GraphicsDeviceGLES1::BindVertexBuffer(VertexBuffer* vertexBuffer)
                 glVertexPointer(3, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_UV, position));
                 break;
             }
+            case kVertexFormat_P_XYZ_RGBA_UV:
+            {
+                GLsizei stride = sizeof(Vertex_PXYZ_RGBA_UV);
+                glColorPointer(4, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_RGBA_UV, color));
+                glTexCoordPointer(2, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_RGBA_UV, uv));
+                glVertexPointer(3, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_RGBA_UV, position));
+                break;
+            }
             case kVertexFormat_NP_XYZ_UV:
             {
                 GLsizei stride = sizeof(Vertex_NPXYZ_UV);
@@ -84,7 +94,6 @@ void GraphicsDeviceGLES1::BindVertexBuffer(VertexBuffer* vertexBuffer)
                 break;
             }
         }
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
      }
 }
 
@@ -99,11 +108,20 @@ void GraphicsDeviceGLES1::UnlockVertexBuffer(VertexBuffer* vertexBuffer)
     switch (vertexBuffer->GetVertexFormat())
     {
         case kVertexFormat_P_XYZ_UV:
-            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_PXYZ_UV) * vertexBuffer->GetLength(), vertexBuffer->GetData(), GL_DYNAMIC_DRAW);
+        {
+            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_PXYZ_UV) * vertexBuffer->GetLength(), vertexBuffer->GetData(), GL_STATIC_DRAW);
             break;
+        }
+        case kVertexFormat_P_XYZ_RGBA_UV:
+        {
+            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_PXYZ_RGBA_UV) * vertexBuffer->GetLength(), vertexBuffer->GetData(), GL_STATIC_DRAW);
+            break;
+        }
         case kVertexFormat_NP_XYZ_UV:
-            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_NPXYZ_UV) * vertexBuffer->GetLength(), vertexBuffer->GetData(), GL_DYNAMIC_DRAW);
+        {
+            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_NPXYZ_UV) * vertexBuffer->GetLength(), vertexBuffer->GetData(), GL_STATIC_DRAW);
             break;
+        }
     }
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
@@ -173,5 +191,5 @@ void GraphicsDeviceGLES1::BindTexture(Texture* texture)
         glBindTexture(GL_TEXTURE_2D, textureId);
     }
 }
-    
+
 #endif

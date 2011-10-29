@@ -12,10 +12,13 @@ VertexBuffer::VertexBuffer(GraphicsDevice* device, BufferFormat bufferFormat, Ve
     _Data = 0;
     _Locked = 0;
     
-    switch (vertexFormat)
+    switch (_VertexFormat)
     {
         case kVertexFormat_P_XYZ_UV:
             _Data = new Vertex_PXYZ_UV[length];
+            break;
+        case kVertexFormat_P_XYZ_RGBA_UV:
+            _Data = new Vertex_PXYZ_RGBA_UV[length];
             break;
         case kVertexFormat_NP_XYZ_UV:
             _Data = new Vertex_NPXYZ_UV[length];
@@ -25,7 +28,18 @@ VertexBuffer::VertexBuffer(GraphicsDevice* device, BufferFormat bufferFormat, Ve
     
 VertexBuffer::~VertexBuffer()
 {
-    
+    switch (_VertexFormat)
+    {
+        case kVertexFormat_P_XYZ_UV:
+            delete[] static_cast<Vertex_PXYZ_UV*>(_Data);
+            break;
+        case kVertexFormat_P_XYZ_RGBA_UV:
+            delete[] static_cast<Vertex_PXYZ_RGBA_UV*>(_Data);
+            break;
+        case kVertexFormat_NP_XYZ_UV:
+            delete[] static_cast<Vertex_NPXYZ_UV*>(_Data);
+            break;
+    }
 }
 
 BufferFormat VertexBuffer::GetBufferFormat()
@@ -55,12 +69,7 @@ void VertexBuffer::Lock()
     
 void* VertexBuffer::GetData()
 {
-    if (_Locked)
-    {
-        return _Data;
-    }
-    
-    return 0;
+    return _Data;
 }
 
 void VertexBuffer::Unlock()
