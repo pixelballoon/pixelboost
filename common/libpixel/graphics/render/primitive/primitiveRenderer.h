@@ -1,10 +1,5 @@
 #pragma once
 
-#include <list>
-#include <map>
-#include <string>
-#include <vector>
-
 #include "libpixel/math/maths.h"
 
 namespace libpixel
