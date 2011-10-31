@@ -20,7 +20,7 @@ public:
     void PlayBgm(const std::string& name, bool loop, float volume=1.f);
     void StopBgm();
     
-    void PlaySfx(const std::string& name, bool compressed, float volume=1.f);
+    void PlaySfx(const std::string& name, bool compressed, float volume=1.f, float pitch=1.f);
     
 private:
     std::string _CurrentBgmName;

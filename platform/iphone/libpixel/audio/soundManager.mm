@@ -74,14 +74,14 @@ void SoundManager::StopBgm()
     [[OALSimpleAudio sharedInstance] stopBg];
 }
 
-void SoundManager::PlaySfx(const std::string& name, bool compressed, float volume)
+void SoundManager::PlaySfx(const std::string& name, bool compressed, float volume, float pitch)
 {
     if (_MuteSfx)
         return;
     
     std::string fileName = FileHelpers::GetRootPath() + "/data/audio/sfx/" + name + (compressed ? ".mp3" : ".wav");
      
-    [[OALSimpleAudio sharedInstance] playEffect:[NSString stringWithUTF8String:fileName.c_str()] volume:volume pitch:1.f pan:0.f loop:false];
+    [[OALSimpleAudio sharedInstance] playEffect:[NSString stringWithUTF8String:fileName.c_str()] volume:volume pitch:pitch pan:0.f loop:false];
 }
 
 }
