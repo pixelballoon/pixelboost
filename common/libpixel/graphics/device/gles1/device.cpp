@@ -185,7 +185,7 @@ void GraphicsDeviceGLES1::BindTexture(Texture* texture)
 {
     GLuint textureId = static_cast<TextureGLES1*>(texture)->_Texture;
     
-    if (textureId != _State->boundTexture)
+    //if (textureId != _State->boundTexture)
     {
         _State->boundTexture = textureId;
         glBindTexture(GL_TEXTURE_2D, textureId);
