@@ -12,7 +12,7 @@ libpixel::TextureGLES1::TextureGLES1(GraphicsDeviceGLES1* device)
 
 libpixel::TextureGLES1::~TextureGLES1()
 {
-    
+    glDeleteTextures(1, &_Texture);
 }
 
 void libpixel::TextureGLES1::Bind(int unit)

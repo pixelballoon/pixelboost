@@ -19,7 +19,7 @@ public:
     virtual ~Texture();
     
     virtual void Load(const std::string& image, bool createMips) = 0;
-    virtual void Bind(int unit) = 0;
+    virtual void Bind(int unit = 0) = 0;
 };
 
 }

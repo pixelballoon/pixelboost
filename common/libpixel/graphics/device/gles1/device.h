@@ -38,7 +38,7 @@ public:
     virtual void UnlockIndexBuffer(IndexBuffer* vertexBuffer);
     
     virtual Texture* CreateTexture();
-    virtual void RemoveTexture(Texture* texture);
+    virtual void DestroyTexture(Texture* texture);
     virtual void BindTexture(Texture* texture);
     
 private:

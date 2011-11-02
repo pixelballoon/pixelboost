@@ -176,7 +176,7 @@ Texture* GraphicsDeviceGLES1::CreateTexture()
     return new TextureGLES1(this);
 }
 
-void GraphicsDeviceGLES1::RemoveTexture(Texture* texture)
+void GraphicsDeviceGLES1::DestroyTexture(Texture* texture)
 {
     delete texture;
 }
