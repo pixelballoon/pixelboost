@@ -69,7 +69,7 @@ void TouchManager::RemoveTouchHandler(TouchHandler* handler)
 void TouchManager::AddTouch(void* uiTouch, Vec2 position)
 {
 	Touch* touch = new Touch();
-	touch->_Position = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? Vec2(position[0]/2.4f, position[1]/2.133f) : position;
+	touch->_Position = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? Vec2(position[0]/2.f, position[1]/2.f) : position;
 	_Touches[uiTouch] = touch;
 	OnTouchBegin(touch);
 }
