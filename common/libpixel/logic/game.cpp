@@ -3,6 +3,7 @@
 #include "libpixel/graphics/device/device.h"
 #include "libpixel/graphics/render/font/fontRenderer.h"
 #include "libpixel/graphics/render/model/modelRenderer.h"
+#include "libpixel/graphics/render/particle/particleRenderer.h"
 #include "libpixel/graphics/render/primitive/primitiveRenderer.h"
 #include "libpixel/graphics/render/sprite/spriteRenderer.h"
 #include "libpixel/input/touchManager.h"
@@ -31,6 +32,7 @@ Game::Game(void* viewController)
     
     _FontRenderer = new FontRenderer();
     _ModelRenderer  = new ModelRenderer();
+    _ParticleRenderer = new ParticleRenderer();
     _PrimitiveRenderer = new PrimitiveRenderer();
     _SpriteRenderer = new SpriteRenderer();
     
@@ -48,6 +50,7 @@ Game::~Game()
     delete _FontRenderer;
     delete _GameCenter;
     delete _ModelRenderer;
+    delete _ParticleRenderer;
     delete _PrimitiveRenderer;
     delete _ResourceManager;
     delete _SoundManager;
@@ -83,6 +86,11 @@ ModelRenderer* Game::GetModelRenderer() const
 ResourceManager* Game::GetResourceManager() const
 {
     return _ResourceManager;
+}
+    
+ParticleRenderer* Game::GetParticleRenderer() const
+{
+    return _ParticleRenderer;
 }
 
 PrimitiveRenderer* Game::GetPrimitiveRenderer() const

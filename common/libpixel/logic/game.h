@@ -9,6 +9,7 @@ class FontRenderer;
 class GameCenter;
 class GraphicsDevice;
 class ModelRenderer;
+class ParticleRenderer;
 class PrimitiveRenderer;
 class ResourceManager;
 class Screen;
@@ -30,6 +31,7 @@ public:
     GameCenter* GetGameCenter() const;
     ModelRenderer* GetModelRenderer() const;
 	ResourceManager* GetResourceManager() const;
+    ParticleRenderer* GetParticleRenderer() const;
     PrimitiveRenderer* GetPrimitiveRenderer() const;
     SoundManager* GetSoundManager() const;
 	SpriteRenderer* GetSpriteRenderer() const;
@@ -51,6 +53,7 @@ private:
     FontRenderer* _FontRenderer;
     GameCenter* _GameCenter;
     ModelRenderer* _ModelRenderer;
+    ParticleRenderer* _ParticleRenderer;
     PrimitiveRenderer* _PrimitiveRenderer;
 	ResourceManager* _ResourceManager;
 	SoundManager* _SoundManager;
