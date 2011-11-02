@@ -45,7 +45,7 @@ public:
 public:
     unsigned long _RefCount;
     
-    GLuint _Texture;
+    Texture* _Texture;
 };
 
 class ModelRenderer

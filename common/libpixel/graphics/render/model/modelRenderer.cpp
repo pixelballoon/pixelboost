@@ -204,7 +204,8 @@ bool ModelTexture::Load(const std::string& textureName)
 {
     std::string texFilename = FileHelpers::GetRootPath() + "/data/models/" + textureName + ".png";
     
-    _Texture = LoadTexture(texFilename, true);
+    _Texture = GraphicsDevice::Instance()->CreateTexture();
+    _Texture->Load(texFilename, true);
     
     return true;
 }
@@ -314,7 +315,7 @@ bool ModelRenderer::Render(const std::string& modelName, const std::string& text
     glRotatef(rotation[1], 0, 1, 0);
     glRotatef(rotation[2], 0, 0, 1);
 
-    glBindTexture(GL_TEXTURE_2D, texture->_Texture);
+    texture->_Texture->Bind();
     
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);

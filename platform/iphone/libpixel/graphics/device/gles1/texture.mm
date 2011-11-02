@@ -2,11 +2,14 @@
 
 using namespace libpixel;
 
-GLuint libpixel::LoadTexture(void* image, bool createMips)
+void libpixel::TextureGLES1::Load(const std::string& path, bool createMips)
 {
-    UIImage* uiImage = (UIImage*)image;
+    UIImage* image = [[UIImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:path.c_str()]];
     
-    CGImage* cgImage = [uiImage CGImage];
+    if (!image)
+        return;
+    
+    CGImage* cgImage = [image CGImage];
 	const int width = CGImageGetWidth(cgImage);
 	const int height = CGImageGetHeight(cgImage);
 	
@@ -39,25 +42,8 @@ GLuint libpixel::LoadTexture(void* image, bool createMips)
 	
 	glBindTexture(GL_TEXTURE_2D, 0);
 	free(textureData);
-    
-    return handle;
-}
-
-GLuint libpixel::LoadTexture(const std::string& path, bool createMips)
-{
-	UIImage* image = [[UIImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:path.c_str()]];
-    
-    if (!image)
-        return 0;
-    
-    GLuint handle = LoadTexture(image, createMips);
 	
 	[image release];
-	
-	return handle;
-}
-
-void libpixel::TextureGLES1::Load(const std::string& image, bool createMips)
-{
-    _Texture = LoadTexture(image);
+    
+    _Texture = handle;
 }
