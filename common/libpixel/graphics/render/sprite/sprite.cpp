@@ -14,6 +14,7 @@ SpriteSheet::SpriteSheet()
 
 SpriteSheet::~SpriteSheet()
 {
+    GraphicsDevice::Instance()->DestroyTexture(_Texture);
 }
 
 bool SpriteSheet::Load(const std::string& name, bool generateMips)
