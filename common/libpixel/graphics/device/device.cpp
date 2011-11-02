@@ -1,5 +1,6 @@
 #include "libpixel/graphics/device/device.h"
 #include "libpixel/graphics/device/indexBuffer.h"
+#include "libpixel/graphics/device/texture.h"
 #include "libpixel/graphics/device/vertexBuffer.h"
 
 using namespace libpixel;
@@ -68,4 +69,9 @@ void GraphicsDevice::LockIndexBuffer(IndexBuffer* vertexBuffer)
 void GraphicsDevice::UnlockIndexBuffer(IndexBuffer* vertexBuffer)
 {
     
+}
+
+void GraphicsDevice::DestroyTexture(Texture* texture)
+{
+    delete texture;
 }

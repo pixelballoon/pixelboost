@@ -34,7 +34,7 @@ public:
     virtual void UnlockIndexBuffer(IndexBuffer* vertexBuffer);
     
     virtual Texture* CreateTexture() = 0;
-    virtual void DestroyTexture(Texture* texture) = 0;
+    virtual void DestroyTexture(Texture* texture);
     virtual void BindTexture(Texture* texture) = 0;
 };
     

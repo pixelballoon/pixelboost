@@ -14,10 +14,9 @@ class TextureGLES1 : Texture
 {
 protected:
     TextureGLES1(GraphicsDeviceGLES1* _Device);
-    
-public:
     virtual ~TextureGLES1();
     
+public:
     void Load(const std::string& image, bool createMips);
     void Bind(int unit);
     

@@ -178,7 +178,7 @@ Texture* GraphicsDeviceGLES1::CreateTexture()
 
 void GraphicsDeviceGLES1::DestroyTexture(Texture* texture)
 {
-    delete texture;
+    GraphicsDevice::DestroyTexture(texture);
 }
     
 void GraphicsDeviceGLES1::BindTexture(Texture* texture)
