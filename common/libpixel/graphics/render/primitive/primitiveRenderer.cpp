@@ -81,7 +81,7 @@ void PrimitiveRenderer::RenderLine(Vec2 start, Vec2 end, Vec4 color)
     glDisable(GL_BLEND);
 }
     
-void PrimitiveRenderer::RenderBox(Vec2 position, Vec2 size, Vec4 color)
+void PrimitiveRenderer::RenderBox(Vec2 position, Vec2 size, Vec3 rotation, Vec4 color, bool solid)
 {
     glEnable(GL_BLEND);
     
@@ -89,18 +89,30 @@ void PrimitiveRenderer::RenderBox(Vec2 position, Vec2 size, Vec4 color)
     
     glColor4f(color[0], color[1], color[2], color[3]);
     
+    glPushMatrix();
+    
+    glTranslatef(position[0], position[1], 0);
+    glRotatef(rotation[0], 1, 0, 0);
+    glRotatef(rotation[1], 0, 1, 0);
+    glRotatef(rotation[2], 0, 0, 1);
+    
     glEnableClientState(GL_VERTEX_ARRAY);
     
-    Vec2 tl(position[0] - size[0]/2.f, position[1] - size[1]/2.f);
-    Vec2 br(position[0] + size[0]/2.f, position[1] + size[1]/2.f);
+    Vec2 tl(-size[0]/2.f, -size[1]/2.f);
+    Vec2 br(+size[0]/2.f, +size[1]/2.f);
     
     GLfloat glVertices[8] = { tl[0], br[1], tl[0], tl[1], br[0], tl[1], br[0], br[1] };
     glVertexPointer(2, GL_FLOAT, 0, glVertices);
-    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+    if (solid)
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+    else
+        glDrawArrays(GL_LINE_LOOP, 0, 4);
         
     glDisableClientState(GL_VERTEX_ARRAY);
     
     glColor4f(1.f, 1.f, 1.f, 1.f);
+    
+    glPopMatrix();
     
     glDisable(GL_BLEND);
 }
