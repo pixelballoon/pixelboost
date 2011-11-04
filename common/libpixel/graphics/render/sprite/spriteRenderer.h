@@ -7,6 +7,7 @@
 
 #include "libpixel/graphics/device/device.h"
 #include "libpixel/graphics/device/vertexBuffer.h"
+#include "libpixel/graphics/render/common/irenderer.h"
 #include "libpixel/math/maths.h"
 
 namespace libpixel
@@ -42,18 +43,19 @@ private:
     friend class SpriteRenderer;
 };
 
-class SpriteRenderer
+class SpriteRenderer : public IRenderer
 {
 public:
 	SpriteRenderer();
 	~SpriteRenderer();
     
-    void Render();
+    void Update(float time);
+    void Render(RenderLayer* layer);
 	
-	bool Load(const std::string& spriteSheet, bool generateMips);
-    bool Unload(const std::string& spriteSheet);
+    bool AddSpriteSheet(const std::string& name, SpriteSheet* spriteSheet, bool takeOwnership);
+    bool RemoveSpriteSheet(SpriteSheet* spriteSheet);
     
-    bool AttachToRenderer(const std::string& sheetName, const std::string& spriteName, Vec2 position, Vec3 rotation = Vec3(0.f, 0.f, 0.f), Vec2 scale = Vec2(1.f, 1.f), BlendMode blendMode = kBlendModeNormal, Vec2 offset = Vec2(0.f, 0.f));
+    bool AttachToRenderer(RenderLayer* layer, const std::string& sheetName, const std::string& spriteName, Vec2 position, Vec3 rotation = Vec3(0.f, 0.f, 0.f), Vec2 scale = Vec2(1.f, 1.f), BlendMode blendMode = kBlendModeNormal, Vec2 offset = Vec2(0.f, 0.f));
     
     Sprite* GetSprite(const std::string& sheetName, const std::string& spriteName) const;
 		
@@ -61,9 +63,17 @@ private:
     SpriteSheet* GetSpriteSheet(const std::string& spriteSheet) const;
     
 	typedef std::list<SpriteInstance> InstanceList;
-    typedef std::map<std::string, SpriteSheet*> SheetMap;
+    typedef std::map<RenderLayer*, InstanceList> InstanceListMap;
+    
+    struct SpriteRendererSheet
+    {
+        SpriteSheet* spriteSheet;
+        bool hasOwnership;
+    };
+    
+    typedef std::map<std::string, SpriteRendererSheet> SheetMap;
 	
-	InstanceList _Instances;
+	InstanceListMap _Instances;
     
 	SheetMap _SpriteSheets;
     

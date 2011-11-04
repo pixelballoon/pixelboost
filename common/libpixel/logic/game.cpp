@@ -1,6 +1,7 @@
 #include "libpixel/audio/soundManager.h"
 #include "libpixel/debug/debugVariableManager.h"
 #include "libpixel/graphics/device/device.h"
+#include "libpixel/graphics/render/common/renderer.h"
 #include "libpixel/graphics/render/font/fontRenderer.h"
 #include "libpixel/graphics/render/model/modelRenderer.h"
 #include "libpixel/graphics/render/particle/particleRenderer.h"
@@ -34,6 +35,7 @@ Game::Game(void* viewController)
     _ModelRenderer  = new ModelRenderer();
     _ParticleRenderer = new ParticleRenderer();
     _PrimitiveRenderer = new PrimitiveRenderer();
+    _Renderer = new Renderer();
     _SpriteRenderer = new SpriteRenderer();
     
     _SoundManager = new SoundManager();
@@ -52,6 +54,7 @@ Game::~Game()
     delete _ModelRenderer;
     delete _ParticleRenderer;
     delete _PrimitiveRenderer;
+    delete _Renderer;
     delete _ResourceManager;
     delete _SoundManager;
     delete _SpriteRenderer;
@@ -77,7 +80,7 @@ GameCenter* Game::GetGameCenter() const
 {
     return _GameCenter;
 }
-    
+        
 ModelRenderer* Game::GetModelRenderer() const
 {
     return _ModelRenderer;
@@ -96,6 +99,11 @@ ParticleRenderer* Game::GetParticleRenderer() const
 PrimitiveRenderer* Game::GetPrimitiveRenderer() const
 {
     return _PrimitiveRenderer;
+}
+    
+Renderer* Game::GetRenderer() const
+{
+    return _Renderer;
 }
 
 SoundManager* Game::GetSoundManager() const
@@ -132,10 +140,13 @@ void Game::Update(float time)
 {
     _GameTime += time;
     _TotalTime += time;
+    
+    _Renderer->Update(time);
 }
 
 void Game::Render()
 {
+    _Renderer->Render();
 }
 
 void* Game::GetViewController()

@@ -5,7 +5,7 @@
 
 #include "libpixel/graphics/device/texture.h"
 #include "libpixel/graphics/device/vertexBuffer.h"
-#include "libpixel/graphics/render/renderer.h"
+#include "libpixel/graphics/render/common/irenderer.h"
 #include "libpixel/math/maths.h"
 
 namespace libpixel

@@ -5,11 +5,11 @@ namespace libpixel
 
 class RenderLayer;
     
-class Renderer
+class IRenderer
 {
 public:
-    Renderer();
-    ~Renderer();
+    IRenderer();
+    virtual ~IRenderer();
     
     virtual void Update(float time) = 0;
     virtual void Render(RenderLayer* layer) = 0;

@@ -186,7 +186,7 @@ void ParticleRenderer::Render(RenderLayer* layer)
     
     ParticleList& particleList = _Particles[layer];
     
-    std::sort(particleList.begin(), particleList.end(), &ParticleRenderer::ParticleSortPredicate);
+    std::stable_sort(particleList.begin(), particleList.end(), &ParticleRenderer::ParticleSortPredicate);
     
     if (indexBuffer && vertexBuffer)
     {

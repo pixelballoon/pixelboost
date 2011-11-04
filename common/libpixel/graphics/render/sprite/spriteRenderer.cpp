@@ -45,7 +45,12 @@ SpriteRenderer::~SpriteRenderer()
 {
 }
     
-void SpriteRenderer::Render()
+void SpriteRenderer::Update(float time)
+{
+    _Instances.clear();
+}
+    
+void SpriteRenderer::Render(RenderLayer* layer)
 {
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
@@ -63,7 +68,9 @@ void SpriteRenderer::Render()
     
     Vertex_PXYZ_UV* vertexBuffer = _Vertices;
     
-    for (InstanceList::iterator it = _Instances.begin(); it != _Instances.end(); ++it)
+    InstanceList& instanceList = _Instances[layer];
+    
+    for (InstanceList::iterator it = instanceList.begin(); it != instanceList.end(); ++it)
     {
         switch (it->_BlendMode)
         {
@@ -142,48 +149,43 @@ void SpriteRenderer::Render()
     
     glDisable(GL_BLEND);
     glDisable(GL_TEXTURE_2D);
-    
-    _Instances.clear();
 }
-  
-bool SpriteRenderer::Load(const std::string& spriteSheet, bool generateMips)
+
+bool SpriteRenderer::AddSpriteSheet(const std::string& name, SpriteSheet* spriteSheet, bool takeOwnership)
 {
-    SheetMap::iterator it = _SpriteSheets.find(spriteSheet);
+    SheetMap::iterator it = _SpriteSheets.find(name);
     
     if (it != _SpriteSheets.end())
         return true;
     
-    SpriteSheet* sheet = new SpriteSheet();
-    
-    sheet->Load(spriteSheet, generateMips);
-    
-    _SpriteSheets[spriteSheet] = sheet;
+    SpriteRendererSheet sheet;
+    sheet.spriteSheet = spriteSheet;
+    sheet.hasOwnership = takeOwnership;
+    _SpriteSheets[name] = sheet;
 
     return true;
 }
-    
-bool SpriteRenderer::Unload(const std::string& spriteSheet)
+ 
+bool SpriteRenderer::RemoveSpriteSheet(libpixel::SpriteSheet *spriteSheet)
 {
-    SheetMap::iterator it = _SpriteSheets.find(spriteSheet);
+    for (SheetMap::iterator it = _SpriteSheets.begin(); it != _SpriteSheets.end(); ++it)
+    {
+        if (it->second.spriteSheet == spriteSheet)
+        {
+            if (it->second.hasOwnership)
+                delete it->second.spriteSheet;
+            
+            _SpriteSheets.erase(it);
+            return true;
+        }
+    }
     
-    if (it == _SpriteSheets.end())
-        return false;
-    
-    delete it->second;
-    
-    _SpriteSheets.erase(it);
-    
-    return true;
+    return false;
 }
 
-bool SpriteRenderer::AttachToRenderer(const std::string& sheetName, const std::string& spriteName, Vec2 position, Vec3 rotation, Vec2 scale, BlendMode blendMode, Vec2 offset)
+bool SpriteRenderer::AttachToRenderer(RenderLayer* layer, const std::string& sheetName, const std::string& spriteName, Vec2 position, Vec3 rotation, Vec2 scale, BlendMode blendMode, Vec2 offset)
 {
-    SpriteSheet* spriteSheet = GetSpriteSheet(sheetName);
-    
-    if (!spriteSheet)
-        return false;
-    
-    Sprite* sprite = spriteSheet->GetSprite(spriteName);
+    Sprite* sprite = GetSprite(sheetName, spriteName);
     
     if (!sprite)
         return false;
@@ -196,9 +198,7 @@ bool SpriteRenderer::AttachToRenderer(const std::string& sheetName, const std::s
     instance._Offset = offset;
     instance._BlendMode = blendMode;
     
-    _Instances.push_back(instance);
-    
-    Render();
+    _Instances[layer].push_back(instance);
     
     return true;
 }
@@ -220,7 +220,7 @@ SpriteSheet* SpriteRenderer::GetSpriteSheet(const std::string& spriteSheet) cons
     if (it == _SpriteSheets.end())
         return 0;
     
-    return it->second;
+    return it->second.spriteSheet;
 }
 
 }

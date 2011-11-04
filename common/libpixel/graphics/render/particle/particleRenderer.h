@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "libpixel/graphics/render/renderer.h"
+#include "libpixel/graphics/render/common/irenderer.h"
 #include "libpixel/math/maths.h"
 
 namespace libpixel
@@ -12,7 +12,7 @@ namespace libpixel
 class RenderLayer;
 class SpriteSheet;
     
-class ParticleRenderer
+class ParticleRenderer : IRenderer
 {
 public:
     class ParticleEmitter;

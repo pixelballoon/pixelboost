@@ -11,6 +11,7 @@ class GraphicsDevice;
 class ModelRenderer;
 class ParticleRenderer;
 class PrimitiveRenderer;
+class Renderer;
 class ResourceManager;
 class Screen;
 class SoundManager;
@@ -33,6 +34,7 @@ public:
 	ResourceManager* GetResourceManager() const;
     ParticleRenderer* GetParticleRenderer() const;
     PrimitiveRenderer* GetPrimitiveRenderer() const;
+    Renderer* GetRenderer() const;
     SoundManager* GetSoundManager() const;
 	SpriteRenderer* GetSpriteRenderer() const;
 	TouchManager* GetTouchManager() const;
@@ -55,6 +57,7 @@ private:
     ModelRenderer* _ModelRenderer;
     ParticleRenderer* _ParticleRenderer;
     PrimitiveRenderer* _PrimitiveRenderer;
+    Renderer* _Renderer;
 	ResourceManager* _ResourceManager;
 	SoundManager* _SoundManager;
 	SpriteRenderer* _SpriteRenderer;
