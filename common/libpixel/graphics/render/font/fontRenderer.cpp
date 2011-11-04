@@ -213,6 +213,8 @@ void FontRenderer::Render()
         glPushMatrix();
         
         glTranslatef(it->_Position[0], it->_Position[1], 0.f);
+
+        glRotatef(it->_Rotation, 0, 0, 1);
         
         glScalef(it->_Scale, it->_Scale, 1.f);
         
