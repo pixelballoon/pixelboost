@@ -178,13 +178,16 @@ void ParticleRenderer::Update(float time)
 
 void ParticleRenderer::Render(RenderLayer* layer)
 {
+    ParticleList& particleList = _Particles[layer];
+
+    if (!particleList.size())
+        return;
+    
     _IndexBuffer->Lock();
     _VertexBuffer->Lock();
     
     unsigned short* indexBuffer = _IndexBuffer->GetData();
     libpixel::Vertex_PXYZ_RGBA_UV* vertexBuffer = static_cast<libpixel::Vertex_PXYZ_RGBA_UV*>(_VertexBuffer->GetData());
-    
-    ParticleList& particleList = _Particles[layer];
     
     std::stable_sort(particleList.begin(), particleList.end(), &ParticleRenderer::ParticleSortPredicate);
     
@@ -299,7 +302,7 @@ void ParticleRenderer::Render(RenderLayer* layer)
         glEnableClientState(GL_COLOR_ARRAY);
         glEnableClientState(GL_TEXTURE_COORD_ARRAY);
         glEnableClientState(GL_VERTEX_ARRAY);
-        glDrawElements(GL_TRIANGLES, _Particles.size()*6, GL_UNSIGNED_SHORT, (void*)0);
+        glDrawElements(GL_TRIANGLES, particleList.size()*6, GL_UNSIGNED_SHORT, (void*)0);
         glDisableClientState(GL_COLOR_ARRAY);
         glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         glDisableClientState(GL_VERTEX_ARRAY);
