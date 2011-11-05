@@ -161,15 +161,11 @@ void FontRenderer::Render()
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 #endif
     
+    glDisableClientState(GL_COLOR_ARRAY);
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     
-    _VertexBuffer->Bind();
     _IndexBuffer->Bind();
-    
-    GLsizei stride = sizeof(Vertex_PXYZ_UV);
-    glVertexPointer(3, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_UV, position));
-    glTexCoordPointer(2, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_UV, uv));
     
     for (InstanceList::iterator it = _Instances.begin(); it != _Instances.end(); ++it)
     {
@@ -182,6 +178,7 @@ void FontRenderer::Render()
         font = fontIt->second;
         
         _VertexBuffer->Lock();
+        
         Vertex_PXYZ_UV* vertexBuffer = static_cast<Vertex_PXYZ_UV*>(_VertexBuffer->GetData());
         
         float offset = 0.f;
