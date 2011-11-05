@@ -4,8 +4,14 @@
 
 using namespace libpixel;
 
-RenderLayer::RenderLayer(Camera* camera)
+RenderLayer::RenderLayer(int depth, Camera* camera)
     : _Camera(camera)
+    , _Depth(depth)
 {
     
+}
+
+int RenderLayer::GetDepth()
+{
+    return _Depth;
 }

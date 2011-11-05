@@ -8,13 +8,6 @@
 
 using namespace libpixel;
 
-Renderer::InternalRenderLayer::InternalRenderLayer(int depth, RenderLayer* layer)
-    : depth(depth)
-    , layer(layer)
-{
-
-}
-
 Renderer::Renderer()
 {
     
@@ -40,8 +33,8 @@ void Renderer::Render()
     {
         for (RendererList::iterator rendererIt = _Renderers.begin(); rendererIt != _Renderers.end(); ++rendererIt)
         {
-            it->layer->_Camera->ApplyTransform();
-            (*rendererIt)->Render(it->layer);
+            (*it)->_Camera->ApplyTransform();
+            (*rendererIt)->Render(*it);
         }
     }
 }
@@ -63,16 +56,16 @@ void Renderer::RemoveRenderer(IRenderer* renderer)
     }
 }
 
-void Renderer::AddLayer(int depth, RenderLayer* layer)
+void Renderer::AddLayer(RenderLayer* layer)
 {
-    _Layers.push_back(InternalRenderLayer(depth, layer));
+    _Layers.push_back(layer);
 }
 
 void Renderer::RemoveLayer(RenderLayer* layer)
 {
     for (LayerList::iterator it = _Layers.begin(); it != _Layers.end(); ++it)
     {
-        if (it->layer == layer)
+        if (*it == layer)
         {
             _Layers.erase(it);
             return;
@@ -80,19 +73,7 @@ void Renderer::RemoveLayer(RenderLayer* layer)
     }
 }
 
-void Renderer::SetLayerDepth(const RenderLayer* layer, int depth)
+bool Renderer::LayerSortPredicate(const RenderLayer* a, const RenderLayer* b)
 {
-    for (LayerList::iterator it = _Layers.begin(); it != _Layers.end(); ++it)
-    {
-        if (it->layer == layer)
-        {
-            it->depth = depth;
-            return;
-        }
-    }
-}
-
-bool Renderer::LayerSortPredicate(const InternalRenderLayer& a, const InternalRenderLayer& b)
-{
-    return a.depth < b.depth;
+    return a->_Depth < b->_Depth;
 }

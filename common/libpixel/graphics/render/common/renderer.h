@@ -20,24 +20,14 @@ public:
     void AddRenderer(IRenderer* renderer);
     void RemoveRenderer(IRenderer* renderer);
     
-    void AddLayer(int depth, RenderLayer* layer);
+    void AddLayer(RenderLayer* layer);
     void RemoveLayer(RenderLayer* layer);
     
-    void SetLayerDepth(const RenderLayer* layer, int depth);
-    
 private:
-    struct InternalRenderLayer
-    {
-        InternalRenderLayer(int depth, RenderLayer* layer);
-        
-        int depth;
-        RenderLayer* layer;
-    };
-
-    static bool LayerSortPredicate(const InternalRenderLayer& a, const InternalRenderLayer& b);
+    static bool LayerSortPredicate(const RenderLayer* a, const RenderLayer* b);
     
     typedef std::vector<IRenderer*> RendererList;
-    typedef std::vector<InternalRenderLayer> LayerList;
+    typedef std::vector<RenderLayer*> LayerList;
     
     RendererList _Renderers;
     LayerList _Layers;
