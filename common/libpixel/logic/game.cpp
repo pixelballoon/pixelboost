@@ -2,6 +2,7 @@
 #include "libpixel/debug/debugVariableManager.h"
 #include "libpixel/graphics/device/device.h"
 #include "libpixel/graphics/render/common/renderer.h"
+#include "libpixel/graphics/render/custom/customRenderer.h"
 #include "libpixel/graphics/render/font/fontRenderer.h"
 #include "libpixel/graphics/render/model/modelRenderer.h"
 #include "libpixel/graphics/render/particle/particleRenderer.h"
@@ -31,6 +32,7 @@ Game::Game(void* viewController)
     
     _GameCenter = new GameCenter();
     
+    _CustomRenderer = new CustomRenderer();
     _FontRenderer = new FontRenderer();
     _ModelRenderer  = new ModelRenderer();
     _ParticleRenderer = new ParticleRenderer();
@@ -38,6 +40,7 @@ Game::Game(void* viewController)
     _Renderer = new Renderer();
     _SpriteRenderer = new SpriteRenderer();
 
+    _Renderer->AddRenderer(_CustomRenderer);
     _Renderer->AddRenderer(_ParticleRenderer);
     _Renderer->AddRenderer(_PrimitiveRenderer);
     _Renderer->AddRenderer(_SpriteRenderer);
@@ -52,7 +55,13 @@ Game::Game(void* viewController)
 Game::~Game()
 {
     _Instance = 0;
+    
+    _Renderer->RemoveRenderer(_CustomRenderer);
+    _Renderer->RemoveRenderer(_ParticleRenderer);
+    _Renderer->RemoveRenderer(_PrimitiveRenderer);
+    _Renderer->RemoveRenderer(_SpriteRenderer);
 
+    delete _CustomRenderer;
     delete _FontRenderer;
     delete _GameCenter;
     delete _ModelRenderer;
@@ -73,6 +82,11 @@ Game* Game::Instance()
 void Game::Initialise()
 {
 
+}
+    
+CustomRenderer* Game::GetCustomRenderer() const
+{
+    return _CustomRenderer;
 }
     
 FontRenderer* Game::GetFontRenderer() const

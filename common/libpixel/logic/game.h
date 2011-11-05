@@ -5,6 +5,7 @@
 namespace libpixel
 {
 
+class CustomRenderer;
 class FontRenderer;
 class GameCenter;
 class GraphicsDevice;
@@ -28,6 +29,7 @@ public:
 	
 	virtual void Initialise();
 
+    CustomRenderer* GetCustomRenderer() const;
     FontRenderer* GetFontRenderer() const;
     GameCenter* GetGameCenter() const;
     ModelRenderer* GetModelRenderer() const;
@@ -52,6 +54,7 @@ public:
 private:
 	static Game* _Instance;
 
+    CustomRenderer* _CustomRenderer;
     FontRenderer* _FontRenderer;
     GameCenter* _GameCenter;
     ModelRenderer* _ModelRenderer;
