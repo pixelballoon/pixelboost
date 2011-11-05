@@ -12,7 +12,7 @@ namespace libpixel
 class RenderLayer;
 class SpriteSheet;
     
-class ParticleRenderer : IRenderer
+class ParticleRenderer : public IRenderer
 {
 public:
     class ParticleEmitter;
