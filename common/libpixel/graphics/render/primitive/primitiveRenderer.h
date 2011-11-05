@@ -1,19 +1,50 @@
 #pragma once
 
+#include <map>
+#include <vector>
+
+#include "libpixel/graphics/render/common/irenderer.h"
 #include "libpixel/math/maths.h"
 
 namespace libpixel
 {
 
-class PrimitiveRenderer
+class PrimitiveRenderer : public IRenderer
 {
 public:
     PrimitiveRenderer();
     ~PrimitiveRenderer();
     
-    void RenderEllipse(Vec2 position, Vec2 size, Vec3 rotation = Vec3(0.f, 0.f, 0.f), Vec4 color = Vec4(1.f, 1.f, 1.f, 1.f), int segments = 12);
-    void RenderLine(Vec2 start, Vec2 end, Vec4 color = Vec4(1.f, 1.f, 1.f, 1.f));
-    void RenderBox(Vec2 position, Vec2 size, Vec3 rotation = Vec3(0.f, 0.f, 0.f), Vec4 color = Vec4(1.f, 1.f, 1.f, 1.f), bool solid=true);
+    void Update(float time);
+    void Render(RenderLayer* layer);
+    
+    void AttachEllipse(RenderLayer* layer, Vec2 position, Vec2 size, Vec3 rotation = Vec3(0.f, 0.f, 0.f), Vec4 color = Vec4(1.f, 1.f, 1.f, 1.f), int segments = 12);
+    void AttachLine(RenderLayer* layer, Vec2 start, Vec2 end, Vec4 color = Vec4(1.f, 1.f, 1.f, 1.f));
+    void AttachBox(RenderLayer* layer, Vec2 position, Vec2 size, Vec3 rotation = Vec3(0.f, 0.f, 0.f), Vec4 color = Vec4(1.f, 1.f, 1.f, 1.f), bool solid=true);
+    
+private:
+    struct RenderItem
+    {
+        enum Type
+        {
+            kTypeEllipse,
+            kTypeLine,
+            kTypeBox,
+        };
+        
+        Type type;
+        Vec2 position;
+        Vec2 size;
+        Vec3 rotation;
+        Vec4 color;
+        bool solid;
+        int segments;
+    };
+    
+    typedef std::vector<RenderItem> ItemList;
+    typedef std::map<RenderLayer*, ItemList> ItemListMap;
+    
+    ItemListMap _Items;
 };
     
 }

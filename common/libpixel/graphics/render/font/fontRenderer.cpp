@@ -155,7 +155,7 @@ void FontRenderer::Render()
     glEnable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
     
-#ifndef LIBPIXEL_PLATFORM_IOS
+#ifndef LIBPIXEL_GRAPHICS_PREMULTIPLIED_ALPHA
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 #else
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);

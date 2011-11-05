@@ -39,6 +39,7 @@ Game::Game(void* viewController)
     _SpriteRenderer = new SpriteRenderer();
 
     _Renderer->AddRenderer(_ParticleRenderer);
+    _Renderer->AddRenderer(_PrimitiveRenderer);
     _Renderer->AddRenderer(_SpriteRenderer);
     
     _SoundManager = new SoundManager();

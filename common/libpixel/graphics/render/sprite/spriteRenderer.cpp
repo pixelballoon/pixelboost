@@ -52,6 +52,10 @@ void SpriteRenderer::Update(float time)
     
 void SpriteRenderer::Render(RenderLayer* layer)
 {
+    InstanceList& instanceList = _Instances[layer];
+    if (!instanceList.size())
+        return;
+    
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
@@ -67,8 +71,6 @@ void SpriteRenderer::Render(RenderLayer* layer)
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     
     Vertex_PXYZ_UV* vertexBuffer = _Vertices;
-    
-    InstanceList& instanceList = _Instances[layer];
     
     for (InstanceList::iterator it = instanceList.begin(); it != instanceList.end(); ++it)
     {
