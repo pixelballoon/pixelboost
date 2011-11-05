@@ -208,6 +208,9 @@ void FontRenderer::Render()
         }
         
         _VertexBuffer->Unlock();
+        
+        _VertexBuffer->Bind();
+        
         font->texture->Bind(0);
         
         glPushMatrix();
@@ -229,7 +232,7 @@ void FontRenderer::Render()
                 break;
         }
         
-        glDrawElements(GL_TRIANGLES, it->_String.length() * 6, GL_UNSIGNED_SHORT, (void*)0);
+        GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, it->_String.length()*6);
         
         glPopMatrix();
     }

@@ -23,6 +23,7 @@ public:
     GraphicsDeviceGLES1();
     virtual ~GraphicsDeviceGLES1();
     
+public:
     virtual VertexBuffer* CreateVertexBuffer(BufferFormat bufferFormat, VertexFormat vertexFormat, int length);
     virtual void DestroyVertexBuffer(VertexBuffer* buffer);
     virtual void BindVertexBuffer(VertexBuffer* buffer);
@@ -40,6 +41,9 @@ public:
     virtual Texture* CreateTexture();
     virtual void DestroyTexture(Texture* texture);
     virtual void BindTexture(Texture* texture);
+    
+public:
+    virtual void DrawElements(ElementType elementType, int num);
     
 private:
     DeviceState* _State;

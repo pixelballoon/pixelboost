@@ -36,6 +36,15 @@ public:
     virtual Texture* CreateTexture() = 0;
     virtual void DestroyTexture(Texture* texture);
     virtual void BindTexture(Texture* texture) = 0;
+    
+public:
+    enum ElementType
+    {
+        kElementLines,
+        kElementTriangles,
+    };
+    
+    virtual void DrawElements(ElementType elementType, int num) = 0;
 };
     
 }

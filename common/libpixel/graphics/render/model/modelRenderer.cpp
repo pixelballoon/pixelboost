@@ -329,7 +329,7 @@ bool ModelRenderer::Render(const std::string& modelName, const std::string& text
     glNormalPointer(GL_FLOAT, stride, (void*)offsetof(Vertex_NPXYZ_UV, normal));
     glTexCoordPointer(2, GL_FLOAT, stride, (void*)offsetof(Vertex_NPXYZ_UV, uv));
     
-    glDrawElements(GL_TRIANGLES, model->_NumVertices, GL_UNSIGNED_SHORT, (void*)0);
+    GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, model->_NumVertices);
     
     glPopMatrix();
     

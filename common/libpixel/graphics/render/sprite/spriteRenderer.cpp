@@ -138,7 +138,7 @@ void SpriteRenderer::Render(RenderLayer* layer)
         
         glScalef(it->_Sprite->_Dimension[0], it->_Sprite->_Dimension[1], 1.f);
         
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, (void*)0);
+        GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, 6);
         
         glPopMatrix();
     }

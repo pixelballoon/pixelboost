@@ -191,5 +191,31 @@ void GraphicsDeviceGLES1::BindTexture(Texture* texture)
         glBindTexture(GL_TEXTURE_2D, textureId);
     }
 }
+enum ElementType
+{
+    kElementLines,
+    kElementTriangles,
+};
+
+void GraphicsDeviceGLES1::DrawElements(ElementType elementType, int num)
+{
+    GLuint type;
+    
+    switch (elementType)
+    {
+        case kElementLines:
+        {
+            type = GL_LINES;
+            break;
+        }
+        case kElementTriangles:
+        {
+            type = GL_TRIANGLES;
+            break;
+        }
+    }
+    
+    glDrawElements(GL_TRIANGLES, num, GL_UNSIGNED_SHORT, (void*)0);
+}
 
 #endif
