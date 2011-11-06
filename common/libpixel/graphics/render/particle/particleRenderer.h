@@ -73,6 +73,7 @@ public:
 private:
     Config* _Config;
     Vec2 _Position;
+    float _EmitCount;
     
     friend class ParticleRenderer;
 };

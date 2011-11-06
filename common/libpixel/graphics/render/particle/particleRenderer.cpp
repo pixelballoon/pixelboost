@@ -90,6 +90,7 @@ ParticleEmitter::Config::~Config()
 ParticleEmitter::ParticleEmitter()
 {
     _Config = new Config();
+    _EmitCount = 0.f;
 }
 
 ParticleEmitter::~ParticleEmitter()
@@ -188,21 +189,28 @@ void ParticleRenderer::Update(float time)
             ParticleEmitter* emitter = *it;
             ParticleEmitter::Config& config = emitter->GetConfig();
             
+            emitter->_EmitCount += config.particlesPerUpdate;
+            
             if (!config.sprites.size())
                 continue;
             
-            Particle particle(&config);
-            particle.position[0] = emitter->_Position[0] + config.minPosOffset[0] + (config.maxPosOffset[0]-config.minPosOffset[0]) * (float)rand()/(float)RAND_MAX;
-            particle.position[1] = emitter->_Position[1] + config.minPosOffset[1] + (config.maxPosOffset[1]-config.minPosOffset[1]) * (float)rand()/(float)RAND_MAX;
-            particle.rotation = config.minRotOffset + (config.maxRotOffset-config.minRotOffset) * (float)rand()/(float)RAND_MAX;
-            particle.rotationVelocity = config.minRotVelocity + (config.maxRotVelocity-config.minRotVelocity) * (float)rand()/(float)RAND_MAX;
-            particle.positionVelocity[0] = config.minPosVelocity[0] + (config.maxPosVelocity[0]-config.minPosVelocity[0]) * (float)rand()/(float)RAND_MAX;
-            particle.positionVelocity[1] = config.minPosVelocity[1] + (config.maxPosVelocity[1]-config.minPosVelocity[1]) * (float)rand()/(float)RAND_MAX;
-            particle.life = 0;
-            particle.sprite = config.sprites[Min((int)((float)rand()/(float)RAND_MAX * config.sprites.size()), (int)config.sprites.size()-1)];
-            particle.totalLife = config.life;
-            
-            _Particles[emitterListIt->first].push_back(particle);
+            while (emitter->_EmitCount >= 1.f)
+            {
+                Particle particle(&config);
+                particle.position[0] = emitter->_Position[0] + config.minPosOffset[0] + (config.maxPosOffset[0]-config.minPosOffset[0]) * (float)rand()/(float)RAND_MAX;
+                particle.position[1] = emitter->_Position[1] + config.minPosOffset[1] + (config.maxPosOffset[1]-config.minPosOffset[1]) * (float)rand()/(float)RAND_MAX;
+                particle.rotation = config.minRotOffset + (config.maxRotOffset-config.minRotOffset) * (float)rand()/(float)RAND_MAX;
+                particle.rotationVelocity = config.minRotVelocity + (config.maxRotVelocity-config.minRotVelocity) * (float)rand()/(float)RAND_MAX;
+                particle.positionVelocity[0] = config.minPosVelocity[0] + (config.maxPosVelocity[0]-config.minPosVelocity[0]) * (float)rand()/(float)RAND_MAX;
+                particle.positionVelocity[1] = config.minPosVelocity[1] + (config.maxPosVelocity[1]-config.minPosVelocity[1]) * (float)rand()/(float)RAND_MAX;
+                particle.life = 0;
+                particle.sprite = config.sprites[Min((int)((float)rand()/(float)RAND_MAX * config.sprites.size()), (int)config.sprites.size()-1)];
+                particle.totalLife = config.life;
+
+                _Particles[emitterListIt->first].push_back(particle);
+                
+                emitter->_EmitCount -= 1.f;
+            }
         }
     }
     
