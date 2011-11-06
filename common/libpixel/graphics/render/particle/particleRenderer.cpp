@@ -7,20 +7,62 @@
 
 using namespace libpixel;
 
-ParticleRenderer::Particle::Particle(const ParticleEmitterConfig& config)
-    : emitterConfig(&config)
+ParticleRenderer::Particle::Particle(ParticleEmitter::Config* config)
+    : emitterConfig(config)
 {
-    
+    emitterConfig->refCount++;
 }
 
-ParticleRenderer::ParticleEmitterConfig::ParticleEmitterConfig()
+ParticleRenderer::Particle::Particle(const Particle& rhs)
 {
+    Assign(rhs);
+}
+
+ParticleRenderer::Particle::~Particle()
+{
+    emitterConfig->refCount--;
+    
+    if (emitterConfig->refCount == 0)
+    {
+        delete emitterConfig;
+    }
+}
+
+ParticleRenderer::Particle& ParticleRenderer::Particle::operator=(const Particle& rhs)
+{
+    Assign(rhs);
+    
+    return *this;
+}
+
+void ParticleRenderer::Particle::Assign(const Particle& rhs)
+{
+    emitterConfig = rhs.emitterConfig;
+    emitterConfig->refCount++;
+    
+    sprite = rhs.sprite;
+    
+    life = rhs.life;
+    totalLife = rhs.totalLife;
+    
+    rotation = rhs.rotation;
+    position = rhs.position;
+    
+    rotationVelocity = rhs.rotationVelocity;
+    positionVelocity = rhs.positionVelocity;
+}
+
+ParticleEmitter::Config::Config()
+{
+    hasSpriteSheetOwnership = false;
+    spriteSheet = 0;
+    
+    refCount = 1;
+    
     particlesPerUpdate = 1.f;
     
     initialScale = 1.f;
     life = 1.f;
-    
-//    sprite = "";
     
     startScale = Vec2(1.f, 1.f);
     endScale = Vec2(1.f, 1.f);
@@ -34,63 +76,67 @@ ParticleRenderer::ParticleEmitterConfig::ParticleEmitterConfig()
     maxRotVelocity = Vec3(0.f, 0.f, 0.f);
     minPosVelocity = Vec2(0.f, 0.f);
     maxPosVelocity = Vec2(0.f, 0.f);
-    gravityScale = 1.f;
+    gravity = Vec2(0.f, 0.f);
 }
 
-ParticleRenderer::ParticleEmitter::ParticleEmitter()
-    : _HasSpriteSheetOwnership(false)
+ParticleEmitter::Config::~Config()
 {
-    
+    if (hasSpriteSheetOwnership && spriteSheet)
+    {
+        delete spriteSheet;
+    }
 }
 
-ParticleRenderer::ParticleEmitter::~ParticleEmitter()
+ParticleEmitter::ParticleEmitter()
 {
-    
+    _Config = new Config();
 }
 
-bool ParticleRenderer::ParticleEmitter::Load(const std::string& file)
+ParticleEmitter::~ParticleEmitter()
+{
+    _Config->refCount--;
+    
+    if (_Config->refCount == 0)
+        delete _Config;
+}
+
+bool ParticleEmitter::Load(const std::string& file)
 {
     return false;
 }
 
-void ParticleRenderer::ParticleEmitter::LoadSpriteSheet(const std::string& file, bool createMips)
+void ParticleEmitter::LoadSpriteSheet(const std::string& file, bool createMips)
 {
-    if (_HasSpriteSheetOwnership && _SpriteSheet)
-        delete _SpriteSheet;
+    if (_Config->hasSpriteSheetOwnership && _Config->spriteSheet)
+        delete _Config->spriteSheet;
     
-    _HasSpriteSheetOwnership = true;
-    _SpriteSheet = new SpriteSheet();
-    _SpriteSheet->Load(file, createMips);
+    _Config->hasSpriteSheetOwnership = true;
+    _Config->spriteSheet = new SpriteSheet();
+    _Config->spriteSheet->Load(file, createMips);
 }
 
-void ParticleRenderer::ParticleEmitter::SetSpriteSheet(SpriteSheet* spriteSheet, bool takeOwnership)
+void ParticleEmitter::SetSpriteSheet(SpriteSheet* spriteSheet, bool takeOwnership)
 {
-    if (_HasSpriteSheetOwnership && _SpriteSheet)
-        delete _SpriteSheet;
+    if (_Config->hasSpriteSheetOwnership && _Config->spriteSheet)
+        delete _Config->spriteSheet;
     
-    _HasSpriteSheetOwnership = takeOwnership;
-    _SpriteSheet = spriteSheet;
+    _Config->hasSpriteSheetOwnership = takeOwnership;
+    _Config->spriteSheet = spriteSheet;
 }
 
-Vec2 ParticleRenderer::ParticleEmitter::GetPosition()
+Vec2 ParticleEmitter::GetPosition()
 {
     return _Position;
 }
 
-void ParticleRenderer::ParticleEmitter::SetPosition(const Vec2& position)
+void ParticleEmitter::SetPosition(const Vec2& position)
 {
     _Position = position;
 }
 
-const ParticleRenderer::ParticleEmitterConfig& ParticleRenderer::ParticleEmitter::GetConfig()
+ParticleEmitter::Config& ParticleEmitter::GetConfig()
 {
-    return _Config;
-}
-
-void ParticleRenderer::ParticleEmitter::SetConfig(const ParticleEmitterConfig& config)
-{
-    _Config = config;
-    _Config.emitter = this;
+    return *_Config;
 }
 
 ParticleRenderer::ParticleRenderer(int maxParticlesPerLayer)
@@ -107,7 +153,7 @@ ParticleRenderer::~ParticleRenderer()
     libpixel::GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
 }
 
-ParticleRenderer::ParticleEmitter* ParticleRenderer::CreateEmitter(RenderLayer* layer)
+ParticleEmitter* ParticleRenderer::CreateEmitter(RenderLayer* layer)
 {
     ParticleEmitter* emitter = new ParticleEmitter();
     _Emitters[layer].push_back(emitter);
@@ -140,9 +186,9 @@ void ParticleRenderer::Update(float time)
                 break;
             
             ParticleEmitter* emitter = *it;
-            const ParticleEmitterConfig& config = emitter->GetConfig();
+            ParticleEmitter::Config& config = emitter->GetConfig();
             
-            Particle particle(config);
+            Particle particle(&config);
             particle.position[0] = emitter->_Position[0] + config.minPosOffset[0] + (config.maxPosOffset[0]-config.minPosOffset[0]) * (float)rand()/(float)RAND_MAX;
             particle.position[1] = emitter->_Position[1] + config.minPosOffset[1] + (config.maxPosOffset[1]-config.minPosOffset[1]) * (float)rand()/(float)RAND_MAX;
             particle.rotation = config.minRotOffset + (config.maxRotOffset-config.minRotOffset) * (float)rand()/(float)RAND_MAX;
@@ -150,7 +196,8 @@ void ParticleRenderer::Update(float time)
             particle.positionVelocity[0] = config.minPosVelocity[0] + (config.maxPosVelocity[0]-config.minPosVelocity[0]) * (float)rand()/(float)RAND_MAX;
             particle.positionVelocity[1] = config.minPosVelocity[1] + (config.maxPosVelocity[1]-config.minPosVelocity[1]) * (float)rand()/(float)RAND_MAX;
             particle.life = 0;
-            particle.sprite = config.sprites[(int)(float)rand()/(float)RAND_MAX * config.sprites.size()];
+            int index = Min((int)((float)rand()/(float)RAND_MAX * config.sprites.size()), (int)config.sprites.size()-1);
+            particle.sprite = config.sprites[index];
             particle.totalLife = config.life;
             
             _Particles[emitterListIt->first].push_back(particle);
@@ -205,20 +252,22 @@ void ParticleRenderer::Render(RenderLayer* layer)
             color *= alpha;
             color[3] = alpha;
 #endif
+            libpixel::Sprite* sprite = it->emitterConfig->spriteSheet->GetSprite(it->sprite);
             
             Vec2 scale = it->emitterConfig->startScale + (it->emitterConfig->endScale-it->emitterConfig->startScale)*tween;
+            Vec2 size = sprite->_Dimension * scale;
             
-            vertexBuffer[0].position[0] = (cos(it->rotation[2])*scale[0])+it->position[0];
-            vertexBuffer[0].position[1] = (sin(it->rotation[2])*scale[1])+it->position[1];
+            vertexBuffer[0].position[0] = (cos(it->rotation[2])*size[0])+it->position[0];
+            vertexBuffer[0].position[1] = (sin(it->rotation[2])*size[1])+it->position[1];
             vertexBuffer[0].position[2] = 0.f;
-            vertexBuffer[1].position[0] = (cos(it->rotation[2]+M_PI_2)*scale[0])+it->position[0];
-            vertexBuffer[1].position[1] = (sin(it->rotation[2]+M_PI_2)*scale[1])+it->position[1];
+            vertexBuffer[1].position[0] = (cos(it->rotation[2]+M_PI_2)*size[0])+it->position[0];
+            vertexBuffer[1].position[1] = (sin(it->rotation[2]+M_PI_2)*size[1])+it->position[1];
             vertexBuffer[1].position[2] = 0.f;
-            vertexBuffer[2].position[0] = (cos(it->rotation[2]-M_PI_2)*scale[0])+it->position[0];
-            vertexBuffer[2].position[1] = (sin(it->rotation[2]-M_PI_2)*scale[1])+it->position[1];
+            vertexBuffer[2].position[0] = (cos(it->rotation[2]-M_PI_2)*size[0])+it->position[0];
+            vertexBuffer[2].position[1] = (sin(it->rotation[2]-M_PI_2)*size[1])+it->position[1];
             vertexBuffer[2].position[2] = 0.f;
-            vertexBuffer[3].position[0] = (cos(it->rotation[2]+M_PI)*scale[0])+it->position[0];
-            vertexBuffer[3].position[1] = (sin(it->rotation[2]+M_PI)*scale[1])+it->position[1];
+            vertexBuffer[3].position[0] = (cos(it->rotation[2]+M_PI)*size[0])+it->position[0];
+            vertexBuffer[3].position[1] = (sin(it->rotation[2]+M_PI)*size[1])+it->position[1];
             vertexBuffer[3].position[2] = 0.f;
             
             vertexBuffer[0].color[0] = color[0];
@@ -237,8 +286,6 @@ void ParticleRenderer::Render(RenderLayer* layer)
             vertexBuffer[3].color[1] = color[1];
             vertexBuffer[3].color[2] = color[2];
             vertexBuffer[3].color[3] = color[3];
-            
-            libpixel::Sprite* sprite = it->emitterConfig->emitter->_SpriteSheet->GetSprite(it->sprite);
             
             if (!sprite->_Rotated)
             {
