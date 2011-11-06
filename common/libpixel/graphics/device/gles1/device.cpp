@@ -70,11 +70,25 @@ void GraphicsDeviceGLES1::BindVertexBuffer(VertexBuffer* vertexBuffer)
         
         switch (vertexBuffer->GetVertexFormat())
         {
+            case kVertexFormat_P_XY_RGBA:
+            {
+                GLsizei stride = sizeof(Vertex_PXY_RGBA);
+                glColorPointer(4, GL_FLOAT, stride, (void*)offsetof(Vertex_PXY_RGBA, color));
+                glVertexPointer(2, GL_FLOAT, stride, (void*)offsetof(Vertex_PXY_RGBA, position));
+                break;
+            }
             case kVertexFormat_P_XYZ_UV:
             {
                 GLsizei stride = sizeof(Vertex_PXYZ_UV);
                 glTexCoordPointer(2, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_UV, uv));
                 glVertexPointer(3, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_UV, position));
+                break;
+            }
+            case kVertexFormat_P_XYZ_RGBA:
+            {
+                GLsizei stride = sizeof(Vertex_PXYZ_RGBA);
+                glColorPointer(4, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_RGBA, color));
+                glVertexPointer(3, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_RGBA, position));
                 break;
             }
             case kVertexFormat_P_XYZ_RGBA_UV:
@@ -104,22 +118,34 @@ void GraphicsDeviceGLES1::LockVertexBuffer(VertexBuffer* vertexBuffer)
 
 void GraphicsDeviceGLES1::UnlockVertexBuffer(VertexBuffer* vertexBuffer)
 {
+    GLenum bufferType = vertexBuffer->GetBufferFormat() == kBufferFormatStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW;
+    
     glBindBuffer(GL_ARRAY_BUFFER, _VertexBuffers[vertexBuffer]);
     switch (vertexBuffer->GetVertexFormat())
     {
+        case kVertexFormat_P_XY_RGBA:
+        {
+            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_PXY_RGBA) * vertexBuffer->GetLength(), vertexBuffer->GetData(), bufferType);
+            break;
+        }
         case kVertexFormat_P_XYZ_UV:
         {
-            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_PXYZ_UV) * vertexBuffer->GetLength(), vertexBuffer->GetData(), GL_STATIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_PXYZ_UV) * vertexBuffer->GetLength(), vertexBuffer->GetData(), bufferType);
+            break;
+        }
+        case kVertexFormat_P_XYZ_RGBA:
+        {
+            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_PXYZ_RGBA) * vertexBuffer->GetLength(), vertexBuffer->GetData(), bufferType);
             break;
         }
         case kVertexFormat_P_XYZ_RGBA_UV:
         {
-            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_PXYZ_RGBA_UV) * vertexBuffer->GetLength(), vertexBuffer->GetData(), GL_STATIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_PXYZ_RGBA_UV) * vertexBuffer->GetLength(), vertexBuffer->GetData(), bufferType);
             break;
         }
         case kVertexFormat_NP_XYZ_UV:
         {
-            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_NPXYZ_UV) * vertexBuffer->GetLength(), vertexBuffer->GetData(), GL_STATIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_NPXYZ_UV) * vertexBuffer->GetLength(), vertexBuffer->GetData(), bufferType);
             break;
         }
     }
@@ -167,7 +193,7 @@ void GraphicsDeviceGLES1::UnlockIndexBuffer(IndexBuffer* indexBuffer)
     GLuint indexBufferId = _IndexBuffers[indexBuffer];
     
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferId);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * indexBuffer->GetLength(), indexBuffer->GetData(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * indexBuffer->GetLength(), indexBuffer->GetData(), indexBuffer->GetBufferFormat() == kBufferFormatStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
     
