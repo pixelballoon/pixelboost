@@ -188,6 +188,9 @@ void ParticleRenderer::Update(float time)
             ParticleEmitter* emitter = *it;
             ParticleEmitter::Config& config = emitter->GetConfig();
             
+            if (!config.sprites.size())
+                continue;
+            
             Particle particle(&config);
             particle.position[0] = emitter->_Position[0] + config.minPosOffset[0] + (config.maxPosOffset[0]-config.minPosOffset[0]) * (float)rand()/(float)RAND_MAX;
             particle.position[1] = emitter->_Position[1] + config.minPosOffset[1] + (config.maxPosOffset[1]-config.minPosOffset[1]) * (float)rand()/(float)RAND_MAX;
@@ -196,8 +199,7 @@ void ParticleRenderer::Update(float time)
             particle.positionVelocity[0] = config.minPosVelocity[0] + (config.maxPosVelocity[0]-config.minPosVelocity[0]) * (float)rand()/(float)RAND_MAX;
             particle.positionVelocity[1] = config.minPosVelocity[1] + (config.maxPosVelocity[1]-config.minPosVelocity[1]) * (float)rand()/(float)RAND_MAX;
             particle.life = 0;
-            int index = Min((int)((float)rand()/(float)RAND_MAX * config.sprites.size()), (int)config.sprites.size()-1);
-            particle.sprite = config.sprites[index];
+            particle.sprite = config.sprites[Min((int)((float)rand()/(float)RAND_MAX * config.sprites.size()), (int)config.sprites.size()-1)];
             particle.totalLife = config.life;
             
             _Particles[emitterListIt->first].push_back(particle);
@@ -209,6 +211,8 @@ void ParticleRenderer::Update(float time)
         for (ParticleList::iterator it = particleListIt->second.begin(); it != particleListIt->second.end(); )
         {
             it->life += time;
+            
+            it->positionVelocity += it->emitterConfig->gravity;
             
             it->rotation += it->rotationVelocity;
             it->position += it->positionVelocity;
