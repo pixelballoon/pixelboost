@@ -6,9 +6,6 @@
 
 namespace libpixel
 {
-
-GLuint LoadTexture(void* image, bool createMips = false);
-GLuint LoadTexture(const std::string& path, bool createMips = false);
     
 class Texture
 {

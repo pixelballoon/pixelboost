@@ -79,8 +79,8 @@ private:
     
 private:
     Vertex_PXYZ_UV _Vertices[4];
-    GLuint _VertexBuffer;
-    GLuint _IndexBuffer;
+    unsigned int _VertexBuffer;
+    unsigned int _IndexBuffer;
 };
     
 }
