@@ -32,7 +32,7 @@ public:
 	~SpriteInstance();
     
 private:
-    Vec2 _Offset;
+    Vec4 _Crop;
     Vec2 _Position;
     Vec3 _Rotation;
     Vec2 _Scale;
@@ -55,7 +55,7 @@ public:
     bool AddSpriteSheet(const std::string& name, SpriteSheet* spriteSheet, bool takeOwnership);
     bool RemoveSpriteSheet(SpriteSheet* spriteSheet);
     
-    bool AttachToRenderer(RenderLayer* layer, const std::string& sheetName, const std::string& spriteName, Vec2 position, Vec3 rotation = Vec3(0.f, 0.f, 0.f), Vec2 scale = Vec2(1.f, 1.f), BlendMode blendMode = kBlendModeNormal, Vec2 offset = Vec2(0.f, 0.f));
+    bool AttachToRenderer(RenderLayer* layer, const std::string& sheetName, const std::string& spriteName, Vec2 position, Vec3 rotation = Vec3(0.f, 0.f, 0.f), Vec2 scale = Vec2(1.f, 1.f), BlendMode blendMode = kBlendModeNormal, Vec4 crop = Vec4(0.f, 0.f, 1.f, 1.f));
     
     Sprite* GetSprite(const std::string& sheetName, const std::string& spriteName) const;
 		

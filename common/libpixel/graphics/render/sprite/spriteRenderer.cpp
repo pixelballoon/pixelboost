@@ -99,8 +99,8 @@ void SpriteRenderer::Render(RenderLayer* layer)
                 
         if (!it->_Sprite->_Rotated)
         {
-            Vec2 min = it->_Sprite->_Position;
-            Vec2 max = it->_Sprite->_Position + it->_Sprite->_Size;
+            Vec2 min = it->_Sprite->_Position + Vec2(it->_Sprite->_Size[0] * it->_Crop[0], it->_Sprite->_Size[1] * it->_Crop[1]);
+            Vec2 max = it->_Sprite->_Position + Vec2(it->_Sprite->_Size[0] * it->_Crop[2], it->_Sprite->_Size[1] * it->_Crop[3]);
             
             vertexBuffer[0].uv[0] = min[0];
             vertexBuffer[0].uv[1] = max[1],
@@ -111,8 +111,8 @@ void SpriteRenderer::Render(RenderLayer* layer)
             vertexBuffer[3].uv[0] = max[0];
             vertexBuffer[3].uv[1] = max[1];
         } else {
-            Vec2 min = it->_Sprite->_Position + Vec2(it->_Sprite->_Size[1], 0);
-            Vec2 max = it->_Sprite->_Position + Vec2(0, it->_Sprite->_Size[0]);
+            Vec2 min = it->_Sprite->_Position + Vec2(it->_Sprite->_Size[1] * it->_Crop[3], it->_Sprite->_Size[0] * it->_Crop[2]);
+            Vec2 max = it->_Sprite->_Position + Vec2(it->_Sprite->_Size[1] * it->_Crop[1], it->_Sprite->_Size[0] * it->_Crop[0]);
 
             vertexBuffer[0].uv[0] = max[0];
             vertexBuffer[0].uv[1] = min[1];
@@ -129,14 +129,13 @@ void SpriteRenderer::Render(RenderLayer* layer)
         
         glPushMatrix();
         
-        glTranslatef(it->_Position[0], it->_Position[1], 0.f);
-        glScalef(it->_Scale[0], it->_Scale[1], 1.f);        
-        glTranslatef(it->_Offset[0], it->_Offset[1], 0.f);
+        glTranslatef(it->_Position[0] - (0.5 - (it->_Crop[0]+it->_Crop[2])/2.f) * it->_Sprite->_Dimension[0], it->_Position[1] - (0.5 - (it->_Crop[1]+it->_Crop[3])/2.f) * it->_Sprite->_Dimension[1], 0.f);
+        glScalef(it->_Scale[0], it->_Scale[1], 1.f);
         glRotatef(it->_Rotation[0], 1, 0, 0);
         glRotatef(it->_Rotation[1], 0, 1, 0);
         glRotatef(it->_Rotation[2], 0, 0, 1);
         
-        glScalef(it->_Sprite->_Dimension[0], it->_Sprite->_Dimension[1], 1.f);
+        glScalef(it->_Sprite->_Dimension[0] * (it->_Crop[2]-it->_Crop[0]), it->_Sprite->_Dimension[1] * (it->_Crop[3]-it->_Crop[1]), 1.f);
         
         GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, 6);
         
@@ -185,7 +184,7 @@ bool SpriteRenderer::RemoveSpriteSheet(libpixel::SpriteSheet *spriteSheet)
     return false;
 }
 
-bool SpriteRenderer::AttachToRenderer(RenderLayer* layer, const std::string& sheetName, const std::string& spriteName, Vec2 position, Vec3 rotation, Vec2 scale, BlendMode blendMode, Vec2 offset)
+bool SpriteRenderer::AttachToRenderer(RenderLayer* layer, const std::string& sheetName, const std::string& spriteName, Vec2 position, Vec3 rotation, Vec2 scale, BlendMode blendMode, Vec4 crop)
 {
     Sprite* sprite = GetSprite(sheetName, spriteName);
     
@@ -194,10 +193,10 @@ bool SpriteRenderer::AttachToRenderer(RenderLayer* layer, const std::string& she
 
     SpriteInstance instance(sprite);
     
+    instance._Crop = crop;
     instance._Position = position;
     instance._Rotation = rotation;
     instance._Scale = scale;
-    instance._Offset = offset;
     instance._BlendMode = blendMode;
     
     _Instances[layer].push_back(instance);
