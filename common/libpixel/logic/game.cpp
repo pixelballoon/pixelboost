@@ -40,10 +40,11 @@ Game::Game(void* viewController)
     _Renderer = new Renderer();
     _SpriteRenderer = new SpriteRenderer();
 
+    _Renderer->AddRenderer(_SpriteRenderer);
     _Renderer->AddRenderer(_CustomRenderer);
     _Renderer->AddRenderer(_ParticleRenderer);
     _Renderer->AddRenderer(_PrimitiveRenderer);
-    _Renderer->AddRenderer(_SpriteRenderer);
+    _Renderer->AddRenderer(_FontRenderer);
     
     _SoundManager = new SoundManager();
     

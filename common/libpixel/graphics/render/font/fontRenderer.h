@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "libpixel/graphics/render/common/irenderer.h"
+
 #include "libpixel/math/maths.h"
 
 namespace libpixel
@@ -20,17 +22,18 @@ namespace libpixel
         kFontAlignRight,
     };
     
-    class FontRenderer
+    class FontRenderer : public IRenderer
     {
     public:
         FontRenderer(int maxCharacters=128);
-        ~FontRenderer();
+        virtual ~FontRenderer();
         
         void LoadFont(const std::string& fontName);
         
-        void Render();
+        virtual void Update(float time);
+        virtual void Render(RenderLayer* layer);
         
-        bool AttachToRenderer(const std::string& fontName, const std::string& string, Vec2 position, FontAlign alignment = kFontAlignCenter, float scale = 32.f, float rotation = 0.f);
+        bool AttachToRenderer(RenderLayer* layer, const std::string& fontName, const std::string& string, Vec2 position, FontAlign alignment = kFontAlignCenter, float scale = 32.f, float rotation = 0.f);
         
         void SplitString(const std::string& string, char seperator, std::vector<std::string>& output);
         
@@ -69,9 +72,10 @@ namespace libpixel
         
         typedef std::map<std::string, Font*> FontMap;
         typedef std::vector<FontInstance> InstanceList;
+        typedef std::map<RenderLayer*, InstanceList> InstanceListMap;
         
         FontMap _Fonts;
-        InstanceList _Instances;
+        InstanceListMap _Instances;
 
         int _MaxCharacters;
         IndexBuffer* _IndexBuffer;

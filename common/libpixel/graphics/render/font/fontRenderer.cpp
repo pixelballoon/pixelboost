@@ -149,8 +149,18 @@ void FontRenderer::LoadFont(const std::string& name)
     _Fonts[name] = font;
 }
 
-void FontRenderer::Render()
+void FontRenderer::Update(float time)
 {
+    _Instances.clear();
+}
+
+void FontRenderer::Render(RenderLayer* layer)
+{
+    InstanceList& instances = _Instances[layer];
+    
+    if (instances.size() == 0)
+        return;
+    
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
@@ -167,7 +177,7 @@ void FontRenderer::Render()
     
     _IndexBuffer->Bind();
     
-    for (InstanceList::iterator it = _Instances.begin(); it != _Instances.end(); ++it)
+    for (InstanceList::iterator it = instances.begin(); it != instances.end(); ++it)
     {
         Font* font;
         
@@ -234,8 +244,6 @@ void FontRenderer::Render()
         glPopMatrix();
     }
     
-    _Instances.clear();
-    
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     
@@ -246,7 +254,7 @@ void FontRenderer::Render()
     glDisable(GL_TEXTURE_2D);
 }
 
-bool FontRenderer::AttachToRenderer(const std::string& fontName, const std::string& string, Vec2 position, FontAlign alignment, float scale, float rotation)
+bool FontRenderer::AttachToRenderer(RenderLayer* layer, const std::string& fontName, const std::string& string, Vec2 position, FontAlign alignment, float scale, float rotation)
 {
     FontInstance instance;
     
@@ -257,9 +265,7 @@ bool FontRenderer::AttachToRenderer(const std::string& fontName, const std::stri
     instance._Rotation = rotation;
     instance._Scale = scale;
     
-    _Instances.push_back(instance);
-    
-    Render();
+    _Instances[layer].push_back(instance);
     
     return true;
 }
