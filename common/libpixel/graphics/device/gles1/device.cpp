@@ -241,7 +241,7 @@ void GraphicsDeviceGLES1::DrawElements(ElementType elementType, int num)
         }
     }
     
-    glDrawElements(GL_TRIANGLES, num, GL_UNSIGNED_SHORT, (void*)0);
+    glDrawElements(type, num, GL_UNSIGNED_SHORT, (void*)0);
 }
 
 #endif

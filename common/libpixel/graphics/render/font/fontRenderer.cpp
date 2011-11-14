@@ -20,12 +20,13 @@ FontRenderer::FontRenderer(int maxCharacters)
     unsigned short* indices = _IndexBuffer->GetData();
     for (int i=0; i<_MaxCharacters; i++)
     {
-        indices[(i*6)+0] = (i*4);
-        indices[(i*6)+1] = (i*4)+1;
-        indices[(i*6)+2] = (i*4)+2;
-        indices[(i*6)+3] = (i*4);
-        indices[(i*6)+4] = (i*4)+2;
-        indices[(i*6)+5] = (i*4)+3;
+        indices[0] = (i*4);
+        indices[1] = (i*4)+1;
+        indices[2] = (i*4)+2;
+        indices[3] = (i*4);
+        indices[4] = (i*4)+2;
+        indices[5] = (i*4)+3;
+        indices += 6;
     }
     
     _IndexBuffer->Unlock();
