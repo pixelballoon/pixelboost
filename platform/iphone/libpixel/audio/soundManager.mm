@@ -9,6 +9,8 @@ namespace libpixel
 SoundManager::SoundManager()
 {
     _CurrentBgmName = "";
+    _MuteBgm = false;
+    _MuteSfx = false;
     
     [OALSimpleAudio sharedInstance].allowIpod = NO;
     [OALSimpleAudio sharedInstance].honorSilentSwitch = YES;
