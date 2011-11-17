@@ -29,14 +29,14 @@ public:
     virtual void BindVertexBuffer(VertexBuffer* buffer);
     
     virtual void LockVertexBuffer(VertexBuffer* vertexBuffer);
-    virtual void UnlockVertexBuffer(VertexBuffer* vertexBuffer);
+    virtual void UnlockVertexBuffer(VertexBuffer* vertexBuffer, int numElements=-1);
     
     virtual IndexBuffer* CreateIndexBuffer(BufferFormat bufferFormat, int length);
     virtual void DestroyIndexBuffer(IndexBuffer* buffer);
     virtual void BindIndexBuffer(IndexBuffer* buffer);
     
     virtual void LockIndexBuffer(IndexBuffer* vertexBuffer);
-    virtual void UnlockIndexBuffer(IndexBuffer* vertexBuffer);
+    virtual void UnlockIndexBuffer(IndexBuffer* vertexBuffer, int numElements=-1);
     
     virtual Texture* CreateTexture();
     virtual void DestroyTexture(Texture* texture);

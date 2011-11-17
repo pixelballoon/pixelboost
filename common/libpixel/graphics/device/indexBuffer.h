@@ -20,7 +20,7 @@ public:
     unsigned short* GetData();
     
     void Lock();
-    void Unlock();
+    void Unlock(int numElements=-1);
     
     void Bind();
     

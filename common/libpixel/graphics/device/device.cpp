@@ -41,7 +41,7 @@ void GraphicsDevice::LockVertexBuffer(VertexBuffer* buffer)
     
 }
     
-void GraphicsDevice::UnlockVertexBuffer(VertexBuffer* buffer)
+void GraphicsDevice::UnlockVertexBuffer(VertexBuffer* buffer, int numElements)
 {
     
 }
@@ -66,7 +66,7 @@ void GraphicsDevice::LockIndexBuffer(IndexBuffer* vertexBuffer)
     
 }
 
-void GraphicsDevice::UnlockIndexBuffer(IndexBuffer* vertexBuffer)
+void GraphicsDevice::UnlockIndexBuffer(IndexBuffer* vertexBuffer, int numElements)
 {
     
 }

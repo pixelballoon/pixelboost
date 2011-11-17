@@ -84,13 +84,13 @@ void* VertexBuffer::GetData()
     return _Data;
 }
 
-void VertexBuffer::Unlock()
+void VertexBuffer::Unlock(int numElements)
 {
     _Locked--;
     
     if (_Locked == 0)
     {
-        _Device->UnlockVertexBuffer(this);
+        _Device->UnlockVertexBuffer(this, numElements);
     }
 }
 

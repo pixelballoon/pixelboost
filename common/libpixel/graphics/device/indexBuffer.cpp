@@ -42,13 +42,13 @@ unsigned short* IndexBuffer::GetData()
     return _Data;
 }
 
-void IndexBuffer::Unlock()
+void IndexBuffer::Unlock(int numElements)
 {
     _Locked--;
     
     if (_Locked == 0)
     {
-        _Device->UnlockIndexBuffer(this);
+        _Device->UnlockIndexBuffer(this, numElements);
     }
 }
 
