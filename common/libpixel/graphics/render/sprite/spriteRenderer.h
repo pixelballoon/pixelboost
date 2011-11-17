@@ -1,6 +1,5 @@
 #pragma once
 
-#include <list>
 #include <map>
 #include <string>
 #include <vector>
@@ -31,14 +30,14 @@ public:
 	SpriteInstance(Sprite* sprite);
 	~SpriteInstance();
     
-private:
-    Vec4 _Crop;
-    Vec2 _Position;
-    Vec3 _Rotation;
-    Vec2 _Scale;
-    BlendMode _BlendMode;
+public:
+    Vec4 crop;
+    Vec2 position;
+    Vec3 rotation;
+    Vec2 scale;
+    BlendMode blendMode;
     
-	Sprite* _Sprite;
+	Sprite* sprite;
     
     friend class SpriteRenderer;
 };
@@ -46,7 +45,7 @@ private:
 class SpriteRenderer : public IRenderer
 {
 public:
-	SpriteRenderer();
+	SpriteRenderer(int maxSpritesPerLayer=100);
 	~SpriteRenderer();
     
     void Update(float time);
@@ -62,7 +61,7 @@ public:
 private:
     SpriteSheet* GetSpriteSheet(const std::string& spriteSheet) const;
     
-	typedef std::list<SpriteInstance> InstanceList;
+	typedef std::vector<SpriteInstance> InstanceList;
     typedef std::map<RenderLayer*, InstanceList> InstanceListMap;
     
     struct SpriteRendererSheet
@@ -78,9 +77,10 @@ private:
 	SheetMap _SpriteSheets;
     
 private:
-    Vertex_PXYZ_UV _Vertices[4];
-    unsigned int _VertexBuffer;
-    unsigned int _IndexBuffer;
+    IndexBuffer* _IndexBuffer;
+    VertexBuffer* _VertexBuffer;
+    
+    int _MaxSprites;
 };
     
 }

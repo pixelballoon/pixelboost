@@ -1,4 +1,6 @@
 #include "libpixel/graphics/device/device.h"
+#include "libpixel/graphics/device/indexBuffer.h"
+#include "libpixel/graphics/device/vertexBuffer.h"
 #include "libpixel/graphics/render/sprite/spriteRenderer.h"
 #include "libpixel/graphics/render/sprite/sprite.h"
 
@@ -6,39 +8,36 @@ namespace libpixel
 {
 
 SpriteInstance::SpriteInstance(Sprite* sprite) :
-	  _Sprite(sprite)
+	  sprite(sprite)
 {
-	_Sprite->_Sheet->_RefCount++;
+	sprite->_Sheet->_RefCount++;
 }
     
 SpriteInstance::~SpriteInstance()
 {
-    _Sprite->_Sheet->_RefCount--;
+    sprite->_Sheet->_RefCount--;
 }
 
-SpriteRenderer::SpriteRenderer()
+SpriteRenderer::SpriteRenderer(int maxSpritesPerLayer)
+    : _MaxSprites(maxSpritesPerLayer)
 {
-    GLfloat glVertices[8] = { -0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f };
+    _IndexBuffer = libpixel::GraphicsDevice::Instance()->CreateIndexBuffer(libpixel::kBufferFormatStatic, _MaxSprites*6);
+    _VertexBuffer = libpixel::GraphicsDevice::Instance()->CreateVertexBuffer(libpixel::kBufferFormatDynamic, libpixel::kVertexFormat_P_XYZ_UV, _MaxSprites*4);
     
-    glGenBuffers(1, &_VertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, _VertexBuffer);
-	
-    Vertex_PXYZ_UV* vertexBuffer = _Vertices;
-
-    for (int i=0; i<4; i++)
+    _IndexBuffer->Lock();
+    unsigned short* indexBuffer = _IndexBuffer->GetData();
+    for (int i=0; i<_MaxSprites; i++)
     {
-        vertexBuffer[i].position[0] = glVertices[i*2];
-        vertexBuffer[i].position[1] = glVertices[(i*2)+1];
-        vertexBuffer[i].position[2] = 0.f;
+        indexBuffer[0] = (i*4);
+        indexBuffer[1] = (i*4) + 1;
+        indexBuffer[2] = (i*4) + 2;
+        indexBuffer[3] = (i*4) + 0;
+        indexBuffer[4] = (i*4) + 2;
+        indexBuffer[5] = (i*4) + 3;
+        
+        indexBuffer += 6;
     }
-    
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    
-    GLushort indexBuffer[6] = {0, 1, 2, 0, 2, 3};
-    glGenBuffers(1, &_IndexBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _IndexBuffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * 6, indexBuffer, GL_STATIC_DRAW);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    _IndexBuffer->Unlock();
 }
 
 SpriteRenderer::~SpriteRenderer()
@@ -60,59 +59,72 @@ void SpriteRenderer::Render(RenderLayer* layer)
     glEnable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
     
-    glBindBuffer(GL_ARRAY_BUFFER, _VertexBuffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _IndexBuffer);
-    
-    GLsizei stride = sizeof(Vertex_PXYZ_UV);
-    glVertexPointer(3, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_UV, position));
-    glTexCoordPointer(2, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_UV, uv));
-    
+    _IndexBuffer->Bind();
+    _VertexBuffer->Bind();
+        
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     
-    Vertex_PXYZ_UV* vertexBuffer = _Vertices;
+    _VertexBuffer->Lock();
+    
+    Vertex_PXYZ_UV* vertexBuffer = static_cast<Vertex_PXYZ_UV*>(_VertexBuffer->GetData());
+    
+    // TODO: Switch and draw elements when sheet changes
+    instanceList[0].sprite->_Sheet->_Texture->Bind(0);
+    switch (instanceList[0].blendMode)
+    {
+        case kBlendModeMultiply:
+            glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA);
+            break;
+        case kBlendModeScreen:
+            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR);
+            break;
+        case kBlendModeAdd:
+            glBlendFunc(GL_ONE, GL_ONE);
+            break;
+        case kBlendModeOverlay:
+            glBlendFunc(GL_DST_COLOR, GL_ONE);
+            break;
+        case kBlendModeNormal:
+#ifdef LIBPIXEL_GRAPHICS_PREMULTIPLIED_ALPHA
+            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+#else
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+#endif
+            break;
+    }
     
     for (InstanceList::iterator it = instanceList.begin(); it != instanceList.end(); ++it)
     {
-        switch (it->_BlendMode)
-        {
-            case kBlendModeMultiply:
-                glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA);
-                break;
-            case kBlendModeScreen:
-                glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR);
-                break;
-            case kBlendModeAdd:
-                glBlendFunc(GL_ONE, GL_ONE);
-                break;
-            case kBlendModeOverlay:
-                glBlendFunc(GL_DST_COLOR, GL_ONE);
-                break;
-            case kBlendModeNormal:
-                #ifdef LIBPIXEL_GRAPHICS_PREMULTIPLIED_ALPHA
-                    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-                #else
-                    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-                #endif
-                break;
-        }
+        vertexBuffer[0].position[0] = (cos(it->rotation[2]-M_PI_4)*it->scale[0])+it->position[0];
+        vertexBuffer[0].position[1] = (sin(it->rotation[2]-M_PI_4)*it->scale[1])+it->position[1];
+        vertexBuffer[0].position[2] = 0.f;
+        vertexBuffer[1].position[0] = (cos(it->rotation[2]+M_PI_2-M_PI_4)*it->scale[0])+it->position[0];
+        vertexBuffer[1].position[1] = (sin(it->rotation[2]+M_PI_2-M_PI_4)*it->scale[1])+it->position[1];
+        vertexBuffer[1].position[2] = 0.f;
+        vertexBuffer[2].position[0] = (cos(it->rotation[2]+M_PI-M_PI_4)*it->scale[0])+it->position[0];
+        vertexBuffer[2].position[1] = (sin(it->rotation[2]+M_PI-M_PI_4)*it->scale[1])+it->position[1];
+        vertexBuffer[2].position[2] = 0.f;
+        vertexBuffer[3].position[0] = (cos(it->rotation[2]-M_PI_2-M_PI_4)*it->scale[0])+it->position[0];
+        vertexBuffer[3].position[1] = (sin(it->rotation[2]-M_PI_2-M_PI_4)*it->scale[1])+it->position[1];
+        vertexBuffer[3].position[2] = 0.f;
                 
-        if (!it->_Sprite->_Rotated)
+        if (!it->sprite->_Rotated)
         {
-            Vec2 min = it->_Sprite->_Position + Vec2(it->_Sprite->_Size[0] * it->_Crop[0], it->_Sprite->_Size[1] * it->_Crop[1]);
-            Vec2 max = it->_Sprite->_Position + Vec2(it->_Sprite->_Size[0] * it->_Crop[2], it->_Sprite->_Size[1] * it->_Crop[3]);
+            Vec2 min = it->sprite->_Position + Vec2(it->sprite->_Size[0] * it->crop[0], it->sprite->_Size[1] * it->crop[1]);
+            Vec2 max = it->sprite->_Position + Vec2(it->sprite->_Size[0] * it->crop[2], it->sprite->_Size[1] * it->crop[3]);
             
-            vertexBuffer[0].uv[0] = min[0];
+            vertexBuffer[0].uv[0] = max[0];
             vertexBuffer[0].uv[1] = max[1],
-            vertexBuffer[1].uv[0] = min[0];
+            vertexBuffer[1].uv[0] = max[0];
             vertexBuffer[1].uv[1] = min[1];
-            vertexBuffer[2].uv[0] = max[0];
+            vertexBuffer[2].uv[0] = min[0];
             vertexBuffer[2].uv[1] = min[1];
-            vertexBuffer[3].uv[0] = max[0];
+            vertexBuffer[3].uv[0] = min[0];
             vertexBuffer[3].uv[1] = max[1];
         } else {
-            Vec2 min = it->_Sprite->_Position + Vec2(it->_Sprite->_Size[1] * it->_Crop[3], it->_Sprite->_Size[0] * it->_Crop[2]);
-            Vec2 max = it->_Sprite->_Position + Vec2(it->_Sprite->_Size[1] * it->_Crop[1], it->_Sprite->_Size[0] * it->_Crop[0]);
+            Vec2 min = it->sprite->_Position + Vec2(it->sprite->_Size[1] * it->crop[3], it->sprite->_Size[0] * it->crop[2]);
+            Vec2 max = it->sprite->_Position + Vec2(it->sprite->_Size[1] * it->crop[1], it->sprite->_Size[0] * it->crop[0]);
 
             vertexBuffer[0].uv[0] = max[0];
             vertexBuffer[0].uv[1] = min[1];
@@ -124,23 +136,13 @@ void SpriteRenderer::Render(RenderLayer* layer)
             vertexBuffer[3].uv[1] = max[1];
         }
         
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_PXYZ_UV) * 4, _Vertices, GL_DYNAMIC_DRAW);
-        it->_Sprite->_Sheet->_Texture->Bind(0);
-        
-        glPushMatrix();
-        
-        glTranslatef(it->_Position[0] - (0.5 - (it->_Crop[0]+it->_Crop[2])/2.f) * it->_Sprite->_Dimension[0], it->_Position[1] - (0.5 - (it->_Crop[1]+it->_Crop[3])/2.f) * it->_Sprite->_Dimension[1], 0.f);
-        glScalef(it->_Scale[0], it->_Scale[1], 1.f);
-        glRotatef(it->_Rotation[0], 1, 0, 0);
-        glRotatef(it->_Rotation[1], 0, 1, 0);
-        glRotatef(it->_Rotation[2], 0, 0, 1);
-        
-        glScalef(it->_Sprite->_Dimension[0] * (it->_Crop[2]-it->_Crop[0]), it->_Sprite->_Dimension[1] * (it->_Crop[3]-it->_Crop[1]), 1.f);
-        
-        GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, 6);
-        
-        glPopMatrix();
+        vertexBuffer += 4;
     }
+    
+    _VertexBuffer->Unlock(instanceList.size()*4);
+    _VertexBuffer->Bind();
+    
+    GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, instanceList.size()*6);
     
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -193,11 +195,12 @@ bool SpriteRenderer::AttachToRenderer(RenderLayer* layer, const std::string& she
 
     SpriteInstance instance(sprite);
     
-    instance._Crop = crop;
-    instance._Position = position;
-    instance._Rotation = rotation;
-    instance._Scale = scale;
-    instance._BlendMode = blendMode;
+    instance.crop = crop;
+    instance.position = position - Vec2((0.5 - (crop[0]+crop[2])/2.f) * sprite->_Dimension[0], (0.5 - (crop[1]+crop[3])/2.f) * sprite->_Dimension[1]);
+    instance.rotation = (rotation / 180.f) * M_PI;
+    instance.scale = sprite->_Dimension * Vec2(crop[2]-crop[0], crop[3]-crop[1]) * scale * sqrt(2) * 0.5; // Scale now for later optimisation
+    
+    instance.blendMode = blendMode;
     
     _Instances[layer].push_back(instance);
     
