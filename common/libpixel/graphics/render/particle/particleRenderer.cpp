@@ -145,7 +145,22 @@ ParticleRenderer::ParticleRenderer(int maxParticlesPerLayer)
     _MaxParticles = maxParticlesPerLayer;
     
     _IndexBuffer = libpixel::GraphicsDevice::Instance()->CreateIndexBuffer(libpixel::kBufferFormatStatic, _MaxParticles*6);
-    _VertexBuffer = libpixel::GraphicsDevice::Instance()->CreateVertexBuffer(libpixel::kBufferFormatStatic, libpixel::kVertexFormat_P_XYZ_RGBA_UV, _MaxParticles*4);
+    _VertexBuffer = libpixel::GraphicsDevice::Instance()->CreateVertexBuffer(libpixel::kBufferFormatDynamic, libpixel::kVertexFormat_P_XYZ_RGBA_UV, _MaxParticles*4);
+    
+    _IndexBuffer->Lock();
+    unsigned short* indexBuffer = _IndexBuffer->GetData();
+    for (int i=0; i<_MaxParticles; i++)
+    {
+        indexBuffer[0] = (i*4);
+        indexBuffer[1] = (i*4) + 1;
+        indexBuffer[2] = (i*4) + 2;
+        indexBuffer[3] = (i*4) + 1;
+        indexBuffer[4] = (i*4) + 2;
+        indexBuffer[5] = (i*4) + 3;
+        
+        indexBuffer += 6;
+    }
+    _IndexBuffer->Unlock();
 }
 
 ParticleRenderer::~ParticleRenderer()
@@ -242,18 +257,14 @@ void ParticleRenderer::Render(RenderLayer* layer)
     if (!particleList.size())
         return;
     
-    _IndexBuffer->Lock();
     _VertexBuffer->Lock();
     
-    unsigned short* indexBuffer = _IndexBuffer->GetData();
     libpixel::Vertex_PXYZ_RGBA_UV* vertexBuffer = static_cast<libpixel::Vertex_PXYZ_RGBA_UV*>(_VertexBuffer->GetData());
     
     std::stable_sort(particleList.begin(), particleList.end(), &ParticleRenderer::ParticleSortPredicate);
     
-    if (indexBuffer && vertexBuffer)
+    if (vertexBuffer)
     {
-        int index = 0;
-        
         for (ParticleList::iterator it = particleList.begin(); it != particleList.end(); ++it)
         {
             float tween = it->life/it->emitterConfig->life;
@@ -328,24 +339,13 @@ void ParticleRenderer::Render(RenderLayer* layer)
             
             vertexBuffer += 4;
             
-            indexBuffer[0] = 0 + index;
-            indexBuffer[1] = 1 + index;
-            indexBuffer[2] = 2 + index;
-            indexBuffer[3] = 1 + index;
-            indexBuffer[4] = 2 + index;
-            indexBuffer[5] = 3 + index;
-            
-            indexBuffer += 6;
-            index += 4;
-            
             sprite->_Sheet->_Texture->Bind();
         }
     }
     
-    _IndexBuffer->Unlock();
-    _VertexBuffer->Unlock();
+    _VertexBuffer->Unlock(particleList.size()*4);
     
-    if (indexBuffer && vertexBuffer)
+    if (vertexBuffer && particleList.size())
     {
         _IndexBuffer->Bind();
         _VertexBuffer->Bind();
