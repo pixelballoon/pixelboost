@@ -118,16 +118,16 @@ void SpriteRenderer::Render(RenderLayer* layer)
     
     for (InstanceList::iterator it = instanceList.begin(); it != instanceList.end(); ++it)
     {
-        bufferData[0].position[0] = (cos(it->rotation[2]-M_PI_4)*it->scale[0])+it->position[0];
+        bufferData[0].position[0] = (cos(it->rotation[2]-M_PI_4)*it->scale[0])+it->position[0]; // Top Left
         bufferData[0].position[1] = (sin(it->rotation[2]-M_PI_4)*it->scale[1])+it->position[1];
         bufferData[0].position[2] = 0.f;
-        bufferData[1].position[0] = (cos(it->rotation[2]+M_PI_2-M_PI_4)*it->scale[0])+it->position[0];
+        bufferData[1].position[0] = (cos(it->rotation[2]+M_PI_2-M_PI_4)*it->scale[0])+it->position[0]; // Top Right
         bufferData[1].position[1] = (sin(it->rotation[2]+M_PI_2-M_PI_4)*it->scale[1])+it->position[1];
         bufferData[1].position[2] = 0.f;
-        bufferData[2].position[0] = (cos(it->rotation[2]+M_PI-M_PI_4)*it->scale[0])+it->position[0];
+        bufferData[2].position[0] = (cos(it->rotation[2]+M_PI-M_PI_4)*it->scale[0])+it->position[0]; // Bottom Right
         bufferData[2].position[1] = (sin(it->rotation[2]+M_PI-M_PI_4)*it->scale[1])+it->position[1];
         bufferData[2].position[2] = 0.f;
-        bufferData[3].position[0] = (cos(it->rotation[2]-M_PI_2-M_PI_4)*it->scale[0])+it->position[0];
+        bufferData[3].position[0] = (cos(it->rotation[2]-M_PI_2-M_PI_4)*it->scale[0])+it->position[0]; // Bottom Left
         bufferData[3].position[1] = (sin(it->rotation[2]-M_PI_2-M_PI_4)*it->scale[1])+it->position[1];
         bufferData[3].position[2] = 0.f;
                 
@@ -147,7 +147,7 @@ void SpriteRenderer::Render(RenderLayer* layer)
         } else {
             Vec2 min = it->sprite->_Position + Vec2(it->sprite->_Size[1] * it->crop[3], it->sprite->_Size[0] * it->crop[2]);
             Vec2 max = it->sprite->_Position + Vec2(it->sprite->_Size[1] * it->crop[1], it->sprite->_Size[0] * it->crop[0]);
-
+            
             bufferData[0].uv[0] = max[0];
             bufferData[0].uv[1] = min[1];
             bufferData[1].uv[0] = min[0];
