@@ -18,11 +18,18 @@ SpriteInstance::~SpriteInstance()
     sprite->_Sheet->_RefCount--;
 }
 
-SpriteRenderer::SpriteRenderer(int maxSpritesPerLayer)
-    : _MaxSprites(maxSpritesPerLayer)
+SpriteRenderer::SpriteRenderer(int maxSpritesPerLayer, int numVertexBuffers)
+    : _CurrentVertexBuffer(0)
+    , _MaxSprites(maxSpritesPerLayer)
 {
     _IndexBuffer = libpixel::GraphicsDevice::Instance()->CreateIndexBuffer(libpixel::kBufferFormatStatic, _MaxSprites*6);
-    _VertexBuffer = libpixel::GraphicsDevice::Instance()->CreateVertexBuffer(libpixel::kBufferFormatDynamic, libpixel::kVertexFormat_P_XYZ_UV, _MaxSprites*4);
+    
+    for (int i=0; i<numVertexBuffers; i++)
+    {
+        VertexBuffer* vertexBuffer = libpixel::GraphicsDevice::Instance()->CreateVertexBuffer(libpixel::kBufferFormatDynamic, libpixel::kVertexFormat_P_XYZ_UV, _MaxSprites*4);
+        
+        _VertexBuffers.push_back(vertexBuffer);
+    }
     
     _IndexBuffer->Lock();
     unsigned short* indexBuffer = _IndexBuffer->GetData();
@@ -42,6 +49,11 @@ SpriteRenderer::SpriteRenderer(int maxSpritesPerLayer)
 
 SpriteRenderer::~SpriteRenderer()
 {
+    for (VertexBufferList::iterator it = _VertexBuffers.begin(); it != _VertexBuffers.end(); ++it)
+    {
+        libpixel::GraphicsDevice::Instance()->DestroyVertexBuffer(*it);
+    }
+    libpixel::GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
 }
     
 void SpriteRenderer::Update(float time)
@@ -55,19 +67,29 @@ void SpriteRenderer::Render(RenderLayer* layer)
     if (!instanceList.size())
         return;
     
+    // TODO: Remove this check and simply refill vertex buffer
+    if (instanceList.size() > _MaxSprites)
+        return;
+    
+    VertexBuffer* vertexBuffer = _VertexBuffers[_CurrentVertexBuffer];
+    
+    _CurrentVertexBuffer++;
+    
+    if (_CurrentVertexBuffer >= _VertexBuffers.size())
+        _CurrentVertexBuffer = 0;
+    
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
     
     _IndexBuffer->Bind();
-    _VertexBuffer->Bind();
         
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     
-    _VertexBuffer->Lock();
+    vertexBuffer->Lock();
     
-    Vertex_PXYZ_UV* vertexBuffer = static_cast<Vertex_PXYZ_UV*>(_VertexBuffer->GetData());
+    Vertex_PXYZ_UV* bufferData = static_cast<Vertex_PXYZ_UV*>(vertexBuffer->GetData());
     
     // TODO: Switch and draw elements when sheet changes
     instanceList[0].sprite->_Sheet->_Texture->Bind(0);
@@ -96,51 +118,51 @@ void SpriteRenderer::Render(RenderLayer* layer)
     
     for (InstanceList::iterator it = instanceList.begin(); it != instanceList.end(); ++it)
     {
-        vertexBuffer[0].position[0] = (cos(it->rotation[2]-M_PI_4)*it->scale[0])+it->position[0];
-        vertexBuffer[0].position[1] = (sin(it->rotation[2]-M_PI_4)*it->scale[1])+it->position[1];
-        vertexBuffer[0].position[2] = 0.f;
-        vertexBuffer[1].position[0] = (cos(it->rotation[2]+M_PI_2-M_PI_4)*it->scale[0])+it->position[0];
-        vertexBuffer[1].position[1] = (sin(it->rotation[2]+M_PI_2-M_PI_4)*it->scale[1])+it->position[1];
-        vertexBuffer[1].position[2] = 0.f;
-        vertexBuffer[2].position[0] = (cos(it->rotation[2]+M_PI-M_PI_4)*it->scale[0])+it->position[0];
-        vertexBuffer[2].position[1] = (sin(it->rotation[2]+M_PI-M_PI_4)*it->scale[1])+it->position[1];
-        vertexBuffer[2].position[2] = 0.f;
-        vertexBuffer[3].position[0] = (cos(it->rotation[2]-M_PI_2-M_PI_4)*it->scale[0])+it->position[0];
-        vertexBuffer[3].position[1] = (sin(it->rotation[2]-M_PI_2-M_PI_4)*it->scale[1])+it->position[1];
-        vertexBuffer[3].position[2] = 0.f;
+        bufferData[0].position[0] = (cos(it->rotation[2]-M_PI_4)*it->scale[0])+it->position[0];
+        bufferData[0].position[1] = (sin(it->rotation[2]-M_PI_4)*it->scale[1])+it->position[1];
+        bufferData[0].position[2] = 0.f;
+        bufferData[1].position[0] = (cos(it->rotation[2]+M_PI_2-M_PI_4)*it->scale[0])+it->position[0];
+        bufferData[1].position[1] = (sin(it->rotation[2]+M_PI_2-M_PI_4)*it->scale[1])+it->position[1];
+        bufferData[1].position[2] = 0.f;
+        bufferData[2].position[0] = (cos(it->rotation[2]+M_PI-M_PI_4)*it->scale[0])+it->position[0];
+        bufferData[2].position[1] = (sin(it->rotation[2]+M_PI-M_PI_4)*it->scale[1])+it->position[1];
+        bufferData[2].position[2] = 0.f;
+        bufferData[3].position[0] = (cos(it->rotation[2]-M_PI_2-M_PI_4)*it->scale[0])+it->position[0];
+        bufferData[3].position[1] = (sin(it->rotation[2]-M_PI_2-M_PI_4)*it->scale[1])+it->position[1];
+        bufferData[3].position[2] = 0.f;
                 
         if (!it->sprite->_Rotated)
         {
             Vec2 min = it->sprite->_Position + Vec2(it->sprite->_Size[0] * it->crop[0], it->sprite->_Size[1] * it->crop[1]);
             Vec2 max = it->sprite->_Position + Vec2(it->sprite->_Size[0] * it->crop[2], it->sprite->_Size[1] * it->crop[3]);
             
-            vertexBuffer[0].uv[0] = max[0];
-            vertexBuffer[0].uv[1] = max[1],
-            vertexBuffer[1].uv[0] = max[0];
-            vertexBuffer[1].uv[1] = min[1];
-            vertexBuffer[2].uv[0] = min[0];
-            vertexBuffer[2].uv[1] = min[1];
-            vertexBuffer[3].uv[0] = min[0];
-            vertexBuffer[3].uv[1] = max[1];
+            bufferData[0].uv[0] = max[0];
+            bufferData[0].uv[1] = max[1],
+            bufferData[1].uv[0] = max[0];
+            bufferData[1].uv[1] = min[1];
+            bufferData[2].uv[0] = min[0];
+            bufferData[2].uv[1] = min[1];
+            bufferData[3].uv[0] = min[0];
+            bufferData[3].uv[1] = max[1];
         } else {
             Vec2 min = it->sprite->_Position + Vec2(it->sprite->_Size[1] * it->crop[3], it->sprite->_Size[0] * it->crop[2]);
             Vec2 max = it->sprite->_Position + Vec2(it->sprite->_Size[1] * it->crop[1], it->sprite->_Size[0] * it->crop[0]);
 
-            vertexBuffer[0].uv[0] = max[0];
-            vertexBuffer[0].uv[1] = min[1];
-            vertexBuffer[1].uv[0] = min[0];
-            vertexBuffer[1].uv[1] = min[1];
-            vertexBuffer[2].uv[0] = min[0];
-            vertexBuffer[2].uv[1] = max[1];
-            vertexBuffer[3].uv[0] = max[0];
-            vertexBuffer[3].uv[1] = max[1];
+            bufferData[0].uv[0] = max[0];
+            bufferData[0].uv[1] = min[1];
+            bufferData[1].uv[0] = min[0];
+            bufferData[1].uv[1] = min[1];
+            bufferData[2].uv[0] = min[0];
+            bufferData[2].uv[1] = max[1];
+            bufferData[3].uv[0] = max[0];
+            bufferData[3].uv[1] = max[1];
         }
         
-        vertexBuffer += 4;
+        bufferData += 4;
     }
     
-    _VertexBuffer->Unlock(instanceList.size()*4);
-    _VertexBuffer->Bind();
+    vertexBuffer->Unlock(instanceList.size()*4);
+    vertexBuffer->Bind();
     
     GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, instanceList.size()*6);
     

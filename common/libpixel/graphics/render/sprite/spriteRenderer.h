@@ -12,8 +12,10 @@
 namespace libpixel
 {
 
+class IndexBuffer;
 class SpriteSheet;
 class Sprite;
+class VertexBuffer;
     
 enum BlendMode
 {
@@ -45,7 +47,7 @@ public:
 class SpriteRenderer : public IRenderer
 {
 public:
-	SpriteRenderer(int maxSpritesPerLayer=100);
+	SpriteRenderer(int maxSpritesPerLayer=100, int numVertexBuffers=4);
 	~SpriteRenderer();
     
     void Update(float time);
@@ -77,9 +79,11 @@ private:
 	SheetMap _SpriteSheets;
     
 private:
+    typedef std::vector<VertexBuffer*> VertexBufferList;
     IndexBuffer* _IndexBuffer;
-    VertexBuffer* _VertexBuffer;
+    VertexBufferList _VertexBuffers;
     
+    int _CurrentVertexBuffer;
     int _MaxSprites;
 };
     
