@@ -31,9 +31,9 @@ void Renderer::Render()
     std::sort(_Layers.begin(), _Layers.end(), &Renderer::LayerSortPredicate);
     for (LayerList::iterator it = _Layers.begin(); it != _Layers.end(); ++it)
     {
+        (*it)->_Camera->ApplyTransform();
         for (RendererList::iterator rendererIt = _Renderers.begin(); rendererIt != _Renderers.end(); ++rendererIt)
         {
-            (*it)->_Camera->ApplyTransform();
             (*rendererIt)->Render(*it);
         }
     }
