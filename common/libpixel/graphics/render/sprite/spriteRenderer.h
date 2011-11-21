@@ -25,6 +25,7 @@ enum BlendMode
     kBlendModeScreen,
     kBlendModeAdd,
     kBlendModeOverlay,
+    kBlendModeUnknown,
 };
 
 class SpriteInstance
@@ -64,6 +65,9 @@ public:
 private:
     std::shared_ptr<SpriteSheet> GetSpriteSheet(const std::string& spriteSheet) const;
     
+    void SetBlendMode(BlendMode blendMode);
+    void RenderCurrentBuffer();
+    
 	typedef std::vector<SpriteInstance> InstanceList;
     typedef std::map<RenderLayer*, InstanceList> InstanceListMap;
     
@@ -78,6 +82,7 @@ private:
     IndexBuffer* _IndexBuffer;
     VertexBufferList _VertexBuffers;
     
+    int _SpritesRendered;
     int _CurrentVertexBuffer;
     int _MaxSprites;
 };

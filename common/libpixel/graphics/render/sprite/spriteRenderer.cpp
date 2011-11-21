@@ -65,17 +65,6 @@ void SpriteRenderer::Render(RenderLayer* layer)
     if (!instanceList.size())
         return;
     
-    // TODO: Remove this check and simply refill vertex buffer
-    if (instanceList.size() > _MaxSprites)
-        return;
-    
-    VertexBuffer* vertexBuffer = _VertexBuffers[_CurrentVertexBuffer];
-    
-    _CurrentVertexBuffer++;
-    
-    if (_CurrentVertexBuffer >= _VertexBuffers.size())
-        _CurrentVertexBuffer = 0;
-    
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
@@ -85,37 +74,44 @@ void SpriteRenderer::Render(RenderLayer* layer)
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     
-    vertexBuffer->Lock();
+    VertexBuffer* vertexBuffer = 0;
+    Vertex_PXYZ_UV* bufferData = 0;
     
-    Vertex_PXYZ_UV* bufferData = static_cast<Vertex_PXYZ_UV*>(vertexBuffer->GetData());
+    BlendMode blendMode = kBlendModeUnknown;
+    Texture* texture = 0;
+    int currentVertexBuffer = -1;
     
-    // TODO: Switch and draw elements when sheet changes
-    instanceList[0].sprite->_Sheet->_Texture->Bind(0);
-    switch (instanceList[0].blendMode)
-    {
-        case kBlendModeMultiply:
-            glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA);
-            break;
-        case kBlendModeScreen:
-            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR);
-            break;
-        case kBlendModeAdd:
-            glBlendFunc(GL_ONE, GL_ONE);
-            break;
-        case kBlendModeOverlay:
-            glBlendFunc(GL_DST_COLOR, GL_ONE);
-            break;
-        case kBlendModeNormal:
-#ifdef LIBPIXEL_GRAPHICS_PREMULTIPLIED_ALPHA
-            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-#else
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-#endif
-            break;
-    }
+    _SpritesRendered = 0;
     
     for (InstanceList::iterator it = instanceList.begin(); it != instanceList.end(); ++it)
     {
+        if (it->blendMode != blendMode)
+        {
+            RenderCurrentBuffer();
+            blendMode = it->blendMode;
+            SetBlendMode(blendMode);
+        }
+        
+        if (texture != it->sprite->_Sheet->_Texture)
+        {
+            RenderCurrentBuffer();
+            texture = it->sprite->_Sheet->_Texture;
+            texture->Bind();
+        }
+        
+        if (_SpritesRendered == _MaxSprites)
+        {
+            RenderCurrentBuffer();
+        }
+        
+        if (_CurrentVertexBuffer != currentVertexBuffer)
+        {
+            currentVertexBuffer = _CurrentVertexBuffer;
+            vertexBuffer = _VertexBuffers[_CurrentVertexBuffer];
+            vertexBuffer->Lock();
+            bufferData = static_cast<Vertex_PXYZ_UV*>(vertexBuffer->GetData());
+        }
+            
         bufferData[0].position[0] = (cos(it->rotation[2]-M_PI_4)*it->scale[0])+it->position[0]; // Top Left
         bufferData[0].position[1] = (sin(it->rotation[2]-M_PI_4)*it->scale[1])+it->position[1];
         bufferData[0].position[2] = 0.f;
@@ -157,12 +153,10 @@ void SpriteRenderer::Render(RenderLayer* layer)
         }
         
         bufferData += 4;
+        _SpritesRendered++;
     }
     
-    vertexBuffer->Unlock(instanceList.size()*4);
-    vertexBuffer->Bind();
-    
-    GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, instanceList.size()*6);
+    RenderCurrentBuffer();
     
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -239,6 +233,52 @@ std::shared_ptr<SpriteSheet> SpriteRenderer::GetSpriteSheet(const std::string& s
         return std::shared_ptr<SpriteSheet>();
     
     return it->second;
+}
+    
+void SpriteRenderer::SetBlendMode(BlendMode blendMode)
+{
+    switch (blendMode)
+    {
+        case kBlendModeMultiply:
+            glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA);
+            break;
+        case kBlendModeScreen:
+            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR);
+            break;
+        case kBlendModeAdd:
+            glBlendFunc(GL_ONE, GL_ONE);
+            break;
+        case kBlendModeOverlay:
+            glBlendFunc(GL_DST_COLOR, GL_ONE);
+            break;
+        case kBlendModeNormal:
+#ifdef LIBPIXEL_GRAPHICS_PREMULTIPLIED_ALPHA
+            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+#else
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+#endif
+            break;
+        case kBlendModeUnknown:
+            break;
+    }
+}
+    
+void SpriteRenderer::RenderCurrentBuffer()
+{
+    if (_SpritesRendered == 0)
+        return;
+    
+    _VertexBuffers[_CurrentVertexBuffer]->Unlock(_SpritesRendered*4);
+    _VertexBuffers[_CurrentVertexBuffer]->Bind();
+    
+    GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, _SpritesRendered*6);
+    
+    _CurrentVertexBuffer++;
+    
+    if (_CurrentVertexBuffer >= _VertexBuffers.size())
+        _CurrentVertexBuffer = 0;
+
+    _SpritesRendered = 0;
 }
 
 }
