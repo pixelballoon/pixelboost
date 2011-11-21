@@ -6,6 +6,7 @@
 
 #include "libpixel/graphics/render/common/irenderer.h"
 #include "libpixel/math/maths.h"
+#include "libpixel/misc/pointer.h"
 
 namespace libpixel
 {
@@ -52,8 +53,7 @@ public:
         SpriteList sprites;
         
     private:
-        SpriteSheet* spriteSheet;
-        bool hasSpriteSheetOwnership;
+        libpixel::shared_ptr<SpriteSheet> spriteSheet;
         
         friend class ParticleEmitter;
         friend class ParticleRenderer;
@@ -63,7 +63,7 @@ public:
     bool Load(const std::string& file);
     
     void LoadSpriteSheet(const std::string& file, bool createMips);
-    void SetSpriteSheet(SpriteSheet* spriteSheet, bool takeOwnership);
+    void SetSpriteSheet(libpixel::shared_ptr<SpriteSheet> spriteSheet);
     
     Vec2 GetPosition();
     void SetPosition(const Vec2& position);

@@ -5,6 +5,7 @@
 
 #include "libpixel/graphics/device/texture.h"
 #include "libpixel/math/maths.h"
+#include "libpixel/misc/pointer.h"
 
 namespace libpixel
 {
@@ -13,8 +14,11 @@ class Sprite;
     
 class SpriteSheet
 {
-public:
+private:
     SpriteSheet();
+    
+public:
+    static libpixel::shared_ptr<SpriteSheet> Create();
     virtual ~SpriteSheet();
     
     bool Load(const std::string& name, bool generateMips);
@@ -22,8 +26,6 @@ public:
     Sprite* GetSprite(const std::string& name);
     
 public:
-    unsigned long _RefCount;
-    
     Texture* _Texture;
     
 private:

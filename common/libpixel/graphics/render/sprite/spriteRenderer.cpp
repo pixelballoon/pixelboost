@@ -10,12 +10,10 @@ namespace libpixel
 SpriteInstance::SpriteInstance(Sprite* sprite) :
 	  sprite(sprite)
 {
-	sprite->_Sheet->_RefCount++;
 }
     
 SpriteInstance::~SpriteInstance()
 {
-    sprite->_Sheet->_RefCount--;
 }
 
 SpriteRenderer::SpriteRenderer(int maxSpritesPerLayer, int numVertexBuffers)
@@ -176,30 +174,24 @@ void SpriteRenderer::Render(RenderLayer* layer)
     glDisable(GL_TEXTURE_2D);
 }
 
-bool SpriteRenderer::AddSpriteSheet(const std::string& name, SpriteSheet* spriteSheet, bool takeOwnership)
+bool SpriteRenderer::AddSpriteSheet(const std::string& name, libpixel::shared_ptr<SpriteSheet> spriteSheet)
 {
     SheetMap::iterator it = _SpriteSheets.find(name);
     
     if (it != _SpriteSheets.end())
         return true;
     
-    SpriteRendererSheet sheet;
-    sheet.spriteSheet = spriteSheet;
-    sheet.hasOwnership = takeOwnership;
-    _SpriteSheets[name] = sheet;
+    _SpriteSheets[name] = spriteSheet;
 
     return true;
 }
  
-bool SpriteRenderer::RemoveSpriteSheet(libpixel::SpriteSheet *spriteSheet)
+bool SpriteRenderer::RemoveSpriteSheet(libpixel::shared_ptr<SpriteSheet> spriteSheet)
 {
     for (SheetMap::iterator it = _SpriteSheets.begin(); it != _SpriteSheets.end(); ++it)
     {
-        if (it->second.spriteSheet == spriteSheet)
+        if (it->second == spriteSheet)
         {
-            if (it->second.hasOwnership)
-                delete it->second.spriteSheet;
-            
             _SpriteSheets.erase(it);
             return true;
         }
@@ -231,7 +223,7 @@ bool SpriteRenderer::AttachToRenderer(RenderLayer* layer, const std::string& she
     
 Sprite* SpriteRenderer::GetSprite(const std::string &sheetName, const std::string &spriteName) const
 {
-    SpriteSheet* sheet = GetSpriteSheet(sheetName);
+    libpixel::shared_ptr<SpriteSheet> sheet = GetSpriteSheet(sheetName);
     
     if (!sheet)
         return 0;
@@ -239,14 +231,14 @@ Sprite* SpriteRenderer::GetSprite(const std::string &sheetName, const std::strin
     return sheet->GetSprite(spriteName);
 }
 
-SpriteSheet* SpriteRenderer::GetSpriteSheet(const std::string& spriteSheet) const
+libpixel::shared_ptr<SpriteSheet> SpriteRenderer::GetSpriteSheet(const std::string& spriteSheet) const
 {
     SheetMap::const_iterator it = _SpriteSheets.find(spriteSheet);
     
     if (it == _SpriteSheets.end())
-        return 0;
+        return libpixel::shared_ptr<SpriteSheet>();
     
-    return it->second.spriteSheet;
+    return it->second;
 }
 
 }

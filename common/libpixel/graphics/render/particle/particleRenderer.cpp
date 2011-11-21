@@ -54,9 +54,6 @@ void ParticleRenderer::Particle::Assign(const Particle& rhs)
 
 ParticleEmitter::Config::Config()
 {
-    hasSpriteSheetOwnership = false;
-    spriteSheet = 0;
-    
     refCount = 1;
     
     particlesPerUpdate = 1.f;
@@ -81,10 +78,7 @@ ParticleEmitter::Config::Config()
 
 ParticleEmitter::Config::~Config()
 {
-    if (hasSpriteSheetOwnership && spriteSheet)
-    {
-        delete spriteSheet;
-    }
+
 }
 
 ParticleEmitter::ParticleEmitter()
@@ -108,20 +102,12 @@ bool ParticleEmitter::Load(const std::string& file)
 
 void ParticleEmitter::LoadSpriteSheet(const std::string& file, bool createMips)
 {
-    if (_Config->hasSpriteSheetOwnership && _Config->spriteSheet)
-        delete _Config->spriteSheet;
-    
-    _Config->hasSpriteSheetOwnership = true;
-    _Config->spriteSheet = new SpriteSheet();
+    _Config->spriteSheet = SpriteSheet::Create();
     _Config->spriteSheet->Load(file, createMips);
 }
 
-void ParticleEmitter::SetSpriteSheet(SpriteSheet* spriteSheet, bool takeOwnership)
+void ParticleEmitter::SetSpriteSheet(libpixel::shared_ptr<SpriteSheet> spriteSheet)
 {
-    if (_Config->hasSpriteSheetOwnership && _Config->spriteSheet)
-        delete _Config->spriteSheet;
-    
-    _Config->hasSpriteSheetOwnership = takeOwnership;
     _Config->spriteSheet = spriteSheet;
 }
 
