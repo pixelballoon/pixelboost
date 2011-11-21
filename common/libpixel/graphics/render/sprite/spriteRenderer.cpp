@@ -161,8 +161,8 @@ void SpriteRenderer::Render(RenderLayer* layer)
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    GraphicsDevice::Instance()->BindIndexBuffer(0);
+    GraphicsDevice::Instance()->BindVertexBuffer(0);
     
     glDisable(GL_BLEND);
     glDisable(GL_TEXTURE_2D);

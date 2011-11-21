@@ -60,54 +60,57 @@ void GraphicsDeviceGLES1::DestroyVertexBuffer(VertexBuffer* vertexBuffer)
 
 void GraphicsDeviceGLES1::BindVertexBuffer(VertexBuffer* vertexBuffer)
 {
-    GLuint vertexBufferId = _VertexBuffers[vertexBuffer];
+    GLuint vertexBufferId = vertexBuffer ? _VertexBuffers[vertexBuffer] : 0;
     
-//    if (vertexBufferId != _State->boundVertexBuffer)
+    if (vertexBufferId != _State->boundVertexBuffer)
     {
         glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
-        
+
         _State->boundVertexBuffer = vertexBufferId;
-        
-        switch (vertexBuffer->GetVertexFormat())
+
+        if (vertexBuffer)
         {
-            case kVertexFormat_P_XY_RGBA:
+            switch (vertexBuffer->GetVertexFormat())
             {
-                GLsizei stride = sizeof(Vertex_PXY_RGBA);
-                glColorPointer(4, GL_FLOAT, stride, (void*)offsetof(Vertex_PXY_RGBA, color));
-                glVertexPointer(2, GL_FLOAT, stride, (void*)offsetof(Vertex_PXY_RGBA, position));
-                break;
+                case kVertexFormat_P_XY_RGBA:
+                {
+                    GLsizei stride = sizeof(Vertex_PXY_RGBA);
+                    glColorPointer(4, GL_FLOAT, stride, (void*)offsetof(Vertex_PXY_RGBA, color));
+                    glVertexPointer(2, GL_FLOAT, stride, (void*)offsetof(Vertex_PXY_RGBA, position));
+                    break;
+                }
+                case kVertexFormat_P_XYZ_UV:
+                {
+                    GLsizei stride = sizeof(Vertex_PXYZ_UV);
+                    glTexCoordPointer(2, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_UV, uv));
+                    glVertexPointer(3, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_UV, position));
+                    break;
+                }
+                case kVertexFormat_P_XYZ_RGBA:
+                {
+                    GLsizei stride = sizeof(Vertex_PXYZ_RGBA);
+                    glColorPointer(4, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_RGBA, color));
+                    glVertexPointer(3, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_RGBA, position));
+                    break;
+                }
+                case kVertexFormat_P_XYZ_RGBA_UV:
+                {
+                    GLsizei stride = sizeof(Vertex_PXYZ_RGBA_UV);
+                    glColorPointer(4, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_RGBA_UV, color));
+                    glTexCoordPointer(2, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_RGBA_UV, uv));
+                    glVertexPointer(3, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_RGBA_UV, position));
+                    break;
+                }
+                case kVertexFormat_NP_XYZ_UV:
+                {
+                    GLsizei stride = sizeof(Vertex_NPXYZ_UV);
+                    glNormalPointer(GL_FLOAT, stride, (void*)offsetof(Vertex_NPXYZ_UV, normal));
+                    glTexCoordPointer(2, GL_FLOAT, stride, (void*)offsetof(Vertex_NPXYZ_UV, uv));
+                    glVertexPointer(3, GL_FLOAT, stride, (void*)offsetof(Vertex_NPXYZ_UV, position));
+                    break;
+                }
             }
-            case kVertexFormat_P_XYZ_UV:
-            {
-                GLsizei stride = sizeof(Vertex_PXYZ_UV);
-                glTexCoordPointer(2, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_UV, uv));
-                glVertexPointer(3, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_UV, position));
-                break;
-            }
-            case kVertexFormat_P_XYZ_RGBA:
-            {
-                GLsizei stride = sizeof(Vertex_PXYZ_RGBA);
-                glColorPointer(4, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_RGBA, color));
-                glVertexPointer(3, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_RGBA, position));
-                break;
-            }
-            case kVertexFormat_P_XYZ_RGBA_UV:
-            {
-                GLsizei stride = sizeof(Vertex_PXYZ_RGBA_UV);
-                glColorPointer(4, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_RGBA_UV, color));
-                glTexCoordPointer(2, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_RGBA_UV, uv));
-                glVertexPointer(3, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_RGBA_UV, position));
-                break;
-            }
-            case kVertexFormat_NP_XYZ_UV:
-            {
-                GLsizei stride = sizeof(Vertex_NPXYZ_UV);
-                glNormalPointer(GL_FLOAT, stride, (void*)offsetof(Vertex_NPXYZ_UV, normal));
-                glTexCoordPointer(2, GL_FLOAT, stride, (void*)offsetof(Vertex_NPXYZ_UV, uv));
-                glVertexPointer(3, GL_FLOAT, stride, (void*)offsetof(Vertex_NPXYZ_UV, position));
-                break;
-            }
-        }
+         }
      }
 }
 
@@ -180,9 +183,9 @@ void GraphicsDeviceGLES1::DestroyIndexBuffer(IndexBuffer* indexBuffer)
 
 void GraphicsDeviceGLES1::BindIndexBuffer(IndexBuffer* indexBuffer)
 {
-    GLuint indexBufferId = _IndexBuffers[indexBuffer];
+    GLuint indexBufferId = indexBuffer ? _IndexBuffers[indexBuffer] : 0;
     
-    //if (indexBufferId != _State->boundIndexBuffer)
+    if (indexBufferId != _State->boundIndexBuffer)
     {
         _State->boundIndexBuffer = indexBufferId;
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferId);
@@ -221,9 +224,9 @@ void GraphicsDeviceGLES1::DestroyTexture(Texture* texture)
     
 void GraphicsDeviceGLES1::BindTexture(Texture* texture)
 {
-    GLuint textureId = static_cast<TextureGLES1*>(texture)->_Texture;
+    GLuint textureId = texture ? static_cast<TextureGLES1*>(texture)->_Texture : 0;
     
-    //if (textureId != _State->boundTexture)
+    if (textureId != _State->boundTexture)
     {
         _State->boundTexture = textureId;
         glBindTexture(GL_TEXTURE_2D, textureId);
