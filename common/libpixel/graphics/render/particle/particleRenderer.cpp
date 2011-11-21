@@ -106,7 +106,7 @@ void ParticleEmitter::LoadSpriteSheet(const std::string& file, bool createMips)
     _Config->spriteSheet->Load(file, createMips);
 }
 
-void ParticleEmitter::SetSpriteSheet(libpixel::shared_ptr<SpriteSheet> spriteSheet)
+void ParticleEmitter::SetSpriteSheet(std::shared_ptr<SpriteSheet> spriteSheet)
 {
     _Config->spriteSheet = spriteSheet;
 }

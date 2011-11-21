@@ -174,7 +174,7 @@ void SpriteRenderer::Render(RenderLayer* layer)
     glDisable(GL_TEXTURE_2D);
 }
 
-bool SpriteRenderer::AddSpriteSheet(const std::string& name, libpixel::shared_ptr<SpriteSheet> spriteSheet)
+bool SpriteRenderer::AddSpriteSheet(const std::string& name, std::shared_ptr<SpriteSheet> spriteSheet)
 {
     SheetMap::iterator it = _SpriteSheets.find(name);
     
@@ -186,7 +186,7 @@ bool SpriteRenderer::AddSpriteSheet(const std::string& name, libpixel::shared_pt
     return true;
 }
  
-bool SpriteRenderer::RemoveSpriteSheet(libpixel::shared_ptr<SpriteSheet> spriteSheet)
+bool SpriteRenderer::RemoveSpriteSheet(std::shared_ptr<SpriteSheet> spriteSheet)
 {
     for (SheetMap::iterator it = _SpriteSheets.begin(); it != _SpriteSheets.end(); ++it)
     {
@@ -223,7 +223,7 @@ bool SpriteRenderer::AttachToRenderer(RenderLayer* layer, const std::string& she
     
 Sprite* SpriteRenderer::GetSprite(const std::string &sheetName, const std::string &spriteName) const
 {
-    libpixel::shared_ptr<SpriteSheet> sheet = GetSpriteSheet(sheetName);
+    std::shared_ptr<SpriteSheet> sheet = GetSpriteSheet(sheetName);
     
     if (!sheet)
         return 0;
@@ -231,12 +231,12 @@ Sprite* SpriteRenderer::GetSprite(const std::string &sheetName, const std::strin
     return sheet->GetSprite(spriteName);
 }
 
-libpixel::shared_ptr<SpriteSheet> SpriteRenderer::GetSpriteSheet(const std::string& spriteSheet) const
+std::shared_ptr<SpriteSheet> SpriteRenderer::GetSpriteSheet(const std::string& spriteSheet) const
 {
     SheetMap::const_iterator it = _SpriteSheets.find(spriteSheet);
     
     if (it == _SpriteSheets.end())
-        return libpixel::shared_ptr<SpriteSheet>();
+        return std::shared_ptr<SpriteSheet>();
     
     return it->second;
 }

@@ -2,7 +2,7 @@
 
 #include <tr1/memory>
 
-namespace libpixel
+namespace std
 {
     using std::tr1::shared_ptr;
 }

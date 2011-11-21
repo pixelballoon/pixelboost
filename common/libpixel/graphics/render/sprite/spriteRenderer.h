@@ -54,20 +54,20 @@ public:
     void Update(float time);
     void Render(RenderLayer* layer);
 	
-    bool AddSpriteSheet(const std::string& name, libpixel::shared_ptr<SpriteSheet> spriteSheet);
-    bool RemoveSpriteSheet(libpixel::shared_ptr<SpriteSheet> spriteSheet);
+    bool AddSpriteSheet(const std::string& name, std::shared_ptr<SpriteSheet> spriteSheet);
+    bool RemoveSpriteSheet(std::shared_ptr<SpriteSheet> spriteSheet);
     
     bool AttachToRenderer(RenderLayer* layer, const std::string& sheetName, const std::string& spriteName, Vec2 position, Vec3 rotation = Vec3(0.f, 0.f, 0.f), Vec2 scale = Vec2(1.f, 1.f), BlendMode blendMode = kBlendModeNormal, Vec4 crop = Vec4(0.f, 0.f, 1.f, 1.f));
     
     Sprite* GetSprite(const std::string& sheetName, const std::string& spriteName) const;
 		
 private:
-    libpixel::shared_ptr<SpriteSheet> GetSpriteSheet(const std::string& spriteSheet) const;
+    std::shared_ptr<SpriteSheet> GetSpriteSheet(const std::string& spriteSheet) const;
     
 	typedef std::vector<SpriteInstance> InstanceList;
     typedef std::map<RenderLayer*, InstanceList> InstanceListMap;
     
-    typedef std::map<std::string, libpixel::shared_ptr<SpriteSheet> > SheetMap;
+    typedef std::map<std::string, std::shared_ptr<SpriteSheet> > SheetMap;
 	
 	InstanceListMap _Instances;
     

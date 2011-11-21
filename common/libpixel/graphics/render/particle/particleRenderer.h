@@ -53,7 +53,7 @@ public:
         SpriteList sprites;
         
     private:
-        libpixel::shared_ptr<SpriteSheet> spriteSheet;
+        std::shared_ptr<SpriteSheet> spriteSheet;
         
         friend class ParticleEmitter;
         friend class ParticleRenderer;
@@ -63,7 +63,7 @@ public:
     bool Load(const std::string& file);
     
     void LoadSpriteSheet(const std::string& file, bool createMips);
-    void SetSpriteSheet(libpixel::shared_ptr<SpriteSheet> spriteSheet);
+    void SetSpriteSheet(std::shared_ptr<SpriteSheet> spriteSheet);
     
     Vec2 GetPosition();
     void SetPosition(const Vec2& position);

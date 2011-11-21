@@ -18,7 +18,7 @@ private:
     SpriteSheet();
     
 public:
-    static libpixel::shared_ptr<SpriteSheet> Create();
+    static std::shared_ptr<SpriteSheet> Create();
     virtual ~SpriteSheet();
     
     bool Load(const std::string& name, bool generateMips);

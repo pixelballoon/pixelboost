@@ -8,9 +8,9 @@
 namespace libpixel
 {
     
-libpixel::shared_ptr<SpriteSheet> SpriteSheet::Create()
+std::shared_ptr<SpriteSheet> SpriteSheet::Create()
 {
-    return libpixel::shared_ptr<SpriteSheet>(new SpriteSheet());
+    return std::shared_ptr<SpriteSheet>(new SpriteSheet());
 }
 
 SpriteSheet::SpriteSheet()
