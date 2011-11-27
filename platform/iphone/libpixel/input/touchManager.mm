@@ -52,6 +52,7 @@ void TouchHandler::OnTouchEnd(Touch* touch)
 }
     
 TouchManager::TouchManager()
+    : _IsTouchActive(false)
 {
     
 }
@@ -63,11 +64,13 @@ void TouchManager::AddTouchHandler(TouchHandler* handler)
     
 void TouchManager::RemoveTouchHandler(TouchHandler* handler)
 {
-    _Handlers.erase(handler);
+    _HandlersToRemove.insert(handler);
 }
 
 void TouchManager::AddTouch(void* uiTouch, Vec2 position)
 {
+    ClearTouchHandlers();
+    
 	Touch* touch = new Touch();
 	touch->_Position = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? Vec2(position[0]/2.f, position[1]/2.f) : position;
 	_Touches[uiTouch] = touch;
@@ -76,6 +79,8 @@ void TouchManager::AddTouch(void* uiTouch, Vec2 position)
 
 void TouchManager::RemoveTouch(void* touch)
 {
+    ClearTouchHandlers();
+    
 	std::map<void*, Touch*>::iterator it = _Touches.find(touch);
 	
 	if (it != _Touches.end())
@@ -88,6 +93,8 @@ void TouchManager::RemoveTouch(void* touch)
 
 void TouchManager::UpdateTouch(void* uiTouch, Vec2 position)
 {
+    ClearTouchHandlers();
+    
 	Touch* touch = _Touches[uiTouch];
 	touch->_Position = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? Vec2(position[0]/2.4f, position[1]/2.133f) : position;
 	OnTouchUpdate(touch);
@@ -137,6 +144,15 @@ void TouchManager::OnTouchEnd(Touch* touch)
     {
         (*it)->OnTouchEnd(touch);
     }
+}
+    
+void TouchManager::ClearTouchHandlers()
+{
+    for (TouchHandlerList::iterator it = _HandlersToRemove.begin(); it != _HandlersToRemove.end(); ++it)
+    {
+        _Handlers.erase(_Handlers.find(*it));
+    }
+    _HandlersToRemove.clear();
 }
 
 }

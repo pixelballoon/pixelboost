@@ -62,14 +62,18 @@ public:
 	Touch* GetTouch(int index);
 	
 private:
+    void ClearTouchHandlers();
+    
     typedef std::set<TouchHandler*> TouchHandlerList;
     
 	void OnTouchBegin(Touch* touch);
 	void OnTouchUpdate(Touch* touch);
 	void OnTouchEnd(Touch* touch);
 	
+    bool _IsTouchActive;
 	TouchHandlerList _Handlers;
 	std::map<void*, Touch*> _Touches;
+    TouchHandlerList _HandlersToRemove;
 };
     
 }
