@@ -111,32 +111,36 @@ void SpriteRenderer::Render(RenderLayer* layer)
             vertexBuffer->Lock();
             bufferData = static_cast<Vertex_PXYZ_UV*>(vertexBuffer->GetData());
         }
-            
-        bufferData[0].position[0] = (cos(it->rotation[2]-M_PI_4)*it->scale[0])+it->position[0]; // Top Left
-        bufferData[0].position[1] = (sin(it->rotation[2]-M_PI_4)*it->scale[1])+it->position[1];
+        
         bufferData[0].position[2] = 0.f;
-        bufferData[1].position[0] = (cos(it->rotation[2]+M_PI_2-M_PI_4)*it->scale[0])+it->position[0]; // Top Right
-        bufferData[1].position[1] = (sin(it->rotation[2]+M_PI_2-M_PI_4)*it->scale[1])+it->position[1];
         bufferData[1].position[2] = 0.f;
-        bufferData[2].position[0] = (cos(it->rotation[2]+M_PI-M_PI_4)*it->scale[0])+it->position[0]; // Bottom Right
-        bufferData[2].position[1] = (sin(it->rotation[2]+M_PI-M_PI_4)*it->scale[1])+it->position[1];
         bufferData[2].position[2] = 0.f;
-        bufferData[3].position[0] = (cos(it->rotation[2]-M_PI_2-M_PI_4)*it->scale[0])+it->position[0]; // Bottom Left
-        bufferData[3].position[1] = (sin(it->rotation[2]-M_PI_2-M_PI_4)*it->scale[1])+it->position[1];
         bufferData[3].position[2] = 0.f;
-                
+        
+        float cosRot = cos(it->rotation);
+        float sinRot = sin(it->rotation);
+        
+        bufferData[0].position[0] = -it->scale[1] * cosRot + it->scale[0] * sinRot + it->position[0];
+        bufferData[0].position[1] = it->scale[1] * sinRot + it->scale[0] * cosRot + it->position[1];
+        bufferData[1].position[0] = it->scale[1] * cosRot + it->scale[0] * sinRot + it->position[0];
+        bufferData[1].position[1] = -it->scale[1] * sinRot + it->scale[0] * cosRot + it->position[1];
+        bufferData[2].position[0] = it->scale[1] * cosRot - it->scale[0] * sinRot + it->position[0];
+        bufferData[2].position[1] = -it->scale[1] * sinRot - it->scale[0] * cosRot + it->position[1];
+        bufferData[3].position[0] = -it->scale[1] * cosRot - it->scale[0] * sinRot + it->position[0];
+        bufferData[3].position[1] = it->scale[1] * sinRot - it->scale[0] * cosRot + it->position[1];
+        
         if (!it->sprite->_Rotated)
         {
             Vec2 min = it->sprite->_Position + Vec2(it->sprite->_Size[0] * it->crop[0], it->sprite->_Size[1] * it->crop[1]);
             Vec2 max = it->sprite->_Position + Vec2(it->sprite->_Size[0] * it->crop[2], it->sprite->_Size[1] * it->crop[3]);
             
-            bufferData[0].uv[0] = max[0];
+            bufferData[0].uv[0] = min[0];
             bufferData[0].uv[1] = max[1],
-            bufferData[1].uv[0] = max[0];
+            bufferData[1].uv[0] = min[0];
             bufferData[1].uv[1] = min[1];
-            bufferData[2].uv[0] = min[0];
+            bufferData[2].uv[0] = max[0];
             bufferData[2].uv[1] = min[1];
-            bufferData[3].uv[0] = min[0];
+            bufferData[3].uv[0] = max[0];
             bufferData[3].uv[1] = max[1];
         } else {
             Vec2 min = it->sprite->_Position + Vec2(it->sprite->_Size[1] * it->crop[3], it->sprite->_Size[0] * it->crop[2]);
@@ -205,8 +209,8 @@ bool SpriteRenderer::AttachToRenderer(RenderLayer* layer, const std::string& she
     
     instance.crop = crop;
     instance.position = position - Vec2((0.5 - (crop[0]+crop[2])/2.f) * sprite->_Dimension[0], (0.5 - (crop[1]+crop[3])/2.f) * sprite->_Dimension[1]);
-    instance.rotation = (rotation / 180.f) * M_PI;
-    instance.scale = sprite->_Dimension * Vec2(crop[2]-crop[0], crop[3]-crop[1]) * scale * sqrt(2) * 0.5; // Scale now for later optimisation
+    instance.rotation = ((-rotation[2]-90.f) / 180.f) * M_PI;
+    instance.scale = sprite->_Dimension * Vec2(crop[2]-crop[0], crop[3]-crop[1]) * scale * 0.5; // Scale now for later optimisation
     
     instance.blendMode = blendMode;
     

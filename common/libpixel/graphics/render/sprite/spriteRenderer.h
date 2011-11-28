@@ -37,7 +37,7 @@ public:
 public:
     Vec4 crop;
     Vec2 position;
-    Vec3 rotation;
+    float rotation;
     Vec2 scale;
     BlendMode blendMode;
     
