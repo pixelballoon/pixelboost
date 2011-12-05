@@ -44,6 +44,7 @@ VertexBuffer* GraphicsDeviceGLES1::CreateVertexBuffer(BufferFormat bufferFormat,
     
     GLuint buffer = 0;
     glGenBuffers(1, &buffer);
+
     
     _VertexBuffers[vertexBuffer] = buffer;
     
@@ -129,7 +130,7 @@ void GraphicsDeviceGLES1::UnlockVertexBuffer(VertexBuffer* vertexBuffer, int num
     
     GLenum bufferType = vertexBuffer->GetBufferFormat() == kBufferFormatStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW;
     
-    glBindBuffer(GL_ARRAY_BUFFER, _VertexBuffers[vertexBuffer]);
+    BindVertexBuffer(vertexBuffer);
     switch (vertexBuffer->GetVertexFormat())
     {
         case kVertexFormat_P_XY_RGBA:
@@ -158,7 +159,6 @@ void GraphicsDeviceGLES1::UnlockVertexBuffer(VertexBuffer* vertexBuffer, int num
             break;
         }
     }
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
     
 IndexBuffer* GraphicsDeviceGLES1::CreateIndexBuffer(BufferFormat bufferFormat, int length)
@@ -205,11 +205,8 @@ void GraphicsDeviceGLES1::UnlockIndexBuffer(IndexBuffer* indexBuffer, int numEle
     if (numElements == -1)
         numElements = indexBuffer->GetLength();
     
-    GLuint indexBufferId = _IndexBuffers[indexBuffer];
-    
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferId);
+    BindIndexBuffer(indexBuffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * numElements, indexBuffer->GetData(), indexBuffer->GetBufferFormat() == kBufferFormatStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
     
 Texture* GraphicsDeviceGLES1::CreateTexture()
