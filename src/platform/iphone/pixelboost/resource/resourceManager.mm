@@ -1,3 +1,5 @@
+#ifdef PIXELBOOST_PLATFORM_IOS
+
 #include "ResourceManager.h"
 
 namespace pixelboost
@@ -27,3 +29,5 @@ std::string ResourceManager::GetFilename(const std::string& fileName)
 }
 
 }
+
+#endif

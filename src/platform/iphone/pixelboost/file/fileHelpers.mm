@@ -1,3 +1,5 @@
+#ifdef PIXELBOOST_PLATFORM_IOS
+
 #include "pixelboost/file/fileHelpers.h"
 
 namespace pixelboost
@@ -17,3 +19,5 @@ std::string GetRootPath()
 }
     
 }
+
+#endif

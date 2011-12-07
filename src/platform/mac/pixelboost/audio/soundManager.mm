@@ -1,6 +1,4 @@
-#ifdef PIXELBOOST_PLATFORM_IOS
-
-#import "ObjectAL.h"
+#ifdef PIXELBOOST_PLATFORM_OSX
 
 #include "pixelboost/audio/soundManager.h"
 #include "pixelboost/file/fileHelpers.h"
@@ -13,9 +11,6 @@ SoundManager::SoundManager()
     _CurrentBgmName = "";
     _MuteBgm = false;
     _MuteSfx = false;
-    
-    [OALSimpleAudio sharedInstance].allowIpod = NO;
-    [OALSimpleAudio sharedInstance].honorSilentSwitch = YES;
 }
 
 SoundManager::~SoundManager()
@@ -44,17 +39,10 @@ void SoundManager::MuteSfx(bool mute)
 
 void SoundManager::LoadBgm(const std::string& name)
 {
-
 }
 
 void SoundManager::LoadSfx(const std::string& name, bool compressed)
 {
-    //if (compressed)
-        return;
-    
-    std::string fileName = FileHelpers::GetRootPath() + "/data/audio/sfx/" + name + (compressed ? ".mp3" : ".wav");
-    
-    [[OALSimpleAudio sharedInstance] preloadEffect:[NSString stringWithUTF8String:fileName.c_str()]];
 }
 
 void SoundManager::PlayBgm(const std::string& name, bool loop, float volume)
@@ -66,16 +54,12 @@ void SoundManager::PlayBgm(const std::string& name, bool loop, float volume)
     if (_MuteBgm || _CurrentBgmName == "")
         return;
     
-     std::string fileName = FileHelpers::GetRootPath() + "/data/audio/bgm/" + name + ".mp3";
-     
-    [[OALSimpleAudio sharedInstance] playBg:[NSString stringWithUTF8String:fileName.c_str()] volume:volume pan:0.f loop:loop];
+     std::string fileName = FileHelpers::GetRootPath() + "/data/audio/bgm/" + name + ".mp3";     
 }
     
 void SoundManager::StopBgm()
 {
     _CurrentBgmName = "";
-    
-    [[OALSimpleAudio sharedInstance] stopBg];
 }
 
 void SoundManager::PlaySfx(const std::string& name, bool compressed, float volume, float pitch)
@@ -84,8 +68,6 @@ void SoundManager::PlaySfx(const std::string& name, bool compressed, float volum
         return;
     
     std::string fileName = FileHelpers::GetRootPath() + "/data/audio/sfx/" + name + (compressed ? ".mp3" : ".wav");
-     
-    [[OALSimpleAudio sharedInstance] playEffect:[NSString stringWithUTF8String:fileName.c_str()] volume:volume pitch:pitch pan:0.f loop:false];
 }
 
 }

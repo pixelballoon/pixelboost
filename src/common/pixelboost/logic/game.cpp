@@ -13,7 +13,6 @@
 #include "pixelboost/logic/screen.h"
 #include "pixelboost/network/gameCenter.h"
 #include "pixelboost/network/networkServer.h"
-#include "pixelboost/resource/resourceManager.h"
 
 namespace pixelboost
 {
@@ -27,7 +26,6 @@ Game::Game(void* viewController)
 {
     _Instance = this;
 
-    _ResourceManager = new ResourceManager();
     _TouchManager = new TouchManager();
     
     _GameCenter = new GameCenter();

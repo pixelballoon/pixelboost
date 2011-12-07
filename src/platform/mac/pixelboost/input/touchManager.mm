@@ -1,4 +1,4 @@
-#ifdef PIXELBOOST_PLATFORM_IOS
+#ifdef PIXELBOOST_PLATFORM_OSX
 
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/helper/screenHelpers.h"
@@ -74,7 +74,7 @@ void TouchManager::AddTouch(void* uiTouch, Vec2 position)
     ClearTouchHandlers();
     
 	Touch* touch = new Touch();
-	touch->_Position = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? Vec2(position[0]/2.f, position[1]/2.f) : position;
+	touch->_Position = position;
 	_Touches[uiTouch] = touch;
 	OnTouchBegin(touch);
 }
@@ -98,13 +98,13 @@ void TouchManager::UpdateTouch(void* uiTouch, Vec2 position)
     ClearTouchHandlers();
     
 	Touch* touch = _Touches[uiTouch];
-	touch->_Position = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? Vec2(position[0]/2.4f, position[1]/2.133f) : position;
+	touch->_Position = position;
 	OnTouchUpdate(touch);
 }
 
 int TouchManager::GetNumTouches()
 {
-	return _Touches.size();
+	return (int)_Touches.size();
 }
 
 Touch* TouchManager::GetTouch(int index)

@@ -54,3 +54,9 @@ public:
     #define PIXELBOOST_GRAPHICS_PREMULTIPLIED_ALPHA
     #include "pixelboost/graphics/device/gles1/device.h" // TODO: No need to include this line!
 #endif
+
+#ifdef PIXELBOOST_PLATFORM_OSX
+    #define PIXELBOOST_GRAPHICS_OPENGL
+    #define PIXELBOOST_GRAPHICS_PREMULTIPLIED_ALPHA
+    #include <OpenGL/gl.h>
+#endif

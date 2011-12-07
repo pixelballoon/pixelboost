@@ -1,3 +1,7 @@
+#ifdef PIXELBOOST_PLATFORM_IOS
+
+#include <string>
+
 #include "pixelboost/graphics/device/texture.h"
 
 using namespace pixelboost;
@@ -47,3 +51,5 @@ void pixelboost::TextureGLES1::Load(const std::string& path, bool createMips)
     
     _Texture = handle;
 }
+
+#endif

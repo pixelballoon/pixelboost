@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef PIXELBOOST_PLATFORM_IOS
+#ifdef PIXELBOOST_PLATFORM_OSX
 
 #include "pixelboost/math/maths.h"
 #include <map>

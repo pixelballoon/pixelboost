@@ -24,6 +24,7 @@ Model::~Model()
     
 bool Model::Load(const std::string& modelName)
 {
+    /*
     std::string objFilename = FileHelpers::GetRootPath() + "/data/models/" + modelName + ".obj";
     
     std::fstream file;
@@ -135,7 +136,7 @@ bool Model::Load(const std::string& modelName)
     }
     glUnmapBufferOES(GL_ELEMENT_ARRAY_BUFFER);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    
+    */
 	return true;
 }
     

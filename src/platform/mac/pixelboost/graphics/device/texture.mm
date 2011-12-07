@@ -1,6 +1,7 @@
-#ifdef PIXELBOOST_PLATFORM_MACOSX
+#ifdef PIXELBOOST_PLATFORM_OSX
 
-#include "pixelboost/render/textureLoader.h"
+#import <AppKit/AppKit.h>
+#include "pixelboost/graphics/device/texture.h"
 
 namespace pixelboost
 {

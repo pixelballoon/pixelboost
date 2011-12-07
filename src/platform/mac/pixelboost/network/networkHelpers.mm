@@ -1,4 +1,4 @@
-#ifdef PIXELBOOST_PLATFORM_IOS
+#ifdef PIXELBOOST_PLATFORM_OSX
 
 #include <arpa/inet.h>
 #include <netinet/in.h>

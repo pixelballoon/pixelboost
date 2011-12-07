@@ -1,3 +1,5 @@
+#ifdef PIXELBOOST_PLATFORM_IOS
+
 #include "pixelboost/graphics/helper/screenHelpers.h"
 #include "pixelboost/logic/game.h"
 
@@ -100,3 +102,5 @@ float GetDpu()
 }
     
 }
+
+#endif

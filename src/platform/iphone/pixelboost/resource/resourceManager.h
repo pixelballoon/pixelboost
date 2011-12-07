@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef PIXELBOOST_PLATFORM_IOS
+
 #include <string>
 
 namespace pixelboost
@@ -30,3 +32,5 @@ class ResourceManager
 };
     
 }
+
+#endif

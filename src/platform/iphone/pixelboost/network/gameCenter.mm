@@ -1,3 +1,5 @@
+#ifdef PIXELBOOST_PLATFORM_IOS
+
 #include "sys/sysctl.h"
 
 #include "pixelboost/logic/game.h"
@@ -425,3 +427,5 @@ void GameCenter::SubmitAchievement(void* achievement)
 }
 
 }
+
+#endif
