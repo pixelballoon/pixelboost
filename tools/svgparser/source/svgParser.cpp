@@ -1,3 +1,4 @@
+#include <fstream>
 #include <sstream>
 
 #include "svgParser.h"
@@ -141,11 +142,9 @@ bool SvgParser::ParseLayer(const std::string& src, const std::string& dst)
 
 bool SvgParser::Export(const std::string& filename)
 {
-    std::stringstream output;
+    std::fstream output(filename.c_str(), std::ios::trunc | std::ios::out);
     
     json::Writer::Write(_Json, output);
-    
-    printf("%s", output.str().c_str());
     
     return true;
 }
