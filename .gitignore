@@ -1,4 +1,6 @@
 .DS_Store
 data/espresso.esproj/user.*
+tools/bin/
+tools/svgparser/osx/svgparser/build/
 tools/svgparser/osx/svgparser/svgparser.xcodeproj/project.xcworkspace/xcuserdata/
 tools/svgparser/osx/svgparser/svgparser.xcodeproj/xcuserdata/
