@@ -1,0 +1,14 @@
+task :default => 'tools:build' do
+end
+
+namespace :tools do
+  task :build => [:svgparser] do
+  end
+
+  task :svgparser do
+    Dir.chdir 'svgparser/osx' do
+      system 'xcodebuild'
+    end
+    cp 'svgparser/osx/Release/svgparser', 'bin'
+  end
+end
