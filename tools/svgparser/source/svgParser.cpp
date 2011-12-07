@@ -36,10 +36,12 @@ bool SvgParser::Load(const std::string& filename)
     if (!_Xml->load_file(filename.c_str()))
         return false;
     
-    _Width = atof(_Xml->root().attribute("width").value());
+    pugi::xpath_node svg = _Xml->select_single_node("svg");
+
+    _Width = atof(svg.node().attribute("width").value())/32.f;
     _Json["width"] = json::Number(_Width);
 
-    _Height = atof(_Xml->root().attribute("height").value());
+    _Height = atof(svg.node().attribute("height").value())/32.f;
     _Json["height"] = json::Number(_Height);
     
     return true;
@@ -74,7 +76,7 @@ bool SvgParser::ParseLayer(const std::string& src, const std::string& dst)
     {
         json::Object image;
         std::string href = imageIt->node().attribute("xlink:href").value();
-        image["name"] = json::String(href.substr(href.find_last_of('/')+1, href.find_last_of(".")-href.find_last_of('/')-1));
+        image["image"] = json::String(href.substr(href.find_last_of('/')+1, href.find_last_of(".")-href.find_last_of('/')-1));
         
         float width = atof(imageIt->node().attribute("width").value())/32.f;
         float height = atof(imageIt->node().attribute("height").value())/32.f;
@@ -96,7 +98,7 @@ bool SvgParser::ParseLayer(const std::string& src, const std::string& dst)
             image["tx"] = json::Number(tx);
             
             float ty = atof(items[5].c_str()) / 32.f;
-            image["ty"] = json::Number(_Height/2.f - ty + height/2.f);
+            image["ty"] = json::Number(_Height/2.f - ty - height/2.f);
         }
         
         layerImages.Insert(image);
@@ -122,14 +124,14 @@ bool SvgParser::ParseLayer(const std::string& src, const std::string& dst)
         {
             json::Object point;
             
-            point["x1"] = json::Number(pointIt->x1);
-            point["y1"] = json::Number(pointIt->y1);
-            point["cx1"] = json::Number(pointIt->cx1);
-            point["cy1"] = json::Number(pointIt->cy1);
-            point["cx2"] = json::Number(pointIt->cx2);
-            point["cy2"] = json::Number(pointIt->cy2);
-            point["x2"] = json::Number(pointIt->x2);
-            point["y2"] = json::Number(pointIt->y2);
+            point["x1"] = json::Number(pointIt->x1/32.f);
+            point["y1"] = json::Number(_Height/2.f - pointIt->y1/32.f);
+            point["cx1"] = json::Number(pointIt->cx1/32.f);
+            point["cy1"] = json::Number(_Height/2.f - pointIt->cy1/32.f);
+            point["cx2"] = json::Number(pointIt->cx2/32.f);
+            point["cy2"] = json::Number(_Height/2.f - pointIt->cy2/32.f);
+            point["x2"] = json::Number(pointIt->x2/32.f);
+            point["y2"] = json::Number(_Height/2.f - pointIt->y2/32.f);
             
             points.Insert(point);
         }
@@ -336,7 +338,7 @@ bool PathParser::Parse(SvgPath& path)
             {
                 if (numbers.size() == 6)
                 {
-                    path.points.push_back(SvgPath::Point(_X, _Y, numbers[0], numbers[1], numbers[2], numbers[3], _X + numbers[4], _X + numbers[5]));
+                    path.points.push_back(SvgPath::Point(_X, _Y, _X + numbers[0], _Y + numbers[1], _X + numbers[2], _Y + numbers[3], _X + numbers[4], _X + numbers[5]));
                     
                     _X += numbers[4];
                     _Y += numbers[5];
