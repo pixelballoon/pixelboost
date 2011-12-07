@@ -2,7 +2,7 @@
 #include "pixelboost/graphics/device/texture.h"
 #include "pixelboost/graphics/helper/screenHelpers.h"
 #include "pixelboost/graphics/render/sprite/sprite.h"
-#include "pixelboost/json/reader.h"
+#include "pixelboost/parser/json/reader.h"
 #include "pixelboost/logic/game.h"
 
 namespace pixelboost

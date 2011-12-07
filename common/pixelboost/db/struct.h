@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pixelboost/json/reader.h"
+#include "pixelboost/parser/json/reader.h"
 
 namespace pixelboostdb
 {
