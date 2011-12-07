@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <queue>
 #include <vector>
 
 #include "pixelboost/parser/json/elements.h"
@@ -40,9 +41,16 @@ struct SvgPath
 {
     struct Point
     {
-        float cx1, cy1;
-        float x, y;
-        float cx2, cy2;
+        Point(float x1, float y1, float cx1, float cy1,  float cx2, float cy2, float x2, float y2);
+        
+        float x1;
+        float y1;
+        float cx1;
+        float cy1;
+        float cx2;
+        float cy2;
+        float x2;
+        float y2;
     };
     
     std::vector<Point> points;
@@ -56,22 +64,27 @@ public:
     
     enum TokenType
     {
+        kTokenTypeUnknown,
         kTokenTypeMoveAbsolute,
         kTokenTypeMoveRelative,
         kTokenTypeCurveAbsolute,
         kTokenTypeCurveRelative,
         kTokenTypeSmoothAbsolute,
         kTokenTypeSmoothRelative,
-        kTokenType
+        kTokenTypeNumber,
     };
     
     struct Token
     {
+        Token(TokenType type = kTokenTypeUnknown, const std::string& data = "");
+        
         TokenType type;
         std::string data;
     };
     
-    const std::vector<Token>& GetTokens();
+    const std::queue<Token>& GetTokens();
+    
+    bool Tokenize();
     
 private:
     enum State
@@ -84,7 +97,7 @@ private:
     State _State;
     int _Index;
     
-    std::vector<Token> _Tokens;
+    std::queue<Token> _Tokens;
 };
 
 class PathParser
@@ -96,5 +109,9 @@ public:
     bool Parse(SvgPath& path);
     
 private:
+    std::queue<PathTokenizer::Token> _Tokens;
+    
+    float _X;
+    float _Y;
     PathTokenizer _Tokenizer;
 };

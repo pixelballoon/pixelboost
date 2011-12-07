@@ -117,9 +117,18 @@ bool SvgParser::ParseLayer(const std::string& src, const std::string& dst)
         PathParser parser(pathIt->node().attribute("d").value());
         parser.Parse(path);
         
-        for (std::vector<SvgPath::Point>::iterator it = path.points.begin(); it != path.points.end(); ++it)
+        for (std::vector<SvgPath::Point>::iterator pointIt = path.points.begin(); pointIt != path.points.end(); ++pointIt)
         {
             json::Object point;
+            
+            point["x1"] = json::Number(pointIt->x1);
+            point["y1"] = json::Number(pointIt->y1);
+            point["cx1"] = json::Number(pointIt->cx1);
+            point["cy1"] = json::Number(pointIt->cy1);
+            point["cx2"] = json::Number(pointIt->cx2);
+            point["cy2"] = json::Number(pointIt->cy2);
+            point["x2"] = json::Number(pointIt->x2);
+            point["y2"] = json::Number(pointIt->y2);
             
             points.Insert(point);
         }
@@ -141,6 +150,26 @@ bool SvgParser::Export(const std::string& filename)
     return true;
 }
 
+SvgPath::Point::Point(float x1, float y1, float cx1, float cy1,  float cx2, float cy2, float x2, float y2)
+    : x1(x1)
+    , y1(y1)
+    , cx1(cx1)
+    , cy1(cy1)
+    , cx2(cx2)
+    , cy2(cy2)
+    , x2(x2)
+    , y2(y2)
+{
+    
+}
+
+PathTokenizer::Token::Token(TokenType type, const std::string& data)
+    : data(data)
+    , type(type)
+{
+    
+}
+
 PathTokenizer::PathTokenizer(const std::string& path)
 {
     _Path = path;
@@ -151,9 +180,86 @@ PathTokenizer::~PathTokenizer()
     
 }
 
-const std::vector<PathTokenizer::Token>& PathTokenizer::GetTokens()
+const std::queue<PathTokenizer::Token>& PathTokenizer::GetTokens()
 {
     return _Tokens;
+}
+
+bool PathTokenizer::Tokenize()
+{
+    std::string tokenData;
+    bool finished = false;
+    _Index = 0;
+    _State = kStateMain;
+    while (!finished)
+    {
+        char character = _Index >= _Path.length() ? 0 : _Path[_Index];
+        
+        switch (_State)
+        {
+            case kStateMain:
+            {
+                int absolute = false;
+                if (character >= 'A' && character <= 'Z')
+                {
+                    absolute = true;
+                    character -= 'A'-'a';
+                }
+                
+                if (character == 'm')
+                {
+                    _Tokens.push(Token(absolute?kTokenTypeMoveAbsolute:kTokenTypeMoveRelative));
+                } else if (character == 'c')
+                {
+                    _Tokens.push(Token(absolute?kTokenTypeCurveAbsolute:kTokenTypeCurveRelative));
+                } else if (character == 's')
+                {
+                    _Tokens.push(Token(absolute?kTokenTypeSmoothAbsolute:kTokenTypeSmoothRelative));
+                } else if ((character >= '0' && character <= '9') || character == '-') {
+                    _State = kStateNumber;
+                    continue;
+                } else if (character == 0)
+                {
+                    finished = true;
+                }
+                
+                _Index++;
+                
+                break;
+            }
+                
+            case kStateNumber:
+            {
+                if ((character >= '0' && character <= '9') || character == '-' || character == '.')
+                {
+                    if (character == '-')
+                    {
+                        if (tokenData.length())
+                        {
+                            _Tokens.push(Token(kTokenTypeNumber, tokenData));
+                            tokenData = "";
+                        }
+                    }
+                } else
+                {
+                    if (tokenData.length())
+                    {
+                        _Tokens.push(Token(kTokenTypeNumber, tokenData));
+                        tokenData = "";
+                    }
+                    
+                    _State = kStateMain;
+                    continue;
+                }
+                
+                tokenData += character;
+                _Index++;
+                break;
+            }
+        }
+    }
+    
+    return true;
 }
 
 PathParser::PathParser(const std::string& path)
@@ -169,5 +275,131 @@ PathParser::~PathParser()
 
 bool PathParser::Parse(SvgPath& path)
 {
+    _X = 0;
+    _Y = 0;
+    
+    _Tokenizer.Tokenize();
+    _Tokens = _Tokenizer.GetTokens();
+    
+    std::vector<float> numbers;
+    PathTokenizer::Token stateToken;
+    while (_Tokens.size())
+    {
+        PathTokenizer::Token token = _Tokens.front();
+        _Tokens.pop();
+        
+        if (token.type != PathTokenizer::kTokenTypeNumber)
+        {
+            if (numbers.size() != 0)
+                return false;
+            
+            stateToken = token;
+        } else {
+            numbers.push_back(atof(token.data.c_str()));
+        }
+        
+        switch (stateToken.type)
+        {
+            case PathTokenizer::kTokenTypeMoveAbsolute:
+            {
+                if (numbers.size() == 2)
+                {
+                    _X = numbers[0];
+                    _Y = numbers[1];
+                    numbers.clear();
+                }
+                break;
+            }
+            case PathTokenizer::kTokenTypeMoveRelative:
+            {
+                if (numbers.size() == 2)
+                {
+                    _X += numbers[0];
+                    _Y += numbers[1];
+                    numbers.clear();
+                }
+                break;
+            }
+            case PathTokenizer::kTokenTypeCurveAbsolute:
+            {
+                if (numbers.size() == 6)
+                {
+                    path.points.push_back(SvgPath::Point(_X, _Y, numbers[0], numbers[1], numbers[2], numbers[3], numbers[4], numbers[5]));
+                    
+                    _X = numbers[4];
+                    _Y = numbers[5];
+                    
+                    numbers.clear();
+                }
+                break;
+            }
+            case PathTokenizer::kTokenTypeCurveRelative:
+            {
+                if (numbers.size() == 6)
+                {
+                    path.points.push_back(SvgPath::Point(_X, _Y, numbers[0], numbers[1], numbers[2], numbers[3], _X + numbers[4], _X + numbers[5]));
+                    
+                    _X += numbers[4];
+                    _Y += numbers[5];
+                    
+                    numbers.clear();
+                }
+                break;
+            }
+            case PathTokenizer::kTokenTypeSmoothAbsolute:
+            {
+                if (numbers.size() == 4)
+                {
+                    float cx;
+                    float cy;
+                    
+                    if (path.points.size())
+                    {
+                        cx = 2*_X - path.points.back().cx2;
+                        cy = 2*_Y - path.points.back().cy2;
+                    } else {
+                        cx = _X;
+                        cy = _Y;
+                    }
+                    
+                    path.points.push_back(SvgPath::Point(_X, _Y, cx, cy, numbers[0], numbers[1], numbers[2], numbers[3]));
+                    
+                    _X = numbers[2];
+                    _Y = numbers[3];
+                    
+                    numbers.clear();
+                }
+                break;
+            }
+            case PathTokenizer::kTokenTypeSmoothRelative:
+            {
+                if (numbers.size() == 4)
+                {
+                    float cx;
+                    float cy;
+                    
+                    if (path.points.size())
+                    {
+                        cx = 2*_X - path.points.back().cx2;
+                        cy = 2*_Y - path.points.back().cy2;
+                    } else {
+                        cx = _X;
+                        cy = _Y;
+                    }
+                    
+                    path.points.push_back(SvgPath::Point(_X, _Y, cx, cy, numbers[0], numbers[1], numbers[2], numbers[3]));
+                    
+                    _X += numbers[2];
+                    _Y += numbers[3];
+                    
+                    numbers.clear();
+                }
+                break;
+            }
+            default:
+                break;
+        }
+    }
+    
     return true;
 }
