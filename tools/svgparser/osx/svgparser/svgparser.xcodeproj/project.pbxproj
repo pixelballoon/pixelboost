@@ -9,9 +9,8 @@
 /* Begin PBXBuildFile section */
 		1C14BCD2148FA5D5001C38B8 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C14BCD1148FA5D5001C38B8 /* CoreData.framework */; };
 		1C14BCD4148FA5D5001C38B8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C14BCD3148FA5D5001C38B8 /* Foundation.framework */; };
-		1C14BCD7148FA5D5001C38B8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C14BCD6148FA5D5001C38B8 /* main.m */; };
+		1C14BCD7148FA5D5001C38B8 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C14BCD6148FA5D5001C38B8 /* main.mm */; };
 		1C14BDAE148FA5EC001C38B8 /* xml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C14BD61148FA5EC001C38B8 /* xml.cpp */; };
-		1C14BDAF148FA5EC001C38B8 /* mongoose.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C14BD68148FA5EC001C38B8 /* mongoose.c */; };
 		1C14BDBB148FA759001C38B8 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C14BDBA148FA759001C38B8 /* AppKit.framework */; };
 		1C14BDBD148FA815001C38B8 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C14BDBC148FA815001C38B8 /* OpenGL.framework */; };
 		1C14BDFE148FAB74001C38B8 /* soundManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C14BDDA148FAB74001C38B8 /* soundManager.mm */; };
@@ -42,7 +41,7 @@
 		1C14BCCD148FA5D5001C38B8 /* svgparser */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = svgparser; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C14BCD1148FA5D5001C38B8 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		1C14BCD3148FA5D5001C38B8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		1C14BCD6148FA5D5001C38B8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		1C14BCD6148FA5D5001C38B8 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		1C14BCD9148FA5D5001C38B8 /* svgparser-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "svgparser-Prefix.pch"; sourceTree = "<group>"; };
 		1C14BD59148FA5EC001C38B8 /* elements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = elements.h; sourceTree = "<group>"; };
 		1C14BD5A148FA5EC001C38B8 /* elements.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = elements.inl; sourceTree = "<group>"; };
@@ -54,8 +53,6 @@
 		1C14BD61148FA5EC001C38B8 /* xml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xml.cpp; sourceTree = "<group>"; };
 		1C14BD62148FA5EC001C38B8 /* xml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xml.h; sourceTree = "<group>"; };
 		1C14BD63148FA5EC001C38B8 /* xmlconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlconfig.h; sourceTree = "<group>"; };
-		1C14BD68148FA5EC001C38B8 /* mongoose.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mongoose.c; sourceTree = "<group>"; };
-		1C14BD69148FA5EC001C38B8 /* mongoose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mongoose.h; sourceTree = "<group>"; };
 		1C14BDBA148FA759001C38B8 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		1C14BDBC148FA815001C38B8 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		1C14BDD9148FAB74001C38B8 /* soundManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = soundManager.h; sourceTree = "<group>"; };
@@ -123,7 +120,7 @@
 		1C14BCD5148FA5D5001C38B8 /* svgparser */ = {
 			isa = PBXGroup;
 			children = (
-				1C14BCD6148FA5D5001C38B8 /* main.m */,
+				1C14BCD6148FA5D5001C38B8 /* main.mm */,
 				1C14BCD8148FA5D5001C38B8 /* Supporting Files */,
 			);
 			path = svgparser;
@@ -141,7 +138,6 @@
 			isa = PBXGroup;
 			children = (
 				1C14BCE5148FA5EC001C38B8 /* common */,
-				1C14BD64148FA5EC001C38B8 /* external */,
 				1C14BDD5148FAB74001C38B8 /* platform */,
 			);
 			name = pixelboost;
@@ -195,39 +191,6 @@
 				1C14BD63148FA5EC001C38B8 /* xmlconfig.h */,
 			);
 			path = xml;
-			sourceTree = "<group>";
-		};
-		1C14BD64148FA5EC001C38B8 /* external */ = {
-			isa = PBXGroup;
-			children = (
-				1C14BD65148FA5EC001C38B8 /* pixelboost */,
-			);
-			path = external;
-			sourceTree = "<group>";
-		};
-		1C14BD65148FA5EC001C38B8 /* pixelboost */ = {
-			isa = PBXGroup;
-			children = (
-				1C14BD66148FA5EC001C38B8 /* external */,
-			);
-			path = pixelboost;
-			sourceTree = "<group>";
-		};
-		1C14BD66148FA5EC001C38B8 /* external */ = {
-			isa = PBXGroup;
-			children = (
-				1C14BD67148FA5EC001C38B8 /* mongoose */,
-			);
-			path = external;
-			sourceTree = "<group>";
-		};
-		1C14BD67148FA5EC001C38B8 /* mongoose */ = {
-			isa = PBXGroup;
-			children = (
-				1C14BD68148FA5EC001C38B8 /* mongoose.c */,
-				1C14BD69148FA5EC001C38B8 /* mongoose.h */,
-			);
-			path = mongoose;
 			sourceTree = "<group>";
 		};
 		1C14BDD5148FAB74001C38B8 /* platform */ = {
@@ -415,9 +378,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1C14BCD7148FA5D5001C38B8 /* main.m in Sources */,
+				1C14BCD7148FA5D5001C38B8 /* main.mm in Sources */,
 				1C14BDAE148FA5EC001C38B8 /* xml.cpp in Sources */,
-				1C14BDAF148FA5EC001C38B8 /* mongoose.c in Sources */,
 				1C14BDFE148FAB74001C38B8 /* soundManager.mm in Sources */,
 				1C14BDFF148FAB74001C38B8 /* fileHelpers.mm in Sources */,
 				1C14BE00148FAB74001C38B8 /* texture.mm in Sources */,
