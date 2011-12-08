@@ -147,13 +147,13 @@ void SpriteRenderer::Render(RenderLayer* layer)
             Vec2 max = it->sprite->_Position + Vec2(it->sprite->_Size[1] * it->crop[1], it->sprite->_Size[0] * it->crop[0]);
             
             bufferData[0].uv[0] = max[0];
-            bufferData[0].uv[1] = min[1];
+            bufferData[0].uv[1] = max[1];
             bufferData[1].uv[0] = min[0];
-            bufferData[1].uv[1] = min[1];
+            bufferData[1].uv[1] = max[1];
             bufferData[2].uv[0] = min[0];
-            bufferData[2].uv[1] = max[1];
+            bufferData[2].uv[1] = min[1];
             bufferData[3].uv[0] = max[0];
-            bufferData[3].uv[1] = max[1];
+            bufferData[3].uv[1] = min[1];
         }
         
         bufferData += 4;
