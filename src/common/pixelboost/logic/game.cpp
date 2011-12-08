@@ -67,7 +67,6 @@ Game::~Game()
     delete _ParticleRenderer;
     delete _PrimitiveRenderer;
     delete _Renderer;
-    delete _ResourceManager;
     delete _SoundManager;
     delete _SpriteRenderer;
     delete _TouchManager;
