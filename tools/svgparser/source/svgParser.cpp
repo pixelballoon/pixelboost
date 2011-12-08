@@ -95,7 +95,7 @@ bool SvgParser::ParseLayer(const std::string& src, const std::string& dst)
             image["sy"] = json::Number(atof(items[3].c_str()));
             
             float tx = atof(items[4].c_str()) / 32.f;
-            image["tx"] = json::Number(tx);
+            image["tx"] = json::Number(tx + width/2.f);
             
             float ty = atof(items[5].c_str()) / 32.f;
             image["ty"] = json::Number(_Height/2.f - ty - height/2.f);
@@ -338,7 +338,7 @@ bool PathParser::Parse(SvgPath& path)
             {
                 if (numbers.size() == 6)
                 {
-                    path.points.push_back(SvgPath::Point(_X, _Y, _X + numbers[0], _Y + numbers[1], _X + numbers[2], _Y + numbers[3], _X + numbers[4], _X + numbers[5]));
+                    path.points.push_back(SvgPath::Point(_X, _Y, _X + numbers[0], _Y + numbers[1], _X + numbers[2], _Y + numbers[3], _X + numbers[4], _Y + numbers[5]));
                     
                     _X += numbers[4];
                     _Y += numbers[5];
@@ -388,7 +388,7 @@ bool PathParser::Parse(SvgPath& path)
                         cy = _Y;
                     }
                     
-                    path.points.push_back(SvgPath::Point(_X, _Y, cx, cy, numbers[0], numbers[1], numbers[2], numbers[3]));
+                    path.points.push_back(SvgPath::Point(_X, _Y, cx, cy, _X + numbers[0], _Y + numbers[1], _X + numbers[2], _Y + numbers[3]));
                     
                     _X += numbers[2];
                     _Y += numbers[3];
