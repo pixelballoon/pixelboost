@@ -4,3 +4,5 @@ tools/bin/
 tools/svgparser/osx/svgparser/build/
 tools/svgparser/osx/svgparser/svgparser.xcodeproj/project.xcworkspace/xcuserdata/
 tools/svgparser/osx/svgparser/svgparser.xcodeproj/xcuserdata/
+tools/hullgenerator/osx/hullgenerator/hullgenerator.xcodeproj/project.xcworkspace/
+tools/hullgenerator/osx/hullgenerator/hullgenerator.xcodeproj/xcuserdata/
