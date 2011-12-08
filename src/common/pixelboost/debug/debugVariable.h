@@ -5,7 +5,7 @@
 namespace pixelboost
 {
     
-#ifndef PIXELBALLOON_BUILD_RELEASE
+#ifndef PIXELBOOST_BUILD_RELEASE
     
 class DebugVariable
 {
@@ -258,7 +258,7 @@ public:
 #endif
 }
 
-#ifndef PIXELBALLOON_BUILD_RELEASE
+#ifndef PIXELBOOST_BUILD_RELEASE
 
 #define DEFINE_DEBUG_STRING(name, location, value) pixelboost::DebugString name(location, value)
 #define DEFINE_DEBUG_BOOL(name, location, value) pixelboost::DebugBool name(location, value)

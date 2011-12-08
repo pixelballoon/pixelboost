@@ -3,7 +3,7 @@
 #include "debugVariable.h"
 #include "debugVariableManager.h"
 
-#ifndef PIXELBALLOON_BUILD_RELEASE
+#ifndef PIXELBOOST_BUILD_RELEASE
 
 namespace pixelboost
 {

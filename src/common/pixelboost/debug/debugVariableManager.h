@@ -24,7 +24,7 @@ public:
     static DebugVariableManager* Instance();
     
 private:
-#ifndef PIXELBALLOON_BUILD_RELEASE    
+#ifndef PIXELBOOST_BUILD_RELEASE    
     typedef std::map<int, DebugVariable*> VariableMap;
     
     void AddVariable(DebugVariable* variable);
@@ -44,7 +44,7 @@ private:
 private:
     static DebugVariableManager* _Instance;
     
-#ifndef PIXELBALLOON_BUILD_RELEASE
+#ifndef PIXELBOOST_BUILD_RELEASE
     VariableMap _Variables;
 #endif
     

@@ -34,7 +34,7 @@ DebugVariableManager* DebugVariableManager::Instance()
     return _Instance;
 }
 
-#ifndef PIXELBALLOON_BUILD_RELEASE
+#ifndef PIXELBOOST_BUILD_RELEASE
 
 void DebugVariableManager::AddVariable(DebugVariable* variable)
 {
