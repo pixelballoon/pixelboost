@@ -1,0 +1,21 @@
+task :default => 'tools:build' do
+end
+
+namespace :tools do
+  puts Rake.application.original_dir
+  rakeLocation = File.dirname __FILE__  
+  puts rakeLocation
+    task :build => [:svgparser] do
+    end
+
+    binDir = File.join rakeLocation, 'bin/'
+    directory binDir
+    task :svgparser => binDir do
+      parserDir = File.join rakeLocation, 'svgparser/osx/svgparser'
+      Dir.chdir parserDir do
+        system 'xcodebuild'
+      end
+      releaseDir = File.join parserDir, 'build/Release/svgparser'      
+      cp releaseDir, binDir
+    end
+end

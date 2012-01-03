@@ -1,0 +1,294 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1C14BE3F14912408001C38B8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C14BE3E14912408001C38B8 /* Cocoa.framework */; };
+		1C14BE4914912408001C38B8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1C14BE4714912408001C38B8 /* InfoPlist.strings */; };
+		1C14BE4B14912408001C38B8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C14BE4A14912408001C38B8 /* main.m */; };
+		1C14BE4F14912408001C38B8 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 1C14BE4D14912408001C38B8 /* Credits.rtf */; };
+		1C14BE5214912408001C38B8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C14BE5114912408001C38B8 /* AppDelegate.m */; };
+		1C14BE5514912409001C38B8 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1C14BE5314912409001C38B8 /* MainMenu.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1C14BE3A14912408001C38B8 /* hullgenerator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hullgenerator.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1C14BE3E14912408001C38B8 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		1C14BE4114912408001C38B8 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		1C14BE4214912408001C38B8 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		1C14BE4314912408001C38B8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		1C14BE4614912408001C38B8 /* hullgenerator-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "hullgenerator-Info.plist"; sourceTree = "<group>"; };
+		1C14BE4814912408001C38B8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1C14BE4A14912408001C38B8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		1C14BE4C14912408001C38B8 /* hullgenerator-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "hullgenerator-Prefix.pch"; sourceTree = "<group>"; };
+		1C14BE4E14912408001C38B8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		1C14BE5014912408001C38B8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		1C14BE5114912408001C38B8 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		1C14BE5414912409001C38B8 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1C14BE3714912408001C38B8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1C14BE3F14912408001C38B8 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1C14BE2F14912408001C38B8 = {
+			isa = PBXGroup;
+			children = (
+				1C14BE4414912408001C38B8 /* hullgenerator */,
+				1C14BE3D14912408001C38B8 /* Frameworks */,
+				1C14BE3B14912408001C38B8 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1C14BE3B14912408001C38B8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1C14BE3A14912408001C38B8 /* hullgenerator.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1C14BE3D14912408001C38B8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1C14BE3E14912408001C38B8 /* Cocoa.framework */,
+				1C14BE4014912408001C38B8 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1C14BE4014912408001C38B8 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1C14BE4114912408001C38B8 /* AppKit.framework */,
+				1C14BE4214912408001C38B8 /* CoreData.framework */,
+				1C14BE4314912408001C38B8 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		1C14BE4414912408001C38B8 /* hullgenerator */ = {
+			isa = PBXGroup;
+			children = (
+				1C14BE5014912408001C38B8 /* AppDelegate.h */,
+				1C14BE5114912408001C38B8 /* AppDelegate.m */,
+				1C14BE5314912409001C38B8 /* MainMenu.xib */,
+				1C14BE4514912408001C38B8 /* Supporting Files */,
+			);
+			path = hullgenerator;
+			sourceTree = "<group>";
+		};
+		1C14BE4514912408001C38B8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				1C14BE4614912408001C38B8 /* hullgenerator-Info.plist */,
+				1C14BE4714912408001C38B8 /* InfoPlist.strings */,
+				1C14BE4A14912408001C38B8 /* main.m */,
+				1C14BE4C14912408001C38B8 /* hullgenerator-Prefix.pch */,
+				1C14BE4D14912408001C38B8 /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1C14BE3914912408001C38B8 /* hullgenerator */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1C14BE5814912409001C38B8 /* Build configuration list for PBXNativeTarget "hullgenerator" */;
+			buildPhases = (
+				1C14BE3614912408001C38B8 /* Sources */,
+				1C14BE3714912408001C38B8 /* Frameworks */,
+				1C14BE3814912408001C38B8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = hullgenerator;
+			productName = hullgenerator;
+			productReference = 1C14BE3A14912408001C38B8 /* hullgenerator.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1C14BE3114912408001C38B8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+				ORGANIZATIONNAME = "Moshen Ltd";
+			};
+			buildConfigurationList = 1C14BE3414912408001C38B8 /* Build configuration list for PBXProject "hullgenerator" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 1C14BE2F14912408001C38B8;
+			productRefGroup = 1C14BE3B14912408001C38B8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1C14BE3914912408001C38B8 /* hullgenerator */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1C14BE3814912408001C38B8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1C14BE4914912408001C38B8 /* InfoPlist.strings in Resources */,
+				1C14BE4F14912408001C38B8 /* Credits.rtf in Resources */,
+				1C14BE5514912409001C38B8 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1C14BE3614912408001C38B8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1C14BE4B14912408001C38B8 /* main.m in Sources */,
+				1C14BE5214912408001C38B8 /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		1C14BE4714912408001C38B8 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1C14BE4814912408001C38B8 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		1C14BE4D14912408001C38B8 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1C14BE4E14912408001C38B8 /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		1C14BE5314912409001C38B8 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1C14BE5414912409001C38B8 /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		1C14BE5614912409001C38B8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		1C14BE5714912409001C38B8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		1C14BE5914912409001C38B8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "hullgenerator/hullgenerator-Prefix.pch";
+				INFOPLIST_FILE = "hullgenerator/hullgenerator-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		1C14BE5A14912409001C38B8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "hullgenerator/hullgenerator-Prefix.pch";
+				INFOPLIST_FILE = "hullgenerator/hullgenerator-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1C14BE3414912408001C38B8 /* Build configuration list for PBXProject "hullgenerator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1C14BE5614912409001C38B8 /* Debug */,
+				1C14BE5714912409001C38B8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1C14BE5814912409001C38B8 /* Build configuration list for PBXNativeTarget "hullgenerator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1C14BE5914912409001C38B8 /* Debug */,
+				1C14BE5A14912409001C38B8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1C14BE3114912408001C38B8 /* Project object */;
+}
