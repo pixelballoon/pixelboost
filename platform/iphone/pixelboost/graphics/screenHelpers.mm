@@ -63,10 +63,12 @@ float GetAspectRatio()
 Vec2 GetScreenResolution()
 {
     if ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad))
+    {
         if (!IsLandscape())
             return Vec2(768.f, 1024.f);
         else
             return Vec2(1024.f, 768.f);
+    }
     else if (IsHighResolution())
     {
         if (!IsLandscape())
@@ -74,6 +76,7 @@ Vec2 GetScreenResolution()
         else
             return Vec2(960.f, 640.f);
     }
+    else
     {
         if (!IsLandscape())
             return Vec2(320.f, 480.f);
