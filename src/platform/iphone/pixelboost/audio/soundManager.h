@@ -66,6 +66,7 @@ public:
     
 private:
     void SfxPlay(const Sound& sound);
+    void SfxStop(const Sound& sound);
     bool SfxIsPlaying(const Sound& sound);
     void SfxUpdateLooping(const Sound& sound);
     void SfxUpdatePitch(const Sound& sound);

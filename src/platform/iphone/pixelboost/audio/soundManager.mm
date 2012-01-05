@@ -31,7 +31,7 @@ void Sound::Play()
 
 void Sound::Stop()
 {
-    
+    SoundManager::Instance()->SfxStop(*this);
 }
 
 bool Sound::IsPlaying() const
@@ -195,6 +195,18 @@ void SoundManager::SfxPlay(const Sound& sound)
     id<ALSoundSource> instance = [[OALSimpleAudio sharedInstance] playEffect:[NSString stringWithUTF8String:sound.GetName().c_str()] volume:sound.GetVolume() pitch:sound.GetPitch() pan:0.f loop:false];
     [instance retain];
     _Sounds[sound.GetId()] = instance;
+}
+
+void SoundManager::SfxStop(const Sound& sound)
+{
+    std::map<int, void*>::iterator it = _Sounds.find(sound.GetId());
+    
+    if (it == _Sounds.end())
+        return;
+    
+    id<ALSoundSource> src = (id<ALSoundSource>)it->second;
+    
+    [src stop];
 }
 
 bool SoundManager::SfxIsPlaying(const Sound& sound)
