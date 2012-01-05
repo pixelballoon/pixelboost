@@ -5,11 +5,11 @@
 
 #include "pixelboost/file/fileHelpers.h"
 #include "pixelboost/graphics/device/device.h"
+#include "pixelboost/graphics/device/indexBuffer.h"
 #include "pixelboost/graphics/device/texture.h"
 #include "pixelboost/graphics/render/model/modelRenderer.h"
 
-namespace pixelboost
-{
+using namespace pixelboost;
 
 Model::Model()
     : _RefCount(1)
@@ -19,19 +19,17 @@ Model::Model()
 
 Model::~Model()
 {
-    // TODO: Release buffers
+    GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
+    GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
 }
     
 bool Model::Load(const std::string& modelName)
 {
-    /*
     std::string objFilename = FileHelpers::GetRootPath() + "/data/models/" + modelName + ".obj";
     
-    std::fstream file;
+    FILE* file = fopen(objFilename.c_str(), "r");
     
-    file.open(objFilename.c_str(), std::ios_base::in);
-    
-    if (!file.is_open())
+    if (!file)
         return false;
     
     std::vector<Vec3> vertices;
@@ -51,9 +49,9 @@ bool Model::Load(const std::string& modelName)
     ReadMode readMode;
     
     char lineChars[1024];
-    while (!file.eof())
+    while (!feof(file))
     {
-        file.getline(lineChars, 1024);
+        fgets(lineChars, 1024, file);
         
         std::string line = lineChars;
         
@@ -104,14 +102,13 @@ bool Model::Load(const std::string& modelName)
         }
     }
 
-    file.close();
+    fclose(file);
     
     _NumVertices = verts.size();
 
-	glGenBuffers(1, &_VertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, _VertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_NPXYZ_UV) * _NumVertices, 0, GL_STATIC_DRAW);
-	Vertex_NPXYZ_UV* vertexBuffer = (Vertex_NPXYZ_UV*)glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
+    _VertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatStatic, kVertexFormat_NP_XYZ_UV, _NumVertices);
+    _VertexBuffer->Lock();
+    Vertex_NPXYZ_UV* vertexBuffer = static_cast<Vertex_NPXYZ_UV*>(_VertexBuffer->GetData());
     for (int i=0; i<_NumVertices; i++)
     {
         vertexBuffer[i].position[0] = verts[i].position[0];
@@ -123,20 +120,17 @@ bool Model::Load(const std::string& modelName)
         vertexBuffer[i].normal[1] = verts[i].normal[1];
         vertexBuffer[i].normal[2] = verts[i].normal[2];
     }
-	glUnmapBufferOES(GL_ARRAY_BUFFER);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    _VertexBuffer->Unlock();
     
-	glGenBuffers(1, &_IndexBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _IndexBuffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * _NumVertices, 0, GL_STATIC_DRAW);
-    GLushort* indexBuffer = (GLushort*)glMapBufferOES(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
+    _IndexBuffer = GraphicsDevice::Instance()->CreateIndexBuffer(kBufferFormatStatic, _NumVertices);
+    _IndexBuffer->Lock();
+    unsigned short* indexBuffer = _IndexBuffer->GetData();
     for (int i=0; i<_NumVertices; i++)
     {
         indexBuffer[i] = i;
     }
-    glUnmapBufferOES(GL_ELEMENT_ARRAY_BUFFER);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    */
+    _IndexBuffer->Unlock();
+    
 	return true;
 }
     
@@ -190,26 +184,6 @@ std::vector<std::string> Model::SplitPath(const std::string &string)
     std::vector<std::string> items;
     return SplitString(string, '/', items);
 }
-    
-ModelTexture::ModelTexture()
-{
-    
-}
-
-ModelTexture::~ModelTexture()
-{
-    // TODO: Release texture
-}
-
-bool ModelTexture::Load(const std::string& textureName)
-{
-    std::string texFilename = FileHelpers::GetRootPath() + "/data/models/" + textureName + ".png";
-    
-    _Texture = GraphicsDevice::Instance()->CreateTexture();
-    _Texture->Load(texFilename, true);
-    
-    return true;
-}
 
 ModelRenderer::ModelRenderer()
 {
@@ -222,6 +196,71 @@ ModelRenderer::~ModelRenderer()
     {
         delete it->second;
     }
+    
+    for (TextureMap::iterator it = _Textures.begin(); it != _Textures.end(); ++it)
+    {
+        GraphicsDevice::Instance()->DestroyTexture(it->second);
+    }
+}
+
+void ModelRenderer::Update(float time)
+{
+    _Instances.clear();
+}
+
+void ModelRenderer::Render(RenderLayer* layer)
+{
+    InstanceList& instanceList = _Instances[layer];
+    if (!instanceList.size())
+        return;
+    
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_ALPHA_TEST);
+    glEnable(GL_TEXTURE_2D);
+    
+    glAlphaFunc(GL_GREATER, 0.5f);
+    
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    
+    for (InstanceList::iterator it = instanceList.begin(); it != instanceList.end(); ++it)
+    {
+        Model* model = GetModel(it->modelName);
+        Texture* texture = GetTexture(it->textureName);
+        
+        if (!model || !texture)
+            continue;
+        
+        glPushMatrix();
+        
+        glTranslatef(it->position[0], it->position[1], it->position[2]);
+        glScalef(it->scale[0], it->scale[1], it->scale[2]);
+        glTranslatef(it->offset[0], it->offset[1], it->offset[2]);
+        glRotatef(it->rotation[0], 1, 0, 0);
+        glRotatef(it->rotation[1], 0, 1, 0);
+        glRotatef(it->rotation[2], 0, 0, 1);
+        
+        GraphicsDevice::Instance()->BindIndexBuffer(model->_IndexBuffer);
+        GraphicsDevice::Instance()->BindVertexBuffer(model->_VertexBuffer);
+        GraphicsDevice::Instance()->BindTexture(texture);
+        
+        GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, model->_NumVertices);
+        
+        glPopMatrix();
+    }
+    
+    GraphicsDevice::Instance()->BindIndexBuffer(0);
+    GraphicsDevice::Instance()->BindTexture(0);
+    GraphicsDevice::Instance()->BindVertexBuffer(0);
+    
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+  
+    glDisable(GL_ALPHA_TEST);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_TEXTURE_2D);
 }
     
 bool ModelRenderer::LoadModel(const std::string& modelName)
@@ -266,16 +305,15 @@ bool ModelRenderer::LoadTexture(const std::string& textureName)
     
     if (it != _Textures.end())
     {
-        it->second->_RefCount++;
-        return true;
+        return false;
     }
     
-    ModelTexture* texture = new ModelTexture();
-    texture->Load(textureName);
+    Texture* texture = GraphicsDevice::Instance()->CreateTexture();
+    texture->Load(FileHelpers::GetRootPath() + "/data/models/" + textureName + ".png", true);
     
     _Textures[textureName] = texture;
     
-    return false;
+    return true;
 }
 
 bool ModelRenderer::UnloadTexture(const std::string& textureName)
@@ -284,66 +322,31 @@ bool ModelRenderer::UnloadTexture(const std::string& textureName)
     
     if (it == _Textures.end())
         return false;
-    
-    it->second->_RefCount--;
-    
-    if (it->second->_RefCount == 0)
-    {
-        delete it->second;
-        _Textures.erase(it);
-    }
+ 
+    GraphicsDevice::Instance()->DestroyTexture(it->second);
+    _Textures.erase(it);
     
     return true;
 }
-    
-bool ModelRenderer::Render(const std::string& modelName, const std::string& textureName, Vec3 position, Vec3 rotation, Vec3 scale, Vec3 offset)
+
+bool ModelRenderer::AttachToRenderer(RenderLayer* layer, const std::string& modelName, const std::string& textureName, Vec3 position, Vec3 rotation, Vec3 scale, Vec3 offset)
 {
     Model* model = GetModel(modelName);
-    ModelTexture* texture = GetTexture(textureName);
+    Texture* texture = GetTexture(textureName);
     
     if (!model || !texture)
         return false;
     
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_TEXTURE_2D);
-    
-    glPushMatrix();
-    
-    glTranslatef(position[0], position[1], position[2]);
-    glScalef(scale[0], scale[1], scale[2]);
-    glTranslatef(offset[0], offset[1], offset[2]);
-    glRotatef(rotation[0], 1, 0, 0);
-    glRotatef(rotation[1], 0, 1, 0);
-    glRotatef(rotation[2], 0, 0, 1);
+    ModelInstance instance;
+    instance.modelName = modelName;
+    instance.textureName = textureName;
+    instance.position = position;
+    instance.rotation = rotation;
+    instance.scale = scale;
+    instance.offset = offset;
 
-    texture->_Texture->Bind();
+    _Instances[layer].push_back(instance);
     
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_NORMAL_ARRAY);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, model->_VertexBuffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model->_IndexBuffer);
-    
-    GLsizei stride = sizeof(Vertex_NPXYZ_UV);
-    glVertexPointer(3, GL_FLOAT, stride, (void*)offsetof(Vertex_NPXYZ_UV, position));
-    glNormalPointer(GL_FLOAT, stride, (void*)offsetof(Vertex_NPXYZ_UV, normal));
-    glTexCoordPointer(2, GL_FLOAT, stride, (void*)offsetof(Vertex_NPXYZ_UV, uv));
-    
-    GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, model->_NumVertices);
-    
-    glPopMatrix();
-    
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_NORMAL_ARRAY);
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-    
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_TEXTURE_2D);
-
     return true;
 }
     
@@ -357,7 +360,7 @@ Model* ModelRenderer::GetModel(const std::string& modelName)
     return it->second;
 }
     
-ModelTexture* ModelRenderer::GetTexture(const std::string& textureName)
+Texture* ModelRenderer::GetTexture(const std::string& textureName)
 {
     TextureMap::iterator it = _Textures.find(textureName);
     
@@ -365,6 +368,4 @@ ModelTexture* ModelRenderer::GetTexture(const std::string& textureName)
         return 0;
     
     return it->second;   
-}
-
 }

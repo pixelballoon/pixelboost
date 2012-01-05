@@ -35,10 +35,11 @@ Game::Game(void* viewController)
     _ModelRenderer  = new ModelRenderer();
     _ParticleRenderer = new ParticleRenderer();
     _PrimitiveRenderer = new PrimitiveRenderer();
-    _Renderer = new Renderer();
     _SpriteRenderer = new SpriteRenderer();
 
+    _Renderer = new Renderer();
     _Renderer->AddRenderer(_SpriteRenderer);
+    _Renderer->AddRenderer(_ModelRenderer);
     _Renderer->AddRenderer(_CustomRenderer);
     _Renderer->AddRenderer(_ParticleRenderer);
     _Renderer->AddRenderer(_PrimitiveRenderer);
@@ -56,6 +57,8 @@ Game::~Game()
     _Instance = 0;
     
     _Renderer->RemoveRenderer(_CustomRenderer);
+    _Renderer->RemoveRenderer(_FontRenderer);
+    _Renderer->RemoveRenderer(_ModelRenderer);
     _Renderer->RemoveRenderer(_ParticleRenderer);
     _Renderer->RemoveRenderer(_PrimitiveRenderer);
     _Renderer->RemoveRenderer(_SpriteRenderer);
