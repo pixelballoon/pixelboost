@@ -44,8 +44,6 @@ Game::Game(void* viewController)
     _Renderer->AddRenderer(_PrimitiveRenderer);
     _Renderer->AddRenderer(_FontRenderer);
     
-    _SoundManager = new SoundManager();
-    
 #ifndef PIXELBOOST_DISABLE_GAMECENTER
     _GameCenter->Connect();
 #endif
@@ -67,7 +65,6 @@ Game::~Game()
     delete _ParticleRenderer;
     delete _PrimitiveRenderer;
     delete _Renderer;
-    delete _SoundManager;
     delete _SpriteRenderer;
     delete _TouchManager;
 }
@@ -122,11 +119,6 @@ Renderer* Game::GetRenderer() const
     return _Renderer;
 }
 
-SoundManager* Game::GetSoundManager() const
-{
-	return _SoundManager;
-}
-    
 SpriteRenderer* Game::GetSpriteRenderer() const
 {
     return _SpriteRenderer;
@@ -158,6 +150,10 @@ void Game::Update(float time)
     _TotalTime += time;
     
     _Renderer->Update(time);
+    
+#ifndef PIXELBOOST_DISABLE_SOUND
+    SoundManager::Instance()->Update(time);
+#endif
 }
 
 void Game::Render()

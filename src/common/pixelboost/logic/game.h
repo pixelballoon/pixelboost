@@ -37,7 +37,6 @@ public:
     ParticleRenderer* GetParticleRenderer() const;
     PrimitiveRenderer* GetPrimitiveRenderer() const;
     Renderer* GetRenderer() const;
-    SoundManager* GetSoundManager() const;
 	SpriteRenderer* GetSpriteRenderer() const;
 	TouchManager* GetTouchManager() const;
     
