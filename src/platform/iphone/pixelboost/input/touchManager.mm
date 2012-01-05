@@ -23,7 +23,7 @@ Vec2 Touch::GetScreenPosition()
 	return position;
 }
 
-Vec2 Touch::GetWorldPosition(Camera* camera)
+Vec2 Touch::GetWorldPosition(OrthographicCamera* camera)
 {
 	Vec2 position = _Position;
     
