@@ -5,8 +5,7 @@
 #include "pixelboost/graphics/render/sprite/sprite.h"
 #include "pixelboost/logic/game.h"
 
-namespace pixelboost
-{
+using namespace pixelboost;
     
 std::shared_ptr<SpriteSheet> SpriteSheet::Create()
 {
@@ -93,6 +92,4 @@ Sprite* SpriteSheet::GetSprite(const std::string& name)
 Vec4 Sprite::GetUV()
 {
     return Vec4(0, 0, 1, 1);
-}
-    
 }
