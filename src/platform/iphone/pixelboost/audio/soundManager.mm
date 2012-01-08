@@ -10,13 +10,13 @@
 
 using namespace pixelboost;
 
-Sound::Sound(int id, const std::string& name, float volume, float pitch)
-    : _Id(id)
+Sound::Sound(const std::string& name, bool compressed, float volume, float pitch)
+    : _Compressed(compressed)
     , _Name(name)
     , _Pitch(pitch)
     , _Volume(volume)
 {
-    
+    _Id = SoundManager::Instance()->SfxGetId();
 }
 
 int Sound::GetId() const
@@ -42,6 +42,16 @@ bool Sound::IsPlaying() const
 const std::string& Sound::GetName() const
 {
     return _Name;
+}
+
+bool Sound::IsCompressed() const
+{
+    return _Compressed;
+}
+
+void Sound::SetCompressed(bool compressed)
+{
+    _Compressed = true;
 }
 
 bool Sound::IsLooping() const
@@ -171,28 +181,28 @@ void SoundManager::StopBgm()
     [[OALSimpleAudio sharedInstance] stopBg];
 }
 
-Sound SoundManager::CreateSfx(const std::string& name, bool compressed, float volume, float pitch)
-{
-    std::string fileName = FileHelpers::GetRootPath() + "/data/audio/sfx/" + name + (compressed ? ".mp3" : ".wav");
-    
-    return Sound(_SoundId++, fileName, volume, pitch);
-}
-
 Sound SoundManager::PlaySfx(const std::string& name, bool compressed, float volume, float pitch)
 {
     if (_MuteSfx)
         return Sound(0);
     
-    Sound sound = CreateSfx(name, compressed, volume, pitch);
+    Sound sound(name, volume, pitch);
     
     sound.Play();
     
     return sound;
 }
 
+int SoundManager::SfxGetId()
+{
+    return _SoundId++;
+}
+
 void SoundManager::SfxPlay(const Sound& sound)
 {
-    id<ALSoundSource> instance = [[OALSimpleAudio sharedInstance] playEffect:[NSString stringWithUTF8String:sound.GetName().c_str()] volume:sound.GetVolume() pitch:sound.GetPitch() pan:0.f loop:false];
+    std::string filename = FileHelpers::GetRootPath() + "/data/audio/sfx/" + sound.GetName() + (sound.IsCompressed() ? ".mp3" : ".wav");
+    
+    id<ALSoundSource> instance = [[OALSimpleAudio sharedInstance] playEffect:[NSString stringWithUTF8String:filename.c_str()] volume:sound.GetVolume() pitch:sound.GetPitch() pan:0.f loop:sound.IsLooping()];
     [instance retain];
     _Sounds[sound.GetId()] = instance;
 }

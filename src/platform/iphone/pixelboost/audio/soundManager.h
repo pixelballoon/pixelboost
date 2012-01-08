@@ -10,10 +10,9 @@ namespace pixelboost
     
 class Sound
 {
-private:
-    Sound(int id, const std::string& name="", float volume=1.f, float pitch=1.f);
-    
 public:
+    Sound(const std::string& name="", bool compressed=false, float volume=1.f, float pitch=1.f);
+    
     int GetId() const;
     
     void Play();
@@ -21,6 +20,9 @@ public:
     bool IsPlaying() const;
     
     const std::string& GetName() const;
+    
+    bool IsCompressed() const;
+    void SetCompressed(bool compressed);
     
     bool IsLooping() const;
     void SetLooping(bool looping);
@@ -33,6 +35,7 @@ public:
     
 private:
     int _Id;
+    bool _Compressed;
     bool _Looping;
     std::string _Name;
     float _Pitch;
@@ -61,10 +64,10 @@ public:
     void PlayBgm(const std::string& name, bool loop, float volume=1.f);
     void StopBgm();
     
-    Sound CreateSfx(const std::string& name, bool compressed, float volume=1.f, float pitch=1.f);
     Sound PlaySfx(const std::string& name, bool compressed, float volume=1.f, float pitch=1.f);
     
 private:
+    int SfxGetId();
     void SfxPlay(const Sound& sound);
     void SfxStop(const Sound& sound);
     bool SfxIsPlaying(const Sound& sound);
