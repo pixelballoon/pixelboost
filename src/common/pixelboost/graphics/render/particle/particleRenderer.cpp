@@ -271,8 +271,8 @@ void ParticleRenderer::Render(RenderLayer* layer)
             vertexBuffer[2].position[2] = 0.f;
             vertexBuffer[3].position[2] = 0.f;
             
-            float cosRot = cos((it->rotation[2]/180.f)*M_PI);
-            float sinRot = sin((it->rotation[2]/180.f)*M_PI);
+            float cosRot = cos(((-it->rotation[2]-90.f)/180.f)*M_PI);
+            float sinRot = sin(((-it->rotation[2]-90.f)/180.f)*M_PI);
             
             vertexBuffer[0].position[0] = -size[1] * cosRot + size[0] * sinRot + it->position[0];
             vertexBuffer[0].position[1] = size[1] * sinRot + size[0] * cosRot + it->position[1];
