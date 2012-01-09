@@ -4,7 +4,7 @@
 #include <queue>
 #include <vector>
 
-#include "pixelboost/parser/json/elements.h"
+#include "pixelboost/data/json/elements.h"
 
 namespace pugi
 {
