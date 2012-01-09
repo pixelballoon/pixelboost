@@ -2,6 +2,11 @@
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/helper/screenHelpers.h"
 
+#ifdef PIXELBOOST_GRAPHICS_OPENGLES1
+
+#include <OpenGLES/ES1/gl.h>
+#include <OpenGLES/ES1/glext.h>
+
 using namespace pixelboost;
 
 Camera::Camera()
@@ -90,3 +95,5 @@ void PerspectiveCamera::BuildMatrix(float* m, float fov, float znear, float zfar
     m[14] = qn;
     m[15] = 0;
 }
+
+#endif

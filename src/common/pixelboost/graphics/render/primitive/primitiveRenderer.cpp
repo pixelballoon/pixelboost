@@ -1,6 +1,13 @@
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/render/primitive/primitiveRenderer.h"
 
+// TODO : Use vertex buffers objects rather than relying on direct OpenGL usage
+
+#ifdef PIXELBOOST_GRAPHICS_OPENGLES1
+
+#include <OpenGLES/ES1/gl.h>
+#include <OpenGLES/ES1/glext.h>
+
 namespace pixelboost
 {
 
@@ -149,3 +156,5 @@ void PrimitiveRenderer::AttachBox(pixelboost::RenderLayer *layer, Vec2 position,
 }
     
 }
+
+#endif

@@ -52,7 +52,6 @@ public:
 #ifdef PIXELBOOST_PLATFORM_IOS
     #define PIXELBOOST_GRAPHICS_OPENGLES1
     #define PIXELBOOST_GRAPHICS_PREMULTIPLIED_ALPHA
-    #include "pixelboost/graphics/device/gles1/device.h" // TODO: No need to include this line!
 #endif
 
 #ifdef PIXELBOOST_PLATFORM_OSX
