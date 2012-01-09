@@ -25,7 +25,7 @@ public:
     void AttachBox(RenderLayer* layer, Vec2 position, Vec2 size, Vec3 rotation = Vec3(0.f, 0.f, 0.f), Vec4 color = Vec4(1.f, 1.f, 1.f, 1.f), bool solid=true);
     
 private:
-    struct RenderItem
+    struct PrimitiveInstance
     {
         enum Type
         {
@@ -43,7 +43,7 @@ private:
         int segments;
     };
     
-    typedef std::vector<RenderItem> ItemList;
+    typedef std::vector<PrimitiveInstance> ItemList;
     typedef std::map<RenderLayer*, ItemList> ItemListMap;
     
     ItemListMap _Items;

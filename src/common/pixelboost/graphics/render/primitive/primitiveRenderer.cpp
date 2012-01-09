@@ -47,7 +47,7 @@ void PrimitiveRenderer::Render(RenderLayer* layer)
         
         switch (it->type)
         {
-            case RenderItem::kTypeEllipse:
+            case PrimitiveInstance::kTypeEllipse:
             {
                 glPushMatrix();
                 
@@ -76,7 +76,7 @@ void PrimitiveRenderer::Render(RenderLayer* layer)
                 
                 break;
             }
-            case RenderItem::kTypeBox:
+            case PrimitiveInstance::kTypeBox:
             {
                 glPushMatrix();
                 
@@ -99,7 +99,7 @@ void PrimitiveRenderer::Render(RenderLayer* layer)
                 
                 break;
             }
-            case RenderItem::kTypeLine:
+            case PrimitiveInstance::kTypeLine:
             {
                 glPushMatrix();
                 
@@ -124,8 +124,8 @@ void PrimitiveRenderer::Render(RenderLayer* layer)
     
 void PrimitiveRenderer::AttachEllipse(pixelboost::RenderLayer *layer, Vec2 position, Vec2 size, Vec3 rotation, Vec4 color, int segments)
 {
-    RenderItem item;
-    item.type = RenderItem::kTypeEllipse;
+    PrimitiveInstance item;
+    item.type = PrimitiveInstance::kTypeEllipse;
     item.position = position;
     item.size = size;
     item.rotation = rotation;
@@ -136,8 +136,8 @@ void PrimitiveRenderer::AttachEllipse(pixelboost::RenderLayer *layer, Vec2 posit
     
 void PrimitiveRenderer::AttachLine(pixelboost::RenderLayer *layer, Vec2 start, Vec2 end, Vec4 color)
 {
-    RenderItem item;
-    item.type = RenderItem::kTypeLine;
+    PrimitiveInstance item;
+    item.type = PrimitiveInstance::kTypeLine;
     item.position = start;
     item.size = end;
     item.color = color;
@@ -146,8 +146,8 @@ void PrimitiveRenderer::AttachLine(pixelboost::RenderLayer *layer, Vec2 start, V
     
 void PrimitiveRenderer::AttachBox(pixelboost::RenderLayer *layer, Vec2 position, Vec2 size, Vec3 rotation, Vec4 color, bool solid)
 {
-    RenderItem item;
-    item.type = RenderItem::kTypeBox;
+    PrimitiveInstance item;
+    item.type = PrimitiveInstance::kTypeBox;
     item.position = position;
     item.size = size;
     item.rotation = rotation;
