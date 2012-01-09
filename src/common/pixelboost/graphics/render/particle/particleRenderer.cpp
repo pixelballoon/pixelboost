@@ -140,7 +140,7 @@ ParticleRenderer::ParticleRenderer(int maxParticlesPerLayer)
         indexBuffer[0] = (i*4);
         indexBuffer[1] = (i*4) + 1;
         indexBuffer[2] = (i*4) + 2;
-        indexBuffer[3] = (i*4) + 1;
+        indexBuffer[3] = (i*4) + 0;
         indexBuffer[4] = (i*4) + 2;
         indexBuffer[5] = (i*4) + 3;
         
@@ -266,18 +266,22 @@ void ParticleRenderer::Render(RenderLayer* layer)
             Vec2 scale = it->emitterConfig->startScale + (it->emitterConfig->endScale-it->emitterConfig->startScale)*tween;
             Vec2 size = sprite->_Dimension * scale;
             
-            vertexBuffer[0].position[0] = (cos(it->rotation[2])*size[0])+it->position[0];
-            vertexBuffer[0].position[1] = (sin(it->rotation[2])*size[1])+it->position[1];
             vertexBuffer[0].position[2] = 0.f;
-            vertexBuffer[1].position[0] = (cos(it->rotation[2]+M_PI_2)*size[0])+it->position[0];
-            vertexBuffer[1].position[1] = (sin(it->rotation[2]+M_PI_2)*size[1])+it->position[1];
             vertexBuffer[1].position[2] = 0.f;
-            vertexBuffer[2].position[0] = (cos(it->rotation[2]-M_PI_2)*size[0])+it->position[0];
-            vertexBuffer[2].position[1] = (sin(it->rotation[2]-M_PI_2)*size[1])+it->position[1];
             vertexBuffer[2].position[2] = 0.f;
-            vertexBuffer[3].position[0] = (cos(it->rotation[2]+M_PI)*size[0])+it->position[0];
-            vertexBuffer[3].position[1] = (sin(it->rotation[2]+M_PI)*size[1])+it->position[1];
             vertexBuffer[3].position[2] = 0.f;
+            
+            float cosRot = cos(((-it->rotation[2]-90.f)/180.f)*M_PI);
+            float sinRot = sin(((-it->rotation[2]-90.f)/180.f)*M_PI);
+            
+            vertexBuffer[0].position[0] = -size[1] * cosRot + size[0] * sinRot + it->position[0];
+            vertexBuffer[0].position[1] = size[1] * sinRot + size[0] * cosRot + it->position[1];
+            vertexBuffer[1].position[0] = size[1] * cosRot + size[0] * sinRot + it->position[0];
+            vertexBuffer[1].position[1] = -size[1] * sinRot + size[0] * cosRot + it->position[1];
+            vertexBuffer[2].position[0] = size[1] * cosRot - size[0] * sinRot + it->position[0];
+            vertexBuffer[2].position[1] = -size[1] * sinRot - size[0] * cosRot + it->position[1];
+            vertexBuffer[3].position[0] = -size[1] * cosRot - size[0] * sinRot + it->position[0];
+            vertexBuffer[3].position[1] = size[1] * sinRot - size[0] * cosRot + it->position[1];
             
             vertexBuffer[0].color[0] = color[0];
             vertexBuffer[0].color[1] = color[1];
@@ -302,11 +306,11 @@ void ParticleRenderer::Render(RenderLayer* layer)
                 Vec2 max = sprite->_Position + sprite->_Size;
                 
                 vertexBuffer[0].uv[0] = min[0];
-                vertexBuffer[0].uv[1] = min[1],
-                vertexBuffer[1].uv[0] = max[0];
+                vertexBuffer[0].uv[1] = max[1],
+                vertexBuffer[1].uv[0] = min[0];
                 vertexBuffer[1].uv[1] = min[1];
-                vertexBuffer[2].uv[0] = min[0];
-                vertexBuffer[2].uv[1] = max[1];
+                vertexBuffer[2].uv[0] = max[0];
+                vertexBuffer[2].uv[1] = min[1];
                 vertexBuffer[3].uv[0] = max[0];
                 vertexBuffer[3].uv[1] = max[1];
             } else {
@@ -314,13 +318,13 @@ void ParticleRenderer::Render(RenderLayer* layer)
                 Vec2 max = sprite->_Position + Vec2(0, sprite->_Size[0]);
                 
                 vertexBuffer[0].uv[0] = max[0];
-                vertexBuffer[0].uv[1] = min[1];
+                vertexBuffer[0].uv[1] = max[1];
                 vertexBuffer[1].uv[0] = min[0];
-                vertexBuffer[1].uv[1] = min[1];
+                vertexBuffer[1].uv[1] = max[1];
                 vertexBuffer[2].uv[0] = min[0];
-                vertexBuffer[2].uv[1] = max[1];
+                vertexBuffer[2].uv[1] = min[1];
                 vertexBuffer[3].uv[0] = max[0];
-                vertexBuffer[3].uv[1] = max[1];
+                vertexBuffer[3].uv[1] = min[1];
             }
             
             vertexBuffer += 4;

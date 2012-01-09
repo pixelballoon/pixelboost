@@ -1,12 +1,11 @@
+#include "pixelboost/data/json/reader.h"
 #include "pixelboost/file/fileHelpers.h"
 #include "pixelboost/graphics/device/texture.h"
 #include "pixelboost/graphics/helper/screenHelpers.h"
 #include "pixelboost/graphics/render/sprite/sprite.h"
-#include "pixelboost/parser/json/reader.h"
 #include "pixelboost/logic/game.h"
 
-namespace pixelboost
-{
+using namespace pixelboost;
     
 std::shared_ptr<SpriteSheet> SpriteSheet::Create()
 {
@@ -93,6 +92,4 @@ Sprite* SpriteSheet::GetSprite(const std::string& name)
 Vec4 Sprite::GetUV()
 {
     return Vec4(0, 0, 1, 1);
-}
-    
 }

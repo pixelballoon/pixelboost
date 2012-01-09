@@ -2,10 +2,10 @@
 #include <cstdlib>
 #include <sstream>
 
+#include "pixelboost/data/json/writer.h"
 #include "pixelboost/debug/debugVariable.h"
 #include "pixelboost/debug/debugVariableManager.h"
 #include "pixelboost/file/fileHelpers.h"
-#include "pixelboost/parser/json/writer.h"
 #include "pixelboost/network/networkMessage.h"
 
 namespace pixelboost
