@@ -299,7 +299,7 @@ bool ModelRenderer::UnloadModel(const std::string& modelName)
     return true;
 }
     
-bool ModelRenderer::LoadTexture(const std::string& textureName)
+bool ModelRenderer::LoadTexture(const std::string& textureName, bool createMips)
 {
     TextureMap::iterator it = _Textures.find(textureName);
     
@@ -309,7 +309,7 @@ bool ModelRenderer::LoadTexture(const std::string& textureName)
     }
     
     Texture* texture = GraphicsDevice::Instance()->CreateTexture();
-    texture->Load(FileHelpers::GetRootPath() + "/data/models/" + textureName + ".png", true);
+    texture->Load(FileHelpers::GetRootPath() + "/data/models/" + textureName + ".png", createMips);
     
     _Textures[textureName] = texture;
     

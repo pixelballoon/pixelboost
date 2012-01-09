@@ -51,7 +51,7 @@ public:
     bool LoadModel(const std::string& modelName);
     bool UnloadModel(const std::string& modelName);
     
-    bool LoadTexture(const std::string& textureName);
+    bool LoadTexture(const std::string& textureName, bool createMips=true);
     bool UnloadTexture(const std::string& textureName);
     
     bool AttachToRenderer(RenderLayer* layer, const std::string& modelName, const std::string& textureName, Vec3 position, Vec3 rotation = Vec3(0.f, 0.f, 0.f), Vec3 scale = Vec3(1.f, 1.f, 1.f), Vec3 offset = Vec3(0.f, 0.f, 0.f));
