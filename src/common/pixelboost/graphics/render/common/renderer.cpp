@@ -11,12 +11,14 @@ using namespace pixelboost;
 Renderer::Renderer()
     : _FreeRendererId(0)
 {
-    
+    _DefaultCamera = new OrthographicCamera();
+    _DefaultLayer = new RenderLayer(-1, _DefaultCamera);
+    AddLayer(_DefaultLayer);
 }
 
 Renderer::~Renderer()
 {
-    
+    RemoveLayer(_DefaultLayer);
 }
 
 void Renderer::Update(float time)
@@ -27,6 +29,11 @@ void Renderer::Update(float time)
     }
 }
 
+RenderLayer* Renderer::GetDefaultLayer()
+{
+    return _DefaultLayer;
+}
+
 void Renderer::Render()
 {
     std::sort(_Layers.begin(), _Layers.end(), &Renderer::LayerSortPredicate);
@@ -35,7 +42,7 @@ void Renderer::Render()
         (*it)->_Camera->ApplyTransform();
         for (RendererMap::iterator rendererIt = _Renderers.begin(); rendererIt != _Renderers.end(); ++rendererIt)
         {
-            rendererIt->second->Render(*it);
+            rendererIt->second->Render(*it == _DefaultLayer ? 0 : *it);
         }
     }
 }

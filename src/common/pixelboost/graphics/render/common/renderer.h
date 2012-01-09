@@ -7,6 +7,7 @@ namespace pixelboost
 {
 
 class IRenderer;
+class OrthographicCamera;
 class RenderLayer;
     
 struct RenderItem
@@ -24,6 +25,8 @@ public:
     void Update(float time);
     void Render();
     
+    RenderLayer* GetDefaultLayer();
+    
     void AddLayer(RenderLayer* layer);
     void RemoveLayer(RenderLayer* layer);
     
@@ -39,6 +42,9 @@ private:
     int _FreeRendererId;
     RendererMap _Renderers;
     LayerList _Layers;
+    
+    OrthographicCamera* _DefaultCamera;
+    RenderLayer* _DefaultLayer;
     
     friend class IRenderer;
 };
