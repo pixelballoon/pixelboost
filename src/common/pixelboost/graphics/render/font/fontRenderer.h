@@ -33,7 +33,7 @@ namespace pixelboost
         virtual void Update(float time);
         virtual void Render(RenderLayer* layer);
         
-        bool AttachToRenderer(RenderLayer* layer, const std::string& fontName, const std::string& string, Vec2 position, FontAlign alignment = kFontAlignCenter, float scale = 32.f, float rotation = 0.f);
+        bool AttachToRenderer(RenderLayer* layer, const std::string& fontName, const std::string& string, Vec2 position, FontAlign alignment = kFontAlignCenter, float scale = 32.f, float rotation = 0.f, Vec4 color = Vec4(1.f, 1.f, 1.f, 1.f));
         
         void SplitString(const std::string& string, char seperator, std::vector<std::string>& output);
         
@@ -45,7 +45,8 @@ namespace pixelboost
             Vec2 _Position;
             FontAlign _Alignment;
             float _Rotation;
-            float _Scale;        
+            float _Scale;   
+            Vec4 _Color;
         };
         
         struct Font

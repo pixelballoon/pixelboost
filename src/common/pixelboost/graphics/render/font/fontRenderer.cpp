@@ -255,7 +255,7 @@ void FontRenderer::Render(RenderLayer* layer)
     glDisable(GL_TEXTURE_2D);
 }
 
-bool FontRenderer::AttachToRenderer(RenderLayer* layer, const std::string& fontName, const std::string& string, Vec2 position, FontAlign alignment, float scale, float rotation)
+bool FontRenderer::AttachToRenderer(RenderLayer* layer, const std::string& fontName, const std::string& string, Vec2 position, FontAlign alignment, float scale, float rotation, Vec4 color)
 {
     FontInstance instance;
     
@@ -265,6 +265,7 @@ bool FontRenderer::AttachToRenderer(RenderLayer* layer, const std::string& fontN
     instance._Alignment = alignment;
     instance._Rotation = rotation;
     instance._Scale = scale;
+    instance._Color = color;
     
     _Instances[layer].push_back(instance);
     
