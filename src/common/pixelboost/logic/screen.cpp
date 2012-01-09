@@ -23,6 +23,11 @@ void Screen::Render()
 {
 }
     
+void Screen::SetActive(bool active)
+{
+    
+}
+    
 Game* Screen::GetGame()
 {
     return _Game;

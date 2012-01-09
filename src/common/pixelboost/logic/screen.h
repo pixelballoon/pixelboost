@@ -1,5 +1,4 @@
-#ifndef COMMON__LOGIC__SCREEN__H
-#define COMMON__LOGIC__SCREEN__H
+#pragma once
 
 namespace pixelboost
 {
@@ -15,7 +14,7 @@ public:
 	virtual void Update(float time);
 	virtual void Render();
     
-    void SetActive(bool active);
+    virtual void SetActive(bool active);
     
     Game* GetGame();
     
@@ -24,5 +23,3 @@ protected:
 };
 
 }
-
-#endif
