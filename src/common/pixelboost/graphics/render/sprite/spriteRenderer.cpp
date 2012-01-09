@@ -173,27 +173,28 @@ void SpriteRenderer::Render(RenderLayer* layer)
     glDisable(GL_TEXTURE_2D);
 }
 
-bool SpriteRenderer::AddSpriteSheet(const std::string& name, std::shared_ptr<SpriteSheet> spriteSheet)
+bool SpriteRenderer::LoadSpriteSheet(const std::string& name, bool createMips)
 {
     SheetMap::iterator it = _SpriteSheets.find(name);
     
     if (it != _SpriteSheets.end())
         return true;
     
-    _SpriteSheets[name] = spriteSheet;
+    std::shared_ptr<SpriteSheet> sheet = SpriteSheet::Create();
+    sheet->Load(name, createMips);
+    _SpriteSheets[name] = sheet;
 
     return true;
 }
  
-bool SpriteRenderer::RemoveSpriteSheet(std::shared_ptr<SpriteSheet> spriteSheet)
+bool SpriteRenderer::UnloadSpriteSheet(const std::string& name)
 {
-    for (SheetMap::iterator it = _SpriteSheets.begin(); it != _SpriteSheets.end(); ++it)
+    SheetMap::iterator it = _SpriteSheets.find(name);
+    
+    if (it != _SpriteSheets.end())
     {
-        if (it->second == spriteSheet)
-        {
-            _SpriteSheets.erase(it);
-            return true;
-        }
+        _SpriteSheets.erase(it);
+        return true;
     }
     
     return false;

@@ -56,8 +56,8 @@ public:
     void Update(float time);
     void Render(RenderLayer* layer);
 	
-    bool AddSpriteSheet(const std::string& name, std::shared_ptr<SpriteSheet> spriteSheet);
-    bool RemoveSpriteSheet(std::shared_ptr<SpriteSheet> spriteSheet);
+    bool LoadSpriteSheet(const std::string& name, bool createMips=false);
+    bool UnloadSpriteSheet(const std::string& name);
     
     bool AttachToRenderer(RenderLayer* layer, const std::string& sheetName, const std::string& spriteName, Vec2 position, Vec3 rotation = Vec3(0.f, 0.f, 0.f), Vec2 scale = Vec2(1.f, 1.f), BlendMode blendMode = kBlendModeNormal, Vec4 crop = Vec4(0.f, 0.f, 1.f, 1.f));
     
