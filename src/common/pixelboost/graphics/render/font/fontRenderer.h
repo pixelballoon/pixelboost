@@ -11,6 +11,7 @@
 namespace pixelboost
 {
     class IndexBuffer;
+    class Renderer;
     class Texture;
     class VertexBuffer;
     struct Vertex_PXYZ_UV;
@@ -25,7 +26,7 @@ namespace pixelboost
     class FontRenderer : public IRenderer
     {
     public:
-        FontRenderer(int maxCharacters=128);
+        FontRenderer(Renderer* renderer, int maxCharacters=128);
         virtual ~FontRenderer();
         
         void LoadFont(const std::string& fontName);

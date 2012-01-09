@@ -8,11 +8,13 @@
 
 namespace pixelboost
 {
+    
+class Renderer;
 
 class PrimitiveRenderer : public IRenderer
 {
 public:
-    PrimitiveRenderer();
+    PrimitiveRenderer(Renderer* renderer);
     ~PrimitiveRenderer();
     
     void Update(float time);

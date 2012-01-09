@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <vector>
 
 namespace pixelboost
@@ -7,6 +8,12 @@ namespace pixelboost
 
 class IRenderer;
 class RenderLayer;
+    
+struct RenderItem
+{
+    int Renderer;
+    void* Data;
+};
 
 class Renderer
 {
@@ -17,20 +24,23 @@ public:
     void Update(float time);
     void Render();
     
-    void AddRenderer(IRenderer* renderer);
-    void RemoveRenderer(IRenderer* renderer);
-    
     void AddLayer(RenderLayer* layer);
     void RemoveLayer(RenderLayer* layer);
     
 private:
+    int AddRenderer(IRenderer* renderer);
+    void RemoveRenderer(IRenderer* renderer);
+    
     static bool LayerSortPredicate(const RenderLayer* a, const RenderLayer* b);
     
-    typedef std::vector<IRenderer*> RendererList;
+    typedef std::map<int, IRenderer*> RendererMap;
     typedef std::vector<RenderLayer*> LayerList;
     
-    RendererList _Renderers;
+    int _FreeRendererId;
+    RendererMap _Renderers;
     LayerList _Layers;
+    
+    friend class IRenderer;
 };
 
 }

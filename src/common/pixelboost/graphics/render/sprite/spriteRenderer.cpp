@@ -16,8 +16,9 @@ SpriteInstance::~SpriteInstance()
 {
 }
 
-SpriteRenderer::SpriteRenderer(int maxSpritesPerLayer, int numVertexBuffers)
-    : _CurrentVertexBuffer(0)
+SpriteRenderer::SpriteRenderer(Renderer* renderer, int maxSpritesPerLayer, int numVertexBuffers)
+    : IRenderer(renderer)
+    , _CurrentVertexBuffer(0)
     , _MaxSprites(maxSpritesPerLayer)
 {
     _IndexBuffer = pixelboost::GraphicsDevice::Instance()->CreateIndexBuffer(pixelboost::kBufferFormatStatic, _MaxSprites*6);

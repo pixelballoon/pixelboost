@@ -9,8 +9,9 @@
 
 using namespace pixelboost;
 
-FontRenderer::FontRenderer(int maxCharacters)
-    : _MaxCharacters(maxCharacters)
+FontRenderer::FontRenderer(Renderer* renderer, int maxCharacters)
+    : IRenderer(renderer)
+    , _MaxCharacters(maxCharacters)
 {
     _IndexBuffer = GraphicsDevice::Instance()->CreateIndexBuffer(kBufferFormatStatic, _MaxCharacters*6);
     _VertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatStatic, kVertexFormat_P_XYZ_UV, _MaxCharacters*4);

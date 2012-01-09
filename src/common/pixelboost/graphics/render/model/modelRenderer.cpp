@@ -185,7 +185,8 @@ std::vector<std::string> Model::SplitPath(const std::string &string)
     return SplitString(string, '/', items);
 }
 
-ModelRenderer::ModelRenderer()
+ModelRenderer::ModelRenderer(Renderer* renderer)
+    : IRenderer(renderer)
 {
     
 }

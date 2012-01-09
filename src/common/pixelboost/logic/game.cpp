@@ -29,21 +29,14 @@ Game::Game(void* viewController)
     _TouchManager = new TouchManager();
     
     _GameCenter = new GameCenter();
-    
-    _CustomRenderer = new CustomRenderer();
-    _FontRenderer = new FontRenderer();
-    _ModelRenderer  = new ModelRenderer();
-    _ParticleRenderer = new ParticleRenderer();
-    _PrimitiveRenderer = new PrimitiveRenderer();
-    _SpriteRenderer = new SpriteRenderer();
 
     _Renderer = new Renderer();
-    _Renderer->AddRenderer(_SpriteRenderer);
-    _Renderer->AddRenderer(_ModelRenderer);
-    _Renderer->AddRenderer(_CustomRenderer);
-    _Renderer->AddRenderer(_ParticleRenderer);
-    _Renderer->AddRenderer(_PrimitiveRenderer);
-    _Renderer->AddRenderer(_FontRenderer);
+    _CustomRenderer = new CustomRenderer(_Renderer);
+    _FontRenderer = new FontRenderer(_Renderer);
+    _ModelRenderer  = new ModelRenderer(_Renderer);
+    _ParticleRenderer = new ParticleRenderer(_Renderer);
+    _PrimitiveRenderer = new PrimitiveRenderer(_Renderer);
+    _SpriteRenderer = new SpriteRenderer(_Renderer);
     
 #ifndef PIXELBOOST_DISABLE_GAMECENTER
     _GameCenter->Connect();
@@ -54,13 +47,6 @@ Game::~Game()
 {
     _Instance = 0;
     
-    _Renderer->RemoveRenderer(_CustomRenderer);
-    _Renderer->RemoveRenderer(_FontRenderer);
-    _Renderer->RemoveRenderer(_ModelRenderer);
-    _Renderer->RemoveRenderer(_ParticleRenderer);
-    _Renderer->RemoveRenderer(_PrimitiveRenderer);
-    _Renderer->RemoveRenderer(_SpriteRenderer);
-
     delete _CustomRenderer;
     delete _FontRenderer;
     delete _GameCenter;

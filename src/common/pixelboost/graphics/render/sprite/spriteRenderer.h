@@ -14,6 +14,7 @@ namespace pixelboost
 {
 
 class IndexBuffer;
+class Renderer;
 class SpriteSheet;
 class Sprite;
 class VertexBuffer;
@@ -49,7 +50,7 @@ public:
 class SpriteRenderer : public IRenderer
 {
 public:
-	SpriteRenderer(int maxSpritesPerLayer=100, int numVertexBuffers=4);
+	SpriteRenderer(Renderer* renderer, int maxSpritesPerLayer=100, int numVertexBuffers=4);
 	~SpriteRenderer();
     
     void Update(float time);

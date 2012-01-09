@@ -9,6 +9,7 @@
 using namespace pixelboost;
 
 Renderer::Renderer()
+    : _FreeRendererId(0)
 {
     
 }
@@ -20,9 +21,9 @@ Renderer::~Renderer()
 
 void Renderer::Update(float time)
 {
-    for (RendererList::iterator it = _Renderers.begin(); it != _Renderers.end(); ++it)
+    for (RendererMap::iterator it = _Renderers.begin(); it != _Renderers.end(); ++it)
     {
-        (*it)->Update(time);
+        it->second->Update(time);
     }
 }
 
@@ -32,28 +33,23 @@ void Renderer::Render()
     for (LayerList::iterator it = _Layers.begin(); it != _Layers.end(); ++it)
     {
         (*it)->_Camera->ApplyTransform();
-        for (RendererList::iterator rendererIt = _Renderers.begin(); rendererIt != _Renderers.end(); ++rendererIt)
+        for (RendererMap::iterator rendererIt = _Renderers.begin(); rendererIt != _Renderers.end(); ++rendererIt)
         {
-            (*rendererIt)->Render(*it);
+            rendererIt->second->Render(*it);
         }
     }
 }
 
-void Renderer::AddRenderer(IRenderer* renderer)
+int Renderer::AddRenderer(IRenderer* renderer)
 {
-    _Renderers.push_back(renderer);
+    int id = _FreeRendererId++;
+    _Renderers[id] = renderer;
+    return id;
 }
 
 void Renderer::RemoveRenderer(IRenderer* renderer)
 {
-    for (RendererList::iterator it = _Renderers.begin(); it != _Renderers.end(); ++it)
-    {
-        if (*it == renderer)
-        {
-            _Renderers.erase(it);
-            return;
-        }
-    }
+    _Renderers.erase(_Renderers.find(renderer->GetId()));
 }
 
 void Renderer::AddLayer(RenderLayer* layer)
