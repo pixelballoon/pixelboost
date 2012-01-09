@@ -184,7 +184,7 @@ void SoundManager::StopBgm()
 Sound SoundManager::PlaySfx(const std::string& name, bool compressed, float volume, float pitch)
 {
     if (_MuteSfx)
-        return Sound(0);
+        return Sound();
     
     Sound sound(name, volume, pitch);
     
