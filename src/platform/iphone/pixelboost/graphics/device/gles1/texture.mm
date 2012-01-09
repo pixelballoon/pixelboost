@@ -6,6 +6,11 @@
 
 using namespace pixelboost;
 
+void pixelboost::TextureGLES1::Load(const unsigned char* data, bool createMips, TextureFormat format)
+{
+    
+}
+
 void pixelboost::TextureGLES1::Load(const std::string& path, bool createMips)
 {
     UIImage* image = [[UIImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:path.c_str()]];

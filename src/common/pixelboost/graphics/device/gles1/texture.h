@@ -17,6 +17,7 @@ protected:
     virtual ~TextureGLES1();
     
 public:
+    void Load(const unsigned char* data, bool createMips, TextureFormat format);
     void Load(const std::string& image, bool createMips);
     void Bind(int unit);
     
