@@ -9,8 +9,7 @@ CustomRendererItem::~CustomRendererItem()
 
 }
     
-CustomRenderer::CustomRenderer(Renderer* renderer)
-    : IRenderer(renderer)
+CustomRenderer::CustomRenderer()
 {
     
 }

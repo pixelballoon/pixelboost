@@ -9,8 +9,6 @@
 namespace pixelboost
 {
 
-class Renderer;
-    
 class CustomRendererItem
 {
 public:
@@ -21,7 +19,7 @@ public:
 class CustomRenderer : public IRenderer
 {
 public:
-    CustomRenderer(Renderer* renderer);
+    CustomRenderer();
     ~CustomRenderer();
     
     void Update(float time);

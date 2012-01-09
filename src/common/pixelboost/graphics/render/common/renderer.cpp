@@ -8,9 +8,12 @@
 
 using namespace pixelboost;
 
+Renderer* Renderer::Renderer::_Instance = 0;
+
 Renderer::Renderer()
     : _FreeRendererId(0)
 {
+    _Instance = this;
     _DefaultCamera = new OrthographicCamera();
     _DefaultLayer = new RenderLayer(-1, _DefaultCamera);
     AddLayer(_DefaultLayer);
@@ -18,7 +21,13 @@ Renderer::Renderer()
 
 Renderer::~Renderer()
 {
+    _Instance = 0;
     RemoveLayer(_DefaultLayer);
+}
+
+Renderer* Renderer::Instance()
+{
+    return _Instance;
 }
 
 void Renderer::Update(float time)

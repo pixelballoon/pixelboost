@@ -31,12 +31,12 @@ Game::Game(void* viewController)
     _GameCenter = new GameCenter();
 
     _Renderer = new Renderer();
-    _CustomRenderer = new CustomRenderer(_Renderer);
-    _FontRenderer = new FontRenderer(_Renderer);
-    _ModelRenderer  = new ModelRenderer(_Renderer);
-    _ParticleRenderer = new ParticleRenderer(_Renderer);
-    _PrimitiveRenderer = new PrimitiveRenderer(_Renderer);
-    _SpriteRenderer = new SpriteRenderer(_Renderer);
+    _CustomRenderer = new CustomRenderer();
+    _FontRenderer = new FontRenderer();
+    _ModelRenderer  = new ModelRenderer();
+    _ParticleRenderer = new ParticleRenderer();
+    _PrimitiveRenderer = new PrimitiveRenderer();
+    _SpriteRenderer = new SpriteRenderer();
     
 #ifndef PIXELBOOST_DISABLE_GAMECENTER
     _GameCenter->Connect();

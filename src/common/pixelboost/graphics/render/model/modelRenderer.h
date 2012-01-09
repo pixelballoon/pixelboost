@@ -13,7 +13,6 @@ namespace pixelboost
 {
     
 class IndexBuffer;
-class Renderer;
     
 class Model
 {
@@ -44,7 +43,7 @@ private:
 class ModelRenderer : public IRenderer
 {
 public:
-    ModelRenderer(Renderer* renderer);
+    ModelRenderer();
     ~ModelRenderer();
     
     void Update(float time);

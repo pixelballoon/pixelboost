@@ -3,13 +3,12 @@
 namespace pixelboost
 {
 
-class Renderer;
 class RenderLayer;
     
 class IRenderer
 {
 public:
-    IRenderer(Renderer* renderer);
+    IRenderer();
     virtual ~IRenderer();
     
     int GetId();
@@ -19,7 +18,6 @@ public:
     
 private:
     int _Id;
-    Renderer* _Renderer;
 };
 
 }

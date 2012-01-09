@@ -11,8 +11,7 @@
 namespace pixelboost
 {
 
-PrimitiveRenderer::PrimitiveRenderer(Renderer* renderer)
-    : IRenderer(renderer)
+PrimitiveRenderer::PrimitiveRenderer()
 {
     
 }

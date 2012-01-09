@@ -12,7 +12,6 @@ namespace pixelboost
 {
     
 class IndexBuffer;
-class Renderer;
 class RenderLayer;
 class SpriteSheet;
 class VertexBuffer;
@@ -82,7 +81,7 @@ private:
 class ParticleRenderer : public IRenderer
 {
 public:
-    ParticleRenderer(Renderer* renderer, int maxParticlesPerLayer=200);
+    ParticleRenderer(int maxParticlesPerLayer=200);
     ~ParticleRenderer();
     
     ParticleEmitter* CreateEmitter(RenderLayer* layer);

@@ -3,15 +3,14 @@
 
 using namespace pixelboost;
 
-IRenderer::IRenderer(Renderer* renderer)
-    : _Renderer(renderer)
+IRenderer::IRenderer()
 {
-    _Id = renderer->AddRenderer(this);
+    _Id = Renderer::Instance()->AddRenderer(this);
 }
 
 IRenderer::~IRenderer()
 {
-    _Renderer->RemoveRenderer(this);
+    Renderer::Instance()->RemoveRenderer(this);
 }
 
 int IRenderer::GetId()

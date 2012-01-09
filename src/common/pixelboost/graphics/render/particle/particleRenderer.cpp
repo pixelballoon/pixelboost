@@ -126,8 +126,7 @@ ParticleEmitter::Config& ParticleEmitter::GetConfig()
     return *_Config;
 }
 
-ParticleRenderer::ParticleRenderer(Renderer* renderer, int maxParticlesPerLayer)
-    : IRenderer(renderer)
+ParticleRenderer::ParticleRenderer(int maxParticlesPerLayer)
 {
     _MaxParticles = maxParticlesPerLayer;
     

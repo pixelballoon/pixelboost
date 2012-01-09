@@ -22,6 +22,8 @@ public:
     Renderer();
     ~Renderer();
     
+    static Renderer* Instance();
+    
     void Update(float time);
     void Render();
     
@@ -45,6 +47,8 @@ private:
     
     OrthographicCamera* _DefaultCamera;
     RenderLayer* _DefaultLayer;
+    
+    static Renderer* _Instance;
     
     friend class IRenderer;
 };
