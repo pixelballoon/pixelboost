@@ -234,7 +234,7 @@ void ModelRenderer::Render(RenderLayer* layer)
         
         glPushMatrix();
         
-        glTranslatef(it->position[0], it->position[1], it->position[2]);
+        glTranslatef(it->position[0], it->position[1], -it->position[2]);
         glScalef(it->scale[0], it->scale[1], it->scale[2]);
         glTranslatef(it->offset[0], it->offset[1], it->offset[2]);
         glRotatef(it->rotation[0], 1, 0, 0);
