@@ -109,7 +109,7 @@ void FontRenderer::LoadFont(const std::string& name)
             int scaleW = (int)atoi(data["scaleW"].c_str());
             int scaleH = (int)atoi(data["scaleH"].c_str());
             
-            font->base = (float)base / (float)scaleH;
+            font->base = (float)base/(float)font->size;
             font->lineHeight = (float)lineHeight / (float)scaleH;
             texSize = Vec2(scaleW, scaleH);
         } else if (elementType == "page")
@@ -231,9 +231,7 @@ void FontRenderer::Render(RenderLayer* layer)
 
         glRotatef(it->_Rotation, 0, 0, 1);
         
-        float scale = (it->_Size/(float)font->size) * ((float)font->size/(float)pixelboost::ScreenHelpers::GetDpu());
-            
-        glScalef(scale, scale, 1.f);
+        glScalef(it->_Size, it->_Size, 1.f);
         
         switch (it->_Alignment) {
             case kFontAlignLeft:
