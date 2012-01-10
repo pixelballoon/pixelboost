@@ -45,7 +45,7 @@ namespace pixelboost
             Vec2 _Position;
             FontAlign _Alignment;
             float _Rotation;
-            float _Scale;   
+            float _Size;
             Vec4 _Color;
         };
         
@@ -53,8 +53,10 @@ namespace pixelboost
         {
             struct Character
             {
-                float x;
-                float y;
+                float uvx;
+                float uvy;
+                float uvu;
+                float uvv;
                 float width;
                 float height;
                 float xOffset;
@@ -63,6 +65,7 @@ namespace pixelboost
             };
             
             Texture* texture;
+            int size;
             float base;
             float lineHeight;
             std::map<char, Character> chars;

@@ -50,20 +50,20 @@ void FontRenderer::AddCharacter(Vertex_PXYZ_UV* buffer, const Font::Character& c
     
     buffer[0].position[0] = offset + xOffset;
     buffer[0].position[1] = yOffset - character.height;
-    buffer[0].uv[0] = character.x;
-    buffer[0].uv[1] = character.y + character.height;
+    buffer[0].uv[0] = character.uvx;
+    buffer[0].uv[1] = character.uvy + character.uvv;
     buffer[1].position[0] = offset + xOffset;
     buffer[1].position[1] = yOffset;
-    buffer[1].uv[0] = character.x;
-    buffer[1].uv[1] = character.y;
+    buffer[1].uv[0] = character.uvx;
+    buffer[1].uv[1] = character.uvy;
     buffer[2].position[0] = offset + character.width + xOffset;
     buffer[2].position[1] = yOffset;
-    buffer[2].uv[0] = character.x + character.width;
-    buffer[2].uv[1] = character.y;
+    buffer[2].uv[0] = character.uvx + character.uvu;
+    buffer[2].uv[1] = character.uvy;
     buffer[3].position[0] = offset + character.width + xOffset;
     buffer[3].position[1] = yOffset - character.height;
-    buffer[3].uv[0] = character.x + character.width;
-    buffer[3].uv[1] = character.y + character.height;
+    buffer[3].uv[0] = character.uvx + character.uvu;
+    buffer[3].uv[1] = character.uvy + character.uvv;
 }
 
 void FontRenderer::LoadFont(const std::string& name)
@@ -99,7 +99,9 @@ void FontRenderer::LoadFont(const std::string& name)
         
         if (elementType == "info")
         {
+            int size = (int)atoi(data["size"].c_str());
             
+            font->size = size;
         } else if (elementType == "common")
         {
             int lineHeight = (int)atoi(data["lineHeight"].c_str());
@@ -128,13 +130,15 @@ void FontRenderer::LoadFont(const std::string& name)
             int yoffset = (int)atoi(data["yoffset"].c_str());
             int xadvance = (int)atoi(data["xadvance"].c_str());
             
-            character.x = x/texSize[0];
-            character.y = y/texSize[1];
-            character.width = width/texSize[0];
-            character.height = height/texSize[1];
-            character.xOffset = xoffset/texSize[0];
-            character.yOffset = yoffset/texSize[1];
-            character.xAdvance = xadvance/texSize[0];
+            character.width = width/(float)font->size;
+            character.height = height/(float)font->size;
+            character.uvx = x/texSize[0];
+            character.uvy = y/texSize[1];
+            character.uvu = width/texSize[0];
+            character.uvv = height/texSize[1];
+            character.xOffset = xoffset/(float)font->size;
+            character.yOffset = yoffset/(float)font->size;
+            character.xAdvance = xadvance/(float)font->size;
             
             font->chars[charCode] = character;
         } else if (elementType == "kerning")
@@ -227,7 +231,9 @@ void FontRenderer::Render(RenderLayer* layer)
 
         glRotatef(it->_Rotation, 0, 0, 1);
         
-        glScalef(it->_Scale, it->_Scale, 1.f);
+        float scale = (it->_Size/(float)font->size) * ((float)font->size/(float)pixelboost::ScreenHelpers::GetDpu());
+            
+        glScalef(scale, scale, 1.f);
         
         switch (it->_Alignment) {
             case kFontAlignLeft:
@@ -255,7 +261,7 @@ void FontRenderer::Render(RenderLayer* layer)
     glDisable(GL_TEXTURE_2D);
 }
 
-bool FontRenderer::AttachToRenderer(RenderLayer* layer, const std::string& fontName, const std::string& string, Vec2 position, FontAlign alignment, float scale, float rotation, Vec4 color)
+bool FontRenderer::AttachToRenderer(RenderLayer* layer, const std::string& fontName, const std::string& string, Vec2 position, FontAlign alignment, float size, float rotation, Vec4 color)
 {
     FontInstance instance;
     
@@ -264,7 +270,7 @@ bool FontRenderer::AttachToRenderer(RenderLayer* layer, const std::string& fontN
     instance._Position = position;
     instance._Alignment = alignment;
     instance._Rotation = rotation;
-    instance._Scale = scale;
+    instance._Size = size;
     instance._Color = color;
     
     _Instances[layer].push_back(instance);
