@@ -186,7 +186,7 @@ Sound SoundManager::PlaySfx(const std::string& name, bool compressed, float volu
     if (_MuteSfx)
         return Sound();
     
-    Sound sound(name, volume, pitch);
+    Sound sound(name, compressed, volume, pitch);
     
     sound.Play();
     
