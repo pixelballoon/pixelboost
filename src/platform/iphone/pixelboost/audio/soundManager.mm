@@ -200,6 +200,9 @@ int SoundManager::SfxGetId()
 
 void SoundManager::SfxPlay(const Sound& sound)
 {
+    if (_MuteSfx)
+        return;
+    
     std::string filename = FileHelpers::GetRootPath() + "/data/audio/sfx/" + sound.GetName() + (sound.IsCompressed() ? ".mp3" : ".wav");
     
     id<ALSoundSource> instance = [[OALSimpleAudio sharedInstance] playEffect:[NSString stringWithUTF8String:filename.c_str()] volume:sound.GetVolume() pitch:sound.GetPitch() pan:0.f loop:sound.IsLooping()];
