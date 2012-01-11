@@ -27,13 +27,11 @@ public:
     PerspectiveCamera();
     virtual void ApplyTransform();
     
-    Vec3 Position;
     float FieldOfView;
+    Vec2 Offset;
+    Vec3 Position;
     float ZNear;
     float ZFar;
-    
-private:
-    void BuildMatrix(float* m, float fov, float znear, float zfar);
 };
 
 }
