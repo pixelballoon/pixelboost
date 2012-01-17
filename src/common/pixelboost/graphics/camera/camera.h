@@ -15,10 +15,11 @@ public:
 class OrthographicCamera : public Camera
 {
 public:
-    OrthographicCamera();
+    OrthographicCamera(Vec2 position = Vec2(0,0), Vec2 scale = Vec2(1,1));
     virtual void ApplyTransform();
 
     Vec2 Position;
+    Vec2 Scale;
 };
     
 class PerspectiveCamera : public Camera

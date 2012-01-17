@@ -14,8 +14,9 @@ Camera::Camera()
 
 }
     
-OrthographicCamera::OrthographicCamera()
-    : Position(0,0)
+OrthographicCamera::OrthographicCamera(Vec2 position, Vec2 scale)
+    : Position(position)
+    , Scale(scale)
 {
     
 }
@@ -28,8 +29,8 @@ void OrthographicCamera::ApplyTransform()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
-    glScalef(ScreenHelpers::GetWorldScale()[0] * ScreenHelpers::GetAspectRatio(), ScreenHelpers::GetWorldScale()[1], 1.f);
-	
+    glScalef(ScreenHelpers::GetWorldScale()[0] * ScreenHelpers::GetAspectRatio() * Scale[0], ScreenHelpers::GetWorldScale()[1] * Scale[1], 1.f);
+    
     glTranslatef(-Position[0], -Position[1], 0.f);
 }
 
