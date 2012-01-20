@@ -10,8 +10,9 @@
 
 using namespace pixelboost;
 
-Sound::Sound(const std::string& name, bool compressed, float volume, float pitch)
+Sound::Sound(const std::string& name, bool compressed, float volume, float pitch, bool looping)
     : _Compressed(compressed)
+    , _Looping(false)
     , _Name(name)
     , _Pitch(pitch)
     , _Volume(volume)

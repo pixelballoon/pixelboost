@@ -11,7 +11,7 @@ namespace pixelboost
 class Sound
 {
 public:
-    Sound(const std::string& name="", bool compressed=false, float volume=1.f, float pitch=1.f);
+    Sound(const std::string& name="", bool compressed=false, float volume=1.f, float pitch=1.f, bool looping=false);
     
     int GetId() const;
     
