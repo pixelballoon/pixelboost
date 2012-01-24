@@ -20,6 +20,13 @@ public:
 private:
     void GenerateFrame(int x, int y);
     
+    void GenerateBorders();
+    bool AppendBorder(int x, int y);
+    void ProcessBorder(const std::vector<Vec2>& border);
+    void GenerateHulls();
+    
+    void DebugBorder(const std::vector<Vec2>& border);
+    
     enum FrameValue
     {
         kFrameValueUnset,
@@ -38,6 +45,8 @@ private:
     
     std::vector<FrameValue> _Frame;
     std::vector<Vec2> _Border;
+    
+    std::vector<std::vector<Vec2> > _Objects;
 };
 
 int main (int argc, const char * argv[])
@@ -99,6 +108,17 @@ bool HullGenerator::Process()
         std::cout << std::endl;
     }
     
+    // End Debug
+    
+    GenerateBorders();
+    
+    for (std::vector<std::vector<Vec2> >::iterator it = _Objects.begin(); it != _Objects.end(); ++it)
+    {
+        DebugBorder(*it);
+    }
+    
+    GenerateHulls();
+    
     return true;
 }
 
@@ -118,7 +138,134 @@ void HullGenerator::GenerateFrame(int x, int y)
         GenerateFrame(x, y-1);
     } else {
         SetFrame(x, y, kFrameValueBorder);
+        
+        if (y == 0 || y == _Height-1)
+        {
+            GenerateFrame(x-1, y);
+            GenerateFrame(x+1, y);
+        }
+        
+        if (x == 0 || x == _Width-1)
+        {
+            GenerateFrame(x, y-1);
+            GenerateFrame(x, y+1);
+        }
     }
+}
+
+void HullGenerator::GenerateBorders()
+{
+    for (int y=0; y<_Height; y++)
+    {
+        for (int x=0; x<_Width; x++)
+        {
+            if (GetFrame(x, y) == kFrameValueBorder)
+            {
+                AppendBorder(x, y);
+                ProcessBorder(_Border);
+            }
+        }
+    }
+}
+
+bool HullGenerator::AppendBorder(int x, int y)
+{
+    if (x < 0 || y < 0 || x >= _Width || y >= _Height)
+        return false;
+    
+    if (GetFrame(x, y) != kFrameValueBorder)
+        return false;
+        
+    SetFrame(x, y, kFrameValueEmpty);
+    
+    _Border.push_back(Vec2(x, y));
+    
+    if (AppendBorder(x+1, y))
+        return true;
+    
+    if (AppendBorder(x+1, y-1))
+        return true;
+    
+    if (AppendBorder(x, y-1))
+        return true;
+    
+    if (AppendBorder(x-1, y-1))
+        return true;
+    
+    if (AppendBorder(x-1, y))
+        return true;
+    
+    if (AppendBorder(x-1, y+1))
+        return true;
+    
+    if (AppendBorder(x, y+1))
+        return true;
+
+    if (AppendBorder(x+1, y+1))
+        return true;
+    
+    return true;
+}
+
+void HullGenerator::DebugBorder(const std::vector<Vec2>& border)
+{
+    for (int y=0; y<_Height; y++)
+    {
+        for (int x=0; x<_Width; x++)
+        {
+            int i=0;
+            bool hasValue = false;
+            for (std::vector<Vec2>::const_iterator it = border.begin(); it != border.end(); ++it)
+            {
+                if ((*it)[0] == x && (*it)[1] == y)
+                {
+                    hasValue = true;
+                    break;
+                }
+                i++;
+            }
+            
+            char character[16];
+            sprintf(character, "%c", (char)('A' + (i%26)));
+            std::cout << (hasValue ? character : " ");
+        }
+        
+        std::cout << std::endl;
+    }
+}
+
+void HullGenerator::ProcessBorder(const std::vector<Vec2>& border)
+{
+    std::vector<Vec2> optimisedBorder;
+    
+    if (!border.size())
+        return;
+    
+    int lastIndex = 0;
+    for (int i=0; i<border.size(); i++)
+    {
+        Vec2 lastPosition = border[lastIndex];
+        Vec2 newPosition = border[i];
+        
+        for (int j=lastIndex; j<i; j++)
+        {
+            if (j-lastIndex > 1)
+            {
+                optimisedBorder.push_back(Vec2(lastPosition));
+                lastIndex = j;
+                break;
+            }
+        }
+    }
+    
+    _Border.clear();
+    
+    _Objects.push_back(optimisedBorder);
+}
+
+void HullGenerator::GenerateHulls()
+{
+    
 }
 
 HullGenerator::FrameValue HullGenerator::GetFrame(int x, int y)
