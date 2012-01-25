@@ -14,10 +14,13 @@
 class HullGenerator
 {
 public:
+    HullGenerator(bool debugMode);
+    
     bool Load(const std::string& filename);
     bool Process();
     
 private:
+    bool IsTransparent(int x, int y);
     void GenerateFrame(int x, int y);
     
     void GenerateBorders();
@@ -25,7 +28,8 @@ private:
     void ProcessBorder(const std::vector<Vec2>& border);
     void GenerateHulls();
     
-    void DebugBorder(const std::vector<Vec2>& border);
+    void DebugBorder(const std::vector<Vec2>& border, const std::string& filename);
+    void DebugFrame(const std::string& filename);
     
     enum FrameValue
     {
@@ -47,17 +51,25 @@ private:
     std::vector<Vec2> _Border;
     
     std::vector<std::vector<Vec2> > _Objects;
+    
+    bool _DebugMode;
 };
 
 int main (int argc, const char * argv[])
 {
     const char* filename = argc > 1 ? argv[1] : "default.png";
     
-    HullGenerator hullGenerator;
+    HullGenerator hullGenerator(false);
     hullGenerator.Load(filename);
     hullGenerator.Process();
 
     return 0;
+}
+
+HullGenerator::HullGenerator(bool debugMode)
+    : _DebugMode(debugMode)
+{
+    
 }
 
 bool HullGenerator::Load(const std::string &filename)
@@ -94,32 +106,34 @@ bool HullGenerator::Process()
         _Frame[i] = kFrameValueUnset;
     }
     
-    GenerateFrame(0, 0);
-    
-    // Debug
-
-    for (int y=0; y<_Height; y++)
+    for (int x=0; x<_Width; x++)
     {
-        for (int x=0; x<_Width; x++)
+        for (int y=0; y<_Height; y++)
         {
-            std::cout << ((GetFrame(x, y) == kFrameValueBorder) ? "X" : " ");
+            GenerateFrame(x, y);
         }
-        
-        std::cout << std::endl;
     }
+
     
-    // End Debug
+    if (_DebugMode)
+        DebugFrame("/Users/aeonflame/Development/moshenltd/dragonsdream/debug/main.png");
     
     GenerateBorders();
-    
-    for (std::vector<std::vector<Vec2> >::iterator it = _Objects.begin(); it != _Objects.end(); ++it)
-    {
-        DebugBorder(*it);
-    }
     
     GenerateHulls();
     
     return true;
+}
+
+bool HullGenerator::IsTransparent(int x, int y)
+{
+    if (x<0 || y<0 || x>=_Width || y>=_Height)
+        return true;
+    
+    if (_Image[(y*_Width*4)+(x*4)+3] < 100)
+        return true;
+    
+    return false;
 }
 
 void HullGenerator::GenerateFrame(int x, int y)
@@ -129,26 +143,15 @@ void HullGenerator::GenerateFrame(int x, int y)
         return;
     }
     
-    if ((_Image[(y*_Width*4)+(x*4)+3] < 100))
+    if (IsTransparent(x, y))
     {
         SetFrame(x, y, kFrameValueEmpty);
-        GenerateFrame(x+1, y);
-        GenerateFrame(x, y+1);
-        GenerateFrame(x-1, y);
-        GenerateFrame(x, y-1);
     } else {
-        SetFrame(x, y, kFrameValueBorder);
-        
-        if (y == 0 || y == _Height-1)
+        if (IsTransparent(x-1, y) || IsTransparent(x, y-1) || IsTransparent(x, y+1) || IsTransparent(x+1, y))
         {
-            GenerateFrame(x-1, y);
-            GenerateFrame(x+1, y);
-        }
-        
-        if (x == 0 || x == _Width-1)
-        {
-            GenerateFrame(x, y-1);
-            GenerateFrame(x, y+1);
+            SetFrame(x, y, kFrameValueBorder);
+        } else {
+            SetFrame(x, y, kFrameValueImage);
         }
     }
 }
@@ -163,6 +166,17 @@ void HullGenerator::GenerateBorders()
             {
                 AppendBorder(x, y);
                 ProcessBorder(_Border);
+                _Border.clear();
+                
+                if (_DebugMode)
+                {
+                    char debugName[128];
+                    sprintf(debugName, "/Users/aeonflame/Development/moshenltd/dragonsdream/debug/frame_%lu.png", _Objects.size()-1);
+                    DebugFrame(debugName);
+                    
+                    sprintf(debugName, "/Users/aeonflame/Development/moshenltd/dragonsdream/debug/debug_%lu.png", _Objects.size()-1);
+                    DebugBorder(_Objects[_Objects.size()-1], debugName);
+                }
             }
         }
     }
@@ -183,32 +197,35 @@ bool HullGenerator::AppendBorder(int x, int y)
     if (AppendBorder(x+1, y))
         return true;
     
-    if (AppendBorder(x+1, y-1))
+    if (AppendBorder(x+1, y+1))
         return true;
     
-    if (AppendBorder(x, y-1))
-        return true;
-    
-    if (AppendBorder(x-1, y-1))
-        return true;
-    
-    if (AppendBorder(x-1, y))
+    if (AppendBorder(x, y+1))
         return true;
     
     if (AppendBorder(x-1, y+1))
         return true;
     
-    if (AppendBorder(x, y+1))
+    if (AppendBorder(x-1, y))
+        return true;
+    
+    if (AppendBorder(x-1, y-1))
+        return true;
+    
+    if (AppendBorder(x, y-1))
         return true;
 
-    if (AppendBorder(x+1, y+1))
+    if (AppendBorder(x+1, y-1))
         return true;
     
     return true;
 }
 
-void HullGenerator::DebugBorder(const std::vector<Vec2>& border)
+void HullGenerator::DebugBorder(const std::vector<Vec2>& border, const std::string& filename)
 {
+    std::vector<unsigned char> image;
+    std::vector<unsigned char> buffer;
+    
     for (int y=0; y<_Height; y++)
     {
         for (int x=0; x<_Width; x++)
@@ -225,13 +242,46 @@ void HullGenerator::DebugBorder(const std::vector<Vec2>& border)
                 i++;
             }
             
-            char character[16];
-            sprintf(character, "%c", (char)('A' + (i%26)));
-            std::cout << (hasValue ? character : " ");
+            image.push_back(hasValue ? 0 : 255);
+            image.push_back(hasValue ? 0 : 255);
+            image.push_back(hasValue ? 0 : 255);
+            image.push_back(255);
         }
-        
-        std::cout << std::endl;
     }
+    
+    LodePNG::Encoder encoder;
+    encoder.encode(buffer, image, _Width, _Height);
+    LodePNG::saveFile(buffer, filename);
+}
+
+void HullGenerator::DebugFrame(const std::string& filename)
+{
+    std::vector<unsigned char> image;
+    std::vector<unsigned char> buffer;
+    
+    for (int y=0; y<_Height; y++)
+    {
+        for (int x=0; x<_Width; x++)
+        {
+            char value;
+            
+            if (GetFrame(x, y) == kFrameValueBorder)
+                value = 0;
+            else if (GetFrame(x, y) == kFrameValueImage)
+                value = 230;
+            else
+                value = 255;
+            
+            image.push_back(value);
+            image.push_back(value);
+            image.push_back(value);
+            image.push_back(255);
+        }
+    }
+    
+    LodePNG::Encoder encoder;
+    encoder.encode(buffer, image, _Width, _Height);
+    LodePNG::saveFile(buffer, filename);
 }
 
 void HullGenerator::ProcessBorder(const std::vector<Vec2>& border)
@@ -249,16 +299,14 @@ void HullGenerator::ProcessBorder(const std::vector<Vec2>& border)
         
         for (int j=lastIndex; j<i; j++)
         {
-            if (j-lastIndex > 1)
+            //if (j-lastIndex > 1)
             {
                 optimisedBorder.push_back(Vec2(lastPosition));
-                lastIndex = j;
+                lastIndex = i;
                 break;
             }
         }
     }
-    
-    _Border.clear();
     
     _Objects.push_back(optimisedBorder);
 }
