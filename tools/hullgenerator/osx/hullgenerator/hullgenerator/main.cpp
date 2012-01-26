@@ -1,14 +1,8 @@
-//
-//  main.cpp
-//  hullgenerator
-//
-//  Created by Jamie Hales on 23/01/2012.
-//  Copyright (c) 2012 Moshen Ltd. All rights reserved.
-//
-
+#include <fstream>
 #include <iostream>
 #include <string>
 
+#include "pixelboost/data/json/writer.h"
 #include "pixelboost/math/maths.h"
 #include "pixelboost/external/lodepng/lodepng.h"
 #include "pixelboost/external/polydecomp/decomp.h"
@@ -19,6 +13,7 @@ public:
     HullGenerator(bool debugMode, const std::string& debugPath);
     
     bool Load(const std::string& filename);
+    bool Save(const std::string& filename);
     bool Process();
     
 private:
@@ -61,11 +56,14 @@ private:
 
 int main (int argc, const char * argv[])
 {
-    const char* filename = argc > 1 ? argv[1] : "/Users/aeonflame/Development/moshenltd/dragonsdream/resources/spritesheets/images/blockers/ArchesMorning_bottom_3.png";
+    const char* inputLocation = argc > 1 ? argv[1] : "/Users/aeonflame/Development/moshenltd/dragonsdream/resources/spritesheets/images/blockers/ArchesMorning_bottom_3.png";
+    
+    const char* outputLocation = argc > 2 ? argv[2] : "/Users/aeonflame/Development/moshenltd/dragonsdream/data/physics/ArchesMorning_bottom_3.psy";
     
     HullGenerator hullGenerator(true, "/Users/aeonflame/Development/moshenltd/dragonsdream/debug/");
-    hullGenerator.Load(filename);
+    hullGenerator.Load(inputLocation);
     hullGenerator.Process();
+    hullGenerator.Save(outputLocation);
 
     return 0;
 }
@@ -77,11 +75,11 @@ HullGenerator::HullGenerator(bool debugMode, const std::string& debugPath)
     
 }
 
-bool HullGenerator::Load(const std::string &filename)
+bool HullGenerator::Load(const std::string& filename)
 {
     std::vector<unsigned char> buffer;
     
-    LodePNG::loadFile(buffer, filename); //load the image file with given filename
+    LodePNG::loadFile(buffer, filename);
     LodePNG::Decoder decoder;
     
     decoder.decode(_Image, buffer.size() ? &buffer[0] : 0, (unsigned)buffer.size());
@@ -92,8 +90,45 @@ bool HullGenerator::Load(const std::string &filename)
         return false;
     }
     
-    _Width = decoder.getWidth(); //get the width in pixels
-    _Height = decoder.getHeight(); //get the height in pixels
+    _Width = decoder.getWidth();
+    _Height = decoder.getHeight();
+    
+    return true;
+}
+
+bool HullGenerator::Save(const std::string& filename)
+{
+    float heightOffset = _Height/32.f/2.f;
+    float widthOffset = _Width/32.f/2.f;
+    
+    json::Object o;
+    
+    json::Array hulls;
+    for (std::vector<std::vector<Vec2> >::iterator hullIt = _Hulls.begin(); hullIt != _Hulls.end(); ++hullIt)
+    {
+        json::Array hull;
+        
+        for (std::vector<Vec2>::iterator it = hullIt->begin(); it != hullIt->end(); ++it)
+        {
+            json::Object pt;
+            pt["x"] = json::Number((*it)[0]/32.f-widthOffset);
+            pt["y"] = json::Number((*it)[1]/32.f-heightOffset);
+            hull.Insert(pt);
+        }
+        
+        hulls.Insert(hull);
+    }
+    
+    o["hulls"] = hulls;
+    
+    std::ofstream file;
+    file.open(filename.c_str());
+    
+    if (!file.is_open())
+        return false;
+    
+    json::Writer::Write(o, file);
+    file.close();
     
     return true;
 }
