@@ -16,11 +16,19 @@ class RenderLayer;
 class SpriteSheet;
 class VertexBuffer;
     
+class ParticleModifier
+{
+    
+};
+    
 class ParticleEmitter
 {
 protected:
-    ParticleEmitter();
+    ParticleEmitter(int maxParticles=50);
     ~ParticleEmitter();
+    
+    void Update(float time);
+    void Render();
     
 public:
     struct Config
@@ -58,39 +66,8 @@ public:
         friend class ParticleEmitter;
         friend class ParticleRenderer;
     };
-
-public:
-    bool Load(const std::string& file);
-    
-    void LoadSpriteSheet(const std::string& file, bool createMips);
-    void SetSpriteSheet(std::shared_ptr<SpriteSheet> spriteSheet);
-    
-    Vec2 GetPosition();
-    void SetPosition(const Vec2& position);
-    
-    Config& GetConfig();
     
 private:
-    Config* _Config;
-    Vec2 _Position;
-    float _EmitCount;
-    
-    friend class ParticleRenderer;
-};
-    
-class ParticleRenderer : public IRenderer
-{
-public:
-    ParticleRenderer(int maxParticlesPerLayer=200);
-    ~ParticleRenderer();
-    
-    ParticleEmitter* CreateEmitter(RenderLayer* layer);
-    void DestroyEmitter(ParticleEmitter* emitter);
-    
-    virtual void Update(float time);
-    virtual void Render(RenderLayer* layer);
-    
-public:
     struct Particle
     {
         Particle(ParticleEmitter::Config* config);
@@ -115,23 +92,55 @@ public:
     private:
         void Assign(const Particle& rhs);
     };
+
+public:
+    typedef std::vector<Particle> ParticleList;
+    
+    bool Load(const std::string& file);
+    
+    void LoadSpriteSheet(const std::string& file, bool createMips);
+    void SetSpriteSheet(std::shared_ptr<SpriteSheet> spriteSheet);
+    
+    Vec2 GetPosition();
+    void SetPosition(const Vec2& position);
+    
+    Config& GetConfig();
+    ParticleList& GetParticles();
     
 private:
     static bool ParticleSortPredicate(const Particle& a, const Particle& b);
+    ParticleList _Particles;
     
-    typedef std::vector<Particle> ParticleList;
-    typedef std::vector<ParticleEmitter*> EmitterList;
-    
-    typedef std::map<RenderLayer*, EmitterList> EmitterListMap;
-    typedef std::map<RenderLayer*, ParticleList> ParticleListMap;
-    
-    EmitterListMap _Emitters;
-    ParticleListMap _Particles;
+    Config* _Config;
+    Vec2 _Position;
+    float _EmitCount;
     
     IndexBuffer* _IndexBuffer;
     VertexBuffer* _VertexBuffer;
     
+    bool _BufferDirty;
     int _MaxParticles;
+    
+    friend class ParticleRenderer;
+};
+    
+class ParticleRenderer : public IRenderer
+{
+public:
+    ParticleRenderer();
+    ~ParticleRenderer();
+    
+    ParticleEmitter* CreateEmitter(RenderLayer* layer);
+    void DestroyEmitter(ParticleEmitter* emitter);
+    
+    virtual void Update(float time);
+    virtual void Render(RenderLayer* layer);
+    
+private:
+    typedef std::vector<ParticleEmitter*> EmitterList;
+    typedef std::map<RenderLayer*, EmitterList> EmitterListMap;
+    
+    EmitterListMap _Emitters;
 };
 
 }

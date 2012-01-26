@@ -7,18 +7,18 @@
 
 using namespace pixelboost;
 
-ParticleRenderer::Particle::Particle(ParticleEmitter::Config* config)
+ParticleEmitter::Particle::Particle(ParticleEmitter::Config* config)
     : emitterConfig(config)
 {
     emitterConfig->refCount++;
 }
 
-ParticleRenderer::Particle::Particle(const Particle& rhs)
+ParticleEmitter::Particle::Particle(const Particle& rhs)
 {
     Assign(rhs);
 }
 
-ParticleRenderer::Particle::~Particle()
+ParticleEmitter::Particle::~Particle()
 {
     emitterConfig->refCount--;
     
@@ -28,14 +28,14 @@ ParticleRenderer::Particle::~Particle()
     }
 }
 
-ParticleRenderer::Particle& ParticleRenderer::Particle::operator=(const Particle& rhs)
+ParticleEmitter::Particle& ParticleEmitter::Particle::operator=(const Particle& rhs)
 {
     Assign(rhs);
     
     return *this;
 }
 
-void ParticleRenderer::Particle::Assign(const Particle& rhs)
+void ParticleEmitter::Particle::Assign(const Particle& rhs)
 {
     emitterConfig = rhs.emitterConfig;
     emitterConfig->refCount++;
@@ -81,54 +81,11 @@ ParticleEmitter::Config::~Config()
 
 }
 
-ParticleEmitter::ParticleEmitter()
+ParticleEmitter::ParticleEmitter(int maxParticles)
+    : _EmitCount(0)
+    , _MaxParticles(maxParticles)
 {
     _Config = new Config();
-    _EmitCount = 0.f;
-}
-
-ParticleEmitter::~ParticleEmitter()
-{
-    _Config->refCount--;
-    
-    if (_Config->refCount == 0)
-        delete _Config;
-}
-
-bool ParticleEmitter::Load(const std::string& file)
-{
-    return false;
-}
-
-void ParticleEmitter::LoadSpriteSheet(const std::string& file, bool createMips)
-{
-    _Config->spriteSheet = SpriteSheet::Create();
-    _Config->spriteSheet->Load(file, createMips);
-}
-
-void ParticleEmitter::SetSpriteSheet(std::shared_ptr<SpriteSheet> spriteSheet)
-{
-    _Config->spriteSheet = spriteSheet;
-}
-
-Vec2 ParticleEmitter::GetPosition()
-{
-    return _Position;
-}
-
-void ParticleEmitter::SetPosition(const Vec2& position)
-{
-    _Position = position;
-}
-
-ParticleEmitter::Config& ParticleEmitter::GetConfig()
-{
-    return *_Config;
-}
-
-ParticleRenderer::ParticleRenderer(int maxParticlesPerLayer)
-{
-    _MaxParticles = maxParticlesPerLayer;
     
     _IndexBuffer = pixelboost::GraphicsDevice::Instance()->CreateIndexBuffer(pixelboost::kBufferFormatStatic, _MaxParticles*6);
     _VertexBuffer = pixelboost::GraphicsDevice::Instance()->CreateVertexBuffer(pixelboost::kBufferFormatDynamic, pixelboost::kVertexFormat_P_XYZ_RGBA_UV, _MaxParticles*4);
@@ -149,109 +106,77 @@ ParticleRenderer::ParticleRenderer(int maxParticlesPerLayer)
     _IndexBuffer->Unlock();
 }
 
-ParticleRenderer::~ParticleRenderer()
+ParticleEmitter::~ParticleEmitter()
 {
     pixelboost::GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
     pixelboost::GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
+    
+    _Config->refCount--;
+    
+    if (_Config->refCount == 0)
+        delete _Config;
 }
 
-ParticleEmitter* ParticleRenderer::CreateEmitter(RenderLayer* layer)
+void ParticleEmitter::Update(float time)
 {
-    ParticleEmitter* emitter = new ParticleEmitter();
-    _Emitters[layer].push_back(emitter);
-    return emitter;
-}
+    if (!_Config->sprites.size())
+        return;
     
-void ParticleRenderer::DestroyEmitter(ParticleEmitter* emitter)
-{
-    for (EmitterListMap::iterator emitterListIt = _Emitters.begin(); emitterListIt != _Emitters.end(); ++emitterListIt)
+    if (_Particles.size() < _MaxParticles)
     {
-        for (EmitterList::iterator emitterIt = emitterListIt->second.begin(); emitterIt != emitterListIt->second.end(); ++emitterIt)
+        _EmitCount += _Config->particlesPerUpdate;
+        
+        while (_EmitCount >= 1.f)
         {
-            if (emitter == *emitterIt)
-            {
-                emitterListIt->second.erase(emitterIt);
-                delete emitter;
-                return;
-            }
-        }
-    }
-}
-    
-void ParticleRenderer::Update(float time)
-{
-    for (EmitterListMap::iterator emitterListIt = _Emitters.begin(); emitterListIt != _Emitters.end(); ++emitterListIt)
-    {
-        for (EmitterList::iterator it = emitterListIt->second.begin(); it != emitterListIt->second.end(); ++it)
-        {
-            if (_Particles[emitterListIt->first].size() >= _MaxParticles)
-                break;
+            Particle particle(_Config);
+            particle.position[0] = _Position[0] + _Config->minPosOffset[0] + (_Config->maxPosOffset[0]-_Config->minPosOffset[0]) * (float)rand()/(float)RAND_MAX;
+            particle.position[1] = _Position[1] + _Config->minPosOffset[1] + (_Config->maxPosOffset[1]-_Config->minPosOffset[1]) * (float)rand()/(float)RAND_MAX;
+            particle.rotation = _Config->minRotOffset + (_Config->maxRotOffset-_Config->minRotOffset) * (float)rand()/(float)RAND_MAX;
+            particle.rotationVelocity = _Config->minRotVelocity + (_Config->maxRotVelocity-_Config->minRotVelocity) * (float)rand()/(float)RAND_MAX;
+            particle.positionVelocity[0] = _Config->minPosVelocity[0] + (_Config->maxPosVelocity[0]-_Config->minPosVelocity[0]) * (float)rand()/(float)RAND_MAX;
+            particle.positionVelocity[1] = _Config->minPosVelocity[1] + (_Config->maxPosVelocity[1]-_Config->minPosVelocity[1]) * (float)rand()/(float)RAND_MAX;
+            particle.life = 0;
+            particle.sprite = _Config->sprites[Min((int)((float)rand()/(float)RAND_MAX * _Config->sprites.size()), (int)_Config->sprites.size()-1)];
+            particle.totalLife = _Config->life;
             
-            ParticleEmitter* emitter = *it;
-            ParticleEmitter::Config& config = emitter->GetConfig();
+            _Particles.push_back(particle);
             
-            emitter->_EmitCount += config.particlesPerUpdate;
-            
-            if (!config.sprites.size())
-                continue;
-            
-            while (emitter->_EmitCount >= 1.f)
-            {
-                Particle particle(&config);
-                particle.position[0] = emitter->_Position[0] + config.minPosOffset[0] + (config.maxPosOffset[0]-config.minPosOffset[0]) * (float)rand()/(float)RAND_MAX;
-                particle.position[1] = emitter->_Position[1] + config.minPosOffset[1] + (config.maxPosOffset[1]-config.minPosOffset[1]) * (float)rand()/(float)RAND_MAX;
-                particle.rotation = config.minRotOffset + (config.maxRotOffset-config.minRotOffset) * (float)rand()/(float)RAND_MAX;
-                particle.rotationVelocity = config.minRotVelocity + (config.maxRotVelocity-config.minRotVelocity) * (float)rand()/(float)RAND_MAX;
-                particle.positionVelocity[0] = config.minPosVelocity[0] + (config.maxPosVelocity[0]-config.minPosVelocity[0]) * (float)rand()/(float)RAND_MAX;
-                particle.positionVelocity[1] = config.minPosVelocity[1] + (config.maxPosVelocity[1]-config.minPosVelocity[1]) * (float)rand()/(float)RAND_MAX;
-                particle.life = 0;
-                particle.sprite = config.sprites[Min((int)((float)rand()/(float)RAND_MAX * config.sprites.size()), (int)config.sprites.size()-1)];
-                particle.totalLife = config.life;
-
-                _Particles[emitterListIt->first].push_back(particle);
-                
-                emitter->_EmitCount -= 1.f;
-            }
+            _EmitCount -= 1.f;
         }
     }
     
-    for (ParticleListMap::iterator particleListIt = _Particles.begin(); particleListIt != _Particles.end(); ++particleListIt)
+    for (ParticleList::iterator it = _Particles.begin(); it != _Particles.end(); )
     {
-        for (ParticleList::iterator it = particleListIt->second.begin(); it != particleListIt->second.end(); )
+        it->life += time;
+        
+        it->positionVelocity += it->emitterConfig->gravity;
+        
+        it->rotation += it->rotationVelocity;
+        it->position += it->positionVelocity;
+        
+        if (it->life > it->totalLife)
         {
-            it->life += time;
-            
-            it->positionVelocity += it->emitterConfig->gravity;
-            
-            it->rotation += it->rotationVelocity;
-            it->position += it->positionVelocity;
-            
-            if (it->life > it->totalLife)
-            {
-                it = particleListIt->second.erase(it);
-            } else {
-                it++;
-            }
+            it = _Particles.erase(it);
+        } else {
+            it++;
         }
     }
 }
 
-void ParticleRenderer::Render(RenderLayer* layer)
+void ParticleEmitter::Render()
 {
-    ParticleList& particleList = _Particles[layer];
-
-    if (!particleList.size())
+    if (!_Particles.size())
         return;
     
     _VertexBuffer->Lock();
     
     pixelboost::Vertex_PXYZ_RGBA_UV* vertexBuffer = static_cast<pixelboost::Vertex_PXYZ_RGBA_UV*>(_VertexBuffer->GetData());
     
-    std::stable_sort(particleList.begin(), particleList.end(), &ParticleRenderer::ParticleSortPredicate);
+    std::stable_sort(_Particles.begin(), _Particles.end(), &ParticleEmitter::ParticleSortPredicate);
     
     if (vertexBuffer)
     {
-        for (ParticleList::iterator it = particleList.begin(); it != particleList.end(); ++it)
+        for (ParticleList::iterator it = _Particles.begin(); it != _Particles.end(); ++it)
         {
             float tween = it->life/it->emitterConfig->life;
             Vec4 color = it->emitterConfig->startColor + (it->emitterConfig->endColor-it->emitterConfig->startColor)*tween;
@@ -333,9 +258,9 @@ void ParticleRenderer::Render(RenderLayer* layer)
         }
     }
     
-    _VertexBuffer->Unlock(particleList.size()*4);
+    _VertexBuffer->Unlock(_Particles.size()*4);
     
-    if (vertexBuffer && particleList.size())
+    if (vertexBuffer && _Particles.size())
     {
         _IndexBuffer->Bind();
         _VertexBuffer->Bind();
@@ -351,7 +276,7 @@ void ParticleRenderer::Render(RenderLayer* layer)
         glEnableClientState(GL_COLOR_ARRAY);
         glEnableClientState(GL_TEXTURE_COORD_ARRAY);
         glEnableClientState(GL_VERTEX_ARRAY);
-        GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, particleList.size()*6);
+        GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, _Particles.size()*6);
         glDisableClientState(GL_COLOR_ARRAY);
         glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         glDisableClientState(GL_VERTEX_ARRAY);
@@ -362,7 +287,100 @@ void ParticleRenderer::Render(RenderLayer* layer)
     }
 }
 
-bool ParticleRenderer::ParticleSortPredicate(const Particle& a, const Particle& b)
+bool ParticleEmitter::Load(const std::string& file)
+{
+    return false;
+}
+
+void ParticleEmitter::LoadSpriteSheet(const std::string& file, bool createMips)
+{
+    _Config->spriteSheet = SpriteSheet::Create();
+    _Config->spriteSheet->Load(file, createMips);
+}
+
+void ParticleEmitter::SetSpriteSheet(std::shared_ptr<SpriteSheet> spriteSheet)
+{
+    _Config->spriteSheet = spriteSheet;
+}
+
+Vec2 ParticleEmitter::GetPosition()
+{
+    return _Position;
+}
+
+void ParticleEmitter::SetPosition(const Vec2& position)
+{
+    _Position = position;
+}
+
+ParticleEmitter::Config& ParticleEmitter::GetConfig()
+{
+    return *_Config;
+}
+
+ParticleEmitter::ParticleList& ParticleEmitter::GetParticles()
+{
+    _BufferDirty = true;
+    return _Particles;
+}
+
+bool ParticleEmitter::ParticleSortPredicate(const Particle& a, const Particle& b)
 {
     return true;
+}
+
+ParticleRenderer::ParticleRenderer()
+{
+    
+}
+
+ParticleRenderer::~ParticleRenderer()
+{
+    
+}
+
+ParticleEmitter* ParticleRenderer::CreateEmitter(RenderLayer* layer)
+{
+    ParticleEmitter* emitter = new ParticleEmitter();
+    _Emitters[layer].push_back(emitter);
+    return emitter;
+}
+    
+void ParticleRenderer::DestroyEmitter(ParticleEmitter* emitter)
+{
+    for (EmitterListMap::iterator emitterListIt = _Emitters.begin(); emitterListIt != _Emitters.end(); ++emitterListIt)
+    {
+        for (EmitterList::iterator emitterIt = emitterListIt->second.begin(); emitterIt != emitterListIt->second.end(); ++emitterIt)
+        {
+            if (emitter == *emitterIt)
+            {
+                emitterListIt->second.erase(emitterIt);
+                delete emitter;
+                return;
+            }
+        }
+    }
+}
+    
+void ParticleRenderer::Update(float time)
+{
+    for (EmitterListMap::iterator emitterListIt = _Emitters.begin(); emitterListIt != _Emitters.end(); ++emitterListIt)
+    {
+        for (EmitterList::iterator it = emitterListIt->second.begin(); it != emitterListIt->second.end(); ++it)
+        {
+            (*it)->Update(time);
+        }
+    }
+}
+
+void ParticleRenderer::Render(RenderLayer* layer)
+{
+    EmitterListMap::iterator emitterListIt = _Emitters.find(layer);
+    if (emitterListIt == _Emitters.end())
+        return;
+                                                     
+    for (EmitterList::iterator it = emitterListIt->second.begin(); it != emitterListIt->second.end(); ++it)
+    {
+        (*it)->Render();
+    }
 }
