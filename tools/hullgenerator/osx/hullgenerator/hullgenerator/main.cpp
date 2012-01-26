@@ -56,11 +56,13 @@ private:
 
 int main (int argc, const char * argv[])
 {
-    const char* inputLocation = argc > 1 ? argv[1] : "/Users/aeonflame/Development/moshenltd/dragonsdream/resources/spritesheets/images/blockers/ArchesMorning_bottom_3.png";
+    const char* inputLocation = argc > 1 ? argv[1] : "";
     
-    const char* outputLocation = argc > 2 ? argv[2] : "/Users/aeonflame/Development/moshenltd/dragonsdream/data/physics/ArchesMorning_bottom_3.psy";
+    const char* outputLocation = argc > 2 ? argv[2] : "";
     
-    HullGenerator hullGenerator(true, "/Users/aeonflame/Development/moshenltd/dragonsdream/debug/");
+    const char* debugLocation = argc > 3 ? argv[3] : "";
+    
+    HullGenerator hullGenerator(argc > 3, debugLocation);
     hullGenerator.Load(inputLocation);
     hullGenerator.Process();
     hullGenerator.Save(outputLocation);
