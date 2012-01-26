@@ -7,14 +7,16 @@
 //
 
 #include <iostream>
+#include <string>
 
 #include "pixelboost/math/maths.h"
 #include "pixelboost/external/lodepng/lodepng.h"
+#include "pixelboost/external/polydecomp/decomp.h"
 
 class HullGenerator
 {
 public:
-    HullGenerator(bool debugMode);
+    HullGenerator(bool debugMode, const std::string& debugPath);
     
     bool Load(const std::string& filename);
     bool Process();
@@ -50,24 +52,27 @@ private:
     std::vector<FrameValue> _Frame;
     std::vector<Vec2> _Border;
     
+    std::vector<std::vector<Vec2> > _Hulls;
     std::vector<std::vector<Vec2> > _Objects;
     
+    std::string _DebugPath;
     bool _DebugMode;
 };
 
 int main (int argc, const char * argv[])
 {
-    const char* filename = argc > 1 ? argv[1] : "default.png";
+    const char* filename = argc > 1 ? argv[1] : "/Users/aeonflame/Development/moshenltd/dragonsdream/resources/spritesheets/images/blockers/ArchesMorning_bottom_3.png";
     
-    HullGenerator hullGenerator(false);
+    HullGenerator hullGenerator(true, "/Users/aeonflame/Development/moshenltd/dragonsdream/debug/");
     hullGenerator.Load(filename);
     hullGenerator.Process();
 
     return 0;
 }
 
-HullGenerator::HullGenerator(bool debugMode)
+HullGenerator::HullGenerator(bool debugMode, const std::string& debugPath)
     : _DebugMode(debugMode)
+    , _DebugPath(debugPath)
 {
     
 }
@@ -113,10 +118,9 @@ bool HullGenerator::Process()
             GenerateFrame(x, y);
         }
     }
-
     
     if (_DebugMode)
-        DebugFrame("/Users/aeonflame/Development/moshenltd/dragonsdream/debug/main.png");
+        DebugFrame(_DebugPath + "main.png");
     
     GenerateBorders();
     
@@ -171,10 +175,10 @@ void HullGenerator::GenerateBorders()
                 if (_DebugMode)
                 {
                     char debugName[128];
-                    sprintf(debugName, "/Users/aeonflame/Development/moshenltd/dragonsdream/debug/frame_%lu.png", _Objects.size()-1);
+                    sprintf(debugName, "%s/frame_%lu.png", _DebugPath.c_str(), _Objects.size()-1);
                     DebugFrame(debugName);
                     
-                    sprintf(debugName, "/Users/aeonflame/Development/moshenltd/dragonsdream/debug/debug_%lu.png", _Objects.size()-1);
+                    sprintf(debugName, "%s/debug_%lu.png", _DebugPath.c_str(), _Objects.size()-1);
                     DebugBorder(_Objects[_Objects.size()-1], debugName);
                 }
             }
@@ -230,23 +234,20 @@ void HullGenerator::DebugBorder(const std::vector<Vec2>& border, const std::stri
     {
         for (int x=0; x<_Width; x++)
         {
-            int i=0;
-            bool hasValue = false;
-            for (std::vector<Vec2>::const_iterator it = border.begin(); it != border.end(); ++it)
-            {
-                if ((*it)[0] == x && (*it)[1] == y)
-                {
-                    hasValue = true;
-                    break;
-                }
-                i++;
-            }
-            
-            image.push_back(hasValue ? 0 : 255);
-            image.push_back(hasValue ? 0 : 255);
-            image.push_back(hasValue ? 0 : 255);
+            image.push_back(255);
+            image.push_back(255);
+            image.push_back(255);
             image.push_back(255);
         }
+    }
+    
+    for (int i=0; i<border.size(); i++)
+    {
+        Vec2 pos = border[i];
+        int offset = (pos[1]*_Width*4)+(pos[0]*4);
+        image[offset] = 0;
+        image[offset+1] = 0;
+        image[offset+2] = 0;
     }
     
     LodePNG::Encoder encoder;
@@ -299,7 +300,7 @@ void HullGenerator::ProcessBorder(const std::vector<Vec2>& border)
         
         for (int j=lastIndex; j<i; j++)
         {
-            //if (j-lastIndex > 1)
+            if (j-lastIndex > 20)
             {
                 optimisedBorder.push_back(Vec2(lastPosition));
                 lastIndex = i;
@@ -313,7 +314,37 @@ void HullGenerator::ProcessBorder(const std::vector<Vec2>& border)
 
 void HullGenerator::GenerateHulls()
 {
-    
+    for (std::vector<std::vector<Vec2> >::iterator it = _Objects.begin(); it != _Objects.end(); ++it)
+    {
+        polydecomp::PolyDecomp::Polygon poly;
+        
+        std::vector<Vec2>& object = *it;
+        
+        for (std::vector<Vec2>::iterator it = object.begin(); it != object.end(); ++it)
+        {
+            poly.push_back(polydecomp::Point((*it)[0],(*it)[1]));
+        }
+        
+        polydecomp::PolyDecomp decomp;
+        std::vector<polydecomp::PolyDecomp::Polygon> polys = decomp.Decompose(poly);
+        
+        for (std::vector<polydecomp::PolyDecomp::Polygon>::iterator polyIt = polys.begin(); polyIt != polys.end(); ++polyIt)
+        {
+            std::vector<Vec2> hull;
+            for (polydecomp::PolyDecomp::Polygon::iterator pointIt = polyIt->begin(); pointIt != polyIt->end(); ++pointIt)
+            {
+                hull.push_back(Vec2(pointIt->x, pointIt->y));
+            }
+            _Hulls.push_back(hull);
+            
+            if (_DebugMode)
+            {
+                char debugName[128];
+                sprintf(debugName, "%s/hull_%lu.png", _DebugPath.c_str(), _Hulls.size()-1);
+                DebugBorder(_Hulls[_Hulls.size()-1], debugName);
+            }
+        }
+    }
 }
 
 HullGenerator::FrameValue HullGenerator::GetFrame(int x, int y)
