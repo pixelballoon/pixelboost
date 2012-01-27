@@ -390,9 +390,15 @@ void HullGenerator::GenerateHulls()
         for (std::vector<polydecomp::PolyDecomp::Polygon>::iterator polyIt = polys.begin(); polyIt != polys.end(); ++polyIt)
         {
             std::vector<Vec2> hull;
+            Vec2 lastPoint(-1,-1);
             for (polydecomp::PolyDecomp::Polygon::iterator pointIt = polyIt->begin(); pointIt != polyIt->end(); ++pointIt)
             {
-                hull.push_back(Vec2(pointIt->x, pointIt->y));
+                Vec2 currentPoint = Vec2(pointIt->x, pointIt->y);
+                if (lastPoint != currentPoint)
+                {
+                    hull.push_back(currentPoint);
+                    lastPoint = currentPoint;
+                }
             }
             _Hulls.push_back(hull);
             
