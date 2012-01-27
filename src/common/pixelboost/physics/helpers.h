@@ -21,7 +21,7 @@ namespace pixelboost
     {
     public:
         static FixtureDefinition LoadDefinition(const std::string& filename);
-        static b2Body* CreateBodyFromDefinition(b2World* world, const FixtureDefinition& definition, const Vec2& position, void* userData);
+        static b2Body* CreateBodyFromDefinition(b2World* world, const FixtureDefinition& definition, const Vec2& position, void* userData, Vec2 scale=Vec2(1,1));
     };
 }
 
