@@ -206,6 +206,13 @@ void HullGenerator::GenerateBorders()
             if (GetFrame(x, y) == kFrameValueBorder)
             {
                 AppendBorder(x, y);
+                
+                for (std::vector<Vec2>::iterator it = _Border.begin(); it != _Border.end(); ++it)
+                {
+                    *it = Vec2((*it)[0], _Height-1-(*it)[1]);
+                }
+                std::reverse(_Border.begin(), _Border.end());
+                
                 ProcessBorder(_Border);
                 _Border.clear();
                 
