@@ -324,27 +324,42 @@ void HullGenerator::DebugFrame(const std::string& filename)
 
 void HullGenerator::ProcessBorder(const std::vector<Vec2>& border)
 {
-    std::vector<Vec2> optimisedBorder;
+    std::vector<Vec2> optimisedBorder = border;
     
-    if (!border.size())
+    if (!optimisedBorder.size())
         return;
     
-    int lastIndex = 0;
-    for (int i=0; i<border.size(); i++)
+    for (int i=0; i<((int)optimisedBorder.size())-2;)
     {
-        Vec2 lastPosition = border[lastIndex];
-        Vec2 newPosition = border[i];
+        Vec2 a = optimisedBorder[i];
+        Vec2 b = optimisedBorder[i+1];
+        Vec2 c = optimisedBorder[i+2];
         
-        for (int j=lastIndex; j<i; j++)
+        float angle = acos(dot(norm(b-a), norm(b-c)));
+        float deg = (angle/M_PI)*180.f;
+
+        if (deg > 120.f)
         {
-            if (j-lastIndex > 20)
-            {
-                optimisedBorder.push_back(Vec2(lastPosition));
-                lastIndex = i;
-                break;
-            }
+            optimisedBorder.erase(optimisedBorder.begin() + (i+1));
+        } else {
+            i++;
         }
     }
+    
+    for (int i=0; i<((int)optimisedBorder.size())-2;)
+    {
+        Vec2 a = optimisedBorder[i];
+        Vec2 b = optimisedBorder[i+1];
+        Vec2 c = optimisedBorder[i+2];
+        
+        if (len(a-b) < 5.f || len(b-c) < 5.f)
+        {
+            optimisedBorder.erase(optimisedBorder.begin() + (i+1));
+        } else {
+            i++;
+        }
+    }
+    
     
     _Objects.push_back(optimisedBorder);
 }
