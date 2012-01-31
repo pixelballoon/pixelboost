@@ -21,12 +21,13 @@ private:
     void GenerateFrame(int x, int y);
     
     void GenerateBorders();
-    bool AppendBorder(int x, int y);
+    bool AppendBorder(int x, int y, bool forward);
     void ProcessBorder(const std::vector<Vec2>& border);
     void GenerateHulls();
     
     void DebugBorder(const std::vector<Vec2>& border, const std::string& filename);
     void DebugFrame(const std::string& filename);
+    void DebugFinal(const std::string& filename);
     
     enum FrameValue
     {
@@ -159,9 +160,18 @@ bool HullGenerator::Process()
     if (_DebugMode)
         DebugFrame(_DebugPath + "main.png");
     
+    if (_DebugMode)
+        printf("Generate borders\n");
+    
     GenerateBorders();
     
+    if (_DebugMode)
+        printf("Generate hulls\n");
+    
     GenerateHulls();
+    
+    if (_DebugMode)
+        DebugFinal(_DebugPath + "final.png");
     
     return true;
 }
@@ -205,7 +215,7 @@ void HullGenerator::GenerateBorders()
         {
             if (GetFrame(x, y) == kFrameValueBorder)
             {
-                AppendBorder(x, y);
+                AppendBorder(x, y, true);
                 
                 for (std::vector<Vec2>::iterator it = _Border.begin(); it != _Border.end(); ++it)
                 {
@@ -230,7 +240,7 @@ void HullGenerator::GenerateBorders()
     }
 }
 
-bool HullGenerator::AppendBorder(int x, int y)
+bool HullGenerator::AppendBorder(int x, int y, bool forward)
 {
     if (x < 0 || y < 0 || x >= _Width || y >= _Height)
         return false;
@@ -240,31 +250,62 @@ bool HullGenerator::AppendBorder(int x, int y)
         
     SetFrame(x, y, kFrameValueEmpty);
     
-    _Border.push_back(Vec2(x, y));
+    if (forward)
+        _Border.push_back(Vec2(x, y));
+    else
+        _Border.insert(_Border.begin(), Vec2(x, y));
     
-    if (AppendBorder(x+1, y))
-        return true;
+    bool foundBorder = false;
     
-    if (AppendBorder(x+1, y+1))
-        return true;
+    if (!foundBorder && AppendBorder(x+1, y, forward))
+        foundBorder = true;
     
-    if (AppendBorder(x, y+1))
-        return true;
+    if (!foundBorder && AppendBorder(x+1, y+1, forward))
+        foundBorder = true;
     
-    if (AppendBorder(x-1, y+1))
-        return true;
+    if (!foundBorder && AppendBorder(x, y+1, forward))
+        foundBorder = true;
     
-    if (AppendBorder(x-1, y))
-        return true;
+    if (!foundBorder && AppendBorder(x-1, y+1, forward))
+        foundBorder = true;
     
-    if (AppendBorder(x-1, y-1))
-        return true;
+    if (!foundBorder && AppendBorder(x-1, y, forward))
+        foundBorder = true;
     
-    if (AppendBorder(x, y-1))
-        return true;
+    if (!foundBorder && AppendBorder(x-1, y-1, forward))
+        foundBorder = true;
+    
+    if (!foundBorder && AppendBorder(x, y-1, forward))
+        foundBorder = true;    
+    
+    if (!foundBorder && AppendBorder(x+1, y-1, forward))    
+        foundBorder = true;
+    
+    foundBorder = false;
+    
+    if (!foundBorder && AppendBorder(x+1, y-1, !forward))    
+        foundBorder = true;
+    
+    if (!foundBorder && AppendBorder(x, y-1, !forward))
+        foundBorder = true; 
+    
+    if (!foundBorder && AppendBorder(x-1, y-1, !forward))
+        foundBorder = true;
+    
+    if (!foundBorder && AppendBorder(x-1, y, !forward))
+        foundBorder = true;
+    
+    if (!foundBorder && AppendBorder(x-1, y+1, !forward))
+        foundBorder = true;
+    
+    if (!foundBorder && AppendBorder(x, y+1, !forward))
+        foundBorder = true;
 
-    if (AppendBorder(x+1, y-1))
-        return true;
+    if (!foundBorder && AppendBorder(x+1, y+1, !forward))
+        foundBorder = true;
+    
+    if (!foundBorder && AppendBorder(x+1, y, !forward))
+        foundBorder = true;
     
     return true;
 }
@@ -289,9 +330,9 @@ void HullGenerator::DebugBorder(const std::vector<Vec2>& border, const std::stri
     {
         Vec2 pos = border[i];
         int offset = (pos[1]*_Width*4)+(pos[0]*4);
-        image[offset] = 0;
-        image[offset+1] = 0;
-        image[offset+2] = 0;
+        image[offset] = (i%64)*4;
+        image[offset+1] = (i%64)*4;
+        image[offset+2] = (i%64)*4;
     }
     
     LodePNG::Encoder encoder;
@@ -329,6 +370,71 @@ void HullGenerator::DebugFrame(const std::string& filename)
     LodePNG::saveFile(buffer, filename);
 }
 
+void HullGenerator::DebugFinal(const std::string& filename)
+{
+    std::vector<unsigned char> buffer;
+    std::vector<unsigned char> image;
+    
+    for (int y=0; y<_Height; y++)
+    {
+        for (int x=0; x<_Width; x++)
+        {
+            image.push_back(255);
+            image.push_back(255);
+            image.push_back(255);
+            image.push_back(255);
+        }
+    }
+    
+    //for (std::vector<std::vector<Vec2> >::iterator it = _Objects.begin(); it != _Objects.end(); ++it)
+    for (std::vector<std::vector<Vec2> >::iterator it = _Hulls.begin(); it != _Hulls.end(); ++it)
+    {
+        std::vector<Vec2>& hull = *it;
+        for (int i=0; i<hull.size(); i++)
+        {
+            Vec2 a = hull[i];
+            Vec2 b = hull[(i+1)%hull.size()];
+            
+            int sx = a[0];
+            int sy = a[1];
+            int ex = b[0];
+            int ey = b[1];
+            
+            if (sx > ex)
+            {
+                Swap(sx, ex);
+                Swap(sy, ey);
+            }
+            
+            int deltaX = ex - sx;
+            int deltaY = ey - sy;
+            int y = sy;
+            int yStep = (sy > ey) ? -1 : 1;
+            float e = 0;
+            float deltaE = abs((float)deltaY / (float)deltaX);
+            for (int x=sx; x<ex; x++)
+            {
+                int offset = (y*_Width*4)+(x*4);
+                image[offset] = (i%64)*4;
+                image[offset+1] = (i%64)*4;
+                image[offset+2] = (i%64)*4;
+                
+                e += deltaE;
+                
+                if (e > 0.5)
+                {
+                    y += yStep;
+                    e -= 1.0;
+                }
+            }
+        }
+    }
+    
+    LodePNG::Encoder encoder;
+    encoder.encode(buffer, image, _Width, _Height);
+    LodePNG::saveFile(buffer, filename);
+}
+
 void HullGenerator::ProcessBorder(const std::vector<Vec2>& border)
 {
     std::vector<Vec2> optimisedBorder = border;
@@ -336,7 +442,24 @@ void HullGenerator::ProcessBorder(const std::vector<Vec2>& border)
     if (!optimisedBorder.size())
         return;
     
-    for (int i=0; i<((int)optimisedBorder.size())-2;)
+    for (int i=0; i<((int)optimisedBorder.size())-1 && optimisedBorder.size() > 3;)
+    {
+        Vec2 a = optimisedBorder[i];
+        
+        for (int j=i+1; j<optimisedBorder.size();)
+        {
+            Vec2 b = optimisedBorder[j];
+            if (len(a-b) < (float)_Width/25.f)
+            {
+                optimisedBorder.erase(optimisedBorder.begin() + j);
+            } else {
+                i=j;
+                break;
+            }
+        }
+    }
+    
+    for (int i=0; i<((int)optimisedBorder.size())-2 && optimisedBorder.size() > 3;)
     {
         Vec2 a = optimisedBorder[i];
         Vec2 b = optimisedBorder[i+1];
@@ -345,28 +468,13 @@ void HullGenerator::ProcessBorder(const std::vector<Vec2>& border)
         float angle = acos(dot(norm(b-a), norm(b-c)));
         float deg = (angle/M_PI)*180.f;
 
-        if (deg > 120.f)
+        if (deg >= 120.f)
         {
             optimisedBorder.erase(optimisedBorder.begin() + (i+1));
         } else {
             i++;
         }
     }
-    
-    for (int i=0; i<((int)optimisedBorder.size())-2;)
-    {
-        Vec2 a = optimisedBorder[i];
-        Vec2 b = optimisedBorder[i+1];
-        Vec2 c = optimisedBorder[i+2];
-        
-        if (len(a-b) < 5.f || len(b-c) < 5.f)
-        {
-            optimisedBorder.erase(optimisedBorder.begin() + (i+1));
-        } else {
-            i++;
-        }
-    }
-    
     
     _Objects.push_back(optimisedBorder);
 }
@@ -394,7 +502,7 @@ void HullGenerator::GenerateHulls()
             for (polydecomp::PolyDecomp::Polygon::iterator pointIt = polyIt->begin(); pointIt != polyIt->end(); ++pointIt)
             {
                 Vec2 currentPoint = Vec2(pointIt->x, pointIt->y);
-                if (lastPoint != currentPoint)
+                if (lastPoint != currentPoint) // Should never happen!
                 {
                     hull.push_back(currentPoint);
                     lastPoint = currentPoint;
@@ -421,7 +529,6 @@ void HullGenerator::SetFrame(int x, int y, FrameValue value)
 {
     _Frame[GetIndex(x, y)] = value;
 }
-
 
 int HullGenerator::GetIndex(int x, int y)
 {
