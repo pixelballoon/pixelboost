@@ -12,14 +12,10 @@ namespace pixelboost
 {
     
 class IndexBuffer;
+class ParticleModifier;
 class RenderLayer;
 class SpriteSheet;
 class VertexBuffer;
-    
-class ParticleModifier
-{
-    
-};
     
 class ParticleEmitter
 {
@@ -94,7 +90,10 @@ private:
     };
 
 public:
+    typedef std::vector<ParticleModifier*> ModifierList;
     typedef std::vector<Particle> ParticleList;
+    
+    void AddModifier(ParticleModifier* modifier);
     
     bool Load(const std::string& file);
     
@@ -111,6 +110,8 @@ private:
     static bool ParticleSortPredicate(const Particle& a, const Particle& b);
     ParticleList _Particles;
     
+    ModifierList _Modifiers;
+    
     Config* _Config;
     Vec2 _Position;
     float _EmitCount;
@@ -121,7 +122,36 @@ private:
     bool _BufferDirty;
     int _MaxParticles;
     
+    friend class ParticleModifier;
     friend class ParticleRenderer;
+};
+    
+class ParticleModifier
+{
+public:
+    ParticleModifier(ParticleEmitter* emitter);
+    virtual ~ParticleModifier();
+                     
+    void Update(float time);
+                     
+protected:
+    virtual void UpdateParticles(float time, ParticleEmitter::ParticleList& particles) = 0;
+    
+private:
+    ParticleEmitter* _Emitter;
+};
+                                          
+class ParticleAttractor : public ParticleModifier
+{
+public:
+    ParticleAttractor(ParticleEmitter* emitter, const Vec2& position, float strength);
+    virtual ~ParticleAttractor();
+    
+    virtual void UpdateParticles(float time, ParticleEmitter::ParticleList& particles);
+    
+private:
+    Vec2 _Position;
+    float _Strength;
 };
     
 class ParticleRenderer : public IRenderer

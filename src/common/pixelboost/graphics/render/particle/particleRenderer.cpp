@@ -108,6 +108,11 @@ ParticleEmitter::ParticleEmitter(int maxParticles)
 
 ParticleEmitter::~ParticleEmitter()
 {
+    for (ModifierList::iterator it = _Modifiers.begin(); it != _Modifiers.end(); ++it)
+    {
+        delete *it;
+    }
+    
     pixelboost::GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
     pixelboost::GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
     
@@ -121,6 +126,11 @@ void ParticleEmitter::Update(float time)
 {
     if (!_Config->sprites.size())
         return;
+    
+    for (ModifierList::iterator it = _Modifiers.begin(); it != _Modifiers.end(); ++it)
+    {
+        (*it)->Update(time);
+    }
     
     if (_Particles.size() < _MaxParticles)
     {
@@ -287,6 +297,11 @@ void ParticleEmitter::Render()
     }
 }
 
+void ParticleEmitter::AddModifier(ParticleModifier* modifier)
+{
+    _Modifiers.push_back(modifier);
+}
+
 bool ParticleEmitter::Load(const std::string& file)
 {
     return false;
@@ -327,6 +342,45 @@ ParticleEmitter::ParticleList& ParticleEmitter::GetParticles()
 bool ParticleEmitter::ParticleSortPredicate(const Particle& a, const Particle& b)
 {
     return true;
+}
+
+ParticleModifier::ParticleModifier(ParticleEmitter* emitter)
+    : _Emitter(emitter)
+{
+    
+}
+
+ParticleModifier::~ParticleModifier()
+{
+    
+}
+
+void ParticleModifier::Update(float time)
+{
+    UpdateParticles(time, _Emitter->_Particles);
+}
+
+ParticleAttractor::ParticleAttractor(ParticleEmitter* emitter, const Vec2& position, float strength)
+    : ParticleModifier(emitter)
+    , _Position(position)
+    , _Strength(strength)
+{
+    
+}
+
+ParticleAttractor::~ParticleAttractor()
+{
+    
+}
+
+void ParticleAttractor::UpdateParticles(float time, ParticleEmitter::ParticleList& particles)
+{
+    for (ParticleEmitter::ParticleList::iterator it = particles.begin(); it != particles.end(); ++it)
+    {
+        Vec2 diff = _Position - it->position;
+        float r = len(diff);
+        it->position = it->position + (diff * (_Strength / (r*r)));
+    }
 }
 
 ParticleRenderer::ParticleRenderer()
