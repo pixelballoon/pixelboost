@@ -1,23 +1,23 @@
-//
-//  main.cpp
-//  hullgenerator
-//
-//  Created by Jamie Hales on 23/01/2012.
-//  Copyright (c) 2012 Moshen Ltd. All rights reserved.
-//
-
+#include <fstream>
 #include <iostream>
+#include <string>
 
+#include "pixelboost/data/json/writer.h"
 #include "pixelboost/math/maths.h"
 #include "pixelboost/external/lodepng/lodepng.h"
+#include "pixelboost/external/polydecomp/decomp.h"
 
 class HullGenerator
 {
 public:
+    HullGenerator(bool debugMode, const std::string& debugPath);
+    
     bool Load(const std::string& filename);
+    bool Save(const std::string& filename);
     bool Process();
     
 private:
+    bool IsTransparent(int x, int y);
     void GenerateFrame(int x, int y);
     
     void GenerateBorders();
@@ -25,7 +25,8 @@ private:
     void ProcessBorder(const std::vector<Vec2>& border);
     void GenerateHulls();
     
-    void DebugBorder(const std::vector<Vec2>& border);
+    void DebugBorder(const std::vector<Vec2>& border, const std::string& filename);
+    void DebugFrame(const std::string& filename);
     
     enum FrameValue
     {
@@ -46,25 +47,41 @@ private:
     std::vector<FrameValue> _Frame;
     std::vector<Vec2> _Border;
     
+    std::vector<std::vector<Vec2> > _Hulls;
     std::vector<std::vector<Vec2> > _Objects;
+    
+    std::string _DebugPath;
+    bool _DebugMode;
 };
 
 int main (int argc, const char * argv[])
 {
-    const char* filename = argc > 1 ? argv[1] : "default.png";
+    const char* inputLocation = argc > 1 ? argv[1] : "";
     
-    HullGenerator hullGenerator;
-    hullGenerator.Load(filename);
+    const char* outputLocation = argc > 2 ? argv[2] : "";
+    
+    const char* debugLocation = argc > 3 ? argv[3] : "";
+    
+    HullGenerator hullGenerator(argc > 3, debugLocation);
+    hullGenerator.Load(inputLocation);
     hullGenerator.Process();
+    hullGenerator.Save(outputLocation);
 
     return 0;
 }
 
-bool HullGenerator::Load(const std::string &filename)
+HullGenerator::HullGenerator(bool debugMode, const std::string& debugPath)
+    : _DebugMode(debugMode)
+    , _DebugPath(debugPath)
+{
+    
+}
+
+bool HullGenerator::Load(const std::string& filename)
 {
     std::vector<unsigned char> buffer;
     
-    LodePNG::loadFile(buffer, filename); //load the image file with given filename
+    LodePNG::loadFile(buffer, filename);
     LodePNG::Decoder decoder;
     
     decoder.decode(_Image, buffer.size() ? &buffer[0] : 0, (unsigned)buffer.size());
@@ -75,8 +92,45 @@ bool HullGenerator::Load(const std::string &filename)
         return false;
     }
     
-    _Width = decoder.getWidth(); //get the width in pixels
-    _Height = decoder.getHeight(); //get the height in pixels
+    _Width = decoder.getWidth();
+    _Height = decoder.getHeight();
+    
+    return true;
+}
+
+bool HullGenerator::Save(const std::string& filename)
+{
+    float heightOffset = _Height/32.f/2.f;
+    float widthOffset = _Width/32.f/2.f;
+    
+    json::Object o;
+    
+    json::Array hulls;
+    for (std::vector<std::vector<Vec2> >::iterator hullIt = _Hulls.begin(); hullIt != _Hulls.end(); ++hullIt)
+    {
+        json::Array hull;
+        
+        for (std::vector<Vec2>::iterator it = hullIt->begin(); it != hullIt->end(); ++it)
+        {
+            json::Object pt;
+            pt["x"] = json::Number((*it)[0]/32.f-widthOffset);
+            pt["y"] = json::Number((*it)[1]/32.f-heightOffset);
+            hull.Insert(pt);
+        }
+        
+        hulls.Insert(hull);
+    }
+    
+    o["hulls"] = hulls;
+    
+    std::ofstream file;
+    file.open(filename.c_str());
+    
+    if (!file.is_open())
+        return false;
+    
+    json::Writer::Write(o, file);
+    file.close();
     
     return true;
 }
@@ -94,32 +148,33 @@ bool HullGenerator::Process()
         _Frame[i] = kFrameValueUnset;
     }
     
-    GenerateFrame(0, 0);
-    
-    // Debug
-
-    for (int y=0; y<_Height; y++)
+    for (int x=0; x<_Width; x++)
     {
-        for (int x=0; x<_Width; x++)
+        for (int y=0; y<_Height; y++)
         {
-            std::cout << ((GetFrame(x, y) == kFrameValueBorder) ? "X" : " ");
+            GenerateFrame(x, y);
         }
-        
-        std::cout << std::endl;
     }
     
-    // End Debug
+    if (_DebugMode)
+        DebugFrame(_DebugPath + "main.png");
     
     GenerateBorders();
-    
-    for (std::vector<std::vector<Vec2> >::iterator it = _Objects.begin(); it != _Objects.end(); ++it)
-    {
-        DebugBorder(*it);
-    }
     
     GenerateHulls();
     
     return true;
+}
+
+bool HullGenerator::IsTransparent(int x, int y)
+{
+    if (x<0 || y<0 || x>=_Width || y>=_Height)
+        return true;
+    
+    if (_Image[(y*_Width*4)+(x*4)+3] < 100)
+        return true;
+    
+    return false;
 }
 
 void HullGenerator::GenerateFrame(int x, int y)
@@ -129,26 +184,15 @@ void HullGenerator::GenerateFrame(int x, int y)
         return;
     }
     
-    if ((_Image[(y*_Width*4)+(x*4)+3] < 100))
+    if (IsTransparent(x, y))
     {
         SetFrame(x, y, kFrameValueEmpty);
-        GenerateFrame(x+1, y);
-        GenerateFrame(x, y+1);
-        GenerateFrame(x-1, y);
-        GenerateFrame(x, y-1);
     } else {
-        SetFrame(x, y, kFrameValueBorder);
-        
-        if (y == 0 || y == _Height-1)
+        if (IsTransparent(x-1, y) || IsTransparent(x, y-1) || IsTransparent(x, y+1) || IsTransparent(x+1, y))
         {
-            GenerateFrame(x-1, y);
-            GenerateFrame(x+1, y);
-        }
-        
-        if (x == 0 || x == _Width-1)
-        {
-            GenerateFrame(x, y-1);
-            GenerateFrame(x, y+1);
+            SetFrame(x, y, kFrameValueBorder);
+        } else {
+            SetFrame(x, y, kFrameValueImage);
         }
     }
 }
@@ -162,7 +206,25 @@ void HullGenerator::GenerateBorders()
             if (GetFrame(x, y) == kFrameValueBorder)
             {
                 AppendBorder(x, y);
+                
+                for (std::vector<Vec2>::iterator it = _Border.begin(); it != _Border.end(); ++it)
+                {
+                    *it = Vec2((*it)[0], _Height-1-(*it)[1]);
+                }
+                std::reverse(_Border.begin(), _Border.end());
+                
                 ProcessBorder(_Border);
+                _Border.clear();
+                
+                if (_DebugMode)
+                {
+                    char debugName[128];
+                    sprintf(debugName, "%s/frame_%lu.png", _DebugPath.c_str(), _Objects.size()-1);
+                    DebugFrame(debugName);
+                    
+                    sprintf(debugName, "%s/debug_%lu.png", _DebugPath.c_str(), _Objects.size()-1);
+                    DebugBorder(_Objects[_Objects.size()-1], debugName);
+                }
             }
         }
     }
@@ -183,89 +245,171 @@ bool HullGenerator::AppendBorder(int x, int y)
     if (AppendBorder(x+1, y))
         return true;
     
-    if (AppendBorder(x+1, y-1))
+    if (AppendBorder(x+1, y+1))
         return true;
     
-    if (AppendBorder(x, y-1))
-        return true;
-    
-    if (AppendBorder(x-1, y-1))
-        return true;
-    
-    if (AppendBorder(x-1, y))
+    if (AppendBorder(x, y+1))
         return true;
     
     if (AppendBorder(x-1, y+1))
         return true;
     
-    if (AppendBorder(x, y+1))
+    if (AppendBorder(x-1, y))
+        return true;
+    
+    if (AppendBorder(x-1, y-1))
+        return true;
+    
+    if (AppendBorder(x, y-1))
         return true;
 
-    if (AppendBorder(x+1, y+1))
+    if (AppendBorder(x+1, y-1))
         return true;
     
     return true;
 }
 
-void HullGenerator::DebugBorder(const std::vector<Vec2>& border)
+void HullGenerator::DebugBorder(const std::vector<Vec2>& border, const std::string& filename)
 {
+    std::vector<unsigned char> image;
+    std::vector<unsigned char> buffer;
+    
     for (int y=0; y<_Height; y++)
     {
         for (int x=0; x<_Width; x++)
         {
-            int i=0;
-            bool hasValue = false;
-            for (std::vector<Vec2>::const_iterator it = border.begin(); it != border.end(); ++it)
-            {
-                if ((*it)[0] == x && (*it)[1] == y)
-                {
-                    hasValue = true;
-                    break;
-                }
-                i++;
-            }
-            
-            char character[16];
-            sprintf(character, "%c", (char)('A' + (i%26)));
-            std::cout << (hasValue ? character : " ");
+            image.push_back(255);
+            image.push_back(255);
+            image.push_back(255);
+            image.push_back(255);
         }
-        
-        std::cout << std::endl;
     }
+    
+    for (int i=0; i<border.size(); i++)
+    {
+        Vec2 pos = border[i];
+        int offset = (pos[1]*_Width*4)+(pos[0]*4);
+        image[offset] = 0;
+        image[offset+1] = 0;
+        image[offset+2] = 0;
+    }
+    
+    LodePNG::Encoder encoder;
+    encoder.encode(buffer, image, _Width, _Height);
+    LodePNG::saveFile(buffer, filename);
+}
+
+void HullGenerator::DebugFrame(const std::string& filename)
+{
+    std::vector<unsigned char> image;
+    std::vector<unsigned char> buffer;
+    
+    for (int y=0; y<_Height; y++)
+    {
+        for (int x=0; x<_Width; x++)
+        {
+            char value;
+            
+            if (GetFrame(x, y) == kFrameValueBorder)
+                value = 0;
+            else if (GetFrame(x, y) == kFrameValueImage)
+                value = 230;
+            else
+                value = 255;
+            
+            image.push_back(value);
+            image.push_back(value);
+            image.push_back(value);
+            image.push_back(255);
+        }
+    }
+    
+    LodePNG::Encoder encoder;
+    encoder.encode(buffer, image, _Width, _Height);
+    LodePNG::saveFile(buffer, filename);
 }
 
 void HullGenerator::ProcessBorder(const std::vector<Vec2>& border)
 {
-    std::vector<Vec2> optimisedBorder;
+    std::vector<Vec2> optimisedBorder = border;
     
-    if (!border.size())
+    if (!optimisedBorder.size())
         return;
     
-    int lastIndex = 0;
-    for (int i=0; i<border.size(); i++)
+    for (int i=0; i<((int)optimisedBorder.size())-2;)
     {
-        Vec2 lastPosition = border[lastIndex];
-        Vec2 newPosition = border[i];
+        Vec2 a = optimisedBorder[i];
+        Vec2 b = optimisedBorder[i+1];
+        Vec2 c = optimisedBorder[i+2];
         
-        for (int j=lastIndex; j<i; j++)
+        float angle = acos(dot(norm(b-a), norm(b-c)));
+        float deg = (angle/M_PI)*180.f;
+
+        if (deg > 120.f)
         {
-            if (j-lastIndex > 1)
-            {
-                optimisedBorder.push_back(Vec2(lastPosition));
-                lastIndex = j;
-                break;
-            }
+            optimisedBorder.erase(optimisedBorder.begin() + (i+1));
+        } else {
+            i++;
         }
     }
     
-    _Border.clear();
+    for (int i=0; i<((int)optimisedBorder.size())-2;)
+    {
+        Vec2 a = optimisedBorder[i];
+        Vec2 b = optimisedBorder[i+1];
+        Vec2 c = optimisedBorder[i+2];
+        
+        if (len(a-b) < 5.f || len(b-c) < 5.f)
+        {
+            optimisedBorder.erase(optimisedBorder.begin() + (i+1));
+        } else {
+            i++;
+        }
+    }
+    
     
     _Objects.push_back(optimisedBorder);
 }
 
 void HullGenerator::GenerateHulls()
 {
-    
+    for (std::vector<std::vector<Vec2> >::iterator it = _Objects.begin(); it != _Objects.end(); ++it)
+    {
+        polydecomp::PolyDecomp::Polygon poly;
+        
+        std::vector<Vec2>& object = *it;
+        
+        for (std::vector<Vec2>::iterator it = object.begin(); it != object.end(); ++it)
+        {
+            poly.push_back(polydecomp::Point((*it)[0],(*it)[1]));
+        }
+        
+        polydecomp::PolyDecomp decomp;
+        std::vector<polydecomp::PolyDecomp::Polygon> polys = decomp.Decompose(poly);
+        
+        for (std::vector<polydecomp::PolyDecomp::Polygon>::iterator polyIt = polys.begin(); polyIt != polys.end(); ++polyIt)
+        {
+            std::vector<Vec2> hull;
+            Vec2 lastPoint(-1,-1);
+            for (polydecomp::PolyDecomp::Polygon::iterator pointIt = polyIt->begin(); pointIt != polyIt->end(); ++pointIt)
+            {
+                Vec2 currentPoint = Vec2(pointIt->x, pointIt->y);
+                if (lastPoint != currentPoint)
+                {
+                    hull.push_back(currentPoint);
+                    lastPoint = currentPoint;
+                }
+            }
+            _Hulls.push_back(hull);
+            
+            if (_DebugMode)
+            {
+                char debugName[128];
+                sprintf(debugName, "%s/hull_%lu.png", _DebugPath.c_str(), _Hulls.size()-1);
+                DebugBorder(_Hulls[_Hulls.size()-1], debugName);
+            }
+        }
+    }
 }
 
 HullGenerator::FrameValue HullGenerator::GetFrame(int x, int y)

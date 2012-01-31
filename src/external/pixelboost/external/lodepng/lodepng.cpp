@@ -362,7 +362,7 @@ static void string_set(char** out, const char* in)
 
 /* ////////////////////////////////////////////////////////////////////////// */
 
-unsigned LodePNG_read32bitInt(const unsigned char* buffer)
+static unsigned LodePNG_read32bitInt(const unsigned char* buffer)
 {
   return (buffer[0] << 24) | (buffer[1] << 16) | (buffer[2] << 8) | buffer[3];
 }
@@ -1423,7 +1423,7 @@ static unsigned countZeros(const unsigned char* data, size_t size, size_t pos)
   return max_count;
 }
 
-void updateHashChain(unsigned short* hashchain, int* hashhead, int* hashval,
+static void updateHashChain(unsigned short* hashchain, int* hashhead, int* hashval,
                      size_t pos, int hash, unsigned windowSize)
 {
   unsigned wpos = pos % windowSize;
@@ -2536,7 +2536,7 @@ unsigned LodePNG_InfoColor_canHaveAlpha(const LodePNG_InfoColor* info)
       || LodePNG_InfoColor_hasPaletteAlpha(info);
 }
 
-unsigned LodePNG_InfoColor_equal(const LodePNG_InfoColor* info1, const LodePNG_InfoColor* info2)
+static unsigned LodePNG_InfoColor_equal(const LodePNG_InfoColor* info1, const LodePNG_InfoColor* info2)
 {
   return info1->colorType == info2->colorType
       && info1->bitDepth  == info2->bitDepth; /*palette and color key not compared*/
@@ -2779,7 +2779,7 @@ unsigned LodePNG_InfoPng_copy(LodePNG_InfoPng* dest, const LodePNG_InfoPng* sour
   return error;
 }
 
-void LodePNG_InfoPng_swap(LodePNG_InfoPng* a, LodePNG_InfoPng* b)
+static void LodePNG_InfoPng_swap(LodePNG_InfoPng* a, LodePNG_InfoPng* b)
 {
   LodePNG_InfoPng temp = *a;
   *a = *b;
@@ -5470,7 +5470,7 @@ static unsigned isGreyScale(const unsigned char* image, unsigned w, unsigned h, 
 }
 
 /*Get RGBA8 color of pixel with index i (y * width + x) from the raw image with given color type.*/
-unsigned getPixelColorRGBA8(unsigned char *r, unsigned char *g, unsigned char *b, unsigned char *a,
+static unsigned getPixelColorRGBA8(unsigned char *r, unsigned char *g, unsigned char *b, unsigned char *a,
                             const unsigned char* in, size_t i, const LodePNG_InfoColor* info)
 {
   if(info->colorType == 0)
@@ -5701,7 +5701,7 @@ static unsigned can16BitBe8Bit(const unsigned char* image, unsigned w, unsigned 
 }
 
 /*Returns how many bits needed to represent given value (max 8 bit)*/
-unsigned getValueRequiredBits(unsigned char value)
+static unsigned getValueRequiredBits(unsigned char value)
 {
   if(value == 0 || value == 255) return 1;
   /*The scaling of 2-bit and 4-bit values uses multiples of 85 and 17*/
@@ -5773,7 +5773,7 @@ static unsigned addUnknownChunks(ucvector* out, unsigned char* data, size_t data
 #endif /*LODEPNG_COMPILE_UNKNOWN_CHUNKS*/
 
 /*updates values of info with a potentially smaller color model*/
-void doAutoChooseColor(LodePNG_InfoColor* infoOut,
+static void doAutoChooseColor(LodePNG_InfoColor* infoOut,
                        const unsigned char* image, unsigned w, unsigned h, LodePNG_InfoColor* infoIn)
 {
   size_t i;
