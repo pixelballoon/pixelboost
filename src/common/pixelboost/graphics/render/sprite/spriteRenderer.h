@@ -58,23 +58,23 @@ public:
     bool LoadSpriteSheet(const std::string& name, bool createMips=false);
     bool UnloadSpriteSheet(const std::string& name);
     
-    bool AttachToRenderer(RenderLayer* layer, const std::string& sheetName, const std::string& spriteName, Vec2 position, Vec3 rotation = Vec3(0.f, 0.f, 0.f), Vec2 scale = Vec2(1.f, 1.f), BlendMode blendMode = kBlendModeNormal, Vec4 crop = Vec4(0.f, 0.f, 1.f, 1.f));
+    bool AttachToRenderer(RenderLayer* layer, const std::string& spriteName, Vec2 position, Vec3 rotation = Vec3(0.f, 0.f, 0.f), Vec2 scale = Vec2(1.f, 1.f), BlendMode blendMode = kBlendModeNormal, Vec4 crop = Vec4(0.f, 0.f, 1.f, 1.f));
     
-    Sprite* GetSprite(const std::string& sheetName, const std::string& spriteName) const;
+    Sprite* GetSprite(const std::string& spriteName) const;
 		
 private:
-    std::shared_ptr<SpriteSheet> GetSpriteSheet(const std::string& spriteSheet) const;
-    
     void SetBlendMode(BlendMode blendMode);
     void RenderCurrentBuffer();
     
 	typedef std::vector<SpriteInstance> InstanceList;
     typedef std::map<RenderLayer*, InstanceList> InstanceListMap;
     
+    typedef std::map<std::string, Sprite*> SpriteMap;
     typedef std::map<std::string, std::shared_ptr<SpriteSheet> > SheetMap;
 	
 	InstanceListMap _Instances;
     
+    SpriteMap _Sprites;
 	SheetMap _SpriteSheets;
     
 private:
@@ -85,6 +85,8 @@ private:
     int _SpritesRendered;
     int _CurrentVertexBuffer;
     int _MaxSprites;
+    
+    friend class SpriteSheet;
 };
     
 }

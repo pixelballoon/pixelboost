@@ -3,6 +3,7 @@
 #include "pixelboost/graphics/device/texture.h"
 #include "pixelboost/graphics/helper/screenHelpers.h"
 #include "pixelboost/graphics/render/sprite/sprite.h"
+#include "pixelboost/graphics/render/sprite/spriteRenderer.h"
 #include "pixelboost/logic/game.h"
 
 using namespace pixelboost;
@@ -18,6 +19,11 @@ SpriteSheet::SpriteSheet()
 
 SpriteSheet::~SpriteSheet()
 {
+    for (SpriteMap::iterator it = _Sprites.begin(); it != _Sprites.end(); ++it)
+    {
+        Game::Instance()->GetSpriteRenderer()->_Sprites.erase(it->first);
+    }
+    
     GraphicsDevice::Instance()->DestroyTexture(_Texture);
 }
 
@@ -70,7 +76,9 @@ bool SpriteSheet::Load(const std::string& name, bool generateMips)
         
         sprite->_Rotated = rotated.Value();
         
-        _Sprites[name.substr(0, name.length()-4)] = sprite;
+        std::string spriteName = name.substr(0, name.length()-4);
+        _Sprites[spriteName] = sprite;
+        Game::Instance()->GetSpriteRenderer()->_Sprites[spriteName] = sprite;
     }
     
     _Texture = GraphicsDevice::Instance()->CreateTexture();

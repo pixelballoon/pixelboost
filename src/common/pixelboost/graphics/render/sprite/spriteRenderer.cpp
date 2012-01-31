@@ -199,9 +199,9 @@ bool SpriteRenderer::UnloadSpriteSheet(const std::string& name)
     return false;
 }
 
-bool SpriteRenderer::AttachToRenderer(RenderLayer* layer, const std::string& sheetName, const std::string& spriteName, Vec2 position, Vec3 rotation, Vec2 scale, BlendMode blendMode, Vec4 crop)
+bool SpriteRenderer::AttachToRenderer(RenderLayer* layer, const std::string& spriteName, Vec2 position, Vec3 rotation, Vec2 scale, BlendMode blendMode, Vec4 crop)
 {
-    Sprite* sprite = GetSprite(sheetName, spriteName);
+    Sprite* sprite = GetSprite(spriteName);
     
     if (!sprite)
         return false;
@@ -220,22 +220,12 @@ bool SpriteRenderer::AttachToRenderer(RenderLayer* layer, const std::string& she
     return true;
 }
     
-Sprite* SpriteRenderer::GetSprite(const std::string &sheetName, const std::string &spriteName) const
+Sprite* SpriteRenderer::GetSprite(const std::string& spriteName) const
 {
-    std::shared_ptr<SpriteSheet> sheet = GetSpriteSheet(sheetName);
+    SpriteMap::const_iterator it = _Sprites.find(spriteName);
     
-    if (!sheet)
+    if (it == _Sprites.end())
         return 0;
-    
-    return sheet->GetSprite(spriteName);
-}
-
-std::shared_ptr<SpriteSheet> SpriteRenderer::GetSpriteSheet(const std::string& spriteSheet) const
-{
-    SheetMap::const_iterator it = _SpriteSheets.find(spriteSheet);
-    
-    if (it == _SpriteSheets.end())
-        return std::shared_ptr<SpriteSheet>();
     
     return it->second;
 }
