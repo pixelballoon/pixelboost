@@ -17,11 +17,12 @@ public:
     bool Process();
     
 private:
-    bool IsTransparent(int x, int y);
+    int IsTransparent(int x, int y);
     void GenerateFrame(int x, int y);
     
     void GenerateBorders();
-    bool AppendBorder(int x, int y, bool forward);
+    bool CheckBorder(int x, int y, int angle);
+    bool AppendBorder(int startX, int startY, int x, int y, int angle, bool start);
     void ProcessBorder(const std::vector<Vec2>& border);
     void GenerateHulls();
     
@@ -176,15 +177,15 @@ bool HullGenerator::Process()
     return true;
 }
 
-bool HullGenerator::IsTransparent(int x, int y)
+int HullGenerator::IsTransparent(int x, int y)
 {
     if (x<0 || y<0 || x>=_Width || y>=_Height)
-        return true;
+        return 1;
     
     if (_Image[(y*_Width*4)+(x*4)+3] < 100)
-        return true;
+        return 1;
     
-    return false;
+    return 0;
 }
 
 void HullGenerator::GenerateFrame(int x, int y)
@@ -198,27 +199,30 @@ void HullGenerator::GenerateFrame(int x, int y)
     {
         SetFrame(x, y, kFrameValueEmpty);
     } else {
-        if (IsTransparent(x-1, y) || IsTransparent(x, y-1) || IsTransparent(x, y+1) || IsTransparent(x+1, y))
-        {
+        unsigned char border = IsTransparent(x-1, y-1) | IsTransparent(x, y-1)<<1 | IsTransparent(x+1, y-1)<<2 | IsTransparent(x-1, y)<<3 | IsTransparent(x+1, y)<<4 | IsTransparent(x-1, y+1)<<5 | IsTransparent(x, y+1)<<6 | IsTransparent(x+1, y+1)<<7;
+        
+        if (border & (1<<1 | 1<<3 | 1<<4 | 1<<6))
             SetFrame(x, y, kFrameValueBorder);
-        } else {
+        else
             SetFrame(x, y, kFrameValueImage);
-        }
     }
 }
 
 void HullGenerator::GenerateBorders()
 {
-    for (int y=0; y<_Height; y++)
+    for (int x=0; x<_Width; x++)
     {
-        for (int x=0; x<_Width; x++)
+        for (int y=0; y<_Height; y++)
         {
+        
             if (GetFrame(x, y) == kFrameValueBorder)
             {
-                AppendBorder(x, y, true);
+
+                AppendBorder(x, y, x, y, 0, true);
                 
                 for (std::vector<Vec2>::iterator it = _Border.begin(); it != _Border.end(); ++it)
                 {
+                    SetFrame((*it)[0], (*it)[1], kFrameValueEmpty);
                     *it = Vec2((*it)[0], _Height-1-(*it)[1]);
                 }
                 std::reverse(_Border.begin(), _Border.end());
@@ -232,82 +236,129 @@ void HullGenerator::GenerateBorders()
                     sprintf(debugName, "%s/frame_%lu.png", _DebugPath.c_str(), _Objects.size()-1);
                     DebugFrame(debugName);
                     
-                    sprintf(debugName, "%s/debug_%lu.png", _DebugPath.c_str(), _Objects.size()-1);
-                    DebugBorder(_Objects[_Objects.size()-1], debugName);
+                    if (_Objects.size())
+                    {
+                        sprintf(debugName, "%s/debug_%lu.png", _DebugPath.c_str(), _Objects.size()-1);
+                        DebugBorder(_Objects[_Objects.size()-1], debugName);
+                    }
                 }
             }
         }
     }
 }
 
-bool HullGenerator::AppendBorder(int x, int y, bool forward)
+bool HullGenerator::CheckBorder(int startX, int startY, int angle)
 {
+    int x, y;
+    
+    angle = (angle+8)%8;
+    
+    switch (angle)
+    {
+        case 0:
+            x = startX+1;
+            y = startY;
+            break;
+        case 1:
+            x = startX+1;
+            y = startY+1;
+            break;
+        case 2:
+            x = startX;
+            y = startY+1;
+            break;
+        case 3:
+            x = startX-1;
+            y = startY+1;
+            break;
+        case 4:
+            x = startX-1;
+            y = startY;
+            break;
+        case 5:
+            x = startX-1;
+            y = startY-1;
+            break;
+        case 6:
+            x = startX;
+            y = startY-1;
+            break;
+        case 7:
+            x = startX+1;
+            y = startY-1;
+            break;
+    }
+    
     if (x < 0 || y < 0 || x >= _Width || y >= _Height)
         return false;
     
     if (GetFrame(x, y) != kFrameValueBorder)
         return false;
-        
-    SetFrame(x, y, kFrameValueEmpty);
-    
-    if (forward)
-        _Border.push_back(Vec2(x, y));
-    else
-        _Border.insert(_Border.begin(), Vec2(x, y));
-    
-    bool foundBorder = false;
-    
-    if (!foundBorder && AppendBorder(x+1, y, forward))
-        foundBorder = true;
-    
-    if (!foundBorder && AppendBorder(x+1, y+1, forward))
-        foundBorder = true;
-    
-    if (!foundBorder && AppendBorder(x, y+1, forward))
-        foundBorder = true;
-    
-    if (!foundBorder && AppendBorder(x-1, y+1, forward))
-        foundBorder = true;
-    
-    if (!foundBorder && AppendBorder(x-1, y, forward))
-        foundBorder = true;
-    
-    if (!foundBorder && AppendBorder(x-1, y-1, forward))
-        foundBorder = true;
-    
-    if (!foundBorder && AppendBorder(x, y-1, forward))
-        foundBorder = true;    
-    
-    if (!foundBorder && AppendBorder(x+1, y-1, forward))    
-        foundBorder = true;
-    
-    foundBorder = false;
-    
-    if (!foundBorder && AppendBorder(x+1, y-1, !forward))    
-        foundBorder = true;
-    
-    if (!foundBorder && AppendBorder(x, y-1, !forward))
-        foundBorder = true; 
-    
-    if (!foundBorder && AppendBorder(x-1, y-1, !forward))
-        foundBorder = true;
-    
-    if (!foundBorder && AppendBorder(x-1, y, !forward))
-        foundBorder = true;
-    
-    if (!foundBorder && AppendBorder(x-1, y+1, !forward))
-        foundBorder = true;
-    
-    if (!foundBorder && AppendBorder(x, y+1, !forward))
-        foundBorder = true;
-
-    if (!foundBorder && AppendBorder(x+1, y+1, !forward))
-        foundBorder = true;
-    
-    if (!foundBorder && AppendBorder(x+1, y, !forward))
-        foundBorder = true;
     
     return true;
+}
+
+bool HullGenerator::AppendBorder(int startX, int startY, int x, int y, int angle, bool start)
+{
+    if (startX == x && startY == y && !start)
+        return true;
+    
+    _Border.push_back(Vec2(x, y));
+    
+    bool prevBorder = true;
+    for (int i=angle-4; i<angle+4; i++)
+    {
+        bool addBorder = false;
+
+        bool border = CheckBorder(x, y, i);
+        if (!prevBorder && border)
+            addBorder = true;
+        
+        prevBorder = border;
+        
+        // If there's no other option, go back to where we came from (for single pixel width lines)
+        if (i == angle+3 && !addBorder)
+        {
+            addBorder = true;
+            i = angle-4;
+        }
+
+        if (addBorder)
+        {
+            i = (i+8)%8;
+
+            switch (i)
+            {
+                case 0:
+                    return AppendBorder(startX, startY, x+1, y, i, false);
+                    
+                case 1:
+                    return AppendBorder(startX, startY, x+1, y+1, i, false);
+                
+                case 2:
+                    return AppendBorder(startX, startY, x, y+1, i, false);
+
+                case 3:
+                    return AppendBorder(startX, startY, x-1, y+1, i, false);
+                
+                case 4:
+                    return AppendBorder(startX, startY, x-1, y, i, false);
+                
+                case 5:
+                    return AppendBorder(startX, startY, x-1, y-1, i, false);
+                
+                case 6:
+                    return AppendBorder(startX, startY, x, y-1, i, false);
+                
+                case 7:
+                    return AppendBorder(startX, startY, x+1, y-1, i, false);
+            }
+            
+            return true;
+        }
+    }
+    
+    return false;
 }
 
 void HullGenerator::DebugBorder(const std::vector<Vec2>& border, const std::string& filename)
@@ -436,9 +487,9 @@ void HullGenerator::DebugFinal(const std::string& filename)
 }
 
 void HullGenerator::ProcessBorder(const std::vector<Vec2>& border)
-{
+{   
     std::vector<Vec2> optimisedBorder = border;
-    
+
     if (!optimisedBorder.size())
         return;
     
