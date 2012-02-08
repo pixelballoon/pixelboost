@@ -188,11 +188,35 @@ bool SpriteRenderer::LoadSpriteSheet(const std::string& name, bool createMips)
  
 bool SpriteRenderer::UnloadSpriteSheet(const std::string& name)
 {
-    SheetMap::iterator it = _SpriteSheets.find(name);
+    SheetMap::iterator sheetIt = _SpriteSheets.find(name);
     
-    if (it != _SpriteSheets.end())
+    if (sheetIt != _SpriteSheets.end())
     {
-        _SpriteSheets.erase(it);
+        for (InstanceListMap::iterator layerIt = _Instances.begin(); layerIt != _Instances.end(); ++layerIt)
+        {
+            for (InstanceList::iterator instanceIt = layerIt->second.begin(); instanceIt != layerIt->second.end();)
+            {
+                bool eraseSprite = false;
+                
+                for (SpriteSheet::SpriteMap::iterator spriteIt = sheetIt->second->_Sprites.begin(); spriteIt != sheetIt->second->_Sprites.end(); ++spriteIt)
+                {
+                    if (instanceIt->sprite == spriteIt->second)
+                    {
+                        eraseSprite = true;
+                        break;
+                    }
+                }
+                
+                if (eraseSprite)
+                {
+                    instanceIt = layerIt->second.erase(instanceIt);
+                } else {
+                    instanceIt++;
+                }
+            }
+        }
+        
+        _SpriteSheets.erase(sheetIt);
         return true;
     }
     

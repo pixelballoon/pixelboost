@@ -31,6 +31,8 @@ public:
 private:
     typedef std::map<std::string, Sprite*> SpriteMap;
     SpriteMap _Sprites;
+    
+    friend class SpriteRenderer;
 };
 
 class Sprite
