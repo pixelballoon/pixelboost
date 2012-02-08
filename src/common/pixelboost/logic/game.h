@@ -44,6 +44,8 @@ public:
     float GetTotalTime();
     
     virtual bool IsLandscape();
+    
+    virtual void OnMemoryWarning();
 	
 	virtual void Update(float time);
 	virtual void Render();

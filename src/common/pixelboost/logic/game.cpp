@@ -132,6 +132,11 @@ bool Game::IsLandscape()
 {
     return false;
 }
+    
+void Game::OnMemoryWarning()
+{
+    
+}
 
 void Game::Update(float time)
 {
