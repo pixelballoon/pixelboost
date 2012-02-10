@@ -68,6 +68,9 @@ void FontRenderer::AddCharacter(Vertex_PXYZ_UV* buffer, const Font::Character& c
 
 void FontRenderer::LoadFont(const std::string& name)
 {
+    if (_Fonts.find(name) != _Fonts.end())
+        return;
+    
     Font* font = new Font();
     
     std::string fileRoot = FileHelpers::GetRootPath();
