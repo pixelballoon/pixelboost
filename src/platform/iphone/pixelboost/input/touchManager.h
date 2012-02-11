@@ -72,8 +72,9 @@ private:
 	void OnTouchUpdate(Touch* touch);
 	void OnTouchEnd(Touch* touch);
 	
-    bool _IsTouchActive;
+	bool _IsTouchActive;
 	TouchHandlerList _Handlers;
+	TouchHandlerList _HandlersToAdd;
 	std::map<void*, Touch*> _Touches;
 };
     

@@ -67,7 +67,7 @@ void TouchManager::AddTouchHandler(TouchHandler* handler)
     {
         it->second = true;
     } else {
-        _Handlers[handler] = true;
+        _HandlersToAdd[handler] = true;
     }
 }
     
@@ -75,6 +75,12 @@ void TouchManager::RemoveTouchHandler(TouchHandler* handler)
 {
     TouchHandlerList::iterator it = _Handlers.find(handler);
     if (it != _Handlers.end())
+    {
+        it->second = false;
+    }
+    
+    it = _HandlersToAdd.find(handler);
+    if (it != _HandlersToAdd.end())
     {
         it->second = false;
     }
@@ -173,6 +179,15 @@ void TouchManager::UpdateTouchHandlers()
             ++it;
         }
     }
+    
+    for (TouchHandlerList::iterator it = _HandlersToAdd.begin(); it != _HandlersToAdd.end(); ++it)
+    {
+        if (it->second == true)
+        {
+            _Handlers[it->first] = it->second;
+        }
+    }
+    _HandlersToAdd.clear();
 }
 
 }
