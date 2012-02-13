@@ -106,8 +106,8 @@ bool SvgParser::ParseLayer(const std::string& src, const std::string& dst)
         } else {
             image["sx"] = json::Number(1.f);
             image["sy"] = json::Number(1.f);
-            image["tx"] = json::Number(0.f);
-            image["ty"] = json::Number(0.f);
+            image["tx"] = json::Number(width/2.f);
+            image["ty"] = json::Number(_Height/2.f - height/2.f);
         }
         
         layerImages.Insert(image);
