@@ -91,14 +91,23 @@ bool SvgParser::ParseLayer(const std::string& src, const std::string& dst)
             matrix = matrix.substr(matrix.find_first_of('(')+1, matrix.find_last_of(')')-matrix.find_first_of('(')-1);
 
             std::vector<std::string> items = split(matrix, ' ');
-            image["sx"] = json::Number(atof(items[0].c_str()));
-            image["sy"] = json::Number(atof(items[3].c_str()));
+            
+            float sx = atof(items[0].c_str());
+            image["sx"] = json::Number(sx);
+            
+            float sy = atof(items[3].c_str());
+            image["sy"] = json::Number(sy);
             
             float tx = atof(items[4].c_str()) / 32.f;
-            image["tx"] = json::Number(tx + width/2.f);
+            image["tx"] = json::Number(tx + (width*sx)/2.f);
             
             float ty = atof(items[5].c_str()) / 32.f;
-            image["ty"] = json::Number(_Height/2.f - ty - height/2.f);
+            image["ty"] = json::Number(_Height/2.f - ty - (height*sy)/2.f);
+        } else {
+            image["sx"] = json::Number(1.f);
+            image["sy"] = json::Number(1.f);
+            image["tx"] = json::Number(0.f);
+            image["ty"] = json::Number(0.f);
         }
         
         layerImages.Insert(image);
