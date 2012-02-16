@@ -35,6 +35,7 @@ public:
 	~SpriteInstance();
     
 public:
+    Vec4 color;
     Vec4 crop;
     Vec2 position;
     float rotation;
@@ -58,7 +59,7 @@ public:
     bool LoadSpriteSheet(const std::string& name, bool createMips=false);
     bool UnloadSpriteSheet(const std::string& name);
     
-    bool AttachToRenderer(RenderLayer* layer, const std::string& spriteName, Vec2 position, Vec3 rotation = Vec3(0.f, 0.f, 0.f), Vec2 scale = Vec2(1.f, 1.f), BlendMode blendMode = kBlendModeNormal, Vec4 crop = Vec4(0.f, 0.f, 1.f, 1.f));
+    bool AttachToRenderer(RenderLayer* layer, const std::string& spriteName, Vec2 position, Vec3 rotation = Vec3(0.f, 0.f, 0.f), Vec2 scale = Vec2(1.f, 1.f), BlendMode blendMode = kBlendModeNormal, Vec4 color = Vec4(1.f, 1.f, 1.f, 1.f), Vec4 crop = Vec4(0.f, 0.f, 1.f, 1.f));
     
     Sprite* GetSprite(const std::string& spriteName) const;
 		

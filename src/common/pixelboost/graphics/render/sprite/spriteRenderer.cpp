@@ -24,7 +24,7 @@ SpriteRenderer::SpriteRenderer(int maxSpritesPerLayer, int numVertexBuffers)
     
     for (int i=0; i<numVertexBuffers; i++)
     {
-        VertexBuffer* vertexBuffer = pixelboost::GraphicsDevice::Instance()->CreateVertexBuffer(pixelboost::kBufferFormatDynamic, pixelboost::kVertexFormat_P_XYZ_UV, _MaxSprites*4);
+        VertexBuffer* vertexBuffer = pixelboost::GraphicsDevice::Instance()->CreateVertexBuffer(pixelboost::kBufferFormatDynamic, pixelboost::kVertexFormat_P_XYZ_RGBA_UV, _MaxSprites*4);
         
         _VertexBuffers.push_back(vertexBuffer);
     }
@@ -73,9 +73,10 @@ void SpriteRenderer::Render(RenderLayer* layer)
         
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
     
     VertexBuffer* vertexBuffer = 0;
-    Vertex_PXYZ_UV* bufferData = 0;
+    Vertex_PXYZ_RGBA_UV* bufferData = 0;
     
     BlendMode blendMode = kBlendModeUnknown;
     Texture* texture = 0;
@@ -109,13 +110,30 @@ void SpriteRenderer::Render(RenderLayer* layer)
             currentVertexBuffer = _CurrentVertexBuffer;
             vertexBuffer = _VertexBuffers[_CurrentVertexBuffer];
             vertexBuffer->Lock();
-            bufferData = static_cast<Vertex_PXYZ_UV*>(vertexBuffer->GetData());
+            bufferData = static_cast<Vertex_PXYZ_RGBA_UV*>(vertexBuffer->GetData());
         }
         
         bufferData[0].position[2] = 0.f;
         bufferData[1].position[2] = 0.f;
         bufferData[2].position[2] = 0.f;
         bufferData[3].position[2] = 0.f;
+        
+        bufferData[0].color[0] = it->color[0];
+        bufferData[0].color[1] = it->color[1];
+        bufferData[0].color[2] = it->color[2];
+        bufferData[0].color[3] = it->color[3];
+        bufferData[1].color[0] = it->color[0];
+        bufferData[1].color[1] = it->color[1];
+        bufferData[1].color[2] = it->color[2];
+        bufferData[1].color[3] = it->color[3];
+        bufferData[2].color[0] = it->color[0];
+        bufferData[2].color[1] = it->color[1];
+        bufferData[2].color[2] = it->color[2];
+        bufferData[2].color[3] = it->color[3];
+        bufferData[3].color[0] = it->color[0];
+        bufferData[3].color[1] = it->color[1];
+        bufferData[3].color[2] = it->color[2];
+        bufferData[3].color[3] = it->color[3];
         
         float cosRot = cos(it->rotation);
         float sinRot = sin(it->rotation);
@@ -162,6 +180,7 @@ void SpriteRenderer::Render(RenderLayer* layer)
     
     RenderCurrentBuffer();
     
+    glDisableClientState(GL_COLOR_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     
@@ -223,7 +242,7 @@ bool SpriteRenderer::UnloadSpriteSheet(const std::string& name)
     return false;
 }
 
-bool SpriteRenderer::AttachToRenderer(RenderLayer* layer, const std::string& spriteName, Vec2 position, Vec3 rotation, Vec2 scale, BlendMode blendMode, Vec4 crop)
+bool SpriteRenderer::AttachToRenderer(RenderLayer* layer, const std::string& spriteName, Vec2 position, Vec3 rotation, Vec2 scale, BlendMode blendMode, Vec4 color, Vec4 crop)
 {
     Sprite* sprite = GetSprite(spriteName);
     
@@ -236,6 +255,7 @@ bool SpriteRenderer::AttachToRenderer(RenderLayer* layer, const std::string& spr
     instance.position = position - Vec2((0.5 - (crop[0]+crop[2])/2.f) * sprite->_Dimension[0], (0.5 - (crop[1]+crop[3])/2.f) * sprite->_Dimension[1]);
     instance.rotation = ((-rotation[2]-90.f) / 180.f) * M_PI;
     instance.scale = sprite->_Dimension * Vec2(crop[2]-crop[0], crop[3]-crop[1]) * scale * 0.5; // Scale now for later optimisation
+    instance.color = color;
     
     instance.blendMode = blendMode;
     
