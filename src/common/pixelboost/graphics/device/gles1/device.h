@@ -24,6 +24,8 @@ public:
     virtual ~GraphicsDeviceGLES1();
     
 public:
+    virtual unsigned char* CaptureRenderBuffer();
+    
     virtual VertexBuffer* CreateVertexBuffer(BufferFormat bufferFormat, VertexFormat vertexFormat, int length);
     virtual void DestroyVertexBuffer(VertexBuffer* buffer);
     virtual void BindVertexBuffer(VertexBuffer* buffer);

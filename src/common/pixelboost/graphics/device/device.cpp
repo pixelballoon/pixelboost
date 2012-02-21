@@ -20,6 +20,11 @@ GraphicsDevice* GraphicsDevice::Instance()
     static GraphicsDevice* instance = GraphicsDevice::Create();
     return instance;
 }
+
+unsigned char* GraphicsDevice::CaptureRenderBuffer()
+{
+    return 0;
+}
     
 VertexBuffer* GraphicsDevice::CreateVertexBuffer(BufferFormat bufferFormat, VertexFormat vertexFormat, int length)
 {
