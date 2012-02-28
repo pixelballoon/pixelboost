@@ -222,7 +222,7 @@ void FontRenderer::Render(RenderLayer* layer)
             }
         }
         
-        _VertexBuffer->Unlock();
+        _VertexBuffer->Unlock(it->_String.length()*4);
         
         _VertexBuffer->Bind();
         
