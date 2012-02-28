@@ -71,10 +71,10 @@ bool SpriteSheet::Load(const std::string& name, bool generateMips)
         
         sprite->_Dimension = Vec2(sizeX.Value(), sizeY.Value()) / ppu;
         
-        sprite->_Position = Vec2(posX.Value()/width.Value(), posY.Value()/height.Value());
-        sprite->_Size = Vec2(sizeX.Value()/width.Value(), sizeY.Value()/height.Value());
-        
         sprite->_Rotated = rotated.Value();
+        
+        sprite->_Position = Vec2(posX.Value()/width.Value(), posY.Value()/height.Value());
+        sprite->_Size = sprite->_Rotated ? Vec2(sizeX.Value()/height.Value(), sizeY.Value()/width.Value()) : Vec2(sizeX.Value()/width.Value(), sizeY.Value()/height.Value());
         
         std::string spriteName = name.substr(0, name.length()-4);
         _Sprites[spriteName] = sprite;
