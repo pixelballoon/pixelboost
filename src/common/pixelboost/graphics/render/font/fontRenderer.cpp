@@ -247,7 +247,11 @@ void FontRenderer::Render(RenderLayer* layer)
                 break;
         }
         
+        glColor4f(it->_Color[0], it->_Color[1], it->_Color[2], it->_Color[3]);
+        
         GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, it->_String.length()*6);
+        
+        glColor4f(1, 1, 1, 1);
         
         glPopMatrix();
     }
