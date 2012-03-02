@@ -132,11 +132,11 @@ void ParticleEmitter::Update(float time)
         (*it)->Update(time);
     }
     
-    if (_Particles.size() < _MaxParticles)
+    _EmitCount += _Config->particlesPerUpdate;
+    
+    while (_EmitCount >= 1.f)
     {
-        _EmitCount += _Config->particlesPerUpdate;
-        
-        while (_EmitCount >= 1.f)
+        if (_Particles.size() < _MaxParticles)
         {
             Particle particle(_Config);
             particle.position[0] = _Position[0] + _Config->minPosOffset[0] + (_Config->maxPosOffset[0]-_Config->minPosOffset[0]) * (float)rand()/(float)RAND_MAX;
@@ -150,9 +150,9 @@ void ParticleEmitter::Update(float time)
             particle.totalLife = _Config->life;
             
             _Particles.push_back(particle);
-            
-            _EmitCount -= 1.f;
         }
+        
+        _EmitCount -= 1.f;
     }
     
     for (ParticleList::iterator it = _Particles.begin(); it != _Particles.end(); )
@@ -181,8 +181,6 @@ void ParticleEmitter::Render()
     _VertexBuffer->Lock();
     
     pixelboost::Vertex_PXYZ_RGBA_UV* vertexBuffer = static_cast<pixelboost::Vertex_PXYZ_RGBA_UV*>(_VertexBuffer->GetData());
-    
-    std::stable_sort(_Particles.begin(), _Particles.end(), &ParticleEmitter::ParticleSortPredicate);
     
     if (vertexBuffer)
     {
@@ -266,12 +264,9 @@ void ParticleEmitter::Render()
             
             sprite->_Sheet->_Texture->Bind();
         }
-    }
+
+        _VertexBuffer->Unlock(_Particles.size()*4);
     
-    _VertexBuffer->Unlock(_Particles.size()*4);
-    
-    if (vertexBuffer && _Particles.size())
-    {
         _IndexBuffer->Bind();
         _VertexBuffer->Bind();
         
@@ -337,11 +332,6 @@ ParticleEmitter::ParticleList& ParticleEmitter::GetParticles()
 {
     _BufferDirty = true;
     return _Particles;
-}
-
-bool ParticleEmitter::ParticleSortPredicate(const Particle& a, const Particle& b)
-{
-    return true;
 }
 
 ParticleModifier::ParticleModifier(ParticleEmitter* emitter)
