@@ -13,6 +13,11 @@ Camera::Camera()
 {
 
 }
+
+Camera::~Camera()
+{
+    
+}
     
 OrthographicCamera::OrthographicCamera(Vec2 position, Vec2 scale)
     : Position(position)

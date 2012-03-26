@@ -9,6 +9,8 @@ class Camera
 {
 public:
 	Camera();
+    virtual ~Camera();
+    
 	virtual void ApplyTransform() = 0;
 };
     
