@@ -34,9 +34,16 @@ void PrimitiveRenderer::Render(RenderLayer* layer)
         return;
     
     glDisable(GL_DEPTH_TEST);
+    glDisable(GL_TEXTURE_2D);
+    
     glEnable(GL_BLEND);
     glEnableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
+    
+    //glBindBuffer(GL_ARRAY_BUFFER, 0);
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
@@ -67,7 +74,7 @@ void PrimitiveRenderer::Render(RenderLayer* layer)
                     glVertices[i+1] = sin(angle);
                 }
                 
-                glVertexPointer(2, GL_FLOAT, 0, glVertices);
+                glVertexPointer(2, GL_FLOAT, 0, glVertices);                
                 
                 glDrawArrays(GL_LINE_LOOP, 0, it->segments);
                 
@@ -89,8 +96,11 @@ void PrimitiveRenderer::Render(RenderLayer* layer)
                 
                 GLfloat glVertices[8] = { tl[0], br[1], tl[0], tl[1], br[0], tl[1], br[0], br[1] };
                 glVertexPointer(2, GL_FLOAT, 0, glVertices);
+                
                 if (it->solid)
+                {
                     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+                }
                 else
                     glDrawArrays(GL_LINE_LOOP, 0, 4);
                 

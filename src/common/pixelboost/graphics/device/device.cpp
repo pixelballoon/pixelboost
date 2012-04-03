@@ -36,9 +36,14 @@ void GraphicsDevice::DestroyVertexBuffer(VertexBuffer* buffer)
     delete buffer;
 }
 
-void GraphicsDevice::BindVertexBuffer(VertexBuffer* buffer)
+VertexBuffer* GraphicsDevice::GetBoundVertexBuffer()
 {
-    
+    return 0;
+}
+
+VertexBuffer* GraphicsDevice::BindVertexBuffer(VertexBuffer* buffer)
+{
+    return 0;
 }
     
 void GraphicsDevice::LockVertexBuffer(VertexBuffer* buffer)
@@ -61,9 +66,14 @@ void GraphicsDevice::DestroyIndexBuffer(IndexBuffer* buffer)
     delete buffer;
 }
 
-void GraphicsDevice::BindIndexBuffer(IndexBuffer* buffer)
+IndexBuffer* GraphicsDevice::GetBoundIndexBuffer()
 {
-    
+    return 0;
+}
+
+IndexBuffer* GraphicsDevice::BindIndexBuffer(IndexBuffer* buffer)
+{
+    return 0;
 }
 
 void GraphicsDevice::LockIndexBuffer(IndexBuffer* vertexBuffer)

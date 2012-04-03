@@ -31,6 +31,9 @@ GraphicsDevice* GraphicsDevice::Create()
 GraphicsDeviceGLES1::GraphicsDeviceGLES1()
 {
     _State = new DeviceState();
+    
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 GraphicsDeviceGLES1::~GraphicsDeviceGLES1()
@@ -57,9 +60,9 @@ VertexBuffer* GraphicsDeviceGLES1::CreateVertexBuffer(BufferFormat bufferFormat,
     
     GLuint buffer = 0;
     glGenBuffers(1, &buffer);
-
     
     _VertexBuffers[vertexBuffer] = buffer;
+    _VertexReverseBuffers[buffer] = vertexBuffer;
     
     return vertexBuffer;
 }
@@ -69,19 +72,34 @@ void GraphicsDeviceGLES1::DestroyVertexBuffer(VertexBuffer* vertexBuffer)
     GLuint buffer = _VertexBuffers[vertexBuffer];
     glDeleteBuffers(1, &buffer);
     
+    _VertexBuffers.erase(vertexBuffer);
+    _VertexReverseBuffers.erase(buffer);
+    
     GraphicsDevice::DestroyVertexBuffer(vertexBuffer);
 }
 
-void GraphicsDeviceGLES1::BindVertexBuffer(VertexBuffer* vertexBuffer)
+VertexBuffer* GraphicsDeviceGLES1::GetBoundVertexBuffer()
+{
+    VertexReverseMap::iterator it = _VertexReverseBuffers.find(_State->boundVertexBuffer);
+    
+    if (it != _VertexReverseBuffers.end())
+        return it->second;
+    
+    return 0;
+}
+
+VertexBuffer* GraphicsDeviceGLES1::BindVertexBuffer(VertexBuffer* vertexBuffer)
 {
     GLuint vertexBufferId = vertexBuffer ? _VertexBuffers[vertexBuffer] : 0;
+    
+    int previousBinding = _State->boundVertexBuffer;
     
     if (vertexBufferId != _State->boundVertexBuffer)
     {
         glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
-
+        
         _State->boundVertexBuffer = vertexBufferId;
-
+        
         if (vertexBuffer)
         {
             switch (vertexBuffer->GetVertexFormat())
@@ -124,8 +142,15 @@ void GraphicsDeviceGLES1::BindVertexBuffer(VertexBuffer* vertexBuffer)
                     break;
                 }
             }
-         }
-     }
+        }
+    }
+    
+    VertexReverseMap::iterator it = _VertexReverseBuffers.find(previousBinding);
+    
+    if (it != _VertexReverseBuffers.end())
+        return it->second;
+    
+    return 0;
 }
 
 void GraphicsDeviceGLES1::LockVertexBuffer(VertexBuffer* vertexBuffer)
@@ -143,7 +168,7 @@ void GraphicsDeviceGLES1::UnlockVertexBuffer(VertexBuffer* vertexBuffer, int num
     
     GLenum bufferType = vertexBuffer->GetBufferFormat() == kBufferFormatStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW;
     
-    BindVertexBuffer(vertexBuffer);
+    VertexBuffer* previousBuffer = BindVertexBuffer(vertexBuffer);
     switch (vertexBuffer->GetVertexFormat())
     {
         case kVertexFormat_P_XY_RGBA:
@@ -172,6 +197,7 @@ void GraphicsDeviceGLES1::UnlockVertexBuffer(VertexBuffer* vertexBuffer, int num
             break;
         }
     }
+    BindVertexBuffer(previousBuffer);
 }
     
 IndexBuffer* GraphicsDeviceGLES1::CreateIndexBuffer(BufferFormat bufferFormat, int length)
@@ -182,6 +208,7 @@ IndexBuffer* GraphicsDeviceGLES1::CreateIndexBuffer(BufferFormat bufferFormat, i
     glGenBuffers(1, &buffer);
     
     _IndexBuffers[indexBuffer] = buffer;
+    _IndexReverseBuffers[buffer] = indexBuffer;
     
     return indexBuffer;
 }
@@ -191,18 +218,40 @@ void GraphicsDeviceGLES1::DestroyIndexBuffer(IndexBuffer* indexBuffer)
     GLuint buffer = _IndexBuffers[indexBuffer];
     glDeleteBuffers(1, &buffer);
     
+    _IndexBuffers.erase(indexBuffer);
+    _IndexReverseBuffers.erase(buffer);
+    
     GraphicsDevice::DestroyIndexBuffer(indexBuffer);
 }
 
-void GraphicsDeviceGLES1::BindIndexBuffer(IndexBuffer* indexBuffer)
+IndexBuffer* GraphicsDeviceGLES1::GetBoundIndexBuffer()
+{
+    IndexReverseMap::iterator it = _IndexReverseBuffers.find(_State->boundIndexBuffer);
+    
+    if (it != _IndexReverseBuffers.end())
+        return it->second;
+    
+    return 0;
+}
+
+IndexBuffer* GraphicsDeviceGLES1::BindIndexBuffer(IndexBuffer* indexBuffer)
 {
     GLuint indexBufferId = indexBuffer ? _IndexBuffers[indexBuffer] : 0;
+    
+    int previousBuffer = _State->boundIndexBuffer;
     
     if (indexBufferId != _State->boundIndexBuffer)
     {
         _State->boundIndexBuffer = indexBufferId;
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferId);
     }
+    
+    IndexReverseMap::iterator it = _IndexReverseBuffers.find(previousBuffer);
+    
+    if (it != _IndexReverseBuffers.end())
+        return it->second;
+    
+    return 0;
 }
 
 void GraphicsDeviceGLES1::LockIndexBuffer(IndexBuffer* indexBuffer)
@@ -218,8 +267,9 @@ void GraphicsDeviceGLES1::UnlockIndexBuffer(IndexBuffer* indexBuffer, int numEle
     if (numElements == -1)
         numElements = indexBuffer->GetLength();
     
-    BindIndexBuffer(indexBuffer);
+    IndexBuffer* previousBuffer = BindIndexBuffer(indexBuffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * numElements, indexBuffer->GetData(), indexBuffer->GetBufferFormat() == kBufferFormatStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
+    BindIndexBuffer(previousBuffer);
 }
     
 Texture* GraphicsDeviceGLES1::CreateTexture()
