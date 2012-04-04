@@ -8,6 +8,7 @@
 #include <OpenGLES/ES1/glext.h>
 
 #include <map>
+#include <vector>
 
 namespace pixelboost
 {
@@ -44,13 +45,18 @@ public:
     
     virtual Texture* CreateTexture();
     virtual void DestroyTexture(Texture* texture);
-    virtual void BindTexture(Texture* texture);
+    virtual Texture* GetBoundTexture();
+    virtual Texture* BindTexture(Texture* texture);
     
 public:
     virtual void DrawElements(ElementType elementType, int num);
     
 private:
     DeviceState* _State;
+    
+    typedef std::vector<Texture*> TextureList;
+    
+    TextureList _Textures;
     
     typedef std::map<IndexBuffer*, GLuint> IndexMap;
     typedef std::map<VertexBuffer*, GLuint> VertexMap;

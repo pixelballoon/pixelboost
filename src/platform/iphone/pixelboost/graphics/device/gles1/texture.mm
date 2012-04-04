@@ -28,9 +28,9 @@ void pixelboost::TextureGLES1::Load(const std::string& path, bool createMips)
 	CGContextDrawImage(textureContext, CGRectMake(0.0, 0.0, (CGFloat)width, (CGFloat)height), cgImage);
 	CGContextRelease(textureContext);
 	
-	GLuint handle;
-	glGenTextures(1, &handle);
-	glBindTexture(GL_TEXTURE_2D, handle);
+	glGenTextures(1, &_Texture);
+
+    Texture* previousTexture = _Device->BindTexture(this);
     
     if (createMips)
     {
@@ -49,12 +49,11 @@ void pixelboost::TextureGLES1::Load(const std::string& path, bool createMips)
     
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
 	
-	glBindTexture(GL_TEXTURE_2D, 0);
+    _Device->BindTexture(previousTexture);
+    
 	free(textureData);
 	
 	[image release];
-    
-    _Texture = handle;
 }
 
 #endif

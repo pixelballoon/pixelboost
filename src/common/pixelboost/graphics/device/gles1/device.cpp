@@ -31,9 +31,6 @@ GraphicsDevice* GraphicsDevice::Create()
 GraphicsDeviceGLES1::GraphicsDeviceGLES1()
 {
     _State = new DeviceState();
-    
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 GraphicsDeviceGLES1::~GraphicsDeviceGLES1()
@@ -238,7 +235,7 @@ IndexBuffer* GraphicsDeviceGLES1::BindIndexBuffer(IndexBuffer* indexBuffer)
 {
     GLuint indexBufferId = indexBuffer ? _IndexBuffers[indexBuffer] : 0;
     
-    int previousBuffer = _State->boundIndexBuffer;
+    IndexBuffer* previousBuffer = GetBoundIndexBuffer();
     
     if (indexBufferId != _State->boundIndexBuffer)
     {
@@ -246,12 +243,7 @@ IndexBuffer* GraphicsDeviceGLES1::BindIndexBuffer(IndexBuffer* indexBuffer)
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferId);
     }
     
-    IndexReverseMap::iterator it = _IndexReverseBuffers.find(previousBuffer);
-    
-    if (it != _IndexReverseBuffers.end())
-        return it->second;
-    
-    return 0;
+    return previousBuffer;
 }
 
 void GraphicsDeviceGLES1::LockIndexBuffer(IndexBuffer* indexBuffer)
@@ -274,29 +266,41 @@ void GraphicsDeviceGLES1::UnlockIndexBuffer(IndexBuffer* indexBuffer, int numEle
     
 Texture* GraphicsDeviceGLES1::CreateTexture()
 {
-    return new TextureGLES1(this);
+    TextureGLES1* texture = new TextureGLES1(this);
+    _Textures.push_back(texture);
+    return texture;
 }
 
 void GraphicsDeviceGLES1::DestroyTexture(Texture* texture)
 {
     GraphicsDevice::DestroyTexture(texture);
 }
+
+Texture* GraphicsDeviceGLES1::GetBoundTexture()
+{
+    for (TextureList::iterator it = _Textures.begin(); it != _Textures.end(); ++it)
+    {
+        if (static_cast<TextureGLES1*>(*it)->_Texture == _State->boundTexture)
+            return *it;
+    }
     
-void GraphicsDeviceGLES1::BindTexture(Texture* texture)
+    return 0;
+}
+    
+Texture* GraphicsDeviceGLES1::BindTexture(Texture* texture)
 {
     GLuint textureId = texture ? static_cast<TextureGLES1*>(texture)->_Texture : 0;
+    
+    Texture* previousTexture = GetBoundTexture();
     
     if (textureId != _State->boundTexture)
     {
         _State->boundTexture = textureId;
         glBindTexture(GL_TEXTURE_2D, textureId);
     }
+    
+    return previousTexture;
 }
-enum ElementType
-{
-    kElementLines,
-    kElementTriangles,
-};
 
 void GraphicsDeviceGLES1::DrawElements(ElementType elementType, int num)
 {
