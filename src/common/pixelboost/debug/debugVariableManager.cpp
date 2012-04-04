@@ -8,8 +8,7 @@
 #include "pixelboost/file/fileHelpers.h"
 #include "pixelboost/network/networkMessage.h"
 
-namespace pixelboost
-{
+using namespace pixelboost;
     
 DebugVariableManager* DebugVariableManager::_Instance = 0;
 
@@ -83,11 +82,11 @@ bool DebugVariableManager::OnHttpRequest(HttpServer::RequestType type, const std
             break;
     }
     
-    if (command == "getVariables" && type == kRequestTypeGet)
+    if (command == "variables" && type == kRequestTypeGet)
     {
         OnGetVariables(connection);
         return true;
-    } else if (command == "getVariable" && type == kRequestTypeGet)
+    } else if (command == "variable" && type == kRequestTypeGet)
     {
         if (arguments.size())
         {
@@ -99,7 +98,7 @@ bool DebugVariableManager::OnHttpRequest(HttpServer::RequestType type, const std
                 return true;
             }
         }
-    } else if (command == "setVariable" && type == kRequestTypePut)
+    } else if (command == "variable" && type == kRequestTypePut)
     {
         if (arguments.size() && data != "")
         {
@@ -293,5 +292,3 @@ void DebugVariableManager::PopulateVariable(DebugVariable* variable, json::Objec
 }
     
 #endif
-
-}

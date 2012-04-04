@@ -16,7 +16,7 @@
       
       	switch (type)
       	{
-      		case 'bool':
+          case 'bool':
             data = '{ "value" : ' + $("#"+name+"_button").val() + ' }';
             break;
               	
@@ -36,11 +36,11 @@
       
         $.ajax({
           type: 'PUT',
-          url: ajaxPrefix+'setVariable/'+name+'/',
+          url: ajaxPrefix+'variable/'+name+'/',
           contentType: 'application/json',
           data: data,
           complete : function() {
-            $.getJSON(ajaxPrefix+'getVariable/'+name+'/', function(data) {
+            $.getJSON(ajaxPrefix+'variable/'+name+'/', function(data) {
               if (data["modified"])
               {
                 $('#'+name+'_title').addClass('modified');
@@ -57,7 +57,7 @@
       }
     
       $(function(){
-        $.getJSON(ajaxPrefix+'getVariables/', function(data) {
+        $.getJSON(ajaxPrefix+'variables/', function(data) {
           var items = [];
 
           var strings = [];
