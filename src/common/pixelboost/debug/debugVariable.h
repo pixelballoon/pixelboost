@@ -30,6 +30,7 @@ public:
     virtual VariableType GetVariableType() = 0;
     
     virtual bool HasVariableChanged();
+    virtual void Reset();
     
 protected:
     void OnVariableChanged();
@@ -54,6 +55,7 @@ public:
     operator bool() const;
     
     virtual bool HasVariableChanged();
+    virtual void Reset();
     
 private:
     bool _Original;
@@ -75,6 +77,7 @@ public:
     operator const char*() const;
     
     virtual bool HasVariableChanged();
+    virtual void Reset();
     
 private:
     std::string _Original;
@@ -95,6 +98,7 @@ public:
     operator int() const;
     
     virtual bool HasVariableChanged();
+    virtual void Reset();
     
 private:
     int _Original;
@@ -117,6 +121,7 @@ public:
     operator float() const;
     
     virtual bool HasVariableChanged();
+    virtual void Reset();
     
 private:
     float _Original;
@@ -147,6 +152,7 @@ public:
     void A(float a);
     
     virtual bool HasVariableChanged();
+    virtual void Reset();
     
 private:
     float _OriginalR;

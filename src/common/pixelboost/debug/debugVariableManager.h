@@ -35,6 +35,7 @@ private:
     void OnGetVariables(HttpConnection& connection);
     void OnGetVariable(HttpConnection& connection, DebugVariable* variable);
     void OnSetVariable(HttpConnection& connection, DebugVariable* variable, json::Object& params);
+    void OnResetVariable(HttpConnection& connection, DebugVariable* variable);
     
     void PopulateVariable(DebugVariable* variable, json::Object& o);
     

@@ -114,6 +114,18 @@ bool DebugVariableManager::OnHttpRequest(HttpServer::RequestType type, const std
                 return true;
             }
         }
+    } else if (command == "variable" && type == kRequestTypeDelete)
+    {
+        if (arguments.size() && data != "")
+        {
+            DebugVariableManager::VariableMap::const_iterator it = _Variables.find(atoi(arguments[0].c_str()));
+            
+            if (it != _Variables.end())
+            {
+                OnResetVariable(connection, it->second);
+                return true;
+            }
+        }
     }
     
     if (type == kRequestTypeGet)
@@ -137,6 +149,26 @@ void DebugVariableManager::OnGetVariables(HttpConnection& connection)
     
     std::stringstream contentStream;
     json::Writer::Write(variables, contentStream);
+    
+    std::string content = contentStream.str();
+    
+    connection.AddHeader("Content-Type", "application/json;charset=utf-8");
+    
+    char contentLength[64];
+    sprintf(contentLength, "%d", static_cast<int>(content.length()));
+    connection.AddHeader("Content-Length", contentLength);
+    connection.SetContent(content);
+    connection.Send();
+}
+    
+void DebugVariableManager::OnGetVariable(HttpConnection& connection, DebugVariable* variable)
+{
+    json::Object json;
+    
+    PopulateVariable(variable, json);
+    
+    std::stringstream contentStream;
+    json::Writer::Write(json, contentStream);
     
     std::string content = contentStream.str();
     
@@ -198,25 +230,10 @@ void DebugVariableManager::OnSetVariable(HttpConnection& connection, DebugVariab
             break;
     }
 }
-
-void DebugVariableManager::OnGetVariable(HttpConnection& connection, DebugVariable* variable)
+    
+void DebugVariableManager::OnResetVariable(HttpConnection& connection, DebugVariable* variable)
 {
-    json::Object json;
-    
-    PopulateVariable(variable, json);
-    
-    std::stringstream contentStream;
-    json::Writer::Write(json, contentStream);
-    
-    std::string content = contentStream.str();
-    
-    connection.AddHeader("Content-Type", "application/json;charset=utf-8");
-    
-    char contentLength[64];
-    sprintf(contentLength, "%d", static_cast<int>(content.length()));
-    connection.AddHeader("Content-Length", contentLength);
-    connection.SetContent(content);
-    connection.Send();
+    variable->Reset();
 }
     
 void DebugVariableManager::PopulateVariable(DebugVariable* variable, json::Object& o)

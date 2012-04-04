@@ -39,6 +39,10 @@ bool DebugVariable::HasVariableChanged()
     return false;
 }
     
+void DebugVariable::Reset()
+{
+}
+    
 void DebugVariable::OnVariableChanged()
 {
 }
@@ -71,6 +75,11 @@ DebugBool::operator bool() const
 bool DebugBool::HasVariableChanged()
 {
     return _Original != _Value;
+}
+
+void DebugBool::Reset()
+{
+    _Value = _Original;
 }
     
 DebugString::DebugString(const char* name, const char* value)
@@ -106,6 +115,11 @@ bool DebugString::HasVariableChanged()
 {
     return _Original != _Value;
 }
+    
+void DebugString::Reset()
+{
+    _Value = _Original;
+}
 
 DebugInteger::DebugInteger(const char* name, int value, int min, int max)
     : DebugVariable(name)
@@ -138,6 +152,11 @@ bool DebugInteger::HasVariableChanged()
 {
     return _Original != _Value;
 }
+    
+void DebugInteger::Reset()
+{
+    _Value = _Original;
+}
 
 DebugFloat::DebugFloat(const char* name, float value, float min, float max)
     : DebugVariable(name)
@@ -169,6 +188,11 @@ DebugFloat::operator float() const
 bool DebugFloat::HasVariableChanged()
 {
     return _Original != _Value;
+}
+    
+void DebugFloat::Reset()
+{
+    _Value = _Original;
 }
     
 DebugColor::DebugColor(const char* name, float r, float g, float b, float a)
@@ -246,6 +270,14 @@ void DebugColor::A(float a)
 bool DebugColor::HasVariableChanged()
 {
     return _OriginalR != _R || _OriginalG != _G || _OriginalB != _B || _OriginalA != _A;
+}
+    
+void DebugColor::Reset()
+{
+    _R = _OriginalR;
+    _G = _OriginalG;
+    _B = _OriginalB;
+    _A = _OriginalA;
 }
     
 DebugFunction::DebugFunction(const char* name, void(*callback)(void*))
