@@ -10,6 +10,19 @@
       //var ajaxPrefix = 'http://127.0.0.1:9091/'; // For development
       var ajaxPrefix = '/'; // For deployment
       
+      function resetVariable(name)
+      {
+        $.ajax({
+          type: 'DELETE',
+          url: ajaxPrefix+'variable/'+name+'/',
+          complete : function() {
+            $('#'+name+'_title').removeClass('modified');
+            $('#'+name+'_reset').hide();
+            // TODO: Reset variable value
+          }
+        });
+      }
+      
       function sendVariable(type, name)
       {
         var data = "{}";
@@ -114,7 +127,8 @@
           
           $.each(data, function(key, val) {
             $("#"+val["id"]+"_reset").button(
-              {icons: {primary: "ui-icon-pencil"}, text: false}).val(val.value ? "true" : "false").change(function() {
+              {icons: {primary: "ui-icon-pencil"}, text: false}).val(val.value ? "true" : "false").click(function() {
+                resetVariable(data[key]["id"]);
               });
             
             if (val["modified"])

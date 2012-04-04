@@ -116,7 +116,7 @@ bool DebugVariableManager::OnHttpRequest(HttpServer::RequestType type, const std
         }
     } else if (command == "variable" && type == kRequestTypeDelete)
     {
-        if (arguments.size() && data != "")
+        if (arguments.size())
         {
             DebugVariableManager::VariableMap::const_iterator it = _Variables.find(atoi(arguments[0].c_str()));
             
@@ -234,6 +234,23 @@ void DebugVariableManager::OnSetVariable(HttpConnection& connection, DebugVariab
 void DebugVariableManager::OnResetVariable(HttpConnection& connection, DebugVariable* variable)
 {
     variable->Reset();
+    
+    json::Object json;
+    
+    PopulateVariable(variable, json);
+    
+    std::stringstream contentStream;
+    json::Writer::Write(json, contentStream);
+    
+    std::string content = contentStream.str();
+    
+    connection.AddHeader("Content-Type", "application/json;charset=utf-8");
+    
+    char contentLength[64];
+    sprintf(contentLength, "%d", static_cast<int>(content.length()));
+    connection.AddHeader("Content-Length", contentLength);
+    connection.SetContent(content);
+    connection.Send();
 }
     
 void DebugVariableManager::PopulateVariable(DebugVariable* variable, json::Object& o)
