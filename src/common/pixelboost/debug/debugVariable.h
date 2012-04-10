@@ -282,10 +282,10 @@ public:
 
 #else
 
-#define DEFINE_DEBUG_STRING(name, value, location) const char* name=value
-#define DEFINE_DEBUG_BOOL(name, value, location) bool name=value;
-#define DEFINE_DEBUG_INTEGER(name, value, location, min, max) int name=value
-#define DEFINE_DEBUG_FLOAT(name, value, location, min, max) float name=value
+#define DEFINE_DEBUG_STRING(name, location, value) const char* name=value
+#define DEFINE_DEBUG_BOOL(name, location, value) bool name=value;
+#define DEFINE_DEBUG_INTEGER(name, location, value, min, max) int name=value
+#define DEFINE_DEBUG_FLOAT(name, location, value, min, max) float name=value
 #define DEFINE_DEBUG_COLOR(name, location, r, g, b, a) pixelboost::DebugColor name(location, r, g, b, a)
 #define DEFINE_DEBUG_FUNCTION(name, location, callback) pixelboost::DebugFunction name()
 
