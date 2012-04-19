@@ -1,3 +1,5 @@
+#ifndef PIXELBOOST_DISABLE_BOX2D
+
 #include "pixelboost/data/json/reader.h"
 #include "pixelboost/file/fileHelpers.h"
 #include "pixelboost/physics/helpers.h"
@@ -72,3 +74,5 @@ b2Body* Box2DHelpers::CreateBodyFromDefinition(b2World* world, const FixtureDefi
     
     return body;
 }
+
+#endif
