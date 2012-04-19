@@ -1,3 +1,5 @@
+#ifndef PIXELBOOST_DISABLE_GRAPHICS
+
 #include <fstream>
 #include <sstream>
 
@@ -369,3 +371,5 @@ Texture* ModelRenderer::GetTexture(const std::string& textureName)
     
     return it->second;   
 }
+
+#endif

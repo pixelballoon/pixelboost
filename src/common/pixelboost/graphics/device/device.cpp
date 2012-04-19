@@ -1,3 +1,5 @@
+#ifndef PIXELBOOST_DISABLE_GRAPHICS
+
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/indexBuffer.h"
 #include "pixelboost/graphics/device/texture.h"
@@ -70,3 +72,5 @@ void GraphicsDevice::DestroyTexture(Texture* texture)
 {
     delete texture;
 }
+
+#endif

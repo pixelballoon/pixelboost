@@ -1,3 +1,5 @@
+#ifndef PIXELBOOST_DISABLE_GRAPHICS
+
 #ifdef PIXELBOOST_PLATFORM_OSX
 
 #include "pixelboost/graphics/helper/screenHelpers.h"
@@ -55,5 +57,7 @@ float GetDpu()
 }
     
 }
+
+#endif
 
 #endif

@@ -1,3 +1,5 @@
+#ifndef PIXELBOOST_DISABLE_GRAPHICS
+
 #ifdef PIXELBOOST_PLATFORM_OSX
 
 #include "pixelboost/graphics/camera/camera.h"
@@ -23,7 +25,7 @@ Vec2 Touch::GetScreenPosition()
 	return position;
 }
 
-Vec2 Touch::GetWorldPosition(Camera* camera)
+Vec2 Touch::GetWorldPosition(OrthographicCamera* camera)
 {
 	Vec2 position = _Position;
     
@@ -158,5 +160,7 @@ void TouchManager::ClearTouchHandlers()
 }
 
 }
+
+#endif
 
 #endif

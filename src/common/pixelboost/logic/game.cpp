@@ -26,10 +26,9 @@ Game::Game(void* viewController)
 {
     _Instance = this;
 
+#ifndef PIXELBOOST_DISABLE_GRAPHICS
     _TouchManager = new TouchManager();
     
-    _GameCenter = new GameCenter();
-
     _Renderer = new Renderer();
     _CustomRenderer = new CustomRenderer();
     _ModelRenderer  = new ModelRenderer();
@@ -37,8 +36,10 @@ Game::Game(void* viewController)
     _PrimitiveRenderer = new PrimitiveRenderer();
     _SpriteRenderer = new SpriteRenderer();
     _FontRenderer = new FontRenderer();
+#endif
     
 #ifndef PIXELBOOST_DISABLE_GAMECENTER
+    _GameCenter = new GameCenter();
     _GameCenter->Connect();
 #endif
 }
@@ -47,15 +48,21 @@ Game::~Game()
 {
     _Instance = 0;
     
+#ifndef PIXELBOOST_DISABLE_GAMECENTER
+    delete _GameCenter;
+#endif
+    
+#ifndef PIXELBOOST_DISABLE_GRAPHICS
     delete _CustomRenderer;
     delete _FontRenderer;
-    delete _GameCenter;
     delete _ModelRenderer;
     delete _ParticleRenderer;
     delete _PrimitiveRenderer;
     delete _Renderer;
     delete _SpriteRenderer;
+    
     delete _TouchManager;
+#endif
 }
 
 Game* Game::Instance()
@@ -143,7 +150,9 @@ void Game::Update(float time)
     _GameTime += time;
     _TotalTime += time;
     
+#ifndef PIXELBOOST_DISABLE_GRAPHICS
     _Renderer->Update(time);
+#endif
     
 #ifndef PIXELBOOST_DISABLE_SOUND
     SoundManager::Instance()->Update(time);
@@ -152,7 +161,9 @@ void Game::Update(float time)
 
 void Game::Render()
 {
+#ifndef PIXELBOOST_DISABLE_GRAPHICS
     _Renderer->Render();
+#endif
 }
 
 void* Game::GetViewController()

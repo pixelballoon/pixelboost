@@ -1,3 +1,5 @@
+#ifndef PIXELBOOST_DISABLE_GRAPHICS
+
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
 
@@ -98,3 +100,5 @@ void VertexBuffer::Bind()
 {
     _Device->BindVertexBuffer(this);
 }
+
+#endif

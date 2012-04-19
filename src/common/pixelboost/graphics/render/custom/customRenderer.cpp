@@ -1,3 +1,5 @@
+#ifndef PIXELBOOST_DISABLE_GRAPHICS
+
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/render/custom/customRenderer.h"
 
@@ -43,3 +45,5 @@ void CustomRenderer::AttachItem(RenderLayer* layer, CustomRendererItem* item)
 }
     
 }
+
+#endif

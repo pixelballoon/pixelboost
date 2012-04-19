@@ -1,3 +1,5 @@
+#ifndef PIXELBOOST_DISABLE_GRAPHICS
+
 #include "pixelboost/data/json/reader.h"
 #include "pixelboost/file/fileHelpers.h"
 #include "pixelboost/graphics/device/texture.h"
@@ -101,3 +103,5 @@ Vec4 Sprite::GetUV()
 {
     return Vec4(0, 0, 1, 1);
 }
+
+#endif

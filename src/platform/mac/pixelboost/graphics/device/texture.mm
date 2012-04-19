@@ -1,3 +1,5 @@
+#ifndef PIXELBOOST_DISABLE_GRAPHICS
+
 #ifdef PIXELBOOST_PLATFORM_OSX
 
 #import <AppKit/AppKit.h>
@@ -43,5 +45,7 @@ GLuint LoadTexture(const std::string& path)
 }
 
 }
+
+#endif
 
 #endif

@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef PIXELBOOST_DISABLE_GRAPHICS
+
 #ifdef PIXELBOOST_PLATFORM_OSX
 
 #include "pixelboost/math/maths.h"
@@ -10,7 +12,7 @@
 namespace pixelboost
 {
 
-class Camera;
+class OrthographicCamera;
 class TouchHandler;
 class TouchManager;
 
@@ -18,7 +20,7 @@ class Touch
 {
 public:
 	Vec2 GetScreenPosition();
-	Vec2 GetWorldPosition(Camera* camera);
+	Vec2 GetWorldPosition(OrthographicCamera* camera);
 	
 private:
 	enum State {
@@ -79,5 +81,7 @@ private:
 };
     
 }
+
+#endif
 
 #endif

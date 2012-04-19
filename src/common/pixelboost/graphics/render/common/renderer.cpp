@@ -1,3 +1,5 @@
+#ifndef PIXELBOOST_DISABLE_GRAPHICS
+
 #include <algorithm>
 #include <set>
 
@@ -89,3 +91,5 @@ bool Renderer::LayerSortPredicate(const RenderLayer* a, const RenderLayer* b)
 {
     return a->_Depth < b->_Depth;
 }
+
+#endif

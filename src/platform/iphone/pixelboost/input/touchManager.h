@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef PIXELBOOST_DISABLE_GRAPHICS
+
 #ifdef PIXELBOOST_PLATFORM_IOS
 
 #include "pixelboost/math/maths.h"
@@ -79,5 +81,7 @@ private:
 };
     
 }
+
+#endif
 
 #endif

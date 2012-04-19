@@ -1,3 +1,5 @@
+#ifndef PIXELBOOST_DISABLE_GRAPHICS
+
 #pragma once
 
 #include <map>
@@ -35,3 +37,5 @@ private:
 };
     
 }
+
+#endif

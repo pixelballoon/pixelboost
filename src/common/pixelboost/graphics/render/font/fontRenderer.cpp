@@ -1,3 +1,5 @@
+#ifndef PIXELBOOST_DISABLE_GRAPHICS
+
 #include "pixelboost/file/fileHelpers.h"
 
 #include "pixelboost/graphics/device/device.h"
@@ -309,3 +311,5 @@ void FontRenderer::SplitString(const std::string& string, char seperator, std::v
         output.push_back(item);
     }
 }
+
+#endif

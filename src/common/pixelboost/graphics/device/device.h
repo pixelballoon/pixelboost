@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef PIXELBOOST_DISABLE_GRAPHICS
+
 #include "pixelboost/graphics/device/bufferFormats.h"
 
 namespace pixelboost
@@ -63,4 +65,6 @@ public:
     #define PIXELBOOST_GRAPHICS_OPENGL
     #define PIXELBOOST_GRAPHICS_PREMULTIPLIED_ALPHA
     #include <OpenGL/gl.h>
+#endif
+
 #endif

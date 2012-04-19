@@ -1,3 +1,5 @@
+#ifndef PIXELBOOST_DISABLE_GRAPHICS
+
 #include "pixelboost/graphics/render/common/irenderer.h"
 #include "pixelboost/graphics/render/common/renderer.h"
 
@@ -17,3 +19,5 @@ int IRenderer::GetId()
 {
     return _Id;
 }
+
+#endif

@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef PIXELBOOST_DISABLE_GRAPHICS
+
 #include <map>
 #include <vector>
 
@@ -54,3 +56,5 @@ private:
 };
 
 }
+
+#endif
