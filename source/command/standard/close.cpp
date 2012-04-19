@@ -1,0 +1,27 @@
+#include <string>
+
+#include "command/standard/file.h"
+#include "project/project.h"
+#include "core.h"
+
+using namespace pixeleditor;
+
+Command* CloseCommand::Create()
+{
+    return new CloseCommand();
+}
+
+std::string CloseCommand::GetStaticName()
+{
+    return "close";
+}
+
+std::string CloseCommand::GetName()
+{
+    return CloseCommand::GetStaticName();
+}
+
+bool CloseCommand::Do()
+{
+    return Core::Instance()->GetProject()->Close();
+}
