@@ -18,4 +18,9 @@
     [self.webView setMainFrameURL:@"http://localhost:9090"];
 }
 
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender
+{
+    return YES;
+}
+
 @end
