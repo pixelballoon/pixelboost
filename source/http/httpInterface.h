@@ -37,6 +37,7 @@ namespace pixeleditor
         
         virtual bool OnHttpRequest(RequestType type, const std::string& uri, const std::string& query, const std::string& data, pixelboost::HttpConnection& connection);
         
+        bool OnSave(pixelboost::HttpConnection& connection);
         bool OnCreateRecord(pixelboost::HttpConnection& connection, const std::string& name, const std::string& type);
         bool OnCreateEntity(pixelboost::HttpConnection& connection, Uid recordId, const std::string& type);
         

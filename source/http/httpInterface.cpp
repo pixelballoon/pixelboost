@@ -137,6 +137,9 @@ bool HttpInterface::OnHttpRequest(HttpServer::RequestType type, const std::strin
         {
             replied = OnCreateRecord(connection, queryArguments["name"], queryArguments["type"]);
         }
+    } else if (command == "save" && type == kRequestTypePut)
+    {
+        OnSave(connection);
     }
     
     if (replied == true)
@@ -149,6 +152,12 @@ bool HttpInterface::OnHttpRequest(HttpServer::RequestType type, const std::strin
         return false; // No over-ride, default to finding html
     else
         return true;
+}
+
+bool HttpInterface::OnSave(pixelboost::HttpConnection& connection)
+{
+    Core::Instance()->GetCommandManager()->Exec("save");
+    return true;
 }
 
 bool HttpInterface::OnCreateRecord(pixelboost::HttpConnection& connection, const std::string& name, const std::string& type)
