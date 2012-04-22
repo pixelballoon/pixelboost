@@ -52,9 +52,15 @@ bool Project::Open(const std::string& directory)
     
     _Location = directory;
     
-    OpenConfig(directory + "project.prj");
+    if (_Location.length() == 0)
+        return false;
     
-    if (!_Schema->Open(directory + "schema/"))
+    if (_Location[_Location.length()-1] != '/')
+        _Location += "/";
+    
+    OpenConfig(_Location + "project.prj");
+    
+    if (!_Schema->Open(_Location + "schema/"))
         return false;
       
     _IsOpen = true;
@@ -62,7 +68,7 @@ bool Project::Open(const std::string& directory)
     projectOpened(this);
     
     std::vector<std::string> files;
-    GetDirectoryListing(directory + "records/", files);
+    GetDirectoryListing(_Location + "records/", files);
     
     for (std::vector<std::string>::iterator it = files.begin(); it != files.end(); ++it)
     {
@@ -72,7 +78,7 @@ bool Project::Open(const std::string& directory)
         if (it->length() < 4 || it->substr(it->length()-4, 4) != ".txt")
             continue;
         
-        LoadRecord(directory + "records/" + *it);
+        LoadRecord(_Location + "records/" + *it);
     }
     
     return true;
