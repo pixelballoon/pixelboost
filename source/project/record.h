@@ -15,12 +15,13 @@ namespace pixeleditor
 class Entity;
 class Project;
 class Schema;
+class SchemaRecord;
 
 class Record : public Struct
 {
 public:
     Record(Project* project);
-    Record(Project* project, const std::string& name);
+    Record(Project* project, const SchemaRecord* type, const std::string& name);
     virtual ~Record();
     
     bool Open(const std::string& filename);

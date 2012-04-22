@@ -400,6 +400,16 @@ const SchemaStruct* Schema::GetStructByName(const std::string& name) const
     return 0;
 }
 
+const SchemaRecord* Schema::GetRecordByName(const std::string& name) const
+{
+    RecordMap::const_iterator it = _Records.find(name);
+    
+    if (it != _Records.end())
+        return it->second;
+    
+    return 0;
+}
+
 const SchemaEntity* Schema::GetEntityByName(const std::string& name) const
 {
     EntityMap::const_iterator it = _Entities.find(name);

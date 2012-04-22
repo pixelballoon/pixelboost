@@ -4,6 +4,7 @@
 #include "project/entity.h"
 #include "project/record.h"
 #include "project/project.h"
+#include "project/schema.h"
 
 #include "pixelboost/data/json/reader.h"
 #include "pixelboost/data/json/writer.h"
@@ -18,8 +19,8 @@ Record::Record(Project* project)
     
 }
 
-Record::Record(Project* project, const std::string& name)
-    : Struct(project)
+Record::Record(Project* project, const SchemaRecord* type, const std::string& name)
+    : Struct(project, type)
     , _IsOpen(true)
 {
     SetName(name);
@@ -124,7 +125,7 @@ bool Record::Export()
     sprintf(cmd, "mkdir -p %s", outputDir.c_str());
     system(cmd);
     
-    std::string location = outputDir + GetName() + ".lpd";
+    std::string location = outputDir + GetName() + ".pbr";
     
     json::Object record;
     

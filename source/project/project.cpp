@@ -251,12 +251,14 @@ const Project::RecordMap& Project::GetRecords() const
     return _Records;
 }
 
-bool Project::AddRecord(const std::string& name)
+bool Project::AddRecord(const std::string& name, const std::string& type)
 {
     if (GetRecordByName(name))
         return false;
     
-    Record* record = new Record(this, name);
+    const SchemaRecord* schemaRecord = GetSchema()->GetRecordByName(type);
+    
+    Record* record = new Record(this, schemaRecord, name);
     
     _Records[record->GetUid()] = record;
     

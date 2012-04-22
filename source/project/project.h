@@ -55,7 +55,7 @@ public:
     typedef std::map<Uid, Record*> RecordMap;
     
     const RecordMap& GetRecords() const;
-    bool AddRecord(const std::string& name);
+    bool AddRecord(const std::string& name, const std::string& type);
     bool LoadRecord(const std::string& filename);
     bool RemoveRecord(const std::string& name, bool erase=true);    
     
