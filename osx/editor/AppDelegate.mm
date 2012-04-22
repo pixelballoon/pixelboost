@@ -8,7 +8,7 @@
 @synthesize window = _window;
 @synthesize webView = _webView;
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+- (void)applicationWillFinishLaunching:(NSNotification *)notification
 {
     _Core = new pixeleditor::Core();
     
@@ -19,13 +19,37 @@
     [preferences setCacheModel:WebCacheModelDocumentBrowser];
     [preferences setPrivateBrowsingEnabled:true];
     [self.webView setPreferences:preferences];
-    
+}
+
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+{
     [self.webView setMainFrameURL:@"http://localhost:9090"];
 }
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender
 {
     return YES;
+}
+
+- (IBAction)open:(id)sender
+{
+    NSOpenPanel* openPanel = [[NSOpenPanel alloc] init];
+    [openPanel setCanChooseFiles:false];
+    [openPanel setCanChooseDirectories:true];
+    
+    if ([openPanel runModal] == NSFileHandlingPanelOKButton)
+    {
+        [self application:nil openFile:[[openPanel directoryURL] path]];
+        [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[openPanel directoryURL]];
+    }    
+}
+
+- (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename
+{
+    if (_Core)
+        _Core->GetCommandManager()->Exec("open", [filename UTF8String]);
+    [self.webView reload:self];
+    return true;
 }
 
 @end

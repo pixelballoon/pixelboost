@@ -15,5 +15,8 @@ namespace pixeleditor
 @property (assign) IBOutlet WebView *webView;
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender;
+- (IBAction)open:(id)sender;
+
+- (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename;
 
 @end
