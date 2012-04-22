@@ -9,6 +9,7 @@
 
 namespace json
 {
+    class Array;
     class Object;
 }
 
@@ -19,6 +20,9 @@ namespace pixelboost
 
 namespace pixeleditor
 {
+    class SchemaProperty;
+    class SchemaStruct;
+    
     class HttpInterface : public pixelboost::HttpServer
     {
     public:
@@ -33,8 +37,17 @@ namespace pixeleditor
         
         virtual bool OnHttpRequest(RequestType type, const std::string& uri, const std::string& query, const std::string& data, pixelboost::HttpConnection& connection);
         
+        bool OnCreateRecord(pixelboost::HttpConnection& connection, const std::string& name, const std::string& type);
+        bool OnCreateEntity(pixelboost::HttpConnection& connection, Uid recordId, const std::string& type);
+        
         bool OnGetRecords(pixelboost::HttpConnection& connection);
         bool OnGetEntities(pixelboost::HttpConnection& connection, Uid record);
+
+        bool OnGetSchema(pixelboost::HttpConnection& connection);
+        bool OnGetSchema(pixelboost::HttpConnection& connection, const std::string& item);
+        
+        void InsertSchemaItem(json::Array& array, SchemaStruct* schemaItem);
+        void ExportProperty(json::Object& property, const std::string& name, const SchemaProperty* schemaProp);
         
         friend class DebugVariable;
     };    
