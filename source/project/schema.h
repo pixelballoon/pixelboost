@@ -225,15 +225,16 @@ private:
 class SchemaPropertyArray : public SchemaProperty
 {
 public:
-    SchemaPropertyArray(SchemaItem* parent, const std::string& type, const std::string& name);
+    SchemaPropertyArray(SchemaItem* parent, const std::string& type, const std::string& name, SchemaProperty* schemaProperty);
     virtual ~SchemaPropertyArray();
     
     virtual SchemaPropertyType GetPropertyType() const;
     
-    const SchemaPropertyStruct* GetSchemaStruct() const;
+public:
+    const SchemaProperty* GetSchemaProperty() const;
     
 private:
-    SchemaPropertyStruct* _Struct;
+    SchemaProperty* _Property;
 };
     
 class SchemaPropertyPointer : public SchemaProperty

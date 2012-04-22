@@ -187,7 +187,12 @@ const SchemaProperty* SchemaStruct::FindPropertyByPath(const std::string& path) 
         
         if (propertyIt != schemaStruct->_Properties.end())
         {
-            SchemaProperty* property = propertyIt->second;
+            const SchemaProperty* property = propertyIt->second;
+            
+            if (property->GetPropertyType() == SchemaProperty::kSchemaPropertyArray)
+            {
+                property = static_cast<const SchemaPropertyArray*>(property)->GetSchemaProperty();
+            }
             
             if (property->GetPropertyType() == SchemaProperty::kSchemaPropertyAtom ||
                 property->GetPropertyType() == SchemaProperty::kSchemaPropertyPointer)
@@ -198,11 +203,6 @@ const SchemaProperty* SchemaStruct::FindPropertyByPath(const std::string& path) 
             {
                 schemaStruct = static_cast<const SchemaPropertyStruct*>(property)->GetSchemaStruct();
             }
-            else if (property->GetPropertyType() == SchemaProperty::kSchemaPropertyArray)
-            {
-                schemaStruct = static_cast<const SchemaPropertyArray*>(property)->GetSchemaStruct()->GetSchemaStruct();
-            }
-                
         } else {
             return 0;
         }
@@ -466,10 +466,10 @@ SchemaPropertyAtom::SchemaAtomType SchemaPropertyAtom::GetAtomType() const
     return _AtomType;
 }
 
-SchemaPropertyArray::SchemaPropertyArray(SchemaItem* parent, const std::string& type, const std::string& name)
+SchemaPropertyArray::SchemaPropertyArray(SchemaItem* parent, const std::string& type, const std::string& name, SchemaProperty* schemaProperty)
     : SchemaProperty(parent, name)
 {
-    _Struct = new SchemaPropertyStruct(this, type, "");
+    _Property = schemaProperty;
 }
     
 SchemaPropertyArray::~SchemaPropertyArray()
@@ -482,9 +482,9 @@ SchemaProperty::SchemaPropertyType SchemaPropertyArray::GetPropertyType() const
     return kSchemaPropertyArray;    
 }
     
-const SchemaPropertyStruct* SchemaPropertyArray::GetSchemaStruct() const
+const SchemaProperty* SchemaPropertyArray::GetSchemaProperty() const
 {
-    return _Struct;
+    return _Property;
 }
 
 SchemaPropertyStruct::SchemaPropertyStruct(SchemaItem* parent, const std::string& type, const std::string& name)

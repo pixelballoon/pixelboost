@@ -350,26 +350,20 @@ SchemaProperty* ParseProperty(SchemaItem* parent, std::vector<Token>& tokens, si
     
     counter++;
     
+    bool isArray = false;
     SchemaProperty::SchemaPropertyType propertyType = SchemaProperty::kSchemaPropertyAtom;
     
     if (tokens[counter].type != Token::kTokenVariable)
     {
         if (tokens[counter].type == Token::kTokenLeftSquare && tokens[counter+1].type == Token::kTokenRightSquare)
         {
-            propertyType = SchemaProperty::kSchemaPropertyArray;
+            isArray = true;
             counter += 2;
-        } else {
-            switch (tokens[counter].type)
-            {
-                case Token::kTokenStar:
-                    propertyType = SchemaProperty::kSchemaPropertyPointer;
-                    break;
-                    
-                default:
-                    // TODO: Error (token type invalid..)
-                    break;
-            }
-            
+        }
+        
+        if (tokens[counter].type == Token::kTokenStar)
+        {
+            propertyType = SchemaProperty::kSchemaPropertyPointer;
             counter++;
         }
     }
@@ -391,23 +385,32 @@ SchemaProperty* ParseProperty(SchemaItem* parent, std::vector<Token>& tokens, si
     
     counter++;
     
+    SchemaProperty* schemaProperty = 0;
+    
     switch (propertyType)
     {
         case SchemaProperty::kSchemaPropertyAtom:
-            return new SchemaPropertyAtom(parent, typeToken.data, nameToken.data);
-            
-        case SchemaProperty::kSchemaPropertyArray:
-            return new SchemaPropertyArray(parent, typeToken.data, nameToken.data);
+            schemaProperty = new SchemaPropertyAtom(parent, typeToken.data, nameToken.data);
+            break;
             
         case SchemaProperty::kSchemaPropertyStruct:
-            return new SchemaPropertyStruct(parent, typeToken.data, nameToken.data);
+            schemaProperty = new SchemaPropertyStruct(parent, typeToken.data, nameToken.data);
+            break;
             
         case SchemaProperty::kSchemaPropertyPointer:
-            return new SchemaPropertyPointer(parent, typeToken.data, nameToken.data);
-            
-        default:
-            return 0;
+            schemaProperty = new SchemaPropertyPointer(parent, typeToken.data, nameToken.data);
+            break;
+        
+        case SchemaProperty::kSchemaPropertyArray: // handled later
+            break;
     }
+    
+    if (isArray)
+    {
+        schemaProperty = new SchemaPropertyArray(parent, typeToken.data, nameToken.data, schemaProperty);
+    }
+    
+    return schemaProperty;
 }
 
 bool ParseStructContents(SchemaStruct* schemaStruct, Schema* schema, std::vector<Token>& tokens, size_t& counter)

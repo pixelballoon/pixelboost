@@ -116,7 +116,7 @@ bool Struct::Save(json::Object& entity)
     return true;
 }
     
-bool ExportProperty(Struct* s, const std::string& path, SchemaProperty* schemaItem, json::Object& container);
+bool ExportProperty(Struct* s, const std::string& path, const SchemaProperty* schemaItem, json::Object& container, bool appendPath = true);
 
 bool Struct::Export(json::Object& entity)
 {
@@ -171,9 +171,13 @@ json::Object ExportStruct(Struct* s, const std::string& path, const SchemaStruct
     return container;
 }
     
-bool ExportProperty(Struct* s, const std::string& path, SchemaProperty* schemaItem, json::Object& container)
+bool ExportProperty(Struct* s, const std::string& path, const SchemaProperty* schemaItem, json::Object& container, bool appendPath)
 {
-    std::string propertyPath = path + schemaItem->GetName() + "/";
+    std::string propertyPath = path;
+    
+    if (appendPath)
+        propertyPath = schemaItem->GetName() + "/";
+    
     const Property* prop = s->GetProperty(propertyPath);
     
     switch (schemaItem->GetPropertyType())
@@ -183,7 +187,7 @@ bool ExportProperty(Struct* s, const std::string& path, SchemaProperty* schemaIt
             if (!prop || prop->GetType() != Property::kPropertyAtom)
                 return true;
             
-            SchemaPropertyAtom* schemaAtom = static_cast<SchemaPropertyAtom*>(schemaItem);
+            const SchemaPropertyAtom* schemaAtom = static_cast<const SchemaPropertyAtom*>(schemaItem);
             const PropertyAtom* atom = static_cast<const PropertyAtom*>(prop);
             
             container[schemaItem->GetName()] = ExportAtom(atom, schemaAtom);
@@ -194,10 +198,10 @@ bool ExportProperty(Struct* s, const std::string& path, SchemaProperty* schemaIt
             if (!prop || prop->GetType() != Property::kPropertyArray)
                 return true;
             
-            SchemaPropertyArray* schemaArray = static_cast<SchemaPropertyArray*>(schemaItem);
+            const SchemaPropertyArray* schemaArray = static_cast<const SchemaPropertyArray*>(schemaItem);
             const PropertyArray* array = static_cast<const PropertyArray*>(prop);
             
-            const SchemaPropertyStruct* schemaStruct = schemaArray->GetSchemaStruct();
+            const SchemaProperty* schemaProperty = schemaArray->GetSchemaProperty();
             
             container[schemaItem->GetName()] = json::Array();
             json::Array& output = container[schemaItem->GetName()];
@@ -205,19 +209,18 @@ bool ExportProperty(Struct* s, const std::string& path, SchemaProperty* schemaIt
             char buffer[255];
             for (int i=0; i < array->GetElementCount(); i++)
             {
-                // TODO : Support non-struct arrays
-                
                 sprintf(buffer, "#%X", array->GetElementIdByIndex(i));
                 
-                output.Insert(ExportStruct(s, propertyPath + buffer + "/", schemaStruct->GetSchemaStruct()));
+                json::Object item;
+                ExportProperty(s, propertyPath + buffer + "/", schemaProperty, container, false);
+                output.Insert(item);
             }
-            
             break;
         }
             
         case SchemaProperty::kSchemaPropertyStruct:
         {
-            const SchemaPropertyStruct* schemaStruct = static_cast<SchemaPropertyStruct*>(schemaItem);
+            const SchemaPropertyStruct* schemaStruct = static_cast<const SchemaPropertyStruct*>(schemaItem);
             
             container[schemaItem->GetName()] = ExportStruct(s, propertyPath, schemaStruct->GetSchemaStruct());
             
@@ -229,7 +232,7 @@ bool ExportProperty(Struct* s, const std::string& path, SchemaProperty* schemaIt
             if (!prop || prop->GetType() != Property::kPropertyPointer)
                 return true;
             
-            SchemaPropertyPointer* schemaPointer = static_cast<SchemaPropertyPointer*>(schemaItem);
+            const SchemaPropertyPointer* schemaPointer = static_cast<const SchemaPropertyPointer*>(schemaItem);
             const PropertyPointer* pointer = static_cast<const PropertyPointer*>(prop);
 
             container[schemaItem->GetName()] = ExportPointer(pointer, schemaPointer);
