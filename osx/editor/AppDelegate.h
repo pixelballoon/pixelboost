@@ -16,6 +16,7 @@ namespace pixeleditor
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender;
 - (IBAction)open:(id)sender;
+- (IBAction)export:(id)sender;
 
 - (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename;
 

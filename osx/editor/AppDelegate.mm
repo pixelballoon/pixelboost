@@ -44,6 +44,11 @@
     }    
 }
 
+- (IBAction)export:(id)sender
+{
+    _Core->GetCommandManager()->Exec("export");
+}
+
 - (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename
 {
     if (_Core)
