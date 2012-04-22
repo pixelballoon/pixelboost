@@ -100,7 +100,6 @@
 		1CEB6DEC1540A53000E8D103 /* schema.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CEB6DD21540A53000E8D103 /* schema.cpp */; };
 		1CEB6DED1540A53000E8D103 /* schemaParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CEB6DD41540A53000E8D103 /* schemaParser.cpp */; };
 		1CEB6DEE1540A53000E8D103 /* struct.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CEB6DD61540A53000E8D103 /* struct.cpp */; };
-		1CEB6DEF1540A53000E8D103 /* template.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CEB6DD81540A53000E8D103 /* template.cpp */; };
 		1CEB6DF31540AA0500E8D103 /* httpInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CEB6DF11540AA0500E8D103 /* httpInterface.cpp */; };
 		1CEB6DF51540AE2200E8D103 /* data in Resources */ = {isa = PBXBuildFile; fileRef = 1CEB6DF41540AE1D00E8D103 /* data */; };
 /* End PBXBuildFile section */
@@ -297,8 +296,6 @@
 		1CEB6DD51540A53000E8D103 /* schemaParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = schemaParser.h; sourceTree = "<group>"; };
 		1CEB6DD61540A53000E8D103 /* struct.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = struct.cpp; sourceTree = "<group>"; };
 		1CEB6DD71540A53000E8D103 /* struct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = struct.h; sourceTree = "<group>"; };
-		1CEB6DD81540A53000E8D103 /* template.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = template.cpp; sourceTree = "<group>"; };
-		1CEB6DD91540A53000E8D103 /* template.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = template.h; sourceTree = "<group>"; };
 		1CEB6DF11540AA0500E8D103 /* httpInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = httpInterface.cpp; path = http/httpInterface.cpp; sourceTree = "<group>"; };
 		1CEB6DF21540AA0500E8D103 /* httpInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = httpInterface.h; path = http/httpInterface.h; sourceTree = "<group>"; };
 		1CEB6DF41540AE1D00E8D103 /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = data; path = ../data; sourceTree = "<group>"; };
@@ -1058,8 +1055,6 @@
 				1CEB6DD51540A53000E8D103 /* schemaParser.h */,
 				1CEB6DD61540A53000E8D103 /* struct.cpp */,
 				1CEB6DD71540A53000E8D103 /* struct.h */,
-				1CEB6DD81540A53000E8D103 /* template.cpp */,
-				1CEB6DD91540A53000E8D103 /* template.h */,
 			);
 			path = project;
 			sourceTree = "<group>";
@@ -1226,7 +1221,6 @@
 				1CEB6DEC1540A53000E8D103 /* schema.cpp in Sources */,
 				1CEB6DED1540A53000E8D103 /* schemaParser.cpp in Sources */,
 				1CEB6DEE1540A53000E8D103 /* struct.cpp in Sources */,
-				1CEB6DEF1540A53000E8D103 /* template.cpp in Sources */,
 				1CEB6DF31540AA0500E8D103 /* httpInterface.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
