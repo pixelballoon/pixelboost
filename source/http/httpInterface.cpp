@@ -162,6 +162,9 @@ bool HttpInterface::OnSave(pixelboost::HttpConnection& connection)
 
 bool HttpInterface::OnCreateRecord(pixelboost::HttpConnection& connection, const std::string& name, const std::string& type)
 {
+    if (name == "")
+        return false;
+    
     Project* project = Core::Instance()->GetProject();
     
     project->AddRecord(name, type);
