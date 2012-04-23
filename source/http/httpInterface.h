@@ -18,6 +18,8 @@ namespace pixelboost
     class DebugVariable;
 }
 
+class Vec2;
+
 namespace pixeleditor
 {
     class SchemaProperty;
@@ -41,6 +43,7 @@ namespace pixeleditor
         bool OnExport(pixelboost::HttpConnection& connection);
         bool OnCreateRecord(pixelboost::HttpConnection& connection, const std::string& name, const std::string& type);
         bool OnCreateEntity(pixelboost::HttpConnection& connection, Uid recordId, const std::string& type);
+        bool OnSetTransform(pixelboost::HttpConnection& connection, Uid recordId, Uid entityId, const Vec2& position, float rotation, const Vec2& scale);
         
         bool OnGetRecords(pixelboost::HttpConnection& connection);
         bool OnGetEntities(pixelboost::HttpConnection& connection, Uid record);

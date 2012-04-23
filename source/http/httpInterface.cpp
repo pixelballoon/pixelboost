@@ -124,12 +124,17 @@ bool HttpInterface::OnHttpRequest(HttpServer::RequestType type, const std::strin
         {
             replied = OnGetSchema(connection, urlArguments[0]);
         }
-    } else if (command == "record" && type == kRequestTypePost)
+    } else if (command == "record" && (type == kRequestTypePost || type == kRequestTypePut))
     {
-        if (urlArguments.size() == 2 && urlArguments[1] == "entities")
+        if (urlArguments.size() == 2 && urlArguments[1] == "entities" && type == kRequestTypePost)
         {
             std::string record = urlArguments[0];
             replied = OnCreateEntity(connection, atoi(record.c_str()), queryArguments["type"]);
+        } else if (urlArguments.size() == 4 && urlArguments[1] == "entity" && urlArguments[3] == "transform" && type == kRequestTypePut)
+        {
+            std::string record = urlArguments[0];
+            std::string entity = urlArguments[2];
+            replied = OnSetTransform(connection, atoi(record.c_str()), atoi(entity.c_str()), Vec2(atof(queryArguments["tx"].c_str()), atof(queryArguments["ty"].c_str())), 0, Vec2(1,1));
         }
     } else if (command == "records" && type == kRequestTypePost)
     {
@@ -188,6 +193,27 @@ bool HttpInterface::OnCreateEntity(pixelboost::HttpConnection& connection, Uid r
     char arguments[256];
     sprintf(arguments, "-r %d -t %s -p 0,0", recordId, type.c_str());
     Core::Instance()->GetCommandManager()->Exec("createEntity", arguments);
+    return true;
+}
+
+bool HttpInterface::OnSetTransform(pixelboost::HttpConnection& connection, Uid recordId, Uid entityId, const Vec2& position, float rotation, const Vec2& scale)
+{
+    Project* project = Core::Instance()->GetProject();
+    
+    Record* record = project->GetRecord(recordId);
+    
+    if (!record)
+        return false;
+    
+    Entity* entity = record->GetEntity(entityId);
+    
+    if (!entity)
+        return false;
+    
+    entity->SetPosition(position);
+    entity->SetRotation(rotation);
+    entity->SetScale(scale);
+    
     return true;
 }
 
