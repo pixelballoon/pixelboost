@@ -139,7 +139,10 @@ bool HttpInterface::OnHttpRequest(HttpServer::RequestType type, const std::strin
         }
     } else if (command == "save" && type == kRequestTypePut)
     {
-        OnSave(connection);
+        replied = OnSave(connection);
+    } else if (command == "export" && type == kRequestTypePut)
+    {
+        replied = OnExport(connection);
     }
     
     if (replied == true)
@@ -157,6 +160,14 @@ bool HttpInterface::OnHttpRequest(HttpServer::RequestType type, const std::strin
 bool HttpInterface::OnSave(pixelboost::HttpConnection& connection)
 {
     Core::Instance()->GetCommandManager()->Exec("save");
+    
+    return true;
+}
+
+bool HttpInterface::OnExport(pixelboost::HttpConnection& connection)
+{
+    Core::Instance()->GetCommandManager()->Exec("export");
+    
     return true;
 }
 
