@@ -1,7 +1,9 @@
 var ajaxPrefix = 'http://localhost:9090/'; // For development
 // var ajaxPrefix = '/'; // For deployment
 
-var canvas;
+var stage;
+var actorLayer;
+
 var record;
 var schema;
 
@@ -10,11 +12,14 @@ function onLoad()
 	populateNavBar();
 	populateButtons();
 	updateSchema();
-	initCanvas();
+	initStage();
+	initUi();
 }
 
 function populateNavBar()
 {
+	$("#navbar").empty();
+	$('<li class="nav-header">Records</li>').appendTo("#navbar");
 	$.getJSON(ajaxPrefix + 'records/', function(data) {
 		for (record in data)
 		{
@@ -28,6 +33,7 @@ function populateNavBar()
 function populateButtons()
 {
 	$("#save").click(onSave);
+	$("#export").click(onExport);
 }
 
 function updateSchema()
@@ -41,7 +47,14 @@ function updateSchema()
 		{
 			if (structs[item].type == "entity")
 			{
-				$("<li data-id='"+structs[item].name+"'><a href='#'>"+structs[item].description+"</a></li>").click(function() {createEntity($(this).attr("data-id"));}).appendTo('#records');
+				$("<li data-id='"+structs[item].name+"'><a href='#'>"+structs[item].description+"</a></li>").click(function() {createEntity($(this).attr("data-id"));}).appendTo('#entityTypes');
+			}
+			if (structs[item].type == "record")
+			{
+				$("<li data-id='"+structs[item].name+"'><a href='#'>"+structs[item].description+"</a></li>").click(function() {
+					$('#createRecordModal').attr("data-id", $(this).attr("data-id"));
+					$('#createRecordModal').modal();
+				}).appendTo('#recordTypes');
 			}
 		}
 
@@ -49,40 +62,82 @@ function updateSchema()
 	});
 }
 
-function initCanvas()
+function initStage()
 {
 	$('#canvas').empty();
-	canvas = Raphael("canvas", 600, 600);
-	canvas.setViewBox(-300, -300, 600, 600);
+	stage = new Kinetic.Stage({container: 'canvas',
+		width:600,
+		height:600});
+
+	actorLayer = new Kinetic.Layer();
+	stage.add(actorLayer);
 }
 
-function startDrag()
+function initUi()
 {
-	this.ox = this.type == "circle" ? this.attr("cx") : this.attr("x");
-	this.oy = this.type == "circle" ? this.attr("cy") : this.attr("y");
-}
+	$('#createRecordModal').submit(function() {
+		$('#createRecordModal').modal('hide');
 
-function onDrag(dx, dy, x, y)
-{
-	this.attr("x", this.ox + dx);
-	this.attr("y", this.oy + dy);
-	this.attr("cx", this.ox + dx);
-	this.attr("cy", this.oy + dy);
+		$.ajax({
+			type: 'POST',
+			url: ajaxPrefix+'records?type='+$(this).attr("data-id")+'&name='+$('#createRecordName').attr("value"),
+			complete : function() {
+				populateNavBar();
+			}
+		});
+
+		return false;
+	});
 }
 
 function loadRecord(record)
 {
-	initCanvas();
+	initStage();
 
 	this.record = record;
 
 	$.getJSON(ajaxPrefix + 'record/' + record + '/entities', function(data) {
 		for (entity in data)
 		{
-			var image = canvas.image("img/glyphicons-halflings.png", 100, 100, 100, 100);
-			image.attr("x", toPixels(data[entity].data.Transform.tx));
-			image.attr("y", toPixels(data[entity].data.Transform.ty));
-			image.drag(onDrag, startDrag);
+			var shape = new Kinetic.RegularPolygon({
+				x: toPixels(data[entity].data.Transform.tx),
+				y: toPixels(data[entity].data.Transform.ty),
+				sides: 10,
+				radius: 2*32,
+				fill: 'red',
+				stroke: 'black',
+				strokeWidth: 4,
+				draggable: true
+			});
+
+			shape.entityId = data[entity].data.Uid;
+
+			shape.on("dragend", function(evt) {
+				var url = ajaxPrefix+'record/'+record+'/entity/'+evt.shape.entityId+'/transform?tx='+getX(evt.shape)+'&ty='+getY(evt.shape);
+				$.ajax({
+							type: 'PUT',
+							url: url,
+							complete : function() {
+							}
+						});
+
+				actorLayer.draw();
+			});
+
+			actorLayer.add(shape);
+		}
+
+		actorLayer.draw();
+	});
+}
+
+function createRecord(recordType)
+{
+	$.ajax({
+		type: 'POST',
+		url: ajaxPrefix+'records?type='+recordType,
+		complete : function() {
+			populateNavBar();
 		}
 	});
 }
@@ -90,25 +145,50 @@ function loadRecord(record)
 function createEntity(entityType)
 {
 	$.ajax({
-          type: 'POST',
-          url: ajaxPrefix+'record/'+record+'/entities?type='+entityType,
-          complete : function() {
-            loadRecord(record);
-          }
-        });
+		type: 'POST',
+		url: ajaxPrefix+'record/'+record+'/entities?type='+entityType,
+		complete : function() {
+			loadRecord(record);
+		}
+	});
 }
 
 function onSave()
 {
 	$.ajax({
-          type: 'PUT',
-          url: ajaxPrefix+'save/',
-          complete : function() {
-          }
-        });
+		type: 'PUT',
+		url: ajaxPrefix+'save',
+		complete : function() {
+		}
+	});
+}
+
+function onExport()
+{
+	$.ajax({
+		type: 'PUT',
+		url: ajaxPrefix+'export',
+		complete : function() {
+		}
+	});
 }
 
 function toPixels(unit)
 {
 	return unit*32;
+}
+
+function fromPixels(pixels)
+{
+	return pixels/32;
+}
+
+function getX(shape)
+{
+	return fromPixels(shape.getPosition().x);
+}
+
+function getY(shape)
+{
+	return fromPixels(shape.getPosition().y);
 }
