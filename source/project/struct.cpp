@@ -125,9 +125,12 @@ bool Struct::Export(json::Object& entity)
     
     json::Object properties;
     
-    for (SchemaStruct::PropertyMap::const_iterator it = _Type->GetProperties().begin(); it != _Type->GetProperties().end(); ++it)
+    if (_Type)
     {
-        ExportProperty(this, "/", it->second, properties);
+        for (SchemaStruct::PropertyMap::const_iterator it = _Type->GetProperties().begin(); it != _Type->GetProperties().end(); ++it)
+        {
+            ExportProperty(this, "/", it->second, properties);
+        }
     }
                
     entity["Properties"] = properties;
