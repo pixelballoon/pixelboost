@@ -25,12 +25,14 @@ public:
     const std::string& GetName() const;
     
 public:
+    typedef std::map<std::string, std::string> ParamValueMap;
+    
     void AddParam(const std::string& param, const std::string& value);
     std::string GetParamValue(const std::string& param, const std::string& defaultValue = "") const;
     
-private:
-    typedef std::map<std::string, std::string> ParamValueMap;
+    const ParamValueMap& GetParamValues() const;
     
+private:
     ParamValueMap _ParamValue;
     
     std::string _Name;

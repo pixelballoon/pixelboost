@@ -347,6 +347,18 @@ void HttpInterface::InsertSchemaItem(json::Array& array, SchemaStruct* schemaIte
     item["name"] = json::String(schemaItem->GetName());
     const SchemaAttribute* description = schemaItem->GetAttribute("Description");
     item["description"] = json::String(description ? description->GetParamValue("") : schemaItem->GetName());
+    
+    json::Object visualisation;
+    const SchemaAttribute* visualisationAttr = schemaItem->GetAttribute("Visualisation");
+    if (visualisationAttr)
+    {
+        for (SchemaAttribute::ParamValueMap::const_iterator it = visualisationAttr->GetParamValues().begin(); it != visualisationAttr->GetParamValues().end(); ++it)
+        {
+            visualisation[it->first] = json::String(it->second);
+        }
+    }
+    item["visualisation"] = visualisation;
+    
     switch (schemaItem->GetSchemaType())
     {
         case SchemaItem::kSchemaRecord:

@@ -50,6 +50,11 @@ std::string SchemaAttribute::GetParamValue(const std::string& param, const std::
     return defaultValue;
 }
 
+const SchemaAttribute::ParamValueMap& SchemaAttribute::GetParamValues() const
+{
+    return _ParamValue;
+}
+
 SchemaItem::SchemaItem(SchemaItem* parent, const std::string& name)
     : _Name(name)
     , _Parent(parent)
