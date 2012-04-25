@@ -29,6 +29,8 @@ public:
     bool Save();
     bool Export();
     
+    bool Export(json::Object& object);
+    
     virtual Record* GetRecord();
     virtual const Record* GetRecord() const;
     

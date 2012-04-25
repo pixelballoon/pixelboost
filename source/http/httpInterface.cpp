@@ -110,20 +110,14 @@ bool HttpInterface::OnHttpRequest(HttpServer::RequestType type, const std::strin
         replied = OnGetRecords(connection);
     } else if (command == "record" && type == kRequestTypeGet)
     {
-        if (urlArguments.size() == 2 && urlArguments[1] == "entities")
+        if (urlArguments.size() == 1)
         {
             std::string record = urlArguments[0];
-            replied = OnGetEntities(connection, atoi(record.c_str()));
+            replied = OnGetRecord(connection, atoi(record.c_str()));
         }
     } else if (command == "schema" && type == kRequestTypeGet)
     {
-        if (urlArguments.size() == 0)
-        {
-            replied = OnGetSchema(connection);
-        } else if (urlArguments.size() == 1)
-        {
-            replied = OnGetSchema(connection, urlArguments[0]);
-        }
+        replied = OnGetSchema(connection);
     } else if (command == "record" && (type == kRequestTypePost || type == kRequestTypePut))
     {
         if (urlArguments.size() == 2 && urlArguments[1] == "entities" && type == kRequestTypePost)
@@ -244,9 +238,9 @@ bool HttpInterface::OnGetRecords(pixelboost::HttpConnection& connection)
     return true;
 }
 
-bool HttpInterface::OnGetEntities(pixelboost::HttpConnection& connection, Uid recordId)
+bool HttpInterface::OnGetRecord(pixelboost::HttpConnection& connection, Uid recordId)
 {
-    json::Array records;
+    json::Object data;
     
     Project* project = Core::Instance()->GetProject();
     
@@ -255,20 +249,41 @@ bool HttpInterface::OnGetEntities(pixelboost::HttpConnection& connection, Uid re
     if (!record)
         return false;
     
-    for (Record::EntityMap::const_iterator it = record->GetEntities().begin(); it != record->GetEntities().end(); ++it)
-    {
-        json::Object record;
-        record["name"] = json::String(it->second->GetName());
-        
-        json::Object data;
-        it->second->Export(data);
-        record["data"] = data;
-        
-        records.Insert(record);
-    }
+    record->Export(data);
     
     std::stringstream contentStream;
-    json::Writer::Write(records, contentStream);
+    json::Writer::Write(data, contentStream);
+    
+    std::string content = contentStream.str();
+    
+    char contentLength[64];
+    sprintf(contentLength, "%d", static_cast<int>(content.length()));
+    connection.AddHeader("Content-Length", contentLength);
+    connection.SetContent(content);
+    
+    return true;
+}
+
+bool HttpInterface::OnGetEntity(pixelboost::HttpConnection& connection, Uid recordId, Uid entityId)
+{
+    json::Object data;
+    
+    Project* project = Core::Instance()->GetProject();
+    
+    Record* record = project->GetRecord(recordId);
+    
+    if (!record)
+        return false;
+    
+    Entity* entity = record->GetEntity(entityId);
+    
+    if (!entity)
+        return false;
+    
+    entity->Export(data);
+    
+    std::stringstream contentStream;
+    json::Writer::Write(data, contentStream);
     
     std::string content = contentStream.str();
     
@@ -306,41 +321,6 @@ bool HttpInterface::OnGetSchema(pixelboost::HttpConnection& connection)
     return true;
 }
 
-bool HttpInterface::OnGetSchema(pixelboost::HttpConnection& connection, const std::string& item)
-{
-    json::Object schemaItem;
-    
-    Project* project = Core::Instance()->GetProject();
-    
-    const SchemaStruct* schemaStruct = project->GetSchema()->GetStructByName(item);
-    
-    if (!schemaStruct)
-        return false;
-    
-    schemaItem["name"] = json::String(schemaStruct->GetName());
-    
-    json::Array properties;
-    for (SchemaStruct::PropertyMap::const_iterator it = schemaStruct->GetProperties().begin(); it != schemaStruct->GetProperties().end(); ++it)
-    {
-        json::Object property;
-        ExportProperty(property, it->first, it->second);
-        properties.Insert(property);
-    }
-    schemaItem["properties"] = properties;
-    
-    std::stringstream contentStream;
-    json::Writer::Write(schemaItem, contentStream);
-    
-    std::string content = contentStream.str();
-    
-    char contentLength[64];
-    sprintf(contentLength, "%d", static_cast<int>(content.length()));
-    connection.AddHeader("Content-Length", contentLength);
-    connection.SetContent(content);
-    
-    return true;
-}
-
 void HttpInterface::InsertSchemaItem(json::Array& array, SchemaStruct* schemaItem)
 {
     json::Object item;
@@ -358,6 +338,15 @@ void HttpInterface::InsertSchemaItem(json::Array& array, SchemaStruct* schemaIte
         }
     }
     item["visualisation"] = visualisation;
+    
+    json::Array properties;
+    for (SchemaStruct::PropertyMap::const_iterator it = schemaItem->GetProperties().begin(); it != schemaItem->GetProperties().end(); ++it)
+    {
+        json::Object property;
+        ExportProperty(property, it->first, it->second);
+        properties.Insert(property);
+    }
+    item["properties"] = properties;
     
     switch (schemaItem->GetSchemaType())
     {

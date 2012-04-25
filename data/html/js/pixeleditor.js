@@ -4,8 +4,10 @@ var ajaxPrefix = 'http://localhost:9090/'; // For development
 var stage;
 var actorLayer;
 
-var record;
-var schema;
+var _record;
+var _recordId;
+var _schema;
+var _entities;
 
 function onLoad()
 {
@@ -21,9 +23,10 @@ function populateNavBar()
 	$("#navbar").empty();
 	$('<li class="nav-header">Records</li>').appendTo("#navbar");
 	$.getJSON(ajaxPrefix + 'records/', function(data) {
-		for (record in data)
+		for (recordIdx in data)
 		{
-			var recordItem = $("<li data-id='"+data[record].id+"'><a href='#'>"+data[record].name+"</a></li>").
+			var record = data[recordIdx];
+			var recordItem = $("<li data-id='"+record.id+"'><a href='#'>"+record.name+"</a></li>").
 				click(function() {loadRecord($(this).attr("data-id"));}).
 				appendTo('#navbar');
 		}
@@ -34,12 +37,14 @@ function populateButtons()
 {
 	$("#save").click(onSave);
 	$("#export").click(onExport);
+	$("#deselect").click(onDeselect);
 }
 
 function updateSchema()
 {
 	$.getJSON(ajaxPrefix + 'schema/', function(data) {
 		schema = new Object();
+
 		for (struct in data.structs)
 		{
 			schema[data.structs[struct].name] = data.structs[struct];
@@ -73,6 +78,11 @@ function initStage()
 
 	actorLayer = new Kinetic.Layer();
 	stage.add(actorLayer);
+
+	stage.on("mousedown", function(evt) {
+		console.log(_record);
+		generateStructProperties(_record);
+	});
 }
 
 function initUi()
@@ -92,17 +102,22 @@ function initUi()
 	});
 }
 
-function loadRecord(record)
+function loadRecord(recordId)
 {
 	initStage();
 
-	this.record = record;
+	_recordId = recordId;
+	_entities = new Object();
 
-	$.getJSON(ajaxPrefix + 'record/' + record + '/entities', function(data) {
-		for (entity in data)
+	$.getJSON(ajaxPrefix + 'record/' + recordId, function(data) {
+		_record = data;
+		for (entityIdx in _record.Entities)
 		{
-			initialiseEntity(data[entity]);
+			var entity = _record.Entities[entityIdx];
+			_entities[entity.Uid] = entity;
+			initialiseEntity(entity);
 		}
+		_record.Entities = null;
 
 		actorLayer.draw();
 	});
@@ -123,23 +138,23 @@ function createEntity(entityType)
 {
 	$.ajax({
 		type: 'POST',
-		url: ajaxPrefix+'record/'+record+'/entities?type='+entityType,
+		url: ajaxPrefix+'record/'+_recordId+'/entities?type='+entityType,
 		complete : function() {
-			loadRecord(record);
+			loadRecord(_recordId);
 		}
 	});
 }
 
 function initialiseEntity(entity)
 {
-	var schemaStruct = schema[entity.data.Type];
+	var schemaStruct = schema[entity.Type];
 	var shape;
 
 	if (!schemaStruct)
 	{
 		shape = new Kinetic.Circle({
-			x: toPixels(entity.data.Transform.tx),
-			y: toPixels(entity.data.Transform.ty),
+			x: toPixels(entity.Transform.tx),
+			y: toPixels(entity.Transform.ty),
 			radius: 32,
 			fill: 'grey',
 			stroke: 'black',
@@ -148,8 +163,8 @@ function initialiseEntity(entity)
 		});
 	} else {
 		shape = new Kinetic.Circle({
-			x: toPixels(entity.data.Transform.tx),
-			y: toPixels(entity.data.Transform.ty),
+			x: toPixels(entity.Transform.tx),
+			y: toPixels(entity.Transform.ty),
 			radius: 32,
 			fill: 'red',
 			stroke: 'black',
@@ -158,10 +173,14 @@ function initialiseEntity(entity)
 		});
 	}
 
-	shape.entityId = entity.data.Uid;
+	shape.entityId = entity.Uid;
+
+	shape.on("click", function(evt) {
+		generateStructProperties(_entities[evt.shape.entityId]);
+	});
 
 	shape.on("dragend", function(evt) {
-		var url = ajaxPrefix+'record/'+record+'/entity/'+evt.shape.entityId+'/transform?tx='+getX(evt.shape)+'&ty='+getY(evt.shape);
+		var url = ajaxPrefix+'record/'+_recordId+'/entity/'+evt.shape.entityId+'/transform?tx='+getX(evt.shape)+'&ty='+getY(evt.shape);
 		$.ajax({
 			type: 'PUT',
 			url: url,
@@ -191,6 +210,68 @@ function onExport()
 		complete : function() {
 		}
 	});
+}
+
+function onDeselect()
+{
+	generateStructProperties(_record);
+}
+
+function generateStructProperties(struct)
+{
+	if (!struct)
+		return;
+
+	var parent = $("#propertyArea");
+	parent.empty();
+	generateProperties(parent, "/", schema[struct.Type], struct.Properties);
+}
+
+function generateProperties(parent, path, schemaItem, properties)
+{
+	if (!schemaItem)
+		return;
+
+	for (propertyIdx in schemaItem.properties)
+	{
+		var property = schemaItem.properties[propertyIdx];
+		addProperty(parent, path + property.name + "/", property, properties);
+	}
+}
+
+function addProperty(parent, path, property, properties)
+{
+	switch (property.type)
+	{
+		case "array":
+			parent.append('<div class="well">'+property.name+': The array type is not yet supported</p></div>');
+			break;
+		case "pointer":
+			parent.append('<div class="well">'+property.name+': The pointer type is not yet supported</p></div>');
+			break;
+		case "struct":
+			$('<label class="control-label">'+property.name+'</label>').appendTo(parent);
+			var child = $('<div class="control-group well"></div>');
+			child.appendTo(parent);
+			generateProperties(child, path, schema[property.structType], properties ? properties[property.name] : null);
+			break;
+		case "atom":
+		{
+			var child;
+			switch (property.atomType)
+			{
+				case "float":
+				case "int":
+					child = $('<label class="control-label">'+property.name+'</label><input type="text" class="span4"></input><br/>');
+					break;
+				case "string":
+					child = $('<label class="control-label">'+property.name+'</label><input type="text" class="span6"></input><br/>');
+					break;
+			}
+			child.appendTo(parent);
+			break;
+		}
+	}
 }
 
 function toPixels(unit)

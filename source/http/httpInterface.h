@@ -46,7 +46,8 @@ namespace pixeleditor
         bool OnSetTransform(pixelboost::HttpConnection& connection, Uid recordId, Uid entityId, const Vec2& position, float rotation, const Vec2& scale);
         
         bool OnGetRecords(pixelboost::HttpConnection& connection);
-        bool OnGetEntities(pixelboost::HttpConnection& connection, Uid record);
+        bool OnGetRecord(pixelboost::HttpConnection& connection, Uid record);
+        bool OnGetEntity(pixelboost::HttpConnection& connection, Uid record, Uid entity);
 
         bool OnGetSchema(pixelboost::HttpConnection& connection);
         bool OnGetSchema(pixelboost::HttpConnection& connection, const std::string& item);

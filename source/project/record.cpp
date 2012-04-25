@@ -116,7 +116,7 @@ bool Record::Save()
     
     return status;
 }
-    
+
 bool Record::Export()
 {
     // TODO: Make OS independant
@@ -129,6 +129,18 @@ bool Record::Export()
     
     json::Object record;
     
+    bool status = Export(record);
+    
+    std::fstream file(location.c_str(), std::fstream::out | std::fstream::trunc);
+    json::Writer::Write(record, file);
+    
+    file.close();
+    
+    return status;
+}
+
+bool Record::Export(json::Object& record)
+{
     bool status = Struct::Export(record);
     
     json::Array entities;
@@ -143,11 +155,6 @@ bool Record::Export()
     }
     
     record["Entities"] = entities;
-    
-    std::fstream file(location.c_str(), std::fstream::out | std::fstream::trunc);
-    json::Writer::Write(record, file);
-    
-    file.close();
     
     return status;
 }
