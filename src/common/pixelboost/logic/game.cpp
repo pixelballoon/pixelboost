@@ -13,9 +13,9 @@
 #include "pixelboost/logic/screen.h"
 #include "pixelboost/network/gameCenter.h"
 #include "pixelboost/network/networkServer.h"
+#include "pixelboost/script/luaManager.h"
 
-namespace pixelboost
-{
+using namespace pixelboost;
 
 Game* Game::_Instance = 0;
 
@@ -25,6 +25,8 @@ Game::Game(void* viewController)
     , _ViewController(viewController)
 {
     _Instance = this;
+    
+    _LuaManager = new LuaManager();
 
 #ifndef PIXELBOOST_DISABLE_GRAPHICS
     _TouchManager = new TouchManager();
@@ -47,6 +49,8 @@ Game::Game(void* viewController)
 Game::~Game()
 {
     _Instance = 0;
+    
+    delete _LuaManager;
     
 #ifndef PIXELBOOST_DISABLE_GAMECENTER
     delete _GameCenter;
@@ -88,6 +92,11 @@ FontRenderer* Game::GetFontRenderer() const
 GameCenter* Game::GetGameCenter() const
 {
     return _GameCenter;
+}
+    
+LuaManager* Game::GetLuaManager() const
+{
+    return _LuaManager;
 }
         
 ModelRenderer* Game::GetModelRenderer() const
@@ -169,6 +178,4 @@ void Game::Render()
 void* Game::GetViewController()
 {
     return _ViewController;
-}
-
 }
