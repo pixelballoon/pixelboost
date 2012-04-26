@@ -1,11 +1,5 @@
 #include "pixelboost/script/luaManager.h"
-
-extern "C"
-{
-#include "pixelboost/external/lua/lua.h"
-#include "pixelboost/external/lua/lauxlib.h"
-#include "pixelboost/external/lua/lualib.h"
-}
+#include "pixelboost/external/lua/lua.hpp"
 
 using namespace pixelboost;
 
