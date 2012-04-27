@@ -257,15 +257,21 @@ function addProperty(parent, path, property, properties)
 			break;
 		case "atom":
 		{
+			var value = properties[property.name];
+			if (value == undefined)
+			{
+				value = "";
+			}
+
 			var child;
 			switch (property.atomType)
 			{
 				case "float":
 				case "int":
-					child = $('<label class="control-label">'+property.name+'</label><input type="text" class="span4"></input><br/>');
+					child = $('<label class="control-label">'+property.name+'</label><input type="text" class="span4" value="'+value+'"></input><br/>');
 					break;
 				case "string":
-					child = $('<label class="control-label">'+property.name+'</label><input type="text" class="span6"></input><br/>');
+					child = $('<label class="control-label">'+property.name+'</label><input type="text" class="span6" value="'+value+'"></input><br/>');
 					break;
 			}
 			child.appendTo(parent);
