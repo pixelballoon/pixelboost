@@ -145,7 +145,10 @@ bool Project::Save()
 bool Project::Export()
 {
     for (RecordMap::iterator it = _Records.begin(); it != _Records.end(); ++it)
-        it->second->Export();
+    {
+        it->second->ExportLua();
+        it->second->ExportJson();
+    }
     
     projectExported(this);
     

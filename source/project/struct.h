@@ -35,7 +35,9 @@ public:
     
     bool Open(json::Object& object);
     bool Save(json::Object& object);
-    bool Export(json::Object& object);
+    
+    bool ExportJson(json::Object& object);
+    bool ExportLua(std::iostream& output, bool appendNewLine=true);
     
 public:    
     Project* GetProject();

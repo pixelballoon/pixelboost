@@ -117,7 +117,7 @@ bool Record::Save()
     return status;
 }
 
-bool Record::Export()
+bool Record::ExportJson()
 {
     // TODO: Make OS independant
     char cmd[2048];
@@ -129,7 +129,7 @@ bool Record::Export()
     
     json::Object record;
     
-    bool status = Export(record);
+    bool status = ExportJson(record);
     
     std::fstream file(location.c_str(), std::fstream::out | std::fstream::trunc);
     json::Writer::Write(record, file);
@@ -139,22 +139,66 @@ bool Record::Export()
     return status;
 }
 
-bool Record::Export(json::Object& record)
+bool Record::ExportLua()
 {
-    bool status = Struct::Export(record);
+    // TODO: Make OS independant
+    char cmd[2048];
+    std::string outputDir = GetProject()->GetConfig().exportDir + "records/";
+    sprintf(cmd, "mkdir -p %s", outputDir.c_str());
+    system(cmd);
+
+    std::string location = outputDir + GetName() + ".lua";
+    
+    std::fstream file(location.c_str(), std::fstream::out | std::fstream::trunc);
+    
+    bool status = ExportLua(file);
+    
+    file.close();
+    
+    return status;
+}
+
+bool Record::ExportJson(json::Object& record)
+{
+    bool status = Struct::ExportJson(record);
     
     json::Array entities;
     
     for (EntityMap::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
     {
         json::Object entity;
-        if (!it->second->Export(entity))
+        if (!it->second->ExportJson(entity))
             status = false;
         
         entities.Insert(entity);
     }
     
     record["Entities"] = entities;
+    
+    return status;
+}
+
+bool Record::ExportLua(std::iostream& output)
+{
+    char record[64];
+    sprintf(record, "records[\"%X\"]", GetUid());
+    
+    output << "if (records == nil) then records = {} end" << std::endl << std::endl;
+    
+    output << record << " = {" << std::endl;
+    bool status = Struct::ExportLua(output);
+    output << "}" << std::endl;
+    
+    output << record << ".entities = {}" << std::endl;
+    
+    int i=0;
+    for (EntityMap::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
+    {
+        output << record << ".entities[" << (++i) << "] = {" << std::endl;
+        if (!it->second->ExportLua(output))
+            status = false;
+        output << std::endl << "}" << std::endl << std::endl;
+    }
     
     return status;
 }

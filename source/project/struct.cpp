@@ -1,3 +1,4 @@
+#include <sstream>
 #include <stdio.h>
 
 #include "project/struct.h"
@@ -115,10 +116,30 @@ bool Struct::Save(json::Object& entity)
     
     return true;
 }
-    
-bool ExportProperty(Struct* s, const std::string& path, const SchemaProperty* schemaItem, json::Object& container, bool appendPath = true);
 
-bool Struct::Export(json::Object& entity)
+class JsonExporter
+{
+public:
+    static bool ExportProperty(Struct* s, const std::string& path, const SchemaProperty* schemaItem, json::Object& container, bool appendPath = true);
+    
+private:
+    static json::UnknownElement ExportAtom(const PropertyAtom* atom, const SchemaPropertyAtom* schemaAtom);
+    static json::UnknownElement ExportPointer(const PropertyPointer* pointer, const SchemaPropertyPointer* schemaPointer);
+    static json::Object ExportStruct(Struct* s, const std::string& path, const SchemaStruct* schemaStruct);    
+};
+
+class LuaExporter
+{
+public:
+    static bool ExportProperty(std::iostream& output, Struct* s, const std::string& path, const SchemaProperty* schemaItem, bool appendPath = true);
+    
+private:
+    static bool ExportAtom(std::iostream& output, const PropertyAtom* atom, const SchemaPropertyAtom* schemaAtom);
+    static bool ExportPointer(std::iostream& output, const PropertyPointer* pointer, const SchemaPropertyPointer* schemaPointer);
+    static bool ExportStruct(std::iostream& output, Struct* s, const std::string& path, const SchemaStruct* schemaStruct);    
+};
+
+bool Struct::ExportJson(json::Object& entity)
 {
     entity["Type"] = json::String(_TypeName);
     entity["Uid"] = json::Number(_Uid);
@@ -129,7 +150,7 @@ bool Struct::Export(json::Object& entity)
     {
         for (SchemaStruct::PropertyMap::const_iterator it = _Type->GetProperties().begin(); it != _Type->GetProperties().end(); ++it)
         {
-            ExportProperty(this, "/", it->second, properties);
+            JsonExporter::ExportProperty(this, "/", it->second, properties);
         }
     }
                
@@ -137,8 +158,46 @@ bool Struct::Export(json::Object& entity)
     
     return true;
 }
+
+bool Struct::ExportLua(std::iostream& output, bool appendNewLine)
+{
+    output << "type = " << _TypeName << "," << std::endl;
+    output << "uid = " << _Uid << "," << std::endl;
     
-json::UnknownElement ExportAtom(const PropertyAtom* atom, const SchemaPropertyAtom* schemaAtom)
+    output << "properties = {" << std::endl;
+    
+    if (_Type)
+    {
+        bool appendComma = false;
+        for (SchemaStruct::PropertyMap::const_iterator it = _Type->GetProperties().begin(); it != _Type->GetProperties().end();)
+        {
+            std::stringstream property;
+            bool status = LuaExporter::ExportProperty(property, this, "/", it->second);
+            
+            if (status)
+            {
+                if (appendComma)
+                {
+                    output << ",";
+                }
+
+                output << property.str();
+                appendComma = true;
+            }
+            
+            ++it;
+        }
+    }
+
+    output << "}";
+    
+    if (appendNewLine)
+        output << std::endl;
+    
+    return false;
+}
+
+json::UnknownElement JsonExporter::ExportAtom(const PropertyAtom* atom, const SchemaPropertyAtom* schemaAtom)
 {
     switch (schemaAtom->GetAtomType())
     {
@@ -157,12 +216,12 @@ json::UnknownElement ExportAtom(const PropertyAtom* atom, const SchemaPropertyAt
     return json::UnknownElement();
 }
     
-json::UnknownElement ExportPointer(const PropertyPointer* pointer, const SchemaPropertyPointer* schemaPointer)
+json::UnknownElement JsonExporter::ExportPointer(const PropertyPointer* pointer, const SchemaPropertyPointer* schemaPointer)
 {
     return json::Number(pointer->GetPointerValue());
 }
     
-json::Object ExportStruct(Struct* s, const std::string& path, const SchemaStruct* schemaStruct)
+json::Object JsonExporter::ExportStruct(Struct* s, const std::string& path, const SchemaStruct* schemaStruct)
 {
     json::Object container;
     
@@ -174,12 +233,12 @@ json::Object ExportStruct(Struct* s, const std::string& path, const SchemaStruct
     return container;
 }
     
-bool ExportProperty(Struct* s, const std::string& path, const SchemaProperty* schemaItem, json::Object& container, bool appendPath)
+bool JsonExporter::ExportProperty(Struct* s, const std::string& path, const SchemaProperty* schemaItem, json::Object& container, bool appendPath)
 {
     std::string propertyPath = path;
     
     if (appendPath)
-        propertyPath = schemaItem->GetName() + "/";
+        propertyPath += schemaItem->GetName() + "/";
     
     const Property* prop = s->GetProperty(propertyPath);
     
@@ -194,6 +253,8 @@ bool ExportProperty(Struct* s, const std::string& path, const SchemaProperty* sc
             const PropertyAtom* atom = static_cast<const PropertyAtom*>(prop);
             
             container[schemaItem->GetName()] = ExportAtom(atom, schemaAtom);
+            
+            break;
         }
             
         case SchemaProperty::kSchemaPropertyArray:
@@ -245,6 +306,139 @@ bool ExportProperty(Struct* s, const std::string& path, const SchemaProperty* sc
     }
     
     return true;
+}
+
+bool LuaExporter::ExportAtom(std::iostream& output, const PropertyAtom* atom, const SchemaPropertyAtom* schemaAtom)
+{
+    switch (schemaAtom->GetAtomType())
+    {
+        case SchemaPropertyAtom::kSchemaAtomFloat:
+            output << atom->GetFloatValue();
+            break;
+            
+        case SchemaPropertyAtom::kSchemaAtomInt:
+            output << atom->GetIntValue();
+            break;
+            
+        case SchemaPropertyAtom::kSchemaAtomString:
+            output << atom->GetStringValue();
+            break;
+    }
+    
+    return true;
+}
+
+bool LuaExporter::ExportPointer(std::iostream& output, const PropertyPointer* pointer, const SchemaPropertyPointer* schemaPointer)
+{
+    output << pointer->GetPointerValue();
+    return true;
+}
+
+bool LuaExporter::ExportStruct(std::iostream& output, Struct* s, const std::string& path, const SchemaStruct* schemaStruct)
+{
+    output << "{";
+    
+    for (SchemaStruct::PropertyMap::const_iterator it = schemaStruct->GetProperties().begin(); it != schemaStruct->GetProperties().end();)
+    {
+        ExportProperty(output, s, path, it->second);
+        
+        ++it;
+        
+        if (it != schemaStruct->GetProperties().end())
+            output << "," << std::endl;
+    }
+    
+    output << "}";
+    
+    return true;
+}
+
+bool LuaExporter::ExportProperty(std::iostream& output, Struct* s, const std::string& path, const SchemaProperty* schemaItem, bool appendPath)
+{
+    std::string propertyPath = path;
+    
+    if (appendPath)
+        propertyPath += schemaItem->GetName() + "/";
+    
+    const Property* prop = s->GetProperty(propertyPath);
+    
+    bool status = false;
+    
+    switch (schemaItem->GetPropertyType())
+    {
+        case SchemaProperty::kSchemaPropertyAtom:
+        {
+            if (!prop || prop->GetType() != Property::kPropertyAtom)
+                return false;
+            
+            const SchemaPropertyAtom* schemaAtom = static_cast<const SchemaPropertyAtom*>(schemaItem);
+            const PropertyAtom* atom = static_cast<const PropertyAtom*>(prop);
+            
+            output << schemaItem->GetName() << " = ";
+            status = ExportAtom(output, atom, schemaAtom);
+            
+            break;
+        }
+            
+        case SchemaProperty::kSchemaPropertyArray:
+        {
+            if (!prop || prop->GetType() != Property::kPropertyArray)
+                return false;
+            
+            const SchemaPropertyArray* schemaArray = static_cast<const SchemaPropertyArray*>(schemaItem);
+            const PropertyArray* array = static_cast<const PropertyArray*>(prop);
+            
+            const SchemaProperty* schemaProperty = schemaArray->GetSchemaProperty();
+            
+            status = true;
+            
+            char buffer[255];
+            for (int i=0; i < array->GetElementCount();)
+            {
+                output << schemaItem->GetName() << " = {";
+                
+                sprintf(buffer, "#%X", array->GetElementIdByIndex(i));
+                
+                if (!ExportProperty(output, s, propertyPath + buffer + "/", schemaProperty, false))
+                    status = false;
+                
+                output << "}";
+                
+                ++i;
+                
+                if (i < array->GetElementCount())
+                    output << ",";
+            }
+            break;
+        }
+            
+        case SchemaProperty::kSchemaPropertyStruct:
+        {
+            const SchemaPropertyStruct* schemaStruct = static_cast<const SchemaPropertyStruct*>(schemaItem);
+            
+            output << schemaItem->GetName() << " = ";
+            status = ExportStruct(output, s, propertyPath, schemaStruct->GetSchemaStruct());
+            
+            break;
+        }
+            
+        case SchemaProperty::kSchemaPropertyPointer:
+        {
+            if (!prop || prop->GetType() != Property::kPropertyPointer)
+                return true;
+            
+            const SchemaPropertyPointer* schemaPointer = static_cast<const SchemaPropertyPointer*>(schemaItem);
+            const PropertyPointer* pointer = static_cast<const PropertyPointer*>(prop);
+            
+            output << schemaItem->GetName() << " = ";
+            
+            status = ExportPointer(output, pointer, schemaPointer);
+            
+            break;
+        }
+    }
+    
+    return status;
 }
 
 Project* Struct::GetProject()

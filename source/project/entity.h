@@ -33,7 +33,9 @@ public:
     
     bool Open(json::Object& entity);
     bool Save(json::Object& entity);
-    bool Export(json::Object& entity);
+    
+    bool ExportJson(json::Object& entity);
+    bool ExportLua(std::iostream& output);
     
     virtual Record* GetRecord();
     virtual const Record* GetRecord() const;
@@ -51,7 +53,8 @@ public:
     sigslot::Signal1<Entity*> entityChanged;
     
 private:
-    bool WriteTransformData(json::Object& entity);
+    bool WriteTransformDataJson(json::Object& entity);
+    bool WriteTransformDataLua(std::iostream& output);
     
 private:
     Record* _Record;

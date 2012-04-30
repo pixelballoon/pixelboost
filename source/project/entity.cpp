@@ -45,16 +45,27 @@ bool Entity::Save(json::Object& entity)
 {
     bool status = Struct::Save(entity);
 
-    status &= WriteTransformData(entity);
+    status &= WriteTransformDataJson(entity);
     
     return status;
 }
     
-bool Entity::Export(json::Object& entity)
+bool Entity::ExportJson(json::Object& entity)
 {
-    bool status = Struct::Export(entity);
+    bool status = Struct::ExportJson(entity);
     
-    status &= WriteTransformData(entity);
+    status &= WriteTransformDataJson(entity);
+    
+    return status;
+}
+
+bool Entity::ExportLua(std::iostream &output)
+{
+    bool status = Struct::ExportLua(output, false);
+    
+    output << "," << std::endl;
+    
+    status &= WriteTransformDataLua(output);
     
     return status;
 }
@@ -105,7 +116,7 @@ void Entity::SetScale(const Vec2& scale)
     entityChanged(this);
 }
     
-bool Entity::WriteTransformData(json::Object& entity)
+bool Entity::WriteTransformDataJson(json::Object& entity)
 {
     json::Object transform;
     transform["tx"] = json::Number(_Position[0]);
@@ -115,6 +126,13 @@ bool Entity::WriteTransformData(json::Object& entity)
     transform["sy"] = json::Number(_Scale[1]);
     
     entity["Transform"] = transform;
+    
+    return true;
+}
+
+bool Entity::WriteTransformDataLua(std::iostream& output)
+{
+    output << "transform = { t = {" << _Position[0] << "," << _Position[1] << "}, r = {0,0," << _Rotation << "}, s = {" << _Scale[0] << "," << _Scale[1] << "} }";
     
     return true;
 }

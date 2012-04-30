@@ -27,9 +27,11 @@ public:
     bool Open(const std::string& filename);
     bool Close();
     bool Save();
-    bool Export();
+    bool ExportJson();
+    bool ExportLua();
     
-    bool Export(json::Object& object);
+    bool ExportJson(json::Object& object);
+    bool ExportLua(std::iostream& output);
     
     virtual Record* GetRecord();
     virtual const Record* GetRecord() const;

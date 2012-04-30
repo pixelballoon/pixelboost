@@ -249,7 +249,7 @@ bool HttpInterface::OnGetRecord(pixelboost::HttpConnection& connection, Uid reco
     if (!record)
         return false;
     
-    record->Export(data);
+    record->ExportJson(data);
     
     std::stringstream contentStream;
     json::Writer::Write(data, contentStream);
@@ -280,7 +280,7 @@ bool HttpInterface::OnGetEntity(pixelboost::HttpConnection& connection, Uid reco
     if (!entity)
         return false;
     
-    entity->Export(data);
+    entity->ExportJson(data);
     
     std::stringstream contentStream;
     json::Writer::Write(data, contentStream);
