@@ -42,7 +42,7 @@ public:
 public:
     struct ProjectConfig
     {
-        std::string imageRoot;
+        std::vector<std::string> imageRoots;
         std::string exportDir;
         unsigned int pixelUnit;
     };
