@@ -50,7 +50,8 @@ namespace pixeleditor
         bool OnGetEntity(pixelboost::HttpConnection& connection, Uid record, Uid entity);
 
         bool OnGetSchema(pixelboost::HttpConnection& connection);
-        bool OnGetSchema(pixelboost::HttpConnection& connection, const std::string& item);
+        
+        bool OnGetImage(pixelboost::HttpConnection& connection, const std::string& image);
         
         void InsertSchemaItem(json::Array& array, SchemaStruct* schemaItem);
         void ExportProperty(json::Object& property, const std::string& name, const SchemaProperty* schemaProp);

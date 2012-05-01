@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <cstdlib>
+#include <fstream>
 #include <sstream>
 
 #include "pixelboost/data/json/writer.h"
@@ -101,9 +102,21 @@ bool HttpInterface::OnHttpRequest(HttpServer::RequestType type, const std::strin
             break;
     }
     
-    connection.AddHeader("Content-Type", "application/json;charset=utf-8");
+    
     
     bool replied = false;
+    
+    if (command == "images" && type == kRequestTypeGet)
+    {
+        connection.AddHeader("Content-Type", "image/png");
+        
+        if (urlArguments.size() == 1)
+        {
+            replied = OnGetImage(connection, urlArguments[0]);
+        }
+    } else {
+        connection.AddHeader("Content-Type", "application/json;charset=utf-8");
+    }
     
     if (command == "records" && type == kRequestTypeGet)
     {
@@ -319,6 +332,37 @@ bool HttpInterface::OnGetSchema(pixelboost::HttpConnection& connection)
     connection.SetContent(content);
     
     return true;
+}
+
+bool HttpInterface::OnGetImage(pixelboost::HttpConnection& connection, const std::string& image)
+{
+    Project* project = Core::Instance()->GetProject();
+
+    const Project::ProjectConfig& config = project->GetConfig();
+  
+    std::fstream file;
+    
+    for (std::vector<std::string>::const_iterator it = config.imageRoots.begin(); it != config.imageRoots.end(); ++it)
+    {
+        file.open((*it + image).c_str());
+        
+        if (file.is_open())
+            break;
+    }
+    
+    if (file.is_open())
+    {
+        std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+
+        char contentLength[64];
+        sprintf(contentLength, "%d", static_cast<int>(content.length()));
+        connection.AddHeader("Content-Length", contentLength);
+        connection.SetContent(content);
+        
+        return true;
+    }
+    
+    return false;
 }
 
 void HttpInterface::InsertSchemaItem(json::Array& array, SchemaStruct* schemaItem)
