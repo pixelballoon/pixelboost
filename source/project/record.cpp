@@ -90,7 +90,8 @@ bool Record::Save()
     sprintf(cmd, "mkdir -p %s", outputDir.c_str());
     system(cmd);
     
-    std::string location = outputDir + GetName() + ".txt";
+    char location[1024];
+    sprintf(location, "%s%X.txt", outputDir.c_str(), GetUid());
 
     json::Object record;
     
@@ -109,7 +110,7 @@ bool Record::Save()
     
     record["Entities"] = entities;
     
-    std::fstream file(location.c_str(), std::fstream::out | std::fstream::trunc);
+    std::fstream file(location, std::fstream::out | std::fstream::trunc);
     json::Writer::Write(record, file);
     
     file.close();
