@@ -80,7 +80,6 @@ function initStage()
 	stage.add(actorLayer);
 
 	stage.on("mousedown", function(evt) {
-		console.log(_record);
 		generateStructProperties(_record);
 	});
 }
@@ -118,8 +117,6 @@ function loadRecord(recordId)
 			initialiseEntity(entity);
 		}
 		_record.Entities = null;
-
-		actorLayer.draw();
 	});
 }
 
@@ -162,17 +159,47 @@ function initialiseEntity(entity)
 			draggable: true
 		});
 	} else {
-		shape = new Kinetic.Circle({
-			x: toPixels(entity.Transform.tx),
-			y: toPixels(entity.Transform.ty),
-			radius: 32,
-			fill: 'red',
-			stroke: 'black',
-			strokeWidth: 1.5,
-			draggable: true
-		});
+		switch (schemaStruct.visualisation.type)
+		{
+			case "sprite":
+			{
+				var sprite = new Image();
+				sprite.src = ajaxPrefix+'images/'+schemaStruct.visualisation.sprite+'.png';
+				sprite.onload = function() {
+					shape = new Kinetic.Image({
+						image: sprite,
+						x: toPixels(entity.Transform.tx),
+						y: toPixels(entity.Transform.ty),
+						centerOffset: {x: sprite.width/2, y: sprite.height/2},
+						width: sprite.width,
+						height: sprite.height,
+						draggable: true
+					});
+					setupShape(shape, entity);
+				}
+				return;
+			}
+			default:
+			{
+				shape = new Kinetic.Circle({
+					x: toPixels(entity.Transform.tx),
+					y: toPixels(entity.Transform.ty),
+					radius: 32,
+					fill: 'red',
+					stroke: 'black',
+					strokeWidth: 1.5,
+					draggable: true
+				});
+				break;
+			}
+		}
 	}
 
+	setupShape(shape, entity);
+}
+
+function setupShape(shape, entity)
+{
 	shape.entityId = entity.Uid;
 
 	shape.on("click", function(evt) {
@@ -190,6 +217,8 @@ function initialiseEntity(entity)
 	});
 
 	actorLayer.add(shape);
+
+	actorLayer.draw();
 }
 
 function onSave()
