@@ -234,7 +234,11 @@ function onSave()
 	$.ajax({
 		type: 'PUT',
 		url: ajaxPrefix+'save',
-		complete : function() {
+		success : function() {
+			noty({"text":"Save successful","theme":"noty_theme_twitter","layout":"topCenter","type":"success","animateOpen":{"height":"toggle"},"animateClose":{"height":"toggle"},"speed":500,"timeout":1000,"closeButton":false,"closeOnSelfClick":true,"closeOnSelfOver":false,"modal":false});
+		},
+		error : function() {
+			noty({"text":"Save failed","theme":"noty_theme_twitter","layout":"topCenter","type":"error","animateOpen":{"height":"toggle"},"animateClose":{"height":"toggle"},"speed":500,"timeout":1000,"closeButton":false,"closeOnSelfClick":true,"closeOnSelfOver":false,"modal":false});
 		}
 	});
 }
