@@ -126,13 +126,14 @@ bool Record::ExportJson()
     sprintf(cmd, "mkdir -p %s", outputDir.c_str());
     system(cmd);
     
-    std::string location = outputDir + GetName() + ".pbr";
+    char location[1024];
+    sprintf(location, "%s%X.pbr", outputDir.c_str(), GetUid());
     
     json::Object record;
     
     bool status = ExportJson(record);
     
-    std::fstream file(location.c_str(), std::fstream::out | std::fstream::trunc);
+    std::fstream file(location, std::fstream::out | std::fstream::trunc);
     json::Writer::Write(record, file);
     
     file.close();
@@ -148,9 +149,10 @@ bool Record::ExportLua()
     sprintf(cmd, "mkdir -p %s", outputDir.c_str());
     system(cmd);
 
-    std::string location = outputDir + GetName() + ".lua";
+    char location[1024];
+    sprintf(location, "%s%X.lua", outputDir.c_str(), GetUid());
     
-    std::fstream file(location.c_str(), std::fstream::out | std::fstream::trunc);
+    std::fstream file(location, std::fstream::out | std::fstream::trunc);
     
     bool status = ExportLua(file);
     
@@ -182,15 +184,13 @@ bool Record::ExportJson(json::Object& record)
 bool Record::ExportLua(std::iostream& output)
 {
     char record[64];
-    sprintf(record, "records[\"%X\"]", GetUid());
-    
-    output << "if (records == nil) then records = {} end" << std::endl << std::endl;
+    sprintf(record, "r%X", GetUid());
     
     output << record << " = {" << std::endl;
     bool status = Struct::ExportLua(output);
-    output << "}" << std::endl;
+    output << "}" << std::endl << std::endl;
     
-    output << record << ".entities = {}" << std::endl;
+    output << record << ".entities = {}" << std::endl << std::endl;
     
     int i=0;
     for (EntityMap::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
