@@ -173,8 +173,10 @@ function initialiseEntity(entity)
 						centerOffset: {x: sprite.width/2, y: sprite.height/2},
 						width: sprite.width,
 						height: sprite.height,
-						draggable: true
+						draggable: true,
+						detectionType: 'pixel'
 					});
+
 					setupShape(shape, entity);
 				}
 				return;
@@ -214,11 +216,17 @@ function setupShape(shape, entity)
 			complete : function() {
 			}
 		});
+
+		this.saveData();
 	});
+
+
 
 	actorLayer.add(shape);
 
 	actorLayer.draw();
+
+	shape.saveData();
 }
 
 function onSave()
