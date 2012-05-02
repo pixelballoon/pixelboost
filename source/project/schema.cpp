@@ -117,6 +117,11 @@ const SchemaAttribute* SchemaItem::GetAttribute(std::string const &name) const
     
     return 0;
 }
+
+const SchemaItem::AttributeMap& SchemaItem::GetAttributes() const
+{
+    return _Attributes;
+}
     
 SchemaStruct::SchemaStruct(Schema* schema, const std::string& name)
     : SchemaItem(schema, name)

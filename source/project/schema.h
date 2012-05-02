@@ -63,12 +63,13 @@ public:
     virtual SchemaType GetSchemaType() const = 0;
     
 public:
-    void SetAttributes(const std::vector<SchemaAttribute*>& attributes);
-    const SchemaAttribute* GetAttribute(const std::string& name) const;
-    
-private:
     typedef std::map<std::string, SchemaAttribute*> AttributeMap;
     
+    void SetAttributes(const std::vector<SchemaAttribute*>& attributes);
+    const SchemaAttribute* GetAttribute(const std::string& name) const;
+    const AttributeMap& GetAttributes() const;
+    
+private:
     AttributeMap _Attributes;
     
     SchemaItem* _Parent;

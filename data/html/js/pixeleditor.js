@@ -159,12 +159,13 @@ function initialiseEntity(entity)
 			draggable: true
 		});
 	} else {
-		switch (schemaStruct.visualisation.type)
+		var visualisation = schemaStruct.attributes.Visualisation;
+		switch (visualisation.type)
 		{
 			case "sprite":
 			{
 				var sprite = new Image();
-				sprite.src = ajaxPrefix+'images/'+schemaStruct.visualisation.sprite+'.png';
+				sprite.src = ajaxPrefix+'images/'+visualisation.sprite+'.png';
 				sprite.onload = function() {
 					shape = new Kinetic.Image({
 						image: sprite,
@@ -219,8 +220,6 @@ function setupShape(shape, entity)
 
 		this.saveData();
 	});
-
-
 
 	actorLayer.add(shape);
 

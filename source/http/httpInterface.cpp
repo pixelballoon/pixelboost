@@ -369,20 +369,21 @@ void HttpInterface::InsertSchemaItem(json::Array& array, SchemaStruct* schemaIte
 {
     json::Object item;
     item["name"] = json::String(schemaItem->GetName());
-    const SchemaAttribute* description = schemaItem->GetAttribute("Description");
-    item["description"] = json::String(description ? description->GetParamValue("") : schemaItem->GetName());
-    
-    json::Object visualisation;
-    const SchemaAttribute* visualisationAttr = schemaItem->GetAttribute("Visualisation");
-    if (visualisationAttr)
+
+    json::Object attributes;
+    for (SchemaItem::AttributeMap::const_iterator it = schemaItem->GetAttributes().begin(); it != schemaItem->GetAttributes().end(); ++it)
     {
-        for (SchemaAttribute::ParamValueMap::const_iterator it = visualisationAttr->GetParamValues().begin(); it != visualisationAttr->GetParamValues().end(); ++it)
+        json::Object attribute;
+        
+        for (SchemaAttribute::ParamValueMap::const_iterator paramIt = it->second->GetParamValues().begin(); paramIt != it->second->GetParamValues().end(); ++paramIt)
         {
-            visualisation[it->first] = json::String(it->second);
+            attribute[paramIt->first] = json::String(paramIt->second);
         }
+        
+        attributes[it->first] = attribute;
     }
-    item["visualisation"] = visualisation;
-    
+    item["attributes"] = attributes;
+        
     json::Array properties;
     for (SchemaStruct::PropertyMap::const_iterator it = schemaItem->GetProperties().begin(); it != schemaItem->GetProperties().end(); ++it)
     {
