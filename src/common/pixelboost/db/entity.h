@@ -3,7 +3,7 @@
 #include "pixelboost/db/struct.h"
 #include "pixelboost/math/maths.h"
 
-namespace pixelboostdb
+namespace pixelboost
 {
     
 class Record;

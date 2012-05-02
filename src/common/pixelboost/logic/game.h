@@ -9,7 +9,6 @@ class CustomRenderer;
 class FontRenderer;
 class GameCenter;
 class GraphicsDevice;
-class LuaManager;
 class ModelRenderer;
 class ParticleRenderer;
 class PrimitiveRenderer;
@@ -33,7 +32,6 @@ public:
     CustomRenderer* GetCustomRenderer() const;
     FontRenderer* GetFontRenderer() const;
     GameCenter* GetGameCenter() const;
-    LuaManager* GetLuaManager() const;
     ModelRenderer* GetModelRenderer() const;
 	ResourceManager* GetResourceManager() const;
     ParticleRenderer* GetParticleRenderer() const;
@@ -60,7 +58,6 @@ private:
     CustomRenderer* _CustomRenderer;
     FontRenderer* _FontRenderer;
     GameCenter* _GameCenter;
-    LuaManager* _LuaManager;
     ModelRenderer* _ModelRenderer;
     ParticleRenderer* _ParticleRenderer;
     PrimitiveRenderer* _PrimitiveRenderer;

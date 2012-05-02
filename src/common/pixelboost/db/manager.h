@@ -5,7 +5,9 @@
 
 #include "pixelboost/db/struct.h"
 
-namespace pixelboostdb
+struct lua_State;
+
+namespace pixelboost
 {
     
 class Record;
@@ -19,15 +21,15 @@ public:
     static DatabaseManager* Instance();
     
 public:
-    typedef Struct*(*CreateStruct)();
+    typedef void*(*CreateStruct)();
     
     void RegisterStruct(const std::string& name, CreateStruct createStruct);
     
     void OpenDatabase(const std::string& location);
     
-    void OpenRecord(const std::string& filename);
+    void OpenRecord(Uid recordId);
     
-    Struct* Create(const std::string& name);
+    void* Create(const std::string& name);
     
 public:
     typedef std::vector<Record*> RecordList;
@@ -38,13 +40,17 @@ public:
 private:
     typedef std::map<std::string, CreateStruct> StructCreateMap;
     typedef std::map<Uid, Record*> RecordMap;
+    typedef std::vector<Uid> RecordIdList;
     
+    RecordIdList _RecordIds;
     RecordList _Records;
     RecordMap _UidMap;
     
     StructCreateMap _StructCreate;
     
     static DatabaseManager* _Instance;
+    
+    lua_State* _State;
 };
     
 }

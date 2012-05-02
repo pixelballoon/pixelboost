@@ -2,7 +2,7 @@
 #include "pixelboost/db/record.h"
 #include "pixelboost/db/manager.h"
 
-namespace pixelboostdb
+namespace pixelboost
 {
     
 bool RecordHandle::IsResolved()
@@ -34,11 +34,12 @@ void Record::Deserialise(json::Object& container, Record* context)
         json::Object& entity = *it;
         json::String& type = entity["Type"];
         
-        Struct* s = DatabaseManager::Instance()->Create(type.Value());
+        void* s = DatabaseManager::Instance()->Create(type.Value());
         
         if (!s)
             continue;
         
+        /*
         if (s->GetType() != 1) // kDbEntity
         {
             delete s;
@@ -49,6 +50,7 @@ void Record::Deserialise(json::Object& container, Record* context)
         
         _Entities.push_back(static_cast<Entity*>(s));
         _UidMap[s->_Uid] = static_cast<Entity*>(s);
+        */
     }
 }
     

@@ -2,7 +2,7 @@
 
 #include "pixelboost/data/json/reader.h"
 
-namespace pixelboostdb
+namespace pixelboost
 {
     
 class Record;

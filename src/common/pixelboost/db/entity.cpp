@@ -1,6 +1,6 @@
 #include "pixelboost/db/entity.h"
 
-namespace pixelboostdb
+namespace pixelboost
 {
     
 Entity::~Entity()

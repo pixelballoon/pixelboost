@@ -1,6 +1,6 @@
 #include "pixelboost/db/struct.h"
 
-namespace pixelboostdb
+namespace pixelboost
 {
     
 Struct::~Struct()
