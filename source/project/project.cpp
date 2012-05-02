@@ -148,11 +148,39 @@ bool Project::Save()
 
 bool Project::Export()
 {
-    for (RecordMap::iterator it = _Records.begin(); it != _Records.end(); ++it)
+    // TODO: Make OS independant
+    char cmd[2048];
+    std::string outputDir = GetConfig().exportDir;
+    sprintf(cmd, "mkdir -p %s", outputDir.c_str());
+    system(cmd);
+
+    std::string location = outputDir + "main.lua";
+    
+    std::fstream file(location.c_str(), std::fstream::out | std::fstream::trunc);
+    
+    file << "records = [" << std::endl;
+
+    for (RecordMap::iterator it = _Records.begin(); it != _Records.end();)
     {
         it->second->ExportLua();
         it->second->ExportJson();
+        
+        char recordString[32];
+        sprintf(recordString, "%X", it->second->GetUid());
+        
+        file << "\"" << recordString << "\"";
+        
+        ++it;
+        
+        if (it != _Records.end())
+            file << ",";
+        
+        file << std::endl;
     }
+    
+    file << "]" << std::endl;
+    
+    file.close();
     
     projectExported(this);
     
