@@ -10,6 +10,8 @@ var _recordId;
 var _schema;
 var _entities;
 
+var _updateCollisionTimer;
+
 function onLoad()
 {
 	populateNavBar();
@@ -95,8 +97,16 @@ function initStage()
 	$('#canvas').on('mousewheel', function(event, delta, deltaX, deltaY) {
 		event.preventDefault();
 
-		stage.setX(stage.getX() - deltaX*100);
-		stage.setY(stage.getY() + deltaY*100);
+		stage.setX(Math.round(stage.getX() - deltaX*100));
+		stage.setY(Math.round(stage.getY() + deltaY*100));
+		
+		if (_updateCollisionTimer != null)
+			window.clearTimeout(_updateCollisionTimer);
+		
+		_updateCollisionTimer = window.setTimeout(function() {
+			updateCollisionData(false);
+		}, 100);
+
 		stage.draw();
 	});
 
@@ -104,6 +114,19 @@ function initStage()
 	actorLayer = new Kinetic.Layer();
 	stage.add(layoutLayer);
 	stage.add(actorLayer);
+}
+
+function updateCollisionData(clear)
+{
+	for (entityId in _entities)
+	{
+		var entity = _entities[entityId];
+		if (clear)
+			entity.shape.clearData();
+		else
+			entity.shape.saveData();
+	}
+	
 }
 
 function initUi()
@@ -182,6 +205,7 @@ function initialiseRecord(record)
 	});
 
 	shape.on("mousedown", function(evt) {
+		updateCollisionData(true);
 		generateStructProperties(_record);
 		this.dragStart = {x: evt.clientX, y: evt.clientY};
 
@@ -190,13 +214,14 @@ function initialiseRecord(record)
 			var yDiff = this.dragStart.y - evt.clientY;
 			this.dragStart.x = evt.clientX;
 			this.dragStart.y = evt.clientY;
-			stage.setX(stage.getX() - xDiff);
-			stage.setY(stage.getY() - yDiff);
+			stage.setX(Math.round(stage.getX() - xDiff));
+			stage.setY(Math.round(stage.getY() - yDiff));
 			stage.draw();
 		});
 	});
 
 	shape.on("mouseup", function(evt) {
+		updateCollisionData(false);
 		this.off("mousemove");
 	});
 
@@ -293,6 +318,8 @@ function initialiseEntity(entity)
 
 function setupShape(shape, entity)
 {
+	entity.shape = shape;
+
 	shape.entityId = entity.Uid;
 
 	shape.on("click", function(evt) {
