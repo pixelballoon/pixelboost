@@ -310,16 +310,14 @@ bool HttpInterface::OnGetEntity(pixelboost::HttpConnection& connection, Uid reco
 
 bool HttpInterface::OnGetSchema(pixelboost::HttpConnection& connection)
 {
-    json::Object schema;
+    json::Array schema;
     
     Project* project = Core::Instance()->GetProject();
     
-    json::Array structs;
     for (Schema::StructMap::const_iterator it = project->GetSchema()->GetStructs().begin(); it != project->GetSchema()->GetStructs().end(); ++it)
     {
-        InsertSchemaItem(structs, it->second);
+        InsertSchemaItem(schema, it->second);
     }
-    schema["structs"] = structs;
     
     std::stringstream contentStream;
     json::Writer::Write(schema, contentStream);

@@ -50,25 +50,35 @@ function updateSchema()
 	$.getJSON(ajaxPrefix + 'schema/', function(data) {
 		schema = new Object();
 
-		for (struct in data.structs)
+		for (schemaItem in data)
 		{
-			schema[data.structs[struct].name] = data.structs[struct];
+			schema[data[schemaItem].name] = data[schemaItem];
 		}
 
 		for (item in schema)
 		{
+			var description = null;
+
+			if (schema[item].attributes.Description != null)
+				description = schema[item].attributes.Description.name;
+
+			if (description == null)
+				description = schema[item].name;
+
 			if (schema[item].type == "entity")
 			{
-				$("<li data-id='"+schema[item].name+"'><a href='#'>"+schema[item].description+"</a></li>").click(function() {createEntity($(this).attr("data-id"));}).appendTo('#entityTypes');
+				$("<li data-id='"+schema[item].name+"'><a href='#'>"+description+"</a></li>").click(function() {createEntity($(this).attr("data-id"));}).appendTo('#entityTypes');
 			}
 			if (schema[item].type == "record")
 			{
-				$("<li data-id='"+schema[item].name+"'><a href='#'>"+schema[item].description+"</a></li>").click(function() {
+				$("<li data-id='"+schema[item].name+"'><a href='#'>"+description+"</a></li>").click(function() {
 					$('#createRecordModal').attr("data-id", $(this).attr("data-id"));
 					$('#createRecordModal').modal();
 				}).appendTo('#recordTypes');
 			}
 		}
+
+		_schema = schema;
 
 		$('.dropdown-toggle').dropdown();
 	});
