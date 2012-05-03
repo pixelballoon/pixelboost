@@ -1,15 +1,18 @@
+#include "pixelboost/db/entity.h"
 #include "pixelboost/db/manager.h"
 #include "pixelboost/db/record.h"
 #include "pixelboost/external/lua/lua.hpp"
 #include "pixelboost/file/fileHelpers.h"
 
-namespace pixelboost
-{
+#include "screens/game/actors/mine.h"
+
+using namespace pixelboost;
     
 DatabaseManager* DatabaseManager::_Instance = 0;
 
 DatabaseManager::DatabaseManager()
 {
+    _DatabaseRoot = "";
     _State = luaL_newstate();
     luaL_openlibs(_State);
 }
@@ -24,6 +27,11 @@ DatabaseManager* DatabaseManager::Instance()
     static DatabaseManager* instance = new DatabaseManager();
     return instance;
 }
+    
+lua_State* DatabaseManager::GetLuaState()
+{
+    return _State;
+}
 
 void DatabaseManager::RegisterStruct(const std::string& name, CreateStruct createStruct)
 {
@@ -32,9 +40,9 @@ void DatabaseManager::RegisterStruct(const std::string& name, CreateStruct creat
     
 void DatabaseManager::OpenDatabase(const std::string& location)
 {
-    std::string fileRoot = FileHelpers::GetRootPath();
+    _DatabaseRoot = FileHelpers::GetRootPath() + location;
     
-    std::string filename = fileRoot + location + "main.lua";
+    std::string filename = _DatabaseRoot + "main.lua";
     
     printf("%s", filename.c_str());
     
@@ -72,53 +80,127 @@ void DatabaseManager::OpenDatabase(const std::string& location)
 
 void DatabaseManager::OpenRecord(Uid recordId)
 {
-    /*
-    std::string recordData = pixelboost::FileHelpers::FileToString(filename);
-        
-    json::Object record;
+    char filename[1024];
+    sprintf(filename, "%srecords/%X.lua", _DatabaseRoot.c_str(), recordId);
     
-    json::Reader::Read(record, recordData);
-
-    json::String& type = record["Type"];
-    
-    Struct* s = DatabaseManager::Instance()->Create(type.Value());
-    
-    if (!s)
-        return;
-    
-    if (s->GetType() != 2) // kDbRecord
+    if (luaL_loadfile(_State, filename) || lua_pcall(_State, 0, 0, 0))
     {
-        delete s;
+        printf("Can't open file: %s\n", lua_tostring(_State, -1));
         return;
     }
-    
-    s->Deserialise(record, 0);
-    
-    _Records.push_back(static_cast<Record*>(s));
-    _UidMap[s->_Uid] = static_cast<Record*>(s);
-     */
-    
-    /*
-    if (luaL_loadfile(_State, filename.c_str()) || lua_pcall(_State, 0, 0, 0))
-    {
-        printf("Can't open file: %s", lua_tostring(_State, -1));
-    }
-     
+         
     char recordName[64];
     sprintf(recordName, "r%X", recordId);
     lua_getglobal(_State, recordName);
-    lua_getfield(_State, -1, "");
-    */
+    
+    lua_getfield(_State, -1, "type");
+    
+    if (!lua_isstring(_State, -1))
+    {
+        lua_pop(_State, -1);
+        printf("Unknown record type");
+        return;
+    }
+    
+    std::string recordType = lua_tostring(_State, -1);
+    lua_pop(_State, 1);
+    
+    Record* record = new Record(recordId, recordType);
+    _Records[recordId] = record;
+    
+    lua_getfield(_State, -1, "entities");
+    
+    if (lua_istable(_State, -1))
+    {
+        lua_len(_State, -1);
+        if (!lua_isnumber(_State, -1))
+            return;
+        
+        int n = lua_tonumber(_State, -1);
+        lua_pop(_State, 1);
+        for (int i=1; i<=n; i++)
+        {
+            Uid uid;
+            std::string type;
+            void* data;
+            
+            lua_rawgeti(_State, -1, i);
+            if (!lua_istable(_State, -1))
+            {
+                lua_pop(_State, 1);
+                continue;
+            }
+            
+            lua_getfield(_State, -1, "uid");
+            
+            if (!lua_isnumber(_State, -1))
+            {
+                lua_pop(_State, 1);
+                continue;
+            }
+            uid = lua_tonumber(_State, -1);
+            lua_pop(_State, 1);
+            
+            lua_getfield(_State, -1, "type");
+            if (!lua_isstring(_State, -1))
+            {
+                lua_pop(_State, 1);
+                continue;
+            }
+            type = lua_tostring(_State, -1);
+            lua_pop(_State, 1);
+            
+            lua_getfield(_State, -1, "properties");
+            
+            if (!lua_istable(_State, -1))
+            {
+                lua_pop(_State, 1);
+                continue;
+            }
+            
+            data = Create(record, type);
+            if (data)
+            {
+                Entity* entity = new Entity(uid, type, data);
+                
+                record->AddEntity(entity);
+            } else {
+                printf("Unable to create entity of type (%s)\n", type.c_str());
+            }
+            
+            lua_pop(_State, 2);
+        }
+    }
+    
+    lua_pop(_State, -1);
 }
     
-void* DatabaseManager::Create(const std::string& name)
+void* DatabaseManager::Create(Record* record, const std::string& name)
 {
     StructCreateMap::iterator it = _StructCreate.find(name);
     
     if (it == _StructCreate.end())
         return 0;
     
-    return it->second();
+    return it->second(record);
 }
 
+const DatabaseManager::RecordIdList& DatabaseManager::GetRecordIds() const
+{
+    return _RecordIds;
+}
+    
+const DatabaseManager::RecordMap& DatabaseManager::GetRecords() const
+{
+    return _Records;
+}
+
+const Record* DatabaseManager::GetRecord(Uid uid) const
+{
+    RecordMap::const_iterator it = _Records.find(uid);
+    
+    if (it == _Records.end())
+        return 0;
+    
+    return it->second;
 }

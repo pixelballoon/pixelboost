@@ -25,24 +25,20 @@ public:
 class Record : public Struct
 {
 public:
+    Record(Uid uid, const std::string& type);
     virtual ~Record();
     
-    virtual int GetType();
-    virtual void Deserialise(json::Object& container, Record* context);
-    
+    void AddEntity(Entity* entity);    
     void AddPointer(Uid pointer, void** destination);
     
 public:
-    typedef std::vector<Entity*> EntityList;
+    typedef std::map<Uid, Entity*> EntityMap;
     
-    const EntityList& GetEntities() const;
+    const EntityMap& GetEntities() const;
     const Entity* GetEntity(Uid uid);
     
 private:
-    typedef std::map<Uid, Entity*> EntityMap;
-    
-    EntityList _Entities;
-    EntityMap _UidMap;
+    EntityMap _Entities;
     
 protected:
     struct EntityPointer

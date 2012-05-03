@@ -21,7 +21,10 @@ public:
     static DatabaseManager* Instance();
     
 public:
-    typedef void*(*CreateStruct)();
+    lua_State* GetLuaState();
+    
+public:
+    typedef void*(*CreateStruct)(Record* record);
     
     void RegisterStruct(const std::string& name, CreateStruct createStruct);
     
@@ -29,22 +32,23 @@ public:
     
     void OpenRecord(Uid recordId);
     
-    void* Create(const std::string& name);
+    void* Create(Record* record, const std::string& name);
     
 public:
-    typedef std::vector<Record*> RecordList;
+    typedef std::vector<Uid> RecordIdList;
+    typedef std::map<Uid, Record*> RecordMap;
     
-    const RecordList& GetRecords() const;
-    const Record* GetRecord(Uid uid);
+    const RecordIdList& GetRecordIds() const;
+    const RecordMap& GetRecords() const;
+    const Record* GetRecord(Uid uid) const;
     
 private:
     typedef std::map<std::string, CreateStruct> StructCreateMap;
-    typedef std::map<Uid, Record*> RecordMap;
-    typedef std::vector<Uid> RecordIdList;
+    
+    std::string _DatabaseRoot;
     
     RecordIdList _RecordIds;
-    RecordList _Records;
-    RecordMap _UidMap;
+    RecordMap _Records;
     
     StructCreateMap _StructCreate;
     

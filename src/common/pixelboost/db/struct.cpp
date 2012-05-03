@@ -1,23 +1,25 @@
 #include "pixelboost/db/struct.h"
 
-namespace pixelboost
+using namespace pixelboost;
+    
+Struct::Struct(Uid uid, const std::string& type)
+    : _Uid(uid)
+    , _Type(type)
 {
+    
+}
     
 Struct::~Struct()
 {
     
 }
 
-int Struct::GetType()
+const std::string& Struct::GetType()
 {
-    return 0; // kDbStruct
+    return _Type;
 }
 
-void Struct::Deserialise(json::Object& container, Record* context)
+Uid Struct::GetUid()
 {
-    json::Number& number = container["Uid"];
-    
-    _Uid = number.Value();
-}
-
+    return _Uid;
 }

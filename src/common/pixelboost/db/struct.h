@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pixelboost/data/json/reader.h"
+#include <string>
 
 namespace pixelboost
 {
@@ -12,13 +12,15 @@ typedef unsigned int Uid;
 class Struct
 {
 public:
+    Struct(Uid uid, const std::string& type);
     virtual ~Struct();
     
-    virtual int GetType();
-    virtual void Deserialise(json::Object& container, Record* context);
+    const std::string& GetType();
+    Uid GetUid();
     
 public:
     Uid _Uid;
+    std::string _Type;
 };
     
 }

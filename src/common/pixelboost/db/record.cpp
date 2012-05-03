@@ -13,60 +13,35 @@ bool RecordHandle::IsResolved()
     return false;
 }
     
+Record::Record(Uid uid, const std::string& type)
+    : Struct(uid, type)
+{
+    
+}
+    
 Record::~Record()
 {
     
 }
-
-int Record::GetType()
-{
-    return 2; // kDbRecord
-}
-
-void Record::Deserialise(json::Object& container, Record* context)
-{
-    Struct::Deserialise(container, this);
     
-    json::Array& entities = container["Entities"];
-    
-    for (json::Array::iterator it = entities.Begin(); it != entities.End(); ++it)
-    {
-        json::Object& entity = *it;
-        json::String& type = entity["Type"];
-        
-        void* s = DatabaseManager::Instance()->Create(type.Value());
-        
-        if (!s)
-            continue;
-        
-        /*
-        if (s->GetType() != 1) // kDbEntity
-        {
-            delete s;
-            continue;
-        }
-        
-        s->Deserialise(entity, this);
-        
-        _Entities.push_back(static_cast<Entity*>(s));
-        _UidMap[s->_Uid] = static_cast<Entity*>(s);
-        */
-    }
-}
-    
-const Record::EntityList& Record::GetEntities() const
+const Record::EntityMap& Record::GetEntities() const
 {
     return _Entities;
 }
 
 const Entity* Record::GetEntity(Uid uid)
 {
-    EntityMap::iterator it = _UidMap.find(uid);
+    EntityMap::iterator it = _Entities.find(uid);
     
-    if (it != _UidMap.end())
+    if (it != _Entities.end())
         return it->second;
     
     return 0;
+}
+    
+void Record::AddEntity(Entity* entity)
+{
+    _Entities[entity->GetUid()] = entity;
 }
     
 void Record::AddPointer(Uid uid, void** pointer)
@@ -82,9 +57,9 @@ void Record::ResolvePointers()
 {
     for (PointerList::iterator it = _Pointers.begin(); it != _Pointers.end(); ++it)
     {
-        EntityMap::iterator entity = _UidMap.find(it->uid);
+        EntityMap::iterator entity = _Entities.find(it->uid);
         
-        if (entity != _UidMap.end())
+        if (entity != _Entities.end())
             (*it->pointer) = entity->second;
     }
     
