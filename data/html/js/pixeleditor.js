@@ -91,14 +91,19 @@ function initStage()
 		width:$('#canvas').width(),
 		height:$('#canvas').height()});
 
-	actorLayer = new Kinetic.Layer();
-	stage.add(actorLayer);
+	$('#canvas').off('mousewheel');
+	$('#canvas').on('mousewheel', function(event, delta, deltaX, deltaY) {
+		event.preventDefault();
 
-	stage.on("mousedown", function(evt) {
-		generateStructProperties(_record);
+		stage.setX(stage.getX() - deltaX*100);
+		stage.setY(stage.getY() + deltaY*100);
+		stage.draw();
 	});
+
 	layoutLayer = new Kinetic.Layer();
+	actorLayer = new Kinetic.Layer();
 	stage.add(layoutLayer);
+	stage.add(actorLayer);
 }
 
 function initUi()
@@ -175,6 +180,26 @@ function initialiseRecord(record)
 		strokeWidth: 1,
 		draggable: false
 	});
+
+	shape.on("mousedown", function(evt) {
+		generateStructProperties(_record);
+		this.dragStart = {x: evt.clientX, y: evt.clientY};
+
+		this.on("mousemove", function(evt) {
+			var xDiff = this.dragStart.x - evt.clientX;
+			var yDiff = this.dragStart.y - evt.clientY;
+			this.dragStart.x = evt.clientX;
+			this.dragStart.y = evt.clientY;
+			stage.setX(stage.getX() - xDiff);
+			stage.setY(stage.getY() - yDiff);
+			stage.draw();
+		});
+	});
+
+	shape.on("mouseup", function(evt) {
+		this.off("mousemove");
+	});
+
 	layoutLayer.add(shape);
 
 	var x;
