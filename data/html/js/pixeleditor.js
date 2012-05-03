@@ -2,6 +2,7 @@ var ajaxPrefix = 'http://localhost:9090/'; // For development
 // var ajaxPrefix = '/'; // For deployment
 
 var stage;
+var layoutLayer;
 var actorLayer;
 
 var _record;
@@ -86,6 +87,8 @@ function initStage()
 	stage.on("mousedown", function(evt) {
 		generateStructProperties(_record);
 	});
+	layoutLayer = new Kinetic.Layer();
+	stage.add(layoutLayer);
 }
 
 function initUi()
@@ -114,6 +117,7 @@ function loadRecord(recordId)
 
 	$.getJSON(ajaxPrefix + 'record/' + recordId, function(data) {
 		_record = data;
+		initialiseRecord(_record);
 		for (entityIdx in _record.Entities)
 		{
 			var entity = _record.Entities[entityIdx];
@@ -144,6 +148,53 @@ function createEntity(entityType)
 			loadRecord(_recordId);
 		}
 	});
+}
+
+function initialiseRecord(record)
+{
+	var width = 50;
+	var height = 20;
+
+	var shape = new Kinetic.Rect({
+		x: -toPixels(width/2),
+		y: -toPixels(height/2),
+		width: toPixels(width),
+		height: toPixels(height),
+		fill: 'lightgrey',
+		stroke: 'black',
+		strokeWidth: 1,
+		draggable: false
+	});
+	layoutLayer.add(shape);
+
+	var x;
+	for (x = Math.ceil(-width/2); x <= width/2; x++)
+	{
+		var points = [{x: toPixels(x), y: -toPixels(height/2)}, {x: toPixels(x), y: toPixels(height/2)}];
+		shape = new Kinetic.Line({
+			points: points,
+			stroke: 'grey',
+			strokeWidth: 1
+		});
+
+		layoutLayer.add(shape);
+	}
+
+	var y;
+	for (y = Math.ceil(-height/2); y <= height/2; y++)
+	{
+		var points = [{x: -toPixels(width/2), y: toPixels(y)}, {x: toPixels(width/2), y: toPixels(y)}];
+		shape = new Kinetic.Line({
+			points: points,
+			stroke: 'grey',
+			strokeWidth: 1
+		});
+
+		layoutLayer.add(shape);
+	}
+
+	layoutLayer.draw();
+	stage.draw();
 }
 
 function initialiseEntity(entity)
