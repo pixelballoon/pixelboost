@@ -39,7 +39,6 @@
 		1C02B0981549CE2A00A9536D /* lundump.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C02B0731549CE2A00A9536D /* lundump.c */; };
 		1C02B0991549CE2A00A9536D /* lvm.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C02B0751549CE2A00A9536D /* lvm.c */; };
 		1C02B09A1549CE2A00A9536D /* lzio.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C02B0771549CE2A00A9536D /* lzio.c */; };
-		1C02B09F1549DE2C00A9536D /* luaManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C02B09D1549DE2C00A9536D /* luaManager.cpp */; };
 		1C210F41152CF44F00DEAC92 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C210F40152CF44F00DEAC92 /* Cocoa.framework */; };
 		1C210F5E152CF60400DEAC92 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C210F5D152CF60400DEAC92 /* WebKit.framework */; };
 		1CEB6C4E1540953100E8D103 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1CEB6C441540953100E8D103 /* AppDelegate.mm */; };
@@ -196,8 +195,6 @@
 		1C02B0761549CE2A00A9536D /* lvm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lvm.h; sourceTree = "<group>"; };
 		1C02B0771549CE2A00A9536D /* lzio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lzio.c; sourceTree = "<group>"; };
 		1C02B0781549CE2A00A9536D /* lzio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lzio.h; sourceTree = "<group>"; };
-		1C02B09D1549DE2C00A9536D /* luaManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = luaManager.cpp; sourceTree = "<group>"; };
-		1C02B09E1549DE2C00A9536D /* luaManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = luaManager.h; sourceTree = "<group>"; };
 		1C210F3C152CF44F00DEAC92 /* editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = editor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C210F40152CF44F00DEAC92 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		1C210F43152CF44F00DEAC92 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -472,15 +469,6 @@
 			path = lua;
 			sourceTree = "<group>";
 		};
-		1C02B09C1549DE2C00A9536D /* script */ = {
-			isa = PBXGroup;
-			children = (
-				1C02B09D1549DE2C00A9536D /* luaManager.cpp */,
-				1C02B09E1549DE2C00A9536D /* luaManager.h */,
-			);
-			path = script;
-			sourceTree = "<group>";
-		};
 		1C210F31152CF44E00DEAC92 = {
 			isa = PBXGroup;
 			children = (
@@ -585,7 +573,6 @@
 				1CEB6CCD15409A4300E8D103 /* misc */,
 				1CEB6CD215409A4300E8D103 /* network */,
 				1CEB6CDB15409A4300E8D103 /* physics */,
-				1C02B09C1549DE2C00A9536D /* script */,
 				1CEB6CDE15409A4300E8D103 /* util */,
 			);
 			path = pixelboost;
@@ -1425,7 +1412,6 @@
 				1C02B0981549CE2A00A9536D /* lundump.c in Sources */,
 				1C02B0991549CE2A00A9536D /* lvm.c in Sources */,
 				1C02B09A1549CE2A00A9536D /* lzio.c in Sources */,
-				1C02B09F1549DE2C00A9536D /* luaManager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
