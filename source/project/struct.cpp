@@ -161,7 +161,7 @@ bool Struct::ExportJson(json::Object& entity)
 
 bool Struct::ExportLua(std::iostream& output, bool appendNewLine)
 {
-    output << "type = " << _TypeName << "," << std::endl;
+    output << "type = \"" << _TypeName << "\"," << std::endl;
     output << "uid = " << _Uid << "," << std::endl;
     
     output << "properties = {" << std::endl;
@@ -169,7 +169,7 @@ bool Struct::ExportLua(std::iostream& output, bool appendNewLine)
     if (_Type)
     {
         bool appendComma = false;
-        for (SchemaStruct::PropertyMap::const_iterator it = _Type->GetProperties().begin(); it != _Type->GetProperties().end();)
+        for (SchemaStruct::PropertyMap::const_iterator it = _Type->GetProperties().begin(); it != _Type->GetProperties().end(); ++it)
         {
             std::stringstream property;
             bool status = LuaExporter::ExportProperty(property, this, "/", it->second);
@@ -184,8 +184,6 @@ bool Struct::ExportLua(std::iostream& output, bool appendNewLine)
                 output << property.str();
                 appendComma = true;
             }
-            
-            ++it;
         }
     }
 
@@ -321,7 +319,7 @@ bool LuaExporter::ExportAtom(std::iostream& output, const PropertyAtom* atom, co
             break;
             
         case SchemaPropertyAtom::kSchemaAtomString:
-            output << atom->GetStringValue();
+            output << "\"" << atom->GetStringValue() << "\"";
             break;
     }
     
@@ -338,14 +336,22 @@ bool LuaExporter::ExportStruct(std::iostream& output, Struct* s, const std::stri
 {
     output << "{";
     
-    for (SchemaStruct::PropertyMap::const_iterator it = schemaStruct->GetProperties().begin(); it != schemaStruct->GetProperties().end();)
-    {
-        ExportProperty(output, s, path, it->second);
+    bool appendComma = false;
+    for (SchemaStruct::PropertyMap::const_iterator it = schemaStruct->GetProperties().begin(); it != schemaStruct->GetProperties().end(); ++it)
+    {   
+        std::stringstream property;
+        bool status = ExportProperty(property, s, path, it->second);
         
-        ++it;
-        
-        if (it != schemaStruct->GetProperties().end())
-            output << "," << std::endl;
+        if (status)
+        {
+            if (appendComma)
+            {
+                output << ",";
+            }
+            
+            output << property.str();
+            appendComma = true;
+        }
     }
     
     output << "}";
