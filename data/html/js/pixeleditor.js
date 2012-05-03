@@ -16,6 +16,10 @@ function onLoad()
 	updateSchema();
 	initStage();
 	initUi();
+
+	$(window).resize(function() {
+		stage.setSize($('#canvas').width(), $('#canvas').height());
+	});
 }
 
 function populateNavBar()
@@ -73,8 +77,8 @@ function initStage()
 {
 	$('#canvas').empty();
 	stage = new Kinetic.Stage({container: 'canvas',
-		width:600,
-		height:600});
+		width:$('#canvas').width(),
+		height:$('#canvas').height()});
 
 	actorLayer = new Kinetic.Layer();
 	stage.add(actorLayer);
