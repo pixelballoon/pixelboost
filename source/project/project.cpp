@@ -158,7 +158,7 @@ bool Project::Export()
     
     std::fstream file(location.c_str(), std::fstream::out | std::fstream::trunc);
     
-    file << "records = [" << std::endl;
+    file << "records = {" << std::endl;
 
     for (RecordMap::iterator it = _Records.begin(); it != _Records.end();)
     {
@@ -178,7 +178,7 @@ bool Project::Export()
         file << std::endl;
     }
     
-    file << "]" << std::endl;
+    file << "}" << std::endl;
     
     file.close();
     
