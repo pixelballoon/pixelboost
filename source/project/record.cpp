@@ -8,6 +8,14 @@
 
 #include "pixelboost/data/json/reader.h"
 #include "pixelboost/data/json/writer.h"
+#include "pixelboost/external/lua/lua.hpp"
+
+extern "C" {
+#include "pixelboost/external/lua/lapi.h"
+#include "pixelboost/external/lua/lobject.h"
+#include "pixelboost/external/lua/lundump.h"
+}
+
 #include "pixelboost/file/fileHelpers.h"
 
 using namespace pixeleditor;
@@ -141,6 +149,11 @@ bool Record::ExportJson()
     return status;
 }
 
+static int writeLua(lua_State*, const void* p, size_t size, void* u)
+{
+    return (fwrite(p,size,1,(FILE*)u)!=1) && (size!=0);
+}
+
 bool Record::ExportLua()
 {
     // TODO: Make OS independant
@@ -157,6 +170,22 @@ bool Record::ExportLua()
     bool status = ExportLua(file);
     
     file.close();
+    
+    // Export byte-code
+    lua_State* state = luaL_newstate();
+    luaL_openlibs(state);
+    luaL_loadfile(state, location);
+    sprintf(location, "%sc", location);
+    FILE* compiledFile = fopen(location, "wb");
+    TValue *o;
+    lua_lock(state);
+    api_checknelems(state, 1);
+    o = state->top - 1;
+    if (isLfunction(o))
+        luaU_dump(state, getproto(o), writeLua, compiledFile, true);
+    lua_unlock(state);
+    fclose(compiledFile);
+    lua_close(state);
     
     return status;
 }
@@ -200,7 +229,7 @@ bool Record::ExportLua(std::iostream& output)
             status = false;
         output << std::endl << "}" << std::endl << std::endl;
     }
-    
+        
     return status;
 }
     
