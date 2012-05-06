@@ -48,6 +48,7 @@ namespace pixeleditor
         bool OnGetRecords(pixelboost::HttpConnection& connection);
         bool OnGetRecord(pixelboost::HttpConnection& connection, Uid record);
         bool OnGetEntity(pixelboost::HttpConnection& connection, Uid record, Uid entity);
+        bool OnGetProperty(pixelboost::HttpConnection& connection, Uid record, Uid entity, const std::string& path);
 
         bool OnGetSchema(pixelboost::HttpConnection& connection);
         

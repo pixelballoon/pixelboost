@@ -13,6 +13,7 @@
 #include "http/httpInterface.h"
 #include "project/entity.h"
 #include "project/project.h"
+#include "project/property.h"
 #include "project/record.h"
 #include "project/schema.h"
 #include "core.h"
@@ -127,6 +128,19 @@ bool HttpInterface::OnHttpRequest(HttpServer::RequestType type, const std::strin
         {
             std::string record = urlArguments[0];
             replied = OnGetRecord(connection, atoi(record.c_str()));
+        } else if (urlArguments.size() >= 3 && urlArguments[1] == "entity")
+        {
+            std::string record = urlArguments[0];
+            std::string entity = urlArguments[2];
+            
+            std::string path = "/";
+            
+            for (int i=3; i < urlArguments.size(); i++)
+            {
+                path += urlArguments[i] + "/";
+            }
+            
+            replied = OnGetProperty(connection, atoi(record.c_str()), atoi(entity.c_str()), path);
         }
     } else if (command == "schema" && type == kRequestTypeGet)
     {
@@ -304,6 +318,41 @@ bool HttpInterface::OnGetEntity(pixelboost::HttpConnection& connection, Uid reco
     sprintf(contentLength, "%d", static_cast<int>(content.length()));
     connection.AddHeader("Content-Length", contentLength);
     connection.SetContent(content);
+    
+    return true;
+}
+
+bool HttpInterface::OnGetProperty(pixelboost::HttpConnection& connection, Uid recordId, Uid entityId, const std::string& path)
+{
+    std::string propertyValue;
+    
+    json::Object data;
+    
+    Project* project = Core::Instance()->GetProject();
+    
+    Record* record = project->GetRecord(recordId);
+    
+    if (!record)
+        return false;
+    
+    Entity* entity = record->GetEntity(entityId);
+    
+    if (!entity)
+        return false;
+    
+    const Property* property = entity->GetProperty(path);
+    
+    if (property && property->GetType() == Property::kPropertyAtom)
+    {
+        propertyValue = static_cast<const PropertyAtom*>(property)->GetStringValue();
+    } else {
+        propertyValue = "";
+    }
+    
+    char contentLength[64];
+    sprintf(contentLength, "%d", static_cast<int>(propertyValue.length()));
+    connection.AddHeader("Content-Length", contentLength);
+    connection.SetContent(propertyValue);
     
     return true;
 }
