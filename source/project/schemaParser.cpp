@@ -410,6 +410,8 @@ SchemaProperty* ParseProperty(SchemaItem* parent, std::vector<Token>& tokens, si
         schemaProperty = new SchemaPropertyArray(parent, typeToken.data, nameToken.data, schemaProperty);
     }
     
+    schemaProperty->SetAttributes(attributes);
+    
     return schemaProperty;
 }
 

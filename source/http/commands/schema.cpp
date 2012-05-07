@@ -44,19 +44,7 @@ void SchemaCommands::InsertSchemaItem(json::Array& array, SchemaStruct* schemaIt
     json::Object item;
     item["name"] = json::String(schemaItem->GetName());
     
-    json::Object attributes;
-    for (SchemaItem::AttributeMap::const_iterator it = schemaItem->GetAttributes().begin(); it != schemaItem->GetAttributes().end(); ++it)
-    {
-        json::Object attribute;
-        
-        for (SchemaAttribute::ParamValueMap::const_iterator paramIt = it->second->GetParamValues().begin(); paramIt != it->second->GetParamValues().end(); ++paramIt)
-        {
-            attribute[paramIt->first] = json::String(paramIt->second);
-        }
-        
-        attributes[it->first] = attribute;
-    }
-    item["attributes"] = attributes;
+    ExportAttributes(item, schemaItem);
     
     json::Array properties;
     for (SchemaStruct::PropertyMap::const_iterator it = schemaItem->GetProperties().begin(); it != schemaItem->GetProperties().end(); ++it)
@@ -87,10 +75,29 @@ void SchemaCommands::InsertSchemaItem(json::Array& array, SchemaStruct* schemaIt
     array.Insert(item);
 }
 
+void SchemaCommands::ExportAttributes(json::Object& parent, const SchemaItem* schemaItem)
+{
+    json::Object attributes;
+    for (SchemaItem::AttributeMap::const_iterator it = schemaItem->GetAttributes().begin(); it != schemaItem->GetAttributes().end(); ++it)
+    {
+        json::Object attribute;
+        
+        for (SchemaAttribute::ParamValueMap::const_iterator paramIt = it->second->GetParamValues().begin(); paramIt != it->second->GetParamValues().end(); ++paramIt)
+        {
+            attribute[paramIt->first] = json::String(paramIt->second);
+        }
+        
+        attributes[it->first] = attribute;
+    }
+    parent["attributes"] = attributes;
+}
+
 void SchemaCommands::ExportProperty(json::Object& property, const std::string& name, const SchemaProperty* schemaProp)
 {
     if (name != "")
         property["name"] = json::String(name);
+    
+    ExportAttributes(property, schemaProp);
     
     switch (schemaProp->GetPropertyType())
     {
