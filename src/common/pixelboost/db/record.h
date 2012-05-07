@@ -25,7 +25,7 @@ public:
 class Record : public Struct
 {
 public:
-    Record(Uid uid, const std::string& type);
+    Record(Uid uid, Uid type);
     virtual ~Record();
     
     void AddEntity(Entity* entity);    

@@ -13,7 +13,7 @@ bool RecordHandle::IsResolved()
     return false;
 }
     
-Record::Record(Uid uid, const std::string& type)
+Record::Record(Uid uid, Uid type)
     : Struct(uid, type)
 {
     

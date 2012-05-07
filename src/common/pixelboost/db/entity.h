@@ -13,10 +13,10 @@ class Record;
 class Entity : public Struct
 {
 public:
-    Entity(Uid uid, const std::string& type, void* data);
+    Entity(Uid uid, Uid type, void* data);
     virtual ~Entity();
     
-    void* GetData();
+    void* GetData() const;
     
 private:
     void* _Data;

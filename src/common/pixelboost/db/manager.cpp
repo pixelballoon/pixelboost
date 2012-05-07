@@ -33,9 +33,9 @@ lua_State* DatabaseManager::GetLuaState()
     return _State;
 }
 
-void DatabaseManager::RegisterStruct(const std::string& name, CreateStruct createStruct)
+void DatabaseManager::RegisterStruct(Uid type, CreateStruct createStruct)
 {
-    _StructCreate[name] = createStruct;
+    _StructCreate[type] = createStruct;
 }
     
 void DatabaseManager::OpenDatabase(const std::string& location)
@@ -102,7 +102,7 @@ void DatabaseManager::OpenRecord(Uid recordId)
         return;
     }
     
-    std::string recordType = lua_tostring(_State, -1);
+    Uid recordType = lua_tonumber(_State, -1);
     lua_pop(_State, 1);
     
     Record* record = new Record(recordId, recordType);
@@ -121,7 +121,7 @@ void DatabaseManager::OpenRecord(Uid recordId)
         for (int i=1; i<=n; i++)
         {
             Uid uid;
-            std::string type;
+            Uid type;
             void* data;
             
             lua_rawgeti(_State, -1, i);
@@ -142,12 +142,12 @@ void DatabaseManager::OpenRecord(Uid recordId)
             lua_pop(_State, 1);
             
             lua_getfield(_State, -1, "type");
-            if (!lua_isstring(_State, -1))
+            if (!lua_isnumber(_State, -1))
             {
                 lua_pop(_State, 1);
                 continue;
             }
-            type = lua_tostring(_State, -1);
+            type = lua_tonumber(_State, -1);
             lua_pop(_State, 1);
             
             lua_getfield(_State, -1, "properties");
@@ -165,7 +165,7 @@ void DatabaseManager::OpenRecord(Uid recordId)
                 
                 record->AddEntity(entity);
             } else {
-                printf("Unable to create entity of type (%s)\n", type.c_str());
+                printf("Unable to create entity of type (%u)\n", type);
             }
             
             lua_pop(_State, 2);
@@ -175,9 +175,9 @@ void DatabaseManager::OpenRecord(Uid recordId)
     lua_pop(_State, -1);
 }
     
-void* DatabaseManager::Create(Record* record, const std::string& name)
+void* DatabaseManager::Create(Record* record, Uid type)
 {
-    StructCreateMap::iterator it = _StructCreate.find(name);
+    StructCreateMap::iterator it = _StructCreate.find(type);
     
     if (it == _StructCreate.end())
         return 0;

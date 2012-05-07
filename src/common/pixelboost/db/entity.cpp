@@ -2,7 +2,7 @@
 
 using namespace pixelboost;
     
-Entity::Entity(Uid uid, const std::string& type, void* data)
+Entity::Entity(Uid uid, Uid type, void* data)
     : Struct(uid, type)
     , _Data(data)
 {
@@ -14,7 +14,7 @@ Entity::~Entity()
     
 }
     
-void* Entity::GetData()
+void* Entity::GetData() const
 {
     return _Data;
 }

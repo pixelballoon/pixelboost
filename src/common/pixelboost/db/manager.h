@@ -26,13 +26,13 @@ public:
 public:
     typedef void*(*CreateStruct)(Record* record);
     
-    void RegisterStruct(const std::string& name, CreateStruct createStruct);
+    void RegisterStruct(Uid type, CreateStruct createStruct);
     
     void OpenDatabase(const std::string& location);
     
     void OpenRecord(Uid recordId);
     
-    void* Create(Record* record, const std::string& name);
+    void* Create(Record* record, Uid type);
     
 public:
     typedef std::vector<Uid> RecordIdList;
@@ -43,7 +43,7 @@ public:
     const Record* GetRecord(Uid uid) const;
     
 private:
-    typedef std::map<std::string, CreateStruct> StructCreateMap;
+    typedef std::map<Uid, CreateStruct> StructCreateMap;
     
     std::string _DatabaseRoot;
     

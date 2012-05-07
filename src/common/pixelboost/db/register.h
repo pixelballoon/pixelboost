@@ -13,13 +13,13 @@
 #define PIXELBOOST_REGISTER(name) PB_Register ## name ();
 #define PIXELBOOST_END_REGISTER }
 
-#define PIXELBOOST_START_STRUCT(name, type) \
+#define PIXELBOOST_START_STRUCT(type, name) \
     class pixelboost::Record; \
     void* PB_Create ## type (pixelboost::Record* record); \
     void PB_Register ## type (); \
     void PB_Deserialise ## type (pixelboost::Record* record, type& object); \
     void PB_Register ## type () { \
-        pixelboost::DatabaseManager::Instance()->RegisterStruct(name, &PB_Create ## type ); \
+        pixelboost::DatabaseManager::Instance()->RegisterStruct(pixelboost::TypeHash(name), &PB_Create ## type ); \
     } \
     void* PB_Create ## type (pixelboost::Record* record) { \
         type* structObject = new type(); \
