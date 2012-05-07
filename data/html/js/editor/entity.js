@@ -60,7 +60,7 @@ Entity.prototype.setupGroup = function()
 	this.group.entityId = this.data.Uid;
 
 	this.group.on("click", _.bind(function(evt) {
-		pb.generateStructProperties(this.data);
+		pb.generateStructProperties("record/"+this.recordId+"/entity/"+this.data.Uid+"/", this.data);
 	}, this));
 
 	this.group.on("dragend", _.bind(function(evt) {

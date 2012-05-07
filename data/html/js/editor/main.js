@@ -212,7 +212,7 @@ PixelEditor.prototype.initialiseRecord = function(record)
 
 	background.on("mousedown", _.bind(function(evt) {
 		this.updateCollisionData(true);
-		this.generateStructProperties(this.record);
+		this.onDeselect();
 
 		background.dragStart = {x: evt.clientX, y: evt.clientY};
 
@@ -291,20 +291,20 @@ PixelEditor.prototype.onExport = function()
 
 PixelEditor.prototype.onDeselect = function()
 {
-	this.generateStructProperties(this.record);
+	this.generateStructProperties("", this.record);
 }
 
-PixelEditor.prototype.generateStructProperties = function(struct)
+PixelEditor.prototype.generateStructProperties = function(root, struct)
 {
 	if (!struct)
 		return;
 
 	var parent = $("#propertyArea");
 	parent.empty();
-	this.generateProperties(parent, "/", this.schema[struct.Type], struct.Properties);
+	this.generateProperties(root, parent, "/", this.schema[struct.Type], struct.Properties);
 }
 
-PixelEditor.prototype.generateProperties = function(parent, path, schemaItem, properties)
+PixelEditor.prototype.generateProperties = function(root, parent, path, schemaItem, properties)
 {
 	if (!schemaItem)
 		return;
@@ -312,11 +312,11 @@ PixelEditor.prototype.generateProperties = function(parent, path, schemaItem, pr
 	for (propertyIdx in schemaItem.properties)
 	{
 		var property = schemaItem.properties[propertyIdx];
-		this.addProperty(parent, path + property.name + "/", property, properties);
+		this.addProperty(root, parent, path + property.name + "/", property, properties);
 	}
 }
 
-PixelEditor.prototype.addProperty = function(parent, path, property, properties)
+PixelEditor.prototype.addProperty = function(root, parent, path, property, properties)
 {
 	switch (property.type)
 	{
@@ -330,7 +330,7 @@ PixelEditor.prototype.addProperty = function(parent, path, property, properties)
 			$('<label class="control-label">'+property.name+'</label>').appendTo(parent);
 			var child = $('<div class="control-group well"></div>');
 			child.appendTo(parent);
-			this.generateProperties(child, path, this.schema[property.structType], properties ? properties[property.name] : null);
+			this.generateProperties(root, child, path, this.schema[property.structType], properties ? properties[property.name] : null);
 			break;
 		case "atom":
 		{
@@ -351,6 +351,17 @@ PixelEditor.prototype.addProperty = function(parent, path, property, properties)
 					child = $('<label class="control-label">'+property.name+'</label><input type="text" class="span6" value="'+value+'"></input><br/>');
 					break;
 			}
+			child.change(_.bind(function(evt) {
+				var value = evt.target.value;
+				var url = ajaxPrefix+root+"property"+path+"?type=atom&value="+value;
+				$.ajax({
+					type: 'PUT',
+					url: url,
+					complete : function() {
+					}
+				});
+				this.properties[this.property.name] = value;
+			}, {root: root, path:path, properties:properties, property:property}));
 			child.appendTo(parent);
 			break;
 		}

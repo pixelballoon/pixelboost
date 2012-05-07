@@ -147,8 +147,8 @@ bool HttpInterface::OnHttpRequest(HttpServer::RequestType type, const std::strin
                 replied = OnGetRecord(connection, atoi(record.c_str()));
             } else if (urlArguments.size() >= 3 && urlArguments[1] == "entity")
             {
-                std::string record = urlArguments[0];
-                std::string entity = urlArguments[2];
+                Uid record = atoi(urlArguments[0].c_str());
+                Uid entity = atoi(urlArguments[2].c_str());
                 
                 std::string path = "/";
                 
@@ -157,7 +157,7 @@ bool HttpInterface::OnHttpRequest(HttpServer::RequestType type, const std::strin
                     path += urlArguments[i] + "/";
                 }
                 
-                replied = OnGetProperty(connection, atoi(record.c_str()), atoi(entity.c_str()), path);
+                replied = OnGetProperty(connection, record, entity, path);
             }
         } else if (command == "record" && (type == kRequestTypePost || type == kRequestTypePut))
         {
@@ -165,11 +165,28 @@ bool HttpInterface::OnHttpRequest(HttpServer::RequestType type, const std::strin
             {
                 std::string record = urlArguments[0];
                 replied = OnCreateEntity(connection, atoi(record.c_str()), queryArguments["type"]);
-            } else if (urlArguments.size() == 4 && urlArguments[1] == "entity" && urlArguments[3] == "transform" && type == kRequestTypePut)
+            } else if (urlArguments.size() >= 4 && urlArguments[1] == "entity" && type == kRequestTypePut)
             {
-                std::string record = urlArguments[0];
-                std::string entity = urlArguments[2];
-                replied = OnSetTransform(connection, atoi(record.c_str()), atoi(entity.c_str()), Vec2(atof(queryArguments["tx"].c_str()), atof(queryArguments["ty"].c_str())), 0, Vec2(1,1));
+                Uid record = atoi(urlArguments[0].c_str());
+                Uid entity = atoi(urlArguments[2].c_str());
+                
+                if (urlArguments[3] == "transform")
+                {
+                    replied = OnSetTransform(connection, record, entity, Vec2(atof(queryArguments["tx"].c_str()), atof(queryArguments["ty"].c_str())), 0, Vec2(1,1));
+                } else if (urlArguments[3] == "property")
+                {
+                    std::string type = queryArguments["type"];
+                    std::string value = queryArguments["value"];
+                    
+                    std::string path = "/";
+                    
+                    for (int i=4; i < urlArguments.size(); i++)
+                    {
+                        path += urlArguments[i] + "/";
+                    }
+                    
+                    replied = OnSetProperty(connection, record, entity, path, type, value);
+                }
             }
         } else if (command == "records" && type == kRequestTypePost)
         {
@@ -321,6 +338,37 @@ bool HttpInterface::OnGetProperty(pixelboost::HttpConnection& connection, Uid re
     sprintf(contentLength, "%d", static_cast<int>(propertyValue.length()));
     connection.AddHeader("Content-Length", contentLength);
     connection.SetContent(propertyValue);
+    
+    return true;
+}
+
+bool HttpInterface::OnSetProperty(pixelboost::HttpConnection& connection, Uid recordId, Uid entityId, const std::string& path, const std::string& type, const std::string& value)
+{
+    std::string propertyValue;
+    
+    json::Object data;
+    
+    Project* project = Core::Instance()->GetProject();
+    
+    Record* record = project->GetRecord(recordId);
+    
+    if (!record)
+        return false;
+    
+    Entity* entity = record->GetEntity(entityId);
+    
+    if (!entity)
+        return false;
+    
+    if (type == "atom")
+    {
+        PropertyAtom* property = entity->AcquireAtom(path);
+        
+        if (!property)
+            return false;
+        
+        property->SetStringValue(value);
+    }
     
     return true;
 }
