@@ -45,6 +45,7 @@ public:
     virtual const Record* GetRecord() const = 0;
     
     const std::string& GetTypeName() const;
+    Uid GetTypeHash() const;
     const SchemaStruct* GetType() const;
     void SetUid(Uid uid);
     Uid GetUid() const;

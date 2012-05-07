@@ -159,9 +159,22 @@ bool Struct::ExportJson(json::Object& entity)
     return true;
 }
 
+Uid Struct::GetTypeHash() const
+{
+    const size_t length = _TypeName.length()+1;
+    Uid hash = 2166136261u;
+    for (size_t i=0; i<length; ++i)
+    {
+        hash ^= _TypeName[i];
+        hash *= 16777619u;
+    }
+    
+    return hash;
+}
+
 bool Struct::ExportLua(std::iostream& output, bool appendNewLine)
 {
-    output << "type = \"" << _TypeName << "\"," << std::endl;
+    output << "type = " << GetTypeHash() << "," << std::endl;
     output << "uid = " << _Uid << "," << std::endl;
     
     output << "properties = {" << std::endl;
