@@ -4,32 +4,43 @@
 #include <sstream>
 
 #include "pixelboost/data/json/writer.h"
-#include "pixelboost/debug/debugVariable.h"
-#include "pixelboost/debug/debugVariableManager.h"
 #include "pixelboost/file/fileHelpers.h"
-#include "pixelboost/network/networkMessage.h"
 
 #include "command/manager.h"
+#include "http/commands/record.h"
+#include "http/commands/schema.h"
 #include "http/httpInterface.h"
 #include "project/entity.h"
 #include "project/project.h"
 #include "project/property.h"
 #include "project/record.h"
-#include "project/schema.h"
 #include "core.h"
 
 using namespace pixelboost;
 using namespace pixeleditor;
 
-HttpInterface::HttpInterface(const std::string& htmlLocation)
+HttpInterface::HttpInterface()
     : pixelboost::HttpServer()
 {
-    Start(9090, pixelboost::FileHelpers::GetRootPath()+"/"+htmlLocation);
+    
 }
 
 HttpInterface::~HttpInterface()
 {
     
+}
+
+void HttpInterface::Initialise()
+{
+    _SchemaCommands = new SchemaCommands();
+    _RecordCommands = new RecordCommands();
+    
+    Start(9090, pixelboost::FileHelpers::GetRootPath()+"/data/html/");
+}
+
+void HttpInterface::RegisterCommand(const std::string& command, HttpServer::RequestType requestType, CommandDelegate delegate)
+{
+    _Commands[CommandRequest(command, requestType)] = delegate;
 }
 
 bool HttpInterface::OnHttpRequest(HttpServer::RequestType type, const std::string& uri, const std::string& query, const std::string& data, pixelboost::HttpConnection& connection)
@@ -103,72 +114,68 @@ bool HttpInterface::OnHttpRequest(HttpServer::RequestType type, const std::strin
             break;
     }
     
-    
-    
     bool replied = false;
     
-    if (command == "images" && type == kRequestTypeGet)
-    {
-        connection.AddHeader("Content-Type", "image/png");
-        
-        if (urlArguments.size() == 1)
-        {
-            replied = OnGetImage(connection, urlArguments[0]);
-        }
-    } else {
-        connection.AddHeader("Content-Type", "application/json;charset=utf-8");
-    }
+    CommandRequest request(command, type);
     
-    if (command == "records" && type == kRequestTypeGet)
+    CommandMap::iterator commandHandler = _Commands.find(request);
+    if (commandHandler != _Commands.end())
     {
-        replied = OnGetRecords(connection);
-    } else if (command == "record" && type == kRequestTypeGet)
-    {
-        if (urlArguments.size() == 1)
+        connection.AddHeader("Content-Type", "application/json;charset=utf-8");
+        replied = commandHandler->second(connection, urlArguments, queryArguments);
+    } else {
+    
+        if (command == "images" && type == kRequestTypeGet)
         {
-            std::string record = urlArguments[0];
-            replied = OnGetRecord(connection, atoi(record.c_str()));
-        } else if (urlArguments.size() >= 3 && urlArguments[1] == "entity")
-        {
-            std::string record = urlArguments[0];
-            std::string entity = urlArguments[2];
+            connection.AddHeader("Content-Type", "image/png");
             
-            std::string path = "/";
-            
-            for (int i=3; i < urlArguments.size(); i++)
+            if (urlArguments.size() == 1)
             {
-                path += urlArguments[i] + "/";
+                replied = OnGetImage(connection, urlArguments[0]);
             }
-            
-            replied = OnGetProperty(connection, atoi(record.c_str()), atoi(entity.c_str()), path);
+        } else {
+            connection.AddHeader("Content-Type", "application/json;charset=utf-8");
         }
-    } else if (command == "schema" && type == kRequestTypeGet)
-    {
-        replied = OnGetSchema(connection);
-    } else if (command == "record" && (type == kRequestTypePost || type == kRequestTypePut))
-    {
-        if (urlArguments.size() == 2 && urlArguments[1] == "entities" && type == kRequestTypePost)
+        
+        if (command == "record" && type == kRequestTypeGet)
         {
-            std::string record = urlArguments[0];
-            replied = OnCreateEntity(connection, atoi(record.c_str()), queryArguments["type"]);
-        } else if (urlArguments.size() == 4 && urlArguments[1] == "entity" && urlArguments[3] == "transform" && type == kRequestTypePut)
+            if (urlArguments.size() == 1)
+            {
+                std::string record = urlArguments[0];
+                replied = OnGetRecord(connection, atoi(record.c_str()));
+            } else if (urlArguments.size() >= 3 && urlArguments[1] == "entity")
+            {
+                std::string record = urlArguments[0];
+                std::string entity = urlArguments[2];
+                
+                std::string path = "/";
+                
+                for (int i=3; i < urlArguments.size(); i++)
+                {
+                    path += urlArguments[i] + "/";
+                }
+                
+                replied = OnGetProperty(connection, atoi(record.c_str()), atoi(entity.c_str()), path);
+            }
+        } else if (command == "record" && (type == kRequestTypePost || type == kRequestTypePut))
         {
-            std::string record = urlArguments[0];
-            std::string entity = urlArguments[2];
-            replied = OnSetTransform(connection, atoi(record.c_str()), atoi(entity.c_str()), Vec2(atof(queryArguments["tx"].c_str()), atof(queryArguments["ty"].c_str())), 0, Vec2(1,1));
+            if (urlArguments.size() == 2 && urlArguments[1] == "entities" && type == kRequestTypePost)
+            {
+                std::string record = urlArguments[0];
+                replied = OnCreateEntity(connection, atoi(record.c_str()), queryArguments["type"]);
+            } else if (urlArguments.size() == 4 && urlArguments[1] == "entity" && urlArguments[3] == "transform" && type == kRequestTypePut)
+            {
+                std::string record = urlArguments[0];
+                std::string entity = urlArguments[2];
+                replied = OnSetTransform(connection, atoi(record.c_str()), atoi(entity.c_str()), Vec2(atof(queryArguments["tx"].c_str()), atof(queryArguments["ty"].c_str())), 0, Vec2(1,1));
+            }
+        } else if (command == "records" && type == kRequestTypePost)
+        {
+            if (urlArguments.size() == 0)
+            {
+                replied = OnCreateRecord(connection, queryArguments["name"], queryArguments["type"]);
+            }
         }
-    } else if (command == "records" && type == kRequestTypePost)
-    {
-        if (urlArguments.size() == 0)
-        {
-            replied = OnCreateRecord(connection, queryArguments["name"], queryArguments["type"]);
-        }
-    } else if (command == "save" && type == kRequestTypePut)
-    {
-        replied = OnSave(connection);
-    } else if (command == "export" && type == kRequestTypePut)
-    {
-        replied = OnExport(connection);
     }
     
     if (replied == true)
@@ -181,20 +188,6 @@ bool HttpInterface::OnHttpRequest(HttpServer::RequestType type, const std::strin
         return false; // No over-ride, default to finding html
     else
         return true;
-}
-
-bool HttpInterface::OnSave(pixelboost::HttpConnection& connection)
-{
-    Core::Instance()->GetCommandManager()->Exec("save");
-    
-    return true;
-}
-
-bool HttpInterface::OnExport(pixelboost::HttpConnection& connection)
-{
-    Core::Instance()->GetCommandManager()->Exec("export");
-    
-    return true;
 }
 
 bool HttpInterface::OnCreateRecord(pixelboost::HttpConnection& connection, const std::string& name, const std::string& type)
@@ -234,33 +227,6 @@ bool HttpInterface::OnSetTransform(pixelboost::HttpConnection& connection, Uid r
     entity->SetPosition(position);
     entity->SetRotation(rotation);
     entity->SetScale(scale);
-    
-    return true;
-}
-
-bool HttpInterface::OnGetRecords(pixelboost::HttpConnection& connection)
-{
-    json::Array records;
-    
-    Project* project = Core::Instance()->GetProject();
-    for (Project::RecordMap::const_iterator it = project->GetRecords().begin(); it != project->GetRecords().end(); ++it)
-    {
-        json::Object record;
-        record["id"] = json::Number(it->first);
-        record["name"] = json::String(it->second->GetName());
-        record["type"] = json::String(it->second->GetTypeName());
-        records.Insert(record);
-    }
-    
-    std::stringstream contentStream;
-    json::Writer::Write(records, contentStream);
-    
-    std::string content = contentStream.str();
-    
-    char contentLength[64];
-    sprintf(contentLength, "%d", static_cast<int>(content.length()));
-    connection.AddHeader("Content-Length", contentLength);
-    connection.SetContent(content);
     
     return true;
 }
@@ -357,30 +323,6 @@ bool HttpInterface::OnGetProperty(pixelboost::HttpConnection& connection, Uid re
     return true;
 }
 
-bool HttpInterface::OnGetSchema(pixelboost::HttpConnection& connection)
-{
-    json::Array schema;
-    
-    Project* project = Core::Instance()->GetProject();
-    
-    for (Schema::StructMap::const_iterator it = project->GetSchema()->GetStructs().begin(); it != project->GetSchema()->GetStructs().end(); ++it)
-    {
-        InsertSchemaItem(schema, it->second);
-    }
-    
-    std::stringstream contentStream;
-    json::Writer::Write(schema, contentStream);
-    
-    std::string content = contentStream.str();
-    
-    char contentLength[64];
-    sprintf(contentLength, "%d", static_cast<int>(content.length()));
-    connection.AddHeader("Content-Length", contentLength);
-    connection.SetContent(content);
-    
-    return true;
-}
-
 bool HttpInterface::OnGetImage(pixelboost::HttpConnection& connection, const std::string& image)
 {
     Project* project = Core::Instance()->GetProject();
@@ -410,112 +352,4 @@ bool HttpInterface::OnGetImage(pixelboost::HttpConnection& connection, const std
     }
     
     return false;
-}
-
-void HttpInterface::InsertSchemaItem(json::Array& array, SchemaStruct* schemaItem)
-{
-    json::Object item;
-    item["name"] = json::String(schemaItem->GetName());
-
-    json::Object attributes;
-    for (SchemaItem::AttributeMap::const_iterator it = schemaItem->GetAttributes().begin(); it != schemaItem->GetAttributes().end(); ++it)
-    {
-        json::Object attribute;
-        
-        for (SchemaAttribute::ParamValueMap::const_iterator paramIt = it->second->GetParamValues().begin(); paramIt != it->second->GetParamValues().end(); ++paramIt)
-        {
-            attribute[paramIt->first] = json::String(paramIt->second);
-        }
-        
-        attributes[it->first] = attribute;
-    }
-    item["attributes"] = attributes;
-        
-    json::Array properties;
-    for (SchemaStruct::PropertyMap::const_iterator it = schemaItem->GetProperties().begin(); it != schemaItem->GetProperties().end(); ++it)
-    {
-        json::Object property;
-        ExportProperty(property, it->first, it->second);
-        properties.Insert(property);
-    }
-    item["properties"] = properties;
-    
-    switch (schemaItem->GetSchemaType())
-    {
-        case SchemaItem::kSchemaRecord:
-            item["type"] = json::String("record");
-            break;
-            
-        case SchemaItem::kSchemaEntity:
-            item["type"] = json::String("entity");
-            break;
-
-        case SchemaItem::kSchemaStruct:
-            item["type"] = json::String("struct");
-            break;
-            
-        default:
-            item["type"] = json::String("invalid");
-    }
-    array.Insert(item);
-}
-
-void HttpInterface::ExportProperty(json::Object& property, const std::string& name, const SchemaProperty* schemaProp)
-{
-    if (name != "")
-        property["name"] = json::String(name);
-    
-    switch (schemaProp->GetPropertyType())
-    {
-        case SchemaProperty::kSchemaPropertyAtom:
-        {
-            property["type"] = json::String("atom");
-            switch (static_cast<const SchemaPropertyAtom*>(schemaProp)->GetAtomType())
-            {
-                case SchemaPropertyAtom::kSchemaAtomFloat:
-                    property["atomType"] = json::String("float");
-                    break;
-                case SchemaPropertyAtom::kSchemaAtomInt:
-                    property["atomType"] = json::String("int");
-                    break;
-                case SchemaPropertyAtom::kSchemaAtomString:
-                    property["atomType"] = json::String("string");
-                    break;
-            }
-            break;
-        }
-        case SchemaProperty::kSchemaPropertyArray:
-        {
-            property["type"] = json::String("array");
-            const SchemaPropertyArray* propertyArray = static_cast<const SchemaPropertyArray*>(schemaProp);
-            const SchemaProperty* schemaProperty = propertyArray->GetSchemaProperty();
-            if (schemaProperty)
-            {
-                json::Object arrayType;
-                ExportProperty(arrayType, "", schemaProperty);
-                property["arrayType"] = arrayType;
-            }
-            break;
-        }
-        case SchemaProperty::kSchemaPropertyStruct:
-        {
-            property["type"] = json::String("struct");
-            const SchemaStruct* propertyStruct = static_cast<const SchemaPropertyStruct*>(schemaProp)->GetSchemaStruct();
-            if (propertyStruct)
-            {
-                property["structType"] = json::String(propertyStruct->GetName());
-            }
-            break;
-        }
-        case SchemaProperty::kSchemaPropertyPointer:
-        {
-            property["type"] = json::String("pointer");
-            const SchemaEntity* propertyEntity = static_cast<const SchemaPropertyPointer*>(schemaProp)->GetSchemaEntity();
-            if (propertyEntity)
-            {
-                property["pointerType"] = json::String(propertyEntity->GetName());
-            }
-            break;
-        }
-    }
 }

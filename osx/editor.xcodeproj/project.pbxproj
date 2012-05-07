@@ -41,6 +41,9 @@
 		1C02B09A1549CE2A00A9536D /* lzio.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C02B0771549CE2A00A9536D /* lzio.c */; };
 		1C210F41152CF44F00DEAC92 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C210F40152CF44F00DEAC92 /* Cocoa.framework */; };
 		1C210F5E152CF60400DEAC92 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C210F5D152CF60400DEAC92 /* WebKit.framework */; };
+		1C3F42361558323400396F50 /* record.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C3F42301558323400396F50 /* record.cpp */; };
+		1C3F42381558323400396F50 /* schema.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C3F42341558323400396F50 /* schema.cpp */; };
+		1C3F423B1558430B00396F50 /* file.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C3F42391558430B00396F50 /* file.cpp */; };
 		1CEB6C4E1540953100E8D103 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1CEB6C441540953100E8D103 /* AppDelegate.mm */; };
 		1CEB6C501540953100E8D103 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 1CEB6C471540953100E8D103 /* Credits.rtf */; };
 		1CEB6C511540953100E8D103 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1CEB6C491540953100E8D103 /* InfoPlist.strings */; };
@@ -201,6 +204,12 @@
 		1C210F44152CF44F00DEAC92 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		1C210F45152CF44F00DEAC92 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1C210F5D152CF60400DEAC92 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		1C3F42301558323400396F50 /* record.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = record.cpp; path = http/commands/record.cpp; sourceTree = "<group>"; };
+		1C3F42311558323400396F50 /* record.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = record.h; path = http/commands/record.h; sourceTree = "<group>"; };
+		1C3F42341558323400396F50 /* schema.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = schema.cpp; path = http/commands/schema.cpp; sourceTree = "<group>"; };
+		1C3F42351558323400396F50 /* schema.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = schema.h; path = http/commands/schema.h; sourceTree = "<group>"; };
+		1C3F42391558430B00396F50 /* file.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = file.cpp; path = http/commands/file.cpp; sourceTree = "<group>"; };
+		1C3F423A1558430B00396F50 /* file.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = file.h; path = http/commands/file.h; sourceTree = "<group>"; };
 		1CEB6C431540953100E8D103 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1CEB6C441540953100E8D103 /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
 		1CEB6C451540953100E8D103 /* editor-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "editor-Info.plist"; sourceTree = "<group>"; };
@@ -508,6 +517,19 @@
 				1C210F5D152CF60400DEAC92 /* WebKit.framework */,
 			);
 			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		1C3F422D1558306700396F50 /* commands */ = {
+			isa = PBXGroup;
+			children = (
+				1C3F42391558430B00396F50 /* file.cpp */,
+				1C3F423A1558430B00396F50 /* file.h */,
+				1C3F42301558323400396F50 /* record.cpp */,
+				1C3F42311558323400396F50 /* record.h */,
+				1C3F42341558323400396F50 /* schema.cpp */,
+				1C3F42351558323400396F50 /* schema.h */,
+			);
+			name = commands;
 			sourceTree = "<group>";
 		};
 		1CEB6C421540953100E8D103 /* editor */ = {
@@ -1219,6 +1241,7 @@
 		1CEB6DF01540A9D000E8D103 /* http */ = {
 			isa = PBXGroup;
 			children = (
+				1C3F422D1558306700396F50 /* commands */,
 				1CEB6DF11540AA0500E8D103 /* httpInterface.cpp */,
 				1CEB6DF21540AA0500E8D103 /* httpInterface.h */,
 			);
@@ -1412,6 +1435,9 @@
 				1C02B0981549CE2A00A9536D /* lundump.c in Sources */,
 				1C02B0991549CE2A00A9536D /* lvm.c in Sources */,
 				1C02B09A1549CE2A00A9536D /* lzio.c in Sources */,
+				1C3F42361558323400396F50 /* record.cpp in Sources */,
+				1C3F42381558323400396F50 /* schema.cpp in Sources */,
+				1C3F423B1558430B00396F50 /* file.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

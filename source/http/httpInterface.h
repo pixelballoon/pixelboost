@@ -3,6 +3,7 @@
 #include <map>
 #include <string>
 
+#include "srutil/delegate/delegate.hpp"
 #include "pixelboost/network/http/httpServer.h"
 
 #include "project/definitions.h"
@@ -22,14 +23,21 @@ class Vec2;
 
 namespace pixeleditor
 {
+    class RecordCommands;
+    class SchemaCommands;
     class SchemaProperty;
     class SchemaStruct;
     
     class HttpInterface : public pixelboost::HttpServer
     {
     public:
-        HttpInterface(const std::string& htmlLocation = "data/html");
+        HttpInterface();
         ~HttpInterface();
+        
+        typedef srutil::delegate3<bool, pixelboost::HttpConnection&, const std::vector<std::string>&, const std::map<std::string, std::string>&> CommandDelegate;
+        
+        void Initialise();
+        void RegisterCommand(const std::string& command, HttpServer::RequestType requestType, CommandDelegate delegate);
         
     private: 
         typedef std::map<int, pixelboost::DebugVariable*> VariableMap;
@@ -57,6 +65,13 @@ namespace pixeleditor
         void InsertSchemaItem(json::Array& array, SchemaStruct* schemaItem);
         void ExportProperty(json::Object& property, const std::string& name, const SchemaProperty* schemaProp);
         
-        friend class DebugVariable;
+        typedef std::pair<std::string, HttpServer::RequestType> CommandRequest;
+        typedef std::map<CommandRequest, CommandDelegate> CommandMap;
+        
+        CommandMap _Commands;
+        
+    private:
+        SchemaCommands* _SchemaCommands;
+        RecordCommands* _RecordCommands;
     };    
 }

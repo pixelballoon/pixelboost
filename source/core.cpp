@@ -12,6 +12,7 @@ Core::Core()
     _Instance = this;
     
     _HttpInterface = new HttpInterface();
+    _HttpInterface->Initialise();
     
     _CommandManager = new CommandManager();
     _Project = new Project();
@@ -35,6 +36,11 @@ Core* Core::Instance()
 CommandManager* Core::GetCommandManager()
 {
     return _CommandManager;
+}
+
+HttpInterface* Core::GetHttpInterface()
+{
+    return _HttpInterface;
 }
 
 Project* Core::GetProject()

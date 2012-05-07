@@ -23,6 +23,7 @@ public:
     static Core* Instance();
     
     CommandManager* GetCommandManager();
+    HttpInterface* GetHttpInterface();
 
     Project* GetProject();
     
