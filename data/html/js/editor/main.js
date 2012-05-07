@@ -262,6 +262,8 @@ PixelEditor.prototype.initialiseRecord = function(record)
 		this.layoutLayer.add(shape);
 	}
 
+	this.stage.setX(this.stage.getWidth()/2);
+	this.stage.setY(this.stage.getHeight()/2);
 	this.stage.draw();
 }
 
