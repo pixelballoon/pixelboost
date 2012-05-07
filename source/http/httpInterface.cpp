@@ -7,6 +7,7 @@
 #include "pixelboost/file/fileHelpers.h"
 
 #include "command/manager.h"
+#include "http/commands/file.h"
 #include "http/commands/record.h"
 #include "http/commands/schema.h"
 #include "http/httpInterface.h"
@@ -32,6 +33,7 @@ HttpInterface::~HttpInterface()
 
 void HttpInterface::Initialise()
 {
+    _FileCommands = new FileCommands();
     _SchemaCommands = new SchemaCommands();
     _RecordCommands = new RecordCommands();
     

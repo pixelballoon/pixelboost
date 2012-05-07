@@ -23,6 +23,7 @@ class Vec2;
 
 namespace pixeleditor
 {
+    class FileCommands;
     class RecordCommands;
     class SchemaCommands;
     class SchemaProperty;
@@ -71,6 +72,7 @@ namespace pixeleditor
         CommandMap _Commands;
         
     private:
+        FileCommands* _FileCommands;
         SchemaCommands* _SchemaCommands;
         RecordCommands* _RecordCommands;
     };    
