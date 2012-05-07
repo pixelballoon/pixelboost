@@ -6,7 +6,6 @@
 #include "pixelboost/debug/debugVariable.h"
 #include "pixelboost/debug/debugVariableManager.h"
 #include "pixelboost/file/fileHelpers.h"
-#include "pixelboost/network/networkMessage.h"
 
 using namespace pixelboost;
     
