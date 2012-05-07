@@ -81,11 +81,17 @@ const PropertyAtom* PropertyAtom::AsAtom() const
 
 void PropertyAtom::SetFloatValue(float value)
 {
+    char tmp[64];
+    snprintf(tmp, 64, "%f", value);
+    _Value = tmp;
     _Struct->propertyChanged(_Struct);
 }
 
 void PropertyAtom::SetIntValue(int value)
 {
+    char tmp[64];
+    snprintf(tmp, 64, "%d", value);
+    _Value = tmp;
     _Struct->propertyChanged(_Struct);
 }
 
