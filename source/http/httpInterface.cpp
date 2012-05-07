@@ -309,8 +309,6 @@ bool HttpInterface::OnGetEntity(pixelboost::HttpConnection& connection, Uid reco
 
 bool HttpInterface::OnGetProperty(pixelboost::HttpConnection& connection, Uid recordId, Uid entityId, const std::string& path)
 {
-    std::string propertyValue;
-    
     json::Object data;
     
     Project* project = Core::Instance()->GetProject();
@@ -318,26 +316,33 @@ bool HttpInterface::OnGetProperty(pixelboost::HttpConnection& connection, Uid re
     Record* record = project->GetRecord(recordId);
     
     if (!record)
-        return false;
+        return true;
     
     Entity* entity = record->GetEntity(entityId);
     
     if (!entity)
-        return false;
+        return true;
     
     const Property* property = entity->GetProperty(path);
     
-    if (property && property->GetType() == Property::kPropertyAtom)
+    if (!property)
+        return true;
+    
+    if (property->GetType() == Property::kPropertyAtom)
     {
-        propertyValue = static_cast<const PropertyAtom*>(property)->GetStringValue();
-    } else {
-        propertyValue = "";
+        data["type"] = json::String("atom");
+        data["value"] = json::String(static_cast<const PropertyAtom*>(property)->GetStringValue());
     }
     
+    std::stringstream contentStream;
+    json::Writer::Write(data, contentStream);
+    
+    std::string content = contentStream.str();
+    
     char contentLength[64];
-    sprintf(contentLength, "%d", static_cast<int>(propertyValue.length()));
+    sprintf(contentLength, "%d", static_cast<int>(content.length()));
     connection.AddHeader("Content-Length", contentLength);
-    connection.SetContent(propertyValue);
+    connection.SetContent(content);
     
     return true;
 }

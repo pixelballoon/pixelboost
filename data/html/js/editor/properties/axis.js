@@ -41,6 +41,11 @@ function AxisProperty(entity)
 	this.entity.addShape(this.center);
 }
 
+AxisProperty.prototype.refresh = function()
+{
+
+}
+
 AxisProperty.prototype.updateCollisionData = function()
 {
 

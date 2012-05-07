@@ -303,10 +303,10 @@ PixelEditor.prototype.generateStructProperties = function(root, struct)
 
 	var parent = $("#propertyArea");
 	parent.empty();
-	this.generateProperties(root, parent, "/", this.schema[struct.Type], struct.Properties);
+	this.generateProperties(root, struct.Uid, parent, "/", this.schema[struct.Type], struct.Properties);
 }
 
-PixelEditor.prototype.generateProperties = function(root, parent, path, schemaItem, properties)
+PixelEditor.prototype.generateProperties = function(root, uid, parent, path, schemaItem, properties)
 {
 	if (!schemaItem)
 		return;
@@ -314,11 +314,11 @@ PixelEditor.prototype.generateProperties = function(root, parent, path, schemaIt
 	for (propertyIdx in schemaItem.properties)
 	{
 		var property = schemaItem.properties[propertyIdx];
-		this.addProperty(root, parent, path + property.name + "/", property, properties);
+		this.addProperty(root, uid, parent, path + property.name + "/", property, properties);
 	}
 }
 
-PixelEditor.prototype.addProperty = function(root, parent, path, property, properties)
+PixelEditor.prototype.addProperty = function(root, uid, parent, path, property, properties)
 {
 	switch (property.type)
 	{
@@ -332,7 +332,7 @@ PixelEditor.prototype.addProperty = function(root, parent, path, property, prope
 			$('<label class="control-label">'+property.name+'</label>').appendTo(parent);
 			var child = $('<div class="control-group well"></div>');
 			child.appendTo(parent);
-			this.generateProperties(root, child, path, this.schema[property.structType], properties ? properties[property.name] : null);
+			this.generateProperties(root, uid, child, path, this.schema[property.structType], properties ? properties[property.name] : null);
 			break;
 		case "atom":
 		{
@@ -363,11 +363,19 @@ PixelEditor.prototype.addProperty = function(root, parent, path, property, prope
 					}
 				});
 				this.properties[this.property.name] = value;
+				pb.refreshEntity(uid);
 			}, {root: root, path:path, properties:properties, property:property}));
 			child.appendTo(parent);
 			break;
 		}
 	}
+}
+
+PixelEditor.prototype.refreshEntity = function(entityId)
+{
+	var entity = pb.entities[entityId];
+	if (entity)
+		entity.refreshProperties();
 }
 
 PixelEditor.prototype.toPixels = function(unit)

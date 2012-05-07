@@ -20,7 +20,38 @@ function Entity(recordId, layer, entity)
 Entity.prototype.initialiseEntity = function(entity)
 {
 	var schemaStruct = pb.schema[entity.Type];
-	var visualisation = schemaStruct ? schemaStruct.attributes.Visualisation : null;
+
+	this.createProperties("/", schemaStruct);
+}
+
+Entity.prototype.createProperties = function(path, schemaStruct)
+{
+	if (!schemaStruct)
+		return;
+
+	this.createProperty(path, schemaStruct.attributes);
+
+	for (propertyIdx in schemaStruct.properties)
+	{
+		var property = schemaStruct.properties[propertyIdx];
+		
+		var child = path + property.name + "/";
+
+		this.createProperty(child, property.attributes);
+
+		if (property.type == "struct")
+		{
+			var schemaStruct = pb.schema[property.structType];
+			this.createProperties(child, schemaStruct);
+		}
+	}
+
+	this.addProperty(new AxisProperty(this));
+}
+
+Entity.prototype.createProperty = function(path, attributes)
+{
+	var visualisation = attributes.Visualisation;
 
 	if (visualisation)
 	{
@@ -28,13 +59,11 @@ Entity.prototype.initialiseEntity = function(entity)
 		{
 			case "sprite":
 			{
-				this.addProperty(new SpriteProperty(this, visualisation));
+				this.addProperty(new SpriteProperty(this, visualisation, path));
 				break;
 			}
 		}
 	}
-
-	this.addProperty(new AxisProperty(this));
 }
 
 Entity.prototype.addProperty = function(property)
@@ -47,6 +76,35 @@ Entity.prototype.addShape = function(shape)
 	this.group.add(shape);
 	shape.saveData();
 	this.layer.draw();
+}
+
+Entity.prototype.removeShape = function(shape)
+{
+	this.group.remove(shape);
+	this.layer.draw();
+}
+
+Entity.prototype.evaluateProperty = function(path, value, callback)
+{
+	if (value.charAt(0) == "/")
+	{
+		var url = ajaxPrefix + 'record/' + this.recordId + "/entity/" + this.data.Uid + path + value.substring(1);
+		$.getJSON(url, _.bind(function(data) {
+			if (data)
+				callback(data.value);
+		}));
+	} else {
+		callback(value);
+	}
+}
+
+Entity.prototype.refreshProperties = function()
+{
+	for (propertyIdx in this.properties)
+	{
+		var property = this.properties[propertyIdx];
+		property.refresh();
+	}
 }
 
 Entity.prototype.setupGroup = function()
