@@ -4,8 +4,6 @@
 #include "pixelboost/external/lua/lua.hpp"
 #include "pixelboost/file/fileHelpers.h"
 
-#include "screens/game/actors/mine.h"
-
 using namespace pixelboost;
     
 DatabaseManager* DatabaseManager::_Instance = 0;
