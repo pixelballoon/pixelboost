@@ -1,87 +1,70 @@
+require(["editor/properties/axis", "editor/properties/sprite"]);
+
 function Entity(recordId, layer, entity)
 {
 	var recordId;
 	var layer;
 	var data;
-	var shape;
+	var group;
+	var properties;
 
 	this.recordId = recordId;
 	this.layer = layer;
 	this.data = entity;
+	this.properties = [];
+	this.setupGroup();
 
 	this.initialiseEntity(entity);
 }
 
 Entity.prototype.initialiseEntity = function(entity)
 {
-	var shape;
-
 	var schemaStruct = pb.schema[entity.Type];
+	var visualisation = schemaStruct ? schemaStruct.attributes.Visualisation : null;
 
-	if (!schemaStruct)
+	if (visualisation)
 	{
-		shape = new Kinetic.Circle({
-			x: toPixels(entity.Transform.tx),
-			y: toPixels(entity.Transform.ty),
-			radius: 32,
-			fill: 'grey',
-			stroke: 'black',
-			strokeWidth: 1.5,
-			draggable: true
-		});
-	} else {
-		var visualisation = schemaStruct.attributes.Visualisation;
 		switch (visualisation.type)
 		{
 			case "sprite":
 			{
-				var sprite = new Image();
-				sprite.src = ajaxPrefix+'images/'+visualisation.sprite+'.png';
-				sprite.onload = _.bind(function() {
-					this.shape = new Kinetic.Image({
-						image: sprite,
-						x: pb.toPixels(entity.Transform.tx),
-						y: pb.toPixels(entity.Transform.ty),
-						centerOffset: {x: sprite.width/2, y: sprite.height/2},
-						width: sprite.width,
-						height: sprite.height,
-						draggable: true,
-						detectionType: 'pixel'
-					});
-
-					this.setupShape();
-				}, this);
-				return;
-			}
-			default:
-			{
-				this.shape = new Kinetic.Circle({
-					x: pb.toPixels(entity.Transform.tx),
-					y: pb.toPixels(entity.Transform.ty),
-					radius: 32,
-					fill: 'red',
-					stroke: 'black',
-					strokeWidth: 1.5,
-					draggable: true
-				});
+				this.addProperty(new SpriteProperty(this, visualisation));
 				break;
 			}
 		}
 	}
 
-	this.setupShape();
+	this.addProperty(new AxisProperty(this));
 }
 
-Entity.prototype.setupShape = function()
+Entity.prototype.addProperty = function(property)
 {
-	this.shape.entityId = this.data.Uid;
+	this.properties.push(property);
+}
 
-	this.shape.on("click", function(evt) {
-		pb.generateStructProperties(pb.entities[evt.shape.entityId].data);
+Entity.prototype.addShape = function(shape)
+{
+	this.group.add(shape);
+	shape.saveData();
+	this.layer.draw();
+}
+
+Entity.prototype.setupGroup = function()
+{
+	this.group = new Kinetic.Group({
+		x: pb.toPixels(this.data.Transform.tx),
+		y: pb.toPixels(this.data.Transform.ty),
+		draggable: true
 	});
 
-	this.shape.on("dragend", _.bind(function(evt) {
-		var url = ajaxPrefix+'record/'+this.recordId+'/entity/'+evt.shape.entityId+'/transform?tx='+this.getX()+'&ty='+this.getY();
+	this.group.entityId = this.data.Uid;
+
+	this.group.on("click", _.bind(function(evt) {
+		pb.generateStructProperties(this.data);
+	}, this));
+
+	this.group.on("dragend", _.bind(function(evt) {
+		var url = ajaxPrefix+'record/'+this.recordId+'/entity/'+this.data.Uid+'/transform?tx='+this.getX()+'&ty='+this.getY();
 		$.ajax({
 			type: 'PUT',
 			url: url,
@@ -89,27 +72,27 @@ Entity.prototype.setupShape = function()
 			}
 		});
 
-		this.shape.saveData();
+		this.updateCollisionData(false);
 	}, this));
 
-	this.layer.add(this.shape);
-
-	this.layer.draw();
-
-	this.shape.saveData();
+	this.layer.add(this.group);
 }
 
-Entity.prototype.getShape = function()
+Entity.prototype.updateCollisionData = function(clear)
 {
-	return this.shape;
+	for (propertyIdx in this.properties)
+	{
+		var property = this.properties[propertyIdx];
+		property.updateCollisionData(clear);
+	}
 }
 
 Entity.prototype.getX = function()
 {
-	return pb.fromPixels(this.shape.getPosition().x);
+	return pb.fromPixels(this.group.getPosition().x);
 }
 
 Entity.prototype.getY = function()
 {
-	return pb.fromPixels(this.shape.getPosition().y);
+	return pb.fromPixels(this.group.getPosition().y);
 }

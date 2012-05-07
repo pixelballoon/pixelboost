@@ -115,21 +115,24 @@ PixelEditor.prototype.initStage = function()
 
 	this.layoutLayer = new Kinetic.Layer();
 	this.actorLayer = new Kinetic.Layer();
-	this.stage.add(this.layoutLayer);
-	this.stage.add(this.actorLayer);
+	this.addLayer(this.layoutLayer);
+	this.addLayer(this.actorLayer);
+
+	this.stage.setScale(1);
+}
+
+PixelEditor.prototype.addLayer = function(layer)
+{
+	this.stage.add(layer);
 }
 
 PixelEditor.prototype.updateCollisionData = function(clear)
 {
-	console.log('updateCollisionData');
 	for (entityId in this.entities)
 	{
 		var entity = this.entities[entityId];
 
-		if (clear)
-			entity.getShape().clearData();
-		else
-			entity.getShape().saveData();
+		entity.updateCollisionData(clear);
 	}
 }
 
@@ -193,7 +196,7 @@ PixelEditor.prototype.createEntity = function(entityType)
 
 PixelEditor.prototype.initialiseRecord = function(record)
 {
-	var width = 50;
+	var width = 30;
 	var height = 20;
 
 	var background = new Kinetic.Rect({
@@ -210,6 +213,7 @@ PixelEditor.prototype.initialiseRecord = function(record)
 	background.on("mousedown", _.bind(function(evt) {
 		this.updateCollisionData(true);
 		this.generateStructProperties(this.record);
+
 		background.dragStart = {x: evt.clientX, y: evt.clientY};
 
 		background.on("mousemove", _.bind(function(evt) {
@@ -258,7 +262,6 @@ PixelEditor.prototype.initialiseRecord = function(record)
 		this.layoutLayer.add(shape);
 	}
 
-	this.layoutLayer.draw();
 	this.stage.draw();
 }
 
