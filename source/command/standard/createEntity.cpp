@@ -59,6 +59,7 @@ bool CreateEntityCommand::Do()
     
     float x = (float)atof(GetArgument("p", 0).c_str());
     float y = (float)atof(GetArgument("p", 1).c_str());
+    float z = (float)atof(GetArgument("p", 2).c_str());
     
     Entity* entity = new Entity(record, type);
 
@@ -68,7 +69,7 @@ bool CreateEntityCommand::Do()
         _EntityUid = entity->GetUid();
     
     entity->SetName(type->GetName());
-    entity->SetPosition(Vec2(x, y));
+    entity->SetPosition(Vec3(x, y, z));
     
     record->AddEntity(entity);
     

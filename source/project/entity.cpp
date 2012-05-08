@@ -13,9 +13,9 @@ using namespace pixeleditor;
 Entity::Entity(Record* record, const SchemaEntity* type)
     : Struct(record->GetProject(), type)
     , _Record(record)
-    , _Position(0, 0)
+    , _Position(0, 0, 0)
     , _Rotation(0)
-    , _Scale(1, 1)
+    , _Scale(1, 1, 1)
 {
 }
 
@@ -30,13 +30,15 @@ bool Entity::Open(json::Object& entity)
     json::Object& transform = entity["Transform"];
     json::Number& tx = transform["tx"];
     json::Number& ty = transform["ty"];
+    json::Number& tz = transform["tz"];
     json::Number& rz = transform["rz"];
     json::Number& sx = transform["sx"];
     json::Number& sy = transform["sy"];
+    json::Number& sz = transform["sz"];
     
-    _Position = Vec2(tx.Value(), ty.Value());
+    _Position = Vec3(tx.Value(), ty.Value(), tz.Value());
     _Rotation = (float)rz.Value();
-    _Scale = Vec2(sx.Value(), sy.Value());
+    _Scale = Vec3(sx.Value(), sy.Value(), sz.Value());
     
     return status;
 }
@@ -80,12 +82,12 @@ const Record* Entity::GetRecord() const
     return _Record;
 }
 
-const Vec2& Entity::GetPosition()
+const Vec3& Entity::GetPosition()
 {
     return _Position;
 }
 
-void Entity::SetPosition(const Vec2& position)
+void Entity::SetPosition(const Vec3& position)
 {
     _Position = position;
     
@@ -104,12 +106,12 @@ void Entity::SetRotation(float rotation)
     entityChanged(this);
 }
 
-const Vec2& Entity::GetScale()
+const Vec3& Entity::GetScale()
 {
     return _Scale;
 }
 
-void Entity::SetScale(const Vec2& scale)
+void Entity::SetScale(const Vec3& scale)
 {
     _Scale = scale;
     
@@ -121,9 +123,13 @@ bool Entity::WriteTransformDataJson(json::Object& entity)
     json::Object transform;
     transform["tx"] = json::Number(_Position[0]);
     transform["ty"] = json::Number(_Position[1]);
+    transform["tz"] = json::Number(_Position[2]);
+    transform["rx"] = json::Number(0);
+    transform["ry"] = json::Number(0);
     transform["rz"] = json::Number(_Rotation);
     transform["sx"] = json::Number(_Scale[0]);
     transform["sy"] = json::Number(_Scale[1]);
+    transform["sz"] = json::Number(_Scale[2]);
     
     entity["Transform"] = transform;
     
@@ -132,7 +138,7 @@ bool Entity::WriteTransformDataJson(json::Object& entity)
 
 bool Entity::WriteTransformDataLua(std::iostream& output)
 {
-    output << "transform = { t = {" << _Position[0] << "," << _Position[1] << "}, r = {0,0," << _Rotation << "}, s = {" << _Scale[0] << "," << _Scale[1] << "} }";
+    output << "transform = { t = {" << _Position[0] << "," << _Position[1] << "," << _Position[2] << "}, r = {0,0," << _Rotation << "}, s = {" << _Scale[0] << "," << _Scale[1] << "," << _Scale[2] << "} }";
     
     return true;
 }

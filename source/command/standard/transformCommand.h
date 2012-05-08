@@ -27,8 +27,8 @@ namespace pixeleditor
         bool _TransformRotation;
         bool _TransformScale;
         
-        Vec2 _PositionOffset;
+        Vec3 _PositionOffset;
         float _RotationOffset;
-        Vec2 _ScaleOffset;
+        Vec3 _ScaleOffset;
     };    
 }

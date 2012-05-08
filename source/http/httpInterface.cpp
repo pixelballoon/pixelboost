@@ -199,7 +199,7 @@ bool HttpInterface::OnHttpRequest(HttpServer::RequestType type, const std::strin
                 
                 if (urlArguments[3] == "transform")
                 {
-                    replied = OnSetTransform(connection, record, entity, Vec2(atof(queryArguments["tx"].c_str()), atof(queryArguments["ty"].c_str())), 0, Vec2(1,1));
+                    replied = OnSetTransform(connection, record, entity, Vec3(atof(queryArguments["tx"].c_str()), atof(queryArguments["ty"].c_str()), atof(queryArguments["tz"].c_str())), 0, Vec3(1,1,1));
                 } else if (urlArguments[3] == "property")
                 {
                     std::string type = queryArguments["type"];
@@ -256,7 +256,7 @@ bool HttpInterface::OnCreateEntity(pixelboost::HttpConnection& connection, Uid r
     return true;
 }
 
-bool HttpInterface::OnSetTransform(pixelboost::HttpConnection& connection, Uid recordId, Uid entityId, const Vec2& position, float rotation, const Vec2& scale)
+bool HttpInterface::OnSetTransform(pixelboost::HttpConnection& connection, Uid recordId, Uid entityId, const Vec3& position, float rotation, const Vec3& scale)
 {
     Project* project = Core::Instance()->GetProject();
     

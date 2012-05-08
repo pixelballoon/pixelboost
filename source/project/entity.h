@@ -41,14 +41,14 @@ public:
     virtual const Record* GetRecord() const;
     
 public:    
-    const Vec2& GetPosition();
-    void SetPosition(const Vec2& position);
+    const Vec3& GetPosition();
+    void SetPosition(const Vec3& position);
     
     float GetRotation();
     void SetRotation(float rotation);
     
-    const Vec2& GetScale();
-    void SetScale(const Vec2& scale);
+    const Vec3& GetScale();
+    void SetScale(const Vec3& scale);
     
     sigslot::Signal1<Entity*> entityChanged;
     
@@ -59,9 +59,9 @@ private:
 private:
     Record* _Record;
     
-    Vec2 _Position;
+    Vec3 _Position;
     float _Rotation;
-    Vec2 _Scale;
+    Vec3 _Scale;
 };
     
 }
