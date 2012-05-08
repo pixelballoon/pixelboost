@@ -21,9 +21,9 @@ public:
 private:
     void* _Data;
     
-    Vec2 _Position;
-    float _Rotation;
-    Vec2 _Scale;
+    Vec3 _Position;
+    Vec3 _Rotation;
+    Vec3 _Scale;
 };
     
 }

@@ -164,6 +164,9 @@ void DatabaseManager::OpenRecord(Uid recordId)
             }
             
             data = Create(record, type);
+            
+            lua_pop(_State, 1);
+            
             if (data)
             {
                 Entity* entity = new Entity(uid, type, data);
@@ -173,11 +176,11 @@ void DatabaseManager::OpenRecord(Uid recordId)
                 printf("Unable to create entity of type (%u)\n", type);
             }
             
-            lua_pop(_State, 2);
+            lua_pop(_State, 1);
         }
     }
     
-    lua_pop(_State, -1);
+    lua_pop(_State, 1);
 }
     
 void* DatabaseManager::Create(Record* record, Uid type)
