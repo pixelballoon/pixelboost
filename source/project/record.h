@@ -28,7 +28,7 @@ public:
     bool Close();
     bool Save();
     bool ExportJson();
-    bool ExportLua();
+    bool ExportLua(bool exportByteCode=false);
     
     bool ExportJson(json::Object& object);
     bool ExportLua(std::iostream& output);

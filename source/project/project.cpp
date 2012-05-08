@@ -163,12 +163,11 @@ bool Project::Export()
     for (RecordMap::iterator it = _Records.begin(); it != _Records.end();)
     {
         it->second->ExportLua();
-        it->second->ExportJson();
         
         char recordString[32];
-        sprintf(recordString, "%X", it->second->GetUid());
+        sprintf(recordString, "{ name = \"%s\", type = %u, uid = %u }", it->second->GetName().c_str(), it->second->GetTypeHash(), it->second->GetUid());
         
-        file << "\"" << recordString << "\"";
+        file << recordString;
         
         ++it;
         

@@ -154,7 +154,7 @@ static int writeLua(lua_State*, const void* p, size_t size, void* u)
     return (fwrite(p,size,1,(FILE*)u)!=1) && (size!=0);
 }
 
-bool Record::ExportLua()
+bool Record::ExportLua(bool exportByteCode)
 {
     // TODO: Make OS independant
     char cmd[2048];
@@ -171,21 +171,23 @@ bool Record::ExportLua()
     
     file.close();
     
-    // Export byte-code
-    lua_State* state = luaL_newstate();
-    luaL_openlibs(state);
-    luaL_loadfile(state, location);
-    sprintf(location, "%sc", location);
-    FILE* compiledFile = fopen(location, "wb");
-    TValue *o;
-    lua_lock(state);
-    api_checknelems(state, 1);
-    o = state->top - 1;
-    if (isLfunction(o))
-        luaU_dump(state, getproto(o), writeLua, compiledFile, true);
-    lua_unlock(state);
-    fclose(compiledFile);
-    lua_close(state);
+    if (exportByteCode)
+    {
+        lua_State* state = luaL_newstate();
+        luaL_openlibs(state);
+        luaL_loadfile(state, location);
+        sprintf(location, "%sc", location);
+        FILE* compiledFile = fopen(location, "wb");
+        TValue *o;
+        lua_lock(state);
+        api_checknelems(state, 1);
+        o = state->top - 1;
+        if (isLfunction(o))
+            luaU_dump(state, getproto(o), writeLua, compiledFile, true);
+        lua_unlock(state);
+        fclose(compiledFile);
+        lua_close(state);
+    }
     
     return status;
 }
