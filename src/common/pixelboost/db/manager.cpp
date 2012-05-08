@@ -42,8 +42,6 @@ void DatabaseManager::OpenDatabase(const std::string& location)
     
     std::string filename = _DatabaseRoot + "main.lua";
     
-    printf("%s", filename.c_str());
-    
     if (luaL_loadfile(_State, filename.c_str()) || lua_pcall(_State, 0, 0, 0))
     {
         printf("Can't open file: %s", lua_tostring(_State, -1));
@@ -61,16 +59,25 @@ void DatabaseManager::OpenDatabase(const std::string& location)
         lua_pop(_State, 1);
         for (int i=1; i<=n; i++)
         {
+            RecordDescription record;
+            
             lua_rawgeti(_State, -1, i);
-            if (!lua_isstring(_State, -1))
+            if (!lua_istable(_State, -1))
                 continue;
             
-            std::string recordIdStr = lua_tostring(_State, -1);
-            Uid recordId;
+            lua_getfield(_State, -1, "type");
+            record.Type = lua_tonumber(_State, -1);
+            lua_pop(_State, 1);
             
-            sscanf(recordIdStr.c_str(), "%X", &recordId);
+            lua_getfield(_State, -1, "uid");
+            record.Uid = lua_tonumber(_State, -1);
+            lua_pop(_State, 1);
             
-            _RecordIds.push_back(recordId);
+            lua_getfield(_State, -1, "name");
+            record.Name = lua_tostring(_State, -1);
+            lua_pop(_State, 1);
+            
+            _RecordDescriptions.push_back(record);
             lua_pop(_State, 1);
         }
     }
@@ -183,9 +190,9 @@ void* DatabaseManager::Create(Record* record, Uid type)
     return it->second(record);
 }
 
-const DatabaseManager::RecordIdList& DatabaseManager::GetRecordIds() const
+const DatabaseManager::RecordDescriptionList& DatabaseManager::GetRecordDescriptions() const
 {
-    return _RecordIds;
+    return _RecordDescriptions;
 }
     
 const DatabaseManager::RecordMap& DatabaseManager::GetRecords() const

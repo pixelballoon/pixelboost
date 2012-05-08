@@ -12,6 +12,13 @@ namespace pixelboost
     
 class Record;
     
+struct RecordDescription
+{
+    std::string Name;
+    Uid Type;
+    Uid Uid;
+};
+    
 class DatabaseManager
 {
 public:
@@ -35,10 +42,10 @@ public:
     void* Create(Record* record, Uid type);
     
 public:
-    typedef std::vector<Uid> RecordIdList;
+    typedef std::vector<RecordDescription> RecordDescriptionList;
     typedef std::map<Uid, Record*> RecordMap;
     
-    const RecordIdList& GetRecordIds() const;
+    const RecordDescriptionList& GetRecordDescriptions() const;
     const RecordMap& GetRecords() const;
     const Record* GetRecord(Uid uid) const;
     
@@ -47,7 +54,7 @@ private:
     
     std::string _DatabaseRoot;
     
-    RecordIdList _RecordIds;
+    RecordDescriptionList _RecordDescriptions;
     RecordMap _Records;
     
     StructCreateMap _StructCreate;
