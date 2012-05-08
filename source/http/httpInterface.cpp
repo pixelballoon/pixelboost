@@ -143,28 +143,55 @@ bool HttpInterface::OnHttpRequest(HttpServer::RequestType type, const std::strin
         {
             if (urlArguments.size() == 1)
             {
-                std::string record = urlArguments[0];
-                replied = OnGetRecord(connection, atoi(record.c_str()));
-            } else if (urlArguments.size() >= 3 && urlArguments[1] == "entity")
+                Uid record = atoi(urlArguments[0].c_str());
+                replied = OnGetRecord(connection, record);
+            } else if (urlArguments.size() >= 2 && urlArguments[1] == "property")
+            {
+                Uid record = atoi(urlArguments[0].c_str());
+                
+                std::string path = "/";
+                
+                for (int i=2; i < urlArguments.size(); i++)
+                {
+                    path += urlArguments[i] + "/";
+                }
+                
+                replied = OnGetRecordProperty(connection, record, path);
+            } else if (urlArguments.size() >= 4 && urlArguments[1] == "entity" && urlArguments[3] == "property")
             {
                 Uid record = atoi(urlArguments[0].c_str());
                 Uid entity = atoi(urlArguments[2].c_str());
                 
                 std::string path = "/";
                 
-                for (int i=3; i < urlArguments.size(); i++)
+                for (int i=4; i < urlArguments.size(); i++)
                 {
                     path += urlArguments[i] + "/";
                 }
                 
-                replied = OnGetProperty(connection, record, entity, path);
+                replied = OnGetEntityProperty(connection, record, entity, path);
             }
         } else if (command == "record" && (type == kRequestTypePost || type == kRequestTypePut))
         {
-            if (urlArguments.size() == 2 && urlArguments[1] == "entities" && type == kRequestTypePost)
+            if (urlArguments.size() >= 2 && urlArguments[1] == "property")
             {
-                std::string record = urlArguments[0];
-                replied = OnCreateEntity(connection, atoi(record.c_str()), queryArguments["type"]);
+                Uid record = atoi(urlArguments[0].c_str());
+                
+                std::string type = queryArguments["type"];
+                std::string value = queryArguments["value"];
+                
+                std::string path = "/";
+                
+                for (int i=2; i < urlArguments.size(); i++)
+                {
+                    path += urlArguments[i] + "/";
+                }
+                
+                replied = OnSetRecordProperty(connection, record, path, type, value);
+            } else if (urlArguments.size() == 2 && urlArguments[1] == "entities" && type == kRequestTypePost)
+            {
+                Uid record = atoi(urlArguments[0].c_str());
+                replied = OnCreateEntity(connection, record, queryArguments["type"]);
             } else if (urlArguments.size() >= 4 && urlArguments[1] == "entity" && type == kRequestTypePut)
             {
                 Uid record = atoi(urlArguments[0].c_str());
@@ -185,7 +212,7 @@ bool HttpInterface::OnHttpRequest(HttpServer::RequestType type, const std::strin
                         path += urlArguments[i] + "/";
                     }
                     
-                    replied = OnSetProperty(connection, record, entity, path, type, value);
+                    replied = OnSetEntityProperty(connection, record, entity, path, type, value);
                 }
             }
         } else if (command == "records" && type == kRequestTypePost)
@@ -307,10 +334,20 @@ bool HttpInterface::OnGetEntity(pixelboost::HttpConnection& connection, Uid reco
     return true;
 }
 
-bool HttpInterface::OnGetProperty(pixelboost::HttpConnection& connection, Uid recordId, Uid entityId, const std::string& path)
+bool HttpInterface::OnGetRecordProperty(pixelboost::HttpConnection& connection, Uid recordId, const std::string& path)
 {
-    json::Object data;
+    Project* project = Core::Instance()->GetProject();
     
+    Record* record = project->GetRecord(recordId);
+    
+    if (!record)
+        return true;
+    
+    return OnGetStructProperty(connection, record->GetProperty(path));
+}
+
+bool HttpInterface::OnGetEntityProperty(pixelboost::HttpConnection& connection, Uid recordId, Uid entityId, const std::string& path)
+{
     Project* project = Core::Instance()->GetProject();
     
     Record* record = project->GetRecord(recordId);
@@ -323,7 +360,12 @@ bool HttpInterface::OnGetProperty(pixelboost::HttpConnection& connection, Uid re
     if (!entity)
         return true;
     
-    const Property* property = entity->GetProperty(path);
+    return OnGetStructProperty(connection, entity->GetProperty(path));
+}
+
+bool HttpInterface::OnGetStructProperty(pixelboost::HttpConnection& connection, const Property* property)
+{
+    json::Object data;
     
     if (!property)
         return true;
@@ -347,7 +389,33 @@ bool HttpInterface::OnGetProperty(pixelboost::HttpConnection& connection, Uid re
     return true;
 }
 
-bool HttpInterface::OnSetProperty(pixelboost::HttpConnection& connection, Uid recordId, Uid entityId, const std::string& path, const std::string& type, const std::string& value)
+bool HttpInterface::OnSetRecordProperty(pixelboost::HttpConnection& connection, Uid recordId, const std::string& path, const std::string& type, const std::string& value)
+{
+    std::string propertyValue;
+    
+    json::Object data;
+    
+    Project* project = Core::Instance()->GetProject();
+    
+    Record* record = project->GetRecord(recordId);
+    
+    if (!record)
+        return false;
+    
+    if (type == "atom")
+    {
+        PropertyAtom* property = record->AcquireAtom(path);
+        
+        if (!property)
+            return false;
+        
+        property->SetStringValue(value);
+    }
+    
+    return true;
+}
+
+bool HttpInterface::OnSetEntityProperty(pixelboost::HttpConnection& connection, Uid recordId, Uid entityId, const std::string& path, const std::string& type, const std::string& value)
 {
     std::string propertyValue;
     

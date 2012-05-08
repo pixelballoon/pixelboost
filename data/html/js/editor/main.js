@@ -1,7 +1,7 @@
 var ajaxPrefix = 'http://localhost:9090/'; // For development
 // var ajaxPrefix = '/'; // For deployment
 
-require(["editor/entity"]);
+require(["editor/entity", "editor/record"]);
 
 function PixelEditor()
 {
@@ -10,9 +10,7 @@ function PixelEditor()
 	var actorLayer;
 
 	var record;
-	var recordId;
-	var schema;
-	var entities;
+	var schema;	
 
 	$(document).ready(_.bind(function() {this.onLoad();}, this));
 }
@@ -50,7 +48,6 @@ PixelEditor.prototype.populateButtons = function()
 {
 	$("#save").click(pb.onSave);
 	$("#export").click(pb.onExport);
-	$("#deselect").click(pb.onDeselect);
 }
 
 PixelEditor.prototype.updateSchema = function()
@@ -118,7 +115,7 @@ PixelEditor.prototype.initStage = function()
 	this.addLayer(this.layoutLayer);
 	this.addLayer(this.actorLayer);
 
-	this.stage.setScale(1);
+	this.stage.setScale(0.5);
 }
 
 PixelEditor.prototype.addLayer = function(layer)
@@ -128,12 +125,7 @@ PixelEditor.prototype.addLayer = function(layer)
 
 PixelEditor.prototype.updateCollisionData = function(clear)
 {
-	for (entityId in this.entities)
-	{
-		var entity = this.entities[entityId];
-
-		entity.updateCollisionData(clear);
-	}
+	this.record.updateCollisionData(clear);
 }
 
 PixelEditor.prototype.initUi = function()
@@ -156,20 +148,8 @@ PixelEditor.prototype.initUi = function()
 PixelEditor.prototype.loadRecord = function(recordId)
 {
 	this.initStage();
-
-	this.recordId = recordId;
-	this.entities = new Object();
-
-	$.getJSON(ajaxPrefix + 'record/' + recordId, _.bind(function(data) {
-		this.record = data;
-		this.initialiseRecord(this.record);
-		for (entityIdx in this.record.Entities)
-		{
-			var entity = this.record.Entities[entityIdx];
-			this.entities[entity.Uid] = new Entity(pb.recordId, pb.actorLayer, entity);
-		}
-		this.record.Entities = null;
-	}, this));
+	this.record = new Record(recordId);
+	this.record.load();
 }
 
 PixelEditor.prototype.createRecord = function(recordType)
@@ -187,84 +167,11 @@ PixelEditor.prototype.createEntity = function(entityType)
 {
 	$.ajax({
 		type: 'POST',
-		url: ajaxPrefix+'record/'+this.recordId+'/entities?type='+entityType,
+		url: ajaxPrefix+'record/'+this.record.data.Uid+'/entities?type='+entityType,
 		complete : _.bind(function() {
-			this.loadRecord(this.recordId);
+			this.record.load();
 		}, this)
 	});
-}
-
-PixelEditor.prototype.initialiseRecord = function(record)
-{
-	var width = 30;
-	var height = 20;
-
-	var background = new Kinetic.Rect({
-		x: -this.toPixels(width/2),
-		y: -this.toPixels(height/2),
-		width: this.toPixels(width),
-		height: this.toPixels(height),
-		fill: 'lightgrey',
-		stroke: 'black',
-		strokeWidth: 1,
-		draggable: false
-	});
-
-	background.on("mousedown", _.bind(function(evt) {
-		this.updateCollisionData(true);
-		this.onDeselect();
-
-		background.dragStart = {x: evt.clientX, y: evt.clientY};
-
-		background.on("mousemove", _.bind(function(evt) {
-			var xDiff = background.dragStart.x - evt.clientX;
-			var yDiff = background.dragStart.y - evt.clientY;
-			background.dragStart.x = evt.clientX;
-			background.dragStart.y = evt.clientY;
-			this.stage.setX(Math.round(this.stage.getX() - xDiff));
-			this.stage.setY(Math.round(this.stage.getY() - yDiff));
-			this.stage.draw();
-		}, this));
-	}, this));
-
-	background.on("mouseup", _.bind(function(evt) {
-		this.updateCollisionData(false);
-		background.off("mousemove");
-	}, this));
-
-	this.layoutLayer.add(background);
-
-	var shape;
-
-	var x;
-	for (x = Math.ceil(-width/2); x <= width/2; x++)
-	{
-		var points = [{x: this.toPixels(x), y: -this.toPixels(height/2)}, {x: this.toPixels(x), y: this.toPixels(height/2)}];
-		shape = new Kinetic.Line({
-			points: points,
-			stroke: 'grey',
-			strokeWidth: 1
-		});
-
-		this.layoutLayer.add(shape);
-	}
-
-	var y;
-	for (y = Math.ceil(-height/2); y <= height/2; y++)
-	{
-		var points = [{x: -this.toPixels(width/2), y: this.toPixels(y)}, {x: this.toPixels(width/2), y: this.toPixels(y)}];
-		shape = new Kinetic.Line({
-			points: points,
-			stroke: 'grey',
-			strokeWidth: 1
-		});
-
-		this.layoutLayer.add(shape);
-	}
-
-	this.stage.setX(this.stage.getWidth()/2);
-	this.stage.setY(this.stage.getHeight()/2);
-	this.stage.draw();
 }
 
 PixelEditor.prototype.onSave = function()
@@ -289,11 +196,6 @@ PixelEditor.prototype.onExport = function()
 		complete : function() {
 		}
 	});
-}
-
-PixelEditor.prototype.onDeselect = function()
-{
-	this.generateStructProperties("", this.record);
 }
 
 PixelEditor.prototype.generateStructProperties = function(root, struct)
@@ -355,7 +257,7 @@ PixelEditor.prototype.addProperty = function(root, uid, parent, path, property, 
 			}
 			child.change(_.bind(function(evt) {
 				var value = evt.target.value;
-				var url = ajaxPrefix+root+"property"+path+"?type=atom&value="+value;
+				var url = ajaxPrefix+root.substring(1)+"property"+path+"?type=atom&value="+value;
 				$.ajax({
 					type: 'PUT',
 					url: url,
@@ -373,7 +275,7 @@ PixelEditor.prototype.addProperty = function(root, uid, parent, path, property, 
 
 PixelEditor.prototype.refreshEntity = function(entityId)
 {
-	var entity = pb.entities[entityId];
+	var entity = pb.record.entities[entityId];
 	if (entity)
 		entity.refreshProperties();
 }

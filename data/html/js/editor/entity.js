@@ -1,6 +1,6 @@
 require(["editor/properties/axis", "editor/properties/sprite"]);
 
-function Entity(recordId, layer, entity)
+function Entity(recordId, layer, data)
 {
 	var recordId;
 	var layer;
@@ -10,11 +10,11 @@ function Entity(recordId, layer, entity)
 
 	this.recordId = recordId;
 	this.layer = layer;
-	this.data = entity;
+	this.data = data;
 	this.properties = [];
 	this.setupGroup();
 
-	this.initialiseEntity(entity);
+	this.initialiseEntity(data);
 }
 
 Entity.prototype.initialiseEntity = function(entity)
@@ -88,10 +88,12 @@ Entity.prototype.evaluateProperty = function(path, value, callback)
 {
 	if (value.charAt(0) == "/")
 	{
-		var url = ajaxPrefix + 'record/' + this.recordId + "/entity/" + this.data.Uid + path + value.substring(1);
+		var url = ajaxPrefix + 'record/' + this.recordId + "/entity/" + this.data.Uid + "/property" + path + value.substring(1);
 		$.getJSON(url, _.bind(function(data) {
 			if (data)
 				callback(data.value);
+			else
+				callback("");
 		}));
 	} else {
 		callback(value);
@@ -118,7 +120,7 @@ Entity.prototype.setupGroup = function()
 	this.group.entityId = this.data.Uid;
 
 	this.group.on("click", _.bind(function(evt) {
-		pb.generateStructProperties("record/"+this.recordId+"/entity/"+this.data.Uid+"/", this.data);
+		pb.generateStructProperties("/record/"+this.recordId+"/entity/"+this.data.Uid+"/", this.data);
 	}, this));
 
 	this.group.on("dragend", _.bind(function(evt) {

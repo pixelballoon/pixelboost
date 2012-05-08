@@ -24,6 +24,7 @@ class Vec2;
 namespace pixeleditor
 {
     class FileCommands;
+    class Property;
     class RecordCommands;
     class SchemaCommands;
     class SchemaProperty;
@@ -57,8 +58,13 @@ namespace pixeleditor
         bool OnGetRecords(pixelboost::HttpConnection& connection);
         bool OnGetRecord(pixelboost::HttpConnection& connection, Uid recordId);
         bool OnGetEntity(pixelboost::HttpConnection& connection, Uid recordId, Uid entityId);
-        bool OnGetProperty(pixelboost::HttpConnection& connection, Uid recordId, Uid entityId, const std::string& path);
-        bool OnSetProperty(pixelboost::HttpConnection& connection, Uid recordId, Uid entityId, const std::string& path, const std::string& type, const std::string& value);
+
+        bool OnGetRecordProperty(pixelboost::HttpConnection& connection, Uid recordId, const std::string& path);
+        bool OnGetEntityProperty(pixelboost::HttpConnection& connection, Uid recordId, Uid entityId, const std::string& path);
+        bool OnGetStructProperty(pixelboost::HttpConnection& connection, const Property* property);
+        
+        bool OnSetRecordProperty(pixelboost::HttpConnection& connection, Uid recordId, const std::string& path, const std::string& type, const std::string& value);
+        bool OnSetEntityProperty(pixelboost::HttpConnection& connection, Uid recordId, Uid entityId, const std::string& path, const std::string& type, const std::string& value);
 
         bool OnGetSchema(pixelboost::HttpConnection& connection);
         
