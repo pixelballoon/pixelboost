@@ -27,7 +27,8 @@
         return structObject; \
     } \
     void PB_Deserialise ## type (pixelboost::Record* record, type& object) { \
-        lua_State* state = pixelboost::DatabaseManager::Instance()->GetLuaState();
+        lua_State* state = pixelboost::DatabaseManager::Instance()->GetLuaState(); \
+        (void)state;
 
 #define PIXELBOOST_FIELD_INT(field, name) { \
     lua_getfield(state, -1, name); \
