@@ -385,9 +385,9 @@ ParticleRenderer::~ParticleRenderer()
     
 }
 
-ParticleEmitter* ParticleRenderer::CreateEmitter(RenderLayer* layer)
+ParticleEmitter* ParticleRenderer::CreateEmitter(RenderLayer* layer, int maxParticles)
 {
-    ParticleEmitter* emitter = new ParticleEmitter();
+    ParticleEmitter* emitter = new ParticleEmitter(maxParticles);
     _Emitters[layer].push_back(emitter);
     return emitter;
 }

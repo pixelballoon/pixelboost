@@ -160,7 +160,7 @@ public:
     ParticleRenderer();
     ~ParticleRenderer();
     
-    ParticleEmitter* CreateEmitter(RenderLayer* layer);
+    ParticleEmitter* CreateEmitter(RenderLayer* layer, int maxParticles=50);
     void DestroyEmitter(ParticleEmitter* emitter);
     
     virtual void Update(float time);
