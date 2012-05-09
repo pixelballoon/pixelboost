@@ -4,6 +4,7 @@
 
 #include <vector>
 
+#include "Box2d/Box2D.h"
 #include "pixelboost/math/maths.h"
 
 class b2Body;
