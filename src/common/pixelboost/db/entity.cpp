@@ -41,6 +41,21 @@ Entity::~Entity()
 {
     
 }
+
+const Vec3& Entity::GetPosition() const
+{
+    return _Position;
+}
+
+const Vec3& Entity::GetRotation() const
+{
+    return _Rotation;
+}
+
+const Vec3& Entity::GetScale() const
+{
+    return _Scale;
+}
     
 void* Entity::GetData() const
 {

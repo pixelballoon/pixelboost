@@ -16,6 +16,10 @@ public:
     Entity(Uid uid, Uid type, void* data);
     virtual ~Entity();
     
+    const Vec3& GetPosition() const;
+    const Vec3& GetRotation() const;
+    const Vec3& GetScale() const;
+    
     void* GetData() const;
     
 private:
