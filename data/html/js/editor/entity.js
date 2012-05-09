@@ -113,7 +113,7 @@ Entity.prototype.setupGroup = function()
 {
 	this.group = new Kinetic.Group({
 		x: pb.toPixels(this.data.Transform.tx),
-		y: pb.toPixels(this.data.Transform.ty),
+		y: -pb.toPixels(this.data.Transform.ty),
 		draggable: true
 	});
 
@@ -154,5 +154,5 @@ Entity.prototype.getX = function()
 
 Entity.prototype.getY = function()
 {
-	return pb.fromPixels(this.group.getPosition().y);
+	return -pb.fromPixels(this.group.getPosition().y);
 }
