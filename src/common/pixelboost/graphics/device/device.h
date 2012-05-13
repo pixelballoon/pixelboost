@@ -4,7 +4,7 @@
 
 #include "pixelboost/graphics/device/bufferFormats.h"
 
-namespace pixelboost
+namespace pb
 {
 
 class Texture;

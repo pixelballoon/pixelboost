@@ -6,7 +6,7 @@
 #include "pixelboost/graphics/helper/screenHelpers.h"
 #include "pixelboost/input/touchManager.h"
 
-namespace pixelboost
+namespace pb
 {
 
 Vec2 Touch::GetScreenPosition()

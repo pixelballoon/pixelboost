@@ -2,9 +2,9 @@
 
 #include "pixelboost/file/fileHelpers.h"
 
-using namespace pixelboost::FileHelpers;
+using namespace pb::FileHelpers;
 
-std::string pixelboost::FileHelpers::GetRootPath()
+std::string pb::FileHelpers::GetRootPath()
 {
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     std::string rootPath = [[[NSBundle mainBundle] bundlePath] UTF8String];
@@ -12,7 +12,7 @@ std::string pixelboost::FileHelpers::GetRootPath()
     return rootPath;
 }
     
-std::string pixelboost::FileHelpers::GetUserPath()
+std::string pb::FileHelpers::GetUserPath()
 {
     NSArray *dirPaths;
     dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);

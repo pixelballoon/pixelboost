@@ -7,7 +7,7 @@
 
 #include "pixelboost/graphics/device/gles1/device.h"
 
-namespace pixelboost
+namespace pb
 {
 
 class TextureGLES1 : Texture

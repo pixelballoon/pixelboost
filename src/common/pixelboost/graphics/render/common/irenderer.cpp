@@ -3,7 +3,7 @@
 #include "pixelboost/graphics/render/common/irenderer.h"
 #include "pixelboost/graphics/render/common/renderer.h"
 
-using namespace pixelboost;
+using namespace pb;
 
 IRenderer::IRenderer()
 {

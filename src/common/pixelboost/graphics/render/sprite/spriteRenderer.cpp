@@ -6,7 +6,7 @@
 #include "pixelboost/graphics/render/sprite/spriteRenderer.h"
 #include "pixelboost/graphics/render/sprite/sprite.h"
 
-namespace pixelboost
+namespace pb
 {
 
 SpriteInstance::SpriteInstance(Sprite* sprite) :
@@ -22,11 +22,11 @@ SpriteRenderer::SpriteRenderer(int maxSpritesPerLayer, int numVertexBuffers)
     : _CurrentVertexBuffer(0)
     , _MaxSprites(maxSpritesPerLayer)
 {
-    _IndexBuffer = pixelboost::GraphicsDevice::Instance()->CreateIndexBuffer(pixelboost::kBufferFormatStatic, _MaxSprites*6);
+    _IndexBuffer = pb::GraphicsDevice::Instance()->CreateIndexBuffer(pb::kBufferFormatStatic, _MaxSprites*6);
     
     for (int i=0; i<numVertexBuffers; i++)
     {
-        VertexBuffer* vertexBuffer = pixelboost::GraphicsDevice::Instance()->CreateVertexBuffer(pixelboost::kBufferFormatDynamic, pixelboost::kVertexFormat_P_XYZ_RGBA_UV, _MaxSprites*4);
+        VertexBuffer* vertexBuffer = pb::GraphicsDevice::Instance()->CreateVertexBuffer(pb::kBufferFormatDynamic, pb::kVertexFormat_P_XYZ_RGBA_UV, _MaxSprites*4);
         
         _VertexBuffers.push_back(vertexBuffer);
     }
@@ -51,9 +51,9 @@ SpriteRenderer::~SpriteRenderer()
 {
     for (VertexBufferList::iterator it = _VertexBuffers.begin(); it != _VertexBuffers.end(); ++it)
     {
-        pixelboost::GraphicsDevice::Instance()->DestroyVertexBuffer(*it);
+        pb::GraphicsDevice::Instance()->DestroyVertexBuffer(*it);
     }
-    pixelboost::GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
+    pb::GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
 }
     
 void SpriteRenderer::Update(float time)

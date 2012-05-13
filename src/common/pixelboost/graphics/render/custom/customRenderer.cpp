@@ -3,7 +3,7 @@
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/render/custom/customRenderer.h"
 
-namespace pixelboost
+namespace pb
 {
 
 CustomRendererItem::~CustomRendererItem()

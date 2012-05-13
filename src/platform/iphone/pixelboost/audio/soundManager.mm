@@ -8,7 +8,7 @@
 #include "pixelboost/audio/soundManager.h"
 #include "pixelboost/file/fileHelpers.h"
 
-using namespace pixelboost;
+using namespace pb;
 
 Sound::Sound(const std::string& name, bool compressed, float volume, float pitch, bool looping)
     : _Compressed(compressed)

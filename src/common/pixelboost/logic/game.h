@@ -2,7 +2,7 @@
 
 #include <vector>
 
-namespace pixelboost
+namespace pb
 {
 
 class CustomRenderer;

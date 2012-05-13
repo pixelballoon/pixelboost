@@ -12,12 +12,12 @@
 @private
     bool matchStarted;
     GKMatch* currentMatch;
-    pixelboost::GameCenterDelegate* delegate;
+    pb::GameCenterDelegate* delegate;
 }
 
 @property (assign) bool matchStarted;
 @property (retain) GKMatch* currentMatch;
-@property (assign) pixelboost::GameCenterDelegate* delegate;
+@property (assign) pb::GameCenterDelegate* delegate;
 
 - (void)disconnect;
 - (void)startMatch;
@@ -35,7 +35,7 @@
 {
     if (delegate)
     {
-        pixelboost::NetworkMessage msg;
+        pb::NetworkMessage msg;
         msg.SetData(data.length-4, ((char*)data.bytes)+4);
         delegate->ReceiveMessage(msg);
     }
@@ -107,12 +107,12 @@
 
 @interface GameCenterDelegate : NSObject<GKMatchmakerViewControllerDelegate> {
 @private
-    pixelboost::GameCenter* gameCenter;
+    pb::GameCenter* gameCenter;
     GKMatchmakerViewController* matchMaker;
     MatchDelegate* matchDelegate;
 }
 
-@property (assign) pixelboost::GameCenter* gameCenter;
+@property (assign) pb::GameCenter* gameCenter;
 @property (assign) GKMatchmakerViewController* matchMaker;
 @property (retain) MatchDelegate* matchDelegate;
 
@@ -153,7 +153,7 @@
 
 @end
 
-namespace pixelboost
+namespace pb
 {
     
 void GameCenterDelegate::MatchStarted()
@@ -309,7 +309,7 @@ void GameCenter::FindMatch(int group)
     
     mmvc.matchmakerDelegate = gcDelegate;
     
-    UIViewController* view = (UIViewController*)pixelboost::Game::Instance()->GetViewController();
+    UIViewController* view = (UIViewController*)pb::Game::Instance()->GetViewController();
     [view presentModalViewController:mmvc animated:YES];
 }
     

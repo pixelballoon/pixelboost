@@ -8,7 +8,7 @@
 
 #include "pixelboost/network/networkHelpers.h"
 
-namespace pixelboost
+namespace pb
 {
     
 namespace NetworkHelpers

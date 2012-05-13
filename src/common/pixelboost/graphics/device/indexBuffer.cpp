@@ -3,7 +3,7 @@
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/indexBuffer.h"
 
-using namespace pixelboost;
+using namespace pb;
 
 IndexBuffer::IndexBuffer(GraphicsDevice* device, BufferFormat bufferFormat, int length)
     : _Device(device)

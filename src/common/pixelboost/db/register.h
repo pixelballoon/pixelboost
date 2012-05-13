@@ -14,12 +14,12 @@
 #define PIXELBOOST_END_REGISTER }
 
 #define PIXELBOOST_START_STRUCT(type, name) \
-    class pixelboost::Record; \
+    class pb::Record; \
     void* PB_Create ## type (); \
     void PB_Register ## type (); \
     void PB_Deserialise ## type (type& object); \
     void PB_Register ## type () { \
-        pixelboost::DatabaseManager::Instance()->RegisterStruct(pixelboost::TypeHash(name), &PB_Create ## type ); \
+        pb::DatabaseManager::Instance()->RegisterStruct(pb::TypeHash(name), &PB_Create ## type ); \
     } \
     void* PB_Create ## type () { \
         type* structObject = new type(); \
@@ -27,7 +27,7 @@
         return structObject; \
     } \
     void PB_Deserialise ## type (type& object) { \
-        lua_State* state = pixelboost::DatabaseManager::Instance()->GetLuaState(); \
+        lua_State* state = pb::DatabaseManager::Instance()->GetLuaState(); \
         (void)state;
 
 #define PIXELBOOST_FIELD_INT(field, name) { \

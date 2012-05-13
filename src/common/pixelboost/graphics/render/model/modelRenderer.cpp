@@ -11,7 +11,7 @@
 #include "pixelboost/graphics/device/texture.h"
 #include "pixelboost/graphics/render/model/modelRenderer.h"
 
-using namespace pixelboost;
+using namespace pb;
 
 Model::Model()
     : _RefCount(1)

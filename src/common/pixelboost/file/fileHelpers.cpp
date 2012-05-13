@@ -1,6 +1,6 @@
 #include "pixelboost/file/fileHelpers.h"
 
-namespace pixelboost
+namespace pb
 {
 namespace FileHelpers
 {

@@ -7,7 +7,7 @@
 #include <OpenGLES/ES1/gl.h>
 #include <OpenGLES/ES1/glext.h>
 
-using namespace pixelboost;
+using namespace pb;
 
 Camera::Camera()
 {

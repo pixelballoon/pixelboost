@@ -4,7 +4,7 @@
 
 #include "pixelboost/graphics/device/device.h"
 
-namespace pixelboost
+namespace pb
 {
     
 class Texture

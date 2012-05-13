@@ -4,18 +4,18 @@
 
 #include "pixelboost/graphics/device/gles1/texture.h"
 
-pixelboost::TextureGLES1::TextureGLES1(GraphicsDeviceGLES1* device)
+pb::TextureGLES1::TextureGLES1(GraphicsDeviceGLES1* device)
     : _Device(device)
 {
     
 }
 
-pixelboost::TextureGLES1::~TextureGLES1()
+pb::TextureGLES1::~TextureGLES1()
 {
     glDeleteTextures(1, &_Texture);
 }
 
-void pixelboost::TextureGLES1::Bind(int unit)
+void pb::TextureGLES1::Bind(int unit)
 {
     _Device->BindTexture(this);
 }

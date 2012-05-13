@@ -3,7 +3,7 @@
 #include "pixelboost/audio/soundManager.h"
 #include "pixelboost/file/fileHelpers.h"
 
-namespace pixelboost
+namespace pb
 {
 
 SoundManager::SoundManager()

@@ -14,7 +14,7 @@
 #include "pixelboost/network/gameCenter.h"
 #include "pixelboost/network/networkServer.h"
 
-using namespace pixelboost;
+using namespace pb;
 
 Game* Game::_Instance = 0;
 

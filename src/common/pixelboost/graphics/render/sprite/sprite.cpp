@@ -8,7 +8,7 @@
 #include "pixelboost/graphics/render/sprite/spriteRenderer.h"
 #include "pixelboost/logic/game.h"
 
-using namespace pixelboost;
+using namespace pb;
     
 std::shared_ptr<SpriteSheet> SpriteSheet::Create()
 {

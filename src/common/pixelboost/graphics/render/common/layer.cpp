@@ -2,7 +2,7 @@
 #include "pixelboost/graphics/render/common/layer.h"
 #include "pixelboost/graphics/render/common/irenderer.h"
 
-using namespace pixelboost;
+using namespace pb;
 
 RenderLayer::RenderLayer(int depth, Camera* camera)
     : _Camera(camera)

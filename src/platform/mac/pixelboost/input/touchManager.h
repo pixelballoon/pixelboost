@@ -9,7 +9,7 @@
 #include <set>
 #include <vector>
 
-namespace pixelboost
+namespace pb
 {
 
 class OrthographicCamera;

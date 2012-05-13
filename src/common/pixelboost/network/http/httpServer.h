@@ -6,7 +6,7 @@
 class mg_connection;
 class mg_context;
 
-namespace pixelboost
+namespace pb
 {
     class HttpConnection
     {

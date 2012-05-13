@@ -1,11 +1,11 @@
 #include "pixelboost/graphics/device/texture.h"
 
-pixelboost::Texture::Texture()
+pb::Texture::Texture()
 {
     
 }
 
-pixelboost::Texture::~Texture()
+pb::Texture::~Texture()
 {
     
 }

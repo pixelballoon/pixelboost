@@ -4,14 +4,14 @@
 
 #include "pixelboost/graphics/device/texture.h"
 
-using namespace pixelboost;
+using namespace pb;
 
-void pixelboost::TextureGLES1::Load(const unsigned char* data, bool createMips, TextureFormat format)
+void pb::TextureGLES1::Load(const unsigned char* data, bool createMips, TextureFormat format)
 {
     
 }
 
-void pixelboost::TextureGLES1::Load(const std::string& path, bool createMips)
+void pb::TextureGLES1::Load(const std::string& path, bool createMips)
 {
     UIImage* image = [[UIImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:path.c_str()]];
     

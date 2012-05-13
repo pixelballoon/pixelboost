@@ -11,7 +11,7 @@ class b2Body;
 class b2PolygonShape;
 class b2World;
 
-namespace pixelboost
+namespace pb
 {
     struct FixtureDefinition
     {

@@ -5,7 +5,7 @@
 #import <AppKit/AppKit.h>
 #include "pixelboost/graphics/device/texture.h"
 
-namespace pixelboost
+namespace pb
 {
 
 GLuint LoadTexture(const std::string& path)

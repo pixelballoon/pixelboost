@@ -2,7 +2,7 @@
 
 #include "ResourceManager.h"
 
-namespace pixelboost
+namespace pb
 {
 
 AsyncResource::AsyncResource(const std::string& fileName)

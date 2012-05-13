@@ -7,7 +7,7 @@
 #include "pixelboost/math/maths.h"
 #include "pixelboost/misc/pointer.h"
 
-namespace pixelboost
+namespace pb
 {
     
 class Sprite;

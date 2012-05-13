@@ -3,7 +3,7 @@
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
 
-using namespace pixelboost;
+using namespace pb;
 
 VertexBuffer::VertexBuffer(GraphicsDevice* device, BufferFormat bufferFormat, VertexFormat vertexFormat, int length)
     : _Device(device)

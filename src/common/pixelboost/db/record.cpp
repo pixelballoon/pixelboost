@@ -2,7 +2,7 @@
 #include "pixelboost/db/record.h"
 #include "pixelboost/db/manager.h"
 
-namespace pixelboost
+namespace pb
 {
     
 bool RecordHandle::IsResolved()

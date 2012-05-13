@@ -9,7 +9,7 @@
 #include "pixelboost/graphics/helper/screenHelpers.h"
 #include "pixelboost/graphics/render/font/fontRenderer.h"
 
-using namespace pixelboost;
+using namespace pb;
 
 FontRenderer::FontRenderer(int maxCharacters)
     : _MaxCharacters(maxCharacters)

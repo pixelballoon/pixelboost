@@ -5,7 +5,7 @@
 
 #include <string>
 
-namespace pixelboost
+namespace pb
 {
     
 class Record;

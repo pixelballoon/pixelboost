@@ -5,7 +5,7 @@
 
 #ifndef PIXELBOOST_BUILD_RELEASE
 
-namespace pixelboost
+namespace pb
 {
 
 DebugVariable::DebugVariable(const char* name)

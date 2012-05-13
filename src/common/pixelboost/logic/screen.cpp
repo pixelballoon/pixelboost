@@ -2,7 +2,7 @@
 #include "pixelboost/logic/game.h"
 #include "pixelboost/logic/screen.h"
 
-namespace pixelboost
+namespace pb
 {
 
 Screen::Screen(Game* game)

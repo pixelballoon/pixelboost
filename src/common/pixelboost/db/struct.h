@@ -4,7 +4,7 @@
 
 #include "pixelboost/db/definitions.h"
 
-namespace pixelboost
+namespace pb
 {
     
 class Record;

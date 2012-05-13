@@ -8,7 +8,7 @@
 
 #include "pixelboost/math/maths.h"
 
-namespace pixelboost
+namespace pb
 {
     class IndexBuffer;
     class Texture;

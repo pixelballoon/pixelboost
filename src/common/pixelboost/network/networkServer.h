@@ -4,7 +4,7 @@
 #include <queue>
 #include <vector>
 
-namespace pixelboost
+namespace pb
 {
     class NetworkConnection;
     class NetworkMessage;

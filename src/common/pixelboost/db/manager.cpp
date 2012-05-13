@@ -4,7 +4,7 @@
 #include "pixelboost/external/lua/lua.hpp"
 #include "pixelboost/file/fileHelpers.h"
 
-using namespace pixelboost;
+using namespace pb;
     
 DatabaseManager* DatabaseManager::_Instance = 0;
 

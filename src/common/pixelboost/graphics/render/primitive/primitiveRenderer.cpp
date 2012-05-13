@@ -8,7 +8,7 @@
 #include <OpenGLES/ES1/gl.h>
 #include <OpenGLES/ES1/glext.h>
 
-namespace pixelboost
+namespace pb
 {
 
 PrimitiveRenderer::PrimitiveRenderer()
@@ -131,7 +131,7 @@ void PrimitiveRenderer::Render(RenderLayer* layer)
     glDisableClientState(GL_VERTEX_ARRAY);
 }
     
-void PrimitiveRenderer::AttachEllipse(pixelboost::RenderLayer *layer, Vec2 position, Vec2 size, Vec3 rotation, Vec4 color, int segments)
+void PrimitiveRenderer::AttachEllipse(pb::RenderLayer *layer, Vec2 position, Vec2 size, Vec3 rotation, Vec4 color, int segments)
 {
     PrimitiveInstance item;
     item.type = PrimitiveInstance::kTypeEllipse;
@@ -143,7 +143,7 @@ void PrimitiveRenderer::AttachEllipse(pixelboost::RenderLayer *layer, Vec2 posit
     _Items[layer].push_back(item);
 }
     
-void PrimitiveRenderer::AttachLine(pixelboost::RenderLayer *layer, Vec2 start, Vec2 end, Vec4 color)
+void PrimitiveRenderer::AttachLine(pb::RenderLayer *layer, Vec2 start, Vec2 end, Vec4 color)
 {
     PrimitiveInstance item;
     item.type = PrimitiveInstance::kTypeLine;
@@ -153,7 +153,7 @@ void PrimitiveRenderer::AttachLine(pixelboost::RenderLayer *layer, Vec2 start, V
     _Items[layer].push_back(item);
 }
     
-void PrimitiveRenderer::AttachBox(pixelboost::RenderLayer *layer, Vec2 position, Vec2 size, Vec3 rotation, Vec4 color, bool solid)
+void PrimitiveRenderer::AttachBox(pb::RenderLayer *layer, Vec2 position, Vec2 size, Vec3 rotation, Vec4 color, bool solid)
 {
     PrimitiveInstance item;
     item.type = PrimitiveInstance::kTypeBox;

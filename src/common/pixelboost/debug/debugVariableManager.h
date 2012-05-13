@@ -10,7 +10,7 @@ namespace json
     class Object;
 }
 
-namespace pixelboost
+namespace pb
 {
     
 class DebugVariable;

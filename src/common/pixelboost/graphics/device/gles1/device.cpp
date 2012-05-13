@@ -3,13 +3,13 @@
 #include "pixelboost/graphics/device/texture.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
 
-using namespace pixelboost;
+using namespace pb;
 
 #ifdef PIXELBOOST_GRAPHICS_OPENGLES1
 
 #include <OpenGLES/ES1/gl.h>
 
-struct pixelboost::DeviceState
+struct pb::DeviceState
 {
     DeviceState()
     {

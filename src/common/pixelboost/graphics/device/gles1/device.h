@@ -10,7 +10,7 @@
 #include <map>
 #include <vector>
 
-namespace pixelboost
+namespace pb
 {
 
 struct DeviceState;

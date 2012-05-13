@@ -5,7 +5,7 @@
 
 #include "pixelboost/db/struct.h"
 
-namespace pixelboost
+namespace pb
 {
     
 class Entity;

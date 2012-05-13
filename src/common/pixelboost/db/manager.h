@@ -7,7 +7,7 @@
 
 struct lua_State;
 
-namespace pixelboost
+namespace pb
 {
     
 class Record;

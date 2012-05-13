@@ -6,11 +6,11 @@
 
 #include "Box2D/Box2D.h"
 
-using namespace pixelboost;
+using namespace pb;
 
 FixtureDefinition Box2DHelpers::LoadDefinition(const std::string& filename)
 {
-    std::string definitionString = pixelboost::FileHelpers::FileToString(pixelboost::FileHelpers::GetRootPath()+"/data/physics/"+filename+".phy");
+    std::string definitionString = pb::FileHelpers::FileToString(pb::FileHelpers::GetRootPath()+"/data/physics/"+filename+".phy");
     
     json::Object definition;
     

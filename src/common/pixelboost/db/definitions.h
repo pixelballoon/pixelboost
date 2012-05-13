@@ -8,7 +8,7 @@
 #define PB_INLINE inline
 #endif
 
-namespace pixelboost
+namespace pb
 {
     typedef unsigned int Uid;
     

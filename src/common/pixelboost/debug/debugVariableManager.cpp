@@ -7,7 +7,7 @@
 #include "pixelboost/debug/debugVariableManager.h"
 #include "pixelboost/file/fileHelpers.h"
 
-using namespace pixelboost;
+using namespace pb;
     
 DebugVariableManager* DebugVariableManager::_Instance = 0;
 

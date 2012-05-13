@@ -7,7 +7,7 @@
 #include "pixelboost/network/networkMessage.h"
 #include "pixelboost/network/networkServer.h"
 
-namespace pixelboost
+namespace pb
 {
     
     NetworkServer* NetworkServer::_Instance = 0;

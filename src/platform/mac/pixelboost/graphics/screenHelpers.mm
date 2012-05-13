@@ -8,7 +8,7 @@
 #include <sys/sysctl.h>
 #include <string>
 
-namespace pixelboost
+namespace pb
 {
     
 namespace ScreenHelpers

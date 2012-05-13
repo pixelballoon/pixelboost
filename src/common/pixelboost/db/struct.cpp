@@ -1,6 +1,6 @@
 #include "pixelboost/db/struct.h"
 
-using namespace pixelboost;
+using namespace pb;
     
 Struct::Struct(Uid uid, Uid type, void* data)
     : _Uid(uid)

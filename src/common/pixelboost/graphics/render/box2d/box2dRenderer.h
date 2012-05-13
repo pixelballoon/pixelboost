@@ -4,7 +4,7 @@
 
 #include "Box2d/Box2d.h"
 
-namespace pixelboost
+namespace pb
 {
     
 class RenderLayer;

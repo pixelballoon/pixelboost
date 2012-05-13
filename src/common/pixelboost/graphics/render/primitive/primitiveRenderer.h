@@ -6,7 +6,7 @@
 #include "pixelboost/graphics/render/common/irenderer.h"
 #include "pixelboost/math/maths.h"
 
-namespace pixelboost
+namespace pb
 {
     
 class PrimitiveRenderer : public IRenderer

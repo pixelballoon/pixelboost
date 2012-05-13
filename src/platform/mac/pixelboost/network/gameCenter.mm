@@ -6,7 +6,7 @@
 #include "pixelboost/network/gameCenter.h"
 #include "pixelboost/network/networkMessage.h"
 
-namespace pixelboost
+namespace pb
 {
     
 void GameCenterDelegate::MatchStarted()

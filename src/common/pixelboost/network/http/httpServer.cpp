@@ -4,7 +4,7 @@
 #include  "pixelboost/external/mongoose/mongoose.h"
 #include  "pixelboost/network/http/httpServer.h"
 
-using namespace pixelboost;
+using namespace pb;
 
 static void* MongooseCallback(enum mg_event event, struct mg_connection *conn, const struct mg_request_info *requestInfo)
 {
@@ -49,45 +49,45 @@ static void* MongooseCallback(enum mg_event event, struct mg_connection *conn, c
     return 0;
 }
 
-pixelboost::HttpConnection::HttpConnection(mg_connection* connection)
+pb::HttpConnection::HttpConnection(mg_connection* connection)
     : _Connection(connection)
 {
     _Data = "HTTP/1.1 200 OK\r\n";
 }
 
-pixelboost::HttpConnection::~HttpConnection()
+pb::HttpConnection::~HttpConnection()
 {
     
 }
 
-void pixelboost::HttpConnection::AddHeader(const std::string& headerName, const std::string& headerValue)
+void pb::HttpConnection::AddHeader(const std::string& headerName, const std::string& headerValue)
 {
     _Data += headerName + ": " + headerValue + "\r\n";
 }
 
-void pixelboost::HttpConnection::SetContent(const std::string& data)
+void pb::HttpConnection::SetContent(const std::string& data)
 {
     _Data += "\r\n";
     _Data += data;
 }
 
-void pixelboost::HttpConnection::Send()
+void pb::HttpConnection::Send()
 {
     mg_write(_Connection, _Data.c_str(), _Data.length()+1);
 }
 
-pixelboost::HttpServer::HttpServer()
+pb::HttpServer::HttpServer()
     : _Context(0)
 {
     
 }
 
-pixelboost::HttpServer::~HttpServer()
+pb::HttpServer::~HttpServer()
 {
 
 }
 
-void pixelboost::HttpServer::Start(int port, const std::string& documentRoot)
+void pb::HttpServer::Start(int port, const std::string& documentRoot)
 {
     if (_Context != 0)
         return;
@@ -114,18 +114,18 @@ void pixelboost::HttpServer::Start(int port, const std::string& documentRoot)
     }
 }
                         
-void pixelboost::HttpServer::Stop()
+void pb::HttpServer::Stop()
 {
     mg_stop(_Context);
     _Context = 0;
 }
 
-void pixelboost::HttpServer::Update()
+void pb::HttpServer::Update()
 {
     
 }
 
-bool pixelboost::HttpServer::OnHttpRequest(RequestType type, const std::string& uri, const std::string& query, const std::string& data, HttpConnection& connection)
+bool pb::HttpServer::OnHttpRequest(RequestType type, const std::string& uri, const std::string& query, const std::string& data, HttpConnection& connection)
 {
     return false;
 }

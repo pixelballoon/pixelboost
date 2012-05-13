@@ -5,7 +5,7 @@
 #include "pixelboost/graphics/device/texture.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
 
-using namespace pixelboost;
+using namespace pb;
 
 GraphicsDevice::GraphicsDevice()
 {

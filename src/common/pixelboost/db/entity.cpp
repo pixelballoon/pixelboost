@@ -3,12 +3,12 @@
 
 #include "pixelboost/external/lua/lua.hpp"
 
-using namespace pixelboost;
+using namespace pb;
     
 Entity::Entity(Uid uid, Uid type, void* data)
     : Struct(uid, type, data)
 {
-    lua_State* state = pixelboost::DatabaseManager::Instance()->GetLuaState();
+    lua_State* state = pb::DatabaseManager::Instance()->GetLuaState();
     
     lua_getfield(state, -1, "transform");
 

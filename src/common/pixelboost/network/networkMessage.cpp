@@ -2,7 +2,7 @@
 
 #include "pixelboost/network/networkMessage.h"
 
-namespace pixelboost
+namespace pb
 {
 
 NetworkMessage::NetworkMessage()

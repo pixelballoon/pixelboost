@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace pixelboost
+namespace pb
 {
 
 namespace FileHelpers

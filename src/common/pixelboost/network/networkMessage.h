@@ -4,7 +4,7 @@
 
 #include <sys/types.h>
 
-namespace pixelboost
+namespace pb
 {
 
 class NetworkMessage

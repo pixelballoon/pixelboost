@@ -7,7 +7,7 @@
 #include "pixelboost/graphics/render/sprite/sprite.h"
 #include "pixelboost/logic/game.h"
 
-using namespace pixelboost;
+using namespace pb;
 
 ParticleEmitter::Particle::Particle(ParticleEmitter::Config* config)
     : emitterConfig(config)
@@ -89,8 +89,8 @@ ParticleEmitter::ParticleEmitter(int maxParticles)
 {
     _Config = new Config();
     
-    _IndexBuffer = pixelboost::GraphicsDevice::Instance()->CreateIndexBuffer(pixelboost::kBufferFormatStatic, _MaxParticles*6);
-    _VertexBuffer = pixelboost::GraphicsDevice::Instance()->CreateVertexBuffer(pixelboost::kBufferFormatDynamic, pixelboost::kVertexFormat_P_XYZ_RGBA_UV, _MaxParticles*4);
+    _IndexBuffer = pb::GraphicsDevice::Instance()->CreateIndexBuffer(pb::kBufferFormatStatic, _MaxParticles*6);
+    _VertexBuffer = pb::GraphicsDevice::Instance()->CreateVertexBuffer(pb::kBufferFormatDynamic, pb::kVertexFormat_P_XYZ_RGBA_UV, _MaxParticles*4);
     
     _IndexBuffer->Lock();
     unsigned short* indexBuffer = _IndexBuffer->GetData();
@@ -115,8 +115,8 @@ ParticleEmitter::~ParticleEmitter()
         delete *it;
     }
     
-    pixelboost::GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
-    pixelboost::GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
+    pb::GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
+    pb::GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
     
     _Config->refCount--;
     
@@ -182,7 +182,7 @@ void ParticleEmitter::Render()
     
     _VertexBuffer->Lock();
     
-    pixelboost::Vertex_PXYZ_RGBA_UV* vertexBuffer = static_cast<pixelboost::Vertex_PXYZ_RGBA_UV*>(_VertexBuffer->GetData());
+    pb::Vertex_PXYZ_RGBA_UV* vertexBuffer = static_cast<pb::Vertex_PXYZ_RGBA_UV*>(_VertexBuffer->GetData());
     
     if (vertexBuffer)
     {
@@ -196,7 +196,7 @@ void ParticleEmitter::Render()
             color *= alpha;
             color[3] = alpha;
 #endif
-            pixelboost::Sprite* sprite = it->emitterConfig->spriteSheet->GetSprite(it->sprite);
+            pb::Sprite* sprite = it->emitterConfig->spriteSheet->GetSprite(it->sprite);
             
             Vec2 scale = it->emitterConfig->startScale + (it->emitterConfig->endScale-it->emitterConfig->startScale)*tween;
             Vec2 size = sprite->_Dimension * scale;
