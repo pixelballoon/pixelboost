@@ -83,7 +83,7 @@ void DatabaseManager::OpenDatabase(const std::string& location)
     }
 }
 
-void DatabaseManager::OpenRecord(Uid recordId)
+Record* DatabaseManager::OpenRecord(Uid recordId)
 {
     char filename[1024];
     sprintf(filename, "%srecords/%X.lua", _DatabaseRoot.c_str(), recordId);
@@ -91,7 +91,7 @@ void DatabaseManager::OpenRecord(Uid recordId)
     if (luaL_loadfile(_State, filename) || lua_pcall(_State, 0, 0, 0))
     {
         printf("Can't open file: %s\n", lua_tostring(_State, -1));
-        return;
+        return 0;
     }
          
     char recordName[64];
@@ -104,7 +104,7 @@ void DatabaseManager::OpenRecord(Uid recordId)
     {
         lua_pop(_State, -1);
         printf("Unknown record type");
-        return;
+        return 0;
     }
     
     Uid recordType = lua_tonumber(_State, -1);
@@ -115,7 +115,7 @@ void DatabaseManager::OpenRecord(Uid recordId)
     if (!lua_istable(_State, -1))
     {
         lua_pop(_State, 1);
-        return;
+        return 0;
     }
     
     void* data = Create(recordType);
@@ -131,7 +131,7 @@ void DatabaseManager::OpenRecord(Uid recordId)
     {
         lua_len(_State, -1);
         if (!lua_isnumber(_State, -1))
-            return;
+            return 0;
         
         int n = lua_tonumber(_State, -1);
         lua_pop(_State, 1);
@@ -193,6 +193,8 @@ void DatabaseManager::OpenRecord(Uid recordId)
     }
     
     lua_pop(_State, 1);
+    
+    return record;
 }
     
 void* DatabaseManager::Create(Uid type)

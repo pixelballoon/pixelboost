@@ -37,7 +37,7 @@ public:
     
     void OpenDatabase(const std::string& location);
     
-    void OpenRecord(Uid recordId);
+    Record* OpenRecord(Uid recordId);
     
     void* Create(Uid type);
     
