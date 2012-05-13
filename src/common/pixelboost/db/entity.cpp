@@ -6,8 +6,7 @@
 using namespace pixelboost;
     
 Entity::Entity(Uid uid, Uid type, void* data)
-    : Struct(uid, type)
-    , _Data(data)
+    : Struct(uid, type, data)
 {
     lua_State* state = pixelboost::DatabaseManager::Instance()->GetLuaState();
     
@@ -56,8 +55,4 @@ const Vec3& Entity::GetScale() const
 {
     return _Scale;
 }
-    
-void* Entity::GetData() const
-{
-    return _Data;
-}
+

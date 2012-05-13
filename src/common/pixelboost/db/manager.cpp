@@ -110,7 +110,19 @@ void DatabaseManager::OpenRecord(Uid recordId)
     Uid recordType = lua_tonumber(_State, -1);
     lua_pop(_State, 1);
     
-    Record* record = new Record(recordId, recordType);
+    lua_getfield(_State, -1, "properties");
+    
+    if (!lua_istable(_State, -1))
+    {
+        lua_pop(_State, 1);
+        return;
+    }
+    
+    void* data = Create(recordType);
+    
+    lua_pop(_State, 1);
+    
+    Record* record = new Record(recordId, recordType, data);
     _Records[recordId] = record;
     
     lua_getfield(_State, -1, "entities");
@@ -163,7 +175,7 @@ void DatabaseManager::OpenRecord(Uid recordId)
                 continue;
             }
             
-            data = Create(record, type);
+            data = Create(type);
             
             lua_pop(_State, 1);
             
@@ -183,14 +195,14 @@ void DatabaseManager::OpenRecord(Uid recordId)
     lua_pop(_State, 1);
 }
     
-void* DatabaseManager::Create(Record* record, Uid type)
+void* DatabaseManager::Create(Uid type)
 {
     StructCreateMap::iterator it = _StructCreate.find(type);
     
     if (it == _StructCreate.end())
         return 0;
     
-    return it->second(record);
+    return it->second();
 }
 
 const DatabaseManager::RecordDescriptionList& DatabaseManager::GetRecordDescriptions() const

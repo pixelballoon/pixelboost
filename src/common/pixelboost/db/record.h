@@ -25,7 +25,7 @@ public:
 class Record : public Struct
 {
 public:
-    Record(Uid uid, Uid type);
+    Record(Uid uid, Uid type, void* data);
     virtual ~Record();
     
     void AddEntity(Entity* entity);    
@@ -38,16 +38,17 @@ public:
     const Entity* GetEntity(Uid uid);
     
 private:
+    void ResolvePointers();
+    
+private:
     EntityMap _Entities;
     
-protected:
+private:
     struct EntityPointer
     {
         Uid uid;
         void** pointer;
     };
-    
-    void ResolvePointers();
     
     typedef std::vector<EntityPointer> PointerList;
     

@@ -2,9 +2,10 @@
 
 using namespace pixelboost;
     
-Struct::Struct(Uid uid, Uid type)
+Struct::Struct(Uid uid, Uid type, void* data)
     : _Uid(uid)
     , _Type(type)
+    , _Data(data)
 {
     
 }
@@ -22,4 +23,9 @@ Uid Struct::GetType() const
 Uid Struct::GetUid() const
 {
     return _Uid;
+}
+
+void* Struct::GetData() const
+{
+    return _Data;
 }

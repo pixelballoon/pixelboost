@@ -31,7 +31,7 @@ public:
     lua_State* GetLuaState();
     
 public:
-    typedef void*(*CreateStruct)(Record* record);
+    typedef void*(*CreateStruct)();
     
     void RegisterStruct(Uid type, CreateStruct createStruct);
     
@@ -39,7 +39,7 @@ public:
     
     void OpenRecord(Uid recordId);
     
-    void* Create(Record* record, Uid type);
+    void* Create(Uid type);
     
 public:
     typedef std::vector<RecordDescription> RecordDescriptionList;

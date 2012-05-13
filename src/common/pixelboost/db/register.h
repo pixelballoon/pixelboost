@@ -7,7 +7,7 @@
 #define PIXELBOOST_DECLARE_CLASS(type) class type ; void PB_Register ## type ();
 #define PIXELBOOST_DECLARE_STRUCT(type) struct type ; void PB_Register ## type ();
 
-#define PIXELBOOST_HAS_BINDING(type) friend void PB_Deserialise ## type (class pixelboost::Record* record, type& object)
+#define PIXELBOOST_HAS_BINDING(type) friend void PB_Deserialise ## type (type& object)
 
 #define PIXELBOOST_START_REGISTER(name) void name () {
 #define PIXELBOOST_REGISTER(name) PB_Register ## name ();
@@ -15,18 +15,18 @@
 
 #define PIXELBOOST_START_STRUCT(type, name) \
     class pixelboost::Record; \
-    void* PB_Create ## type (pixelboost::Record* record); \
+    void* PB_Create ## type (); \
     void PB_Register ## type (); \
-    void PB_Deserialise ## type (pixelboost::Record* record, type& object); \
+    void PB_Deserialise ## type (type& object); \
     void PB_Register ## type () { \
         pixelboost::DatabaseManager::Instance()->RegisterStruct(pixelboost::TypeHash(name), &PB_Create ## type ); \
     } \
-    void* PB_Create ## type (pixelboost::Record* record) { \
+    void* PB_Create ## type () { \
         type* structObject = new type(); \
-        PB_Deserialise ## type (record, *structObject); \
+        PB_Deserialise ## type (*structObject); \
         return structObject; \
     } \
-    void PB_Deserialise ## type (pixelboost::Record* record, type& object) { \
+    void PB_Deserialise ## type (type& object) { \
         lua_State* state = pixelboost::DatabaseManager::Instance()->GetLuaState(); \
         (void)state;
 
@@ -57,7 +57,7 @@
 #define PIXELBOOST_FIELD_STRUCT(field, name, type) { \
     lua_getfield(state, -1, name); \
     if (lua_istable(state, -1)) { \
-        PB_Deserialise ## type (record, object.field); \
+        PB_Deserialise ## type (object.field); \
     } \
     lua_pop(state, 1); \
 }

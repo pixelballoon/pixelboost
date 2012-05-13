@@ -20,11 +20,7 @@ public:
     const Vec3& GetRotation() const;
     const Vec3& GetScale() const;
     
-    void* GetData() const;
-    
 private:
-    void* _Data;
-    
     Vec3 _Position;
     Vec3 _Rotation;
     Vec3 _Scale;

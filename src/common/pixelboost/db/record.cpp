@@ -13,8 +13,8 @@ bool RecordHandle::IsResolved()
     return false;
 }
     
-Record::Record(Uid uid, Uid type)
-    : Struct(uid, type)
+Record::Record(Uid uid, Uid type, void* data)
+    : Struct(uid, type, data)
 {
     
 }
