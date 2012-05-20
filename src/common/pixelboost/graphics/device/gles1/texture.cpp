@@ -4,8 +4,6 @@
 
 #include "pixelboost/graphics/device/gles1/texture.h"
 
-#include "lodepng/lodepng.h"
-
 pb::TextureGLES1::TextureGLES1(GraphicsDeviceGLES1* device)
     : _Device(device)
 {
@@ -53,17 +51,7 @@ void pb::TextureGLES1::LoadFromBytes(const unsigned char* data, int width, int h
 	
     _Device->BindTexture(previousTexture);
 
-}
-
-void pb::TextureGLES1::LoadFromPng(const std::string& path, bool createMips)
-{
-    LodePNG::Decoder decoder;
-    std::vector<unsigned char> file;
-    std::vector<unsigned char> data;
-    LodePNG::loadFile(file, path);
-    decoder.decode(data, &file[0], file.size());
-	
-	LoadFromBytes(&data[0], decoder.getWidth(), decoder.getHeight(), createMips, kTextureFormatRGBA);
+    _Size = Vec2(width, height);
 }
 
 #endif

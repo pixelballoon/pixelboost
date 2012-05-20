@@ -4,8 +4,6 @@
 
 #include "pixelboost/graphics/device/gl2/texture.h"
 
-#include "lodepng/lodepng.h"
-
 pb::TextureGL2::TextureGL2(GraphicsDeviceGL2* device)
     : _Device(device)
 {
@@ -52,18 +50,8 @@ void pb::TextureGL2::LoadFromBytes(const unsigned char* data, int width, int hei
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
 	
     _Device->BindTexture(previousTexture);
-
-}
-
-void pb::TextureGL2::LoadFromPng(const std::string& path, bool createMips)
-{
-    LodePNG::Decoder decoder;
-    std::vector<unsigned char> file;
-    std::vector<unsigned char> data;
-    LodePNG::loadFile(file, path);
-    decoder.decode(data, &file[0], file.size());
-	
-	LoadFromBytes(&data[0], decoder.getWidth(), decoder.getHeight(), createMips, kTextureFormatRGBA);
+    
+    _Size = Vec2(width, height);
 }
 
 #endif

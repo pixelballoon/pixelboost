@@ -3,6 +3,7 @@
 #include <string>
 
 #include "pixelboost/graphics/device/device.h"
+#include "pixelboost/math/maths.h"
 
 namespace pb
 {
@@ -20,9 +21,14 @@ public:
     };
     
     virtual void LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format) = 0;
-    virtual void LoadFromPng(const std::string& image, bool createMips) = 0;
+    virtual void LoadFromPng(const std::string& image, bool createMips);
     
     virtual void Bind(int unit = 0) = 0;
+    
+    const Vec2& GetSize();
+    
+protected:
+    Vec2 _Size;
     
     friend class GraphicsDevice;
 };

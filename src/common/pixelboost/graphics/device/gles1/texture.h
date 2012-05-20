@@ -18,7 +18,6 @@ protected:
     
 public:
     void LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format);
-    void LoadFromPng(const std::string& image, bool createMips);
     
 public:
     void Bind(int textureUnit);
