@@ -178,7 +178,7 @@ std::shared_ptr<SpriteSheet> SpriteRenderer::CreateSpriteSheet(const std::string
     SheetMap::iterator it = _SpriteSheets.find(name);
     
     if (it != _SpriteSheets.end())
-        return std::shared_ptr<SpriteSheet>();
+        return it->second;
     
     std::shared_ptr<SpriteSheet> sheet = SpriteSheet::Create();
     _SpriteSheets[name] = sheet;
@@ -277,7 +277,7 @@ bool SpriteRenderer::AttachSprite(RenderLayer* layer, const std::string& spriteN
     return true;
 }
     
-bool SpriteRenderer::AttachCustom(RenderLayer* layer, const std::string& sheetName, Vec2 size, Vec4 uv, Vec2 position, Vec3 rotation, BlendMode blendMode, Vec4 tint)
+bool SpriteRenderer::AttachCustom(RenderLayer* layer, const std::string& sheetName, Vec2 position, Vec2 size, Vec4 uv, Vec3 rotation, BlendMode blendMode, Vec4 tint)
 {
     std::shared_ptr<SpriteSheet> sheet = GetSpriteSheet(sheetName);
     
@@ -287,14 +287,16 @@ bool SpriteRenderer::AttachCustom(RenderLayer* layer, const std::string& sheetNa
     SpriteInstance instance;
     
     instance.uv = uv;
-    instance.position = position;
-    instance.rotation = (rotation[2] / 180.f) * M_PI;
-    instance.scale = Vec2(1.f, 1.f);
+    instance.position = position - Vec2(size[0], size[1])*0.5f;
+    instance.rotation = ((-rotation[2]-90.f) / 180.f) * M_PI;
+    instance.scale = size * 0.5f;
     instance.blendMode = blendMode;
     instance.tint = tint;
     instance.texture = sheet->_Texture;
     
-    return false;
+    _Instances[layer].push_back(instance);
+    
+    return true;
 }
     
 std::shared_ptr<SpriteSheet> SpriteRenderer::GetSpriteSheet(const std::string& sheetName) const
