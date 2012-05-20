@@ -89,6 +89,7 @@ void GwenRenderer::FreeTexture(Gwen::Texture* definition)
 
 Gwen::Color GwenRenderer::PixelColour( Gwen::Texture* pTexture, unsigned int x, unsigned int y, const Gwen::Color& col_default )
 {
+#ifdef PIXELBOOST_GRAPHICS_OPENGL2
     // TODO: Properly implement this - it's currently taken from the OpenGL sample code, and isn't particularly nice
     
     std::shared_ptr<SpriteSheet> sheet = pb::Game::Instance()->GetSpriteRenderer()->GetSpriteSheet(pTexture->name.c_str());
@@ -115,6 +116,9 @@ Gwen::Color GwenRenderer::PixelColour( Gwen::Texture* pTexture, unsigned int x, 
     free( data );
 
     return c;
+#else
+    return Gwen::Color();
+#endif
 }
 
 void GwenRenderer::RenderText(Gwen::Font* font, Gwen::Point pos, const Gwen::UnicodeString& text)
