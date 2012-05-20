@@ -36,6 +36,11 @@ float GetAspectRatio()
     
 Vec2 GetScreenResolution()
 {
+    Vec2 resolution = Game::Instance()->GetScreenResolution();
+    
+    if (resolution[0] != 0 || resolution[1] != 0)
+        return resolution;
+    
     return Vec2(1200.f, 600.f);
 }
     

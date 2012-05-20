@@ -1,5 +1,7 @@
 #pragma once
 
+#include "pixelboost/math/maths.h"
+
 #include <vector>
 
 namespace pb
@@ -44,6 +46,7 @@ public:
     float GetTotalTime();
     
     virtual bool IsLandscape();
+    virtual Vec2 GetScreenResolution();
     
     virtual void OnMemoryWarning();
 	

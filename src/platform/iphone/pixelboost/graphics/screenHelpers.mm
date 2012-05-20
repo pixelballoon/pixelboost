@@ -64,6 +64,11 @@ float GetAspectRatio()
     
 Vec2 GetScreenResolution()
 {
+    Vec2 resolution = Game::Instance()->GetScreenResolution();
+    
+    if (resolution[0] != 0 || resolution[1] != 0)
+        return resolution;
+    
     if ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad))
     {
         if (!IsLandscape())
