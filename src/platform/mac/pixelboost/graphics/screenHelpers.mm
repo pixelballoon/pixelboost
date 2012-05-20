@@ -36,7 +36,7 @@ float GetAspectRatio()
     
 Vec2 GetScreenResolution()
 {
-    return Vec2(1024.f, 768.f);
+    return Vec2(1200.f, 600.f);
 }
     
 Vec2 GetWorldScale()

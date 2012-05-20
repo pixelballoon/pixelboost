@@ -1,28 +1,28 @@
 #include "pixelboost/graphics/device/device.h"
 
-#ifdef PIXELBOOST_GRAPHICS_OPENGLES1
+#ifdef PIXELBOOST_GRAPHICS_OPENGL2
 
-#include "pixelboost/graphics/device/gles1/texture.h"
+#include "pixelboost/graphics/device/gl2/texture.h"
 
 #include "lodepng/lodepng.h"
 
-pb::TextureGLES1::TextureGLES1(GraphicsDeviceGLES1* device)
+pb::TextureGL2::TextureGL2(GraphicsDeviceGL2* device)
     : _Device(device)
 {
     
 }
 
-pb::TextureGLES1::~TextureGLES1()
+pb::TextureGL2::~TextureGL2()
 {
     glDeleteTextures(1, &_Texture);
 }
 
-void pb::TextureGLES1::Bind(int unit)
+void pb::TextureGL2::Bind(int unit)
 {
     _Device->BindTexture(this);
 }
 
-void pb::TextureGLES1::LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format)
+void pb::TextureGL2::LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format)
 {
     if (format != kTextureFormatRGBA)
     {
@@ -55,7 +55,7 @@ void pb::TextureGLES1::LoadFromBytes(const unsigned char* data, int width, int h
 
 }
 
-void pb::TextureGLES1::LoadFromPng(const std::string& path, bool createMips)
+void pb::TextureGL2::LoadFromPng(const std::string& path, bool createMips)
 {
     LodePNG::Decoder decoder;
     std::vector<unsigned char> file;

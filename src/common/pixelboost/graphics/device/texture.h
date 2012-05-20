@@ -32,3 +32,7 @@ public:
 #ifdef PIXELBOOST_GRAPHICS_OPENGLES1
 #include "pixelboost/graphics/device/gles1/texture.h"
 #endif
+
+#ifdef PIXELBOOST_GRAPHICS_OPENGL2
+#include "pixelboost/graphics/device/gl2/texture.h"
+#endif

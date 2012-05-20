@@ -58,11 +58,12 @@ public:
 
 #ifdef PIXELBOOST_PLATFORM_IOS
     #define PIXELBOOST_GRAPHICS_OPENGLES1
+    #include "pixelboost/graphics/device/gles1/device.h"
 #endif
 
 #ifdef PIXELBOOST_PLATFORM_OSX
-    #define PIXELBOOST_GRAPHICS_OPENGL
-    #include <OpenGL/gl.h>
+    #define PIXELBOOST_GRAPHICS_OPENGL2
+    #include "pixelboost/graphics/device/gl2/device.h"
 #endif
 
 #endif

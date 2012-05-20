@@ -3,18 +3,18 @@
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/texture.h"
 
-#ifdef PIXELBOOST_GRAPHICS_OPENGLES1
+#ifdef PIXELBOOST_GRAPHICS_OPENGL2
 
 #include "pixelboost/graphics/device/gles1/device.h"
 
 namespace pb
 {
 
-class TextureGLES1 : public Texture
+class TextureGL2 : public Texture
 {
 protected:
-    TextureGLES1(GraphicsDeviceGLES1* device);
-    virtual ~TextureGLES1();
+    TextureGL2(GraphicsDeviceGL2* device);
+    virtual ~TextureGL2();
     
 public:
     void LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format);
@@ -24,10 +24,10 @@ public:
     void Bind(int textureUnit);
     
 private:
-    GraphicsDeviceGLES1* _Device;
+    GraphicsDeviceGL2* _Device;
     GLuint _Texture;
     
-    friend class GraphicsDeviceGLES1;
+    friend class GraphicsDeviceGL2;
 };
 
 }
