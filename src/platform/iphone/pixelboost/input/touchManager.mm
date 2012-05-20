@@ -6,6 +6,11 @@
 
 namespace pb
 {
+    
+Vec2 Touch::GetDisplayPosition()
+{
+    return _Position;
+}
 
 Vec2 Touch::GetScreenPosition()
 {

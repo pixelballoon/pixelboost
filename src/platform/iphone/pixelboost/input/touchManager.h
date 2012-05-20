@@ -19,6 +19,7 @@ class TouchManager;
 class Touch
 {
 public:
+	Vec2 GetDisplayPosition();
 	Vec2 GetScreenPosition();
 	Vec2 GetWorldPosition(OrthographicCamera* camera);
 	
