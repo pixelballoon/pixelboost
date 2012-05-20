@@ -84,7 +84,7 @@ bool SpriteSheet::Load(const std::string& name, bool generateMips)
     }
     
     _Texture = GraphicsDevice::Instance()->CreateTexture();
-    _Texture->Load(fileRoot + "/data/spritesheets/images/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".png", generateMips);
+    _Texture->LoadFromPng(fileRoot + "/data/spritesheets/images/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".png", generateMips);
     
     return (_Texture != 0);
 }

@@ -10,16 +10,18 @@
 namespace pb
 {
 
-class TextureGLES1 : Texture
+class TextureGLES1 : public Texture
 {
 protected:
     TextureGLES1(GraphicsDeviceGLES1* _Device);
     virtual ~TextureGLES1();
     
 public:
-    void Load(const unsigned char* data, bool createMips, TextureFormat format);
-    void Load(const std::string& image, bool createMips);
-    void Bind(int unit);
+    void LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format);
+    void LoadFromPng(const std::string& image, bool createMips);
+    
+public:
+    void Bind(int textureUnit);
     
 private:
     GraphicsDeviceGLES1* _Device;

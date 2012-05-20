@@ -121,7 +121,7 @@ void FontRenderer::LoadFont(const std::string& name)
         {
             std::string texFilename = fileRoot + "/data/fonts/" + data["file"].substr(1, data["file"].find('"', 1)-1);
             font->texture = GraphicsDevice::Instance()->CreateTexture();
-            font->texture->Load(texFilename, true);
+            font->texture->LoadFromPng(texFilename, true);
         } else if (elementType == "char")
         {
             Font::Character character;

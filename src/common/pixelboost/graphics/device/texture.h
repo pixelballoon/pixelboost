@@ -16,11 +16,11 @@ protected:
 public:
     enum TextureFormat
     {
-        kTextureFormatUncompressed
+        kTextureFormatRGBA,
     };
     
-    virtual void Load(const unsigned char* data, bool createMips, TextureFormat format) = 0;
-    virtual void Load(const std::string& image, bool createMips) = 0;
+    virtual void LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format) = 0;
+    virtual void LoadFromPng(const std::string& image, bool createMips) = 0;
     
     virtual void Bind(int unit = 0) = 0;
     

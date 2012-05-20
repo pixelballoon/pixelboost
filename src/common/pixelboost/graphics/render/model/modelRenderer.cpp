@@ -311,7 +311,7 @@ bool ModelRenderer::LoadTexture(const std::string& textureName, bool createMips)
     }
     
     Texture* texture = GraphicsDevice::Instance()->CreateTexture();
-    texture->Load(FileHelpers::GetRootPath() + "/data/models/" + textureName + ".png", createMips);
+    texture->LoadFromPng(FileHelpers::GetRootPath() + "/data/models/" + textureName + ".png", createMips);
     
     _Textures[textureName] = texture;
     
