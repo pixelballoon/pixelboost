@@ -59,7 +59,7 @@ namespace Gwen
 
 					m_colModal = Gwen::Color( 25, 25, 25, 150 );
 
-					m_DefaultFont.facename	= L"Microsoft Sans Serif";
+					m_DefaultFont.facename	= L"helvetica";
 					m_DefaultFont.size		= 11;
 				}
 

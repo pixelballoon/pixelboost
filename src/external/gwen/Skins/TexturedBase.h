@@ -292,7 +292,7 @@ namespace Gwen
 				
 				virtual void Init( const TextObject& TextureName )
 				{
-					m_DefaultFont.facename	= L"Microsoft Sans Serif";
+					m_DefaultFont.facename	= L"helvetica";
 					m_DefaultFont.size		= 11;
 
 					m_Texture.Load( TextureName, GetRender() );
