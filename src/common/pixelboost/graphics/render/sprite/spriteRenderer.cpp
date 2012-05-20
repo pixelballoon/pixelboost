@@ -250,6 +250,12 @@ bool SpriteRenderer::AttachToRenderer(RenderLayer* layer, const std::string& spr
     
     if (!sprite)
         return false;
+    
+#ifdef PIXELBOOST_GRAPHICS_PREMULTIPLIED_ALPHA
+    float alpha = color[3];
+    color = color*alpha;
+    color[3] = alpha;
+#endif
 
     SpriteInstance instance(sprite);
     
