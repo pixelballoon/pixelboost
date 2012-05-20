@@ -1,3 +1,5 @@
+#ifndef PIXELBOOST_DISABLE_GRAPHICS
+
 #ifndef PIXELBOOST_DISABLE_GWEN
 
 #include "pixelboost/file/fileHelpers.h"
@@ -143,5 +145,7 @@ Gwen::Point GwenRenderer::MeasureText(Gwen::Font* font, const Gwen::UnicodeStrin
     
     return Gwen::Point(length, size);
 }
+
+#endif
 
 #endif
