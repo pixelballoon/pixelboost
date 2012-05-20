@@ -107,7 +107,7 @@ Gwen::Anim::TimedAnimation::TimedAnimation( float fLength, float fDelay, float f
 	m_bFinished = false;
 }
 
-float GetEased( float fTime, float fEase )
+static float GetEased( float fTime, float fEase )
 {
 	// Ease in and Out if ease is < 0
 	if ( fEase < 0 )

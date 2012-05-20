@@ -207,7 +207,7 @@ void Text::RefreshSize()
 	Invalidate();
 }
 
-void SplitWords(const Gwen::UnicodeString &s, wchar_t delim, std::vector<Gwen::UnicodeString> &elems) 
+static void SplitWords(const Gwen::UnicodeString &s, wchar_t delim, std::vector<Gwen::UnicodeString> &elems) 
 {
 	Gwen::UnicodeString str;
 

@@ -56,7 +56,7 @@ bool DragAndDrop::Start( Gwen::Controls::Base* pControl, Package* pPackage )
 	return true;
 }
 
-bool OnDrop( int x, int y )
+static bool OnDrop( int x, int y )
 {
 	bool bSuccess = false;
 
@@ -103,7 +103,7 @@ bool DragAndDrop::OnMouseButton( Gwen::Controls::Base* pHoveredControl, int x, i
 	return false;
 }
 
-bool ShouldStartDraggingControl( int x, int y )
+static bool ShouldStartDraggingControl( int x, int y )
 {
 	// We're not holding a control down..
 	if ( !LastPressedControl ) return false;
@@ -147,7 +147,7 @@ bool ShouldStartDraggingControl( int x, int y )
 
 }
 
-void UpdateHoveredControl( Gwen::Controls::Base* pCtrl, int x, int y )
+static void UpdateHoveredControl( Gwen::Controls::Base* pCtrl, int x, int y )
 {
 	//
 	// We use this global variable to represent our hovered control
