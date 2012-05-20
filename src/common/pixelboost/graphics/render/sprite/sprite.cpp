@@ -27,7 +27,23 @@ SpriteSheet::~SpriteSheet()
         Game::Instance()->GetSpriteRenderer()->_Sprites.erase(it->first);
     }
     
-    GraphicsDevice::Instance()->DestroyTexture(_Texture);
+    if (_Texture)
+    {
+        GraphicsDevice::Instance()->DestroyTexture(_Texture);
+    }
+}
+
+Texture* SpriteSheet::LoadTexture(const std::string& fileName, bool generateMips)
+{
+    if (_Texture)
+    {
+        GraphicsDevice::Instance()->DestroyTexture(_Texture);
+    }
+    
+    _Texture = GraphicsDevice::Instance()->CreateTexture();
+    _Texture->LoadFromPng(fileName, generateMips);
+    
+    return _Texture;
 }
 
 bool SpriteSheet::LoadDefinition(const std::string& name, bool generateMips)
@@ -84,10 +100,9 @@ bool SpriteSheet::LoadDefinition(const std::string& name, bool generateMips)
         Game::Instance()->GetSpriteRenderer()->_Sprites[spriteName] = sprite;
     }
     
-    _Texture = GraphicsDevice::Instance()->CreateTexture();
-    _Texture->LoadFromPng(fileRoot + "/data/spritesheets/images/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".png", generateMips);
+    LoadTexture(fileRoot + "/data/spritesheets/images/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".png", generateMips);
     
-    return (_Texture != 0);
+    return true;
 }
     
 Sprite* SpriteSheet::GetSprite(const std::string& name)
