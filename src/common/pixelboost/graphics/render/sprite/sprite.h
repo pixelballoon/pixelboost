@@ -21,7 +21,7 @@ public:
     static std::shared_ptr<SpriteSheet> Create();
     virtual ~SpriteSheet();
     
-    bool Load(const std::string& name, bool generateMips=false);
+    bool LoadDefinition(const std::string& name, bool generateMips=false);
     
     Sprite* GetSprite(const std::string& name);
     

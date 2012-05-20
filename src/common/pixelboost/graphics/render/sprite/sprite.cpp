@@ -16,6 +16,7 @@ std::shared_ptr<SpriteSheet> SpriteSheet::Create()
 }
 
 SpriteSheet::SpriteSheet()
+    : _Texture(0)
 {
 }
 
@@ -29,7 +30,7 @@ SpriteSheet::~SpriteSheet()
     GraphicsDevice::Instance()->DestroyTexture(_Texture);
 }
 
-bool SpriteSheet::Load(const std::string& name, bool generateMips)
+bool SpriteSheet::LoadDefinition(const std::string& name, bool generateMips)
 {
     std::string fileRoot = FileHelpers::GetRootPath();
     

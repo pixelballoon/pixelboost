@@ -9,8 +9,7 @@
 namespace pb
 {
 
-SpriteInstance::SpriteInstance(Sprite* sprite) :
-	  sprite(sprite)
+SpriteInstance::SpriteInstance()
 {
 }
     
@@ -95,10 +94,10 @@ void SpriteRenderer::Render(RenderLayer* layer)
             SetBlendMode(blendMode);
         }
         
-        if (texture != it->sprite->_Sheet->_Texture)
+        if (texture != it->texture)
         {
             RenderCurrentBuffer();
-            texture = it->sprite->_Sheet->_Texture;
+            texture = it->texture;
             texture->Bind();
         }
         
@@ -115,66 +114,47 @@ void SpriteRenderer::Render(RenderLayer* layer)
             bufferData = static_cast<Vertex_PXYZ_RGBA_UV*>(vertexBuffer->GetData());
         }
         
-        bufferData[0].position[2] = 0.f;
-        bufferData[1].position[2] = 0.f;
-        bufferData[2].position[2] = 0.f;
-        bufferData[3].position[2] = 0.f;
-        
-        bufferData[0].color[0] = it->color[0];
-        bufferData[0].color[1] = it->color[1];
-        bufferData[0].color[2] = it->color[2];
-        bufferData[0].color[3] = it->color[3];
-        bufferData[1].color[0] = it->color[0];
-        bufferData[1].color[1] = it->color[1];
-        bufferData[1].color[2] = it->color[2];
-        bufferData[1].color[3] = it->color[3];
-        bufferData[2].color[0] = it->color[0];
-        bufferData[2].color[1] = it->color[1];
-        bufferData[2].color[2] = it->color[2];
-        bufferData[2].color[3] = it->color[3];
-        bufferData[3].color[0] = it->color[0];
-        bufferData[3].color[1] = it->color[1];
-        bufferData[3].color[2] = it->color[2];
-        bufferData[3].color[3] = it->color[3];
+        bufferData[0].color[0] = it->tint[0];
+        bufferData[0].color[1] = it->tint[1];
+        bufferData[0].color[2] = it->tint[2];
+        bufferData[0].color[3] = it->tint[3];
+        bufferData[1].color[0] = it->tint[0];
+        bufferData[1].color[1] = it->tint[1];
+        bufferData[1].color[2] = it->tint[2];
+        bufferData[1].color[3] = it->tint[3];
+        bufferData[2].color[0] = it->tint[0];
+        bufferData[2].color[1] = it->tint[1];
+        bufferData[2].color[2] = it->tint[2];
+        bufferData[2].color[3] = it->tint[3];
+        bufferData[3].color[0] = it->tint[0];
+        bufferData[3].color[1] = it->tint[1];
+        bufferData[3].color[2] = it->tint[2];
+        bufferData[3].color[3] = it->tint[3];
         
         float cosRot = cos(it->rotation);
         float sinRot = sin(it->rotation);
         
         bufferData[0].position[0] = -it->scale[1] * cosRot + it->scale[0] * sinRot + it->position[0];
         bufferData[0].position[1] = it->scale[1] * sinRot + it->scale[0] * cosRot + it->position[1];
+        bufferData[0].position[2] = 0.f;
         bufferData[1].position[0] = it->scale[1] * cosRot + it->scale[0] * sinRot + it->position[0];
         bufferData[1].position[1] = -it->scale[1] * sinRot + it->scale[0] * cosRot + it->position[1];
+        bufferData[1].position[2] = 0.f;
         bufferData[2].position[0] = it->scale[1] * cosRot - it->scale[0] * sinRot + it->position[0];
         bufferData[2].position[1] = -it->scale[1] * sinRot - it->scale[0] * cosRot + it->position[1];
+        bufferData[2].position[2] = 0.f;
         bufferData[3].position[0] = -it->scale[1] * cosRot - it->scale[0] * sinRot + it->position[0];
         bufferData[3].position[1] = it->scale[1] * sinRot - it->scale[0] * cosRot + it->position[1];
+        bufferData[3].position[2] = 0.f;
         
-        if (!it->sprite->_Rotated)
-        {
-            Vec2 min = it->sprite->_Position + Vec2(it->sprite->_Size[0] * it->crop[0], it->sprite->_Size[1] * it->crop[1]);
-            Vec2 max = it->sprite->_Position + Vec2(it->sprite->_Size[0] * it->crop[2], it->sprite->_Size[1] * it->crop[3]);
-            
-            bufferData[0].uv[0] = min[0];
-            bufferData[0].uv[1] = max[1];
-            bufferData[1].uv[0] = min[0];
-            bufferData[1].uv[1] = min[1];
-            bufferData[2].uv[0] = max[0];
-            bufferData[2].uv[1] = min[1];
-            bufferData[3].uv[0] = max[0];
-            bufferData[3].uv[1] = max[1];
-        } else {
-            Vec2 min = it->sprite->_Position + Vec2(it->sprite->_Size[1] * it->crop[3], it->sprite->_Size[0] * it->crop[2]);
-            Vec2 max = it->sprite->_Position + Vec2(it->sprite->_Size[1] * it->crop[1], it->sprite->_Size[0] * it->crop[0]);
-            
-            bufferData[0].uv[0] = max[0];
-            bufferData[0].uv[1] = max[1];
-            bufferData[1].uv[0] = min[0];
-            bufferData[1].uv[1] = max[1];
-            bufferData[2].uv[0] = min[0];
-            bufferData[2].uv[1] = min[1];
-            bufferData[3].uv[0] = max[0];
-            bufferData[3].uv[1] = min[1];
-        }
+        bufferData[0].uv[0] = it->uv[0];
+        bufferData[0].uv[1] = it->uv[3];
+        bufferData[1].uv[0] = it->uv[0];
+        bufferData[1].uv[1] = it->uv[1];
+        bufferData[2].uv[0] = it->uv[2];
+        bufferData[2].uv[1] = it->uv[1];
+        bufferData[3].uv[0] = it->uv[2];
+        bufferData[3].uv[1] = it->uv[3];
         
         bufferData += 4;
         _SpritesRendered++;
@@ -192,17 +172,27 @@ void SpriteRenderer::Render(RenderLayer* layer)
     glDisable(GL_BLEND);
     glDisable(GL_TEXTURE_2D);
 }
-
-bool SpriteRenderer::LoadSpriteSheet(const std::string& name, bool createMips)
+    
+std::shared_ptr<SpriteSheet> SpriteRenderer::CreateSpriteSheet(const std::string &name)
 {
     SheetMap::iterator it = _SpriteSheets.find(name);
     
     if (it != _SpriteSheets.end())
-        return true;
+        return std::shared_ptr<SpriteSheet>();
     
     std::shared_ptr<SpriteSheet> sheet = SpriteSheet::Create();
-    sheet->Load(name, createMips);
     _SpriteSheets[name] = sheet;
+    
+    return sheet;
+}
+
+bool SpriteRenderer::LoadSpriteSheet(const std::string& name, bool createMips)
+{
+    if (!CreateSpriteSheet(name))
+        return false;
+    
+    std::shared_ptr<SpriteSheet> sheet = GetSpriteSheet(name);
+    sheet->LoadDefinition(name, createMips);
 
     return true;
 }
@@ -217,18 +207,7 @@ bool SpriteRenderer::UnloadSpriteSheet(const std::string& name)
         {
             for (InstanceList::iterator instanceIt = layerIt->second.begin(); instanceIt != layerIt->second.end();)
             {
-                bool eraseSprite = false;
-                
-                for (SpriteSheet::SpriteMap::iterator spriteIt = sheetIt->second->_Sprites.begin(); spriteIt != sheetIt->second->_Sprites.end(); ++spriteIt)
-                {
-                    if (instanceIt->sprite == spriteIt->second)
-                    {
-                        eraseSprite = true;
-                        break;
-                    }
-                }
-                
-                if (eraseSprite)
+                if (instanceIt->texture == sheetIt->second->_Texture)
                 {
                     instanceIt = layerIt->second.erase(instanceIt);
                 } else {
@@ -244,7 +223,7 @@ bool SpriteRenderer::UnloadSpriteSheet(const std::string& name)
     return false;
 }
 
-bool SpriteRenderer::AttachToRenderer(RenderLayer* layer, const std::string& spriteName, Vec2 position, Vec3 rotation, Vec2 scale, BlendMode blendMode, Vec4 color, Vec4 crop)
+bool SpriteRenderer::AttachSprite(RenderLayer* layer, const std::string& spriteName, Vec2 position, Vec3 rotation, Vec2 scale, BlendMode blendMode, Vec4 tint, Vec4 crop)
 {
     Sprite* sprite = GetSprite(spriteName);
     
@@ -256,20 +235,76 @@ bool SpriteRenderer::AttachToRenderer(RenderLayer* layer, const std::string& spr
     color = color*alpha;
     color[3] = alpha;
 #endif
+    
+    Vec2 dimension = sprite->_Dimension;
 
-    SpriteInstance instance(sprite);
+    SpriteInstance instance;
     
-    instance.crop = crop;
-    instance.position = position - Vec2((0.5 - (crop[0]+crop[2])/2.f) * sprite->_Dimension[0], (0.5 - (crop[1]+crop[3])/2.f) * sprite->_Dimension[1]);
+    if (!sprite->_Rotated)
+    {
+        Vec2 min = sprite->_Position + Vec2(sprite->_Size[0] * crop[0], sprite->_Size[1] * crop[1]);
+        Vec2 max = sprite->_Position + Vec2(sprite->_Size[0] * crop[2], sprite->_Size[1] * crop[3]);
+        
+        instance.uv[0] = min[0];
+        instance.uv[1] = min[1];
+        instance.uv[2] = max[0];
+        instance.uv[3] = max[1];
+    } else {
+        Vec2 min = sprite->_Position + Vec2(sprite->_Size[1] * crop[3], sprite->_Size[0] * crop[2]);
+        Vec2 max = sprite->_Position + Vec2(sprite->_Size[1] * crop[1], sprite->_Size[0] * crop[0]);
+        
+        instance.uv[0] = min[0];
+        instance.uv[1] = min[1];
+        instance.uv[2] = max[0];
+        instance.uv[3] = max[1];
+    }
+    
+    if (sprite->_Rotated)
+    {
+        rotation[2] -= 90.f;
+        Swap(dimension[0], dimension[1]);
+    }
+    
+    instance.position = position - Vec2((0.5 - (crop[0]+crop[2])/2.f) * dimension[0], (0.5 - (crop[1]+crop[3])/2.f) * dimension[1]);
     instance.rotation = ((-rotation[2]-90.f) / 180.f) * M_PI;
-    instance.scale = sprite->_Dimension * Vec2(crop[2]-crop[0], crop[3]-crop[1]) * scale * 0.5; // Scale now for later optimisation
-    instance.color = color;
-    
+    instance.scale = dimension * Vec2(crop[2]-crop[0], crop[3]-crop[1]) * scale * 0.5;
     instance.blendMode = blendMode;
+    instance.tint = tint;
+    instance.texture = sprite->_Sheet->_Texture;
     
     _Instances[layer].push_back(instance);
     
     return true;
+}
+    
+bool SpriteRenderer::AttachCustom(RenderLayer* layer, const std::string& sheetName, Vec2 size, Vec4 uv, Vec2 position, Vec3 rotation, BlendMode blendMode, Vec4 tint)
+{
+    std::shared_ptr<SpriteSheet> sheet = GetSpriteSheet(sheetName);
+    
+    if (!sheet)
+        return false;
+    
+    SpriteInstance instance;
+    
+    instance.uv = uv;
+    instance.position = position;
+    instance.rotation = (rotation[2] / 180.f) * M_PI;
+    instance.scale = Vec2(1.f, 1.f);
+    instance.blendMode = blendMode;
+    instance.tint = tint;
+    instance.texture = sheet->_Texture;
+    
+    return false;
+}
+    
+std::shared_ptr<SpriteSheet> SpriteRenderer::GetSpriteSheet(const std::string& sheetName) const
+{
+    SheetMap::const_iterator it = _SpriteSheets.find(sheetName);
+    
+    if (it == _SpriteSheets.end())
+        return std::shared_ptr<SpriteSheet>();
+    
+    return it->second;
 }
     
 Sprite* SpriteRenderer::GetSprite(const std::string& spriteName) const
