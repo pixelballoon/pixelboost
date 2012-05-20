@@ -33,11 +33,13 @@ namespace pb
         virtual void Update(float time);
         virtual void Render(RenderLayer* layer);
         
-        bool AttachToRenderer(RenderLayer* layer, const std::string& fontName, const std::string& string, Vec2 position, FontAlign alignment = kFontAlignCenter, float scale = 1.f, float rotation = 0.f, Vec4 color = Vec4(1.f, 1.f, 1.f, 1.f));
+        bool AttachToRenderer(RenderLayer* layer, const std::string& fontName, const std::string& string, Vec2 position, FontAlign alignment = kFontAlignCenter, float size = 1.f, float rotation = 0.f, Vec4 color = Vec4(1.f, 1.f, 1.f, 1.f));
         
+        float MeasureString(const std::string& fontName, const std::string& string, float size);
+    
+    private:
         void SplitString(const std::string& string, char seperator, std::vector<std::string>& output);
         
-    private:
         struct FontInstance
         {
             std::string _Font;

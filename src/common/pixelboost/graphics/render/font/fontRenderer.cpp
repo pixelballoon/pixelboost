@@ -75,6 +75,8 @@ void FontRenderer::LoadFont(const std::string& name)
     
     Font* font = new Font();
     
+    font->texture = 0;
+    
     std::string fileRoot = FileHelpers::GetRootPath();
     
     std::string fntFilename = fileRoot + "/data/fonts/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".fnt";
@@ -192,7 +194,7 @@ void FontRenderer::Render(RenderLayer* layer)
         Font* font;
         
         FontMap::iterator fontIt = _Fonts.find(it->_Font);
-        if (fontIt == _Fonts.end())
+        if (fontIt == _Fonts.end() || fontIt->second->texture == 0)
             continue;
         
         font = fontIt->second;
@@ -283,6 +285,38 @@ bool FontRenderer::AttachToRenderer(RenderLayer* layer, const std::string& fontN
     _Instances[layer].push_back(instance);
     
     return true;
+}
+
+float FontRenderer::MeasureString(const std::string& fontName, const std::string& string, float size)
+{
+    Font* font;
+    
+    FontMap::iterator fontIt = _Fonts.find(fontName);
+    if (fontIt == _Fonts.end() || fontIt->second->texture == 0)
+        return 0.f;
+    
+    font = fontIt->second;
+    
+    float offset = 0.f;
+    for (int i=0; i<string.length(); i++)
+    {
+        std::map<char, Font::Character>::iterator charIt = font->chars.find(string[i]);
+        
+        if (charIt == font->chars.end())
+            continue;
+        
+        offset += charIt->second.xAdvance;
+        
+        if (i<string.length()-1)
+        {
+            std::map<std::pair<char, char>, float>::iterator kerningIt = font->kerning.find(std::pair<char, char>(string[i], string[i+1]));
+            
+            if (kerningIt != font->kerning.end())
+                offset += kerningIt->second;
+        }
+    }
+    
+    return offset * size;
 }
 
 void FontRenderer::SplitString(const std::string& string, char seperator, std::vector<std::string>& output)
