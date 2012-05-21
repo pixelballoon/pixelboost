@@ -49,11 +49,19 @@ public:
     virtual Vec2 GetScreenResolution();
     virtual void Render();
     
+    void SetDirty();
+    
+    void Scroll(Vec2 offset);
+    void Zoom(float delta);
+    
 public:
     void SetCanvasSize(Vec2 size);
     void SetRecord(Record* record);
     
     void LoadSprite(const std::string& sprite);
+    
+public:
+    sigslot::Signal0<> onRedraw;
     
 private:
     std::string GetSpriteFile(const std::string& sprite);

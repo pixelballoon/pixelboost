@@ -113,6 +113,24 @@ void View::Render()
     Game::Render();
 }
 
+void View::SetDirty()
+{
+    onRedraw();
+}
+
+void View::Scroll(Vec2 offset)
+{
+    _LevelCamera->Position += offset;
+}
+
+void View::Zoom(float delta)
+{
+    float minZoom = 0.1f;
+    float maxZoom = 2.f;
+    Vec2 scale = _LevelCamera->Scale;
+    _LevelCamera->Scale = Vec2(Max(Min(maxZoom, scale[0]+delta), minZoom), Max(Min(maxZoom, scale[1]+delta), minZoom));
+}
+
 void View::LoadSprite(const std::string& sprite)
 {
     if (GetSpriteRenderer()->GetSpriteSheet(sprite))

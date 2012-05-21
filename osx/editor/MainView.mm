@@ -111,4 +111,28 @@ using namespace pixeleditor;
     
 }
 
+- (void)scrollWheel:(NSEvent *)event
+{
+    View* view = View::Instance();
+    
+    if (view)
+    {
+        view->Scroll(Vec2(-event.scrollingDeltaX, event.scrollingDeltaY));
+    }
+    
+    [self setNeedsDisplay:true];
+}
+
+- (void)magnifyWithEvent:(NSEvent *)event
+{
+    View* view = View::Instance();
+    
+    if (view)
+    {
+        view->Zoom(event.magnification);
+    }
+    
+    [self setNeedsDisplay:true];
+}
+
 @end

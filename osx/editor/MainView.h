@@ -16,4 +16,6 @@
 - (void)mouseDragged:(NSEvent *)event;
 - (void)mouseUp:(NSEvent *)event;
 - (void)mouseMoved:(NSEvent *)event;
+- (void)scrollWheel:(NSEvent *)event;
+- (void)magnifyWithEvent:(NSEvent *)event;
 @end
