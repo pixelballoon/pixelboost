@@ -31,9 +31,6 @@ GraphicsDevice* GraphicsDevice::Create()
 GraphicsDeviceGL2::GraphicsDeviceGL2()
 {
     _State = new DeviceState();
-    
-    glCullFace(GL_BACK);
-    glEnable(GL_CULL_FACE);
 }
 
 GraphicsDeviceGL2::~GraphicsDeviceGL2()
