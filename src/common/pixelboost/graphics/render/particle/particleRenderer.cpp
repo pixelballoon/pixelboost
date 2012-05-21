@@ -307,7 +307,7 @@ bool ParticleEmitter::Load(const std::string& file)
 void ParticleEmitter::LoadSpriteSheet(const std::string& file, bool createMips)
 {
     _Config->spriteSheet = SpriteSheet::Create();
-    _Config->spriteSheet->LoadDefinition(file, createMips);
+    _Config->spriteSheet->LoadSheet(file, createMips);
 }
 
 void ParticleEmitter::SetSpriteSheet(std::shared_ptr<SpriteSheet> spriteSheet)

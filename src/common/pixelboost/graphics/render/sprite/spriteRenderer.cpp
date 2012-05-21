@@ -192,7 +192,7 @@ bool SpriteRenderer::LoadSpriteSheet(const std::string& name, bool createMips)
         return false;
     
     std::shared_ptr<SpriteSheet> sheet = GetSpriteSheet(name);
-    sheet->LoadDefinition(name, createMips);
+    sheet->LoadSheet(name, createMips);
 
     return true;
 }

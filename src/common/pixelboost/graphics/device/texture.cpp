@@ -22,6 +22,9 @@ void Texture::LoadFromPng(const std::string& path, bool createMips)
     LodePNG::loadFile(file, path);
     decoder.decode(data, &file[0], file.size());
 	
+    if (!IsPowerOfTwo(decoder.getHeight()) || !IsPowerOfTwo(decoder.getWidth()))
+        createMips = false;
+    
 	LoadFromBytes(&data[0], decoder.getWidth(), decoder.getHeight(), createMips, kTextureFormatRGBA);
 }
 

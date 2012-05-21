@@ -33,20 +33,28 @@ SpriteSheet::~SpriteSheet()
     }
 }
 
-Texture* SpriteSheet::LoadTexture(const std::string& fileName, bool generateMips)
+bool SpriteSheet::LoadSingle(const std::string& fileName, bool generateMips)
 {
-    if (_Texture)
-    {
-        GraphicsDevice::Instance()->DestroyTexture(_Texture);
-    }
+    if (!LoadTexture(fileName))
+        return false;
     
-    _Texture = GraphicsDevice::Instance()->CreateTexture();
-    _Texture->LoadFromPng(fileName, generateMips);
+    std::string spriteName = fileName.substr(fileName.rfind("/")+1);
+    spriteName = spriteName.substr(0, spriteName.length()-4);
     
-    return _Texture;
+    Sprite* sprite = new Sprite();
+    sprite->_Sheet = this;
+    sprite->_Rotated = false;
+    sprite->_Dimension = _Texture->GetSize() / ScreenHelpers::GetDpu();
+    sprite->_Position = Vec2(0,0);
+    sprite->_Size = Vec2(1,1);
+    
+    _Sprites[spriteName] = sprite;
+    Game::Instance()->GetSpriteRenderer()->_Sprites[spriteName] = sprite;
+    
+    return true;
 }
 
-bool SpriteSheet::LoadDefinition(const std::string& name, bool generateMips)
+bool SpriteSheet::LoadSheet(const std::string& name, bool generateMips)
 {
     std::string fileRoot = FileHelpers::GetRootPath();
     
@@ -84,11 +92,7 @@ bool SpriteSheet::LoadDefinition(const std::string& name, bool generateMips)
         
         sprite->_Sheet = this;
         
-        float ppu = 16.f;
-        if (ScreenHelpers::IsHighResolution())
-            ppu = 32.f;
-        
-        sprite->_Dimension = Vec2(sizeX.Value(), sizeY.Value()) / ppu;
+        sprite->_Dimension = Vec2(sizeX.Value(), sizeY.Value()) / ScreenHelpers::GetDpu();
         
         sprite->_Rotated = rotated.Value();
         
@@ -103,6 +107,19 @@ bool SpriteSheet::LoadDefinition(const std::string& name, bool generateMips)
     LoadTexture(fileRoot + "/data/spritesheets/images/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".png", generateMips);
     
     return true;
+}
+
+Texture* SpriteSheet::LoadTexture(const std::string& fileName, bool generateMips)
+{
+    if (_Texture)
+    {
+        GraphicsDevice::Instance()->DestroyTexture(_Texture);
+    }
+    
+    _Texture = GraphicsDevice::Instance()->CreateTexture();
+    _Texture->LoadFromPng(fileName, generateMips);
+    
+    return _Texture;
 }
     
 Sprite* SpriteSheet::GetSprite(const std::string& name)
