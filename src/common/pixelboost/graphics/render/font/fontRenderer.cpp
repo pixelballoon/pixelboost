@@ -68,7 +68,7 @@ void FontRenderer::AddCharacter(Vertex_PXYZ_UV* buffer, const Font::Character& c
     buffer[3].uv[1] = character.uvy + character.uvv;
 }
 
-void FontRenderer::LoadFont(const std::string& name)
+void FontRenderer::LoadFont(const std::string& name, bool createMips)
 {
     if (_Fonts.find(name) != _Fonts.end())
         return;
@@ -123,7 +123,7 @@ void FontRenderer::LoadFont(const std::string& name)
         {
             std::string texFilename = fileRoot + "/data/fonts/" + data["file"].substr(1, data["file"].find('"', 1)-1);
             font->texture = GraphicsDevice::Instance()->CreateTexture();
-            font->texture->LoadFromPng(texFilename, true);
+            font->texture->LoadFromPng(texFilename, createMips);
         } else if (elementType == "char")
         {
             Font::Character character;

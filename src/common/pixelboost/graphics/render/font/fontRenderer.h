@@ -28,7 +28,7 @@ namespace pb
         FontRenderer(int maxCharacters=128);
         virtual ~FontRenderer();
         
-        void LoadFont(const std::string& fontName);
+        void LoadFont(const std::string& fontName, bool createMips=true);
         
         virtual void Update(float time);
         virtual void Render(RenderLayer* layer);
