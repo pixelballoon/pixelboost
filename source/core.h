@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "pixelboost/misc/delegate/signal.h"
+#include "sigslot/signal.h"
 
 #include "manipulator/selection.h"
 

@@ -4,9 +4,10 @@
 #include <string>
 #include <vector>
 
+#include "sigslot/signal.h"
+
 #include "pixelboost/data/json/writer.h"
 #include "pixelboost/math/maths.h"
-#include "pixelboost/misc/delegate/signal.h"
 
 #include "project/definitions.h"
 

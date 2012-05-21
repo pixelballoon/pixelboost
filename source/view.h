@@ -2,9 +2,10 @@
 
 #include <string>
 
+#include "sigslot/signal.h"
+
 #include "pixelboost/logic/game.h"
 #include "pixelboost/math/maths.h"
-#include "pixelboost/misc/delegate/signal.h"
 
 #include "manipulator/selection.h"
 

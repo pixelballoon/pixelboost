@@ -4,8 +4,9 @@
 #include <string>
 #include <vector>
 
+#include "sigslot/signal.h"
+
 #include "pixelboost/math/maths.h"
-#include "pixelboost/misc/delegate/signal.h"
 
 #include "project/definitions.h"
 #include "project/struct.h"

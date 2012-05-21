@@ -133,7 +133,7 @@
 		1CEB6D1F15409A4400E8D103 /* writer.inl in Resources */ = {isa = PBXBuildFile; fileRef = 1CEB6C6615409A4300E8D103 /* writer.inl */; };
 		1CEB6D2015409A4400E8D103 /* xml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CEB6C6815409A4300E8D103 /* xml.cpp */; };
 		1CEB6D2115409A4400E8D103 /* entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CEB6C6C15409A4300E8D103 /* entity.cpp */; };
-		1CEB6D2215409A4400E8D103 /* manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CEB6C6E15409A4300E8D103 /* manager.cpp */; };
+		1CEB6D2215409A4400E8D103 /* database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CEB6C6E15409A4300E8D103 /* database.cpp */; };
 		1CEB6D2315409A4400E8D103 /* record.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CEB6C7015409A4300E8D103 /* record.cpp */; };
 		1CEB6D2415409A4400E8D103 /* struct.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CEB6C7215409A4300E8D103 /* struct.cpp */; };
 		1CEB6D2515409A4400E8D103 /* debugVariable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CEB6C7515409A4300E8D103 /* debugVariable.cpp */; };
@@ -277,6 +277,8 @@
 		1C1807A0156975CD00C738C0 /* view.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = view.h; sourceTree = "<group>"; };
 		1C1807A315698CFC00C738C0 /* inputHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = inputHandler.cpp; sourceTree = "<group>"; };
 		1C1807A415698CFC00C738C0 /* inputHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = inputHandler.h; sourceTree = "<group>"; };
+		1C1810BD156ACAC500C738C0 /* delegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = delegate.h; sourceTree = "<group>"; };
+		1C1810BE156ACAC500C738C0 /* signal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = signal.h; sourceTree = "<group>"; };
 		1C210F3C152CF44F00DEAC92 /* editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = editor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C210F40152CF44F00DEAC92 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		1C210F43152CF44F00DEAC92 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -503,8 +505,8 @@
 		1CEB6C6A15409A4300E8D103 /* xmlconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlconfig.h; sourceTree = "<group>"; };
 		1CEB6C6C15409A4300E8D103 /* entity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = entity.cpp; sourceTree = "<group>"; };
 		1CEB6C6D15409A4300E8D103 /* entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = entity.h; sourceTree = "<group>"; };
-		1CEB6C6E15409A4300E8D103 /* manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = manager.cpp; sourceTree = "<group>"; };
-		1CEB6C6F15409A4300E8D103 /* manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = manager.h; sourceTree = "<group>"; };
+		1CEB6C6E15409A4300E8D103 /* database.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = database.cpp; sourceTree = "<group>"; };
+		1CEB6C6F15409A4300E8D103 /* database.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = database.h; sourceTree = "<group>"; };
 		1CEB6C7015409A4300E8D103 /* record.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = record.cpp; sourceTree = "<group>"; };
 		1CEB6C7115409A4300E8D103 /* record.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = record.h; sourceTree = "<group>"; };
 		1CEB6C7215409A4300E8D103 /* struct.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = struct.cpp; sourceTree = "<group>"; };
@@ -542,8 +544,6 @@
 		1CEB6CCA15409A4300E8D103 /* vec3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vec3.h; sourceTree = "<group>"; };
 		1CEB6CCB15409A4300E8D103 /* vec4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vec4.cpp; sourceTree = "<group>"; };
 		1CEB6CCC15409A4300E8D103 /* vec4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vec4.h; sourceTree = "<group>"; };
-		1CEB6CCF15409A4300E8D103 /* delegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = delegate.h; sourceTree = "<group>"; };
-		1CEB6CD015409A4300E8D103 /* signal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = signal.h; sourceTree = "<group>"; };
 		1CEB6CD115409A4300E8D103 /* pointer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pointer.h; sourceTree = "<group>"; };
 		1CEB6CD415409A4300E8D103 /* httpServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = httpServer.cpp; sourceTree = "<group>"; };
 		1CEB6CD515409A4300E8D103 /* httpServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = httpServer.h; sourceTree = "<group>"; };
@@ -754,6 +754,15 @@
 				1C1807A415698CFC00C738C0 /* inputHandler.h */,
 			);
 			path = gwen;
+			sourceTree = "<group>";
+		};
+		1C1810BC156ACAC400C738C0 /* sigslot */ = {
+			isa = PBXGroup;
+			children = (
+				1C1810BD156ACAC500C738C0 /* delegate.h */,
+				1C1810BE156ACAC500C738C0 /* signal.h */,
+			);
+			path = sigslot;
 			sourceTree = "<group>";
 		};
 		1C210F31152CF44E00DEAC92 = {
@@ -1257,8 +1266,8 @@
 			children = (
 				1CEB6C6C15409A4300E8D103 /* entity.cpp */,
 				1CEB6C6D15409A4300E8D103 /* entity.h */,
-				1CEB6C6E15409A4300E8D103 /* manager.cpp */,
-				1CEB6C6F15409A4300E8D103 /* manager.h */,
+				1CEB6C6E15409A4300E8D103 /* database.cpp */,
+				1CEB6C6F15409A4300E8D103 /* database.h */,
 				1CEB6C7015409A4300E8D103 /* record.cpp */,
 				1CEB6C7115409A4300E8D103 /* record.h */,
 				1CEB6C7215409A4300E8D103 /* struct.cpp */,
@@ -1332,19 +1341,9 @@
 			isa = PBXGroup;
 			children = (
 				1C1807A215698CFC00C738C0 /* gwen */,
-				1CEB6CCE15409A4300E8D103 /* delegate */,
 				1CEB6CD115409A4300E8D103 /* pointer.h */,
 			);
 			path = misc;
-			sourceTree = "<group>";
-		};
-		1CEB6CCE15409A4300E8D103 /* delegate */ = {
-			isa = PBXGroup;
-			children = (
-				1CEB6CCF15409A4300E8D103 /* delegate.h */,
-				1CEB6CD015409A4300E8D103 /* signal.h */,
-			);
-			path = delegate;
 			sourceTree = "<group>";
 		};
 		1CEB6CD215409A4300E8D103 /* network */ = {
@@ -1400,6 +1399,7 @@
 		1CEB6CE415409A4300E8D103 /* external */ = {
 			isa = PBXGroup;
 			children = (
+				1C1810BC156ACAC400C738C0 /* sigslot */,
 				1C78F168156913B0001441AC /* lodepng */,
 				1C78ED0F1567E6B8001441AC /* gwen */,
 				1C78EDD61567E6B8001441AC /* srutil */,
@@ -1913,7 +1913,7 @@
 				1CEB6C531540953100E8D103 /* main.m in Sources */,
 				1CEB6D2015409A4400E8D103 /* xml.cpp in Sources */,
 				1CEB6D2115409A4400E8D103 /* entity.cpp in Sources */,
-				1CEB6D2215409A4400E8D103 /* manager.cpp in Sources */,
+				1CEB6D2215409A4400E8D103 /* database.cpp in Sources */,
 				1CEB6D2315409A4400E8D103 /* record.cpp in Sources */,
 				1CEB6D2415409A4400E8D103 /* struct.cpp in Sources */,
 				1CEB6D2515409A4400E8D103 /* debugVariable.cpp in Sources */,

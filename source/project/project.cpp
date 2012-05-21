@@ -303,7 +303,6 @@ bool Project::AddRecord(const std::string& name, const std::string& type)
     
 bool Project::LoadRecord(const std::string& filename)
 {
-    std::cout << filename << std::endl;
     Record* record = new Record(this);
     
     record->Open(filename);
