@@ -12,10 +12,10 @@ using namespace pixeleditor;
 
 SchemaCommands::SchemaCommands()
 {
-    Core::Instance()->GetHttpInterface()->RegisterCommand("schema", pixelboost::HttpServer::kRequestTypeGet, HttpInterface::CommandDelegate::from_method<SchemaCommands, &SchemaCommands::OnGetSchema>(this));
+    Core::Instance()->GetHttpInterface()->RegisterCommand("schema", pb::HttpServer::kRequestTypeGet, HttpInterface::CommandDelegate::from_method<SchemaCommands, &SchemaCommands::OnGetSchema>(this));
 }
 
-bool SchemaCommands::OnGetSchema(pixelboost::HttpConnection& connection, const std::vector<std::string>& urlArguments, const std::map<std::string, std::string>& queryArguments)
+bool SchemaCommands::OnGetSchema(pb::HttpConnection& connection, const std::vector<std::string>& urlArguments, const std::map<std::string, std::string>& queryArguments)
 {
     json::Array schema;
     

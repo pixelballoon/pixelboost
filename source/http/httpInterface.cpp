@@ -17,11 +17,11 @@
 #include "project/record.h"
 #include "core.h"
 
-using namespace pixelboost;
+using namespace pb;
 using namespace pixeleditor;
 
 HttpInterface::HttpInterface()
-    : pixelboost::HttpServer()
+    : pb::HttpServer()
 {
     
 }
@@ -37,7 +37,7 @@ void HttpInterface::Initialise()
     _SchemaCommands = new SchemaCommands();
     _RecordCommands = new RecordCommands();
     
-    Start(9090, pixelboost::FileHelpers::GetRootPath()+"/data/html/");
+    Start(9090, pb::FileHelpers::GetRootPath()+"/data/html/");
 }
 
 void HttpInterface::RegisterCommand(const std::string& command, HttpServer::RequestType requestType, CommandDelegate delegate)
@@ -45,7 +45,7 @@ void HttpInterface::RegisterCommand(const std::string& command, HttpServer::Requ
     _Commands[CommandRequest(command, requestType)] = delegate;
 }
 
-bool HttpInterface::OnHttpRequest(HttpServer::RequestType type, const std::string& uri, const std::string& query, const std::string& data, pixelboost::HttpConnection& connection)
+bool HttpInterface::OnHttpRequest(HttpServer::RequestType type, const std::string& uri, const std::string& query, const std::string& data, pb::HttpConnection& connection)
 {
     ssize_t split = uri.find('/', 1);
     
@@ -236,7 +236,7 @@ bool HttpInterface::OnHttpRequest(HttpServer::RequestType type, const std::strin
         return true;
 }
 
-bool HttpInterface::OnCreateRecord(pixelboost::HttpConnection& connection, const std::string& name, const std::string& type)
+bool HttpInterface::OnCreateRecord(pb::HttpConnection& connection, const std::string& name, const std::string& type)
 {
     if (name == "")
         return false;
@@ -248,7 +248,7 @@ bool HttpInterface::OnCreateRecord(pixelboost::HttpConnection& connection, const
     return true;
 }
 
-bool HttpInterface::OnCreateEntity(pixelboost::HttpConnection& connection, Uid recordId, const std::string& type)
+bool HttpInterface::OnCreateEntity(pb::HttpConnection& connection, Uid recordId, const std::string& type)
 {
     char arguments[256];
     sprintf(arguments, "-r %d -t %s -p 0,0", recordId, type.c_str());
@@ -256,7 +256,7 @@ bool HttpInterface::OnCreateEntity(pixelboost::HttpConnection& connection, Uid r
     return true;
 }
 
-bool HttpInterface::OnSetTransform(pixelboost::HttpConnection& connection, Uid recordId, Uid entityId, const Vec3& position, float rotation, const Vec3& scale)
+bool HttpInterface::OnSetTransform(pb::HttpConnection& connection, Uid recordId, Uid entityId, const Vec3& position, float rotation, const Vec3& scale)
 {
     Project* project = Core::Instance()->GetProject();
     
@@ -277,7 +277,7 @@ bool HttpInterface::OnSetTransform(pixelboost::HttpConnection& connection, Uid r
     return true;
 }
 
-bool HttpInterface::OnGetRecord(pixelboost::HttpConnection& connection, Uid recordId)
+bool HttpInterface::OnGetRecord(pb::HttpConnection& connection, Uid recordId)
 {
     json::Object data;
     
@@ -303,7 +303,7 @@ bool HttpInterface::OnGetRecord(pixelboost::HttpConnection& connection, Uid reco
     return true;
 }
 
-bool HttpInterface::OnGetEntity(pixelboost::HttpConnection& connection, Uid recordId, Uid entityId)
+bool HttpInterface::OnGetEntity(pb::HttpConnection& connection, Uid recordId, Uid entityId)
 {
     json::Object data;
     
@@ -334,7 +334,7 @@ bool HttpInterface::OnGetEntity(pixelboost::HttpConnection& connection, Uid reco
     return true;
 }
 
-bool HttpInterface::OnGetRecordProperty(pixelboost::HttpConnection& connection, Uid recordId, const std::string& path)
+bool HttpInterface::OnGetRecordProperty(pb::HttpConnection& connection, Uid recordId, const std::string& path)
 {
     Project* project = Core::Instance()->GetProject();
     
@@ -346,7 +346,7 @@ bool HttpInterface::OnGetRecordProperty(pixelboost::HttpConnection& connection, 
     return OnGetStructProperty(connection, record->GetProperty(path));
 }
 
-bool HttpInterface::OnGetEntityProperty(pixelboost::HttpConnection& connection, Uid recordId, Uid entityId, const std::string& path)
+bool HttpInterface::OnGetEntityProperty(pb::HttpConnection& connection, Uid recordId, Uid entityId, const std::string& path)
 {
     Project* project = Core::Instance()->GetProject();
     
@@ -363,7 +363,7 @@ bool HttpInterface::OnGetEntityProperty(pixelboost::HttpConnection& connection, 
     return OnGetStructProperty(connection, entity->GetProperty(path));
 }
 
-bool HttpInterface::OnGetStructProperty(pixelboost::HttpConnection& connection, const Property* property)
+bool HttpInterface::OnGetStructProperty(pb::HttpConnection& connection, const Property* property)
 {
     json::Object data;
     
@@ -389,7 +389,7 @@ bool HttpInterface::OnGetStructProperty(pixelboost::HttpConnection& connection, 
     return true;
 }
 
-bool HttpInterface::OnSetRecordProperty(pixelboost::HttpConnection& connection, Uid recordId, const std::string& path, const std::string& type, const std::string& value)
+bool HttpInterface::OnSetRecordProperty(pb::HttpConnection& connection, Uid recordId, const std::string& path, const std::string& type, const std::string& value)
 {
     std::string propertyValue;
     
@@ -415,7 +415,7 @@ bool HttpInterface::OnSetRecordProperty(pixelboost::HttpConnection& connection, 
     return true;
 }
 
-bool HttpInterface::OnSetEntityProperty(pixelboost::HttpConnection& connection, Uid recordId, Uid entityId, const std::string& path, const std::string& type, const std::string& value)
+bool HttpInterface::OnSetEntityProperty(pb::HttpConnection& connection, Uid recordId, Uid entityId, const std::string& path, const std::string& type, const std::string& value)
 {
     std::string propertyValue;
     
@@ -446,7 +446,7 @@ bool HttpInterface::OnSetEntityProperty(pixelboost::HttpConnection& connection, 
     return true;
 }
 
-bool HttpInterface::OnGetImage(pixelboost::HttpConnection& connection, const std::string& image)
+bool HttpInterface::OnGetImage(pb::HttpConnection& connection, const std::string& image)
 {
     Project* project = Core::Instance()->GetProject();
 

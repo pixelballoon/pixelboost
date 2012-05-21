@@ -12,10 +12,10 @@ using namespace pixeleditor;
 
 RecordCommands::RecordCommands()
 {
-    Core::Instance()->GetHttpInterface()->RegisterCommand("records", pixelboost::HttpServer::kRequestTypeGet, HttpInterface::CommandDelegate::from_method<RecordCommands, &RecordCommands::OnGetRecords>(this));
+    Core::Instance()->GetHttpInterface()->RegisterCommand("records", pb::HttpServer::kRequestTypeGet, HttpInterface::CommandDelegate::from_method<RecordCommands, &RecordCommands::OnGetRecords>(this));
 }
 
-bool RecordCommands::OnGetRecords(pixelboost::HttpConnection& connection, const std::vector<std::string>& urlArguments, const std::map<std::string, std::string>& queryArguments)
+bool RecordCommands::OnGetRecords(pb::HttpConnection& connection, const std::vector<std::string>& urlArguments, const std::map<std::string, std::string>& queryArguments)
 {
     json::Array records;
     

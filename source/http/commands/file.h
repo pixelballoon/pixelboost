@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-namespace pixelboost
+namespace pb
 {
     class HttpConnection;
 }
@@ -17,7 +17,7 @@ namespace pixeleditor
         FileCommands();
         
     private:
-        bool OnExport(pixelboost::HttpConnection& connection, const std::vector<std::string>& urlArguments, const std::map<std::string, std::string>& queryArguments);
-        bool OnSave(pixelboost::HttpConnection& connection, const std::vector<std::string>& urlArguments, const std::map<std::string, std::string>& queryArguments);
+        bool OnExport(pb::HttpConnection& connection, const std::vector<std::string>& urlArguments, const std::map<std::string, std::string>& queryArguments);
+        bool OnSave(pb::HttpConnection& connection, const std::vector<std::string>& urlArguments, const std::map<std::string, std::string>& queryArguments);
     };
 }

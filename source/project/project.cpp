@@ -86,7 +86,7 @@ bool Project::Open(const std::string& directory)
     
 bool Project::OpenConfig(const std::string& filename)
 {
-    std::string file = pixelboost::FileHelpers::FileToString(filename.c_str());
+    std::string file = pb::FileHelpers::FileToString(filename.c_str());
     
     json::Object config;
     

@@ -14,7 +14,7 @@ namespace json
     class Object;
 }
 
-namespace pixelboost
+namespace pb
 {
     class DebugVariable;
 }
@@ -30,45 +30,45 @@ namespace pixeleditor
     class SchemaProperty;
     class SchemaStruct;
     
-    class HttpInterface : public pixelboost::HttpServer
+    class HttpInterface : public pb::HttpServer
     {
     public:
         HttpInterface();
         ~HttpInterface();
         
-        typedef srutil::delegate3<bool, pixelboost::HttpConnection&, const std::vector<std::string>&, const std::map<std::string, std::string>&> CommandDelegate;
+        typedef srutil::delegate3<bool, pb::HttpConnection&, const std::vector<std::string>&, const std::map<std::string, std::string>&> CommandDelegate;
         
         void Initialise();
         void RegisterCommand(const std::string& command, HttpServer::RequestType requestType, CommandDelegate delegate);
         
     private: 
-        typedef std::map<int, pixelboost::DebugVariable*> VariableMap;
+        typedef std::map<int, pb::DebugVariable*> VariableMap;
         
-        void AddVariable(pixelboost::DebugVariable* variable);
-        void SendValue(pixelboost::DebugVariable* variable);
+        void AddVariable(pb::DebugVariable* variable);
+        void SendValue(pb::DebugVariable* variable);
         
-        virtual bool OnHttpRequest(RequestType type, const std::string& uri, const std::string& query, const std::string& data, pixelboost::HttpConnection& connection);
+        virtual bool OnHttpRequest(RequestType type, const std::string& uri, const std::string& query, const std::string& data, pb::HttpConnection& connection);
         
-        bool OnSave(pixelboost::HttpConnection& connection);
-        bool OnExport(pixelboost::HttpConnection& connection);
-        bool OnCreateRecord(pixelboost::HttpConnection& connection, const std::string& name, const std::string& type);
-        bool OnCreateEntity(pixelboost::HttpConnection& connection, Uid recordId, const std::string& type);
-        bool OnSetTransform(pixelboost::HttpConnection& connection, Uid recordId, Uid entityId, const Vec3& position, float rotation, const Vec3& scale);
+        bool OnSave(pb::HttpConnection& connection);
+        bool OnExport(pb::HttpConnection& connection);
+        bool OnCreateRecord(pb::HttpConnection& connection, const std::string& name, const std::string& type);
+        bool OnCreateEntity(pb::HttpConnection& connection, Uid recordId, const std::string& type);
+        bool OnSetTransform(pb::HttpConnection& connection, Uid recordId, Uid entityId, const Vec3& position, float rotation, const Vec3& scale);
         
-        bool OnGetRecords(pixelboost::HttpConnection& connection);
-        bool OnGetRecord(pixelboost::HttpConnection& connection, Uid recordId);
-        bool OnGetEntity(pixelboost::HttpConnection& connection, Uid recordId, Uid entityId);
+        bool OnGetRecords(pb::HttpConnection& connection);
+        bool OnGetRecord(pb::HttpConnection& connection, Uid recordId);
+        bool OnGetEntity(pb::HttpConnection& connection, Uid recordId, Uid entityId);
 
-        bool OnGetRecordProperty(pixelboost::HttpConnection& connection, Uid recordId, const std::string& path);
-        bool OnGetEntityProperty(pixelboost::HttpConnection& connection, Uid recordId, Uid entityId, const std::string& path);
-        bool OnGetStructProperty(pixelboost::HttpConnection& connection, const Property* property);
+        bool OnGetRecordProperty(pb::HttpConnection& connection, Uid recordId, const std::string& path);
+        bool OnGetEntityProperty(pb::HttpConnection& connection, Uid recordId, Uid entityId, const std::string& path);
+        bool OnGetStructProperty(pb::HttpConnection& connection, const Property* property);
         
-        bool OnSetRecordProperty(pixelboost::HttpConnection& connection, Uid recordId, const std::string& path, const std::string& type, const std::string& value);
-        bool OnSetEntityProperty(pixelboost::HttpConnection& connection, Uid recordId, Uid entityId, const std::string& path, const std::string& type, const std::string& value);
+        bool OnSetRecordProperty(pb::HttpConnection& connection, Uid recordId, const std::string& path, const std::string& type, const std::string& value);
+        bool OnSetEntityProperty(pb::HttpConnection& connection, Uid recordId, Uid entityId, const std::string& path, const std::string& type, const std::string& value);
 
-        bool OnGetSchema(pixelboost::HttpConnection& connection);
+        bool OnGetSchema(pb::HttpConnection& connection);
         
-        bool OnGetImage(pixelboost::HttpConnection& connection, const std::string& image);
+        bool OnGetImage(pb::HttpConnection& connection, const std::string& image);
         
         void InsertSchemaItem(json::Array& array, SchemaStruct* schemaItem);
         void ExportProperty(json::Object& property, const std::string& name, const SchemaProperty* schemaProp);

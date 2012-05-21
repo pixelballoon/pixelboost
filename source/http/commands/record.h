@@ -1,6 +1,6 @@
 #pragma once
 
-namespace pixelboost
+namespace pb
 {
     class HttpConnection;
 }
@@ -13,6 +13,6 @@ namespace pixeleditor
         RecordCommands();
         
     private:
-        bool OnGetRecords(pixelboost::HttpConnection& connection, const std::vector<std::string>& urlArguments, const std::map<std::string, std::string>& queryArguments);
+        bool OnGetRecords(pb::HttpConnection& connection, const std::vector<std::string>& urlArguments, const std::map<std::string, std::string>& queryArguments);
     };
 }
