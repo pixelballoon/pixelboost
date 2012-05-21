@@ -1,8 +1,4 @@
-#include "pixelboost/graphics/camera/camera.h"
-#include "pixelboost/graphics/render/common/layer.h"
-#include "pixelboost/graphics/render/common/renderer.h"
-#include "pixelboost/graphics/render/gwen/gwenRenderer.h"
-#include "pixelboost/misc/gwen/inputHandler.h"
+#include <fstream>
 
 #include "Gwen/Gwen.h"
 #include "Gwen/Controls/Layout/Position.h"
@@ -13,6 +9,14 @@
 #include "Gwen/Controls/TabControl.h"
 #include "Gwen/Skins/Simple.h"
 #include "Gwen/Skins/TexturedBase.h"
+
+#include "pixelboost/graphics/camera/camera.h"
+#include "pixelboost/graphics/render/common/layer.h"
+#include "pixelboost/graphics/render/common/renderer.h"
+#include "pixelboost/graphics/render/gwen/gwenRenderer.h"
+#include "pixelboost/graphics/render/sprite/sprite.h"
+#include "pixelboost/graphics/render/sprite/spriteRenderer.h"
+#include "pixelboost/misc/gwen/inputHandler.h"
 
 #include "project/project.h"
 #include "project/record.h"
@@ -43,9 +47,13 @@ View* View::Instance()
 
 void View::Initialise(Vec2 size)
 {
+    _LevelCamera = new pb::OrthographicCamera();
+    _LevelLayer = new pb::RenderLayer(100, _LevelCamera);
+    
     _GwenCamera = new pb::OrthographicCamera();
     _GwenLayer = new pb::RenderLayer(500, _GwenCamera);
     
+    pb::Game::Instance()->GetRenderer()->AddLayer(_LevelLayer);
     pb::Game::Instance()->GetRenderer()->AddLayer(_GwenLayer);
 
     pb::GwenRenderer* renderer = new pb::GwenRenderer(_GwenLayer);
@@ -98,6 +106,38 @@ void View::Render()
     _GwenCanvas->RenderCanvas();
     
     Game::Render();
+}
+
+void View::LoadSprite(const std::string& sprite)
+{
+    if (GetSpriteRenderer()->GetSpriteSheet(sprite))
+        return;
+    
+    std::shared_ptr<pb::SpriteSheet> spriteSheet = GetSpriteRenderer()->CreateSpriteSheet(sprite);
+    spriteSheet->LoadSingle(GetSpriteFile(sprite));
+}
+
+std::string View::GetSpriteFile(const std::string& sprite)
+{
+    Project* project = Core::Instance()->GetProject();
+    
+    const Project::ProjectConfig& config = project->GetConfig();
+    
+    std::fstream file;
+    
+    for (std::vector<std::string>::const_iterator it = config.imageRoots.begin(); it != config.imageRoots.end(); ++it)
+    {
+        std::string fileName = *it + sprite + ".png";
+        file.open(fileName.c_str());
+        
+        if (file.is_open())
+        {
+            file.close();
+            return fileName;
+        }
+    }
+    
+    return "";
 }
 
 void View::SetCanvasSize(Vec2 size)

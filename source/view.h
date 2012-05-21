@@ -52,6 +52,11 @@ public:
     void SetCanvasSize(Vec2 size);
     void SetRecord(Record* record);
     
+    void LoadSprite(const std::string& sprite);
+    
+private:
+    std::string GetSpriteFile(const std::string& sprite);
+    
 private:
     Record* _Record;
     
@@ -69,6 +74,9 @@ private:
     Vec2 _CanvasSize;
     
 private:
+    pb::RenderLayer* _LevelLayer;
+    pb::OrthographicCamera* _LevelCamera;
+    
     pb::GwenInputHandler* _GwenInput;
     pb::RenderLayer* _GwenLayer;
     pb::OrthographicCamera* _GwenCamera;
