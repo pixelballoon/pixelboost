@@ -34,12 +34,12 @@ SpriteRenderer::SpriteRenderer(int maxSpritesPerLayer, int numVertexBuffers)
     unsigned short* indexBuffer = _IndexBuffer->GetData();
     for (int i=0; i<_MaxSprites; i++)
     {
-        indexBuffer[0] = (i*4);
+        indexBuffer[0] = (i*4) + 2;
         indexBuffer[1] = (i*4) + 1;
-        indexBuffer[2] = (i*4) + 2;
-        indexBuffer[3] = (i*4) + 0;
+        indexBuffer[2] = (i*4) + 0;
+        indexBuffer[3] = (i*4) + 3;
         indexBuffer[4] = (i*4) + 2;
-        indexBuffer[5] = (i*4) + 3;
+        indexBuffer[5] = (i*4) + 0;
         
         indexBuffer += 6;
     }
