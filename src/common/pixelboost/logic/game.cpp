@@ -32,8 +32,8 @@ Game::Game(void* viewController)
     _CustomRenderer = new CustomRenderer();
     _ModelRenderer  = new ModelRenderer();
     _ParticleRenderer = new ParticleRenderer();
-    _PrimitiveRenderer = new PrimitiveRenderer();
     _SpriteRenderer = new SpriteRenderer();
+    _PrimitiveRenderer = new PrimitiveRenderer();
     _FontRenderer = new FontRenderer();
 #endif
     
