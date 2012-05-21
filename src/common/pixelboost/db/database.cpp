@@ -1,5 +1,5 @@
+#include "pixelboost/db/database.h"
 #include "pixelboost/db/entity.h"
-#include "pixelboost/db/manager.h"
 #include "pixelboost/db/record.h"
 #include "pixelboost/external/lua/lua.hpp"
 #include "pixelboost/file/fileHelpers.h"

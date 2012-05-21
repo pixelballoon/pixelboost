@@ -1,6 +1,5 @@
 #include "pixelboost/db/entity.h"
 #include "pixelboost/db/record.h"
-#include "pixelboost/db/manager.h"
 
 namespace pb
 {
