@@ -195,7 +195,15 @@ void FontRenderer::Render(RenderLayer* layer)
         
         FontMap::iterator fontIt = _Fonts.find(it->_Font);
         if (fontIt == _Fonts.end() || fontIt->second->texture == 0)
+        {
             continue;
+        }
+        
+        if (it->_String.length() > _MaxCharacters)
+        {
+            printf("String (%s) is too long for the MaxCharacters value set\n", it->_String.c_str());
+            continue;
+        }
         
         font = fontIt->second;
         
