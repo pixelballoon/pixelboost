@@ -6,37 +6,37 @@
 
 using namespace pb;
     
-DatabaseManager* DatabaseManager::_Instance = 0;
+Database* Database::_Instance = 0;
 
-DatabaseManager::DatabaseManager()
+Database::Database()
 {
     _DatabaseRoot = "";
     _State = luaL_newstate();
     luaL_openlibs(_State);
 }
 
-DatabaseManager::~DatabaseManager()
+Database::~Database()
 {
     lua_close(_State);
 }
 
-DatabaseManager* DatabaseManager::Instance()
+Database* Database::Instance()
 {
-    static DatabaseManager* instance = new DatabaseManager();
+    static Database* instance = new Database();
     return instance;
 }
     
-lua_State* DatabaseManager::GetLuaState()
+lua_State* Database::GetLuaState()
 {
     return _State;
 }
 
-void DatabaseManager::RegisterStruct(Uid type, CreateStruct createStruct)
+void Database::RegisterStruct(Uid type, CreateStruct createStruct)
 {
     _StructCreate[type] = createStruct;
 }
     
-void DatabaseManager::OpenDatabase(const std::string& location)
+void Database::OpenDatabase(const std::string& location)
 {
     _DatabaseRoot = FileHelpers::GetRootPath() + location;
     
@@ -83,7 +83,7 @@ void DatabaseManager::OpenDatabase(const std::string& location)
     }
 }
 
-Record* DatabaseManager::OpenRecord(Uid recordId)
+Record* Database::OpenRecord(Uid recordId)
 {
     char filename[1024];
     sprintf(filename, "%srecords/%X.lua", _DatabaseRoot.c_str(), recordId);
@@ -197,7 +197,7 @@ Record* DatabaseManager::OpenRecord(Uid recordId)
     return record;
 }
     
-void* DatabaseManager::Create(Uid type)
+void* Database::Create(Uid type)
 {
     StructCreateMap::iterator it = _StructCreate.find(type);
     
@@ -207,17 +207,17 @@ void* DatabaseManager::Create(Uid type)
     return it->second();
 }
 
-const DatabaseManager::RecordDescriptionList& DatabaseManager::GetRecordDescriptions() const
+const Database::RecordDescriptionList& Database::GetRecordDescriptions() const
 {
     return _RecordDescriptions;
 }
     
-const DatabaseManager::RecordMap& DatabaseManager::GetRecords() const
+const Database::RecordMap& Database::GetRecords() const
 {
     return _Records;
 }
 
-const Record* DatabaseManager::GetRecord(Uid uid) const
+const Record* Database::GetRecord(Uid uid) const
 {
     RecordMap::const_iterator it = _Records.find(uid);
     

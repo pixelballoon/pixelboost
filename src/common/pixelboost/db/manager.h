@@ -19,13 +19,13 @@ struct RecordDescription
     Uid Uid;
 };
     
-class DatabaseManager
+class Database
 {
 public:
-    DatabaseManager();
-    ~DatabaseManager();
+    Database();
+    ~Database();
     
-    static DatabaseManager* Instance();
+    static Database* Instance();
     
 public:
     lua_State* GetLuaState();
@@ -59,7 +59,7 @@ private:
     
     StructCreateMap _StructCreate;
     
-    static DatabaseManager* _Instance;
+    static Database* _Instance;
     
     lua_State* _State;
 };
