@@ -2,7 +2,7 @@
 
 #include "pixelboost/external/lua/lua.hpp"
 
-#include "pixelboost/db/manager.h"
+#include "pixelboost/db/database.h"
 
 #define PIXELBOOST_DECLARE_CLASS(type) class type ; void PB_Register ## type ();
 #define PIXELBOOST_DECLARE_STRUCT(type) struct type ; void PB_Register ## type ();
@@ -19,7 +19,7 @@
     void PB_Register ## type (); \
     void PB_Deserialise ## type (type& object); \
     void PB_Register ## type () { \
-        pb::DatabaseManager::Instance()->RegisterStruct(pb::TypeHash(name), &PB_Create ## type ); \
+        pb::Database::Instance()->RegisterStruct(pb::TypeHash(name), &PB_Create ## type ); \
     } \
     void* PB_Create ## type () { \
         type* structObject = new type(); \
@@ -27,7 +27,7 @@
         return structObject; \
     } \
     void PB_Deserialise ## type (type& object) { \
-        lua_State* state = pb::DatabaseManager::Instance()->GetLuaState(); \
+        lua_State* state = pb::Database::Instance()->GetLuaState(); \
         (void)state;
 
 #define PIXELBOOST_FIELD_INT(field, name) { \
