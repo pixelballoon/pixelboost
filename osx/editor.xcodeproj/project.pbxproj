@@ -643,7 +643,6 @@
 		1CEB6DBF1540A53000E8D103 /* transformCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = transformCommand.h; sourceTree = "<group>"; };
 		1CEB6DC01540A53000E8D103 /* core.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = core.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		1CEB6DC11540A53000E8D103 /* core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = core.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		1CEB6DC21540A53000E8D103 /* definitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = definitions.h; sourceTree = "<group>"; };
 		1CEB6DC41540A53000E8D103 /* selection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = selection.cpp; sourceTree = "<group>"; };
 		1CEB6DC51540A53000E8D103 /* selection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = selection.h; sourceTree = "<group>"; };
 		1CEB6DC71540A53000E8D103 /* definitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = definitions.h; sourceTree = "<group>"; };
@@ -1754,7 +1753,6 @@
 				1CEB6DC61540A53000E8D103 /* project */,
 				1CEB6DC01540A53000E8D103 /* core.cpp */,
 				1CEB6DC11540A53000E8D103 /* core.h */,
-				1CEB6DC21540A53000E8D103 /* definitions.h */,
 				1C18079F156975CD00C738C0 /* view.cpp */,
 				1C1807A0156975CD00C738C0 /* view.h */,
 			);
