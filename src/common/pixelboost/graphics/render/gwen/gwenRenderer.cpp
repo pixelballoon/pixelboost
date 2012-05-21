@@ -53,7 +53,7 @@ void GwenRenderer::DrawFilledRect( Gwen::Rect rect )
 {
     Translate(rect);
     
-    pb::Game::Instance()->GetPrimitiveRenderer()->AttachBox(_Layer, Vec2(rect.x+rect.w/2, -rect.y-rect.h/2)/32.f, Vec2(rect.w, rect.h)/32.f, Vec3(0,0,0), Vec4(_Colour.r, _Colour.g, _Colour.b, _Colour.a));
+    pb::Game::Instance()->GetPrimitiveRenderer()->AttachBox(_Layer, Vec2(rect.x+rect.w/2, -rect.y-rect.h/2)/32.f, Vec2(rect.w, rect.h)/32.f, Vec3(0,0,0), Vec4(_Colour.r/255.f, _Colour.g/255.f, _Colour.b/255.f, _Colour.a/255.f));
 }
 
 void GwenRenderer::StartClip()
@@ -128,7 +128,7 @@ void GwenRenderer::RenderText(Gwen::Font* font, Gwen::Point pos, const Gwen::Uni
     Gwen::String fontName = Gwen::Utility::UnicodeToString(font->facename);
     Gwen::String convertedString = Gwen::Utility::UnicodeToString(text);
     
-    pb::Game::Instance()->GetFontRenderer()->LoadFont(fontName);
+    pb::Game::Instance()->GetFontRenderer()->LoadFont(fontName, false);
     
     float size = font->size * Scale();    
     if (!text.length())
@@ -142,7 +142,7 @@ Gwen::Point GwenRenderer::MeasureText(Gwen::Font* font, const Gwen::UnicodeStrin
     Gwen::String fontName = Gwen::Utility::UnicodeToString(font->facename);
     Gwen::String convertedString = Gwen::Utility::UnicodeToString(text);
     
-    pb::Game::Instance()->GetFontRenderer()->LoadFont(fontName);
+    pb::Game::Instance()->GetFontRenderer()->LoadFont(fontName, false);
     
     float size = font->size * Scale();
     float length = pb::Game::Instance()->GetFontRenderer()->MeasureString(fontName, convertedString, size/32.f)*32.f;
