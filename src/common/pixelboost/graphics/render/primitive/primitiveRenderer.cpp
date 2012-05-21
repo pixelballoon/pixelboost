@@ -42,7 +42,11 @@ void PrimitiveRenderer::Render(RenderLayer* layer)
     //glBindBuffer(GL_ARRAY_BUFFER, 0);
     //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     
+#ifdef PIXELBOOST_GRAPHICS_PREMULTIPLIED_ALPHA
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+#else
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+#endif
     
     for (ItemList::iterator it = list.begin(); it != list.end(); ++it)
     {
