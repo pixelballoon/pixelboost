@@ -66,7 +66,8 @@
 //				  * Bundled with Signals.h for signals and slots library
 //				  * Changed namespace to "gallant"
 
-#pragma once
+#ifndef _Delegate_H_
+#define _Delegate_H_
 
 #if _MSC_VER > 1000
 	#pragma once
@@ -649,7 +650,7 @@ public:
 		return right.IsLess(*this);
 	}
 	DelegateMemento (const DelegateMemento &right)	:
-		m_pFunction(right.m_pFunction), m_pthis(right.m_pthis)
+		m_pthis(right.m_pthis), m_pFunction(right.m_pFunction)
 #if !defined(FASTDELEGATE_USESTATICFUNCTIONHACK)
 		, m_pStaticFunction (right.m_pStaticFunction)
 #endif
@@ -2130,3 +2131,6 @@ Delegate8<Param1, Param2, Param3, Param4, Param5, Param6, Param7, Param8, FASTDL
 #undef FASTDLGT_RETTYPE
 
 } // namespace
+
+#endif //_DELEGATES_H_
+

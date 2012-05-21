@@ -6,10 +6,10 @@
  *
  */
 
-#ifndef CORE__MISC__SIGNAL__H
-#define CORE__MISC__SIGNAL__H
+#ifndef _Signal_H_
+#define _Signal_H_
 
-#include "Delegate.h"
+#include "delegate.h"
 #include <set>
 
 namespace sigslot {
@@ -22,7 +22,7 @@ public:
 
 private:
 	typedef std::set<_Delegate> DelegateList;
-	typedef typename DelegateList::iterator DelegateIterator;
+	typedef typename DelegateList::const_iterator DelegateIterator;
 	DelegateList delegateList;
 
 public:
@@ -60,6 +60,11 @@ public:
 		delegateList.erase( MakeDelegate( obj, func ) );
 	}
 
+	void Clear()
+	{
+		delegateList.clear();
+	}
+
 	void Emit() const
 	{
 		for (DelegateIterator i = delegateList.begin(); i != delegateList.end(); ++i)
@@ -83,7 +88,7 @@ public:
 
 private:
 	typedef std::set<_Delegate> DelegateList;
-	typedef typename DelegateList::iterator DelegateIterator;
+	typedef typename DelegateList::const_iterator DelegateIterator;
 	DelegateList delegateList;
 
 public:
@@ -121,6 +126,11 @@ public:
 		delegateList.erase( MakeDelegate( obj, func ) );
 	}
 
+	void Clear()
+	{
+		delegateList.clear();
+	}
+
 	void Emit( Param1 p1 ) const
 	{
 		for (DelegateIterator i = delegateList.begin(); i != delegateList.end(); ++i)
@@ -144,7 +154,7 @@ public:
 
 private:
 	typedef std::set<_Delegate> DelegateList;
-	typedef typename DelegateList::iterator DelegateIterator;
+	typedef typename DelegateList::const_iterator DelegateIterator;
 	DelegateList delegateList;
 
 public:
@@ -182,6 +192,11 @@ public:
 		delegateList.erase( MakeDelegate( obj, func ) );
 	}
 
+	void Clear()
+	{
+		delegateList.clear();
+	}
+
 	void Emit( Param1 p1, Param2 p2 ) const
 	{
 		for (DelegateIterator i = delegateList.begin(); i != delegateList.end(); ++i)
@@ -205,7 +220,7 @@ public:
 
 private:
 	typedef std::set<_Delegate> DelegateList;
-	typedef typename DelegateList::iterator DelegateIterator;
+	typedef typename DelegateList::const_iterator DelegateIterator;
 	DelegateList delegateList;
 
 public:
@@ -243,6 +258,11 @@ public:
 		delegateList.erase( MakeDelegate( obj, func ) );
 	}
 
+	void Clear()
+	{
+		delegateList.clear();
+	}
+
 	void Emit( Param1 p1, Param2 p2, Param3 p3 ) const
 	{
 		for (DelegateIterator i = delegateList.begin(); i != delegateList.end(); ++i)
@@ -266,7 +286,7 @@ public:
 
 private:
 	typedef std::set<_Delegate> DelegateList;
-	typedef typename DelegateList::iterator DelegateIterator;
+	typedef typename DelegateList::const_iterator DelegateIterator;
 	DelegateList delegateList;
 
 public:
@@ -304,6 +324,11 @@ public:
 		delegateList.erase( MakeDelegate( obj, func ) );
 	}
 
+	void Clear()
+	{
+		delegateList.clear();
+	}
+
 	void Emit( Param1 p1, Param2 p2, Param3 p3, Param4 p4 ) const
 	{
 		for (DelegateIterator i = delegateList.begin(); i != delegateList.end(); ++i)
@@ -327,7 +352,7 @@ public:
 
 private:
 	typedef std::set<_Delegate> DelegateList;
-	typedef typename DelegateList::iterator DelegateIterator;
+	typedef typename DelegateList::const_iterator DelegateIterator;
 	DelegateList delegateList;
 
 public:
@@ -365,6 +390,11 @@ public:
 		delegateList.erase( MakeDelegate( obj, func ) );
 	}
 
+	void Clear()
+	{
+		delegateList.clear();
+	}
+
 	void Emit( Param1 p1, Param2 p2, Param3 p3, Param4 p4, Param5 p5 ) const
 	{
 		for (DelegateIterator i = delegateList.begin(); i != delegateList.end(); ++i)
@@ -388,7 +418,7 @@ public:
 
 private:
 	typedef std::set<_Delegate> DelegateList;
-	typedef typename DelegateList::iterator DelegateIterator;
+	typedef typename DelegateList::const_iterator DelegateIterator;
 	DelegateList delegateList;
 
 public:
@@ -426,6 +456,11 @@ public:
 		delegateList.erase( MakeDelegate( obj, func ) );
 	}
 
+	void Clear()
+	{
+		delegateList.clear();
+	}
+
 	void Emit( Param1 p1, Param2 p2, Param3 p3, Param4 p4, Param5 p5, Param6 p6 ) const
 	{
 		for (DelegateIterator i = delegateList.begin(); i != delegateList.end(); ++i)
@@ -449,7 +484,7 @@ public:
 
 private:
 	typedef std::set<_Delegate> DelegateList;
-	typedef typename DelegateList::iterator DelegateIterator;
+	typedef typename DelegateList::const_iterator DelegateIterator;
 	DelegateList delegateList;
 
 public:
@@ -487,6 +522,11 @@ public:
 		delegateList.erase( MakeDelegate( obj, func ) );
 	}
 
+	void Clear()
+	{
+		delegateList.clear();
+	}
+
 	void Emit( Param1 p1, Param2 p2, Param3 p3, Param4 p4, Param5 p5, Param6 p6, Param7 p7 ) const
 	{
 		for (DelegateIterator i = delegateList.begin(); i != delegateList.end(); ++i)
@@ -510,7 +550,7 @@ public:
 
 private:
 	typedef std::set<_Delegate> DelegateList;
-	typedef typename DelegateList::iterator DelegateIterator;
+	typedef typename DelegateList::const_iterator DelegateIterator;
 	DelegateList delegateList;
 
 public:
@@ -546,6 +586,11 @@ public:
 	void Disconnect( Y * obj, void (X::*func)( Param1 p1, Param2 p2, Param3 p3, Param4 p4, Param5 p5, Param6 p6, Param7 p7, Param8 p8 ) const )
 	{
 		delegateList.erase( MakeDelegate( obj, func ) );
+	}
+
+	void Clear()
+	{
+		delegateList.clear();
 	}
 
 	void Emit( Param1 p1, Param2 p2, Param3 p3, Param4 p4, Param5 p5, Param6 p6, Param7 p7, Param8 p8 ) const
