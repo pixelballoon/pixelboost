@@ -471,6 +471,8 @@ bool HttpInterface::OnGetImage(pb::HttpConnection& connection, const std::string
         connection.AddHeader("Content-Length", contentLength);
         connection.SetContent(content);
         
+        file.close();
+        
         return true;
     }
     
