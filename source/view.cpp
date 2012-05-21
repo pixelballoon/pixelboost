@@ -20,6 +20,7 @@
 
 #include "project/project.h"
 #include "project/record.h"
+#include "view/level.h"
 #include "core.h"
 #include "view.h"
 
@@ -49,6 +50,8 @@ void View::Initialise(Vec2 size)
 {
     _LevelCamera = new pb::OrthographicCamera();
     _LevelLayer = new pb::RenderLayer(100, _LevelCamera);
+    
+    _Level = new Level();
     
     _GwenCamera = new pb::OrthographicCamera();
     _GwenLayer = new pb::RenderLayer(500, _GwenCamera);
@@ -105,6 +108,8 @@ void View::Render()
 {
     _GwenCanvas->RenderCanvas();
     
+    _Level->Render(_LevelLayer);
+    
     Game::Render();
 }
 
@@ -150,6 +155,7 @@ void View::SetCanvasSize(Vec2 size)
 void View::SetRecord(Record* record)
 {
     _Record = record;
+    _Level->SetRecord(_Record);
 }
 
 void View::OnProjectOpened(Project* project)
@@ -163,6 +169,7 @@ void View::OnProjectOpened(Project* project)
 void View::OnProjectClosed(Project* project)
 {
     _FilePage->Clear();
+    _Level->Clear();
 }
 
 void View::OnProjectSaved(Project* project)

@@ -33,6 +33,7 @@ namespace pixeleditor
 
 class CommandManager;
 class HttpInterface;
+class Level;
 class Project;
 class Record;
 
@@ -74,6 +75,7 @@ private:
     Vec2 _CanvasSize;
     
 private:
+    Level* _Level;
     pb::RenderLayer* _LevelLayer;
     pb::OrthographicCamera* _LevelCamera;
     

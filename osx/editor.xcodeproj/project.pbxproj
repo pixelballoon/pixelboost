@@ -41,6 +41,10 @@
 		1C02B09A1549CE2A00A9536D /* lzio.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C02B0771549CE2A00A9536D /* lzio.c */; };
 		1C1807A1156975CE00C738C0 /* view.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C18079F156975CD00C738C0 /* view.cpp */; };
 		1C1807A515698CFC00C738C0 /* inputHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C1807A315698CFC00C738C0 /* inputHandler.cpp */; };
+		1C1810CF156AF6D700C738C0 /* entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C1810C9156AF6D700C738C0 /* entity.cpp */; };
+		1C1810D6156AF9B300C738C0 /* level.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C1810D4156AF9AE00C738C0 /* level.cpp */; };
+		1C1810DC156AFC6B00C738C0 /* property.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C1810D8156AFC6B00C738C0 /* property.cpp */; };
+		1C1810DD156AFC6B00C738C0 /* sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C1810DA156AFC6B00C738C0 /* sprite.cpp */; };
 		1C210F41152CF44F00DEAC92 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C210F40152CF44F00DEAC92 /* Cocoa.framework */; };
 		1C210F5E152CF60400DEAC92 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C210F5D152CF60400DEAC92 /* WebKit.framework */; };
 		1C3F42361558323400396F50 /* record.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C3F42301558323400396F50 /* record.cpp */; };
@@ -279,6 +283,14 @@
 		1C1807A415698CFC00C738C0 /* inputHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = inputHandler.h; sourceTree = "<group>"; };
 		1C1810BD156ACAC500C738C0 /* delegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = delegate.h; sourceTree = "<group>"; };
 		1C1810BE156ACAC500C738C0 /* signal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = signal.h; sourceTree = "<group>"; };
+		1C1810C9156AF6D700C738C0 /* entity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = entity.cpp; sourceTree = "<group>"; };
+		1C1810CA156AF6D700C738C0 /* entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = entity.h; sourceTree = "<group>"; };
+		1C1810D4156AF9AE00C738C0 /* level.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = level.cpp; sourceTree = "<group>"; };
+		1C1810D5156AF9AF00C738C0 /* level.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = level.h; sourceTree = "<group>"; };
+		1C1810D8156AFC6B00C738C0 /* property.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = property.cpp; sourceTree = "<group>"; };
+		1C1810D9156AFC6B00C738C0 /* property.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = property.h; sourceTree = "<group>"; };
+		1C1810DA156AFC6B00C738C0 /* sprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sprite.cpp; sourceTree = "<group>"; };
+		1C1810DB156AFC6B00C738C0 /* sprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sprite.h; sourceTree = "<group>"; };
 		1C210F3C152CF44F00DEAC92 /* editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = editor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C210F40152CF44F00DEAC92 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		1C210F43152CF44F00DEAC92 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -762,6 +774,45 @@
 				1C1810BE156ACAC500C738C0 /* signal.h */,
 			);
 			path = sigslot;
+			sourceTree = "<group>";
+		};
+		1C1810C7156AF6D400C738C0 /* view */ = {
+			isa = PBXGroup;
+			children = (
+				1C1810C8156AF6D700C738C0 /* entity */,
+				1C1810CE156AF6D700C738C0 /* view */,
+				1C1810D4156AF9AE00C738C0 /* level.cpp */,
+				1C1810D5156AF9AF00C738C0 /* level.h */,
+			);
+			path = view;
+			sourceTree = "<group>";
+		};
+		1C1810C8156AF6D700C738C0 /* entity */ = {
+			isa = PBXGroup;
+			children = (
+				1C1810D7156AFC6A00C738C0 /* property */,
+				1C1810C9156AF6D700C738C0 /* entity.cpp */,
+				1C1810CA156AF6D700C738C0 /* entity.h */,
+			);
+			path = entity;
+			sourceTree = "<group>";
+		};
+		1C1810CE156AF6D700C738C0 /* view */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = view;
+			sourceTree = "<group>";
+		};
+		1C1810D7156AFC6A00C738C0 /* property */ = {
+			isa = PBXGroup;
+			children = (
+				1C1810D8156AFC6B00C738C0 /* property.cpp */,
+				1C1810D9156AFC6B00C738C0 /* property.h */,
+				1C1810DA156AFC6B00C738C0 /* sprite.cpp */,
+				1C1810DB156AFC6B00C738C0 /* sprite.h */,
+			);
+			path = property;
 			sourceTree = "<group>";
 		};
 		1C210F31152CF44E00DEAC92 = {
@@ -1751,6 +1802,7 @@
 				1CEB6DF01540A9D000E8D103 /* http */,
 				1CEB6DC31540A53000E8D103 /* manipulator */,
 				1CEB6DC61540A53000E8D103 /* project */,
+				1C1810C7156AF6D400C738C0 /* view */,
 				1CEB6DC01540A53000E8D103 /* core.cpp */,
 				1CEB6DC11540A53000E8D103 /* core.h */,
 				1C18079F156975CD00C738C0 /* view.cpp */,
@@ -2100,6 +2152,10 @@
 				1C78F18915691F00001441AC /* texture.cpp in Sources */,
 				1C1807A1156975CE00C738C0 /* view.cpp in Sources */,
 				1C1807A515698CFC00C738C0 /* inputHandler.cpp in Sources */,
+				1C1810CF156AF6D700C738C0 /* entity.cpp in Sources */,
+				1C1810D6156AF9B300C738C0 /* level.cpp in Sources */,
+				1C1810DC156AFC6B00C738C0 /* property.cpp in Sources */,
+				1C1810DD156AFC6B00C738C0 /* sprite.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
