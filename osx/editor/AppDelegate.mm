@@ -14,21 +14,13 @@
     _Core = new pixeleditor::Core();
     
     _View = new pixeleditor::View();
-    _View->Initialise();
+    _View->Initialise(Vec2(1200,1000));
     _View->Render();
-    
-    [self.webView setMaintainsBackForwardList:false];
-    [self.webView setShouldCloseWithWindow:true];
-    WebPreferences* preferences = [self.webView preferences];
-    [preferences setUsesPageCache:false];
-    [preferences setCacheModel:WebCacheModelDocumentBrowser];
-    [preferences setPrivateBrowsingEnabled:true];
-    [self.webView setPreferences:preferences];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    [self.webView setMainFrameURL:@"http://localhost:9090"];
+    
 }
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender
