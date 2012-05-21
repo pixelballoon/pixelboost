@@ -4,11 +4,13 @@
 namespace pixeleditor
 {
     class Core;
+    class View;
 }
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 {
     pixeleditor::Core* _Core;
+    pixeleditor::View* _View;
 }
 
 @property (assign) IBOutlet NSWindow *window;

@@ -2,6 +2,7 @@
 
 #include "command/manager.h"
 #include "core.h"
+#include "view.h"
 
 @implementation AppDelegate
 
@@ -11,6 +12,10 @@
 - (void)applicationWillFinishLaunching:(NSNotification *)notification
 {
     _Core = new pixeleditor::Core();
+    
+    _View = new pixeleditor::View();
+    _View->Initialise();
+    _View->Render();
     
     [self.webView setMaintainsBackForwardList:false];
     [self.webView setShouldCloseWithWindow:true];
