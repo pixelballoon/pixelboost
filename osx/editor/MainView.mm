@@ -117,7 +117,7 @@ using namespace pixeleditor;
     
     if (view)
     {
-        view->Scroll(Vec2(-event.scrollingDeltaX, event.scrollingDeltaY));
+        view->Scroll(Vec2(-event.scrollingDeltaX, event.scrollingDeltaY)/10.f);
     }
     
     [self setNeedsDisplay:true];
