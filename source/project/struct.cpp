@@ -497,6 +497,16 @@ void Struct::SetName(const std::string& name)
     _Name = name;
 }
 
+std::string Struct::EvaluateProperty(const std::string& path, const std::string& defaultValue)
+{
+    const Property* property = GetProperty(path);
+    
+    if (!property || !property->AsAtom())
+        return defaultValue;
+    
+    return property->AsAtom()->GetStringValue();
+}
+
 const Property* Struct::GetProperty(const std::string& path) const
 {
     PropertyMap::const_iterator it = _Properties.find(path);

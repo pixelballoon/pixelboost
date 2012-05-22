@@ -12,10 +12,15 @@ namespace pixeleditor
     class SpriteViewProperty : public ViewProperty
     {
     public:
-        SpriteViewProperty(ViewEntity* parent);
+        SpriteViewProperty(ViewEntity* parent, const std::string& path, const SchemaItem* item);
         virtual ~SpriteViewProperty();
         
         virtual void Update(float time);
         virtual void Render(pb::RenderLayer* layer);
+        
+        virtual void Refresh();
+        
+    private:
+        std::string _Sprite;
     };
 }

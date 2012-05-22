@@ -55,7 +55,7 @@ public:
     void SetName(const std::string& name);
     
 public:
-    typedef std::map<std::string, Property*> PropertyMap;
+    std::string EvaluateProperty(const std::string& path, const std::string& defaultValue = "");
     
     const Property* GetProperty(const std::string& path) const;
     PropertyAtom* AcquireAtom(const std::string& path);
@@ -78,6 +78,9 @@ private:
     std::string _Name;
     
     Project* _Project;
+    
+private:
+    typedef std::map<std::string, Property*> PropertyMap;
     
     PropertyMap _Properties;
 };
