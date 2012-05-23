@@ -1,7 +1,10 @@
 #pragma once
 
-#include "project/definitions.h"
 #include <map>
+
+#include "sigslot/signal.h"
+
+#include "project/definitions.h"
 
 namespace pb
 {
@@ -26,17 +29,22 @@ namespace pixeleditor
         
         void SetRecord(Record* record);
         
-        Uid GenerateViewEntityId(Entity* entity);
+        ViewEntity* GetEntityById(Uid uid);
         
-        ViewEntity* GetEntityByEntityId(Uid uid);
-        ViewEntity* GetEntityByViewEntityId(Uid uid);
+        sigslot::Signal1<ViewEntity*> entityAdded;
+        sigslot::Signal1<ViewEntity*> entityRemoved;
         
     private:
-        typedef std::map<Uid, Uid> EntityIdMap;
+        void CreateEntity(Uid uid);
+        void CreateEntity(Entity* entity);
+        void DestroyEntity(Uid uid);
+        
+    private:
         typedef std::map<Uid, ViewEntity*> EntityMap;
         
     private:
-        EntityIdMap _EntityIdMap;
+        Record* _Record;
+        
         EntityMap _Entities;
     };
 }

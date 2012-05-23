@@ -6,6 +6,7 @@
 using namespace pixeleditor;
 
 Level::Level()
+    : _Record(0)
 {
     
 }
@@ -33,52 +34,29 @@ void Level::Render(pb::RenderLayer* layer)
 
 void Level::Clear()
 {
-    for (EntityMap::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
-    {
-        delete it->second;
-    }
-    _Entities.clear();
+    while (_Entities.size())
+        DestroyEntity(_Entities.begin()->second->GetUid());
+    
+    _Record = 0;
 }
 
 void Level::SetRecord(Record* record)
 {
     Clear();
     
-    for (Record::EntityMap::const_iterator it = record->GetEntities().begin(); it != record->GetEntities().end(); ++it)
+    if (record)
     {
-        Entity* entity = it->second;
-        Uid id = GenerateViewEntityId(entity);
-        ViewEntity* viewEntity = new ViewEntity(id, entity);
-        _Entities[id] = viewEntity;
+        _Record = record;
+        
+        for (Record::EntityMap::const_iterator it = record->GetEntities().begin(); it != record->GetEntities().end(); ++it)
+        {
+            Entity* entity = it->second;
+            CreateEntity(entity);
+        }
     }
 }
 
-Uid Level::GenerateViewEntityId(Entity* entity)
-{
-    Uid uid;
-    
-    do {
-        uid = rand()%(1<<12);
-    } while (_EntityIdMap.find(uid) != _EntityIdMap.end());
-    
-    _EntityIdMap[entity->GetUid()] = uid;
-    
-    return uid;
-}
-
-ViewEntity* Level::GetEntityByEntityId(Uid uid)
-{
-    EntityIdMap::iterator it = _EntityIdMap.find(uid);
-    
-    if (it != _EntityIdMap.end())
-    {
-        return GetEntityByViewEntityId(uid);
-    }
-    
-    return 0;
-}
-
-ViewEntity* Level::GetEntityByViewEntityId(Uid uid)
+ViewEntity* Level::GetEntityById(Uid uid)
 {
     EntityMap::iterator it = _Entities.find(uid);
     
@@ -89,3 +67,31 @@ ViewEntity* Level::GetEntityByViewEntityId(Uid uid)
     
     return 0;
 }
+                     
+void Level::CreateEntity(Uid uid)
+{
+    Entity* entity = _Record->GetEntity(uid);
+
+    if (entity)
+        CreateEntity(entity);
+}
+
+void Level::CreateEntity(Entity* entity)
+{
+    ViewEntity* viewEntity = new ViewEntity(entity->GetUid(), entity);
+    _Entities[entity->GetUid()] = viewEntity;
+    entityAdded(viewEntity);
+}
+
+void Level::DestroyEntity(Uid uid)
+{
+    EntityMap::iterator it = _Entities.find(uid);
+    
+    if (it != _Entities.end())
+    {
+        entityRemoved(it->second);
+        delete it->second;
+        _Entities.erase(it);
+    }
+}
+
