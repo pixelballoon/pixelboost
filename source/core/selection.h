@@ -19,11 +19,11 @@ public:
     
     void Clear();
     
-    void Add(Uid uid);
-    void Remove(Uid uid);
-    void Toggle(Uid uid);
+    void AddEntity(SelectionUid uid);
+    void RemoveEntity(SelectionUid uid);
+    void ToggleEntity(SelectionUid uid);
     
-    bool IsSelected(Uid id) const;
+    bool IsSelected(SelectionUid id) const;
     
 public:
     typedef std::vector<Uid> Components;

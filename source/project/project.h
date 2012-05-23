@@ -35,7 +35,7 @@ public:
     Record* GetRecord(Uid uid) const;
     Record* GetRecordByName(const std::string& recordName) const;
     
-    Uid CalculateUid(Uid min=65535, Uid max=0xffffffffUL);
+    Uid CalculateUid(Uid min=1, Uid max=0xffffffUL);
     bool RegisterUid(Uid uid);
     bool ReleaseUid(Uid uid);
 

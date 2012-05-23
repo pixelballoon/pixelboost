@@ -36,7 +36,7 @@ void ViewProperty::Refresh()
 
 Uid ViewProperty::GetUid()
 {
-    return GenerateUid(_Parent->GetUid(), _PropertyId);
+    return GenerateSelectionUid(_Parent->GetUid(), _PropertyId);
 }
 
 Uid ViewProperty::GetPropertyId()

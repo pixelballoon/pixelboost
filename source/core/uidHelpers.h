@@ -11,6 +11,6 @@ namespace pixeleditor
         Uid component;
     };
     
-    Uid GenerateUid(Uid entity, Uid property = 0, Uid component = 0);
-    UidComponents SplitUid(Uid uid);
+    SelectionUid GenerateSelectionUid(Uid entity, Uid property = 0, Uid component = 0);
+    UidComponents SplitSelectionUid(SelectionUid uid);
 }

@@ -3,17 +3,17 @@
 namespace pixeleditor
 {
 
-Uid GenerateUid(Uid entity, Uid property, Uid component)
+SelectionUid GenerateSelectionUid(Uid entity, Uid property, Uid component)
 {
-    return (entity & 0xFFF) | (property & 0xFF) << 12 | (component & 0xFFF) << 20;
+    return (SelectionUid)(entity & 0xFFFFFF) | (SelectionUid)(property & 0x3FF) << 24 | (SelectionUid)(component & 0x3FFF) << 34;
 }
 
-UidComponents SplitUid(Uid uid)
+UidComponents SplitSelectionUid(SelectionUid uid)
 {
     UidComponents components;
-    components.entity = uid & 0xFFF;
-    components.property = (uid >> 12) & 0xFF;
-    components.component = (uid >> 20) & 0xFFF;
+    components.entity = uid & 0xFFFFFF; // 24 bits
+    components.property = (uid >> 24) & 0x3FF; // 10 bits
+    components.component = (uid >> 34) & 0x3FFF; // 14 bits
     return components;
 }
 

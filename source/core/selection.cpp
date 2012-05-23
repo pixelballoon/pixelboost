@@ -20,7 +20,7 @@ void Selection::Clear()
     _Selection.clear();
 }
 
-void Selection::Add(Uid uid)
+void Selection::AddEntity(SelectionUid uid)
 {
     Entities::iterator it = _Selection.find(uid);
     
@@ -30,7 +30,7 @@ void Selection::Add(Uid uid)
     }
 }
 
-void Selection::Remove(Uid uid)
+void Selection::RemoveEntity(SelectionUid uid)
 {
     Entities::iterator it = _Selection.find(uid);
     
@@ -39,8 +39,20 @@ void Selection::Remove(Uid uid)
     
     _Selection.erase(it);
 }
+
+void Selection::ToggleEntity(SelectionUid uid)
+{
+    Entities::iterator it = _Selection.find(uid);
     
-bool Selection::IsSelected(Uid uid) const
+    if (it == _Selection.end())
+    {
+        _Selection[uid] = Properties();
+    } else {
+        _Selection.erase(it);
+    }
+}
+    
+bool Selection::IsSelected(SelectionUid uid) const
 {
     Entities::const_iterator it = _Selection.find(uid);
     

@@ -59,7 +59,7 @@ bool SelectCommand::Do()
         {
             std::string id = GetArgument("i", i);
             
-            newSelection.Add(atoi(id.c_str()));
+            newSelection.AddEntity(atoi(id.c_str()));
         }
         
         Core::Instance()->SetSelection(newSelection);
