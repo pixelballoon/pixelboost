@@ -20,6 +20,9 @@ namespace pixeleditor
         
         virtual void Refresh();
         
+    protected:
+        virtual pb::BoundingBox CalculateBounds();
+        
     private:
         std::string _Sprite;
     };

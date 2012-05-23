@@ -8,6 +8,7 @@ ViewProperty::ViewProperty(ViewEntity* parent, const std::string& path, const Sc
     : _Parent(parent)
     , _Path(path)
     , _SchemaItem(schemaItem)
+    , _BoundsDirty(true)
 {
     _PropertyId = _Parent->AddProperty(this);
 }
@@ -45,6 +46,27 @@ Uid ViewProperty::GetPropertyId()
 const std::string& ViewProperty::GetPath()
 {
     return _Path;
+}
+
+void ViewProperty::DirtyBounds()
+{
+    _BoundsDirty = true;
+}
+
+pb::BoundingBox ViewProperty::GetBoundingBox()
+{
+    if (_BoundsDirty)
+    {
+        _BoundingBox = CalculateBounds();
+        _BoundsDirty = false;
+    }
+    
+    return _BoundingBox;
+}
+
+pb::BoundingBox ViewProperty::CalculateBounds()
+{
+    return pb::BoundingBox();
 }
 
 std::string ViewProperty::EvaluateProperty(const std::string& path, const std::string& defaultValue)

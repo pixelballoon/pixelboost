@@ -4,6 +4,7 @@
 #include <string>
 
 #include "pixelboost/math/maths.h"
+#include "pixelboost/maths/boundingBox.h"
 
 namespace pb
 {
@@ -31,6 +32,8 @@ namespace pixeleditor
         Entity* GetEntity();
         Vec3 GetPosition();
         
+        pb::BoundingBox GetBoundingBox();
+        
         Uid GetPropertyIdByPath(const std::string& path);
         ViewProperty* GetPropertyByPath(const std::string& path);
         ViewProperty* GetPropertyById(Uid uid);
@@ -46,6 +49,9 @@ namespace pixeleditor
         void ParseStruct(const std::string& path, const SchemaStruct* schemaStruct);
         void ParseItem(const std::string& path, const SchemaItem* item);
         
+        void DirtyBounds();
+        void UpdateBounds();
+        
     private:
         typedef std::map<std::string, Uid> PropertyIdMap;
         typedef std::map<Uid, ViewProperty*> PropertyMap;
@@ -55,6 +61,9 @@ namespace pixeleditor
         Entity* _Entity;
         PropertyIdMap _PropertyIdMap;
         PropertyMap _Properties;
+        
+        bool _BoundsDirty;
+        pb::BoundingBox _BoundingBox;
         
         friend class ViewProperty;
     };

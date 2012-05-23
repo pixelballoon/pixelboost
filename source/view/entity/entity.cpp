@@ -14,6 +14,8 @@ ViewEntity::ViewEntity(Uid uid, Entity* entity)
     , _Entity(entity)
 {
     ParseProperties();
+    
+    _BoundsDirty = true;
 }
 
 ViewEntity::~ViewEntity()
@@ -31,9 +33,9 @@ void ViewEntity::Update(float time)
 
 void ViewEntity::Render(pb::RenderLayer* layer)
 {
-    Vec3 position = _Entity->GetPosition();
+    UpdateBounds();
     
-    View::Instance()->GetPrimitiveRenderer()->AttachBox(layer, Vec2(position[0], position[1]), Vec2(0.1,0.1));
+    Vec3 position = _Entity->GetPosition();
     
     for (PropertyMap::iterator it = _Properties.begin(); it != _Properties.end(); ++it)
     {
@@ -193,5 +195,25 @@ void ViewEntity::ParseItem(const std::string& path, const SchemaItem* item)
         {
             new SpriteViewProperty(this, path, item);
         }
+    }
+}
+
+void ViewEntity::DirtyBounds()
+{
+    _BoundsDirty = true;
+}
+
+void ViewEntity::UpdateBounds()
+{
+    if (_BoundsDirty)
+    {
+        _BoundingBox.Invalidate();
+        
+        for (PropertyMap::iterator it = _Properties.begin(); it != _Properties.end(); ++it)
+        {
+            _BoundingBox.Expand(it->second->GetBoundingBox());
+        }
+        
+        _BoundsDirty = false;
     }
 }
