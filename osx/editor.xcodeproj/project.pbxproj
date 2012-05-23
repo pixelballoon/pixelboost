@@ -46,6 +46,8 @@
 		1C1810DC156AFC6B00C738C0 /* property.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C1810D8156AFC6B00C738C0 /* property.cpp */; };
 		1C1810DD156AFC6B00C738C0 /* sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C1810DA156AFC6B00C738C0 /* sprite.cpp */; };
 		1C181230156D8A8B00C738C0 /* boundingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C18122E156D8A8B00C738C0 /* boundingBox.cpp */; };
+		1C181234156D922900C738C0 /* selection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C181232156D922900C738C0 /* selection.cpp */; };
+		1C181237156D931000C738C0 /* uidHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C181236156D930F00C738C0 /* uidHelpers.cpp */; };
 		1C210F41152CF44F00DEAC92 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C210F40152CF44F00DEAC92 /* Cocoa.framework */; };
 		1C210F5E152CF60400DEAC92 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C210F5D152CF60400DEAC92 /* WebKit.framework */; };
 		1C3F42361558323400396F50 /* record.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C3F42301558323400396F50 /* record.cpp */; };
@@ -201,7 +203,6 @@
 		1CEB6DE31540A53000E8D103 /* selectCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CEB6DBC1540A53000E8D103 /* selectCommand.cpp */; };
 		1CEB6DE41540A53000E8D103 /* transformCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CEB6DBE1540A53000E8D103 /* transformCommand.cpp */; };
 		1CEB6DE51540A53000E8D103 /* core.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CEB6DC01540A53000E8D103 /* core.cpp */; };
-		1CEB6DE61540A53000E8D103 /* selection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CEB6DC41540A53000E8D103 /* selection.cpp */; };
 		1CEB6DE71540A53000E8D103 /* entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CEB6DC81540A53000E8D103 /* entity.cpp */; };
 		1CEB6DE81540A53000E8D103 /* helpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CEB6DCA1540A53000E8D103 /* helpers.cpp */; };
 		1CEB6DE91540A53000E8D103 /* project.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CEB6DCC1540A53000E8D103 /* project.cpp */; };
@@ -511,6 +512,10 @@
 		1C1811C0156D73B400C738C0 /* xstream.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xstream.hpp; sourceTree = "<group>"; };
 		1C18122E156D8A8B00C738C0 /* boundingBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boundingBox.cpp; sourceTree = "<group>"; };
 		1C18122F156D8A8B00C738C0 /* boundingBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boundingBox.h; sourceTree = "<group>"; };
+		1C181232156D922900C738C0 /* selection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = selection.cpp; sourceTree = "<group>"; };
+		1C181233156D922900C738C0 /* selection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = selection.h; sourceTree = "<group>"; };
+		1C181235156D923C00C738C0 /* uidHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uidHelpers.h; sourceTree = "<group>"; };
+		1C181236156D930F00C738C0 /* uidHelpers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = uidHelpers.cpp; sourceTree = "<group>"; };
 		1C210F3C152CF44F00DEAC92 /* editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = editor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C210F40152CF44F00DEAC92 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		1C210F43152CF44F00DEAC92 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -875,8 +880,6 @@
 		1CEB6DBF1540A53000E8D103 /* transformCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = transformCommand.h; sourceTree = "<group>"; };
 		1CEB6DC01540A53000E8D103 /* core.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = core.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		1CEB6DC11540A53000E8D103 /* core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = core.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		1CEB6DC41540A53000E8D103 /* selection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = selection.cpp; sourceTree = "<group>"; };
-		1CEB6DC51540A53000E8D103 /* selection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = selection.h; sourceTree = "<group>"; };
 		1CEB6DC71540A53000E8D103 /* definitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = definitions.h; sourceTree = "<group>"; };
 		1CEB6DC81540A53000E8D103 /* entity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = entity.cpp; sourceTree = "<group>"; };
 		1CEB6DC91540A53000E8D103 /* entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = entity.h; sourceTree = "<group>"; };
@@ -1303,6 +1306,17 @@
 				1C18122F156D8A8B00C738C0 /* boundingBox.h */,
 			);
 			path = maths;
+			sourceTree = "<group>";
+		};
+		1C181231156D922200C738C0 /* core */ = {
+			isa = PBXGroup;
+			children = (
+				1C181232156D922900C738C0 /* selection.cpp */,
+				1C181233156D922900C738C0 /* selection.h */,
+				1C181236156D930F00C738C0 /* uidHelpers.cpp */,
+				1C181235156D923C00C738C0 /* uidHelpers.h */,
+			);
+			path = core;
 			sourceTree = "<group>";
 		};
 		1C210F31152CF44E00DEAC92 = {
@@ -2290,9 +2304,9 @@
 		1CEB6DAA1540A52F00E8D103 /* source */ = {
 			isa = PBXGroup;
 			children = (
+				1C181231156D922200C738C0 /* core */,
 				1CEB6DAB1540A53000E8D103 /* command */,
 				1CEB6DF01540A9D000E8D103 /* http */,
-				1CEB6DC31540A53000E8D103 /* manipulator */,
 				1CEB6DC61540A53000E8D103 /* project */,
 				1C1810C7156AF6D400C738C0 /* view */,
 				1CEB6DC01540A53000E8D103 /* core.cpp */,
@@ -2335,15 +2349,6 @@
 				1CEB6DBF1540A53000E8D103 /* transformCommand.h */,
 			);
 			path = standard;
-			sourceTree = "<group>";
-		};
-		1CEB6DC31540A53000E8D103 /* manipulator */ = {
-			isa = PBXGroup;
-			children = (
-				1CEB6DC41540A53000E8D103 /* selection.cpp */,
-				1CEB6DC51540A53000E8D103 /* selection.h */,
-			);
-			path = manipulator;
 			sourceTree = "<group>";
 		};
 		1CEB6DC61540A53000E8D103 /* project */ = {
@@ -2517,7 +2522,6 @@
 				1CEB6DE31540A53000E8D103 /* selectCommand.cpp in Sources */,
 				1CEB6DE41540A53000E8D103 /* transformCommand.cpp in Sources */,
 				1CEB6DE51540A53000E8D103 /* core.cpp in Sources */,
-				1CEB6DE61540A53000E8D103 /* selection.cpp in Sources */,
 				1CEB6DE71540A53000E8D103 /* entity.cpp in Sources */,
 				1CEB6DE81540A53000E8D103 /* helpers.cpp in Sources */,
 				1CEB6DE91540A53000E8D103 /* project.cpp in Sources */,
@@ -2644,6 +2648,8 @@
 				1C1810DC156AFC6B00C738C0 /* property.cpp in Sources */,
 				1C1810DD156AFC6B00C738C0 /* sprite.cpp in Sources */,
 				1C181230156D8A8B00C738C0 /* boundingBox.cpp in Sources */,
+				1C181234156D922900C738C0 /* selection.cpp in Sources */,
+				1C181237156D931000C738C0 /* uidHelpers.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

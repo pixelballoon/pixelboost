@@ -1,7 +1,7 @@
 #include <string>
 
 #include "command/standard/selectCommand.h"
-#include "manipulator/selection.h"
+#include "core/selection.h"
 #include "core.h"
 
 using namespace pixeleditor;
@@ -59,7 +59,7 @@ bool SelectCommand::Do()
         {
             std::string id = GetArgument("i", i);
             
-            newSelection.AddEntity(atoi(id.c_str()));
+            newSelection.Add(atoi(id.c_str()));
         }
         
         Core::Instance()->SetSelection(newSelection);

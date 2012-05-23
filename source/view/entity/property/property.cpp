@@ -1,3 +1,4 @@
+#include "core/uidHelpers.h"
 #include "project/entity.h"
 #include "view/entity/property/property.h"
 #include "view/entity/entity.h"
@@ -35,7 +36,7 @@ void ViewProperty::Refresh()
 
 Uid ViewProperty::GetUid()
 {
-    return _Parent->GetUid() | _PropertyId << 12;
+    return GenerateUid(_Parent->GetUid(), _PropertyId);
 }
 
 Uid ViewProperty::GetPropertyId()

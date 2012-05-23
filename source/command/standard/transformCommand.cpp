@@ -51,7 +51,7 @@ bool TransformCommand::Do()
         
         Selection selection = Core::Instance()->GetSelection();
         
-        for (Selection::SelectionMap::const_iterator it = selection.GetSelection().begin(); it != selection.GetSelection().end(); ++it)
+        for (Selection::Entities::const_iterator it = selection.GetSelection().begin(); it != selection.GetSelection().end(); ++it)
         {
             Entity* entity = Core::Instance()->GetProject()->GetEntity(it->first);
             
@@ -71,7 +71,7 @@ bool TransformCommand::Do()
         
         Selection selection = Core::Instance()->GetSelection();
         
-        for (Selection::SelectionMap::const_iterator it = selection.GetSelection().begin(); it != selection.GetSelection().end(); ++it)
+        for (Selection::Entities::const_iterator it = selection.GetSelection().begin(); it != selection.GetSelection().end(); ++it)
         {
             Entity* entity = Core::Instance()->GetProject()->GetEntity(it->first);
             
@@ -92,7 +92,7 @@ bool TransformCommand::Do()
         
         Selection selection = Core::Instance()->GetSelection();
         
-        for (Selection::SelectionMap::const_iterator it = selection.GetSelection().begin(); it != selection.GetSelection().end(); ++it)
+        for (Selection::Entities::const_iterator it = selection.GetSelection().begin(); it != selection.GetSelection().end(); ++it)
         {
             Entity* entity = Core::Instance()->GetProject()->GetEntity(it->first);
             
@@ -113,7 +113,7 @@ bool TransformCommand::Undo()
     {
         Selection selection = Core::Instance()->GetSelection();
         
-        for (Selection::SelectionMap::const_iterator it = selection.GetSelection().begin(); it != selection.GetSelection().end(); ++it)
+        for (Selection::Entities::const_iterator it = selection.GetSelection().begin(); it != selection.GetSelection().end(); ++it)
         {
             Entity* entity = Core::Instance()->GetProject()->GetEntity(it->first);
             
@@ -129,7 +129,7 @@ bool TransformCommand::Undo()
     {
         Selection selection = Core::Instance()->GetSelection();
         
-        for (Selection::SelectionMap::const_iterator it = selection.GetSelection().begin(); it != selection.GetSelection().end(); ++it)
+        for (Selection::Entities::const_iterator it = selection.GetSelection().begin(); it != selection.GetSelection().end(); ++it)
         {
             Entity* entity = Core::Instance()->GetProject()->GetEntity(it->first);
             
@@ -145,7 +145,7 @@ bool TransformCommand::Undo()
     {
         Selection selection = Core::Instance()->GetSelection();
         
-        for (Selection::SelectionMap::const_iterator it = selection.GetSelection().begin(); it != selection.GetSelection().end(); ++it)
+        for (Selection::Entities::const_iterator it = selection.GetSelection().begin(); it != selection.GetSelection().end(); ++it)
         {
             Entity* entity = Core::Instance()->GetProject()->GetEntity(it->first);
             

@@ -56,6 +56,4 @@ const Selection& Core::GetSelection()
 void Core::SetSelection(const Selection& selection)
 {
     _Selection = selection;
-    
-    selectionChanged(&_Selection);
 }

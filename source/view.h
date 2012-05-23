@@ -8,7 +8,7 @@
 #include "pixelboost/logic/game.h"
 #include "pixelboost/math/maths.h"
 
-#include "manipulator/selection.h"
+#include "core/selection.h"
 
 namespace Gwen
 {

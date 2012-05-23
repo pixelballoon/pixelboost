@@ -1,7 +1,7 @@
 #include <string>
 
 #include "command/standard/deleteCommand.h"
-#include "manipulator/selection.h"
+#include "core/selection.h"
 #include "project/entity.h"
 #include "project/project.h"
 #include "project/record.h"
@@ -50,7 +50,7 @@ bool DeleteCommand::Do()
     
     Project* project = Core::Instance()->GetProject();
     
-    for (Selection::SelectionMap::const_iterator it = selection.GetSelection().begin(); it != selection.GetSelection().end(); ++it)
+    for (Selection::Entities::const_iterator it = selection.GetSelection().begin(); it != selection.GetSelection().end(); ++it)
     {
         Entity* entity = project->GetEntity(it->first);
         if (entity)

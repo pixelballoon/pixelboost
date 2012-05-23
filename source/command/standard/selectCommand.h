@@ -1,7 +1,7 @@
 #pragma once
 
 #include "command/base.h"
-#include "manipulator/selection.h"
+#include "core/selection.h"
 
 namespace pixeleditor
 {

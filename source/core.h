@@ -4,7 +4,7 @@
 
 #include "sigslot/signal.h"
 
-#include "manipulator/selection.h"
+#include "core/selection.h"
 
 namespace pixeleditor
 {
@@ -29,8 +29,6 @@ public:
     
     const Selection& GetSelection();
     void SetSelection(const Selection& selection);
-    
-    sigslot::Signal1<const Selection*> selectionChanged;
     
 private:
     void RegisterCoreCommands();
