@@ -87,3 +87,13 @@ void BoundingBox::Expand(const BoundingBox& box)
     if (box._Max.z > _Max.z)
         _Max.z = box._Max.z;
 }
+
+bool BoundingBox::Contains(glm::vec3 point)
+{
+    return (point.x >= _Min.x && point.x <= _Max.x && point.y >= _Min.y && point.y <= _Max.y && point.z >= _Min.z && point.z <= _Max.z);
+}
+
+bool BoundingBox::Intersects(const BoundingBox& box)
+{
+    return !(box._Min.x >= _Max.x || box._Max.x <= _Min.x || box._Min.y >= _Max.y || box._Max.y <= _Min.y || box._Min.z >= _Max.z || box._Max.z <= _Min.z);
+}

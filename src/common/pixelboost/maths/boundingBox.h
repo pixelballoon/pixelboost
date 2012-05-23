@@ -18,6 +18,9 @@ namespace pb
         void Expand(glm::vec3 point);
         void Expand(const BoundingBox& box);
         
+        bool Contains(glm::vec3 point);
+        bool Intersects(const BoundingBox& box);
+        
     private:
         glm::vec3 _Min;
         glm::vec3 _Max;
