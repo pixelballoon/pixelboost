@@ -36,6 +36,7 @@ class HttpInterface;
 class Level;
 class Project;
 class Record;
+class ViewEntity;
 
 class View : public pb::Game, public Gwen::Event::Handler
 {
@@ -79,8 +80,13 @@ private:
     void OnRecordRemoved(Project* project, Record* record);
     
     void OnRecordSelected(Gwen::Controls::Base* item);
-        
-    Vec2 _CanvasSize;
+    
+    void OnEntityAdded(ViewEntity* entity);
+    void OnEntityRemoved(ViewEntity* entity);
+    
+    void OnEntitySelected(Gwen::Controls::Base* item);
+    
+    void OnSelectionChanged();
     
 private:
     Level* _Level;
@@ -91,10 +97,12 @@ private:
     pb::RenderLayer* _GwenLayer;
     pb::OrthographicCamera* _GwenCamera;
     Gwen::Controls::Canvas* _GwenCanvas;
+    Vec2 _CanvasSize;
 
     Gwen::Controls::CollapsibleList* _FilePage;
     Gwen::Controls::CollapsibleCategory* _Records;    
     Gwen::Controls::CollapsibleList* _EntityPage;
+    Gwen::Controls::CollapsibleCategory* _Entities;    
 };
     
 }

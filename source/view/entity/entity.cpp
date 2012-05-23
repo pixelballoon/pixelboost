@@ -1,10 +1,13 @@
 #include "pixelboost/graphics/render/primitive/primitiveRenderer.h"
 
+#include "core/selection.h"
+#include "core/uidHelpers.h"
 #include "project/entity.h"
 #include "project/schema.h"
 #include "view/entity/property/property.h"
 #include "view/entity/property/sprite.h"
 #include "view/entity/entity.h"
+#include "core.h"
 #include "view.h"
 
 using namespace pixeleditor;
@@ -40,6 +43,14 @@ void ViewEntity::Render(pb::RenderLayer* layer)
     for (PropertyMap::iterator it = _Properties.begin(); it != _Properties.end(); ++it)
     {
         it->second->Render(layer);
+    }
+    
+    if (Core::Instance()->GetSelection().IsSelected(GenerateSelectionUid(GetUid())))
+    {
+        glm::vec3 boxCenter = _BoundingBox.GetCenter();
+        glm::vec3 boxSize = _BoundingBox.GetSize();
+        View::Instance()->GetPrimitiveRenderer()->AttachBox(layer, Vec2(boxCenter.x, boxCenter.y), Vec2(boxSize.x, boxSize.y), Vec3(0,0,0), Vec4(0.2,0.2,0.4,0.3));
+           View::Instance()->GetPrimitiveRenderer()->AttachBox(layer, Vec2(boxCenter.x, boxCenter.y), Vec2(boxSize.x, boxSize.y), Vec3(0,0,0), Vec4(0.4,0.2,0.2,0.5), false);
     }
 }
 

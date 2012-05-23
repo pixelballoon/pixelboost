@@ -2,6 +2,7 @@
 
 #include "command/standard/selectCommand.h"
 #include "core/selection.h"
+#include "core/uidHelpers.h"
 #include "core.h"
 
 using namespace pixeleditor;
@@ -51,15 +52,15 @@ bool SelectCommand::Do()
     if (IsArgumentSet("a"))
         newSelection = _Selection;
     
-    if (IsArgumentSet("i"))
+    if (IsArgumentSet("u"))
     {
-        unsigned long count = GetArgumentCount("i");
+        unsigned long count = GetArgumentCount("u");
         
         for (int i=0; i<count; i++)
         {
-            std::string id = GetArgument("i", i);
+            std::string id = GetArgument("u", i);
             
-            newSelection.AddEntity(atoi(id.c_str()));
+            newSelection.AddEntity(GenerateSelectionUid(atoi(id.c_str())));
         }
         
         Core::Instance()->SetSelection(newSelection);

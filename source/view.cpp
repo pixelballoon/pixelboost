@@ -18,8 +18,11 @@
 #include "pixelboost/graphics/render/sprite/spriteRenderer.h"
 #include "pixelboost/misc/gwen/inputHandler.h"
 
+#include "command/manager.h"
+#include "project/entity.h"
 #include "project/project.h"
 #include "project/record.h"
+#include "view/entity/entity.h"
 #include "view/level.h"
 #include "core.h"
 #include "view.h"
@@ -97,6 +100,8 @@ void View::Initialise(Vec2 size)
     Core::Instance()->GetProject()->projectExported.Connect(this, &View::OnProjectExported);
     Core::Instance()->GetProject()->recordAdded.Connect(this, &View::OnRecordAdded);
     Core::Instance()->GetProject()->recordRemoved.Connect(this, &View::OnRecordRemoved);
+    _Level->entityAdded.Connect(this, &View::OnEntityAdded);
+    _Level->entityRemoved.Connect(this, &View::OnEntityRemoved);
 }
 
 Vec2 View::GetScreenResolution()
@@ -172,6 +177,11 @@ void View::SetCanvasSize(Vec2 size)
 
 void View::SetRecord(Record* record)
 {
+    _EntityPage->Clear();
+    _Entities = new Gwen::Controls::CollapsibleCategory(_EntityPage);
+    _Entities->SetText("Entities");
+    _EntityPage->Add(_Entities);
+    
     _Record = record;
     _Level->SetRecord(_Record);
 }
@@ -217,4 +227,31 @@ void View::OnRecordSelected(Gwen::Controls::Base* item)
 {
     Record* record = item->UserData.Get<Record*>("record");
     SetRecord(record);
+}
+
+void View::OnEntityAdded(ViewEntity* entity)
+{
+    Gwen::TextObject entityItem(entity->GetEntity()->GetName());
+    Gwen::Controls::Button* button = _Entities->Add(entityItem);
+    button->UserData.Set("entity", entity);
+    button->onToggleOn.Add(this, &View::OnEntitySelected);
+}
+
+void View::OnEntityRemoved(ViewEntity* entity)
+{
+    
+}
+
+void View::OnEntitySelected(Gwen::Controls::Base* item)
+{
+    ViewEntity* entity = item->UserData.Get<ViewEntity*>("entity");
+    
+    char args[256];
+    sprintf(args, "-u %d", entity->GetUid());
+    Core::Instance()->GetCommandManager()->Exec("select", args);
+}
+
+void View::OnSelectionChanged()
+{
+    SetDirty();
 }
