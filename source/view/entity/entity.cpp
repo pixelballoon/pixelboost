@@ -9,8 +9,9 @@
 
 using namespace pixeleditor;
 
-ViewEntity::ViewEntity(Entity* entity)
-    : _Entity(entity)
+ViewEntity::ViewEntity(Uid uid, Entity* entity)
+    : _Uid(uid)
+    , _Entity(entity)
 {
     ParseProperties();
 }
@@ -40,6 +41,11 @@ void ViewEntity::Render(pb::RenderLayer* layer)
     }
 }
 
+Uid ViewEntity::GetUid()
+{
+    return _Uid;
+}
+
 Entity* ViewEntity::GetEntity()
 {
     return _Entity;
@@ -50,16 +56,91 @@ Vec3 ViewEntity::GetPosition()
     return _Entity->GetPosition();
 }
 
-void ViewEntity::AddProperty(const std::string& path, ViewProperty* property)
+pb::BoundingBox ViewEntity::GetBoundingBox()
 {
-    PropertyMap::iterator it = _Properties.find(path);
+    if (_BoundsDirty)
+        UpdateBounds();
+    
+    return _BoundingBox;
+}
+
+Uid ViewEntity::GetPropertyIdByPath(const std::string& path)
+{
+    PropertyIdMap::iterator it = _PropertyIdMap.find(path);
+    
+    if (it != _PropertyIdMap.end())
+    {
+        return it->second;
+    }
+    
+    return 0;
+}
+
+ViewProperty* ViewEntity::GetPropertyByPath(const std::string& path)
+{
+    PropertyIdMap::iterator it = _PropertyIdMap.find(path);
+    
+    if (it != _PropertyIdMap.end())
+    {
+        return GetPropertyById(it->second);
+    }
+    
+    return 0;
+}
+
+ViewProperty* ViewEntity::GetPropertyById(Uid uid)
+{
+    PropertyMap::iterator it = _Properties.find(uid);
+    if (it != _Properties.end())
+    {
+        return it->second;
+    }
+    
+    return 0;
+}
+
+void ViewEntity::RemoveProperty(ViewProperty* property)
+{
+    RemovePropertyById(property->GetPropertyId());
+}
+
+void ViewEntity::RemovePropertyById(Uid uid)
+{
+    PropertyMap::iterator it = _Properties.find(uid);
     if (it != _Properties.end())
     {
         delete it->second;
         _Properties.erase(it);
     }
+}
+
+Uid ViewEntity::GeneratePropertyId(const std::string& path)
+{
+    Uid uid;
     
-    _Properties[path] = property;
+    do {
+        uid = (rand()%((1<<12)-2))+1;
+    } while (_Properties.find(uid) != _Properties.end());
+    
+    _PropertyIdMap[path] = uid;
+    
+    return uid;
+}
+
+Uid ViewEntity::AddProperty(ViewProperty* property)
+{
+    ViewProperty* other = GetPropertyByPath(property->GetPath());
+    
+    if (other)
+    {
+        RemoveProperty(other);
+    }
+    
+    Uid uid = GeneratePropertyId(property->GetPath());
+    
+    _Properties[uid] = property;
+    
+    return uid;
 }
 
 void ViewEntity::ParseProperties()
@@ -110,8 +191,7 @@ void ViewEntity::ParseItem(const std::string& path, const SchemaItem* item)
         
         if (type == "sprite")
         {
-            SpriteViewProperty* property = new SpriteViewProperty(this, path, item);
-            AddProperty(path, property);
+            new SpriteViewProperty(this, path, item);
         }
     }
 }

@@ -26,10 +26,17 @@ namespace pixeleditor
         
         void SetRecord(Record* record);
         
+        Uid GenerateViewEntityId(Entity* entity);
+        
+        ViewEntity* GetEntityByEntityId(Uid uid);
+        ViewEntity* GetEntityByViewEntityId(Uid uid);
+        
     private:
+        typedef std::map<Uid, Uid> EntityIdMap;
         typedef std::map<Uid, ViewEntity*> EntityMap;
         
     private:
+        EntityIdMap _EntityIdMap;
         EntityMap _Entities;
     };
 }

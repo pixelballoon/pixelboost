@@ -47,7 +47,45 @@ void Level::SetRecord(Record* record)
     for (Record::EntityMap::const_iterator it = record->GetEntities().begin(); it != record->GetEntities().end(); ++it)
     {
         Entity* entity = it->second;
-        ViewEntity* viewEntity = new ViewEntity(entity);
-        _Entities[entity->GetUid()] = viewEntity;
+        Uid id = GenerateViewEntityId(entity);
+        ViewEntity* viewEntity = new ViewEntity(id, entity);
+        _Entities[id] = viewEntity;
     }
+}
+
+Uid Level::GenerateViewEntityId(Entity* entity)
+{
+    Uid uid;
+    
+    do {
+        uid = rand()%(1<<12);
+    } while (_EntityIdMap.find(uid) != _EntityIdMap.end());
+    
+    _EntityIdMap[entity->GetUid()] = uid;
+    
+    return uid;
+}
+
+ViewEntity* Level::GetEntityByEntityId(Uid uid)
+{
+    EntityIdMap::iterator it = _EntityIdMap.find(uid);
+    
+    if (it != _EntityIdMap.end())
+    {
+        return GetEntityByViewEntityId(uid);
+    }
+    
+    return 0;
+}
+
+ViewEntity* Level::GetEntityByViewEntityId(Uid uid)
+{
+    EntityMap::iterator it = _Entities.find(uid);
+    
+    if (it != _Entities.end())
+    {
+        return it->second;
+    }
+    
+    return 0;
 }

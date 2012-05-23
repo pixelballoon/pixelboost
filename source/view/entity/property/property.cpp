@@ -9,12 +9,12 @@ ViewProperty::ViewProperty(ViewEntity* parent, const std::string& path, const Sc
     , _Path(path)
     , _SchemaItem(schemaItem)
 {
-    
+    _PropertyId = _Parent->AddProperty(this);
 }
 
 ViewProperty::~ViewProperty()
 {
-    
+    _Parent->RemoveProperty(this);
 }
 
 void ViewProperty::Update(float time)
@@ -30,6 +30,21 @@ void ViewProperty::Render(pb::RenderLayer* layer)
 void ViewProperty::Refresh()
 {
     
+}
+
+Uid ViewProperty::GetUid()
+{
+    return _Parent->GetUid() | _PropertyId << 12;
+}
+
+Uid ViewProperty::GetPropertyId()
+{
+    return _PropertyId;
+}
+
+const std::string& ViewProperty::GetPath()
+{
+    return _Path;
 }
 
 std::string ViewProperty::EvaluateProperty(const std::string& path, const std::string& defaultValue)

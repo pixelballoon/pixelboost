@@ -23,9 +23,14 @@ namespace pixeleditor
         
         virtual void Refresh();
         
+        const std::string& GetPath();
+        Uid GetUid();
+        Uid GetPropertyId();
+        
     protected:
         std::string EvaluateProperty(const std::string& path, const std::string& defaultValue = "");
         
+        Uid _PropertyId;
         ViewEntity* _Parent;
         std::string _Path;
         const SchemaItem* _SchemaItem;
