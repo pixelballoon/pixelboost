@@ -2,8 +2,6 @@
 
 #ifndef PIXELBOOST_DISABLE_GWEN
 
-#include "pixelboost/input/mouseManager.h"
-
 namespace Gwen
 {
     namespace Controls
@@ -15,24 +13,18 @@ namespace Gwen
 
 namespace pb
 {
-    class GwenInputHandler : public MouseHandler
+    class GwenMouseHandler;
+    class GwenKeyboardHandler;
+    
+    class GwenInputHandler
     {
     public:
         GwenInputHandler(Gwen::Controls::Canvas* canvas, Gwen::Controls::Base* root);
         ~GwenInputHandler();
         
-        virtual int GetPriority();
-        
-        virtual bool OnMouseDown(MouseButton button, glm::vec2 position);
-        virtual bool OnMouseUp(MouseButton button, glm::vec2 position);
-        virtual bool OnMouseMove(glm::vec2 position);
-        virtual bool OnMouseScroll(glm::vec2 delta);
-        
     private:
-        Gwen::Controls::Base* _Root;
-        Gwen::Controls::Canvas*	_Canvas;
-        
-        glm::vec2 _PrevMouse;
+        GwenKeyboardHandler* _KeyboardHandler;
+        GwenMouseHandler* _MouseHandler;
     };
 }
 
