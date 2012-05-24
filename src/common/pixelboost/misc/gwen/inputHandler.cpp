@@ -8,43 +8,56 @@
 
 using namespace pb;
 
-GwenInputHandler::GwenInputHandler(Gwen::Controls::Canvas* canvas)
+GwenInputHandler::GwenInputHandler(Gwen::Controls::Canvas* canvas, Gwen::Controls::Base* root)
     : _Canvas(canvas)
+    , _Root(root)
 {
-    pb::Game::Instance()->GetTouchManager()->AddTouchHandler(this);
+    pb::Game::Instance()->GetMouseManager()->AddHandler(this);
 }
 
 GwenInputHandler::~GwenInputHandler()
 {
-    pb::Game::Instance()->GetTouchManager()->RemoveTouchHandler(this);
+    pb::Game::Instance()->GetMouseManager()->AddHandler(this);
 }
 
-void GwenInputHandler::OnTouchBegin(Touch* touch)
+int GwenInputHandler::GetPriority()
 {
-    Vec2 pos = touch->GetDisplayPosition();
-    _PrevMouse = pos;
+    return 1000;
+}
+
+bool GwenInputHandler::OnMouseDown(MouseButton button, glm::vec2 position)
+{
+    glm::vec2 delta(0,0);
+    _PrevMouse = position;
     
-    _Canvas->InputMouseMoved(pos[0], pos[1], 0, 0);
-    _Canvas->InputMouseButton( 0, true );
-}
-
-void GwenInputHandler::OnTouchUpdate(Touch* touch)
-{
-    Vec2 pos = touch->GetDisplayPosition();
-    Vec2 delta = pos - _PrevMouse;
-    _PrevMouse = touch->GetScreenPosition();
-
-    _Canvas->InputMouseMoved(pos[0], pos[1], delta[0], delta[1]);
-}
-
-void GwenInputHandler::OnTouchEnd(Touch* touch)
-{
-    Vec2 pos = touch->GetDisplayPosition();
-    Vec2 delta = pos - _PrevMouse;
-    _PrevMouse = touch->GetScreenPosition();
+    _Canvas->InputMouseMoved(position.x, position.y, delta[0], delta[1]);
+    Gwen::Controls::Base* hoveredControl = Gwen::HoveredControl;
+    _Canvas->InputMouseButton((int)button, true);
+    if (hoveredControl == _Root)
+        return false;
     
-    _Canvas->InputMouseMoved(pos[0], pos[1], delta[0], delta[1]);
-    _Canvas->InputMouseButton(0, false);
+    return true;
+}
+
+bool GwenInputHandler::OnMouseMove(glm::vec2 position)
+{
+    glm::vec2 delta = position - _PrevMouse;
+    _PrevMouse = position;
+
+    return _Canvas->InputMouseMoved(position.x, position.y, delta[0], delta[1]);
+}
+
+bool GwenInputHandler::OnMouseUp(MouseButton button, glm::vec2 position)
+{
+    glm::vec2 delta = position - _PrevMouse;
+    _PrevMouse = position;
+    
+    return _Canvas->InputMouseButton((int)button, false);
+}
+
+bool GwenInputHandler::OnMouseScroll(glm::vec2 scroll)
+{
+    return _Canvas->InputMouseWheel(scroll.y*120);
 }
 
 #endif
