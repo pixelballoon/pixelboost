@@ -27,7 +27,7 @@ public:
 
     Project* GetProject();
     
-    const Selection& GetSelection();
+    Selection& GetSelection();
     void SetSelection(const Selection& selection);
     
 private:

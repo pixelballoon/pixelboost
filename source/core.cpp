@@ -48,7 +48,7 @@ Project* Core::GetProject()
     return _Project;
 }
     
-const Selection& Core::GetSelection()
+Selection& Core::GetSelection()
 {
     return _Selection;
 }
