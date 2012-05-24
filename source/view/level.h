@@ -4,7 +4,7 @@
 
 #include "sigslot/signal.h"
 
-#include "pixelboost/input/touchManager.h"
+#include "pixelboost/input/mouseManager.h"
 
 #include "project/definitions.h"
 
@@ -18,7 +18,7 @@ namespace pixeleditor
     class Record;
     class ViewEntity;
     
-    class Level : pb::TouchHandler
+    class Level : public pb::MouseHandler
     {
     public:
         Level();
@@ -42,9 +42,10 @@ namespace pixeleditor
         void DestroyEntity(Uid uid);
         
     private:
-        virtual void OnTouchBegin(pb::Touch* touch);
-        virtual void OnTouchUpdate(pb::Touch* touch);
-        virtual void OnTouchEnd(pb::Touch* touch);
+        virtual int GetPriority();
+        virtual bool OnMouseDown(pb::MouseButton button, glm::vec2 position);
+        virtual bool OnMouseUp(pb::MouseButton button, glm::vec2 position);
+        virtual bool OnMouseMove(glm::vec2 position);
         
     private:
         typedef std::map<Uid, ViewEntity*> EntityMap;

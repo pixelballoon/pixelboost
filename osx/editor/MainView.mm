@@ -10,7 +10,7 @@
 
 #include <OpenGL/gl.h>
 
-#include "pixelboost/input/touchManager.h"
+#include "pixelboost/input/mouseManager.h"
 #include "pixelboost/graphics/render/primitive/primitiveRenderer.h"
 
 #include "view.h"
@@ -74,7 +74,7 @@ using namespace pixeleditor;
     {
         NSPoint eventLocation = [self convertPoint:event.locationInWindow fromView:nil];
         
-        view->GetTouchManager()->AddTouch(0, Vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
+        view->GetMouseManager()->OnMouseDown((pb::MouseButton)event.buttonNumber, glm::vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
     }
     
     [self setNeedsDisplay:true];
@@ -88,7 +88,7 @@ using namespace pixeleditor;
     {
         NSPoint eventLocation = [self convertPoint:event.locationInWindow fromView:nil];
         
-        view->GetTouchManager()->UpdateTouch(0, Vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
+        view->GetMouseManager()->OnMouseMove(glm::vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
     }
     
     [self setNeedsDisplay:true];
@@ -100,7 +100,9 @@ using namespace pixeleditor;
     
     if (view)
     {
-        view->GetTouchManager()->RemoveTouch(0);
+        NSPoint eventLocation = [self convertPoint:event.locationInWindow fromView:nil];
+        
+        view->GetMouseManager()->OnMouseUp((pb::MouseButton)event.buttonNumber, glm::vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
     }
     
     [self setNeedsDisplay:true];
@@ -108,7 +110,16 @@ using namespace pixeleditor;
 
 - (void)mouseMoved:(NSEvent *)event
 {
+    View* view = View::Instance();
     
+    if (view)
+    {
+        NSPoint eventLocation = [self convertPoint:event.locationInWindow fromView:nil];
+        
+        view->GetMouseManager()->OnMouseMove(glm::vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
+    }
+    
+    [self setNeedsDisplay:true];
 }
 
 - (void)scrollWheel:(NSEvent *)event
@@ -118,6 +129,8 @@ using namespace pixeleditor;
     if (view)
     {
         view->Scroll(Vec2(-event.scrollingDeltaX, event.scrollingDeltaY)/10.f);
+        
+        view->GetMouseManager()->OnMouseScroll(glm::vec2(-event.scrollingDeltaX, event.scrollingDeltaY));
     }
     
     [self setNeedsDisplay:true];

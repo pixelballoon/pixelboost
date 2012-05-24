@@ -23,6 +23,7 @@
 #include "project/project.h"
 #include "project/record.h"
 #include "view/entity/entity.h"
+#include "view/ui/property/propertyPanel.h"
 #include "view/level.h"
 #include "core.h"
 #include "view.h"
@@ -71,10 +72,10 @@ void View::Initialise(Vec2 size)
     _GwenCanvas = new Gwen::Controls::Canvas(skin);
     _GwenCanvas->SetDrawBackground(false);
     
-    _GwenInput = new pb::GwenInputHandler(_GwenCanvas);
-    
     Gwen::Controls::DockBase* dock = new Gwen::Controls::DockBase(_GwenCanvas);
     dock->Dock(Gwen::Pos::Fill);
+    
+    _GwenInput = new pb::GwenInputHandler(_GwenCanvas, dock);
     
     _FilePage = new Gwen::Controls::CollapsibleList(dock);
     _EntityPage = new Gwen::Controls::CollapsibleList(dock);
@@ -83,13 +84,10 @@ void View::Initialise(Vec2 size)
 	dock->GetLeft()->SetWidth(250);
     
     Gwen::Controls::ListBox* _Output = new Gwen::Controls::ListBox(dock);
-    Gwen::Controls::ListBox* _Properties = new Gwen::Controls::ListBox(dock);
+    PropertyPanel* _Properties = new PropertyPanel(dock);
     dock->GetBottom()->GetTabControl()->AddPage("Properties", _Properties);
     dock->GetBottom()->GetTabControl()->AddPage("Output", _Output);
 	dock->GetBottom()->SetHeight(300);
-    
-    Gwen::Controls::Layout::Center* center = new Gwen::Controls::Layout::Center(dock);
-	center->Dock(Gwen::Pos::Fill);
     
     SetCanvasSize(size);
     

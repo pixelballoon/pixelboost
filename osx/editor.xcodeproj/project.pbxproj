@@ -48,6 +48,9 @@
 		1C181230156D8A8B00C738C0 /* boundingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C18122E156D8A8B00C738C0 /* boundingBox.cpp */; };
 		1C181234156D922900C738C0 /* selection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C181232156D922900C738C0 /* selection.cpp */; };
 		1C181237156D931000C738C0 /* uidHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C181236156D930F00C738C0 /* uidHelpers.cpp */; };
+		1C181273156EC85D00C738C0 /* keyboardManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C18126F156EC85D00C738C0 /* keyboardManager.cpp */; };
+		1C181274156EC85D00C738C0 /* mouseManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C181271156EC85D00C738C0 /* mouseManager.cpp */; };
+		1C181277156ED26200C738C0 /* inputManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C181275156ED25C00C738C0 /* inputManager.cpp */; };
 		1C210F41152CF44F00DEAC92 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C210F40152CF44F00DEAC92 /* Cocoa.framework */; };
 		1C210F5E152CF60400DEAC92 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C210F5D152CF60400DEAC92 /* WebKit.framework */; };
 		1C3F42361558323400396F50 /* record.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C3F42301558323400396F50 /* record.cpp */; };
@@ -516,6 +519,12 @@
 		1C181233156D922900C738C0 /* selection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = selection.h; sourceTree = "<group>"; };
 		1C181235156D923C00C738C0 /* uidHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uidHelpers.h; sourceTree = "<group>"; };
 		1C181236156D930F00C738C0 /* uidHelpers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = uidHelpers.cpp; sourceTree = "<group>"; };
+		1C18126F156EC85D00C738C0 /* keyboardManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = keyboardManager.cpp; sourceTree = "<group>"; };
+		1C181270156EC85D00C738C0 /* keyboardManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = keyboardManager.h; sourceTree = "<group>"; };
+		1C181271156EC85D00C738C0 /* mouseManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mouseManager.cpp; sourceTree = "<group>"; };
+		1C181272156EC85D00C738C0 /* mouseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mouseManager.h; sourceTree = "<group>"; };
+		1C181275156ED25C00C738C0 /* inputManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = inputManager.cpp; sourceTree = "<group>"; };
+		1C181276156ED25F00C738C0 /* inputManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = inputManager.h; sourceTree = "<group>"; };
 		1C210F3C152CF44F00DEAC92 /* editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = editor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C210F40152CF44F00DEAC92 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		1C210F43152CF44F00DEAC92 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -1319,6 +1328,19 @@
 			path = core;
 			sourceTree = "<group>";
 		};
+		1C18126E156EC83100C738C0 /* input */ = {
+			isa = PBXGroup;
+			children = (
+				1C181275156ED25C00C738C0 /* inputManager.cpp */,
+				1C181276156ED25F00C738C0 /* inputManager.h */,
+				1C18126F156EC85D00C738C0 /* keyboardManager.cpp */,
+				1C181270156EC85D00C738C0 /* keyboardManager.h */,
+				1C181271156EC85D00C738C0 /* mouseManager.cpp */,
+				1C181272156EC85D00C738C0 /* mouseManager.h */,
+			);
+			path = input;
+			sourceTree = "<group>";
+		};
 		1C210F31152CF44E00DEAC92 = {
 			isa = PBXGroup;
 			children = (
@@ -1772,6 +1794,7 @@
 				1CEB6C7415409A4300E8D103 /* debug */,
 				1CEB6C7915409A4300E8D103 /* file */,
 				1CEB6D5E15409F8100E8D103 /* graphics */,
+				1C18126E156EC83100C738C0 /* input */,
 				1CEB6CB015409A4300E8D103 /* logic */,
 				1CEB6CB515409A4300E8D103 /* math */,
 				1C18122D156D8A7400C738C0 /* maths */,
@@ -2650,6 +2673,9 @@
 				1C181230156D8A8B00C738C0 /* boundingBox.cpp in Sources */,
 				1C181234156D922900C738C0 /* selection.cpp in Sources */,
 				1C181237156D931000C738C0 /* uidHelpers.cpp in Sources */,
+				1C181273156EC85D00C738C0 /* keyboardManager.cpp in Sources */,
+				1C181274156EC85D00C738C0 /* mouseManager.cpp in Sources */,
+				1C181277156ED26200C738C0 /* inputManager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

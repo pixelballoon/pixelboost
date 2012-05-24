@@ -1,3 +1,5 @@
+#include "pixelboost/graphics/camera/camera.h"
+
 #include "command/manager.h"
 #include "project/entity.h"
 #include "project/record.h"
@@ -11,12 +13,12 @@ using namespace pixeleditor;
 Level::Level()
     : _Record(0)
 {
-    View::Instance()->GetTouchManager()->AddTouchHandler(this);
+    View::Instance()->GetMouseManager()->AddHandler(this);
 }
 
 Level::~Level()
 {
-    View::Instance()->GetTouchManager()->RemoveTouchHandler(this);
+    View::Instance()->GetMouseManager()->RemoveHandler(this);
     
     Clear();
 }
@@ -100,30 +102,37 @@ void Level::DestroyEntity(Uid uid)
     }
 }
 
-void Level::OnTouchBegin(pb::Touch* touch)
+int Level::GetPriority()
 {
-    Vec2 pos = touch->GetWorldPosition(View::Instance()->GetLevelCamera());
+    return 0;
+}
+
+bool Level::OnMouseDown(pb::MouseButton button, glm::vec2 position)
+{
+    glm::vec2 worldPos = View::Instance()->GetLevelCamera()->ConvertScreenToWorld(position);
     
     for (EntityMap::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
     {
-        if (it->second->GetBoundingBox().Contains(glm::vec3(pos[0], pos[1], 0)))
+        if (it->second->GetBoundingBox().Contains(glm::vec3(worldPos[0], worldPos[1], 0)))
         {
             char args[256];
             sprintf(args, "-u %d", it->first);
             Core::Instance()->GetCommandManager()->Exec("select", args);
-            return;
+            return true;
         }
     }
     
     Core::Instance()->GetCommandManager()->Exec("select", "-c");
+    
+    return true;
 }
 
-void Level::OnTouchUpdate(pb::Touch* touch)
+bool Level::OnMouseUp(pb::MouseButton button, glm::vec2 position)
 {
-    
+    return false;
 }
 
-void Level::OnTouchEnd(pb::Touch* touch)
+bool Level::OnMouseMove(glm::vec2 position)
 {
-    
+    return false;
 }
