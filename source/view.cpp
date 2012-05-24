@@ -145,6 +145,11 @@ void View::LoadSprite(const std::string& sprite)
     spriteSheet->LoadSingle(GetSpriteFile(sprite));
 }
 
+pb::OrthographicCamera* View::GetLevelCamera()
+{
+    return _LevelCamera;
+}
+
 std::string View::GetSpriteFile(const std::string& sprite)
 {
     Project* project = Core::Instance()->GetProject();

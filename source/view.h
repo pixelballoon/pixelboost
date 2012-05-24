@@ -61,6 +61,8 @@ public:
     
     void LoadSprite(const std::string& sprite);
     
+    pb::OrthographicCamera* GetLevelCamera();
+    
 public:
     sigslot::Signal0<> onRedraw;
     

@@ -1,18 +1,23 @@
+#include "command/manager.h"
 #include "project/entity.h"
 #include "project/record.h"
 #include "view/entity/entity.h"
 #include "view/level.h"
+#include "core.h"
+#include "view.h"
 
 using namespace pixeleditor;
 
 Level::Level()
     : _Record(0)
 {
-    
+    View::Instance()->GetTouchManager()->AddTouchHandler(this);
 }
 
 Level::~Level()
 {
+    View::Instance()->GetTouchManager()->RemoveTouchHandler(this);
+    
     Clear();
 }
 
@@ -95,3 +100,30 @@ void Level::DestroyEntity(Uid uid)
     }
 }
 
+void Level::OnTouchBegin(pb::Touch* touch)
+{
+    Vec2 pos = touch->GetWorldPosition(View::Instance()->GetLevelCamera());
+    
+    for (EntityMap::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
+    {
+        if (it->second->GetBoundingBox().Contains(glm::vec3(pos[0], pos[1], 0)))
+        {
+            char args[256];
+            sprintf(args, "-u %d", it->first);
+            Core::Instance()->GetCommandManager()->Exec("select", args);
+            return;
+        }
+    }
+    
+    Core::Instance()->GetCommandManager()->Exec("select", "-c");
+}
+
+void Level::OnTouchUpdate(pb::Touch* touch)
+{
+    
+}
+
+void Level::OnTouchEnd(pb::Touch* touch)
+{
+    
+}

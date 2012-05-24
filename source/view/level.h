@@ -4,6 +4,8 @@
 
 #include "sigslot/signal.h"
 
+#include "pixelboost/input/touchManager.h"
+
 #include "project/definitions.h"
 
 namespace pb
@@ -16,7 +18,7 @@ namespace pixeleditor
     class Record;
     class ViewEntity;
     
-    class Level
+    class Level : pb::TouchHandler
     {
     public:
         Level();
@@ -38,6 +40,11 @@ namespace pixeleditor
         void CreateEntity(Uid uid);
         void CreateEntity(Entity* entity);
         void DestroyEntity(Uid uid);
+        
+    private:
+        virtual void OnTouchBegin(pb::Touch* touch);
+        virtual void OnTouchUpdate(pb::Touch* touch);
+        virtual void OnTouchEnd(pb::Touch* touch);
         
     private:
         typedef std::map<Uid, ViewEntity*> EntityMap;
