@@ -48,6 +48,7 @@
 		1C181230156D8A8B00C738C0 /* boundingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C18122E156D8A8B00C738C0 /* boundingBox.cpp */; };
 		1C181234156D922900C738C0 /* selection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C181232156D922900C738C0 /* selection.cpp */; };
 		1C181237156D931000C738C0 /* uidHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C181236156D930F00C738C0 /* uidHelpers.cpp */; };
+		1C18123C156EB0C000C738C0 /* propertyPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C18123A156EB0C000C738C0 /* propertyPanel.cpp */; };
 		1C181273156EC85D00C738C0 /* keyboardManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C18126F156EC85D00C738C0 /* keyboardManager.cpp */; };
 		1C181274156EC85D00C738C0 /* mouseManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C181271156EC85D00C738C0 /* mouseManager.cpp */; };
 		1C181277156ED26200C738C0 /* inputManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C181275156ED25C00C738C0 /* inputManager.cpp */; };
@@ -519,6 +520,8 @@
 		1C181233156D922900C738C0 /* selection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = selection.h; sourceTree = "<group>"; };
 		1C181235156D923C00C738C0 /* uidHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uidHelpers.h; sourceTree = "<group>"; };
 		1C181236156D930F00C738C0 /* uidHelpers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = uidHelpers.cpp; sourceTree = "<group>"; };
+		1C18123A156EB0C000C738C0 /* propertyPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = propertyPanel.cpp; sourceTree = "<group>"; };
+		1C18123B156EB0C000C738C0 /* propertyPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = propertyPanel.h; sourceTree = "<group>"; };
 		1C18126F156EC85D00C738C0 /* keyboardManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = keyboardManager.cpp; sourceTree = "<group>"; };
 		1C181270156EC85D00C738C0 /* keyboardManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = keyboardManager.h; sourceTree = "<group>"; };
 		1C181271156EC85D00C738C0 /* mouseManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mouseManager.cpp; sourceTree = "<group>"; };
@@ -1012,7 +1015,7 @@
 			isa = PBXGroup;
 			children = (
 				1C1810C8156AF6D700C738C0 /* entity */,
-				1C1810CE156AF6D700C738C0 /* view */,
+				1C181238156EB0BE00C738C0 /* ui */,
 				1C1810D4156AF9AE00C738C0 /* level.cpp */,
 				1C1810D5156AF9AF00C738C0 /* level.h */,
 			);
@@ -1027,13 +1030,6 @@
 				1C1810CA156AF6D700C738C0 /* entity.h */,
 			);
 			path = entity;
-			sourceTree = "<group>";
-		};
-		1C1810CE156AF6D700C738C0 /* view */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = view;
 			sourceTree = "<group>";
 		};
 		1C1810D7156AFC6A00C738C0 /* property */ = {
@@ -1326,6 +1322,23 @@
 				1C181235156D923C00C738C0 /* uidHelpers.h */,
 			);
 			path = core;
+			sourceTree = "<group>";
+		};
+		1C181238156EB0BE00C738C0 /* ui */ = {
+			isa = PBXGroup;
+			children = (
+				1C181239156EB0C000C738C0 /* property */,
+			);
+			path = ui;
+			sourceTree = "<group>";
+		};
+		1C181239156EB0C000C738C0 /* property */ = {
+			isa = PBXGroup;
+			children = (
+				1C18123A156EB0C000C738C0 /* propertyPanel.cpp */,
+				1C18123B156EB0C000C738C0 /* propertyPanel.h */,
+			);
+			path = property;
 			sourceTree = "<group>";
 		};
 		1C18126E156EC83100C738C0 /* input */ = {
@@ -2673,6 +2686,7 @@
 				1C181230156D8A8B00C738C0 /* boundingBox.cpp in Sources */,
 				1C181234156D922900C738C0 /* selection.cpp in Sources */,
 				1C181237156D931000C738C0 /* uidHelpers.cpp in Sources */,
+				1C18123C156EB0C000C738C0 /* propertyPanel.cpp in Sources */,
 				1C181273156EC85D00C738C0 /* keyboardManager.cpp in Sources */,
 				1C181274156EC85D00C738C0 /* mouseManager.cpp in Sources */,
 				1C181277156ED26200C738C0 /* inputManager.cpp in Sources */,

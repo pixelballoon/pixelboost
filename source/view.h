@@ -58,6 +58,7 @@ public:
 public:
     void SetCanvasSize(Vec2 size);
     void SetRecord(Record* record);
+    Record* GetRecord();
     
     void LoadSprite(const std::string& sprite);
     

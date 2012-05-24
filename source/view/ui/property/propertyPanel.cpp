@@ -1,0 +1,120 @@
+#include "Gwen/Controls/Button.h"
+#include "Gwen/Controls/TextBox.h"
+
+#include "core/selection.h"
+#include "project/entity.h"
+#include "project/project.h"
+#include "project/property.h"
+#include "project/record.h"
+#include "project/schema.h"
+#include "view/ui/property/propertyPanel.h"
+#include "core.h"
+#include "view.h"
+
+using namespace pixeleditor;
+
+static const int ATOM_PADDING = 5;
+static const int ATOM_WIDTH = 200;
+static const int ATOM_HEIGHT = 25;
+static const int STRUCT_INDENT = 20;
+
+PropertyPanel::PropertyPanel(Gwen::Controls::Base* parent)
+    : Gwen::Controls::ScrollControl(parent)
+    , _Pinned(false)
+{
+    Core::Instance()->GetSelection().selectionChanged.Connect(this, &PropertyPanel::OnSelectionChanged);
+}
+
+PropertyPanel::~PropertyPanel()
+{
+    
+}
+
+void PropertyPanel::SetPinned(bool pinned)
+{
+    _Pinned = pinned;
+}
+
+void PropertyPanel::SetStruct(Struct* item, const std::string& focusPath)
+{
+    RemoveAllChildren();
+    
+    if (item)
+    {
+        AddStruct(glm::vec2(0,0), item->GetType(), item, "/");
+    }
+}
+
+glm::vec2 PropertyPanel::AddStruct(glm::vec2 offset, const SchemaStruct* schemaStruct, Struct* item, const std::string& path)
+{
+    for (SchemaStruct::PropertyMap::const_iterator it = schemaStruct->GetProperties().begin(); it != schemaStruct->GetProperties().end(); ++it)
+    {
+        std::string propertyPath = path + it->first + "/";
+        
+        Gwen::Controls::Label* label = new Gwen::Controls::Label(this);
+        label->SetText(it->second->GetName());
+        label->SetPos(offset.x, offset.y);
+        
+        offset += glm::vec2(0,20);
+        
+        switch (it->second->GetPropertyType())
+        {
+            case SchemaProperty::kSchemaPropertyAtom:
+            {
+                offset = AddAtom(offset, static_cast<SchemaPropertyAtom*>(it->second), item, propertyPath);
+                break;
+            }
+            case SchemaProperty::kSchemaPropertyPointer:
+                break;
+            case SchemaProperty::kSchemaPropertyStruct:
+            {
+                SchemaPropertyStruct* schemaPropertyStruct = static_cast<SchemaPropertyStruct*>(it->second);
+                
+                offset = AddStruct(offset + glm::vec2(STRUCT_INDENT,0), schemaPropertyStruct->GetSchemaStruct(), item, propertyPath) - glm::vec2(STRUCT_INDENT,0);
+                break;
+            }
+            case SchemaProperty::kSchemaPropertyArray:
+                break;
+        }
+    }
+    
+    return offset;
+}
+
+glm::vec2 PropertyPanel::AddAtom(glm::vec2 offset, SchemaPropertyAtom* atom, Struct* item, const std::string& path)
+{
+    const Property* property = item->GetProperty(path);
+    const PropertyAtom* propertyAtom = property ? property->AsAtom() : 0;
+    
+    Gwen::Controls::TextBox* textBox = new Gwen::Controls::TextBox(this);
+    textBox->SetText(propertyAtom ? propertyAtom->GetStringValue() : "");
+    textBox->SetPos(offset.x, offset.y);
+    textBox->SetSize(ATOM_WIDTH, ATOM_HEIGHT);
+    textBox->UserData.Set("path", path);
+    textBox->onTextChanged.Add(this, &PropertyPanel::OnAtomChanged);
+    
+    return offset + glm::vec2(0, ATOM_HEIGHT + ATOM_PADDING);
+}
+
+void PropertyPanel::OnSelectionChanged(const pixeleditor::Selection* selection)
+{
+    if (!_Pinned)
+    {
+        Selection::Entities::const_reverse_iterator entityIt = selection->GetSelection().rbegin();
+        
+        if (entityIt == selection->GetSelection().rend())
+        {
+            SetStruct(View::Instance()->GetRecord());
+            return;
+        }
+        
+        Entity* entity = Core::Instance()->GetProject()->GetEntity(entityIt->first);
+        
+        SetStruct(entity, "");
+    }
+}
+
+void PropertyPanel::OnAtomChanged(Gwen::Controls::Base* atom)
+{
+    
+}

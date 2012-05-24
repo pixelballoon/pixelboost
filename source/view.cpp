@@ -32,6 +32,7 @@ using namespace pixeleditor;
 
 View::View()
     : pb::Game(0)
+    , _Record(0)
 {
 
 }
@@ -68,6 +69,7 @@ void View::Initialise(Vec2 size)
     
     Gwen::Skin::TexturedBase* skin = new Gwen::Skin::TexturedBase(renderer);
     skin->Init("skin.png");
+    skin->SetDefaultFont(Gwen::Utility::StringToUnicode("helvetica"), 12.f);
     
     _GwenCanvas = new Gwen::Controls::Canvas(skin);
     _GwenCanvas->SetDrawBackground(false);
@@ -187,6 +189,11 @@ void View::SetRecord(Record* record)
     
     _Record = record;
     _Level->SetRecord(_Record);
+}
+
+Record* View::GetRecord()
+{
+    return _Record;
 }
 
 void View::OnProjectOpened(Project* project)
