@@ -1,3 +1,5 @@
+#ifndef PIXELBOOST_DISABLE_GRAPHICS
+
 #ifdef PIXELBOOST_PLATFORM_IOS
 
 #include "pixelboost/graphics/camera/camera.h"
@@ -41,8 +43,8 @@ Vec2 Touch::GetWorldPosition(OrthographicCamera* camera)
 	position[0] /= (ScreenHelpers::GetDpu()/inputScale);
 	position[1] /= (ScreenHelpers::GetDpu()/inputScale);
     
-    position -= camera->Position;
     position /= camera->Scale;
+    position += camera->Position;
 	
 	return position;
 }
@@ -196,5 +198,7 @@ void TouchManager::UpdateTouchHandlers()
 }
 
 }
+
+#endif
 
 #endif
