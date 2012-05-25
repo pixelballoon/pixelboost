@@ -65,7 +65,6 @@ public:
     int GetIntValue() const;
     const std::string& GetStringValue() const;
     
-    
 protected:
     bool _HasValue;
     std::string _Value;

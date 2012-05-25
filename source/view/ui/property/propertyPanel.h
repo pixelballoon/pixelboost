@@ -29,7 +29,7 @@ private:
     
     void OnSelectionChanged(const pixeleditor::Selection* selection);
     
-    void OnAtomChanged(Gwen::Controls::Base* atom);
+    void OnAtomChanged(Gwen::Controls::Base* input);
     
 private:
     bool _Pinned;

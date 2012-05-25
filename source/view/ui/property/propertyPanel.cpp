@@ -90,6 +90,7 @@ glm::vec2 PropertyPanel::AddAtom(glm::vec2 offset, SchemaPropertyAtom* atom, Str
     textBox->SetText(propertyAtom ? propertyAtom->GetStringValue() : "");
     textBox->SetPos(offset.x, offset.y);
     textBox->SetSize(ATOM_WIDTH, ATOM_HEIGHT);
+    textBox->UserData.Set("struct", item);
     textBox->UserData.Set("path", path);
     textBox->onTextChanged.Add(this, &PropertyPanel::OnAtomChanged);
     
@@ -114,7 +115,11 @@ void PropertyPanel::OnSelectionChanged(const pixeleditor::Selection* selection)
     }
 }
 
-void PropertyPanel::OnAtomChanged(Gwen::Controls::Base* atom)
+void PropertyPanel::OnAtomChanged(Gwen::Controls::Base* input)
 {
-    
+    Struct* structItem = input->UserData.Get<Struct*>("struct");
+    std::string path = input->UserData.Get<std::string>("path");
+
+    PropertyAtom* atom = structItem->AcquireAtom(path);
+    atom->SetStringValue(input->GetValue());
 }
