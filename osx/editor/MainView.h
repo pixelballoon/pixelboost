@@ -9,6 +9,8 @@
 #import <Cocoa/Cocoa.h>
 
 @interface MainView : NSOpenGLView
+- (BOOL)acceptsFirstResponder;
+
 - (void)update;		// moved or resized
 - (void)reshape;	// scrolled, moved or resized
 
@@ -18,4 +20,6 @@
 - (void)mouseMoved:(NSEvent *)event;
 - (void)scrollWheel:(NSEvent *)event;
 - (void)magnifyWithEvent:(NSEvent *)event;
+- (void)keyDown:(NSEvent *)event;
+- (void)keyUp:(NSEvent *)event;
 @end
