@@ -21,6 +21,32 @@ public:
         
     }
     
+    bool OnKeyDown(KeyboardKey key, char character)
+    {
+        if (key == kKeyboardKeyCharacter)
+            _Canvas->InputCharacter(character);
+        else
+            _Canvas->InputKey(key, true);
+        
+        Gwen::Controls::Base* keyboardFocus = Gwen::KeyboardFocus;
+        if (!keyboardFocus || keyboardFocus == _Root)
+            return false;
+        
+        return true;
+    }
+    
+    bool OnKeyUp(KeyboardKey key, char character)
+    {
+        if (key != kKeyboardKeyCharacter)
+            _Canvas->InputKey(key, false);
+        
+        Gwen::Controls::Base* keyboardFocus = Gwen::KeyboardFocus;
+        if (!keyboardFocus || keyboardFocus == _Root)
+            return false;
+        
+        return true;
+    }
+    
     int GetPriority()
     {
         return 1000;

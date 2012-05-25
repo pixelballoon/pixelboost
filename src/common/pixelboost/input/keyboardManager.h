@@ -6,14 +6,34 @@
 
 namespace pb
 {
+    enum KeyboardKey
+    {
+        kKeyboardKeyCharacter,
+        kKeyboardKeyReturn,
+        kKeyboardKeyBackspace,
+        kKeyboardKeyDelete,
+        kKeyboardKeyLeft,
+        kKeyboardKeyRight,
+        kKeyboardKeyShift,
+        kKeyboardKeyTab,
+        kKeyboardKeySpace,
+        kKeyboardKeyHome,
+        kKeyboardKeyEnd,
+        kKeyboardKeyControl,
+        kKeyboardKeyUp,
+        kKeyboardKeyDown,
+        kKeyboardKeyEscape,
+        kKeyboardKeyAlt
+    };
+    
     class KeyboardHandler : public InputHandler
     {
     public:
         KeyboardHandler();
         virtual ~KeyboardHandler();
         
-        virtual bool OnKeyDown(int key);
-        virtual bool OnKeyUp(int key);
+        virtual bool OnKeyDown(KeyboardKey key, char character);
+        virtual bool OnKeyUp(KeyboardKey key, char character);
     };
     
     class KeyboardManager : public InputManager
@@ -22,8 +42,8 @@ namespace pb
         KeyboardManager();
         ~KeyboardManager();
         
-        void OnKeyDown(int key);
-        void OnKeyUp(int key);
+        void OnKeyDown(KeyboardKey key, char character=0);
+        void OnKeyUp(KeyboardKey key, char character=0);
     };
 }
 
