@@ -74,10 +74,6 @@ public:
     
     bool OnMouseDown(MouseButton button, glm::vec2 position)
     {
-        glm::vec2 delta(0,0);
-        _PrevMouse = position;
-        
-        _Canvas->InputMouseMoved(position.x, position.y, delta[0], delta[1]);
         _Canvas->InputMouseButton((int)button, true);
         
         Gwen::Controls::Base* hoveredControl = Gwen::HoveredControl;
@@ -103,9 +99,6 @@ public:
     
     bool OnMouseUp(MouseButton button, glm::vec2 position)
     {
-        glm::vec2 delta = position - _PrevMouse;
-        _PrevMouse = position;
-        
         _Canvas->InputMouseButton((int)button, false);
         
         Gwen::Controls::Base* hoveredControl = Gwen::HoveredControl;
