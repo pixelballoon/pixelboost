@@ -95,5 +95,5 @@ bool BoundingBox::Contains(glm::vec3 point)
 
 bool BoundingBox::Intersects(const BoundingBox& box)
 {
-    return !(box._Min.x >= _Max.x || box._Max.x <= _Min.x || box._Min.y >= _Max.y || box._Max.y <= _Min.y || box._Min.z >= _Max.z || box._Max.z <= _Min.z);
+    return !(box._Min.x > _Max.x || box._Max.x < _Min.x || box._Min.y > _Max.y || box._Max.y < _Min.y || box._Min.z > _Max.z || box._Max.z < _Min.z);
 }
