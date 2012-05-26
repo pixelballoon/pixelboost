@@ -46,6 +46,11 @@
     _Core->GetCommandManager()->Exec("export");
 }
 
+- (IBAction)save:(id)sender
+{
+    _Core->GetCommandManager()->Exec("save");
+}
+
 - (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename
 {
     if (_Core)

@@ -41,6 +41,12 @@ void Level::Render(pb::RenderLayer* layer)
 
 void Level::Clear()
 {
+    if (_Record)
+    {
+        _Record->entityAdded.Disconnect(this, &Level::OnEntityAdded);
+        _Record->entityRemoved.Disconnect(this, &Level::OnEntityRemoved);
+    }
+    
     while (_Entities.size())
         DestroyEntity(_Entities.begin()->second->GetUid());
     
@@ -55,12 +61,20 @@ void Level::SetRecord(Record* record)
     {
         _Record = record;
         
+        _Record->entityAdded.Connect(this, &Level::OnEntityAdded);
+        _Record->entityRemoved.Connect(this, &Level::OnEntityRemoved);
+        
         for (Record::EntityMap::const_iterator it = record->GetEntities().begin(); it != record->GetEntities().end(); ++it)
         {
             Entity* entity = it->second;
             CreateEntity(entity);
         }
     }
+}
+
+const Level::EntityMap& Level::GetEntities()
+{
+    return _Entities;
 }
 
 ViewEntity* Level::GetEntityById(Uid uid)
@@ -109,22 +123,7 @@ int Level::GetPriority()
 
 bool Level::OnMouseDown(pb::MouseButton button, glm::vec2 position)
 {
-    glm::vec2 worldPos = View::Instance()->GetLevelCamera()->ConvertScreenToWorld(position);
-    
-    for (EntityMap::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
-    {
-        if (it->second->GetBoundingBox().Contains(glm::vec3(worldPos[0], worldPos[1], 0)))
-        {
-            char args[256];
-            sprintf(args, "-u %d", it->first);
-            Core::Instance()->GetCommandManager()->Exec("select", args);
-            return true;
-        }
-    }
-    
-    Core::Instance()->GetCommandManager()->Exec("select", "-c");
-    
-    return true;
+    return false;
 }
 
 bool Level::OnMouseUp(pb::MouseButton button, glm::vec2 position)
@@ -135,4 +134,14 @@ bool Level::OnMouseUp(pb::MouseButton button, glm::vec2 position)
 bool Level::OnMouseMove(glm::vec2 position)
 {
     return false;
+}
+
+void Level::OnEntityAdded(Record* record, Entity* entity)
+{
+    CreateEntity(entity);
+}
+
+void Level::OnEntityRemoved(Record* record, Entity* entity)
+{
+    DestroyEntity(entity->GetUid());
 }

@@ -1,0 +1,39 @@
+#include <vector>
+
+#include "project/definitions.h"
+#include "view/manipulator/manipulator.h"
+
+namespace pixeleditor
+{
+    class MoveManipulator : public Manipulator
+    {
+    public:
+        MoveManipulator();
+        virtual ~MoveManipulator();
+        
+        virtual std::string GetName();
+        virtual char GetKey();
+        
+        virtual bool OnMouseDown(pb::MouseButton button, glm::vec2 position);
+        virtual bool OnMouseUp(pb::MouseButton button, glm::vec2 position);
+        virtual bool OnMouseMove(glm::vec2 position);
+        virtual bool OnKeyDown(pb::KeyboardKey key, char character);
+        virtual bool OnKeyUp(pb::KeyboardKey key, char character);
+        
+        virtual void OnSetActive();
+        virtual void OnSetInactive();
+        
+    private:
+        void Commit();
+        void Reset();
+        
+    private:
+        typedef std::vector<Uid> EntityList;
+        
+        bool _Active;
+        glm::vec2 _Start;
+        glm::vec2 _End;
+        
+        EntityList _EntityIds;
+    };
+}

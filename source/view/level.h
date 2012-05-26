@@ -15,6 +15,7 @@ namespace pb
 
 namespace pixeleditor
 {
+    class Entity;
     class Record;
     class ViewEntity;
     
@@ -31,6 +32,11 @@ namespace pixeleditor
         
         void SetRecord(Record* record);
         
+    public:
+        typedef std::map<Uid, ViewEntity*> EntityMap;
+        
+    public:
+        const EntityMap& GetEntities();
         ViewEntity* GetEntityById(Uid uid);
         
         sigslot::Signal1<ViewEntity*> entityAdded;
@@ -47,8 +53,8 @@ namespace pixeleditor
         virtual bool OnMouseUp(pb::MouseButton button, glm::vec2 position);
         virtual bool OnMouseMove(glm::vec2 position);
         
-    private:
-        typedef std::map<Uid, ViewEntity*> EntityMap;
+        virtual void OnEntityAdded(Record* record, Entity* entity);
+        virtual void OnEntityRemoved(Record* record, Entity* entity);
         
     private:
         Record* _Record;

@@ -1,0 +1,126 @@
+#include "pixelboost/graphics/camera/camera.h"
+
+#include "core/selection.h"
+#include "view/entity/entity.h"
+#include "view/manipulator/move.h"
+#include "view/level.h"
+#include "core.h"
+#include "view.h"
+
+using namespace pixeleditor;
+
+MoveManipulator::MoveManipulator()
+{
+    
+}
+
+MoveManipulator::~MoveManipulator()
+{
+    
+}
+
+std::string MoveManipulator::GetName()
+{
+    return "move";
+}
+
+char MoveManipulator::GetKey()
+{
+    return 'g';
+}
+
+bool MoveManipulator::OnMouseDown(pb::MouseButton button, glm::vec2 position)
+{
+    if (button == pb::kMouseButtonLeft)
+    {
+        Commit();
+        View::Instance()->GetManipulatorManager()->SetActiveManipulator("select");
+        return true;
+    } else if (button == pb::kMouseButtonRight)
+    {
+        Reset();
+        View::Instance()->GetManipulatorManager()->SetActiveManipulator("select");
+        return true;
+    }
+    
+    return false;
+}
+
+bool MoveManipulator::OnMouseUp(pb::MouseButton button, glm::vec2 position)
+{
+    return false;    
+}
+
+bool MoveManipulator::OnMouseMove(glm::vec2 position)
+{
+    if (!_Active)
+    {
+        _Start= position;
+        _Active = true;
+    }
+    
+    _End = position;
+    
+    glm::vec2 start = View::Instance()->GetLevelCamera()->ConvertScreenToWorld(_Start);
+    glm::vec2 end = View::Instance()->GetLevelCamera()->ConvertScreenToWorld(_End);
+    glm::vec2 transform = end-start;
+    
+    for (EntityList::iterator it = _EntityIds.begin(); it != _EntityIds.end(); ++it)
+    {
+        ViewEntity* entity = View::Instance()->GetLevel()->GetEntityById(*it);
+        
+        entity->ResetTransform();
+        entity->Transform(glm::vec3(transform,0));
+    }
+    
+    return false;
+}
+
+bool MoveManipulator::OnKeyDown(pb::KeyboardKey key, char character)
+{
+    return false;
+}
+
+bool MoveManipulator::OnKeyUp(pb::KeyboardKey key, char character)
+{
+    return false;
+}
+
+void MoveManipulator::Commit()
+{
+    for (EntityList::iterator it = _EntityIds.begin(); it != _EntityIds.end(); ++it)
+    {
+        ViewEntity* entity = View::Instance()->GetLevel()->GetEntityById(*it);
+        
+        entity->CommitTransform();
+    }
+}
+
+void MoveManipulator::Reset()
+{
+    for (EntityList::iterator it = _EntityIds.begin(); it != _EntityIds.end(); ++it)
+    {
+        ViewEntity* entity = View::Instance()->GetLevel()->GetEntityById(*it);
+        
+        entity->ResetTransform();
+    }
+}
+
+void MoveManipulator::OnSetActive()
+{
+    _Active = false;
+    
+    _EntityIds.clear();
+    
+    const Selection& selection = Core::Instance()->GetSelection();
+    
+    for (Selection::Entities::const_iterator entityIt = selection.GetSelection().begin(); entityIt != selection.GetSelection().end(); ++entityIt)
+    {
+        _EntityIds.push_back(entityIt->first);
+    }
+}
+
+void MoveManipulator::OnSetInactive()
+{
+    
+}

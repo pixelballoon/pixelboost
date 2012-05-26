@@ -81,6 +81,18 @@ enum {
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    self = [super initWithCoder:decoder];
+    if (self) {
+        NSTrackingArea* trackingArea = [[NSTrackingArea alloc] initWithRect:[self bounds] options:(NSTrackingMouseMoved | NSTrackingActiveAlways) owner:self userInfo:nil];
+        [self addTrackingArea:trackingArea];
+        [trackingArea release];
+    }
+    
+    return self;
+}
+
 - (void)drawRect:(NSRect)dirtyRect
 {
     View* view = View::Instance();
@@ -123,6 +135,20 @@ enum {
     [self setNeedsDisplay:true];
 }
 
+- (void)mouseMoved:(NSEvent *)event
+{
+    View* view = View::Instance();
+    
+    if (view)
+    {
+        NSPoint eventLocation = [self convertPoint:event.locationInWindow fromView:nil];
+        
+        view->GetMouseManager()->OnMouseMove(glm::vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
+    }
+    
+    [self setNeedsDisplay:true];
+}
+
 - (void)mouseDown:(NSEvent *)event
 {
     View* view = View::Instance();
@@ -131,7 +157,7 @@ enum {
     {
         NSPoint eventLocation = [self convertPoint:event.locationInWindow fromView:nil];
         
-        view->GetMouseManager()->OnMouseDown((pb::MouseButton)event.buttonNumber, glm::vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
+        view->GetMouseManager()->OnMouseDown(pb::kMouseButtonLeft, glm::vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
     }
     
     [self setNeedsDisplay:true];
@@ -159,13 +185,27 @@ enum {
     {
         NSPoint eventLocation = [self convertPoint:event.locationInWindow fromView:nil];
         
-        view->GetMouseManager()->OnMouseUp((pb::MouseButton)event.buttonNumber, glm::vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
+        view->GetMouseManager()->OnMouseUp(pb::kMouseButtonLeft, glm::vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
     }
     
     [self setNeedsDisplay:true];
 }
 
-- (void)mouseMoved:(NSEvent *)event
+- (void)rightMouseDown:(NSEvent *)event
+{
+    View* view = View::Instance();
+    
+    if (view)
+    {
+        NSPoint eventLocation = [self convertPoint:event.locationInWindow fromView:nil];
+        
+        view->GetMouseManager()->OnMouseDown(pb::kMouseButtonRight, glm::vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
+    }
+    
+    [self setNeedsDisplay:true];
+}
+
+- (void)rightMouseDragged:(NSEvent *)event
 {
     View* view = View::Instance();
     
@@ -174,6 +214,20 @@ enum {
         NSPoint eventLocation = [self convertPoint:event.locationInWindow fromView:nil];
         
         view->GetMouseManager()->OnMouseMove(glm::vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
+    }
+    
+    [self setNeedsDisplay:true];
+}
+
+- (void)rightMouseUp:(NSEvent *)event
+{
+    View* view = View::Instance();
+    
+    if (view)
+    {
+        NSPoint eventLocation = [self convertPoint:event.locationInWindow fromView:nil];
+        
+        view->GetMouseManager()->OnMouseUp(pb::kMouseButtonRight, glm::vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
     }
     
     [self setNeedsDisplay:true];

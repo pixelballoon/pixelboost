@@ -18,6 +18,9 @@ namespace Gwen
         class Canvas;
         class CollapsibleCategory;
         class CollapsibleList;
+        class ListBox;
+        class MenuItem;
+        class MenuStrip;
     }
 }
 
@@ -34,6 +37,7 @@ namespace pixeleditor
 class CommandManager;
 class HttpInterface;
 class Level;
+class ManipulatorManager;
 class Project;
 class Record;
 class ViewEntity;
@@ -50,6 +54,8 @@ public:
     virtual Vec2 GetScreenResolution();
     virtual void Render();
     
+    ManipulatorManager* GetManipulatorManager();
+    
     void SetDirty();
     
     void Scroll(Vec2 offset);
@@ -62,6 +68,7 @@ public:
     
     void LoadSprite(const std::string& sprite);
     
+    Level* GetLevel();
     pb::OrthographicCamera* GetLevelCamera();
     
 public:
@@ -88,10 +95,13 @@ private:
     void OnEntityRemoved(ViewEntity* entity);
     
     void OnEntitySelected(Gwen::Controls::Base* item);
+    void OnEntityCreate(Gwen::Controls::Base* item);
     
     void OnSelectionChanged();
     
 private:
+    ManipulatorManager* _ManipulatorManager;
+    
     Level* _Level;
     pb::RenderLayer* _LevelLayer;
     pb::OrthographicCamera* _LevelCamera;
@@ -102,10 +112,13 @@ private:
     Gwen::Controls::Canvas* _GwenCanvas;
     Vec2 _CanvasSize;
 
+    Gwen::Controls::MenuStrip* _Menu;
+    Gwen::Controls::MenuItem* _CreateMenu;
     Gwen::Controls::CollapsibleList* _FilePage;
     Gwen::Controls::CollapsibleCategory* _Records;    
     Gwen::Controls::CollapsibleList* _EntityPage;
-    Gwen::Controls::CollapsibleCategory* _Entities;    
+    Gwen::Controls::CollapsibleCategory* _Entities;
+    Gwen::Controls::ListBox* _Output;
 };
     
 }

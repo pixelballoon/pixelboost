@@ -19,6 +19,8 @@ ViewEntity::ViewEntity(Uid uid, Entity* entity)
     ParseProperties();
     
     _BoundsDirty = true;
+    
+    ResetTransform();
 }
 
 ViewEntity::~ViewEntity()
@@ -64,9 +66,60 @@ Entity* ViewEntity::GetEntity()
     return _Entity;
 }
 
-Vec3 ViewEntity::GetPosition()
+glm::vec3 ViewEntity::GetPosition()
 {
-    return _Entity->GetPosition();
+    return _Position;
+}
+
+glm::vec3 ViewEntity::GetRotation()
+{
+    return _Rotation;
+}
+
+glm::vec3 ViewEntity::GetScale()
+{
+    return _Scale;
+}
+
+void ViewEntity::SetPosition(glm::vec3 position)
+{
+    _Position = position;
+    DirtyBounds();
+}
+
+void ViewEntity::SetRotation(glm::vec3 rotation)
+{
+    _Rotation = rotation;
+    DirtyBounds();
+}
+
+void ViewEntity::SetScale(glm::vec3 scale)
+{
+    _Scale = scale;
+    DirtyBounds();
+}
+
+void ViewEntity::Transform(glm::vec3 positionOffset, glm::vec3 rotationOffset, glm::vec3 scaleOffset)
+{
+    _Position += positionOffset;
+    _Rotation += rotationOffset;
+    _Scale *= scaleOffset;
+    DirtyBounds();
+}
+
+void ViewEntity::CommitTransform()
+{
+    _Entity->SetPosition(Vec3(_Position.x, _Position.y, _Position.z));
+    _Entity->SetRotation(_Rotation.z);
+    _Entity->SetScale(Vec3(_Scale.x, _Scale.y, _Scale.z));
+}
+
+void ViewEntity::ResetTransform()
+{
+    _Position = glm::vec3(_Entity->GetPosition()[0], _Entity->GetPosition()[1], _Entity->GetPosition()[2]);
+    _Rotation = glm::vec3(0, 0, _Entity->GetRotation());
+    _Scale = glm::vec3(_Entity->GetScale()[0], _Entity->GetScale()[1], _Entity->GetScale()[2]);
+    DirtyBounds();
 }
 
 pb::BoundingBox ViewEntity::GetBoundingBox()
@@ -212,6 +265,11 @@ void ViewEntity::ParseItem(const std::string& path, const SchemaItem* item)
 void ViewEntity::DirtyBounds()
 {
     _BoundsDirty = true;
+    
+    for (PropertyMap::iterator it = _Properties.begin(); it != _Properties.end(); ++it)
+    {
+        it->second->DirtyBounds();
+    }
 }
 
 void ViewEntity::UpdateBounds()

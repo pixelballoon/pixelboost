@@ -6,6 +6,7 @@
 #include "Gwen/Controls/CollapsibleList.h"
 #include "Gwen/Controls/DockBase.h"
 #include "Gwen/Controls/ListBox.h"
+#include "Gwen/Controls/MenuStrip.h"
 #include "Gwen/Controls/TabControl.h"
 #include "Gwen/Skins/Simple.h"
 #include "Gwen/Skins/TexturedBase.h"
@@ -22,7 +23,14 @@
 #include "project/entity.h"
 #include "project/project.h"
 #include "project/record.h"
+#include "project/schema.h"
 #include "view/entity/entity.h"
+#include "view/manipulator/create.h"
+#include "view/manipulator/manipulator.h"
+#include "view/manipulator/move.h"
+#include "view/manipulator/rotate.h"
+#include "view/manipulator/scale.h"
+#include "view/manipulator/select.h"
 #include "view/ui/property/propertyPanel.h"
 #include "view/level.h"
 #include "core.h"
@@ -34,7 +42,7 @@ View::View()
     : pb::Game(0)
     , _Record(0)
 {
-
+   
 }
 
 View::~View()
@@ -53,6 +61,14 @@ View* View::Instance()
 
 void View::Initialise(Vec2 size)
 {
+    _ManipulatorManager = new ManipulatorManager();
+    _ManipulatorManager->AddManipulator(new SelectManipulator());
+    _ManipulatorManager->AddManipulator(new MoveManipulator());
+    _ManipulatorManager->AddManipulator(new RotateManipulator());
+    _ManipulatorManager->AddManipulator(new ScaleManipulator());
+    _ManipulatorManager->AddManipulator(new CreateManipulator());
+    _ManipulatorManager->SetActiveManipulator("select");
+    
     _LevelCamera = new pb::OrthographicCamera();
     _LevelLayer = new pb::RenderLayer(100, _LevelCamera);
     
@@ -85,11 +101,14 @@ void View::Initialise(Vec2 size)
     dock->GetLeft()->GetTabControl()->AddPage("Entities", _EntityPage);
 	dock->GetLeft()->SetWidth(250);
     
-    Gwen::Controls::ListBox* _Output = new Gwen::Controls::ListBox(dock);
+    _Output = new Gwen::Controls::ListBox(dock);
     PropertyPanel* _Properties = new PropertyPanel(dock);
     dock->GetBottom()->GetTabControl()->AddPage("Properties", _Properties);
     dock->GetBottom()->GetTabControl()->AddPage("Output", _Output);
 	dock->GetBottom()->SetHeight(300);
+    
+    _Menu = new Gwen::Controls::MenuStrip(dock);
+    _CreateMenu = _Menu->AddItem("Create");
     
     SetCanvasSize(size);
     
@@ -115,7 +134,14 @@ void View::Render()
     
     _Level->Render(_LevelLayer);
     
+    _ManipulatorManager->Render(_LevelLayer);
+    
     Game::Render();
+}
+
+ManipulatorManager* View::GetManipulatorManager()
+{
+    return _ManipulatorManager;
 }
 
 void View::SetDirty()
@@ -143,6 +169,11 @@ void View::LoadSprite(const std::string& sprite)
     
     std::shared_ptr<pb::SpriteSheet> spriteSheet = GetSpriteRenderer()->CreateSpriteSheet(sprite);
     spriteSheet->LoadSingle(GetSpriteFile(sprite));
+}
+
+Level* View::GetLevel()
+{
+    return _Level;
 }
 
 pb::OrthographicCamera* View::GetLevelCamera()
@@ -202,6 +233,16 @@ void View::OnProjectOpened(Project* project)
     _Records = new Gwen::Controls::CollapsibleCategory(_FilePage);
     _Records->SetText("Records");
     _FilePage->Add(_Records);
+    
+    Schema* schema = project->GetSchema();
+    
+    _CreateMenu->GetMenu()->ClearItems();
+    for (Schema::EntityMap::const_iterator it = schema->GetEntities().begin(); it != schema->GetEntities().end(); ++it)
+    {
+        Gwen::Controls::MenuItem* item = _CreateMenu->GetMenu()->AddItem(it->first);
+        item->UserData.Set("type", it->first);
+        item->onPress.Add(this, &View::OnEntityCreate);
+    }
 }
 
 void View::OnProjectClosed(Project* project)
@@ -259,6 +300,13 @@ void View::OnEntitySelected(Gwen::Controls::Base* item)
     char args[256];
     sprintf(args, "-u %d", entity->GetUid());
     Core::Instance()->GetCommandManager()->Exec("select", args);
+}
+
+void View::OnEntityCreate(Gwen::Controls::Base* item)
+{
+    CreateManipulator* createManipulator = static_cast<CreateManipulator*>(View::Instance()->GetManipulatorManager()->SetActiveManipulator("create"));
+    
+    createManipulator->SetActorType(item->UserData.Get<std::string>("type"));
 }
 
 void View::OnSelectionChanged()

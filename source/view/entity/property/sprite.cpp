@@ -27,7 +27,7 @@ void SpriteViewProperty::Update(float time)
 
 void SpriteViewProperty::Render(pb::RenderLayer* layer)
 {
-    View::Instance()->GetSpriteRenderer()->AttachSprite(layer, _Sprite, Vec2(_Parent->GetPosition()[0], _Parent->GetPosition()[1]));
+    View::Instance()->GetSpriteRenderer()->AttachSprite(layer, _Sprite, Vec2(_Parent->GetPosition().x, _Parent->GetPosition().y), Vec3(_Parent->GetRotation().x, _Parent->GetRotation().y, _Parent->GetRotation().z), Vec2(_Parent->GetScale().x, _Parent->GetScale().y));
     
     ViewProperty::Render(layer);
 }
@@ -48,6 +48,8 @@ pb::BoundingBox SpriteViewProperty::CalculateBounds()
         return pb::BoundingBox();
 
     glm::vec3 size(sprite->_Dimension[0], sprite->_Dimension[1], 0);
+    size *= _Parent->GetScale();
+    
     glm::vec3 center = glm::vec3(_Parent->GetPosition()[0], _Parent->GetPosition()[1], 0);
     return pb::BoundingBox(center-size/2.f, center+size/2.f);
 }
