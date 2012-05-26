@@ -20,6 +20,7 @@ namespace pixeleditor
     class Entity;
     class SchemaItem;
     class SchemaStruct;
+    class Struct;
     class ViewProperty;
     
     class ViewEntity
@@ -66,6 +67,8 @@ namespace pixeleditor
         void ParseProperties();
         void ParseStruct(const std::string& path, const SchemaStruct* schemaStruct);
         void ParseItem(const std::string& path, const SchemaItem* item);
+        
+        void OnPropertyChanged(Struct* structure);
         
         void DirtyBounds();
         void UpdateBounds();

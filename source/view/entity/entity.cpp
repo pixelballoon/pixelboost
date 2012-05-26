@@ -21,11 +21,13 @@ ViewEntity::ViewEntity(Uid uid, Entity* entity)
     _BoundsDirty = true;
     
     ResetTransform();
+    
+    _Entity->propertyChanged.Connect(this, &ViewEntity::OnPropertyChanged);
 }
 
 ViewEntity::~ViewEntity()
 {
-    
+    _Entity->propertyChanged.Disconnect(this, &ViewEntity::OnPropertyChanged);
 }
 
 void ViewEntity::Update(float time)
@@ -259,6 +261,14 @@ void ViewEntity::ParseItem(const std::string& path, const SchemaItem* item)
         {
             new SpriteViewProperty(this, path, item);
         }
+    }
+}
+
+void ViewEntity::OnPropertyChanged(pixeleditor::Struct* structure)
+{
+    for (PropertyMap::iterator it = _Properties.begin(); it != _Properties.end(); ++it)
+    {
+        it->second->Refresh();
     }
 }
 
