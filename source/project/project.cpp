@@ -238,7 +238,7 @@ Uid Project::CalculateUid(Uid min, Uid max)
 {
     for (int i=0; i<128; i++)
     {
-        unsigned long id = rand();
+        unsigned long id = (rand() % max-min)+min;
         UidSet::iterator it = _Uids.find(id);
         if (id > min && id < max && it == _Uids.end())
         {
