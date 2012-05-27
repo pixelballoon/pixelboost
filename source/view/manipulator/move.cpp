@@ -68,9 +68,11 @@ bool MoveManipulator::OnMouseMove(glm::vec2 position)
     for (EntityList::iterator it = _EntityIds.begin(); it != _EntityIds.end(); ++it)
     {
         ViewEntity* entity = View::Instance()->GetLevel()->GetEntityById(*it);
-        
-        entity->ResetTransform();
-        entity->Transform(glm::vec3(transform,0));
+        if (entity)
+        {
+            entity->ResetTransform();
+            entity->Transform(glm::vec3(transform,0));
+        }
     }
     
     return false;
@@ -91,8 +93,8 @@ void MoveManipulator::Commit()
     for (EntityList::iterator it = _EntityIds.begin(); it != _EntityIds.end(); ++it)
     {
         ViewEntity* entity = View::Instance()->GetLevel()->GetEntityById(*it);
-        
-        entity->CommitTransform();
+        if (entity)
+            entity->CommitTransform();
     }
 }
 
@@ -101,8 +103,8 @@ void MoveManipulator::Reset()
     for (EntityList::iterator it = _EntityIds.begin(); it != _EntityIds.end(); ++it)
     {
         ViewEntity* entity = View::Instance()->GetLevel()->GetEntityById(*it);
-        
-        entity->ResetTransform();
+        if (entity)
+            entity->ResetTransform();
     }
 }
 
