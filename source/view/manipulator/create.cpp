@@ -56,6 +56,8 @@ bool CreateManipulator::OnMouseDown(pb::MouseButton button, glm::vec2 position)
             entity->AcquireAtom(_Fields[i])->SetStringValue(_Values[i]);
         }
         
+        Core::Instance()->GetCommandManager()->Exec("select", "-u " + entityIdString);
+        
         return true;
     } else if (button == pb::kMouseButtonRight)
     {
