@@ -15,7 +15,7 @@ FontRenderer::FontRenderer(int maxCharacters)
     : _MaxCharacters(maxCharacters)
 {
     _IndexBuffer = GraphicsDevice::Instance()->CreateIndexBuffer(kBufferFormatStatic, _MaxCharacters*6);
-    _VertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatStatic, kVertexFormat_P_XYZ_UV, _MaxCharacters*4);
+    _VertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatDynamic, kVertexFormat_P_XYZ_UV, _MaxCharacters*4);
     
     _IndexBuffer->Lock();
     
@@ -209,6 +209,7 @@ void FontRenderer::Render(RenderLayer* layer)
         
         _VertexBuffer->Lock();
         
+        int numCharacters = 0;
         Vertex_PXYZ_UV* vertexBuffer = static_cast<Vertex_PXYZ_UV*>(_VertexBuffer->GetData());
         
         float offset = 0.f;
@@ -222,6 +223,7 @@ void FontRenderer::Render(RenderLayer* layer)
             AddCharacter(vertexBuffer, charIt->second, offset, font->base);
             
             vertexBuffer += 4;
+            numCharacters++;
             
             offset += charIt->second.xAdvance;
             
@@ -234,7 +236,7 @@ void FontRenderer::Render(RenderLayer* layer)
             }
         }
         
-        _VertexBuffer->Unlock(it->_String.length()*4);
+        _VertexBuffer->Unlock(numCharacters*4);
         
         _VertexBuffer->Bind();
         
@@ -261,7 +263,7 @@ void FontRenderer::Render(RenderLayer* layer)
         
         glColor4f(it->_Color[0], it->_Color[1], it->_Color[2], it->_Color[3]);
         
-        GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, it->_String.length()*6);
+        GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, numCharacters*6);
         
         glColor4f(1, 1, 1, 1);
         

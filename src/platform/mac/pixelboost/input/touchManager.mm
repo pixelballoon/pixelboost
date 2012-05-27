@@ -18,14 +18,11 @@ Vec2 Touch::GetScreenPosition()
 {
    	Vec2 position = _Position;
     
-    // Specifically handle retina displays where the input co-ordinates aren't scaled
-    float inputScale = ScreenHelpers::IsHighResolution() ? 2 : 1;
+    position[0] = position[0] - ScreenHelpers::GetScreenResolution()[0]/2;
+    position[1] = ScreenHelpers::GetScreenResolution()[1]/2 - position[1];
     
-    position[0] = position[0] - ScreenHelpers::GetScreenResolution()[0]/(2*inputScale);
-    position[1] = ScreenHelpers::GetScreenResolution()[1]/(2*inputScale) - position[1];
-    
-	position[0] /= (ScreenHelpers::GetDpu()/inputScale);
-	position[1] /= (ScreenHelpers::GetDpu()/inputScale);
+	position[0] /= ScreenHelpers::GetDpu();
+	position[1] /= ScreenHelpers::GetDpu();
 	
 	return position;
 }
@@ -34,16 +31,14 @@ Vec2 Touch::GetWorldPosition(OrthographicCamera* camera)
 {
 	Vec2 position = _Position;
     
-    // Specifically handle retina displays where the input co-ordinates aren't scaled
-    float inputScale = ScreenHelpers::IsHighResolution() ? 2 : 1;
-    
-    position[0] = position[0] - ScreenHelpers::GetScreenResolution()[0]/(2*inputScale);
-    position[1] = ScreenHelpers::GetScreenResolution()[1]/(2*inputScale) - position[1];
+    position[0] = position[0] - ScreenHelpers::GetScreenResolution()[0]/2;
+    position[1] = ScreenHelpers::GetScreenResolution()[1]/2 - position[1];
 
-	position[0] /= (ScreenHelpers::GetDpu()/inputScale);
-	position[1] /= (ScreenHelpers::GetDpu()/inputScale);
+	position[0] /= ScreenHelpers::GetDpu();
+	position[1] /= ScreenHelpers::GetDpu();
     
-    position -= camera->Position;
+    position /= camera->Scale;
+    position += camera->Position;
 	
 	return position;
 }

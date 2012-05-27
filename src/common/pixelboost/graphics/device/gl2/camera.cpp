@@ -37,6 +37,22 @@ void OrthographicCamera::ApplyTransform()
     glTranslatef(-Position[0], -Position[1], 0.f);
 }
 
+glm::vec2 OrthographicCamera::ConvertScreenToWorld(glm::vec2 screen)
+{
+    glm::vec2 position = screen;
+    
+    position[0] = position[0] - ScreenHelpers::GetScreenResolution()[0]/2;
+    position[1] = ScreenHelpers::GetScreenResolution()[1]/2 - position[1];
+    
+	position[0] /= ScreenHelpers::GetDpu();
+	position[1] /= ScreenHelpers::GetDpu();
+    
+    position /= glm::vec2(Scale[0], Scale[1]);
+    position += glm::vec2(Position[0], Position[1]);
+	
+	return position;
+}
+
 PerspectiveCamera::PerspectiveCamera()
     : FieldOfView(90.f)
     , Offset(0,0)

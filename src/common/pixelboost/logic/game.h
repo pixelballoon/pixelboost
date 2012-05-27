@@ -11,7 +11,9 @@ class CustomRenderer;
 class FontRenderer;
 class GameCenter;
 class GraphicsDevice;
+class KeyboardManager;
 class ModelRenderer;
+class MouseManager;
 class ParticleRenderer;
 class PrimitiveRenderer;
 class Renderer;
@@ -40,6 +42,9 @@ public:
     PrimitiveRenderer* GetPrimitiveRenderer() const;
     Renderer* GetRenderer() const;
 	SpriteRenderer* GetSpriteRenderer() const;
+    
+    KeyboardManager* GetKeyboardManager() const;
+    MouseManager* GetMouseManager() const;
 	TouchManager* GetTouchManager() const;
     
     float GetGameTime();
@@ -68,6 +73,9 @@ private:
 	ResourceManager* _ResourceManager;
 	SoundManager* _SoundManager;
 	SpriteRenderer* _SpriteRenderer;
+    
+    KeyboardManager* _KeyboardManager;
+    MouseManager* _MouseManager;
 	TouchManager* _TouchManager;
 	
 	float _GameTime;

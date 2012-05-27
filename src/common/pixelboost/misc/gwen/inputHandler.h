@@ -2,32 +2,29 @@
 
 #ifndef PIXELBOOST_DISABLE_GWEN
 
-#include "pixelboost/input/touchManager.h"
-
 namespace Gwen
 {
     namespace Controls
     {
+        class Base;
         class Canvas;
     }
 }
 
 namespace pb
 {
-    class GwenInputHandler : public TouchHandler
+    class GwenMouseHandler;
+    class GwenKeyboardHandler;
+    
+    class GwenInputHandler
     {
     public:
-        GwenInputHandler(Gwen::Controls::Canvas* canvas);
+        GwenInputHandler(Gwen::Controls::Canvas* canvas, Gwen::Controls::Base* root);
         ~GwenInputHandler();
         
     private:
-        virtual void OnTouchBegin(Touch* touch);
-        virtual void OnTouchUpdate(Touch* touch);
-        virtual void OnTouchEnd(Touch* touch);
-        
-        Gwen::Controls::Canvas*	_Canvas;
-        
-        Vec2 _PrevMouse;
+        GwenKeyboardHandler* _KeyboardHandler;
+        GwenMouseHandler* _MouseHandler;
     };
 }
 

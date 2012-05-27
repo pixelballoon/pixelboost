@@ -8,6 +8,8 @@
 #include "pixelboost/graphics/render/particle/particleRenderer.h"
 #include "pixelboost/graphics/render/primitive/primitiveRenderer.h"
 #include "pixelboost/graphics/render/sprite/spriteRenderer.h"
+#include "pixelboost/input/keyboardManager.h"
+#include "pixelboost/input/mouseManager.h"
 #include "pixelboost/input/touchManager.h"
 #include "pixelboost/logic/game.h"
 #include "pixelboost/logic/screen.h"
@@ -40,6 +42,11 @@ Game::Game(void* viewController)
 #ifndef PIXELBOOST_DISABLE_GAMECENTER
     _GameCenter = new GameCenter();
     _GameCenter->Connect();
+#endif
+    
+#ifndef PIXELBOOST_DISABLE_INPUT
+    _KeyboardManager = new KeyboardManager();
+    _MouseManager = new MouseManager();
 #endif
 }
 
@@ -117,6 +124,16 @@ Renderer* Game::GetRenderer() const
 SpriteRenderer* Game::GetSpriteRenderer() const
 {
     return _SpriteRenderer;
+}
+
+KeyboardManager* Game::GetKeyboardManager() const
+{
+    return _KeyboardManager;
+}
+
+MouseManager* Game::GetMouseManager() const
+{
+    return _MouseManager;
 }
 
 TouchManager* Game::GetTouchManager() const
