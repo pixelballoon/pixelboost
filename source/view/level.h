@@ -16,6 +16,7 @@ namespace pb
 namespace pixeleditor
 {
     class Entity;
+    class Project;
     class Record;
     class ViewEntity;
     
@@ -53,6 +54,7 @@ namespace pixeleditor
         virtual bool OnMouseUp(pb::MouseButton button, glm::vec2 position);
         virtual bool OnMouseMove(glm::vec2 position);
         
+        virtual void OnRecordRemoved(Project* project, Record* record);
         virtual void OnEntityAdded(Record* record, Entity* entity);
         virtual void OnEntityRemoved(Record* record, Entity* entity);
         

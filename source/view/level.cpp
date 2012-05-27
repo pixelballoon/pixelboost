@@ -2,6 +2,7 @@
 
 #include "command/manager.h"
 #include "project/entity.h"
+#include "project/project.h"
 #include "project/record.h"
 #include "view/entity/entity.h"
 #include "view/level.h"
@@ -14,10 +15,14 @@ Level::Level()
     : _Record(0)
 {
     View::Instance()->GetMouseManager()->AddHandler(this);
+    
+    Core::Instance()->GetProject()->recordRemoved.Connect(this, &Level::OnRecordRemoved);
 }
 
 Level::~Level()
 {
+    Core::Instance()->GetProject()->recordRemoved.Disconnect(this, &Level::OnRecordRemoved);
+    
     View::Instance()->GetMouseManager()->RemoveHandler(this);
     
     Clear();
@@ -134,6 +139,14 @@ bool Level::OnMouseUp(pb::MouseButton button, glm::vec2 position)
 bool Level::OnMouseMove(glm::vec2 position)
 {
     return false;
+}
+
+void Level::OnRecordRemoved(Project* project, Record* record)
+{
+    if (record == _Record)
+    {
+        Clear();
+    }
 }
 
 void Level::OnEntityAdded(Record* record, Entity* entity)
