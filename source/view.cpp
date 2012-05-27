@@ -39,15 +39,105 @@
 
 using namespace pixeleditor;
 
+class pixeleditor::ViewKeyboardHandler : public pb::KeyboardHandler
+{
+public:
+    ViewKeyboardHandler()
+    {
+        
+    }
+    
+    ~ViewKeyboardHandler()
+    {
+        
+    }
+    
+    virtual int GetPriority()
+    {
+        return 0;
+    }
+    
+    virtual bool OnKeyDown(pb::KeyboardKey key, char character)
+    {
+        if (key == pb::kKeyboardKeyBackspace || key == pb::kKeyboardKeyDelete)
+        {
+            Core::Instance()->GetCommandManager()->Exec("delete");
+            return true;
+        }
+        
+        return false;
+    }
+    
+    virtual bool OnKeyUp(pb::KeyboardKey key, char character)
+    {
+        return false;
+    }
+};
+
+class pixeleditor::ViewMouseHandler : public pb::MouseHandler
+{
+public:
+    ViewMouseHandler()
+    {
+        
+    }
+    
+    ~ViewMouseHandler()
+    {
+    }
+    
+    virtual int GetPriority()
+    {
+        return 0;
+    }
+    
+    virtual bool OnMouseDown(pb::MouseButton button, glm::vec2 position)
+    {
+        return false;
+    }
+    
+    virtual bool OnMouseUp(pb::MouseButton button, glm::vec2 position)
+    {
+        return false;
+    }
+    
+    virtual bool OnMouseMove(glm::vec2 position)
+    {
+        return false;
+    }
+    
+    virtual bool OnMouseScroll(glm::vec2 delta)
+    {
+        View::Instance()->Scroll(delta/10.f);
+        return true;
+    }
+    
+    virtual bool OnMouseZoom(glm::vec2 delta)
+    {
+        View::Instance()->Zoom(delta.x);
+        return true;
+    }
+};
+
 View::View()
     : pb::Game(0)
     , _Record(0)
 {
-   
+    _KeyboardHandler = new ViewKeyboardHandler();
+    _MouseHandler = new ViewMouseHandler();
+    
+    View::Instance()->GetKeyboardManager()->AddHandler(_KeyboardHandler);
+    View::Instance()->GetMouseManager()->AddHandler(_MouseHandler);
 }
 
 View::~View()
 {
+    View::Instance()->GetKeyboardManager()->RemoveHandler(_KeyboardHandler);
+    View::Instance()->GetMouseManager()->RemoveHandler(_MouseHandler);
+    
+    delete _KeyboardHandler;
+    delete _MouseHandler;
+    
     delete _GwenInput;
     delete _GwenCanvas;
     pb::Game::Instance()->GetRenderer()->RemoveLayer(_GwenLayer);
@@ -151,9 +241,9 @@ void View::SetDirty()
     onRedraw();
 }
 
-void View::Scroll(Vec2 offset)
+void View::Scroll(glm::vec2 offset)
 {
-    _LevelCamera->Position += offset;
+    _LevelCamera->Position += Vec2(offset.x, offset.y);
 }
 
 void View::Zoom(float delta)

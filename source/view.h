@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "glm/glm.hpp"
 #include "Gwen/Events.h"
 #include "sigslot/signal.h"
 
@@ -41,6 +42,8 @@ class ManipulatorManager;
 class Project;
 class Record;
 class ViewEntity;
+class ViewKeyboardHandler;
+class ViewMouseHandler;
 
 class View : public pb::Game, public Gwen::Event::Handler
 {
@@ -58,7 +61,7 @@ public:
     
     void SetDirty();
     
-    void Scroll(Vec2 offset);
+    void Scroll(glm::vec2 offset);
     void Zoom(float delta);
     
 public:
@@ -119,6 +122,9 @@ private:
     Gwen::Controls::CollapsibleList* _EntityPage;
     Gwen::Controls::CollapsibleCategory* _Entities;
     Gwen::Controls::ListBox* _Output;
+    
+    ViewKeyboardHandler* _KeyboardHandler;
+    ViewMouseHandler* _MouseHandler;
 };
     
 }

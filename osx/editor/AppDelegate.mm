@@ -51,6 +51,11 @@
     _Core->GetCommandManager()->Exec("save");
 }
 
+- (IBAction)delete:(id)sender
+{
+    _Core->GetCommandManager()->Exec("delete");
+}
+
 - (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename
 {
     if (_Core)

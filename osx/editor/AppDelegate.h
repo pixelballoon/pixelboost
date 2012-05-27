@@ -20,6 +20,7 @@ namespace pixeleditor
 - (IBAction)open:(id)sender;
 - (IBAction)export:(id)sender;
 - (IBAction)save:(id)sender;
+- (IBAction)delete:(id)sender;
 
 - (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename;
 

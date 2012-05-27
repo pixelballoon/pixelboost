@@ -16,6 +16,11 @@ public:
         
     }
     
+    virtual int GetPriority()
+    {
+        return 1;
+    }
+    
     virtual bool OnKeyDown(pb::KeyboardKey key, char character)
     {
         return View::Instance()->GetManipulatorManager()->OnKeyDown(key, character);
@@ -37,6 +42,11 @@ public:
     
     ~ManipulatorMouseHandler()
     {
+    }
+    
+    virtual int GetPriority()
+    {
+        return 1;
     }
     
     virtual bool OnMouseDown(pb::MouseButton button, glm::vec2 position)
@@ -124,6 +134,9 @@ ManipulatorManager::~ManipulatorManager()
 {
     View::Instance()->GetKeyboardManager()->RemoveHandler(_KeyboardHandler);
     View::Instance()->GetMouseManager()->RemoveHandler(_MouseHandler);
+    
+    delete _KeyboardHandler;
+    delete _MouseHandler;
     
     for (ManipulatorMap::iterator it = _Manipulators.begin(); it != _Manipulators.end(); ++it)
     {

@@ -239,8 +239,6 @@ enum {
     
     if (view)
     {
-        view->Scroll(Vec2(-event.scrollingDeltaX, event.scrollingDeltaY)/10.f);
-        
         view->GetMouseManager()->OnMouseScroll(glm::vec2(-event.scrollingDeltaX, event.scrollingDeltaY));
     }
     
@@ -253,7 +251,7 @@ enum {
     
     if (view)
     {
-        view->Zoom(event.magnification);
+        view->GetMouseManager()->OnMouseZoom(glm::vec2(event.magnification, event.magnification));
     }
     
     [self setNeedsDisplay:true];
@@ -327,7 +325,6 @@ enum {
                 view->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyCharacter, (int)[event.characters UTF8String][0]);
                 break;
         }
-        
     }
     
     [self setNeedsDisplay:true];
