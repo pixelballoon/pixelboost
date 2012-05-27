@@ -42,7 +42,9 @@ void ViewEntity::Render(pb::RenderLayer* layer)
 {
     UpdateBounds();
     
-    Vec3 position = _Entity->GetPosition();
+    View::Instance()->GetPrimitiveRenderer()->AttachBox(layer, Vec2(_Position.x, _Position.y), Vec2(0.1,0.1));
+    View::Instance()->GetPrimitiveRenderer()->AttachLine(layer, Vec2(_Position.x, _Position.y), Vec2(_Position.x, _Position.y+1));
+    View::Instance()->GetPrimitiveRenderer()->AttachLine(layer, Vec2(_Position.x, _Position.y), Vec2(_Position.x+1, _Position.y));
     
     for (PropertyMap::iterator it = _Properties.begin(); it != _Properties.end(); ++it)
     {
@@ -287,6 +289,9 @@ void ViewEntity::UpdateBounds()
     if (_BoundsDirty)
     {
         _BoundingBox.Invalidate();
+        
+        _BoundingBox.Expand(_Position);
+        _BoundingBox.Expand(_Position + glm::vec3(1,1,0));
         
         for (PropertyMap::iterator it = _Properties.begin(); it != _Properties.end(); ++it)
         {
