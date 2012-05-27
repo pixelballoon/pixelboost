@@ -74,10 +74,25 @@ void GwenRenderer::DrawTexturedRect(Gwen::Texture* definition, Gwen::Rect rect, 
 
 void GwenRenderer::LoadTexture(Gwen::Texture* definition)
 {
-    std::shared_ptr<SpriteSheet> sheet = pb::Game::Instance()->GetSpriteRenderer()->CreateSpriteSheet(definition->name.c_str());
+    std::shared_ptr<SpriteSheet> sheet = pb::Game::Instance()->GetSpriteRenderer()->GetSpriteSheet(definition->name.c_str());
+    pb::Texture* texture = 0;
     
-    pb::Texture* texture = sheet->LoadTexture(pb::FileHelpers::GetRootPath() + "/data/" + definition->name.c_str());
-
+    if (!sheet)
+    {
+        sheet = pb::Game::Instance()->GetSpriteRenderer()->CreateSpriteSheet(definition->name.c_str());
+        
+        std::string fileName = definition->name.c_str();
+        
+        if (fileName[0] != '/')
+        {
+            fileName = pb::FileHelpers::GetRootPath() + "/data/" + fileName;
+        }
+        
+        texture = sheet->LoadTexture(fileName);
+    } else {
+        texture = sheet->_Texture;
+    }
+    
     definition->width = texture->GetSize()[0];
     definition->height = texture->GetSize()[1];
 }
