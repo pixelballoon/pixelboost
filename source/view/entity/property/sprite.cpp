@@ -36,8 +36,14 @@ void SpriteViewProperty::Refresh()
 {
     const SchemaAttribute* visualisation = _SchemaItem->GetAttribute("Visualisation");
     
-    _Sprite = EvaluateProperty(visualisation->GetParamValue("sprite"));
-    View::Instance()->LoadSprite(_Sprite);
+    std::string sprite = EvaluateProperty(visualisation->GetParamValue("sprite"));
+    
+    if (sprite != _Sprite)
+    {
+        _Sprite = sprite;
+        View::Instance()->LoadSprite(_Sprite);
+        DirtyBounds();
+    }
 }
 
 pb::BoundingBox SpriteViewProperty::CalculateBounds()

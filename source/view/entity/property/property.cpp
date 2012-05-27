@@ -51,7 +51,11 @@ const std::string& ViewProperty::GetPath()
 
 void ViewProperty::DirtyBounds()
 {
-    _BoundsDirty = true;
+    if (!_BoundsDirty)
+    {
+        _BoundsDirty = true;
+        _Parent->DirtyBounds();
+    }
 }
 
 pb::BoundingBox ViewProperty::GetBoundingBox()
