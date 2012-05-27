@@ -108,6 +108,9 @@ bool Project::OpenConfig(const std::string& filename)
     json::Number& pixelUnit = config["pixel_unit"];
     _Config.pixelUnit = pixelUnit.Value();
     
+    json::Object& assets = config["assets"];
+    _Config.assets = assets;
+    
     return true;
 }
 

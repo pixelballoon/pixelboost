@@ -60,6 +60,7 @@
 		1C18128A156FD40800C738C0 /* scale.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C181287156FD3F500C738C0 /* scale.cpp */; };
 		1C210F41152CF44F00DEAC92 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C210F40152CF44F00DEAC92 /* Cocoa.framework */; };
 		1C210F5E152CF60400DEAC92 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C210F5D152CF60400DEAC92 /* WebKit.framework */; };
+		1C38847E15718E7600E95986 /* createPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C38847C15718E7600E95986 /* createPanel.cpp */; };
 		1C3F42361558323400396F50 /* record.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C3F42301558323400396F50 /* record.cpp */; };
 		1C3F42381558323400396F50 /* schema.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C3F42341558323400396F50 /* schema.cpp */; };
 		1C3F423B1558430B00396F50 /* file.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C3F42391558430B00396F50 /* file.cpp */; };
@@ -552,6 +553,8 @@
 		1C210F44152CF44F00DEAC92 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		1C210F45152CF44F00DEAC92 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1C210F5D152CF60400DEAC92 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		1C38847C15718E7600E95986 /* createPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = createPanel.cpp; path = create/createPanel.cpp; sourceTree = "<group>"; };
+		1C38847D15718E7600E95986 /* createPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = createPanel.h; path = create/createPanel.h; sourceTree = "<group>"; };
 		1C3F42301558323400396F50 /* record.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = record.cpp; path = http/commands/record.cpp; sourceTree = "<group>"; };
 		1C3F42311558323400396F50 /* record.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = record.h; path = http/commands/record.h; sourceTree = "<group>"; };
 		1C3F42341558323400396F50 /* schema.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = schema.cpp; path = http/commands/schema.cpp; sourceTree = "<group>"; };
@@ -1346,6 +1349,7 @@
 		1C181238156EB0BE00C738C0 /* ui */ = {
 			isa = PBXGroup;
 			children = (
+				1C38848015718E7C00E95986 /* create */,
 				1C181239156EB0C000C738C0 /* property */,
 			);
 			path = ui;
@@ -1432,6 +1436,15 @@
 				1C210F5D152CF60400DEAC92 /* WebKit.framework */,
 			);
 			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		1C38848015718E7C00E95986 /* create */ = {
+			isa = PBXGroup;
+			children = (
+				1C38847C15718E7600E95986 /* createPanel.cpp */,
+				1C38847D15718E7600E95986 /* createPanel.h */,
+			);
+			name = create;
 			sourceTree = "<group>";
 		};
 		1C3F422D1558306700396F50 /* commands */ = {
@@ -2734,6 +2747,7 @@
 				1C181284156F9EED00C738C0 /* create.cpp in Sources */,
 				1C181289156FD40800C738C0 /* rotate.cpp in Sources */,
 				1C18128A156FD40800C738C0 /* scale.cpp in Sources */,
+				1C38847E15718E7600E95986 /* createPanel.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

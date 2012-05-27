@@ -66,6 +66,7 @@ public:
     void SetRecord(Record* record);
     Record* GetRecord();
     
+    std::string GetSpriteFile(const std::string& sprite);
     void LoadSprite(const std::string& sprite);
     
     Level* GetLevel();
@@ -73,9 +74,6 @@ public:
     
 public:
     sigslot::Signal0<> onRedraw;
-    
-private:
-    std::string GetSpriteFile(const std::string& sprite);
     
 private:
     Record* _Record;
@@ -98,6 +96,8 @@ private:
     void OnEntityCreate(Gwen::Controls::Base* item);
     
     void OnSelectionChanged();
+    
+    void SetupCreateMenu(Project* project);
     
 private:
     ManipulatorManager* _ManipulatorManager;

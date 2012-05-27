@@ -3,8 +3,11 @@
 #include <map>
 #include <set>
 #include <string>
+#include <vector>
 
 #include "sigslot/signal.h"
+
+#include "pixelboost/data/json/reader.h"
 
 #include "project/definitions.h"
 
@@ -45,6 +48,7 @@ public:
         std::vector<std::string> imageRoots;
         std::string exportDir;
         unsigned int pixelUnit;
+        json::Object assets;
     };
     
     const ProjectConfig& GetConfig() const;

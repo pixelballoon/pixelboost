@@ -1,7 +1,10 @@
 #include "pixelboost/graphics/camera/camera.h"
 
 #include "command/manager.h"
+#include "project/entity.h"
 #include "project/record.h"
+#include "project/project.h"
+#include "project/property.h"
 #include "view/manipulator/create.h"
 #include "core.h"
 #include "view.h"
@@ -23,9 +26,17 @@ std::string CreateManipulator::GetName()
     return "create";
 }
 
-void CreateManipulator::SetActorType(const std::string& actor)
+void CreateManipulator::SetEntityType(const std::string& entity)
 {
-    _ActorType = actor;
+    _EntityType = entity;
+    _Fields.clear();
+    _Values.clear();
+}
+
+void CreateManipulator::SetCreationData(const std::vector<std::string>& fields, const std::vector<std::string>& values)
+{
+    _Fields = fields;
+    _Values = values;
 }
 
 bool CreateManipulator::OnMouseDown(pb::MouseButton button, glm::vec2 position)
@@ -35,8 +46,15 @@ bool CreateManipulator::OnMouseDown(pb::MouseButton button, glm::vec2 position)
         glm::vec2 start = View::Instance()->GetLevelCamera()->ConvertScreenToWorld(position);
         
         char commandArgs[1024];
-        sprintf(commandArgs, "-r %d -t %s -p %f,%f,%f", View::Instance()->GetRecord()->GetUid(), _ActorType.c_str(), start.x, start.y, 0.f);
-        Core::Instance()->GetCommandManager()->Exec("createEntity", commandArgs);
+        sprintf(commandArgs, "-r %d -t %s -p %f,%f,%f", View::Instance()->GetRecord()->GetUid(), _EntityType.c_str(), start.x, start.y, 0.f);
+        std::string entityIdString = Core::Instance()->GetCommandManager()->Exec("createEntity", commandArgs);
+        Uid entityId = atoi(entityIdString.c_str());
+        Entity* entity = Core::Instance()->GetProject()->GetEntity(entityId);
+        
+        for (int i=0; i<_Fields.size(); i++)
+        {
+            entity->AcquireAtom(_Fields[i])->SetStringValue(_Values[i]);
+        }
         
         return true;
     } else if (button == pb::kMouseButtonRight)

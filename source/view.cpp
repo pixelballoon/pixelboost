@@ -31,6 +31,7 @@
 #include "view/manipulator/rotate.h"
 #include "view/manipulator/scale.h"
 #include "view/manipulator/select.h"
+#include "view/ui/create/createPanel.h"
 #include "view/ui/property/propertyPanel.h"
 #include "view/level.h"
 #include "core.h"
@@ -105,6 +106,7 @@ void View::Initialise(Vec2 size)
     PropertyPanel* _Properties = new PropertyPanel(dock);
     dock->GetBottom()->GetTabControl()->AddPage("Properties", _Properties);
     dock->GetBottom()->GetTabControl()->AddPage("Output", _Output);
+    dock->GetBottom()->GetTabControl()->AddPage("Create", new CreatePanel(dock));
 	dock->GetBottom()->SetHeight(300);
     
     _Menu = new Gwen::Controls::MenuStrip(dock);
@@ -162,25 +164,6 @@ void View::Zoom(float delta)
     _LevelCamera->Scale = Vec2(Max(Min(maxZoom, scale[0]+delta), minZoom), Max(Min(maxZoom, scale[1]+delta), minZoom));
 }
 
-void View::LoadSprite(const std::string& sprite)
-{
-    if (GetSpriteRenderer()->GetSpriteSheet(sprite))
-        return;
-    
-    std::shared_ptr<pb::SpriteSheet> spriteSheet = GetSpriteRenderer()->CreateSpriteSheet(sprite);
-    spriteSheet->LoadSingle(GetSpriteFile(sprite));
-}
-
-Level* View::GetLevel()
-{
-    return _Level;
-}
-
-pb::OrthographicCamera* View::GetLevelCamera()
-{
-    return _LevelCamera;
-}
-
 std::string View::GetSpriteFile(const std::string& sprite)
 {
     Project* project = Core::Instance()->GetProject();
@@ -202,6 +185,25 @@ std::string View::GetSpriteFile(const std::string& sprite)
     }
     
     return "";
+}
+
+void View::LoadSprite(const std::string& sprite)
+{
+    if (GetSpriteRenderer()->GetSpriteSheet(sprite))
+        return;
+    
+    std::shared_ptr<pb::SpriteSheet> spriteSheet = GetSpriteRenderer()->CreateSpriteSheet(sprite);
+    spriteSheet->LoadSingle(GetSpriteFile(sprite));
+}
+
+Level* View::GetLevel()
+{
+    return _Level;
+}
+
+pb::OrthographicCamera* View::GetLevelCamera()
+{
+    return _LevelCamera;
 }
 
 void View::SetCanvasSize(Vec2 size)
@@ -234,19 +236,12 @@ void View::OnProjectOpened(Project* project)
     _Records->SetText("Records");
     _FilePage->Add(_Records);
     
-    Schema* schema = project->GetSchema();
-    
-    _CreateMenu->GetMenu()->ClearItems();
-    for (Schema::EntityMap::const_iterator it = schema->GetEntities().begin(); it != schema->GetEntities().end(); ++it)
-    {
-        Gwen::Controls::MenuItem* item = _CreateMenu->GetMenu()->AddItem(it->first);
-        item->UserData.Set("type", it->first);
-        item->onPress.Add(this, &View::OnEntityCreate);
-    }
+    SetupCreateMenu(project);
 }
 
 void View::OnProjectClosed(Project* project)
 {
+    _CreateMenu->GetMenu()->ClearItems();
     _FilePage->Clear();
     _Level->Clear();
 }
@@ -306,10 +301,23 @@ void View::OnEntityCreate(Gwen::Controls::Base* item)
 {
     CreateManipulator* createManipulator = static_cast<CreateManipulator*>(View::Instance()->GetManipulatorManager()->SetActiveManipulator("create"));
     
-    createManipulator->SetActorType(item->UserData.Get<std::string>("type"));
+    createManipulator->SetEntityType(item->UserData.Get<std::string>("type"));
 }
 
 void View::OnSelectionChanged()
 {
     SetDirty();
+}
+
+void View::SetupCreateMenu(Project* project)
+{
+    Schema* schema = project->GetSchema();
+    
+    _CreateMenu->GetMenu()->ClearItems();
+    for (Schema::EntityMap::const_iterator it = schema->GetEntities().begin(); it != schema->GetEntities().end(); ++it)
+    {
+        Gwen::Controls::MenuItem* item = _CreateMenu->GetMenu()->AddItem(it->first);
+        item->UserData.Set("type", it->first);
+        item->onPress.Add(this, &View::OnEntityCreate);
+    }
 }

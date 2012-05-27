@@ -1,4 +1,5 @@
 #include <string>
+#include <vector>
 
 #include "view/manipulator/manipulator.h"
 
@@ -13,7 +14,8 @@ namespace pixeleditor
         virtual std::string GetName();
         
     public:
-        void SetActorType(const std::string& actor);
+        void SetEntityType(const std::string& entity);
+        void SetCreationData(const std::vector<std::string>& fields, const std::vector<std::string>& values);
         
     public:
         virtual bool OnMouseDown(pb::MouseButton button, glm::vec2 position);
@@ -23,6 +25,8 @@ namespace pixeleditor
         virtual bool OnKeyUp(pb::KeyboardKey key, char character);
         
     private:
-        std::string _ActorType;
+        std::string _EntityType;
+        std::vector<std::string> _Fields;
+        std::vector<std::string> _Values;
     };
 }
