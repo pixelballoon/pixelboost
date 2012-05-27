@@ -1,0 +1,28 @@
+<exporter>
+    <name>pixelboost.xml</name>
+	
+    <displayName>PixelBoost Physics (phy)</displayName>
+	
+	<description>PixelBoost Physics Format</description>
+	
+	<version>1.0</version>
+	
+	<yAxisDirection>up</yAxisDirection>
+	
+	<physicsEngine>box2d</physicsEngine>
+	
+	<template>pixelboost.phy</template>
+	
+	<fileExtension>phy</fileExtension>
+	
+	<anchorPoint>
+	    <enabled>no</enabled>
+	</anchorPoint>
+
+    <origin>
+        <type>fixed</type>
+        <relX>0.5</relX>		
+		<relY>0.5</relY>
+    </origin>
+</exporter>
+
