@@ -36,7 +36,7 @@ bool TransformCommand::CanUndo()
     return true;
 }
 
-bool TransformCommand::Do()
+bool TransformCommand::Do(std::string& returnString)
 {
     _TransformPosition = false;
     _TransformRotation = false;

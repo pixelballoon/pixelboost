@@ -39,7 +39,7 @@ bool CreateEntityCommand::CanUndo()
     return true;
 }
 
-bool CreateEntityCommand::Do()
+bool CreateEntityCommand::Do(std::string& returnString)
 {
     Core* core = Core::Instance();
     
@@ -72,6 +72,10 @@ bool CreateEntityCommand::Do()
     entity->SetPosition(Vec3(x, y, z));
     
     record->AddEntity(entity);
+    
+    char entityId[32];
+    sprintf(entityId, "%d", _EntityUid);
+    returnString = entityId;
     
     return true;
 }

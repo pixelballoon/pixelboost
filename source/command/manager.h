@@ -20,7 +20,7 @@ public:
     typedef Command*(*CreateCommand)();
     
     void RegisterCommand(const std::string& command, CreateCommand createCommand);
-    void Exec(const std::string& command, const std::string& arguments = "");
+    std::string Exec(const std::string& command, const std::string& arguments = "");
     
     bool Undo();
     bool Redo();

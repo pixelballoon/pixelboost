@@ -37,7 +37,7 @@ bool SelectCommand::CanUndo()
     return true;
 }
 
-bool SelectCommand::Do()
+bool SelectCommand::Do(std::string& returnString)
 {
     _Selection = Core::Instance()->GetSelection();
     

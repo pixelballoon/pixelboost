@@ -13,7 +13,7 @@ public:
     
     virtual std::string GetName();
     
-    virtual bool Do();
+    virtual bool Do(std::string& returnString);
 };
     
 class ExportCommand : public Command
@@ -24,7 +24,7 @@ public:
     
     virtual std::string GetName();
     
-    virtual bool Do();
+    virtual bool Do(std::string& returnString);
 };
 
 class OpenCommand : public Command
@@ -35,7 +35,7 @@ public:
     
     virtual std::string GetName();
     
-    virtual bool Do();
+    virtual bool Do(std::string& returnString);
 };
 
 class CloseCommand : public Command
@@ -46,7 +46,7 @@ public:
     
     virtual std::string GetName();
     
-    virtual bool Do();
+    virtual bool Do(std::string& returnString);
 };
     
 }

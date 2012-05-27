@@ -21,8 +21,10 @@ void CommandManager::RegisterCommand(const std::string& command, CreateCommand c
     _Commands[command] = createCommand;
 }
 
-void CommandManager::Exec(const std::string& command, const std::string& arguments)
+std::string CommandManager::Exec(const std::string& command, const std::string& arguments)
 {
+    std::string returnString;
+    
     std::cout << "cmd." << command << "(\"" << arguments << "\");" << std::endl;       
     
     ClearRedoStack();
@@ -30,14 +32,14 @@ void CommandManager::Exec(const std::string& command, const std::string& argumen
     if (_Commands.find(command) == _Commands.end())
     {
         std::cout << "// Command doesn't exist" << std::endl;
-        return;
+        return returnString;
     }
     
     Command* cmd = _Commands[command]();
     
     cmd->SetArguments(arguments);
     
-    if (cmd->Do())
+    if (cmd->Do(returnString))
     {
         std::cout << "// Succeeded" << std::endl;
         
@@ -46,6 +48,8 @@ void CommandManager::Exec(const std::string& command, const std::string& argumen
     }
     else
         std::cout << "// Failed" << std::endl;
+    
+    return returnString;
 }
 
 bool CommandManager::Undo()
@@ -85,7 +89,9 @@ bool CommandManager::Redo()
     
     std::cout << "// Redoing " << cmd->GetName() << std::endl;
     
-    bool result = cmd->Do();
+    std::string returnString;
+    
+    bool result = cmd->Do(returnString);
     
     if (result)
     {

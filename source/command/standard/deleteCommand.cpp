@@ -44,7 +44,7 @@ bool DeleteCommand::CanUndo()
     return true;
 }
 
-bool DeleteCommand::Do()
+bool DeleteCommand::Do(std::string& returnString)
 {
     const Selection& selection = Core::Instance()->GetSelection();
     

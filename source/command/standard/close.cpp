@@ -21,7 +21,7 @@ std::string CloseCommand::GetName()
     return CloseCommand::GetStaticName();
 }
 
-bool CloseCommand::Do()
+bool CloseCommand::Do(std::string& returnString)
 {
     return Core::Instance()->GetProject()->Close();
 }

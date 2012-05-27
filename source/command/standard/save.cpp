@@ -21,7 +21,7 @@ std::string SaveCommand::GetName()
     return SaveCommand::GetStaticName();
 }
 
-bool SaveCommand::Do()
+bool SaveCommand::Do(std::string& returnString)
 {
     return Core::Instance()->GetProject()->Save();
 }

@@ -21,7 +21,7 @@ std::string ExportCommand::GetName()
     return ExportCommand::GetStaticName();
 }
 
-bool ExportCommand::Do()
+bool ExportCommand::Do(std::string& returnString)
 {
     char cmd[2048];
     std::string outputDir = Core::Instance()->GetProject()->GetConfig().exportDir + "templates/";

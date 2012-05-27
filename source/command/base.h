@@ -22,7 +22,7 @@ public:
     virtual std::string GetName() = 0;
     
     virtual bool CanUndo();
-    virtual bool Do() = 0;
+    virtual bool Do(std::string& returnString) = 0;
     virtual bool Undo();
     
 private:

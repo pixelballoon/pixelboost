@@ -19,7 +19,7 @@ namespace pixeleditor
         virtual std::string GetName();
         
         virtual bool CanUndo();
-        virtual bool Do();
+        virtual bool Do(std::string& returnString);
         virtual bool Undo();
         
     private:

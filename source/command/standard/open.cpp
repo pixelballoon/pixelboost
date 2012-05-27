@@ -22,7 +22,7 @@ std::string OpenCommand::GetName()
     return OpenCommand::GetStaticName();
 }
 
-bool OpenCommand::Do()
+bool OpenCommand::Do(std::string& returnString)
 {
     return Core::Instance()->GetProject()->Open(GetArgument());
 }
