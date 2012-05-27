@@ -13,15 +13,13 @@ class b2World;
 
 namespace pb
 {
-    struct FixtureDefinition
-    {
-        std::vector<b2PolygonShape> shapeList;
-    };
-    
     class Box2DHelpers
     {
     public:
-        static FixtureDefinition LoadDefinition(const std::string& filename);
+        typedef std::vector<b2PolygonShape> FixtureDefinition;
+        typedef std::map<std::string, FixtureDefinition> FixtureCollection;
+        
+        static FixtureCollection LoadDefinition(const std::string& filename);
         static b2Body* CreateBodyFromDefinition(b2World* world, const FixtureDefinition& definition, const Vec2& position, void* userData, Vec2 scale=Vec2(1,1));
     };
 }

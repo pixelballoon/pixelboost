@@ -7,10 +7,10 @@
 {% for polygon in fixture.polygons %}
 			[
 			    {% for point in polygon %} {% if not forloop.first %}, {% endif %}[ {{point.x|floatformat:4}}, {{point.y|floatformat:4}} ]{% endfor %}
-		    ]
+		    ]{% if not forloop.last %}, {% endif %}
 {% endfor %}
 {% endfor %}
 		]
-	}
+	}{% if not forloop.last %}, {% endif %}
 {% endfor %}
 ]

@@ -8,46 +8,55 @@
 
 using namespace pb;
 
-FixtureDefinition Box2DHelpers::LoadDefinition(const std::string& filename)
+Box2DHelpers::FixtureCollection Box2DHelpers::LoadDefinition(const std::string& filename)
 {
     std::string definitionString = pb::FileHelpers::FileToString(pb::FileHelpers::GetRootPath()+"/data/physics/"+filename+".phy");
     
-    json::Object definition;
+    json::Array fixtures;
     
-    if (!json::Reader::Read(definition, definitionString))
-        return FixtureDefinition();
+    if (!json::Reader::Read(fixtures, definitionString))
+        return FixtureCollection();
     
-    FixtureDefinition fixtureDefinition;
+    FixtureCollection fixtureCollection;
     
-    json::Array& hulls = definition["hulls"];
-    
-    for (json::Array::iterator hullIt = hulls.Begin(); hullIt != hulls.End(); ++hullIt)
+    for (json::Array::iterator fixtureIt = fixtures.Begin(); fixtureIt != fixtures.End(); ++fixtureIt)
     {
-        json::Array& elements = *hullIt;
+        json::Object fixture = *fixtureIt;
         
-        if (elements.Size() >= 3)
+        FixtureDefinition fixtureDefinition;
+        
+        json::Array& hulls = fixture["hulls"];
+        
+        for (json::Array::iterator hullIt = hulls.Begin(); hullIt != hulls.End(); ++hullIt)
         {
-            b2PolygonShape shape;
-        
-            b2Vec2* vertices = new b2Vec2[elements.Size()];
+            json::Array& elements = *hullIt;
             
-            int i=0;
-            for (json::Array::iterator pointIt = elements.Begin(); pointIt != elements.End(); ++pointIt)
+            if (elements.Size() >= 3)
             {
-                json::Object& pt = *pointIt;
-                vertices[i].x = static_cast<json::Number>(pt["x"]).Value();
-                vertices[i].y = static_cast<json::Number>(pt["y"]).Value();
-                i++;
+                b2PolygonShape shape;
+            
+                b2Vec2* vertices = new b2Vec2[elements.Size()];
+                
+                int i=0;
+                for (json::Array::iterator pointIt = elements.Begin(); pointIt != elements.End(); ++pointIt)
+                {
+                    json::Array& pt = *pointIt;
+                    vertices[i].x = static_cast<json::Number>(pt[0]).Value()/32.f;
+                    vertices[i].y = static_cast<json::Number>(pt[1]).Value()/32.f;
+                    i++;
+                }
+                
+                shape.Set(vertices, elements.Size());
+                delete[] vertices;
+                
+                fixtureDefinition.push_back(shape);
             }
-            
-            shape.Set(vertices, elements.Size());
-            delete[] vertices;
-            
-            fixtureDefinition.shapeList.push_back(shape);
         }
+        
+        fixtureCollection[(json::String)fixture["name"]] = fixtureDefinition;
     }
     
-    return fixtureDefinition;
+    return fixtureCollection;
 }
 
 b2Body* Box2DHelpers::CreateBodyFromDefinition(b2World* world, const FixtureDefinition& fixtureDef, const Vec2& position, void* userData, Vec2 scale)
@@ -61,7 +70,7 @@ b2Body* Box2DHelpers::CreateBodyFromDefinition(b2World* world, const FixtureDefi
     
     b2Body* body = world->CreateBody(&bodyDef);
     
-    for (std::vector<b2PolygonShape>::const_iterator it = fixtureDef.shapeList.begin(); it != fixtureDef.shapeList.end(); ++it)
+    for (std::vector<b2PolygonShape>::const_iterator it = fixtureDef.begin(); it != fixtureDef.end(); ++it)
     {
         poly = *it;
         for (int i=0; i<b2_maxPolygonVertices; i++)
