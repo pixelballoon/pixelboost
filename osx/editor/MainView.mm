@@ -85,7 +85,7 @@ enum {
 {
     self = [super initWithCoder:decoder];
     if (self) {
-        NSTrackingArea* trackingArea = [[NSTrackingArea alloc] initWithRect:[self bounds] options:(NSTrackingMouseMoved | NSTrackingActiveAlways) owner:self userInfo:nil];
+        NSTrackingArea* trackingArea = [[NSTrackingArea alloc] initWithRect:[self bounds] options:(NSTrackingMouseMoved | NSTrackingActiveAlways | NSTrackingInVisibleRect) owner:self userInfo:nil];
         [self addTrackingArea:trackingArea];
         [trackingArea release];
     }
