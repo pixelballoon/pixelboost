@@ -11,14 +11,14 @@ namespace pb
 {
     
 class Record;
-    
+
 struct RecordDescription
 {
     std::string Name;
     Uid Type;
     Uid Uid;
 };
-    
+
 class Database
 {
 public:
@@ -32,14 +32,17 @@ public:
     
 public:
     typedef void*(*CreateStruct)();
+    typedef void(*DeserialiseStruct)(void* data);
     
-    void RegisterStruct(Uid type, CreateStruct createStruct);
+    void RegisterCreate(Uid type, CreateStruct createStruct);
+    void RegisterDeserialise(Uid type, DeserialiseStruct deserialiseStruct);
     
     void OpenDatabase(const std::string& location);
     
     Record* OpenRecord(Uid recordId);
     
     void* Create(Uid type);
+    void Deserialise(Uid type, void* data);
     
 public:
     typedef std::vector<RecordDescription> RecordDescriptionList;
@@ -51,6 +54,7 @@ public:
     
 private:
     typedef std::map<Uid, CreateStruct> StructCreateMap;
+    typedef std::map<Uid, DeserialiseStruct> StructDeserialiseMap;
     
     std::string _DatabaseRoot;
     
@@ -58,6 +62,7 @@ private:
     RecordMap _Records;
     
     StructCreateMap _StructCreate;
+    StructDeserialiseMap _StructDeserialise;
     
     static Database* _Instance;
     

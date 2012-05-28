@@ -53,6 +53,8 @@ private:
     typedef std::vector<EntityPointer> PointerList;
     
     PointerList _Pointers;
+    
+    friend class Database;
 };
     
 }
