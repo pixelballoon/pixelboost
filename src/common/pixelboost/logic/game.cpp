@@ -1,4 +1,5 @@
 #include "pixelboost/audio/soundManager.h"
+#include "pixelboost/debug/debugDatabaseHandler.h"
 #include "pixelboost/debug/debugVariableManager.h"
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/render/common/renderer.h"
@@ -48,6 +49,12 @@ Game::Game(void* viewController)
     _KeyboardManager = new KeyboardManager();
     _MouseManager = new MouseManager();
 #endif
+    
+#ifndef PIXELBOOST_DISABLE_DEBUG
+    _DebugNetwork = new NetworkServer();
+    _DebugDatabaseHandler = new DebugDatabaseHandler();
+    _DebugNetwork->RegisterHandler(_DebugDatabaseHandler);
+#endif
 }
 
 Game::~Game()
@@ -78,7 +85,9 @@ Game* Game::Instance()
 
 void Game::Initialise()
 {
-
+#ifndef PIXELBOOST_DISABLE_DEBUG
+    _DebugNetwork->StartServer(9090);
+#endif
 }
     
 CustomRenderer* Game::GetCustomRenderer() const
@@ -177,6 +186,10 @@ void Game::Update(float time)
     
 #ifndef PIXELBOOST_DISABLE_SOUND
     SoundManager::Instance()->Update(time);
+#endif
+    
+#ifndef PIXELBOOST_DISABLE_DEBUG
+    _DebugNetwork->Update();
 #endif
 }
 

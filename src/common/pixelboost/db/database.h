@@ -37,7 +37,8 @@ public:
     void RegisterCreate(Uid type, CreateStruct createStruct);
     void RegisterDeserialise(Uid type, DeserialiseStruct deserialiseStruct);
     
-    void OpenDatabase(const std::string& location);
+    void SetLocation(const std::string& location);
+    void OpenDatabase();
     
     Record* OpenRecord(Uid recordId);
     
@@ -53,6 +54,8 @@ public:
     const Record* GetRecord(Uid uid) const;
     
 private:
+    std::string GetRoot();
+    
     typedef std::map<Uid, CreateStruct> StructCreateMap;
     typedef std::map<Uid, DeserialiseStruct> StructDeserialiseMap;
     
