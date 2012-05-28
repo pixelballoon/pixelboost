@@ -72,6 +72,12 @@ namespace pb
             _IsOpen = false;
             
             _NetworkManager->ConnectionClosed(*this);
+            
+            _RecvOffset = 0;
+            _SendOffset = 0;
+            _SendLength = 0;
+            _RecvLength = 0;
+            _IsReading = false;
         }
     }
     
