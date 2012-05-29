@@ -108,6 +108,7 @@ private:
     ManipulatorManager* _ManipulatorManager;
     
     Level* _Level;
+    pb::RenderLayer* _BackgroundLayer;
     pb::RenderLayer* _LevelLayer;
     pb::OrthographicCamera* _LevelCamera;
     

@@ -1,9 +1,11 @@
 #include "pixelboost/graphics/camera/camera.h"
+#include "pixelboost/graphics/render/primitive/primitiveRenderer.h"
 
 #include "command/manager.h"
 #include "project/entity.h"
 #include "project/project.h"
 #include "project/record.h"
+#include "project/schema.h"
 #include "view/entity/entity.h"
 #include "view/level.h"
 #include "core.h"
@@ -17,6 +19,8 @@ Level::Level()
     View::Instance()->GetMouseManager()->AddHandler(this);
     
     Core::Instance()->GetProject()->recordRemoved.Connect(this, &Level::OnRecordRemoved);
+    
+    _Size = glm::vec2(0,0);
 }
 
 Level::~Level()
@@ -36,11 +40,14 @@ void Level::Update(float time)
     }    
 }
 
-void Level::Render(pb::RenderLayer* layer)
+void Level::Render(pb::RenderLayer* backgroundLayer, pb::RenderLayer* levelLayer)
 {
+    View::Instance()->GetPrimitiveRenderer()->AttachBox(backgroundLayer, Vec2(0,0), Vec2(_Size.x, _Size.y), Vec3(0,0,0), Vec4(0.6, 0.6, 0.6, 1.0), true);
+    View::Instance()->GetPrimitiveRenderer()->AttachBox(backgroundLayer, Vec2(0,0), Vec2(_Size.x, _Size.y), Vec3(0,0,0), Vec4(0, 0, 0, 1.0), false);
+    
     for (EntityMap::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
     {
-        it->second->Render(layer);
+        it->second->Render(levelLayer);
     }
 }
 
@@ -48,6 +55,7 @@ void Level::Clear()
 {
     if (_Record)
     {
+        _Record->propertyChanged.Disconnect(this, &Level::OnPropertyChanged);
         _Record->entityAdded.Disconnect(this, &Level::OnEntityAdded);
         _Record->entityRemoved.Disconnect(this, &Level::OnEntityRemoved);
     }
@@ -66,6 +74,9 @@ void Level::SetRecord(Record* record)
     {
         _Record = record;
         
+        UpdateSize();
+        
+        _Record->propertyChanged.Connect(this, &Level::OnPropertyChanged);
         _Record->entityAdded.Connect(this, &Level::OnEntityAdded);
         _Record->entityRemoved.Connect(this, &Level::OnEntityRemoved);
         
@@ -121,6 +132,22 @@ void Level::DestroyEntity(Uid uid)
     }
 }
 
+void Level::UpdateSize()
+{
+    _Size = glm::vec2(0,0);
+    
+    if (!_Record)
+        return;
+
+    const SchemaAttribute* hasLevel = _Record->GetType()->GetAttribute("HasLevel");
+    if (!hasLevel)
+        return;
+    
+    std::string width = hasLevel->EvaluateParamValue(_Record, "width");
+    std::string height = hasLevel->EvaluateParamValue(_Record, "height");
+    _Size = glm::vec2(atof(width.c_str()), atof(height.c_str()));
+}
+
 int Level::GetPriority()
 {
     return 0;
@@ -157,4 +184,9 @@ void Level::OnEntityAdded(Record* record, Entity* entity)
 void Level::OnEntityRemoved(Record* record, Entity* entity)
 {
     DestroyEntity(entity->GetUid());
+}
+
+void Level::OnPropertyChanged(Struct* structure)
+{
+    UpdateSize();
 }

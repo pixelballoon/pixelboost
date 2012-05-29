@@ -2,6 +2,7 @@
 
 #include <map>
 
+#include "glm/glm.hpp"
 #include "sigslot/signal.h"
 
 #include "pixelboost/input/mouseManager.h"
@@ -27,7 +28,7 @@ namespace pixeleditor
         ~Level();
                 
         void Update(float time);
-        void Render(pb::RenderLayer* layer);
+        void Render(pb::RenderLayer* backgroundLayer, pb::RenderLayer* levelLayer);
         
         void Clear();
         
@@ -48,6 +49,8 @@ namespace pixeleditor
         void CreateEntity(Entity* entity);
         void DestroyEntity(Uid uid);
         
+        void UpdateSize();
+        
     private:
         virtual int GetPriority();
         virtual bool OnMouseDown(pb::MouseButton button, glm::vec2 position);
@@ -58,9 +61,13 @@ namespace pixeleditor
         virtual void OnEntityAdded(Record* record, Entity* entity);
         virtual void OnEntityRemoved(Record* record, Entity* entity);
         
+        virtual void OnPropertyChanged(Struct* structure);
+        
     private:
         Record* _Record;
         
         EntityMap _Entities;
+        
+        glm::vec2 _Size;
     };
 }

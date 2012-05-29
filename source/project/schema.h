@@ -16,6 +16,7 @@ class SchemaEntity;
 class SchemaProperty;
 class SchemaRecord;
 class SchemaStruct;
+class Struct;
     
 class SchemaAttribute
 {
@@ -28,6 +29,7 @@ public:
     typedef std::map<std::string, std::string> ParamValueMap;
     
     void AddParam(const std::string& param, const std::string& value);
+    std::string EvaluateParamValue(Struct* structure, const std::string& param, const std::string& prefix = "", const std::string& defaultValue = "") const;
     std::string GetParamValue(const std::string& param, const std::string& defaultValue = "") const;
     
     const ParamValueMap& GetParamValues() const;

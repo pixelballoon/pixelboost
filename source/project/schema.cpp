@@ -5,6 +5,7 @@
 
 #include "project/schema.h"
 #include "project/schemaParser.h"
+#include "project/struct.h"
 
 using namespace pixeleditor;
     
@@ -38,6 +39,21 @@ const std::string& SchemaAttribute::GetName() const
 void SchemaAttribute::AddParam(const std::string& param, const std::string& value)
 {
     _ParamValue[param] = value;
+}
+
+std::string SchemaAttribute::EvaluateParamValue(Struct* structure, const std::string& param, const std::string& prefix, const std::string& defaultValue) const
+{
+    ParamValueMap::const_iterator it = _ParamValue.find(param);
+    
+    if (it == _ParamValue.end())
+        return defaultValue;
+    
+    std::string paramValue = it->second;
+    
+    if (paramValue[0] == '/')
+        return structure->EvaluateProperty(prefix+paramValue);
+    
+    return paramValue;
 }
 
 std::string SchemaAttribute::GetParamValue(const std::string& param, const std::string& defaultValue) const

@@ -140,6 +140,12 @@ View::~View()
     View::Instance()->GetKeyboardManager()->RemoveHandler(_KeyboardHandler);
     View::Instance()->GetMouseManager()->RemoveHandler(_MouseHandler);
     
+    pb::Game::Instance()->GetRenderer()->RemoveLayer(_BackgroundLayer);
+    pb::Game::Instance()->GetRenderer()->RemoveLayer(_LevelLayer);
+    delete _BackgroundLayer;
+    delete _LevelLayer;
+    delete _LevelCamera;
+    
     delete _KeyboardHandler;
     delete _MouseHandler;
     
@@ -166,6 +172,7 @@ void View::Initialise(Vec2 size)
     _ManipulatorManager->SetActiveManipulator("select");
     
     _LevelCamera = new pb::OrthographicCamera();
+    _BackgroundLayer = new pb::RenderLayer(50, _LevelCamera);
     _LevelLayer = new pb::RenderLayer(100, _LevelCamera);
     
     _Level = new Level();
@@ -173,6 +180,7 @@ void View::Initialise(Vec2 size)
     _GwenCamera = new pb::OrthographicCamera();
     _GwenLayer = new pb::RenderLayer(500, _GwenCamera);
     
+    pb::Game::Instance()->GetRenderer()->AddLayer(_BackgroundLayer);
     pb::Game::Instance()->GetRenderer()->AddLayer(_LevelLayer);
     pb::Game::Instance()->GetRenderer()->AddLayer(_GwenLayer);
 
@@ -234,7 +242,7 @@ void View::Render()
 {
     _GwenCanvas->RenderCanvas();
     
-    _Level->Render(_LevelLayer);
+    _Level->Render(_BackgroundLayer, _LevelLayer);
     
     _ManipulatorManager->Render(_LevelLayer);
     
