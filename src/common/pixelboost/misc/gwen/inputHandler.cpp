@@ -110,7 +110,31 @@ public:
     
     bool OnMouseScroll(glm::vec2 scroll)
     {
-        return _Canvas->InputMouseWheel(scroll.y*120);
+        _Canvas->InputMouseWheel(scroll.y*120);
+        
+        Gwen::Controls::Base* hoveredControl = Gwen::HoveredControl;
+        if (!hoveredControl || hoveredControl == _Root)
+            return false;
+        
+        return true;
+    }
+    
+    bool OnMouseZoom(glm::vec2 zoom)
+    {
+        Gwen::Controls::Base* hoveredControl = Gwen::HoveredControl;
+        if (!hoveredControl || hoveredControl == _Root)
+            return false;
+        
+        return true;
+    }
+    
+    bool OnMouseRotate(float rotate)
+    {
+        Gwen::Controls::Base* hoveredControl = Gwen::HoveredControl;
+        if (!hoveredControl || hoveredControl == _Root)
+            return false;
+        
+        return true;
     }
     
 private:
