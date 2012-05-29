@@ -5,7 +5,7 @@
 #include "pixelboost/file/fileHelpers.h"
 
 using namespace pb;
-    
+
 Database* Database::_Instance = 0;
 
 Database::Database()
@@ -25,22 +25,30 @@ Database* Database::Instance()
     static Database* instance = new Database();
     return instance;
 }
-    
+
 lua_State* Database::GetLuaState()
 {
     return _State;
 }
 
-void Database::RegisterStruct(Uid type, CreateStruct createStruct)
+void Database::RegisterCreate(Uid type, CreateStruct createStruct)
 {
     _StructCreate[type] = createStruct;
 }
-    
-void Database::OpenDatabase(const std::string& location)
+
+void Database::RegisterDeserialise(Uid type, DeserialiseStruct deserialiseStruct)
 {
-    _DatabaseRoot = FileHelpers::GetRootPath() + location;
-    
-    std::string filename = _DatabaseRoot + "main.lua";
+    _StructDeserialise[type] = deserialiseStruct;
+}
+
+void Database::SetLocation(const std::string& location)
+{
+    _DatabaseRoot = location;
+}
+
+void Database::OpenDatabase()
+{
+    std::string filename = GetRoot() + "main.lua";
     
     if (luaL_loadfile(_State, filename.c_str()) || lua_pcall(_State, 0, 0, 0))
     {
@@ -85,15 +93,22 @@ void Database::OpenDatabase(const std::string& location)
 
 Record* Database::OpenRecord(Uid recordId)
 {
+    RecordMap::iterator recordIt = _Records.find(recordId);
+    
+#ifdef PIXELBOOST_DISABLE_DEBUG
+    if (recordIt != _Records.end())
+        return recordIt->second;
+#endif
+
     char filename[1024];
-    sprintf(filename, "%srecords/%X.lua", _DatabaseRoot.c_str(), recordId);
+    sprintf(filename, "%srecords/%X.lua", GetRoot().c_str(), recordId);
     
     if (luaL_loadfile(_State, filename) || lua_pcall(_State, 0, 0, 0))
     {
         printf("Can't open file: %s\n", lua_tostring(_State, -1));
         return 0;
     }
-         
+    
     char recordName[64];
     sprintf(recordName, "r%X", recordId);
     lua_getglobal(_State, recordName);
@@ -118,12 +133,25 @@ Record* Database::OpenRecord(Uid recordId)
         return 0;
     }
     
-    void* data = Create(recordType);
+    void* recordData;
+    
+    Record* record;
+    
+    if (recordIt != _Records.end())
+    {
+        record = recordIt->second;
+        recordData = record->GetData();
+        Deserialise(recordType, recordData);
+    }
+    else
+    {
+        recordData = Create(recordType);
+        Deserialise(recordType, recordData);
+        record = new Record(recordId, recordType, recordData);
+        _Records[recordId] = record;
+    }
     
     lua_pop(_State, 1);
-    
-    Record* record = new Record(recordId, recordType, data);
-    _Records[recordId] = record;
     
     lua_getfield(_State, -1, "entities");
     
@@ -139,7 +167,7 @@ Record* Database::OpenRecord(Uid recordId)
         {
             Uid uid;
             Uid type;
-            void* data;
+            void* entityData;
             
             lua_rawgeti(_State, -1, i);
             if (!lua_istable(_State, -1))
@@ -167,25 +195,50 @@ Record* Database::OpenRecord(Uid recordId)
             type = lua_tonumber(_State, -1);
             lua_pop(_State, 1);
             
-            lua_getfield(_State, -1, "properties");
+            Record::EntityMap::iterator entityIt = record->_Entities.find(uid);
             
-            if (!lua_istable(_State, -1))
+            Entity* entity;
+            
+            if (entityIt != record->_Entities.end())
             {
-                lua_pop(_State, 1);
-                continue;
-            }
-            
-            data = Create(type);
-            
-            lua_pop(_State, 1);
-            
-            if (data)
-            {
-                Entity* entity = new Entity(uid, type, data);
+                entity = entityIt->second;
                 
-                record->AddEntity(entity);
+                lua_getfield(_State, -1, "properties");
+                
+                if (!lua_istable(_State, -1))
+                {
+                    lua_pop(_State, 1);
+                    continue;
+                }
+                
+                entityData = entity->GetData();
+                Deserialise(type, entityData);
+                
+                lua_pop(_State, 1);
+                
+                entity->Load();
             } else {
-                printf("Unable to create entity of type (%u)\n", type);
+                lua_getfield(_State, -1, "properties");
+                
+                if (!lua_istable(_State, -1))
+                {
+                    lua_pop(_State, 1);
+                    continue;
+                }
+                
+                entityData = Create(type);
+                Deserialise(type, entityData);
+                
+                lua_pop(_State, 1);
+                
+                if (entityData)
+                {
+                    entity = new Entity(uid, type, entityData);
+                    entity->Load();
+                    record->AddEntity(entity);
+                } else {
+                    printf("Unable to create entity of type (%u)\n", type);
+                }
             }
             
             lua_pop(_State, 1);
@@ -196,7 +249,7 @@ Record* Database::OpenRecord(Uid recordId)
     
     return record;
 }
-    
+
 void* Database::Create(Uid type)
 {
     StructCreateMap::iterator it = _StructCreate.find(type);
@@ -207,11 +260,21 @@ void* Database::Create(Uid type)
     return it->second();
 }
 
+void Database::Deserialise(Uid type, void* data)
+{
+    StructDeserialiseMap::iterator it = _StructDeserialise.find(type);
+    
+    if (it == _StructDeserialise.end())
+        return;
+    
+    it->second(data);
+}
+
 const Database::RecordDescriptionList& Database::GetRecordDescriptions() const
 {
     return _RecordDescriptions;
 }
-    
+
 const Database::RecordMap& Database::GetRecords() const
 {
     return _Records;
@@ -225,4 +288,19 @@ const Record* Database::GetRecord(Uid uid) const
         return 0;
     
     return it->second;
+}
+
+std::string Database::GetRoot()
+{
+#ifndef PIXELBOOST_DISABLE_DEBUG
+    int bundleDatabase = FileHelpers::GetTimestamp(FileHelpers::GetRootPath() + _DatabaseRoot + "main.lua");
+    int userDatabase = FileHelpers::GetTimestamp(FileHelpers::GetUserPath() + _DatabaseRoot + "main.lua");
+    
+    if (bundleDatabase >= userDatabase)
+        return FileHelpers::GetRootPath() + _DatabaseRoot;
+    else
+        return FileHelpers::GetUserPath() + _DatabaseRoot;
+#else
+    return FileHelpers::GetRootPath() + _DatabaseRoot;
+#endif
 }

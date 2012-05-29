@@ -8,12 +8,14 @@ namespace pb
 {
 
 class CustomRenderer;
+class DebugDatabaseHandler;
 class FontRenderer;
 class GameCenter;
 class GraphicsDevice;
 class KeyboardManager;
 class ModelRenderer;
 class MouseManager;
+class NetworkServer;
 class ParticleRenderer;
 class PrimitiveRenderer;
 class Renderer;
@@ -77,6 +79,9 @@ private:
     KeyboardManager* _KeyboardManager;
     MouseManager* _MouseManager;
 	TouchManager* _TouchManager;
+    
+    NetworkServer* _DebugNetwork;
+    DebugDatabaseHandler* _DebugDatabaseHandler;
 	
 	float _GameTime;
     float _TotalTime;
