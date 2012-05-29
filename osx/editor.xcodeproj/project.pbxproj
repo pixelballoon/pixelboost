@@ -140,6 +140,7 @@
 		1C78F18715691F00001441AC /* camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C78F18215691F00001441AC /* camera.cpp */; };
 		1C78F18815691F00001441AC /* device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C78F18315691F00001441AC /* device.cpp */; };
 		1C78F18915691F00001441AC /* texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C78F18515691F00001441AC /* texture.cpp */; };
+		1CD03697157447C1003F9B92 /* networkWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CD03695157447C1003F9B92 /* networkWindow.cpp */; };
 		1CEB6C4E1540953100E8D103 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1CEB6C441540953100E8D103 /* AppDelegate.mm */; };
 		1CEB6C501540953100E8D103 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 1CEB6C471540953100E8D103 /* Credits.rtf */; };
 		1CEB6C511540953100E8D103 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1CEB6C491540953100E8D103 /* InfoPlist.strings */; };
@@ -755,6 +756,8 @@
 		1C78F18415691F00001441AC /* device.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = device.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		1C78F18515691F00001441AC /* texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = texture.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		1C78F18615691F00001441AC /* texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = texture.h; sourceTree = "<group>"; };
+		1CD03695157447C1003F9B92 /* networkWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = networkWindow.cpp; sourceTree = "<group>"; };
+		1CD03696157447C1003F9B92 /* networkWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = networkWindow.h; sourceTree = "<group>"; };
 		1CEB6C431540953100E8D103 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1CEB6C441540953100E8D103 /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
 		1CEB6C451540953100E8D103 /* editor-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "editor-Info.plist"; sourceTree = "<group>"; };
@@ -1351,6 +1354,7 @@
 			children = (
 				1C38848015718E7C00E95986 /* create */,
 				1C181239156EB0C000C738C0 /* property */,
+				1CD03694157447C1003F9B92 /* settings */,
 			);
 			path = ui;
 			sourceTree = "<group>";
@@ -1796,6 +1800,15 @@
 				1C78F18615691F00001441AC /* texture.h */,
 			);
 			path = gl2;
+			sourceTree = "<group>";
+		};
+		1CD03694157447C1003F9B92 /* settings */ = {
+			isa = PBXGroup;
+			children = (
+				1CD03695157447C1003F9B92 /* networkWindow.cpp */,
+				1CD03696157447C1003F9B92 /* networkWindow.h */,
+			);
+			path = settings;
 			sourceTree = "<group>";
 		};
 		1CEB6C421540953100E8D103 /* editor */ = {
@@ -2748,6 +2761,7 @@
 				1C181289156FD40800C738C0 /* rotate.cpp in Sources */,
 				1C18128A156FD40800C738C0 /* scale.cpp in Sources */,
 				1C38847E15718E7600E95986 /* createPanel.cpp in Sources */,
+				1CD03697157447C1003F9B92 /* networkWindow.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

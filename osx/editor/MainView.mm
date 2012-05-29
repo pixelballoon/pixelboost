@@ -12,6 +12,7 @@
 #include "pixelboost/input/mouseManager.h"
 #include "pixelboost/graphics/render/primitive/primitiveRenderer.h"
 
+#include "core.h"
 #include "view.h"
 
 #import "MainView.h"
@@ -88,9 +89,18 @@ enum {
         NSTrackingArea* trackingArea = [[NSTrackingArea alloc] initWithRect:[self bounds] options:(NSTrackingMouseMoved | NSTrackingActiveAlways | NSTrackingInVisibleRect) owner:self userInfo:nil];
         [self addTrackingArea:trackingArea];
         [trackingArea release];
+        
+        NSTimer* timer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:(1.0/30.0) target:self selector:@selector(onRedrawTimer) userInfo:nil repeats:YES];
+        [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
     }
     
     return self;
+}
+
+- (void)onRedrawTimer
+{
+    Core::Instance()->Update();
+    [self setNeedsDisplay:true];
 }
 
 - (void)drawRect:(NSRect)dirtyRect

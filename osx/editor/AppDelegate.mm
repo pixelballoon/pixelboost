@@ -46,6 +46,11 @@
     _Core->GetCommandManager()->Exec("export");
 }
 
+- (IBAction)networkExport:(id)sender
+{
+    _Core->GetCommandManager()->Exec("export", "-n");
+}
+
 - (IBAction)save:(id)sender
 {
     _Core->GetCommandManager()->Exec("save");

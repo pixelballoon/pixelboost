@@ -28,5 +28,5 @@ bool ExportCommand::Do(std::string& returnString)
     sprintf(cmd, "mkdir -p %s", outputDir.c_str());
     system(cmd);
     
-    return Core::Instance()->GetProject()->Export();
+    return Core::Instance()->GetProject()->Export(IsArgumentSet("n"));
 }

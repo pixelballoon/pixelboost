@@ -8,6 +8,7 @@
 #include "Gwen/Controls/ListBox.h"
 #include "Gwen/Controls/MenuStrip.h"
 #include "Gwen/Controls/TabControl.h"
+#include "Gwen/Controls/WindowControl.h"
 #include "Gwen/Skins/Simple.h"
 #include "Gwen/Skins/TexturedBase.h"
 
@@ -33,6 +34,7 @@
 #include "view/manipulator/select.h"
 #include "view/ui/create/createPanel.h"
 #include "view/ui/property/propertyPanel.h"
+#include "view/ui/settings/networkWindow.h"
 #include "view/level.h"
 #include "core.h"
 #include "view.h"
@@ -200,6 +202,11 @@ void View::Initialise(Vec2 size)
 	dock->GetBottom()->SetHeight(300);
     
     _Menu = new Gwen::Controls::MenuStrip(dock);
+    
+    Gwen::Controls::MenuItem* networkMenu = _Menu->AddItem("Network");
+    Gwen::Controls::MenuItem* deviceAddress = networkMenu->GetMenu()->AddItem("Device Address");
+    deviceAddress->onPress.Add(this, &View::OnDeviceAddress);
+    
     _CreateMenu = _Menu->AddItem("Create");
     
     SetCanvasSize(size);
@@ -392,6 +399,11 @@ void View::OnEntityCreate(Gwen::Controls::Base* item)
     CreateManipulator* createManipulator = static_cast<CreateManipulator*>(View::Instance()->GetManipulatorManager()->SetActiveManipulator("create"));
     
     createManipulator->SetEntityType(item->UserData.Get<std::string>("type"));
+}
+
+void View::OnDeviceAddress(Gwen::Controls::Base* item)
+{
+    new NetworkWindow(_GwenCanvas);
 }
 
 void View::OnSelectionChanged()

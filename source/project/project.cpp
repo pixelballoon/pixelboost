@@ -4,10 +4,14 @@
 
 #include "pixelboost/data/json/reader.h"
 #include "pixelboost/file/fileHelpers.h"
+#include "pixelboost/network/networkMessage.h"
+#include "pixelboost/network/networkServer.h"
 
 #include "project/project.h"
 #include "project/record.h"
 #include "project/schema.h"
+
+#include "core.h"
 
 using namespace pixeleditor;
 
@@ -149,7 +153,7 @@ bool Project::Save()
     return true;
 }
 
-bool Project::Export()
+bool Project::Export(bool networkExport)
 {
     // TODO: Make OS independant
     char cmd[2048];
@@ -185,6 +189,32 @@ bool Project::Export()
     file.close();
     
     projectExported(this);
+    
+    if (networkExport)
+    {
+        if (!Core::Instance()->GetNetworkManager()->GetClientConnection().IsOpen())
+            return false;
+        
+        pb::NetworkMessage message;
+        message.SetProtocol('DBDG');
+        message.WriteString("main.lua");
+        std::string main = pb::FileHelpers::FileToString(outputDir+"main.lua");
+        message.WriteString(main.c_str());
+        Core::Instance()->GetNetworkManager()->GetClientConnection().Send(message);
+        
+        for (RecordMap::iterator it = _Records.begin(); it != _Records.end(); ++it)
+        {
+            char recordName[1024];
+            sprintf(recordName, "records/%X.lua", it->second->GetUid());
+            
+            pb::NetworkMessage message;
+            message.SetProtocol('DBDG');
+            message.WriteString(recordName);
+            std::string main = pb::FileHelpers::FileToString(outputDir+recordName);
+            message.WriteString(main.c_str());
+            Core::Instance()->GetNetworkManager()->GetClientConnection().Send(message);
+        }
+    }
     
     return true;
 }

@@ -6,6 +6,11 @@
 
 #include "core/selection.h"
 
+namespace pb
+{
+    class NetworkServer;
+}
+
 namespace pixeleditor
 {
 
@@ -22,8 +27,11 @@ public:
 public:
     static Core* Instance();
     
+    void Update();
+    
     CommandManager* GetCommandManager();
     HttpInterface* GetHttpInterface();
+    pb::NetworkServer* GetNetworkManager();
 
     Project* GetProject();
     
@@ -39,6 +47,7 @@ private:
     HttpInterface* _HttpInterface;
     
     CommandManager* _CommandManager;
+    pb::NetworkServer* _NetworkManager;
     
     Project* _Project;
     

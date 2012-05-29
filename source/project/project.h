@@ -27,7 +27,7 @@ public:
     bool Open(const std::string& directory);
     bool Close();
     bool Save();
-    bool Export();
+    bool Export(bool networkExport);
     
     bool IsOpen();
     

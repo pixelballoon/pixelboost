@@ -98,6 +98,8 @@ private:
     void OnEntitySelected(Gwen::Controls::Base* item);
     void OnEntityCreate(Gwen::Controls::Base* item);
     
+    void OnDeviceAddress(Gwen::Controls::Base* item);
+    
     void OnSelectionChanged();
     
     void SetupCreateMenu(Project* project);

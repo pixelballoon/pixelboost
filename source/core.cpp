@@ -1,3 +1,5 @@
+#include "pixelboost/network/networkServer.h"
+
 #include "core.h"
 #include "command/manager.h"
 #include "http/httpInterface.h"
@@ -17,6 +19,8 @@ Core::Core()
     _CommandManager = new CommandManager();
     _Project = new Project();
     
+    _NetworkManager = new pb::NetworkServer();
+    
     RegisterCoreCommands();
 }
 
@@ -33,6 +37,11 @@ Core* Core::Instance()
     return _Instance;
 }
 
+void Core::Update()
+{
+    _NetworkManager->Update();
+}
+
 CommandManager* Core::GetCommandManager()
 {
     return _CommandManager;
@@ -41,6 +50,11 @@ CommandManager* Core::GetCommandManager()
 HttpInterface* Core::GetHttpInterface()
 {
     return _HttpInterface;
+}
+
+pb::NetworkServer* Core::GetNetworkManager()
+{
+    return _NetworkManager;
 }
 
 Project* Core::GetProject()
