@@ -29,7 +29,7 @@ char ScaleManipulator::GetKey()
     return 's';
 }
 
-bool ScaleManipulator::OnMouseDown(pb::MouseButton button, glm::vec2 position)
+bool ScaleManipulator::OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifierKeys,  glm::vec2 position)
 {
     if (button == pb::kMouseButtonLeft)
     {
@@ -48,7 +48,7 @@ bool ScaleManipulator::OnMouseDown(pb::MouseButton button, glm::vec2 position)
     return false;
 }
 
-bool ScaleManipulator::OnMouseUp(pb::MouseButton button, glm::vec2 position)
+bool ScaleManipulator::OnMouseUp(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position)
 {
     return false;    
 }

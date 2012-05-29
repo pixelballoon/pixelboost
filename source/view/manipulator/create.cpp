@@ -39,7 +39,7 @@ void CreateManipulator::SetCreationData(const std::vector<std::string>& fields, 
     _Values = values;
 }
 
-bool CreateManipulator::OnMouseDown(pb::MouseButton button, glm::vec2 position)
+bool CreateManipulator::OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position)
 {
     if (button == pb::kMouseButtonLeft)
     {
@@ -68,7 +68,7 @@ bool CreateManipulator::OnMouseDown(pb::MouseButton button, glm::vec2 position)
     return false;
 }
 
-bool CreateManipulator::OnMouseUp(pb::MouseButton button, glm::vec2 position)
+bool CreateManipulator::OnMouseUp(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position)
 {
     return false;    
 }

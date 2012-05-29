@@ -47,7 +47,7 @@ void SelectManipulator::Render(pb::RenderLayer* layer)
     }
 }
 
-bool SelectManipulator::OnMouseDown(pb::MouseButton button, glm::vec2 position)
+bool SelectManipulator::OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position)
 {
     if (button == pb::kMouseButtonLeft)
     {
@@ -60,7 +60,7 @@ bool SelectManipulator::OnMouseDown(pb::MouseButton button, glm::vec2 position)
     return false;
 }
 
-bool SelectManipulator::OnMouseUp(pb::MouseButton button, glm::vec2 position)
+bool SelectManipulator::OnMouseUp(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position)
 {
     if (_Active && button == pb::kMouseButtonLeft)
     {

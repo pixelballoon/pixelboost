@@ -29,7 +29,7 @@ char MoveManipulator::GetKey()
     return 'g';
 }
 
-bool MoveManipulator::OnMouseDown(pb::MouseButton button, glm::vec2 position)
+bool MoveManipulator::OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position)
 {
     if (button == pb::kMouseButtonLeft)
     {
@@ -46,7 +46,7 @@ bool MoveManipulator::OnMouseDown(pb::MouseButton button, glm::vec2 position)
     return false;
 }
 
-bool MoveManipulator::OnMouseUp(pb::MouseButton button, glm::vec2 position)
+bool MoveManipulator::OnMouseUp(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position)
 {
     return false;    
 }

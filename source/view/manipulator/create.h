@@ -18,8 +18,8 @@ namespace pixeleditor
         void SetCreationData(const std::vector<std::string>& fields, const std::vector<std::string>& values);
         
     public:
-        virtual bool OnMouseDown(pb::MouseButton button, glm::vec2 position);
-        virtual bool OnMouseUp(pb::MouseButton button, glm::vec2 position);
+        virtual bool OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position);
+        virtual bool OnMouseUp(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position);
         virtual bool OnMouseMove(glm::vec2 position);
         virtual bool OnKeyDown(pb::KeyboardKey key, char character);
         virtual bool OnKeyUp(pb::KeyboardKey key, char character);

@@ -167,7 +167,21 @@ enum {
     {
         NSPoint eventLocation = [self convertPoint:event.locationInWindow fromView:nil];
         
-        view->GetMouseManager()->OnMouseDown(pb::kMouseButtonLeft, glm::vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
+        pb::ModifierKeys modifiers = 0;
+        
+        if ([event modifierFlags] & NSControlKeyMask)
+            modifiers |= pb::kModifierCtrl;
+        
+        if ([event modifierFlags] & NSCommandKeyMask)
+            modifiers |= pb::kModifierCtrl;
+        
+        if ([event modifierFlags] & NSShiftKeyMask)
+            modifiers |= pb::kModifierShift;
+        
+        if ([event modifierFlags] & NSAlternateKeyMask)
+            modifiers |= pb::kModifierAlt;
+                
+        view->GetMouseManager()->OnMouseDown(pb::kMouseButtonLeft, modifiers, glm::vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
     }
     
     [self setNeedsDisplay:true];
@@ -195,7 +209,21 @@ enum {
     {
         NSPoint eventLocation = [self convertPoint:event.locationInWindow fromView:nil];
         
-        view->GetMouseManager()->OnMouseUp(pb::kMouseButtonLeft, glm::vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
+        pb::ModifierKeys modifiers = 0;
+        
+        if ([event modifierFlags] & NSControlKeyMask)
+            modifiers |= pb::kModifierCtrl;
+        
+        if ([event modifierFlags] & NSCommandKeyMask)
+            modifiers |= pb::kModifierCtrl;
+        
+        if ([event modifierFlags] & NSShiftKeyMask)
+            modifiers |= pb::kModifierShift;
+        
+        if ([event modifierFlags] & NSAlternateKeyMask)
+            modifiers |= pb::kModifierAlt;
+        
+        view->GetMouseManager()->OnMouseUp(pb::kMouseButtonLeft, modifiers, glm::vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
     }
     
     [self setNeedsDisplay:true];
@@ -209,7 +237,21 @@ enum {
     {
         NSPoint eventLocation = [self convertPoint:event.locationInWindow fromView:nil];
         
-        view->GetMouseManager()->OnMouseDown(pb::kMouseButtonRight, glm::vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
+        pb::ModifierKeys modifiers = 0;
+        
+        if ([event modifierFlags] & NSControlKeyMask)
+            modifiers |= pb::kModifierCtrl;
+        
+        if ([event modifierFlags] & NSCommandKeyMask)
+            modifiers |= pb::kModifierCtrl;
+        
+        if ([event modifierFlags] & NSShiftKeyMask)
+            modifiers |= pb::kModifierShift;
+        
+        if ([event modifierFlags] & NSAlternateKeyMask)
+            modifiers |= pb::kModifierAlt;
+        
+        view->GetMouseManager()->OnMouseDown(pb::kMouseButtonRight, modifiers, glm::vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
     }
     
     [self setNeedsDisplay:true];
@@ -237,7 +279,21 @@ enum {
     {
         NSPoint eventLocation = [self convertPoint:event.locationInWindow fromView:nil];
         
-        view->GetMouseManager()->OnMouseUp(pb::kMouseButtonRight, glm::vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
+        pb::ModifierKeys modifiers = 0;
+        
+        if ([event modifierFlags] & NSControlKeyMask)
+            modifiers |= pb::kModifierCtrl;
+        
+        if ([event modifierFlags] & NSCommandKeyMask)
+            modifiers |= pb::kModifierCtrl;
+        
+        if ([event modifierFlags] & NSShiftKeyMask)
+            modifiers |= pb::kModifierShift;
+        
+        if ([event modifierFlags] & NSAlternateKeyMask)
+            modifiers |= pb::kModifierAlt;
+        
+        view->GetMouseManager()->OnMouseUp(pb::kMouseButtonRight, modifiers, glm::vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
     }
     
     [self setNeedsDisplay:true];
@@ -249,7 +305,21 @@ enum {
     
     if (view)
     {
-        view->GetMouseManager()->OnMouseScroll(glm::vec2(-event.scrollingDeltaX, event.scrollingDeltaY));
+        pb::ModifierKeys modifiers = 0;
+        
+        if ([event modifierFlags] & NSControlKeyMask)
+            modifiers |= pb::kModifierCtrl;
+        
+        if ([event modifierFlags] & NSCommandKeyMask)
+            modifiers |= pb::kModifierCtrl;
+        
+        if ([event modifierFlags] & NSShiftKeyMask)
+            modifiers |= pb::kModifierShift;
+        
+        if ([event modifierFlags] & NSAlternateKeyMask)
+            modifiers |= pb::kModifierAlt;
+        
+        view->GetMouseManager()->OnMouseScroll(modifiers, glm::vec2(-event.scrollingDeltaX, event.scrollingDeltaY));
     }
     
     [self setNeedsDisplay:true];

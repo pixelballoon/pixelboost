@@ -49,14 +49,14 @@ public:
         return 1;
     }
     
-    virtual bool OnMouseDown(pb::MouseButton button, glm::vec2 position)
+    virtual bool OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position)
     {
-        return View::Instance()->GetManipulatorManager()->OnMouseDown(button, position);
+        return View::Instance()->GetManipulatorManager()->OnMouseDown(button, modifierKeys, position);
     }
     
-    virtual bool OnMouseUp(pb::MouseButton button, glm::vec2 position)
+    virtual bool OnMouseUp(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position)
     {
-        return View::Instance()->GetManipulatorManager()->OnMouseUp(button, position);
+        return View::Instance()->GetManipulatorManager()->OnMouseUp(button, modifierKeys, position);
     }
     
     virtual bool OnMouseMove(glm::vec2 position)
@@ -85,12 +85,12 @@ void Manipulator::Render(pb::RenderLayer* layer)
     
 }
 
-bool Manipulator::OnMouseDown(pb::MouseButton button, glm::vec2 position)
+bool Manipulator::OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position)
 {
     return false;
 }
 
-bool Manipulator::OnMouseUp(pb::MouseButton button, glm::vec2 position)
+bool Manipulator::OnMouseUp(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position)
 {
     return false;
 }
@@ -180,14 +180,14 @@ Manipulator* ManipulatorManager::SetActiveManipulator(const std::string& name)
     return _ActiveManipulator;
 }
 
-bool ManipulatorManager::OnMouseDown(pb::MouseButton button, glm::vec2 position)
+bool ManipulatorManager::OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position)
 {
-    return _ActiveManipulator->OnMouseDown(button, position);
+    return _ActiveManipulator->OnMouseDown(button, modifierKeys, position);
 }
 
-bool ManipulatorManager::OnMouseUp(pb::MouseButton button, glm::vec2 position)
+bool ManipulatorManager::OnMouseUp(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position)
 {
-    return _ActiveManipulator->OnMouseUp(button, position);
+    return _ActiveManipulator->OnMouseUp(button, modifierKeys, position);
 }
 
 bool ManipulatorManager::OnMouseMove(glm::vec2 position)

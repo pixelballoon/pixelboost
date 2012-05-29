@@ -93,12 +93,12 @@ public:
         return 0;
     }
     
-    virtual bool OnMouseDown(pb::MouseButton button, glm::vec2 position)
+    virtual bool OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position)
     {
         return false;
     }
     
-    virtual bool OnMouseUp(pb::MouseButton button, glm::vec2 position)
+    virtual bool OnMouseUp(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position)
     {
         return false;
     }
@@ -108,9 +108,12 @@ public:
         return false;
     }
     
-    virtual bool OnMouseScroll(glm::vec2 delta)
+    virtual bool OnMouseScroll(pb::ModifierKeys modifierKeys, glm::vec2 delta)
     {
-        View::Instance()->Scroll(delta/10.f);
+        if (modifierKeys & pb::kModifierCtrl)
+            View::Instance()->Zoom(delta.y/1200.f);
+        else
+            View::Instance()->Scroll(delta/10.f);
         return true;
     }
     
