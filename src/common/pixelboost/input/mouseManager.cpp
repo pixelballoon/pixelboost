@@ -14,12 +14,12 @@ MouseHandler::~MouseHandler()
     
 }
 
-bool MouseHandler::OnMouseDown(MouseButton button, glm::vec2 position)
+bool MouseHandler::OnMouseDown(MouseButton button, ModifierKeys modifierKeys, glm::vec2 position)
 {
     return false;
 }
 
-bool MouseHandler::OnMouseUp(MouseButton button, glm::vec2 position)
+bool MouseHandler::OnMouseUp(MouseButton button, ModifierKeys modifierKeys, glm::vec2 position)
 {
     return false;
 }
@@ -29,7 +29,7 @@ bool MouseHandler::OnMouseMove(glm::vec2 position)
     return false;
 }
 
-bool MouseHandler::OnMouseScroll(glm::vec2 delta)
+bool MouseHandler::OnMouseScroll(ModifierKeys modifierKeys, glm::vec2 delta)
 {
     return false;
 }
@@ -54,24 +54,24 @@ MouseManager::~MouseManager()
 
 }
 
-void MouseManager::OnMouseDown(MouseButton button, glm::vec2 position)
+void MouseManager::OnMouseDown(MouseButton button, ModifierKeys modifierKeys, glm::vec2 position)
 {
     UpdateHandlers();
     
     for (HandlerList::iterator it = _Handlers.begin(); it != _Handlers.end(); ++it)
     {
-        if (static_cast<MouseHandler*>(*it)->OnMouseDown(button, position))
+        if (static_cast<MouseHandler*>(*it)->OnMouseDown(button, modifierKeys, position))
             return;
     }
 }
 
-void MouseManager::OnMouseUp(MouseButton button, glm::vec2 position)
+void MouseManager::OnMouseUp(MouseButton button, ModifierKeys modifierKeys, glm::vec2 position)
 {
     UpdateHandlers();
     
     for (HandlerList::iterator it = _Handlers.begin(); it != _Handlers.end(); ++it)
     {
-        if (static_cast<MouseHandler*>(*it)->OnMouseUp(button, position))
+        if (static_cast<MouseHandler*>(*it)->OnMouseUp(button, modifierKeys, position))
             return;
     }
 }
@@ -87,13 +87,13 @@ void MouseManager::OnMouseMove(glm::vec2 position)
     }
 }
 
-void MouseManager::OnMouseScroll(glm::vec2 delta)
+void MouseManager::OnMouseScroll(ModifierKeys modifierKeys, glm::vec2 delta)
 {
     UpdateHandlers();
     
     for (HandlerList::iterator it = _Handlers.begin(); it != _Handlers.end(); ++it)
     {
-        if (static_cast<MouseHandler*>(*it)->OnMouseScroll(delta))
+        if (static_cast<MouseHandler*>(*it)->OnMouseScroll(modifierKeys, delta))
             return;
     }
 }
