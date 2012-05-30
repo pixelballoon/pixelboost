@@ -5,9 +5,9 @@
 #include "pixelboost/db/database.h"
 
 #define PIXELBOOST_DECLARE_CLASS(type) class type ; void PB_Register ## type ();
-#define PIXELBOOST_DECLARE_STRUCT(type) struct type ; void PB_Register ## type ();
+#define PIXELBOOST_DECLARE_STRUCT(type) struct type ; void PB_Register ## type (); void PB_Deserialise ## type (void* data);
 
-#define PIXELBOOST_HAS_BINDING(type) friend void PB_Deserialise ## type (type& object)
+#define PIXELBOOST_HAS_BINDING(type) friend void PB_Deserialise ## type (void* data)
 
 #define PIXELBOOST_START_REGISTER(name) void name () {
 #define PIXELBOOST_REGISTER(name) PB_Register ## name ();
@@ -59,7 +59,7 @@
 #define PIXELBOOST_FIELD_STRUCT(field, name, type) { \
     lua_getfield(state, -1, name); \
     if (lua_istable(state, -1)) { \
-        PB_Deserialise ## type (object.field); \
+        PB_Deserialise ## type (&object.field); \
     } \
     lua_pop(state, 1); \
 }
