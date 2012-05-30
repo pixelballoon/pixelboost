@@ -72,7 +72,7 @@ public:
         return 1000;
     }
     
-    bool OnMouseDown(MouseButton button, glm::vec2 position)
+    bool OnMouseDown(MouseButton button, ModifierKeys modifierKeys, glm::vec2 position)
     {
         _Canvas->InputMouseButton((int)button, true);
         
@@ -97,7 +97,7 @@ public:
         return true;
     }
     
-    bool OnMouseUp(MouseButton button, glm::vec2 position)
+    bool OnMouseUp(MouseButton button, ModifierKeys modifierKeys, glm::vec2 position)
     {
         _Canvas->InputMouseButton((int)button, false);
         
@@ -108,7 +108,7 @@ public:
         return true;
     }
     
-    bool OnMouseScroll(glm::vec2 scroll)
+    bool OnMouseScroll(ModifierKeys modifierKeys, glm::vec2 scroll)
     {
         _Canvas->InputMouseWheel(scroll.y*120);
         

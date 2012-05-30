@@ -8,6 +8,15 @@
 
 namespace pb
 {
+    typedef int ModifierKeys;
+    
+    enum MouseModifier
+    {
+        kModifierShift = 1,
+        kModifierCtrl = 2,
+        kModifierAlt = 4,
+    };
+    
     enum MouseButton
     {
         kMouseButtonLeft,
@@ -21,10 +30,10 @@ namespace pb
         MouseHandler();
         virtual ~MouseHandler();
         
-        virtual bool OnMouseDown(MouseButton button, glm::vec2 position);
-        virtual bool OnMouseUp(MouseButton button, glm::vec2 position);
+        virtual bool OnMouseDown(MouseButton button, ModifierKeys modifierKeys, glm::vec2 position);
+        virtual bool OnMouseUp(MouseButton button, ModifierKeys modifierKeys, glm::vec2 position);
         virtual bool OnMouseMove(glm::vec2 position);
-        virtual bool OnMouseScroll(glm::vec2 delta);
+        virtual bool OnMouseScroll(ModifierKeys modifierKeys, glm::vec2 delta);
         virtual bool OnMouseZoom(glm::vec2 zoom);
         virtual bool OnMouseRotate(float rotate);
     };
@@ -35,10 +44,10 @@ namespace pb
         MouseManager();
         ~MouseManager();
         
-        void OnMouseDown(MouseButton button, glm::vec2 position);
-        void OnMouseUp(MouseButton button, glm::vec2 position);
+        void OnMouseDown(MouseButton button, ModifierKeys modifierKeys, glm::vec2 position);
+        void OnMouseUp(MouseButton button, ModifierKeys modifierKeys, glm::vec2 position);
         void OnMouseMove(glm::vec2 position);
-        void OnMouseScroll(glm::vec2 delta);
+        void OnMouseScroll(ModifierKeys modifierKeys, glm::vec2 delta);
         void OnMouseZoom(glm::vec2 zoom);
         void OnMouseRotate(float rotate);
     };
