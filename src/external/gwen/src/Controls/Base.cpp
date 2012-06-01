@@ -313,7 +313,9 @@ void Base::RemoveAllChildren()
 {
 	while ( Children.size() > 0 )
 	{
-		RemoveChild( *Children.begin() );
+        Base* child = *Children.begin();
+        child->DelayedDelete();
+		RemoveChild( child );
 	}
 }
 
