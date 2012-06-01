@@ -1,5 +1,7 @@
 #ifdef PIXELBOOST_PLATFORM_IOS
 
+#ifndef PIXELBOOST_DISABLE_SOUND
+
 #include <vector>
 
 #import "ObjectAL.h"
@@ -270,5 +272,7 @@ void SoundManager::SfxUpdateVolume(const Sound& sound)
     
     src.volume = sound.GetVolume();
 }
+
+#endif
 
 #endif
