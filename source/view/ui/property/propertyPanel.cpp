@@ -37,10 +37,7 @@ void PropertyPanel::SetPinned(bool pinned)
 
 void PropertyPanel::SetStruct(Struct* item, const std::string& focusPath)
 {
-    for (int i=0; i<NumChildren(); i++)
-    {
-        GetChild(i)->DelayedDelete();
-    }
+    Clear();
     
     if (item)
     {
