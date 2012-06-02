@@ -4,9 +4,8 @@
 
 using namespace pb;
 
-RenderLayer::RenderLayer(int depth, Camera* camera)
-    : _Camera(camera)
-    , _Depth(depth)
+RenderLayer::RenderLayer(int depth)
+    : _Depth(depth)
 {
     
 }

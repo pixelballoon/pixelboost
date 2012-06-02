@@ -222,6 +222,7 @@
 		1C5323CC157A05F2003C756D /* sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C5323BE157A05F2003C756D /* sprite.cpp */; };
 		1C5323CD157A05F2003C756D /* spriteRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C5323C0157A05F2003C756D /* spriteRenderer.cpp */; };
 		1C5323D0157A06AD003C756D /* camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C5323CF157A06AC003C756D /* camera.cpp */; };
+		1C5323D2157A133A003C756D /* viewport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C5323D1157A1339003C756D /* viewport.cpp */; };
 		1C7CA3D2143266340031E584 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C7CA3D1143266340031E584 /* GameKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		1C7CA3D4143266480031E584 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C7CA3D3143266480031E584 /* OpenAL.framework */; };
 		1C7CA3D6143266520031E584 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C7CA3D5143266520031E584 /* AVFoundation.framework */; };
@@ -956,6 +957,7 @@
 		1C5323C1157A05F2003C756D /* spriteRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = spriteRenderer.h; sourceTree = "<group>"; };
 		1C5323CE157A0669003C756D /* viewport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = viewport.h; sourceTree = "<group>"; };
 		1C5323CF157A06AC003C756D /* camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = camera.cpp; sourceTree = "<group>"; };
+		1C5323D1157A1339003C756D /* viewport.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = viewport.cpp; sourceTree = "<group>"; };
 		1C7CA3D1143266340031E584 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		1C7CA3D3143266480031E584 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		1C7CA3D5143266520031E584 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -1143,6 +1145,7 @@
 				1C5323CF157A06AC003C756D /* camera.cpp */,
 				1C531F5315798535003C756D /* camera.h */,
 				1C5323CE157A0669003C756D /* viewport.h */,
+				1C5323D1157A1339003C756D /* viewport.cpp */,
 			);
 			path = camera;
 			sourceTree = "<group>";
@@ -2828,6 +2831,7 @@
 				1C5323CC157A05F2003C756D /* sprite.cpp in Sources */,
 				1C5323CD157A05F2003C756D /* spriteRenderer.cpp in Sources */,
 				1C5323D0157A06AD003C756D /* camera.cpp in Sources */,
+				1C5323D2157A133A003C756D /* viewport.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -11,12 +11,11 @@ class IRenderer;
 class RenderLayer
 {
 public:
-    RenderLayer(int depth, Camera* camera);
+    RenderLayer(int depth);
     
     int GetDepth();
     
 private:
-    Camera* _Camera;
     int _Depth;
     
     friend class Renderer;

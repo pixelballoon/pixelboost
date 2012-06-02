@@ -10,7 +10,7 @@ namespace pb
 
 class IRenderer;
 class OrthographicCamera;
-class RenderLayer;
+class Viewport;
     
 struct RenderItem
 {
@@ -29,30 +29,24 @@ public:
     void Update(float time);
     void Render();
     
-    RenderLayer* GetDefaultLayer();
-    
-    void AddLayer(RenderLayer* layer);
-    void RemoveLayer(RenderLayer* layer);
+    void AddViewport(Viewport* viewport);
+    void RemoveViewport(Viewport* viewport);
     
 private:
     int AddRenderer(IRenderer* renderer);
     void RemoveRenderer(IRenderer* renderer);
     
-    static bool LayerSortPredicate(const RenderLayer* a, const RenderLayer* b);
-    
     typedef std::map<int, IRenderer*> RendererMap;
-    typedef std::vector<RenderLayer*> LayerList;
+    typedef std::vector<Viewport*> ViewportList;
     
     int _FreeRendererId;
     RendererMap _Renderers;
-    LayerList _Layers;
-    
-    OrthographicCamera* _DefaultCamera;
-    RenderLayer* _DefaultLayer;
+    ViewportList _Viewports;
     
     static Renderer* _Instance;
     
     friend class IRenderer;
+    friend class Viewport;
 };
 
 }

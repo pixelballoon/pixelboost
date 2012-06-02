@@ -4,6 +4,7 @@
 #include <set>
 
 #include "pixelboost/graphics/camera/camera.h"
+#include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/renderer/common/layer.h"
 #include "pixelboost/graphics/renderer/common/irenderer.h"
@@ -17,15 +18,11 @@ Renderer::Renderer()
     : _FreeRendererId(0)
 {
     _Instance = this;
-    _DefaultCamera = new OrthographicCamera();
-    _DefaultLayer = new RenderLayer(-1, _DefaultCamera);
-    AddLayer(_DefaultLayer);
 }
 
 Renderer::~Renderer()
 {
     _Instance = 0;
-    RemoveLayer(_DefaultLayer);
 }
 
 Renderer* Renderer::Instance()
@@ -41,23 +38,11 @@ void Renderer::Update(float time)
     }
 }
 
-RenderLayer* Renderer::GetDefaultLayer()
-{
-    return _DefaultLayer;
-}
-
 void Renderer::Render()
 {
-    std::sort(_Layers.begin(), _Layers.end(), &Renderer::LayerSortPredicate);
-    for (LayerList::iterator it = _Layers.begin(); it != _Layers.end(); ++it)
+    for (ViewportList::iterator it = _Viewports.begin(); it != _Viewports.end(); ++it)
     {
-        (*it)->_Camera->CalculateTransform(0);
-        GraphicsDevice::Instance()->SetMatrix(GraphicsDevice::kMatrixTypeModelView, (*it)->_Camera->ModelView);
-        GraphicsDevice::Instance()->SetMatrix(GraphicsDevice::kMatrixTypeProjection, (*it)->_Camera->Projection);
-        for (RendererMap::iterator rendererIt = _Renderers.begin(); rendererIt != _Renderers.end(); ++rendererIt)
-        {
-            rendererIt->second->Render(*it == _DefaultLayer ? 0 : *it);
-        }
+        (*it)->Render();
     }
 }
 
@@ -73,26 +58,21 @@ void Renderer::RemoveRenderer(IRenderer* renderer)
     _Renderers.erase(_Renderers.find(renderer->GetId()));
 }
 
-void Renderer::AddLayer(RenderLayer* layer)
+void Renderer::AddViewport(Viewport* viewport)
 {
-    _Layers.push_back(layer);
+    _Viewports.push_back(viewport);
 }
 
-void Renderer::RemoveLayer(RenderLayer* layer)
+void Renderer::RemoveViewport(Viewport* viewport)
 {
-    for (LayerList::iterator it = _Layers.begin(); it != _Layers.end(); ++it)
+    for (ViewportList::iterator it = _Viewports.begin(); it != _Viewports.end(); ++it)
     {
-        if (*it == layer)
+        if (*it == viewport)
         {
-            _Layers.erase(it);
+            _Viewports.erase(it);
             return;
         }
     }
-}
-
-bool Renderer::LayerSortPredicate(const RenderLayer* a, const RenderLayer* b)
-{
-    return a->_Depth < b->_Depth;
 }
 
 #endif
