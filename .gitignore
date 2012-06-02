@@ -11,3 +11,5 @@ tools/hullgenerator/osx/hullgenerator/build/
 tools/debugscope/osx/debugscope/DebugScope.xcodeproj/xcuserdata/
 tools/debugscope/osx/debugscope/DebugScope.xcodeproj/project.xcworkspace/
 .svn
+xcuserdata
+project.xcworkspace
