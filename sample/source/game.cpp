@@ -1,7 +1,7 @@
 #include "pixelboost/graphics/camera/camera.h"
-#include "pixelboost/graphics/render/common/layer.h"
-#include "pixelboost/graphics/render/common/renderer.h"
-#include "pixelboost/graphics/render/primitive/primitiveRenderer.h"
+#include "pixelboost/graphics/renderer/common/layer.h"
+#include "pixelboost/graphics/renderer/common/renderer.h"
+#include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 
 #include "game.h"
 

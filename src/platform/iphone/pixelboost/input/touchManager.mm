@@ -43,8 +43,8 @@ Vec2 Touch::GetWorldPosition(OrthographicCamera* camera)
 	position[0] /= (ScreenHelpers::GetDpu()/inputScale);
 	position[1] /= (ScreenHelpers::GetDpu()/inputScale);
     
-    position /= camera->Scale;
-    position += camera->Position;
+    position /= Vec2(camera->Scale.x, camera->Scale.y);
+    position += Vec2(camera->Position.y, camera->Position.y);
 	
 	return position;
 }

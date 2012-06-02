@@ -1,3 +1,5 @@
+#include "glm/gtc/type_ptr.hpp"
+
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/indexBuffer.h"
 #include "pixelboost/graphics/device/texture.h"
@@ -300,6 +302,21 @@ Texture* GraphicsDeviceGLES1::BindTexture(Texture* texture)
     }
     
     return previousTexture;
+}
+
+void GraphicsDeviceGLES1::SetMatrix(MatrixType matrixType, glm::mat4x4 matrix)
+{
+    switch (matrixType)
+    {
+        case kMatrixTypeModelView:
+            glMatrixMode(GL_MODELVIEW);
+            glLoadMatrixf(glm::value_ptr(matrix));
+            break;
+        case kMatrixTypeProjection:
+            glMatrixMode(GL_PROJECTION);
+            glLoadMatrixf(glm::value_ptr(matrix));
+            break;
+    }
 }
 
 void GraphicsDeviceGLES1::DrawElements(ElementType elementType, int num)

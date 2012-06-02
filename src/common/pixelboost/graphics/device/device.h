@@ -2,6 +2,8 @@
 
 #ifndef PIXELBOOST_DISABLE_GRAPHICS
 
+#include "glm/glm.hpp"
+
 #include "pixelboost/graphics/device/bufferFormats.h"
 
 namespace pb
@@ -43,6 +45,14 @@ public:
     virtual void DestroyTexture(Texture* texture);
     virtual Texture* GetBoundTexture() = 0;
     virtual Texture* BindTexture(Texture* texture) = 0;
+    
+    enum MatrixType
+    {
+        kMatrixTypeProjection,
+        kMatrixTypeModelView,
+    };
+    
+    virtual void SetMatrix(MatrixType matrixType, glm::mat4x4 matrix) = 0;
     
 public:
     enum ElementType
