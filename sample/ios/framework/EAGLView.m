@@ -18,6 +18,8 @@
 @implementation EAGLView
 
 @synthesize context;
+@synthesize framebufferHeight;
+@synthesize framebufferWidth;
 
 // You must implement this method
 + (Class)layerClass

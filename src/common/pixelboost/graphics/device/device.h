@@ -23,6 +23,9 @@ public:
     static GraphicsDevice* Instance();
     virtual ~GraphicsDevice();
     
+    void SetDisplayResolution(glm::vec2 resolution);
+    glm::vec2 GetDisplayResolution();
+    
     virtual unsigned char* CaptureRenderBuffer();
     
     virtual VertexBuffer* CreateVertexBuffer(BufferFormat bufferFormat, VertexFormat vertexFormat, int length);
@@ -62,6 +65,9 @@ public:
     };
     
     virtual void DrawElements(ElementType elementType, int num) = 0;
+    
+private:
+    glm::vec2 _DisplayResolution;
 };
     
 }

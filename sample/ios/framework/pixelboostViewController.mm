@@ -5,6 +5,7 @@
 #import "pixelboostViewController.h"
 #import "EAGLView.h"
 
+#include "pixelboost/graphics/device/device.h"
 #include "pixelboost/input/touchManager.h"
 
 #include "game.h"
@@ -30,9 +31,11 @@
     
 	self.context = aContext;
 	[aContext release];
+    
+    EAGLView* eaglView = (EAGLView *)self.view;
 	
-    [(EAGLView *)self.view setContext:context];
-    [(EAGLView *)self.view setFramebuffer];
+    [eaglView setContext:context];
+    [eaglView setFramebuffer];
     
     animating = FALSE;
     animationFrameInterval = 2;
@@ -45,6 +48,7 @@
     
     game = new Game(self);
     game->Initialise();
+    pb::GraphicsDevice::Instance()->SetDisplayResolution(glm::vec2(eaglView.framebufferWidth, eaglView.framebufferHeight));
 }
 
 - (void)dealloc

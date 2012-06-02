@@ -1,5 +1,6 @@
 #ifdef PIXELBOOST_PLATFORM_IOS
 
+#include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/helper/screenHelpers.h"
 #include "pixelboost/logic/game.h"
 
@@ -64,32 +65,7 @@ float GetAspectRatio()
     
 glm::vec2 GetScreenResolution()
 {
-    glm::vec2 resolution = Game::Instance()->GetScreenResolution();
-    
-    if (resolution.x != 0 || resolution.y != 0)
-        return resolution;
-    
-    if ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad))
-    {
-        if (!IsLandscape())
-            return glm::vec2(768.f, 1024.f);
-        else
-            return glm::vec2(1024.f, 768.f);
-    }
-    else if (IsHighResolution())
-    {
-        if (!IsLandscape())
-            return glm::vec2(640.f, 960.f);
-        else
-            return glm::vec2(960.f, 640.f);
-    }
-    else
-    {
-        if (!IsLandscape())
-            return glm::vec2(320.f, 480.f);
-        else
-            return glm::vec2(480.f, 320.f);
-    }
+    return pb::GraphicsDevice::Instance()->GetDisplayResolution();
 }
     
 glm::vec2 GetScreenUnits()

@@ -8,6 +8,7 @@
 using namespace pb;
 
 GraphicsDevice::GraphicsDevice()
+    : _DisplayResolution(0,0)
 {
     
 }
@@ -21,6 +22,17 @@ GraphicsDevice* GraphicsDevice::Instance()
 {
     static GraphicsDevice* instance = GraphicsDevice::Create();
     return instance;
+}
+
+
+void GraphicsDevice::SetDisplayResolution(glm::vec2 resolution)
+{
+    _DisplayResolution = resolution;
+}
+
+glm::vec2 GraphicsDevice::GetDisplayResolution()
+{
+    return _DisplayResolution;
 }
 
 unsigned char* GraphicsDevice::CaptureRenderBuffer()
