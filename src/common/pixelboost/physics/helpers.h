@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "Box2d/Box2D.h"
-#include "pixelboost/math/maths.h"
+#include "glm/glm.hpp"
 
 class b2Body;
 class b2PolygonShape;
@@ -20,7 +20,7 @@ namespace pb
         typedef std::map<std::string, FixtureDefinition> FixtureCollection;
         
         static FixtureCollection LoadDefinition(const std::string& filename);
-        static b2Body* CreateBodyFromDefinition(b2World* world, const FixtureDefinition& definition, const Vec2& position, void* userData, Vec2 scale=Vec2(1,1));
+        static b2Body* CreateBodyFromDefinition(b2World* world, const FixtureDefinition& definition, const glm::vec2& position, void* userData, glm::vec2 scale=glm::vec2(1,1));
     };
 }
 

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "pixelboost/math/maths.h"
-
 #include <vector>
+
+#include "glm/glm.hpp"
 
 namespace pb
 {
@@ -53,7 +53,7 @@ public:
     float GetTotalTime();
     
     virtual bool IsLandscape();
-    virtual Vec2 GetScreenResolution();
+    virtual glm::vec2 GetScreenResolution();
     
     virtual void OnMemoryWarning();
 	

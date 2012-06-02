@@ -3,8 +3,9 @@
 #include <map>
 #include <string>
 
+#include "glm/glm.hpp"
+
 #include "pixelboost/graphics/device/texture.h"
-#include "pixelboost/math/maths.h"
 #include "pixelboost/misc/pointer.h"
 
 namespace pb
@@ -40,15 +41,15 @@ private:
 class Sprite
 {
 public:
-    Vec4 GetUV();
+    glm::vec4 GetUV();
     
 public:
     SpriteSheet* _Sheet;
 
-    Vec2 _Dimension;
+    glm::vec2 _Dimension;
     
-    Vec2 _Size;
-    Vec2 _Position;
+    glm::vec2 _Size;
+    glm::vec2 _Position;
     bool _Rotated;
 };
     

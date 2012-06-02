@@ -2,8 +2,6 @@
 
 #include "glm/glm.hpp"
 
-#include "pixelboost/math/maths.h"
-
 namespace pb
 {
     

@@ -3,8 +3,9 @@
 #include <map>
 #include <vector>
 
+#include "glm/glm.hpp"
+
 #include "pixelboost/graphics/renderer/common/irenderer.h"
-#include "pixelboost/math/maths.h"
 
 namespace pb
 {
@@ -18,9 +19,9 @@ public:
     void Update(float time);
     void Render(RenderLayer* layer);
     
-    void AttachEllipse(RenderLayer* layer, Vec2 position, Vec2 size, Vec3 rotation = Vec3(0.f, 0.f, 0.f), Vec4 color = Vec4(1.f, 1.f, 1.f, 1.f), int segments = 12);
-    void AttachLine(RenderLayer* layer, Vec2 start, Vec2 end, Vec4 color = Vec4(1.f, 1.f, 1.f, 1.f));
-    void AttachBox(RenderLayer* layer, Vec2 position, Vec2 size, Vec3 rotation = Vec3(0.f, 0.f, 0.f), Vec4 color = Vec4(1.f, 1.f, 1.f, 1.f), bool solid=true);
+    void AttachEllipse(RenderLayer* layer, glm::vec2 position, glm::vec2 size, glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec4 color = glm::vec4(1.f, 1.f, 1.f, 1.f), int segments = 12);
+    void AttachLine(RenderLayer* layer, glm::vec2 start, glm::vec2 end, glm::vec4 color = glm::vec4(1.f, 1.f, 1.f, 1.f));
+    void AttachBox(RenderLayer* layer, glm::vec2 position, glm::vec2 size, glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec4 color = glm::vec4(1.f, 1.f, 1.f, 1.f), bool solid=true);
     
 private:
     struct PrimitiveInstance
@@ -33,10 +34,10 @@ private:
         };
         
         Type type;
-        Vec2 position;
-        Vec2 size;
-        Vec3 rotation;
-        Vec4 color;
+        glm::vec2 position;
+        glm::vec2 size;
+        glm::vec3 rotation;
+        glm::vec4 color;
         bool solid;
         int segments;
     };

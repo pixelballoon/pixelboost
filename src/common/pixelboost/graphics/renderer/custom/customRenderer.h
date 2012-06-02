@@ -6,7 +6,6 @@
 #include <vector>
 
 #include "pixelboost/graphics/renderer/common/irenderer.h"
-#include "pixelboost/math/maths.h"
 
 namespace pb
 {

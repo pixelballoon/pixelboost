@@ -2,8 +2,9 @@
 
 #include <string>
 
+#include "glm/glm.hpp"
+
 #include "pixelboost/graphics/device/device.h"
-#include "pixelboost/math/maths.h"
 
 namespace pb
 {
@@ -25,10 +26,10 @@ public:
     
     virtual void Bind(int unit = 0) = 0;
     
-    const Vec2& GetSize();
+    const glm::vec2& GetSize();
     
 protected:
-    Vec2 _Size;
+    glm::vec2 _Size;
     
     friend class GraphicsDevice;
 };

@@ -4,9 +4,9 @@
 #include <string>
 #include <vector>
 
-#include "pixelboost/graphics/renderer/common/irenderer.h"
+#include "glm/glm.hpp"
 
-#include "pixelboost/math/maths.h"
+#include "pixelboost/graphics/renderer/common/irenderer.h"
 
 namespace pb
 {
@@ -33,7 +33,7 @@ namespace pb
         virtual void Update(float time);
         virtual void Render(RenderLayer* layer);
         
-        bool AttachToRenderer(RenderLayer* layer, const std::string& fontName, const std::string& string, Vec2 position, FontAlign alignment = kFontAlignCenter, float size = 1.f, float rotation = 0.f, Vec4 color = Vec4(1.f, 1.f, 1.f, 1.f));
+        bool AttachToRenderer(RenderLayer* layer, const std::string& fontName, const std::string& string, glm::vec2 position, FontAlign alignment = kFontAlignCenter, float size = 1.f, float rotation = 0.f, glm::vec4 color = glm::vec4(1.f, 1.f, 1.f, 1.f));
         
         float MeasureString(const std::string& fontName, const std::string& string, float size);
     
@@ -44,11 +44,11 @@ namespace pb
         {
             std::string _Font;
             std::string _String;
-            Vec2 _Position;
+            glm::vec2 _Position;
             FontAlign _Alignment;
             float _Rotation;
             float _Size;
-            Vec4 _Color;
+            glm::vec4 _Color;
         };
         
         struct Font

@@ -34,9 +34,9 @@ bool Model::Load(const std::string& modelName)
     if (!file)
         return false;
     
-    std::vector<Vec3> vertices;
-    std::vector<Vec2> uvs;
-    std::vector<Vec3> normals;
+    std::vector<glm::vec3> vertices;
+    std::vector<glm::vec2> uvs;
+    std::vector<glm::vec3> normals;
     
     std::vector<Vertex_NPXYZ_UV> verts;
     
@@ -77,17 +77,17 @@ bool Model::Load(const std::string& modelName)
         {
             case kReadModeVertex:
             {
-                vertices.push_back(Vec3(atof(command[1].c_str()), atof(command[2].c_str()), atof(command[3].c_str())));
+                vertices.push_back(glm::vec3(atof(command[1].c_str()), atof(command[2].c_str()), atof(command[3].c_str())));
                 break;
             }
             case kReadModeTexture:
             {
-                uvs.push_back(Vec2(atof(command[1].c_str()), atof(command[2].c_str())));
+                uvs.push_back(glm::vec2(atof(command[1].c_str()), atof(command[2].c_str())));
                 break;
             }
             case kReadModeNormal:
             {
-                normals.push_back(Vec3(atof(command[1].c_str()), atof(command[2].c_str()), atof(command[3].c_str())));
+                normals.push_back(glm::vec3(atof(command[1].c_str()), atof(command[2].c_str()), atof(command[3].c_str())));
                 break;
             }
             case kReadModeFace:
@@ -136,7 +136,7 @@ bool Model::Load(const std::string& modelName)
 	return true;
 }
     
-void Model::ParseVert(std::vector<Vertex_NPXYZ_UV>& verts, const std::string& vert, const std::vector<Vec3>& vertices, const std::vector<Vec2>& uvs, const std::vector<Vec3>& normals)
+void Model::ParseVert(std::vector<Vertex_NPXYZ_UV>& verts, const std::string& vert, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec2>& uvs, const std::vector<glm::vec3>& normals)
 {
     std::vector<std::string> vertIndices = SplitPath(vert);
     
@@ -147,9 +147,9 @@ void Model::ParseVert(std::vector<Vertex_NPXYZ_UV>& verts, const std::string& ve
     int uvIndex = atoi(vertIndices[1].c_str());
     int normalIndex = atoi(vertIndices[2].c_str());
     
-    Vec3 pos = vertices[posIndex-1];
-    Vec2 uv = uvs[uvIndex-1];
-    Vec3 normal = normals[normalIndex-1];
+    glm::vec3 pos = vertices[posIndex-1];
+    glm::vec2 uv = uvs[uvIndex-1];
+    glm::vec3 normal = normals[normalIndex-1];
     
     Vertex_NPXYZ_UV vertex;
     vertex.position[0] = pos[0];
@@ -331,7 +331,7 @@ bool ModelRenderer::UnloadTexture(const std::string& textureName)
     return true;
 }
 
-bool ModelRenderer::AttachToRenderer(RenderLayer* layer, const std::string& modelName, const std::string& textureName, Vec3 position, Vec3 rotation, Vec3 scale, Vec3 offset)
+bool ModelRenderer::AttachToRenderer(RenderLayer* layer, const std::string& modelName, const std::string& textureName, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale, glm::vec3 offset)
 {
     Model* model = GetModel(modelName);
     Texture* texture = GetTexture(textureName);

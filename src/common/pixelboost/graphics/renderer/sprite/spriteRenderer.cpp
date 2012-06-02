@@ -223,7 +223,7 @@ bool SpriteRenderer::UnloadSpriteSheet(const std::string& name)
     return false;
 }
 
-bool SpriteRenderer::AttachSprite(RenderLayer* layer, const std::string& spriteName, Vec2 position, Vec3 rotation, Vec2 scale, BlendMode blendMode, Vec4 tint, Vec4 crop)
+bool SpriteRenderer::AttachSprite(RenderLayer* layer, const std::string& spriteName, glm::vec2 position, glm::vec3 rotation, glm::vec2 scale, BlendMode blendMode, glm::vec4 tint, glm::vec4 crop)
 {
     Sprite* sprite = GetSprite(spriteName);
     
@@ -236,22 +236,22 @@ bool SpriteRenderer::AttachSprite(RenderLayer* layer, const std::string& spriteN
     color[3] = alpha;
 #endif
     
-    Vec2 dimension = sprite->_Dimension;
+    glm::vec2 dimension = sprite->_Dimension;
 
     SpriteInstance instance;
     
     if (!sprite->_Rotated)
     {
-        Vec2 min = sprite->_Position + Vec2(sprite->_Size[0] * crop[0], sprite->_Size[1] * crop[1]);
-        Vec2 max = sprite->_Position + Vec2(sprite->_Size[0] * crop[2], sprite->_Size[1] * crop[3]);
+        glm::vec2 min = sprite->_Position + glm::vec2(sprite->_Size[0] * crop[0], sprite->_Size[1] * crop[1]);
+        glm::vec2 max = sprite->_Position + glm::vec2(sprite->_Size[0] * crop[2], sprite->_Size[1] * crop[3]);
         
         instance.uv[0] = min[0];
         instance.uv[1] = min[1];
         instance.uv[2] = max[0];
         instance.uv[3] = max[1];
     } else {
-        Vec2 min = sprite->_Position + Vec2(sprite->_Size[1] * crop[3], sprite->_Size[0] * crop[2]);
-        Vec2 max = sprite->_Position + Vec2(sprite->_Size[1] * crop[1], sprite->_Size[0] * crop[0]);
+        glm::vec2 min = sprite->_Position + glm::vec2(sprite->_Size[1] * crop[3], sprite->_Size[0] * crop[2]);
+        glm::vec2 max = sprite->_Position + glm::vec2(sprite->_Size[1] * crop[1], sprite->_Size[0] * crop[0]);
         
         instance.uv[0] = min[0];
         instance.uv[1] = min[1];
@@ -262,12 +262,14 @@ bool SpriteRenderer::AttachSprite(RenderLayer* layer, const std::string& spriteN
     if (sprite->_Rotated)
     {
         rotation[2] -= 90.f;
-        Swap(dimension[0], dimension[1]);
+        float temp = dimension.x;
+        dimension.x = dimension.y;
+        dimension.y = temp;
     }
     
-    instance.position = position - Vec2((0.5 - (crop[0]+crop[2])/2.f) * dimension[0], (0.5 - (crop[1]+crop[3])/2.f) * dimension[1]);
+    instance.position = position - glm::vec2((0.5 - (crop[0]+crop[2])/2.f) * dimension[0], (0.5 - (crop[1]+crop[3])/2.f) * dimension[1]);
     instance.rotation = ((-rotation[2]-90.f) / 180.f) * M_PI;
-    instance.scale = dimension * Vec2(crop[2]-crop[0], crop[3]-crop[1]) * scale * 0.5;
+    instance.scale = dimension * glm::vec2(crop[2]-crop[0], crop[3]-crop[1]) * scale * 0.5f;
     instance.blendMode = blendMode;
     instance.tint = tint;
     instance.texture = sprite->_Sheet->_Texture;
@@ -277,7 +279,7 @@ bool SpriteRenderer::AttachSprite(RenderLayer* layer, const std::string& spriteN
     return true;
 }
     
-bool SpriteRenderer::AttachCustom(RenderLayer* layer, const std::string& sheetName, Vec2 position, Vec2 size, Vec4 uv, Vec3 rotation, BlendMode blendMode, Vec4 tint)
+bool SpriteRenderer::AttachCustom(RenderLayer* layer, const std::string& sheetName, glm::vec2 position, glm::vec2 size, glm::vec4 uv, glm::vec3 rotation, BlendMode blendMode, glm::vec4 tint)
 {
     std::shared_ptr<SpriteSheet> sheet = GetSpriteSheet(sheetName);
     
@@ -287,7 +289,7 @@ bool SpriteRenderer::AttachCustom(RenderLayer* layer, const std::string& sheetNa
     SpriteInstance instance;
     
     instance.uv = uv;
-    instance.position = position - Vec2(size[0], size[1])*0.5f;
+    instance.position = position - size*0.5f;
     instance.rotation = ((-rotation[2]-90.f) / 180.f) * M_PI;
     instance.scale = size * 0.5f;
     instance.blendMode = blendMode;

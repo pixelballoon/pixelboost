@@ -102,7 +102,7 @@ void FontRenderer::LoadFont(const std::string& name, bool createMips)
         
         std::string elementType = elements[0];
         
-        Vec2 texSize;
+        glm::vec2 texSize;
         
         if (elementType == "info")
         {
@@ -118,7 +118,7 @@ void FontRenderer::LoadFont(const std::string& name, bool createMips)
             
             font->base = (float)base/(float)font->size;
             font->lineHeight = (float)lineHeight / (float)scaleH;
-            texSize = Vec2(scaleW, scaleH);
+            texSize = glm::vec2(scaleW, scaleH);
         } else if (elementType == "page")
         {
             std::string texFilename = fileRoot + "/data/fonts/" + data["file"].substr(1, data["file"].find('"', 1)-1);
@@ -280,7 +280,7 @@ void FontRenderer::Render(RenderLayer* layer)
     glDisable(GL_TEXTURE_2D);
 }
 
-bool FontRenderer::AttachToRenderer(RenderLayer* layer, const std::string& fontName, const std::string& string, Vec2 position, FontAlign alignment, float size, float rotation, Vec4 color)
+bool FontRenderer::AttachToRenderer(RenderLayer* layer, const std::string& fontName, const std::string& string, glm::vec2 position, FontAlign alignment, float size, float rotation, glm::vec4 color)
 {
     FontInstance instance;
     

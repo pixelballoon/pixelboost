@@ -44,8 +44,8 @@ void Game::Update(float time)
 
 void Game::Render()
 {
-    GetPrimitiveRenderer()->AttachBox(_Layer, Vec2(0,0), Vec2(6,6), Vec3(0,0,0), Vec4(0.5,0.5,0.5,1));
-    GetPrimitiveRenderer()->AttachBox(_Layer, Vec2(0,0), Vec2(5,5), Vec3(0,0,0), Vec4(1,1,1,1));
+    GetPrimitiveRenderer()->AttachBox(_Layer, glm::vec2(0,0), glm::vec2(6,6), glm::vec3(0,0,0), glm::vec4(0.5,0.5,0.5,1));
+    GetPrimitiveRenderer()->AttachBox(_Layer, glm::vec2(0,0), glm::vec2(5,5), glm::vec3(0,0,0), glm::vec4(1,1,1,1));
     
     pb::Game::Render();
 }

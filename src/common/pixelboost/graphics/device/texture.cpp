@@ -1,3 +1,4 @@
+#include "glm/gtx/bit.hpp"
 #include "lodepng/lodepng.h"
 
 #include "pixelboost/graphics/device/texture.h"
@@ -22,13 +23,13 @@ void Texture::LoadFromPng(const std::string& path, bool createMips)
     LodePNG::loadFile(file, path);
     decoder.decode(data, &file[0], file.size());
 	
-    if (!IsPowerOfTwo(decoder.getHeight()) || !IsPowerOfTwo(decoder.getWidth()))
+    if (!glm::isPowerOfTwo(decoder.getHeight()) || !glm::isPowerOfTwo(decoder.getWidth()))
         createMips = false;
     
 	LoadFromBytes(&data[0], decoder.getWidth(), decoder.getHeight(), createMips, kTextureFormatRGBA);
 }
 
-const Vec2& Texture::GetSize()
+const glm::vec2& Texture::GetSize()
 {
     return _Size;
 }

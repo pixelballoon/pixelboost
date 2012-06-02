@@ -62,46 +62,46 @@ float GetAspectRatio()
     return GetScreenResolution()[1]/GetScreenResolution()[0];
 }
     
-Vec2 GetScreenResolution()
+glm::vec2 GetScreenResolution()
 {
-    Vec2 resolution = Game::Instance()->GetScreenResolution();
+    glm::vec2 resolution = Game::Instance()->GetScreenResolution();
     
-    if (resolution[0] != 0 || resolution[1] != 0)
+    if (resolution.x != 0 || resolution.y != 0)
         return resolution;
     
     if ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad))
     {
         if (!IsLandscape())
-            return Vec2(768.f, 1024.f);
+            return glm::vec2(768.f, 1024.f);
         else
-            return Vec2(1024.f, 768.f);
+            return glm::vec2(1024.f, 768.f);
     }
     else if (IsHighResolution())
     {
         if (!IsLandscape())
-            return Vec2(640.f, 960.f);
+            return glm::vec2(640.f, 960.f);
         else
-            return Vec2(960.f, 640.f);
+            return glm::vec2(960.f, 640.f);
     }
     else
     {
         if (!IsLandscape())
-            return Vec2(320.f, 480.f);
+            return glm::vec2(320.f, 480.f);
         else
-            return Vec2(480.f, 320.f);
+            return glm::vec2(480.f, 320.f);
     }
 }
     
-Vec2 GetScreenUnits()
+glm::vec2 GetScreenUnits()
 {
     return GetScreenResolution()/GetDpu();
 }
     
-Vec2 GetWorldScale()
+glm::vec2 GetWorldScale()
 {
-    float worldScale = 1.f/((GetScreenResolution()[1]/2)/GetDpu());
+    float worldScale = 1.f/((GetScreenResolution().y/2)/GetDpu());
     
-    return Vec2(worldScale, worldScale);
+    return glm::vec2(worldScale, worldScale);
 }
     
 float GetDpu()

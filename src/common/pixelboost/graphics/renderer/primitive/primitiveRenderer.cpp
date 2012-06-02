@@ -92,8 +92,8 @@ void PrimitiveRenderer::Render(RenderLayer* layer)
                 glRotatef(it->rotation[1], 0, 1, 0);
                 glRotatef(it->rotation[2], 0, 0, 1);
                 
-                Vec2 tl(-it->size[0]/2.f, -it->size[1]/2.f);
-                Vec2 br(+it->size[0]/2.f, +it->size[1]/2.f);
+                glm::vec2 tl(-it->size[0]/2.f, -it->size[1]/2.f);
+                glm::vec2 br(+it->size[0]/2.f, +it->size[1]/2.f);
                 
                 GLfloat glVertices[8] = { tl[0], br[1], tl[0], tl[1], br[0], tl[1], br[0], br[1] };
                 glVertexPointer(2, GL_FLOAT, 0, glVertices);
@@ -132,7 +132,7 @@ void PrimitiveRenderer::Render(RenderLayer* layer)
     glDisableClientState(GL_VERTEX_ARRAY);
 }
     
-void PrimitiveRenderer::AttachEllipse(pb::RenderLayer *layer, Vec2 position, Vec2 size, Vec3 rotation, Vec4 color, int segments)
+void PrimitiveRenderer::AttachEllipse(pb::RenderLayer *layer, glm::vec2 position, glm::vec2 size, glm::vec3 rotation, glm::vec4 color, int segments)
 {
     PrimitiveInstance item;
     item.type = PrimitiveInstance::kTypeEllipse;
@@ -144,7 +144,7 @@ void PrimitiveRenderer::AttachEllipse(pb::RenderLayer *layer, Vec2 position, Vec
     _Items[layer].push_back(item);
 }
     
-void PrimitiveRenderer::AttachLine(pb::RenderLayer *layer, Vec2 start, Vec2 end, Vec4 color)
+void PrimitiveRenderer::AttachLine(pb::RenderLayer *layer, glm::vec2 start, glm::vec2 end, glm::vec4 color)
 {
     PrimitiveInstance item;
     item.type = PrimitiveInstance::kTypeLine;
@@ -154,7 +154,7 @@ void PrimitiveRenderer::AttachLine(pb::RenderLayer *layer, Vec2 start, Vec2 end,
     _Items[layer].push_back(item);
 }
     
-void PrimitiveRenderer::AttachBox(pb::RenderLayer *layer, Vec2 position, Vec2 size, Vec3 rotation, Vec4 color, bool solid)
+void PrimitiveRenderer::AttachBox(pb::RenderLayer *layer, glm::vec2 position, glm::vec2 size, glm::vec3 rotation, glm::vec4 color, bool solid)
 {
     PrimitiveInstance item;
     item.type = PrimitiveInstance::kTypeBox;

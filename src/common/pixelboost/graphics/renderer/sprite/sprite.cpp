@@ -45,8 +45,8 @@ bool SpriteSheet::LoadSingle(const std::string& fileName, bool generateMips)
     sprite->_Sheet = this;
     sprite->_Rotated = false;
     sprite->_Dimension = _Texture->GetSize() / ScreenHelpers::GetDpu();
-    sprite->_Position = Vec2(0,0);
-    sprite->_Size = Vec2(1,1);
+    sprite->_Position = glm::vec2(0,0);
+    sprite->_Size = glm::vec2(1,1);
     
     _Sprites[spriteName] = sprite;
     Game::Instance()->GetSpriteRenderer()->_Sprites[spriteName] = sprite;
@@ -92,12 +92,12 @@ bool SpriteSheet::LoadSheet(const std::string& name, bool generateMips)
         
         sprite->_Sheet = this;
         
-        sprite->_Dimension = Vec2(sizeX.Value(), sizeY.Value()) / ScreenHelpers::GetDpu();
+        sprite->_Dimension = glm::vec2(sizeX.Value(), sizeY.Value()) / ScreenHelpers::GetDpu();
         
         sprite->_Rotated = rotated.Value();
         
-        sprite->_Position = Vec2(posX.Value()/width.Value(), posY.Value()/height.Value());
-        sprite->_Size = sprite->_Rotated ? Vec2(sizeX.Value()/height.Value(), sizeY.Value()/width.Value()) : Vec2(sizeX.Value()/width.Value(), sizeY.Value()/height.Value());
+        sprite->_Position = glm::vec2(posX.Value()/width.Value(), posY.Value()/height.Value());
+        sprite->_Size = sprite->_Rotated ? glm::vec2(sizeX.Value()/height.Value(), sizeY.Value()/width.Value()) : glm::vec2(sizeX.Value()/width.Value(), sizeY.Value()/height.Value());
         
         std::string spriteName = name.substr(0, name.length()-4);
         _Sprites[spriteName] = sprite;
@@ -132,9 +132,9 @@ Sprite* SpriteSheet::GetSprite(const std::string& name)
     return it->second;
 }
 
-Vec4 Sprite::GetUV()
+glm::vec4 Sprite::GetUV()
 {
-    return Vec4(0, 0, 1, 1);
+    return glm::vec4(0, 0, 1, 1);
 }
 
 #endif

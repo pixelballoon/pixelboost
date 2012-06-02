@@ -4,10 +4,11 @@
 #include <string>
 #include <vector>
 
+#include "glm/glm.hpp"
+
 #include "pixelboost/graphics/device/texture.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
 #include "pixelboost/graphics/renderer/common/irenderer.h"
-#include "pixelboost/math/maths.h"
 
 namespace pb
 {
@@ -28,7 +29,7 @@ public:
     unsigned int _NumVertices;
     
 private:
-    void ParseVert(std::vector<Vertex_NPXYZ_UV>& verts, const std::string& vert, const std::vector<Vec3>& vertices, const std::vector<Vec2>& uvs, const std::vector<Vec3>& normals);
+    void ParseVert(std::vector<Vertex_NPXYZ_UV>& verts, const std::string& vert, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec2>& uvs, const std::vector<glm::vec3>& normals);
     
     std::vector<std::string>& SplitString(const std::string& string, char delim, std::vector<std::string> &items);
     std::vector<std::string> SplitLine(const std::string& string);
@@ -55,17 +56,17 @@ public:
     bool LoadTexture(const std::string& textureName, bool createMips=true);
     bool UnloadTexture(const std::string& textureName);
     
-    bool AttachToRenderer(RenderLayer* layer, const std::string& modelName, const std::string& textureName, Vec3 position, Vec3 rotation = Vec3(0.f, 0.f, 0.f), Vec3 scale = Vec3(1.f, 1.f, 1.f), Vec3 offset = Vec3(0.f, 0.f, 0.f));
+    bool AttachToRenderer(RenderLayer* layer, const std::string& modelName, const std::string& textureName, glm::vec3 position, glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f), glm::vec3 offset = glm::vec3(0.f, 0.f, 0.f));
     
 private:
     struct ModelInstance
     {
         std::string modelName;
         std::string textureName;
-        Vec3 position;
-        Vec3 rotation;
-        Vec3 scale;
-        Vec3 offset;
+        glm::vec3 position;
+        glm::vec3 rotation;
+        glm::vec3 scale;
+        glm::vec3 offset;
     };
     
     typedef std::vector<ModelInstance> InstanceList;

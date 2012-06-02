@@ -1,9 +1,10 @@
 #pragma once
 
-#include "pixelboost/db/struct.h"
-#include "pixelboost/math/maths.h"
-
 #include <string>
+
+#include "glm/glm.hpp"
+
+#include "pixelboost/db/struct.h"
 
 namespace pb
 {
@@ -18,14 +19,14 @@ public:
     
     void Load();
     
-    const Vec3& GetPosition() const;
-    const Vec3& GetRotation() const;
-    const Vec3& GetScale() const;
+    const glm::vec3& GetPosition() const;
+    const glm::vec3& GetRotation() const;
+    const glm::vec3& GetScale() const;
     
 private:
-    Vec3 _Position;
-    Vec3 _Rotation;
-    Vec3 _Scale;
+    glm::vec3 _Position;
+    glm::vec3 _Rotation;
+    glm::vec3 _Scale;
 };
     
 }

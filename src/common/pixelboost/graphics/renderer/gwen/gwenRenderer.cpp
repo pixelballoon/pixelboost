@@ -53,7 +53,7 @@ void GwenRenderer::DrawFilledRect( Gwen::Rect rect )
 {
     Translate(rect);
     
-    pb::Game::Instance()->GetPrimitiveRenderer()->AttachBox(_Layer, Vec2(rect.x+rect.w/2, -rect.y-rect.h/2)/32.f, Vec2(rect.w, rect.h)/32.f, Vec3(0,0,0), Vec4(_Colour.r/255.f, _Colour.g/255.f, _Colour.b/255.f, _Colour.a/255.f));
+    pb::Game::Instance()->GetPrimitiveRenderer()->AttachBox(_Layer, glm::vec2(rect.x+rect.w/2, -rect.y-rect.h/2)/32.f, glm::vec2(rect.w, rect.h)/32.f, glm::vec3(0,0,0), glm::vec4(_Colour.r/255.f, _Colour.g/255.f, _Colour.b/255.f, _Colour.a/255.f));
 }
 
 void GwenRenderer::StartClip()
@@ -69,7 +69,7 @@ void GwenRenderer::EndClip()
 void GwenRenderer::DrawTexturedRect(Gwen::Texture* definition, Gwen::Rect rect, float u1, float v1, float u2, float v2)
 {
     Translate(rect);
-    pb::Game::Instance()->GetSpriteRenderer()->AttachCustom(_Layer, definition->name.c_str(), Vec2(rect.w+rect.x, -rect.y)/32.f, Vec2(rect.w, rect.h)/32.f, Vec4(u1, v1, u2, v2), Vec3(0,0,0));
+    pb::Game::Instance()->GetSpriteRenderer()->AttachCustom(_Layer, definition->name.c_str(), glm::vec2(rect.w+rect.x, -rect.y)/32.f, glm::vec2(rect.w, rect.h)/32.f, glm::vec4(u1, v1, u2, v2), glm::vec3(0,0,0));
 }
 
 void GwenRenderer::LoadTexture(Gwen::Texture* definition)
@@ -149,7 +149,7 @@ void GwenRenderer::RenderText(Gwen::Font* font, Gwen::Point pos, const Gwen::Uni
     if (!text.length())
         return;
         
-    pb::Game::Instance()->GetFontRenderer()->AttachToRenderer(_Layer, fontName, convertedString, Vec2(pos.x, -pos.y - size)/32.f, kFontAlignLeft, size/32.f);
+    pb::Game::Instance()->GetFontRenderer()->AttachToRenderer(_Layer, fontName, convertedString, glm::vec2(pos.x, -pos.y - size)/32.f, kFontAlignLeft, size/32.f);
 }
 
 Gwen::Point GwenRenderer::MeasureText(Gwen::Font* font, const Gwen::UnicodeString& text)

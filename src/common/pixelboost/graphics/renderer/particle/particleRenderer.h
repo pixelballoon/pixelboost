@@ -4,8 +4,9 @@
 #include <string>
 #include <vector>
 
+#include "glm/glm.hpp"
+
 #include "pixelboost/graphics/renderer/common/irenderer.h"
-#include "pixelboost/math/maths.h"
 #include "pixelboost/misc/pointer.h"
 
 namespace pb
@@ -39,19 +40,19 @@ public:
         float initialScale;
         float life;
         
-        Vec2 startScale;
-        Vec2 endScale;
-        Vec4 startColor;
-        Vec4 endColor;
-        Vec2 minPosOffset;
-        Vec2 maxPosOffset;
-        Vec3 minRotOffset;
-        Vec3 maxRotOffset;
-        Vec3 minRotVelocity;
-        Vec3 maxRotVelocity;
-        Vec2 minPosVelocity;
-        Vec2 maxPosVelocity;
-        Vec2 gravity;
+        glm::vec2 startScale;
+        glm::vec2 endScale;
+        glm::vec4 startColor;
+        glm::vec4 endColor;
+        glm::vec2 minPosOffset;
+        glm::vec2 maxPosOffset;
+        glm::vec3 minRotOffset;
+        glm::vec3 maxRotOffset;
+        glm::vec3 minRotVelocity;
+        glm::vec3 maxRotVelocity;
+        glm::vec2 minPosVelocity;
+        glm::vec2 maxPosVelocity;
+        glm::vec2 gravity;
         
         typedef std::vector<std::string> SpriteList;
         SpriteList sprites;
@@ -79,11 +80,11 @@ private:
         float life;
         float totalLife;
         
-        Vec3 rotation;
-        Vec2 position;
+        glm::vec3 rotation;
+        glm::vec2 position;
         
-        Vec3 rotationVelocity;
-        Vec2 positionVelocity;
+        glm::vec3 rotationVelocity;
+        glm::vec2 positionVelocity;
         
     private:
         void Assign(const Particle& rhs);
@@ -100,8 +101,8 @@ public:
     void LoadSpriteSheet(const std::string& file, bool createMips);
     void SetSpriteSheet(std::shared_ptr<SpriteSheet> spriteSheet);
     
-    Vec2 GetPosition();
-    void SetPosition(const Vec2& position);
+    glm::vec2 GetPosition();
+    void SetPosition(const glm::vec2& position);
     
     Config& GetConfig();
     ParticleList& GetParticles();
@@ -113,7 +114,7 @@ private:
     ModifierList _Modifiers;
     
     Config* _Config;
-    Vec2 _Position;
+    glm::vec2 _Position;
     float _EmitCount;
     
     IndexBuffer* _IndexBuffer;
@@ -144,13 +145,13 @@ private:
 class ParticleAttractor : public ParticleModifier
 {
 public:
-    ParticleAttractor(ParticleEmitter* emitter, const Vec2& position, float strength);
+    ParticleAttractor(ParticleEmitter* emitter, const glm::vec2& position, float strength);
     virtual ~ParticleAttractor();
     
     virtual void UpdateParticles(float time, ParticleEmitter::ParticleList& particles);
     
 private:
-    Vec2 _Position;
+    glm::vec2 _Position;
     float _Strength;
 };
     

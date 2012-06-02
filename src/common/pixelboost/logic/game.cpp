@@ -165,9 +165,9 @@ bool Game::IsLandscape()
     return false;
 }
 
-Vec2 Game::GetScreenResolution()
+glm::vec2 Game::GetScreenResolution()
 {
-    return Vec2(0,0);
+    return glm::vec2(0,0);
 }
     
 void Game::OnMemoryWarning()

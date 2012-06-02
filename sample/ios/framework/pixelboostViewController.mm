@@ -169,7 +169,7 @@
 	for (UITouch* uiTouch in touches)
 	{
 		CGPoint pt = [uiTouch locationInView:self.view];
-		touchManager->AddTouch(uiTouch, Vec2(pt.x, pt.y));
+		touchManager->AddTouch(uiTouch, glm::vec2(pt.x, pt.y));
     }
 }
 
@@ -180,7 +180,7 @@
 	for (UITouch* uiTouch in touches)
 	{
 		CGPoint pt = [uiTouch locationInView:self.view];
-		touchManager->UpdateTouch(uiTouch, Vec2(pt.x, pt.y));
+		touchManager->UpdateTouch(uiTouch, glm::vec2(pt.x, pt.y));
     }	
 }
 

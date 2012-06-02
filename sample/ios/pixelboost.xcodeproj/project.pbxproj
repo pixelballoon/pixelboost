@@ -29,14 +29,6 @@
 		1C53227015798536003C756D /* mouseManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C531F9315798535003C756D /* mouseManager.cpp */; };
 		1C53227115798536003C756D /* game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C531F9615798535003C756D /* game.cpp */; };
 		1C53227215798536003C756D /* screen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C531F9815798535003C756D /* screen.cpp */; };
-		1C53227315798536003C756D /* basics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C531F9B15798535003C756D /* basics.cpp */; };
-		1C53227415798536003C756D /* libSVL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C531F9E15798535003C756D /* libSVL.cpp */; };
-		1C53227515798536003C756D /* mat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C531F9F15798535003C756D /* mat.cpp */; };
-		1C53227615798536003C756D /* mat2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C531FA115798535003C756D /* mat2.cpp */; };
-		1C53227715798536003C756D /* mat3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C531FA315798535003C756D /* mat3.cpp */; };
-		1C53227815798536003C756D /* mat4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C531FA515798535003C756D /* mat4.cpp */; };
-		1C53227915798536003C756D /* vec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C531FAC15798535003C756D /* vec.cpp */; };
-		1C53227A15798536003C756D /* vec4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C531FB015798535003C756D /* vec4.cpp */; };
 		1C53227B15798536003C756D /* boundingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C531FB315798535003C756D /* boundingBox.cpp */; };
 		1C53227C15798536003C756D /* inputHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C531FB715798535003C756D /* inputHandler.cpp */; };
 		1C53227D15798536003C756D /* httpServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C531FBC15798535003C756D /* httpServer.cpp */; };
@@ -301,29 +293,6 @@
 		1C531F9715798535003C756D /* game.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = game.h; sourceTree = "<group>"; };
 		1C531F9815798535003C756D /* screen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = screen.cpp; sourceTree = "<group>"; };
 		1C531F9915798535003C756D /* screen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = screen.h; sourceTree = "<group>"; };
-		1C531F9B15798535003C756D /* basics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = basics.cpp; sourceTree = "<group>"; };
-		1C531F9C15798535003C756D /* basics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = basics.h; sourceTree = "<group>"; };
-		1C531F9D15798535003C756D /* constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = constants.h; sourceTree = "<group>"; };
-		1C531F9E15798535003C756D /* libSVL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = libSVL.cpp; sourceTree = "<group>"; };
-		1C531F9F15798535003C756D /* mat.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mat.cpp; sourceTree = "<group>"; };
-		1C531FA015798535003C756D /* mat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mat.h; sourceTree = "<group>"; };
-		1C531FA115798535003C756D /* mat2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mat2.cpp; sourceTree = "<group>"; };
-		1C531FA215798535003C756D /* mat2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mat2.h; sourceTree = "<group>"; };
-		1C531FA315798535003C756D /* mat3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mat3.cpp; sourceTree = "<group>"; };
-		1C531FA415798535003C756D /* mat3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mat3.h; sourceTree = "<group>"; };
-		1C531FA515798535003C756D /* mat4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mat4.cpp; sourceTree = "<group>"; };
-		1C531FA615798535003C756D /* mat4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mat4.h; sourceTree = "<group>"; };
-		1C531FA715798535003C756D /* maths.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = maths.h; sourceTree = "<group>"; };
-		1C531FA815798535003C756D /* svlConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = svlConfig.h; sourceTree = "<group>"; };
-		1C531FA915798535003C756D /* svlGL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = svlGL.h; sourceTree = "<group>"; };
-		1C531FAA15798535003C756D /* transform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = transform.h; sourceTree = "<group>"; };
-		1C531FAB15798535003C756D /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
-		1C531FAC15798535003C756D /* vec.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vec.cpp; sourceTree = "<group>"; };
-		1C531FAD15798535003C756D /* vec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vec.h; sourceTree = "<group>"; };
-		1C531FAE15798535003C756D /* vec2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vec2.h; sourceTree = "<group>"; };
-		1C531FAF15798535003C756D /* vec3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vec3.h; sourceTree = "<group>"; };
-		1C531FB015798535003C756D /* vec4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vec4.cpp; sourceTree = "<group>"; };
-		1C531FB115798535003C756D /* vec4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vec4.h; sourceTree = "<group>"; };
 		1C531FB315798535003C756D /* boundingBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boundingBox.cpp; sourceTree = "<group>"; };
 		1C531FB415798535003C756D /* boundingBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boundingBox.h; sourceTree = "<group>"; };
 		1C531FB715798535003C756D /* inputHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = inputHandler.cpp; sourceTree = "<group>"; };
@@ -1045,7 +1014,6 @@
 				1C531F5115798535003C756D /* graphics */,
 				1C531F8E15798535003C756D /* input */,
 				1C531F9515798535003C756D /* logic */,
-				1C531F9A15798535003C756D /* math */,
 				1C531FB215798535003C756D /* maths */,
 				1C531FB515798535003C756D /* misc */,
 				1C531FBA15798535003C756D /* network */,
@@ -1220,36 +1188,6 @@
 				1C531F9915798535003C756D /* screen.h */,
 			);
 			path = logic;
-			sourceTree = "<group>";
-		};
-		1C531F9A15798535003C756D /* math */ = {
-			isa = PBXGroup;
-			children = (
-				1C531F9B15798535003C756D /* basics.cpp */,
-				1C531F9C15798535003C756D /* basics.h */,
-				1C531F9D15798535003C756D /* constants.h */,
-				1C531F9E15798535003C756D /* libSVL.cpp */,
-				1C531F9F15798535003C756D /* mat.cpp */,
-				1C531FA015798535003C756D /* mat.h */,
-				1C531FA115798535003C756D /* mat2.cpp */,
-				1C531FA215798535003C756D /* mat2.h */,
-				1C531FA315798535003C756D /* mat3.cpp */,
-				1C531FA415798535003C756D /* mat3.h */,
-				1C531FA515798535003C756D /* mat4.cpp */,
-				1C531FA615798535003C756D /* mat4.h */,
-				1C531FA715798535003C756D /* maths.h */,
-				1C531FA815798535003C756D /* svlConfig.h */,
-				1C531FA915798535003C756D /* svlGL.h */,
-				1C531FAA15798535003C756D /* transform.h */,
-				1C531FAB15798535003C756D /* utils.h */,
-				1C531FAC15798535003C756D /* vec.cpp */,
-				1C531FAD15798535003C756D /* vec.h */,
-				1C531FAE15798535003C756D /* vec2.h */,
-				1C531FAF15798535003C756D /* vec3.h */,
-				1C531FB015798535003C756D /* vec4.cpp */,
-				1C531FB115798535003C756D /* vec4.h */,
-			);
-			path = math;
 			sourceTree = "<group>";
 		};
 		1C531FB215798535003C756D /* maths */ = {
@@ -2638,14 +2576,6 @@
 				1C53227015798536003C756D /* mouseManager.cpp in Sources */,
 				1C53227115798536003C756D /* game.cpp in Sources */,
 				1C53227215798536003C756D /* screen.cpp in Sources */,
-				1C53227315798536003C756D /* basics.cpp in Sources */,
-				1C53227415798536003C756D /* libSVL.cpp in Sources */,
-				1C53227515798536003C756D /* mat.cpp in Sources */,
-				1C53227615798536003C756D /* mat2.cpp in Sources */,
-				1C53227715798536003C756D /* mat3.cpp in Sources */,
-				1C53227815798536003C756D /* mat4.cpp in Sources */,
-				1C53227915798536003C756D /* vec.cpp in Sources */,
-				1C53227A15798536003C756D /* vec4.cpp in Sources */,
 				1C53227B15798536003C756D /* boundingBox.cpp in Sources */,
 				1C53227C15798536003C756D /* inputHandler.cpp in Sources */,
 				1C53227D15798536003C756D /* httpServer.cpp in Sources */,

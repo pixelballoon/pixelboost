@@ -27,8 +27,7 @@ OrthographicCamera::OrthographicCamera(glm::vec3 position, glm::vec3 rotation, g
 
 void OrthographicCamera::CalculateTransform(Viewport* viewport)
 {
-    Vec2 temp = ScreenHelpers::GetScreenResolution() / ScreenHelpers::GetDpu();
-    glm::vec2 viewportSize = glm::vec2(temp[0], temp[1]) / 2.f;
+    glm::vec2 viewportSize = ScreenHelpers::GetScreenResolution() / ScreenHelpers::GetDpu() / 2.f;
     
     Projection = glm::ortho(-viewportSize.x, viewportSize.x, -viewportSize.y, viewportSize.y, ZNear, ZFar);
     ModelView = glm::translate(glm::mat4x4(), -Position);
@@ -58,8 +57,7 @@ PerspectiveCamera::PerspectiveCamera(glm::vec3 position, glm::vec3 rotation)
 
 void PerspectiveCamera::CalculateTransform(Viewport* viewport)
 {
-    Vec2 temp = ScreenHelpers::GetScreenResolution() / ScreenHelpers::GetDpu();
-    glm::vec2 viewportSize = glm::vec2(temp[0], temp[1]) / 2.f;
+    glm::vec2 viewportSize = ScreenHelpers::GetScreenResolution() / ScreenHelpers::GetDpu() / 2.f;
     
     Projection = glm::perspectiveFov(FieldOfView, viewportSize.x, viewportSize.y, ZNear, ZFar);
     ModelView = glm::translate(glm::mat4x4(), -Position);

@@ -9,30 +9,30 @@
 namespace pb
 {
     
-Vec2 Touch::GetDisplayPosition()
+glm::vec2 Touch::GetDisplayPosition()
 {
     return _Position;
 }
 
-Vec2 Touch::GetScreenPosition()
+glm::vec2 Touch::GetScreenPosition()
 {
-   	Vec2 position = _Position;
+   	glm::vec2 position = _Position;
     
     // Specifically handle retina displays where the input co-ordinates aren't scaled
     float inputScale = ScreenHelpers::IsHighResolution() ? 2 : 1;
     
-    position[0] = position[0] - ScreenHelpers::GetScreenResolution()[0]/(2*inputScale);
-    position[1] = ScreenHelpers::GetScreenResolution()[1]/(2*inputScale) - position[1];
+    position.x = position.x - ScreenHelpers::GetScreenResolution().x/(2*inputScale);
+    position.y = ScreenHelpers::GetScreenResolution()[1]/(2*inputScale) - position[1];
     
-	position[0] /= (ScreenHelpers::GetDpu()/inputScale);
-	position[1] /= (ScreenHelpers::GetDpu()/inputScale);
+	position.x /= (ScreenHelpers::GetDpu()/inputScale);
+	position.y /= (ScreenHelpers::GetDpu()/inputScale);
 	
 	return position;
 }
 
-Vec2 Touch::GetWorldPosition(OrthographicCamera* camera)
+glm::vec2 Touch::GetWorldPosition(OrthographicCamera* camera)
 {
-	Vec2 position = _Position;
+	glm::vec2 position = _Position;
     
     // Specifically handle retina displays where the input co-ordinates aren't scaled
     float inputScale = ScreenHelpers::IsHighResolution() ? 2 : 1;
@@ -43,8 +43,8 @@ Vec2 Touch::GetWorldPosition(OrthographicCamera* camera)
 	position[0] /= (ScreenHelpers::GetDpu()/inputScale);
 	position[1] /= (ScreenHelpers::GetDpu()/inputScale);
     
-    position /= Vec2(camera->Scale.x, camera->Scale.y);
-    position += Vec2(camera->Position.y, camera->Position.y);
+    position /= camera->Scale;
+    position += glm::vec2(camera->Position.x, camera->Position.y);
 	
 	return position;
 }
@@ -93,12 +93,12 @@ void TouchManager::RemoveTouchHandler(TouchHandler* handler)
     }
 }
 
-void TouchManager::AddTouch(void* uiTouch, Vec2 position)
+void TouchManager::AddTouch(void* uiTouch, glm::vec2 position)
 {
     UpdateTouchHandlers();
     
 	Touch* touch = new Touch();
-	touch->_Position = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? Vec2(position[0]/2.f, position[1]/2.f) : position;
+	touch->_Position = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? position/2.f : position;
 	_Touches[uiTouch] = touch;
 	OnTouchBegin(touch);
 }
@@ -117,12 +117,12 @@ void TouchManager::RemoveTouch(void* touch)
 	}
 }
 
-void TouchManager::UpdateTouch(void* uiTouch, Vec2 position)
+void TouchManager::UpdateTouch(void* uiTouch, glm::vec2 position)
 {
     UpdateTouchHandlers();
     
 	Touch* touch = _Touches[uiTouch];
-	touch->_Position = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? Vec2(position[0]/2.4f, position[1]/2.133f) : position;
+	touch->_Position = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? position/2.f : position;
 	OnTouchUpdate(touch);
 }
 
