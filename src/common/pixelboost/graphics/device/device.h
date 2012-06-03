@@ -26,6 +26,9 @@ public:
     void SetDisplayResolution(glm::vec2 resolution);
     glm::vec2 GetDisplayResolution();
     
+    void SetDisplayDensity(float density);
+    float GetDisplayDensity();
+    
     virtual unsigned char* CaptureRenderBuffer();
     
     virtual VertexBuffer* CreateVertexBuffer(BufferFormat bufferFormat, VertexFormat vertexFormat, int length);
@@ -49,6 +52,8 @@ public:
     virtual Texture* GetBoundTexture() = 0;
     virtual Texture* BindTexture(Texture* texture) = 0;
     
+    virtual void SetViewport(glm::vec4 viewport) = 0;
+    
     enum MatrixType
     {
         kMatrixTypeProjection,
@@ -68,6 +73,7 @@ public:
     
 private:
     glm::vec2 _DisplayResolution;
+    float _DisplayDensity;
 };
     
 }

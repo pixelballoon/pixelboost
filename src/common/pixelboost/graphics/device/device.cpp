@@ -35,6 +35,16 @@ glm::vec2 GraphicsDevice::GetDisplayResolution()
     return _DisplayResolution;
 }
 
+void GraphicsDevice::SetDisplayDensity(float density)
+{
+    _DisplayDensity = density;
+}
+
+float GraphicsDevice::GetDisplayDensity()
+{
+    return _DisplayDensity;
+}
+
 unsigned char* GraphicsDevice::CaptureRenderBuffer()
 {
     return 0;

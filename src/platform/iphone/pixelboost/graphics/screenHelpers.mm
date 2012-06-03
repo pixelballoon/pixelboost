@@ -51,10 +51,9 @@ bool IsFastDevice()
 
 bool IsHighResolution()
 {
-    if (([[UIScreen mainScreen] respondsToSelector:@selector(scale)] == YES && [[UIScreen mainScreen] scale] == 2.00) ||
-        (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad))
+    if (GetDpu() >= 32.f)
         return true;
-    
+        
     return false;
 }
     
@@ -82,10 +81,7 @@ glm::vec2 GetWorldScale()
     
 float GetDpu()
 {
-    if (IsHighResolution())
-        return 32.f;
-    else
-        return 16.f;
+    return GraphicsDevice::Instance()->GetDisplayDensity();
 }
     
 }

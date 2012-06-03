@@ -48,6 +48,8 @@ public:
     virtual Texture* GetBoundTexture();
     virtual Texture* BindTexture(Texture* texture);
     
+    virtual void SetViewport(glm::vec4 viewport);
+    
     virtual void SetMatrix(MatrixType matrixType, glm::mat4x4 matrix);
     
 public:

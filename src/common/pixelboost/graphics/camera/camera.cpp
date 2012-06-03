@@ -1,6 +1,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 #include "pixelboost/graphics/camera/camera.h"
+#include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/helper/screenHelpers.h"
 
@@ -9,6 +10,8 @@ using namespace pb;
 Camera::Camera(glm::vec3 position, glm::vec3 rotation)
     : Position(position)
     , Rotation(rotation)
+    , ZNear(0)
+    , ZFar(100)
 {
     
 }
@@ -27,7 +30,7 @@ OrthographicCamera::OrthographicCamera(glm::vec3 position, glm::vec3 rotation, g
 
 void OrthographicCamera::CalculateTransform(Viewport* viewport)
 {
-    glm::vec2 viewportSize = ScreenHelpers::GetScreenResolution() / ScreenHelpers::GetDpu() / 2.f;
+    glm::vec2 viewportSize = viewport->GetSize() / 2.f;
     
     Projection = glm::ortho(-viewportSize.x, viewportSize.x, -viewportSize.y, viewportSize.y, ZNear, ZFar);
     ModelView = glm::translate(glm::mat4x4(), -Position);

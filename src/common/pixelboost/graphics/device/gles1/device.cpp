@@ -304,6 +304,11 @@ Texture* GraphicsDeviceGLES1::BindTexture(Texture* texture)
     return previousTexture;
 }
 
+void GraphicsDeviceGLES1::SetViewport(glm::vec4 viewport)
+{
+    glViewport(viewport.x, viewport.y, viewport.z, viewport.w);
+}
+
 void GraphicsDeviceGLES1::SetMatrix(MatrixType matrixType, glm::mat4x4 matrix)
 {
     switch (matrixType)

@@ -46,9 +46,22 @@
         self.view.contentScaleFactor = [[UIScreen mainScreen] scale];
     }
     
+    pb::GraphicsDevice::Instance()->SetDisplayResolution(glm::vec2(eaglView.framebufferWidth, eaglView.framebufferHeight));
+    
+    float displayDensity = 16.f;
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    {
+        displayDensity = 32.f;
+    }
+        
+    if (([[UIScreen mainScreen] respondsToSelector:@selector(scale)] == YES && [[UIScreen mainScreen] scale] == 2.00))
+        displayDensity *= 2.f;
+    
+    pb::GraphicsDevice::Instance()->SetDisplayDensity(displayDensity);
+    
     game = new Game(self);
     game->Initialise();
-    pb::GraphicsDevice::Instance()->SetDisplayResolution(glm::vec2(eaglView.framebufferWidth, eaglView.framebufferHeight));
 }
 
 - (void)dealloc

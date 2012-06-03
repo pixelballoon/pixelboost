@@ -17,6 +17,17 @@ public:
     Viewport(int viewportId);
     ~Viewport();
     
+    glm::vec2 GetSize();
+    
+    void SetResolution(glm::vec2 size);
+    glm::vec2 GetResolution();
+    
+    void SetDensity(float density);
+    float GetDensity();
+    
+    void SetPosition(glm::vec2 position);
+    glm::vec2 GetPosition();
+    
     void AddLayer(RenderLayer* layer, Camera* camera);
     void RemoveLayer(RenderLayer* layer);
     
@@ -28,7 +39,8 @@ private:
     
     int _ViewportId;
     glm::vec2 _Position;
-    glm::vec2 _Size;
+    glm::vec2 _Resolution;
+    float _Density;
     
     LayerList _Layers;
     CameraMap _Cameras;
