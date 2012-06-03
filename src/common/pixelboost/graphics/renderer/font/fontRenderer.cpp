@@ -52,18 +52,22 @@ void FontRenderer::AddCharacter(Vertex_PXYZ_UV* buffer, const Font::Character& c
     
     buffer[0].position[0] = offset + xOffset;
     buffer[0].position[1] = yOffset - character.height;
+    buffer[0].position[2] = 0.f;
     buffer[0].uv[0] = character.uvx;
     buffer[0].uv[1] = character.uvy + character.uvv;
     buffer[1].position[0] = offset + xOffset;
     buffer[1].position[1] = yOffset;
+    buffer[1].position[2] = 0.f;
     buffer[1].uv[0] = character.uvx;
     buffer[1].uv[1] = character.uvy;
     buffer[2].position[0] = offset + character.width + xOffset;
     buffer[2].position[1] = yOffset;
+    buffer[2].position[2] = 0.f;
     buffer[2].uv[0] = character.uvx + character.uvu;
     buffer[2].uv[1] = character.uvy;
     buffer[3].position[0] = offset + character.width + xOffset;
     buffer[3].position[1] = yOffset - character.height;
+    buffer[3].position[2] = 0.f;
     buffer[3].uv[0] = character.uvx + character.uvu;
     buffer[3].uv[1] = character.uvy + character.uvv;
 }
