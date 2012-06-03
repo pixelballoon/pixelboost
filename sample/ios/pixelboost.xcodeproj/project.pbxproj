@@ -235,6 +235,7 @@
 		1CEC1C721426847F00FEB08C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEC1C711426847F00FEB08C /* CoreGraphics.framework */; };
 		1CEC1C741426847F00FEB08C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEC1C731426847F00FEB08C /* QuartzCore.framework */; };
 		1CEC1C761426847F00FEB08C /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEC1C751426847F00FEB08C /* OpenGLES.framework */; };
+		1CFF4A38157C11560064A169 /* default in Resources */ = {isa = PBXBuildFile; fileRef = 1CFF4A37157C11560064A169 /* default */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -958,6 +959,7 @@
 		1CEC1C731426847F00FEB08C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		1CEC1C751426847F00FEB08C /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		1CFA6BF6150D642600E351AF /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
+		1CFF4A37157C11560064A169 /* default */ = {isa = PBXFileReference; lastKnownFileType = folder; name = default; path = ../../data/default; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2450,6 +2452,7 @@
 			isa = PBXGroup;
 			children = (
 				1CEB6C11153F541800E8D103 /* data */,
+				1CFF4A37157C11560064A169 /* default */,
 				1CEB6BF4153F512F00E8D103 /* framework */,
 				1C531F2B15798502003C756D /* source */,
 				1CEC1D45142697CC00FEB08C /* libs */,
@@ -2548,6 +2551,7 @@
 				1CEB6C0A153F512F00E8D103 /* pixelboostViewController.xib in Resources */,
 				1CEB6C0B153F512F00E8D103 /* MainWindow-iPad.xib in Resources */,
 				1CEB6C12153F541800E8D103 /* data in Resources */,
+				1CFF4A38157C11560064A169 /* default in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

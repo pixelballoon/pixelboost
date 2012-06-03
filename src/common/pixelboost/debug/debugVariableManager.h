@@ -18,7 +18,7 @@ class DebugVariable;
 class DebugVariableManager : public HttpServer
 {
 public:
-    DebugVariableManager(const std::string& htmlLocation = "pixelboost/debug/html");
+    DebugVariableManager(const std::string& htmlLocation = "default/debug/html");
     ~DebugVariableManager();
     
     static DebugVariableManager* Instance();
