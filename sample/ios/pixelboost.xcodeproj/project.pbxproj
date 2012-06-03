@@ -8,6 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		1C341508157B9C0E0016B121 /* screenHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C341507157B9C0E0016B121 /* screenHelpers.cpp */; };
+		1C34151A157B9E010016B121 /* soundManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C34150E157B9E010016B121 /* soundManager.mm */; };
+		1C34151B157B9E010016B121 /* fileHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C341510157B9E010016B121 /* fileHelpers.mm */; };
+		1C34151C157B9E010016B121 /* screenHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C341512157B9E010016B121 /* screenHelpers.mm */; };
+		1C34151D157B9E010016B121 /* touchManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C341515157B9E010016B121 /* touchManager.mm */; };
+		1C34151E157B9E010016B121 /* gameCenter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C341518157B9E010016B121 /* gameCenter.mm */; };
+		1C34151F157B9E010016B121 /* networkHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C341519157B9E010016B121 /* networkHelpers.mm */; };
 		1C53224F15798536003C756D /* xml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C531F3915798535003C756D /* xml.cpp */; };
 		1C53225015798536003C756D /* database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C531F3D15798535003C756D /* database.cpp */; };
 		1C53225115798536003C756D /* entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C531F4015798535003C756D /* entity.cpp */; };
@@ -188,12 +194,6 @@
 		1C53238015798536003C756D /* common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C53221615798535003C756D /* common.cpp */; };
 		1C53238115798536003C756D /* decomp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C53221815798535003C756D /* decomp.cpp */; };
 		1C53238215798536003C756D /* point.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C53221A15798535003C756D /* point.cpp */; };
-		1C53238415798536003C756D /* soundManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C53222D15798535003C756D /* soundManager.mm */; };
-		1C53238515798536003C756D /* fileHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C53222F15798535003C756D /* fileHelpers.mm */; };
-		1C53238615798536003C756D /* screenHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C53223115798535003C756D /* screenHelpers.mm */; };
-		1C53238715798536003C756D /* touchManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C53223415798535003C756D /* touchManager.mm */; };
-		1C53238815798536003C756D /* gameCenter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C53223715798535003C756D /* gameCenter.mm */; };
-		1C53238915798536003C756D /* networkHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C53223815798535003C756D /* networkHelpers.mm */; };
 		1C53238B15798536003C756D /* soundManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C53224015798535003C756D /* soundManager.mm */; };
 		1C53238C15798536003C756D /* fileHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C53224215798535003C756D /* fileHelpers.mm */; };
 		1C53238D15798536003C756D /* screenHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C53224415798535003C756D /* screenHelpers.mm */; };
@@ -237,6 +237,15 @@
 
 /* Begin PBXFileReference section */
 		1C341507157B9C0E0016B121 /* screenHelpers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = screenHelpers.cpp; sourceTree = "<group>"; };
+		1C34150D157B9E010016B121 /* soundManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = soundManager.h; sourceTree = "<group>"; };
+		1C34150E157B9E010016B121 /* soundManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = soundManager.mm; sourceTree = "<group>"; };
+		1C341510157B9E010016B121 /* fileHelpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = fileHelpers.mm; sourceTree = "<group>"; };
+		1C341512157B9E010016B121 /* screenHelpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = screenHelpers.mm; sourceTree = "<group>"; };
+		1C341514157B9E010016B121 /* touchManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = touchManager.h; sourceTree = "<group>"; };
+		1C341515157B9E010016B121 /* touchManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = touchManager.mm; sourceTree = "<group>"; };
+		1C341517157B9E010016B121 /* gameCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gameCenter.h; sourceTree = "<group>"; };
+		1C341518157B9E010016B121 /* gameCenter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = gameCenter.mm; sourceTree = "<group>"; };
+		1C341519157B9E010016B121 /* networkHelpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = networkHelpers.mm; sourceTree = "<group>"; };
 		1C531F3115798535003C756D /* elements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = elements.h; sourceTree = "<group>"; };
 		1C531F3215798535003C756D /* elements.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = elements.inl; sourceTree = "<group>"; };
 		1C531F3315798535003C756D /* reader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = reader.h; sourceTree = "<group>"; };
@@ -877,15 +886,6 @@
 		1C53222415798535003C756D /* delegate_template.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = delegate_template.hpp; sourceTree = "<group>"; };
 		1C53222515798535003C756D /* make_delegates.pl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = make_delegates.pl; sourceTree = "<group>"; };
 		1C53222715798535003C756D /* event.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = event.hpp; sourceTree = "<group>"; };
-		1C53222C15798535003C756D /* soundManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = soundManager.h; sourceTree = "<group>"; };
-		1C53222D15798535003C756D /* soundManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = soundManager.mm; sourceTree = "<group>"; };
-		1C53222F15798535003C756D /* fileHelpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = fileHelpers.mm; sourceTree = "<group>"; };
-		1C53223115798535003C756D /* screenHelpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = screenHelpers.mm; sourceTree = "<group>"; };
-		1C53223315798535003C756D /* touchManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = touchManager.h; sourceTree = "<group>"; };
-		1C53223415798535003C756D /* touchManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = touchManager.mm; sourceTree = "<group>"; };
-		1C53223615798535003C756D /* gameCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gameCenter.h; sourceTree = "<group>"; };
-		1C53223715798535003C756D /* gameCenter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = gameCenter.mm; sourceTree = "<group>"; };
-		1C53223815798535003C756D /* networkHelpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = networkHelpers.mm; sourceTree = "<group>"; };
 		1C53223F15798535003C756D /* soundManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = soundManager.h; sourceTree = "<group>"; };
 		1C53224015798535003C756D /* soundManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = soundManager.mm; sourceTree = "<group>"; };
 		1C53224215798535003C756D /* fileHelpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = fileHelpers.mm; sourceTree = "<group>"; };
@@ -974,6 +974,70 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1C34150A157B9E010016B121 /* ios */ = {
+			isa = PBXGroup;
+			children = (
+				1C34150B157B9E010016B121 /* pixelboost */,
+			);
+			path = ios;
+			sourceTree = "<group>";
+		};
+		1C34150B157B9E010016B121 /* pixelboost */ = {
+			isa = PBXGroup;
+			children = (
+				1C34150C157B9E010016B121 /* audio */,
+				1C34150F157B9E010016B121 /* file */,
+				1C341511157B9E010016B121 /* graphics */,
+				1C341513157B9E010016B121 /* input */,
+				1C341516157B9E010016B121 /* network */,
+			);
+			path = pixelboost;
+			sourceTree = "<group>";
+		};
+		1C34150C157B9E010016B121 /* audio */ = {
+			isa = PBXGroup;
+			children = (
+				1C34150D157B9E010016B121 /* soundManager.h */,
+				1C34150E157B9E010016B121 /* soundManager.mm */,
+			);
+			path = audio;
+			sourceTree = "<group>";
+		};
+		1C34150F157B9E010016B121 /* file */ = {
+			isa = PBXGroup;
+			children = (
+				1C341510157B9E010016B121 /* fileHelpers.mm */,
+			);
+			path = file;
+			sourceTree = "<group>";
+		};
+		1C341511157B9E010016B121 /* graphics */ = {
+			isa = PBXGroup;
+			children = (
+				1C341512157B9E010016B121 /* screenHelpers.mm */,
+			);
+			path = graphics;
+			sourceTree = "<group>";
+		};
+		1C341513157B9E010016B121 /* input */ = {
+			isa = PBXGroup;
+			children = (
+				1C341514157B9E010016B121 /* touchManager.h */,
+				1C341515157B9E010016B121 /* touchManager.mm */,
+			);
+			path = input;
+			sourceTree = "<group>";
+		};
+		1C341516157B9E010016B121 /* network */ = {
+			isa = PBXGroup;
+			children = (
+				1C341517157B9E010016B121 /* gameCenter.h */,
+				1C341518157B9E010016B121 /* gameCenter.mm */,
+				1C341519157B9E010016B121 /* networkHelpers.mm */,
+			);
+			path = network;
+			sourceTree = "<group>";
+		};
 		1C531F2B15798502003C756D /* source */ = {
 			isa = PBXGroup;
 			children = (
@@ -2146,74 +2210,10 @@
 		1C53222815798535003C756D /* platform */ = {
 			isa = PBXGroup;
 			children = (
-				1C53222915798535003C756D /* iphone */,
+				1C34150A157B9E010016B121 /* ios */,
 				1C53223C15798535003C756D /* mac */,
 			);
 			path = platform;
-			sourceTree = "<group>";
-		};
-		1C53222915798535003C756D /* iphone */ = {
-			isa = PBXGroup;
-			children = (
-				1C53222A15798535003C756D /* pixelboost */,
-			);
-			path = iphone;
-			sourceTree = "<group>";
-		};
-		1C53222A15798535003C756D /* pixelboost */ = {
-			isa = PBXGroup;
-			children = (
-				1C53222B15798535003C756D /* audio */,
-				1C53222E15798535003C756D /* file */,
-				1C53223015798535003C756D /* graphics */,
-				1C53223215798535003C756D /* input */,
-				1C53223515798535003C756D /* network */,
-			);
-			path = pixelboost;
-			sourceTree = "<group>";
-		};
-		1C53222B15798535003C756D /* audio */ = {
-			isa = PBXGroup;
-			children = (
-				1C53222C15798535003C756D /* soundManager.h */,
-				1C53222D15798535003C756D /* soundManager.mm */,
-			);
-			path = audio;
-			sourceTree = "<group>";
-		};
-		1C53222E15798535003C756D /* file */ = {
-			isa = PBXGroup;
-			children = (
-				1C53222F15798535003C756D /* fileHelpers.mm */,
-			);
-			path = file;
-			sourceTree = "<group>";
-		};
-		1C53223015798535003C756D /* graphics */ = {
-			isa = PBXGroup;
-			children = (
-				1C53223115798535003C756D /* screenHelpers.mm */,
-			);
-			path = graphics;
-			sourceTree = "<group>";
-		};
-		1C53223215798535003C756D /* input */ = {
-			isa = PBXGroup;
-			children = (
-				1C53223315798535003C756D /* touchManager.h */,
-				1C53223415798535003C756D /* touchManager.mm */,
-			);
-			path = input;
-			sourceTree = "<group>";
-		};
-		1C53223515798535003C756D /* network */ = {
-			isa = PBXGroup;
-			children = (
-				1C53223615798535003C756D /* gameCenter.h */,
-				1C53223715798535003C756D /* gameCenter.mm */,
-				1C53223815798535003C756D /* networkHelpers.mm */,
-			);
-			path = network;
 			sourceTree = "<group>";
 		};
 		1C53223C15798535003C756D /* mac */ = {
@@ -2724,12 +2724,6 @@
 				1C53238015798536003C756D /* common.cpp in Sources */,
 				1C53238115798536003C756D /* decomp.cpp in Sources */,
 				1C53238215798536003C756D /* point.cpp in Sources */,
-				1C53238415798536003C756D /* soundManager.mm in Sources */,
-				1C53238515798536003C756D /* fileHelpers.mm in Sources */,
-				1C53238615798536003C756D /* screenHelpers.mm in Sources */,
-				1C53238715798536003C756D /* touchManager.mm in Sources */,
-				1C53238815798536003C756D /* gameCenter.mm in Sources */,
-				1C53238915798536003C756D /* networkHelpers.mm in Sources */,
 				1C53238B15798536003C756D /* soundManager.mm in Sources */,
 				1C53238C15798536003C756D /* fileHelpers.mm in Sources */,
 				1C53238D15798536003C756D /* screenHelpers.mm in Sources */,
@@ -2752,6 +2746,12 @@
 				1C5323D0157A06AD003C756D /* camera.cpp in Sources */,
 				1C5323D2157A133A003C756D /* viewport.cpp in Sources */,
 				1C341508157B9C0E0016B121 /* screenHelpers.cpp in Sources */,
+				1C34151A157B9E010016B121 /* soundManager.mm in Sources */,
+				1C34151B157B9E010016B121 /* fileHelpers.mm in Sources */,
+				1C34151C157B9E010016B121 /* screenHelpers.mm in Sources */,
+				1C34151D157B9E010016B121 /* touchManager.mm in Sources */,
+				1C34151E157B9E010016B121 /* gameCenter.mm in Sources */,
+				1C34151F157B9E010016B121 /* networkHelpers.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2811,7 +2811,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					../../src/common,
-					../../src/platform/iphone,
+					../../src/platform/ios,
 					../../src/external,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
@@ -2861,7 +2861,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					../../src/common,
-					../../src/platform/iphone,
+					../../src/platform/ios,
 					../../src/external,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
@@ -2916,7 +2916,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					../../src/common,
-					../../src/platform/iphone,
+					../../src/platform/ios,
 					../../src/external,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
@@ -2942,7 +2942,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					../../src/common,
-					../../src/platform/iphone,
+					../../src/platform/ios,
 					../../src/external,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
