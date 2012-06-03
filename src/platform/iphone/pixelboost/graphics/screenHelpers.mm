@@ -1,3 +1,5 @@
+#ifndef PIXELBOOST_DISABLE_GRAPHICS
+
 #ifdef PIXELBOOST_PLATFORM_IOS
 
 #include "pixelboost/graphics/device/device.h"
@@ -7,18 +9,9 @@
 #include <sys/sysctl.h>
 #include <string>
 
-namespace pb
-{
-    
-namespace ScreenHelpers
-{
-    
-bool IsLandscape()
-{
-    return Game::Instance()->IsLandscape();
-}
-    
-bool IsFastDevice()
+using namespace pb;
+
+bool ScreenHelpers::IsFastDevice()
 {
     size_t size;
     sysctlbyname("hw.machine", NULL, &size, NULL, 0); 
@@ -49,43 +42,6 @@ bool IsFastDevice()
     return true;
 }
 
-bool IsHighResolution()
-{
-    if (GetDpu() >= 32.f)
-        return true;
-        
-    return false;
-}
-    
-float GetAspectRatio()
-{
-    return GetScreenResolution()[1]/GetScreenResolution()[0];
-}
-    
-glm::vec2 GetScreenResolution()
-{
-    return pb::GraphicsDevice::Instance()->GetDisplayResolution();
-}
-    
-glm::vec2 GetScreenUnits()
-{
-    return GetScreenResolution()/GetDpu();
-}
-    
-glm::vec2 GetWorldScale()
-{
-    float worldScale = 1.f/((GetScreenResolution().y/2)/GetDpu());
-    
-    return glm::vec2(worldScale, worldScale);
-}
-    
-float GetDpu()
-{
-    return GraphicsDevice::Instance()->GetDisplayDensity();
-}
-    
-}
-    
-}
+#endif
 
 #endif

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C341508157B9C0E0016B121 /* screenHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C341507157B9C0E0016B121 /* screenHelpers.cpp */; };
 		1C53224F15798536003C756D /* xml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C531F3915798535003C756D /* xml.cpp */; };
 		1C53225015798536003C756D /* database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C531F3D15798535003C756D /* database.cpp */; };
 		1C53225115798536003C756D /* entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C531F4015798535003C756D /* entity.cpp */; };
@@ -236,6 +237,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1C341507157B9C0E0016B121 /* screenHelpers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = screenHelpers.cpp; sourceTree = "<group>"; };
 		1C531F3115798535003C756D /* elements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = elements.h; sourceTree = "<group>"; };
 		1C531F3215798535003C756D /* elements.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = elements.inl; sourceTree = "<group>"; };
 		1C531F3315798535003C756D /* reader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = reader.h; sourceTree = "<group>"; };
@@ -1161,6 +1163,7 @@
 		1C531F6A15798535003C756D /* helper */ = {
 			isa = PBXGroup;
 			children = (
+				1C341507157B9C0E0016B121 /* screenHelpers.cpp */,
 				1C531F6B15798535003C756D /* screenHelpers.h */,
 			);
 			path = helper;
@@ -2762,6 +2765,7 @@
 				1C5323CD157A05F2003C756D /* spriteRenderer.cpp in Sources */,
 				1C5323D0157A06AD003C756D /* camera.cpp in Sources */,
 				1C5323D2157A133A003C756D /* viewport.cpp in Sources */,
+				1C341508157B9C0E0016B121 /* screenHelpers.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -5,18 +5,17 @@
 namespace pb
 {
 
-namespace ScreenHelpers
+class ScreenHelpers
 {
-
-bool IsLandscape();
-bool IsFastDevice();
-bool IsHighResolution();
-float GetAspectRatio();
-glm::vec2 GetScreenResolution();
-glm::vec2 GetScreenUnits();
-glm::vec2 GetWorldScale();
-float GetDpu();
-
-}
+public:
+    static bool IsLandscape();
+    static bool IsFastDevice();
+    static bool IsHighResolution();
+    static float GetAspectRatio();
+    static glm::vec2 GetScreenResolution();
+    static glm::vec2 GetScreenUnits();
+    static glm::vec2 GetWorldScale();
+    static float GetDpu();
+};
     
 }
