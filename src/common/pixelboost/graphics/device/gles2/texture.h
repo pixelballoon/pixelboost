@@ -5,10 +5,10 @@
 
 #ifdef PIXELBOOST_GRAPHICS_OPENGLES2
 
-#include "pixelboost/graphics/device/gles2/device.h"
-
 namespace pb
 {
+    
+class GraphicsDeviceGLES2;
 
 class TextureGLES2 : public Texture
 {
@@ -19,7 +19,7 @@ protected:
 public:
     void LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format);
     
-public:
+protected:
     void Bind(int textureUnit);
     
 private:

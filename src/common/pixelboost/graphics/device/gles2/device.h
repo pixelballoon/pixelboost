@@ -15,7 +15,10 @@ namespace pb
 
 struct DeviceState;
 class IndexBuffer;
+class Material;
+class MaterialGLES2;
 class Texture;
+class TextureGLES2;
 class VertexBuffer;
     
 class GraphicsDeviceGLES2 : public GraphicsDevice
@@ -48,9 +51,15 @@ public:
     virtual Texture* GetBoundTexture();
     virtual Texture* BindTexture(Texture* texture);
     
-    virtual void SetViewport(glm::vec4 viewport);
+    virtual Material* CreateMaterial();
+    virtual void DestroyMaterial(Material* material);
+    virtual Material* GetBoundMaterial();
+    virtual Material* BindMaterial(Material* material);
     
-    virtual void SetMatrix(MatrixType matrixType, glm::mat4x4 matrix);
+    virtual void SetState(State state, bool enable);
+    virtual void SetBlendMode(Blend source, Blend destination);
+    
+    virtual void SetViewport(glm::vec4 viewport);
     
 public:
     virtual void DrawElements(ElementType elementType, int num);
@@ -58,8 +67,10 @@ public:
 private:
     DeviceState* _State;
     
-    typedef std::vector<Texture*> TextureList;
+    typedef std::vector<MaterialGLES2*> MaterialList;
+    typedef std::vector<TextureGLES2*> TextureList;
     
+    MaterialList _Materials;
     TextureList _Textures;
     
     typedef std::map<IndexBuffer*, GLuint> IndexMap;

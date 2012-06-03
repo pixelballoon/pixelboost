@@ -12,6 +12,12 @@ struct Vertex_PXY_RGBA
     float position[2];
     float color[4];
 };
+
+struct Vertex_PXYZ
+{
+    float position[3];
+    float __padding;
+};
     
 struct Vertex_PXYZ_UV
 {

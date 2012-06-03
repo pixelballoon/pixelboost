@@ -50,8 +50,6 @@ public:
     
     virtual void SetViewport(glm::vec4 viewport);
     
-    virtual void SetMatrix(MatrixType matrixType, glm::mat4x4 matrix);
-    
 public:
     virtual void DrawElements(ElementType elementType, int num);
     

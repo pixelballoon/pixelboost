@@ -16,8 +16,8 @@ public:
 	virtual void CalculateTransform(Viewport* viewport) = 0;
     
 public:
-    glm::mat4x4 Projection;
-    glm::mat4x4 ModelView;
+    glm::mat4x4 ProjectionMatrix;
+    glm::mat4x4 ViewMatrix;
     
     glm::vec3 Position;
     glm::vec3 Rotation;

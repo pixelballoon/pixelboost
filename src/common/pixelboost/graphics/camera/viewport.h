@@ -28,14 +28,13 @@ public:
     void SetPosition(glm::vec2 position);
     glm::vec2 GetPosition();
     
-    void AddLayer(RenderLayer* layer, Camera* camera);
+    void AddLayer(RenderLayer* layer);
     void RemoveLayer(RenderLayer* layer);
     
     void Render();
 
 private:
     typedef std::vector<RenderLayer*> LayerList;
-    typedef std::map<RenderLayer*, Camera*> CameraMap;
     
     int _ViewportId;
     glm::vec2 _Position;
@@ -43,7 +42,6 @@ private:
     float _Density;
     
     LayerList _Layers;
-    CameraMap _Cameras;
 };
 
 }

@@ -2,6 +2,7 @@
 
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/indexBuffer.h"
+#include "pixelboost/graphics/device/material.h"
 #include "pixelboost/graphics/device/texture.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
 
@@ -93,6 +94,11 @@ void GraphicsDevice::UnlockIndexBuffer(IndexBuffer* vertexBuffer, int numElement
 void GraphicsDevice::DestroyTexture(Texture* texture)
 {
     delete texture;
+}
+
+void GraphicsDevice::DestroyMaterial(Material* material)
+{
+    delete material;
 }
 
 #endif

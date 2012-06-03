@@ -62,6 +62,7 @@ void SpriteRenderer::Update(float time)
     
 void SpriteRenderer::Render(RenderLayer* layer)
 {
+    /*
     InstanceList& instanceList = _Instances[layer];
     if (!instanceList.size())
         return;
@@ -171,6 +172,7 @@ void SpriteRenderer::Render(RenderLayer* layer)
     
     glDisable(GL_BLEND);
     glDisable(GL_TEXTURE_2D);
+    */
 }
     
 std::shared_ptr<SpriteSheet> SpriteRenderer::CreateSpriteSheet(const std::string &name)

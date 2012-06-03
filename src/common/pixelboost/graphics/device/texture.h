@@ -24,9 +24,10 @@ public:
     virtual void LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format) = 0;
     virtual void LoadFromPng(const std::string& image, bool createMips);
     
-    virtual void Bind(int unit = 0) = 0;
-    
     const glm::vec2& GetSize();
+    
+protected:
+    virtual void Bind(int unit = 0) = 0;
     
 protected:
     glm::vec2 _Size;

@@ -212,6 +212,7 @@ void ModelRenderer::Update(float time)
 
 void ModelRenderer::Render(RenderLayer* layer)
 {
+    /*
     InstanceList& instanceList = _Instances[layer];
     if (!instanceList.size())
         return;
@@ -263,6 +264,7 @@ void ModelRenderer::Render(RenderLayer* layer)
     glDisable(GL_ALPHA_TEST);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_TEXTURE_2D);
+    */
 }
     
 bool ModelRenderer::LoadModel(const std::string& modelName)

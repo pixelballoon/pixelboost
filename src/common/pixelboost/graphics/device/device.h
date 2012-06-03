@@ -11,6 +11,7 @@ namespace pb
 
 class Texture;
 class IndexBuffer;
+class Material;
 class VertexBuffer;
 
 class GraphicsDevice
@@ -52,7 +53,25 @@ public:
     virtual Texture* GetBoundTexture() = 0;
     virtual Texture* BindTexture(Texture* texture) = 0;
     
-    virtual void SetViewport(glm::vec4 viewport) = 0;
+    virtual Material* CreateMaterial() = 0;
+    virtual void DestroyMaterial(Material* material);
+    virtual Material* GetBoundMaterial() = 0;
+    virtual Material* BindMaterial(Material* material) = 0;
+
+public:
+    enum Blend
+    {
+        kBlendOne,
+        kBlendSourceAlpha,
+        kBlendOneMinusSourceAlpha,
+    };
+    
+    enum State
+    {
+        kStateBlend,
+        kStateDepthTest,
+        kStateTexture2D,
+    };
     
     enum MatrixType
     {
@@ -60,13 +79,19 @@ public:
         kMatrixTypeModelView,
     };
     
-    virtual void SetMatrix(MatrixType matrixType, glm::mat4x4 matrix) = 0;
+public:
+    virtual void SetState(State state, bool enable) = 0;
+    virtual void SetBlendMode(Blend source, Blend destination) = 0;
+    
+    virtual void SetViewport(glm::vec4 viewport) = 0;
     
 public:
     enum ElementType
     {
         kElementLines,
+        kElementLineLoop,
         kElementTriangles,
+        kElementTriangleFan,
     };
     
     virtual void DrawElements(ElementType elementType, int num) = 0;
@@ -79,8 +104,8 @@ private:
 }
 
 #ifdef PIXELBOOST_PLATFORM_IOS
-    #define PIXELBOOST_GRAPHICS_OPENGLES1
-    #include "pixelboost/graphics/device/gles1/device.h"
+    #define PIXELBOOST_GRAPHICS_OPENGLES2
+    #include "pixelboost/graphics/device/gles2/device.h"
 #endif
 
 #ifdef PIXELBOOST_PLATFORM_OSX

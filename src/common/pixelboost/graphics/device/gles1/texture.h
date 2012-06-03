@@ -19,7 +19,7 @@ protected:
 public:
     void LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format);
     
-public:
+protected:
     void Bind(int textureUnit);
     
 private:

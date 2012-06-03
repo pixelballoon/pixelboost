@@ -15,11 +15,6 @@ pb::TextureGLES2::~TextureGLES2()
     glDeleteTextures(1, &_Texture);
 }
 
-void pb::TextureGLES2::Bind(int unit)
-{
-    _Device->BindTexture(this);
-}
-
 void pb::TextureGLES2::LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format)
 {
     if (format != kTextureFormatRGBA)
@@ -32,13 +27,14 @@ void pb::TextureGLES2::LoadFromBytes(const unsigned char* data, int width, int h
     
     Texture* previousTexture = _Device->BindTexture(this);
     
-    if (createMips)
+    // TODO : Add create mips back in
+    /*if (createMips)
     {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameterf(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
     }
-    else
+    else*/
     {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -52,6 +48,11 @@ void pb::TextureGLES2::LoadFromBytes(const unsigned char* data, int width, int h
     _Device->BindTexture(previousTexture);
 
     _Size = glm::vec2(width, height);
+}
+
+void pb::TextureGLES2::Bind(int unit)
+{
+    _Device->BindTexture(this);
 }
 
 #endif

@@ -2,6 +2,7 @@
 
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/indexBuffer.h"
+#include "pixelboost/graphics/device/material.h"
 #include "pixelboost/graphics/device/texture.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
 
@@ -18,11 +19,13 @@ struct pb::DeviceState
         boundIndexBuffer = 0;
         boundTexture = 0;
         boundVertexBuffer = 0;
+        boundMaterial = 0;
     }
     
     GLuint boundIndexBuffer;
     GLuint boundTexture;
     GLuint boundVertexBuffer;
+    Material* boundMaterial;
 };
 
 GraphicsDevice* GraphicsDevice::Create()
@@ -44,8 +47,8 @@ unsigned char* GraphicsDeviceGLES2::CaptureRenderBuffer()
 {    
     int width, height;
     
-    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &width);
-    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &height);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &width);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &height);
 
     unsigned char* buffer = new unsigned char[width * height * 4];
     glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
@@ -93,6 +96,13 @@ VertexBuffer* GraphicsDeviceGLES2::BindVertexBuffer(VertexBuffer* vertexBuffer)
     
     int previousBinding = _State->boundVertexBuffer;
     
+    VertexBuffer* previousBuffer = 0;
+    
+    VertexReverseMap::iterator it = _VertexReverseBuffers.find(previousBinding);
+    
+    if (it != _VertexReverseBuffers.end())
+        previousBuffer = it->second;
+    
     if (vertexBufferId != _State->boundVertexBuffer)
     {
         glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
@@ -106,50 +116,64 @@ VertexBuffer* GraphicsDeviceGLES2::BindVertexBuffer(VertexBuffer* vertexBuffer)
                 case kVertexFormat_P_XY_RGBA:
                 {
                     GLsizei stride = sizeof(Vertex_PXY_RGBA);
-                    glColorPointer(4, GL_FLOAT, stride, (void*)offsetof(Vertex_PXY_RGBA, color));
-                    glVertexPointer(2, GL_FLOAT, stride, (void*)offsetof(Vertex_PXY_RGBA, position));
+                    glEnableVertexAttribArray(kShaderAttributeVertexPosition);
+                    glEnableVertexAttribArray(kShaderAttributeVertexColor);
+                    glVertexAttribPointer(kShaderAttributeVertexPosition, 2, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXY_RGBA, position));
+                    glVertexAttribPointer(kShaderAttributeVertexColor, 4, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXY_RGBA, color));
+                    break;
+                }
+                case kVertexFormat_P_XYZ:
+                {
+                    GLsizei stride = sizeof(Vertex_PXYZ);
+                    glEnableVertexAttribArray(kShaderAttributeVertexPosition);
+                    glVertexAttribPointer(kShaderAttributeVertexPosition, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXYZ, position));
                     break;
                 }
                 case kVertexFormat_P_XYZ_UV:
                 {
                     GLsizei stride = sizeof(Vertex_PXYZ_UV);
-                    glTexCoordPointer(2, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_UV, uv));
-                    glVertexPointer(3, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_UV, position));
+                    glEnableVertexAttribArray(kShaderAttributeVertexPosition);
+                    glEnableVertexAttribArray(kShaderAttributeVertexTexture0);
+                    glVertexAttribPointer(kShaderAttributeVertexPosition, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXYZ_UV, position));
+                    glVertexAttribPointer(kShaderAttributeVertexTexture0, 2, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXYZ_UV, uv));
                     break;
                 }
                 case kVertexFormat_P_XYZ_RGBA:
                 {
                     GLsizei stride = sizeof(Vertex_PXYZ_RGBA);
-                    glColorPointer(4, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_RGBA, color));
-                    glVertexPointer(3, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_RGBA, position));
+                    glEnableVertexAttribArray(kShaderAttributeVertexPosition);
+                    glEnableVertexAttribArray(kShaderAttributeVertexColor);
+                    glVertexAttribPointer(kShaderAttributeVertexPosition, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXYZ_RGBA, position));
+                    glVertexAttribPointer(kShaderAttributeVertexColor, 4, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXYZ_RGBA, color));
                     break;
                 }
                 case kVertexFormat_P_XYZ_RGBA_UV:
                 {
                     GLsizei stride = sizeof(Vertex_PXYZ_RGBA_UV);
-                    glColorPointer(4, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_RGBA_UV, color));
-                    glTexCoordPointer(2, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_RGBA_UV, uv));
-                    glVertexPointer(3, GL_FLOAT, stride, (void*)offsetof(Vertex_PXYZ_RGBA_UV, position));
+                    glEnableVertexAttribArray(kShaderAttributeVertexPosition);
+                    glEnableVertexAttribArray(kShaderAttributeVertexColor);
+                    glEnableVertexAttribArray(kShaderAttributeVertexTexture0);
+                    glVertexAttribPointer(kShaderAttributeVertexPosition, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXYZ_RGBA_UV, position));
+                    glVertexAttribPointer(kShaderAttributeVertexColor, 4, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXYZ_RGBA_UV, color));
+                    glVertexAttribPointer(kShaderAttributeVertexTexture0, 2, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXYZ_RGBA_UV, uv));
                     break;
                 }
                 case kVertexFormat_NP_XYZ_UV:
                 {
                     GLsizei stride = sizeof(Vertex_NPXYZ_UV);
-                    glNormalPointer(GL_FLOAT, stride, (void*)offsetof(Vertex_NPXYZ_UV, normal));
-                    glTexCoordPointer(2, GL_FLOAT, stride, (void*)offsetof(Vertex_NPXYZ_UV, uv));
-                    glVertexPointer(3, GL_FLOAT, stride, (void*)offsetof(Vertex_NPXYZ_UV, position));
+                    glEnableVertexAttribArray(kShaderAttributeVertexPosition);
+                    glEnableVertexAttribArray(kShaderAttributeVertexNormal);
+                    glEnableVertexAttribArray(kShaderAttributeVertexTexture0);
+                    glVertexAttribPointer(kShaderAttributeVertexPosition, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_NPXYZ_UV, position));
+                    glVertexAttribPointer(kShaderAttributeVertexNormal, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_NPXYZ_UV, normal));
+                    glVertexAttribPointer(kShaderAttributeVertexTexture0, 2, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_NPXYZ_UV, uv));
                     break;
                 }
             }
         }
     }
     
-    VertexReverseMap::iterator it = _VertexReverseBuffers.find(previousBinding);
-    
-    if (it != _VertexReverseBuffers.end())
-        return it->second;
-    
-    return 0;
+    return previousBuffer;
 }
 
 void GraphicsDeviceGLES2::LockVertexBuffer(VertexBuffer* vertexBuffer)
@@ -173,6 +197,11 @@ void GraphicsDeviceGLES2::UnlockVertexBuffer(VertexBuffer* vertexBuffer, int num
         case kVertexFormat_P_XY_RGBA:
         {
             glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_PXY_RGBA) * numElements, vertexBuffer->GetData(), bufferType);
+            break;
+        }
+        case kVertexFormat_P_XYZ:
+        {
+            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_PXYZ) * numElements, vertexBuffer->GetData(), bufferType);
             break;
         }
         case kVertexFormat_P_XYZ_UV:
@@ -275,14 +304,22 @@ Texture* GraphicsDeviceGLES2::CreateTexture()
 
 void GraphicsDeviceGLES2::DestroyTexture(Texture* texture)
 {
-    GraphicsDevice::DestroyTexture(texture);
+    for (TextureList::iterator it = _Textures.begin(); it != _Textures.end(); ++it)
+    {
+        if (*it == texture)
+        {
+            _Textures.erase(it);
+            GraphicsDevice::DestroyTexture(texture);
+            return;
+        }
+    }
 }
 
 Texture* GraphicsDeviceGLES2::GetBoundTexture()
 {
     for (TextureList::iterator it = _Textures.begin(); it != _Textures.end(); ++it)
     {
-        if (static_cast<TextureGLES2*>(*it)->_Texture == _State->boundTexture)
+        if ((*it)->_Texture == _State->boundTexture)
             return *it;
     }
     
@@ -304,24 +341,106 @@ Texture* GraphicsDeviceGLES2::BindTexture(Texture* texture)
     return previousTexture;
 }
 
+Material* GraphicsDeviceGLES2::CreateMaterial()
+{
+    MaterialGLES2* material = new MaterialGLES2(this);
+    _Materials.push_back(material);
+    return material;
+}
+
+void GraphicsDeviceGLES2::DestroyMaterial(Material* material)
+{
+    for (MaterialList::iterator it = _Materials.begin(); it != _Materials.end(); ++it)
+    {
+        if (*it == material)
+        {
+            _Materials.erase(it);
+            GraphicsDevice::DestroyMaterial(material);
+            return;
+        }
+    }
+}
+
+Material* GraphicsDeviceGLES2::GetBoundMaterial()
+{
+    return _State->boundMaterial;
+}
+
+Material* GraphicsDeviceGLES2::BindMaterial(Material* material)
+{
+    Material* previousMaterial = GetBoundMaterial();
+    
+    if (material != _State->boundMaterial)
+    {
+        static_cast<MaterialGLES2*>(material)->Bind();
+        _State->boundMaterial = material;
+    }
+    
+    return previousMaterial;
+}
+
+void GraphicsDeviceGLES2::SetState(State state, bool enable)
+{
+    GLenum glState;
+    
+    switch (state)
+    {
+        case kStateBlend:
+            glState = GL_BLEND;
+            break;
+        case kStateDepthTest:
+            glState = GL_DEPTH_TEST;
+            break;
+        case kStateTexture2D:
+            glState = GL_TEXTURE_2D;
+            break;
+    }
+    
+    if (enable)
+    {
+        glEnable(glState);
+    } else {
+        glDisable(glState);
+    }
+}
+
+void GraphicsDeviceGLES2::SetBlendMode(Blend source, Blend destination)
+{
+    GLenum glSource;
+    GLenum glDest;
+    
+    switch (source)
+    {
+        case kBlendOne:
+            glSource = GL_ONE;
+            break;
+        case kBlendOneMinusSourceAlpha:
+            glSource = GL_ONE_MINUS_SRC_ALPHA;
+            break;
+        case kBlendSourceAlpha:
+            glSource = GL_BLEND_SRC_ALPHA;
+            break;
+    }
+    
+    switch (destination)
+    {
+        case kBlendOne:
+            glDest = GL_ONE;
+            break;
+        case kBlendOneMinusSourceAlpha:
+            glDest = GL_ONE_MINUS_SRC_ALPHA;
+            break;
+        case kBlendSourceAlpha:
+            glDest = GL_BLEND_SRC_ALPHA;
+            break;
+    }
+    
+    glBlendFunc(glSource, glDest);
+}
+
 void GraphicsDeviceGLES2::SetViewport(glm::vec4 viewport)
 {
     glViewport(viewport.x, viewport.y, viewport.z, viewport.w);
-}
-
-void GraphicsDeviceGLES2::SetMatrix(MatrixType matrixType, glm::mat4x4 matrix)
-{
-    switch (matrixType)
-    {
-        case kMatrixTypeModelView:
-            glMatrixMode(GL_MODELVIEW);
-            glLoadMatrixf(glm::value_ptr(matrix));
-            break;
-        case kMatrixTypeProjection:
-            glMatrixMode(GL_PROJECTION);
-            glLoadMatrixf(glm::value_ptr(matrix));
-            break;
-    }
 }
 
 void GraphicsDeviceGLES2::DrawElements(ElementType elementType, int num)
@@ -335,9 +454,19 @@ void GraphicsDeviceGLES2::DrawElements(ElementType elementType, int num)
             type = GL_LINES;
             break;
         }
+        case kElementLineLoop:
+        {
+            type = GL_LINE_LOOP;
+            break;
+        }
         case kElementTriangles:
         {
             type = GL_TRIANGLES;
+            break;
+        }
+        case kElementTriangleFan:
+        {
+            type = GL_TRIANGLE_FAN;
             break;
         }
     }

@@ -177,6 +177,7 @@ void ParticleEmitter::Update(float time)
 
 void ParticleEmitter::Render()
 {
+    /*
     if (!_Particles.size())
         return;
     
@@ -292,6 +293,7 @@ void ParticleEmitter::Render()
         glDisable(GL_BLEND);
         glDisable(GL_TEXTURE_2D);
     }
+    */
 }
 
 void ParticleEmitter::AddModifier(ParticleModifier* modifier)

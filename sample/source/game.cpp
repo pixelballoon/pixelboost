@@ -10,8 +10,6 @@
 Game::Game(void* viewController)
     : pb::Game(viewController)
 {
-    _Layer = new pb::RenderLayer(0);
-    
     glm::vec2 displaySize = pb::GraphicsDevice::Instance()->GetDisplayResolution();
     
     _CameraA = new pb::OrthographicCamera();
@@ -26,8 +24,10 @@ Game::Game(void* viewController)
     _ViewportB->SetResolution(glm::vec2(displaySize.x, displaySize.y/2.f));
     _ViewportB->SetPosition(glm::vec2(0, -displaySize.y/4.f));
     
-    _ViewportA->AddLayer(_Layer, _CameraA);
-    _ViewportB->AddLayer(_Layer, _CameraB);
+    _Layer = new pb::RenderLayer(0, _CameraA);
+    
+    _ViewportA->AddLayer(_Layer);
+    _ViewportB->AddLayer(_Layer);
     
     GetRenderer()->AddViewport(_ViewportA);
     GetRenderer()->AddViewport(_ViewportB);
@@ -53,6 +53,8 @@ void Game::Render()
 {
     GetPrimitiveRenderer()->AttachBox(_Layer, glm::vec2(0,0), _ViewportA->GetSize(), glm::vec3(0,0,0), glm::vec4(0.5,0.5,0.5,1));
     GetPrimitiveRenderer()->AttachBox(_Layer, glm::vec2(0,0), glm::vec2(5,5), glm::vec3(0,0,0), glm::vec4(1,1,1,1));
+    GetPrimitiveRenderer()->AttachLine(_Layer, glm::vec2(0,0), glm::vec2(5,5), glm::vec4(1,0,0,1));
+    GetPrimitiveRenderer()->AttachEllipse(_Layer, glm::vec2(0,0), glm::vec2(5,5), glm::vec3(0,0,0), glm::vec4(0,1,0,1));
     
     pb::Game::Render();
 }

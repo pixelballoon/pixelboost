@@ -1,16 +1,87 @@
 #ifndef PIXELBOOST_DISABLE_GRAPHICS
 
+#include "glm/gtc/matrix_transform.hpp"
+
+#include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/device/device.h"
+#include "pixelboost/graphics/device/indexBuffer.h"
+#include "pixelboost/graphics/device/material.h"
+#include "pixelboost/graphics/device/vertexBuffer.h"
+#include "pixelboost/graphics/renderer/common/layer.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 
-// TODO : Use vertex buffers objects rather than relying on direct OpenGL usage
-
-namespace pb
-{
+using namespace pb;
 
 PrimitiveRenderer::PrimitiveRenderer()
 {
+    _Material = GraphicsDevice::Instance()->CreateMaterial();
+    _Material->Load("/default/materials/primitive.mat");
     
+    {
+        _BoxIndexBuffer = GraphicsDevice::Instance()->CreateIndexBuffer(kBufferFormatStatic, 6);
+        _BoxVertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatStatic, kVertexFormat_P_XYZ, 4);
+        
+        _BoxIndexBuffer->Lock();
+        unsigned short* indicies = _BoxIndexBuffer->GetData();
+        indicies[0] = 0;
+        indicies[1] = 1;
+        indicies[2] = 2;
+        indicies[3] = 1;
+        indicies[4] = 2;
+        indicies[5] = 3;
+        _BoxIndexBuffer->Unlock();
+        
+        _BoxVertexBuffer->Lock();
+        Vertex_PXYZ* vertices = static_cast<Vertex_PXYZ*>(_BoxVertexBuffer->GetData());
+        vertices[0].position[0] = -0.5;
+        vertices[0].position[1] = -0.5;
+        vertices[0].position[2] = 0;
+        vertices[1].position[0] = -0.5;
+        vertices[1].position[1] = 0.5;
+        vertices[1].position[2] = 0;
+        vertices[2].position[0] = 0.5;
+        vertices[2].position[1] = 0.5;
+        vertices[2].position[2] = 0;
+        vertices[3].position[0] = 0.5;
+        vertices[3].position[1] = -0.5;
+        vertices[3].position[2] = 0;
+        _BoxVertexBuffer->Unlock();
+    }
+     
+    {
+        _EllipseIndexBuffer = GraphicsDevice::Instance()->CreateIndexBuffer(kBufferFormatStatic, 32);
+        _EllipseVertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatStatic, kVertexFormat_P_XYZ, 32);
+        
+        _EllipseIndexBuffer->Lock();
+        _EllipseVertexBuffer->Lock();
+        unsigned short* indices = _EllipseIndexBuffer->GetData();
+        Vertex_PXYZ* vertices = static_cast<Vertex_PXYZ*>(_EllipseVertexBuffer->GetData());
+        
+        float angle = 0.f;
+        float step = M_PI * 2.f / 32.f;
+        for (int i=0; i<32; i++)
+        {
+            indices[i] = i;
+            vertices[i].position[0] = cos(angle);
+            vertices[i].position[1] = sin(angle);
+            vertices[i].position[2] = 0.f;
+            angle += step;
+        }
+        
+        _EllipseIndexBuffer->Unlock();
+        _EllipseVertexBuffer->Unlock();
+    }
+    
+    {
+        _LineIndexBuffer = GraphicsDevice::Instance()->CreateIndexBuffer(kBufferFormatStatic, 2);
+        _LineVertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatStatic, kVertexFormat_P_XYZ, 2);
+        
+        _LineIndexBuffer->Lock();
+        unsigned short* indexBuffer = _LineIndexBuffer->GetData();
+        indexBuffer[0] = 0;
+        indexBuffer[1] = 1;
+        _LineIndexBuffer->Unlock();
+    }
 }
     
 PrimitiveRenderer::~PrimitiveRenderer()
@@ -29,110 +100,109 @@ void PrimitiveRenderer::Render(RenderLayer* layer)
     
     if (!list.size())
         return;
-    
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_TEXTURE_2D);
-    
-    glEnable(GL_BLEND);
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-    glDisableClientState(GL_COLOR_ARRAY);
-    glDisableClientState(GL_NORMAL_ARRAY);
-    
-    //glBindBuffer(GL_ARRAY_BUFFER, 0);
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    
+        
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
+            
 #ifdef PIXELBOOST_GRAPHICS_PREMULTIPLIED_ALPHA
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
 #else
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
 #endif
     
     for (ItemList::iterator it = list.begin(); it != list.end(); ++it)
     {
-        glColor4f(it->color[0], it->color[1], it->color[2], it->color[3]);
+        glm::mat4x4 viewProjectionMatrix = layer->GetCamera()->ViewMatrix * layer->GetCamera()->ProjectionMatrix;
+        _Material->SetUniform("diffuseColor", it->color);
         
+        GraphicsDevice::Instance()->BindMaterial(_Material);
+         
         switch (it->type)
         {
             case PrimitiveInstance::kTypeEllipse:
             {
-                glPushMatrix();
+                viewProjectionMatrix = glm::translate(viewProjectionMatrix, glm::vec3(it->position, 0));
+                viewProjectionMatrix = glm::scale(viewProjectionMatrix, glm::vec3(it->size, 1));
+                viewProjectionMatrix = glm::rotate(viewProjectionMatrix, it->rotation[0], glm::vec3(1,0,0));
+                viewProjectionMatrix = glm::rotate(viewProjectionMatrix, it->rotation[1], glm::vec3(0,1,0));
+                viewProjectionMatrix = glm::rotate(viewProjectionMatrix, it->rotation[2], glm::vec3(0,0,1));
                 
-                glTranslatef(it->position[0], it->position[1], 0.f);
-                glScalef(it->size[0], it->size[1], 1.f);        
-                glRotatef(it->rotation[0], 1, 0, 0);
-                glRotatef(it->rotation[1], 0, 1, 0);
-                glRotatef(it->rotation[2], 0, 0, 1);
+                _Material->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
+                GraphicsDevice::Instance()->BindIndexBuffer(_EllipseIndexBuffer);
+                GraphicsDevice::Instance()->BindVertexBuffer(_EllipseVertexBuffer);
                 
-                GLfloat glVertices[it->segments*2];
+                if (!it->solid)
+                    GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementLineLoop, 32);
+                else
+                    GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangleFan, 32);
                 
-                float angle = 0;
-                for (int i=0; i<it->segments*2; i+=2)
-                {
-                    angle += M_PI/(it->segments/2);
-                    
-                    glVertices[i] = cos(angle);
-                    glVertices[i+1] = sin(angle);
-                }
+                GraphicsDevice::Instance()->BindIndexBuffer(0);
+                GraphicsDevice::Instance()->BindVertexBuffer(0);
                 
-                glVertexPointer(2, GL_FLOAT, 0, glVertices);                
-                
-                glDrawArrays(GL_LINE_LOOP, 0, it->segments);
-                
-                glPopMatrix();
+                break;
+
                 
                 break;
             }
             case PrimitiveInstance::kTypeBox:
             {
-                glPushMatrix();
+                viewProjectionMatrix = glm::translate(viewProjectionMatrix, glm::vec3(it->position, 0));
+                viewProjectionMatrix = glm::scale(viewProjectionMatrix, glm::vec3(it->size, 1));
+                viewProjectionMatrix = glm::rotate(viewProjectionMatrix, it->rotation[0], glm::vec3(1,0,0));
+                viewProjectionMatrix = glm::rotate(viewProjectionMatrix, it->rotation[1], glm::vec3(0,1,0));
+                viewProjectionMatrix = glm::rotate(viewProjectionMatrix, it->rotation[2], glm::vec3(0,0,1));
+
+                _Material->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
+                GraphicsDevice::Instance()->BindIndexBuffer(_BoxIndexBuffer);
+                GraphicsDevice::Instance()->BindVertexBuffer(_BoxVertexBuffer);
                 
-                glTranslatef(it->position[0], it->position[1], 0);
-                glRotatef(it->rotation[0], 1, 0, 0);
-                glRotatef(it->rotation[1], 0, 1, 0);
-                glRotatef(it->rotation[2], 0, 0, 1);
-                
-                glm::vec2 tl(-it->size[0]/2.f, -it->size[1]/2.f);
-                glm::vec2 br(+it->size[0]/2.f, +it->size[1]/2.f);
-                
-                GLfloat glVertices[8] = { tl[0], br[1], tl[0], tl[1], br[0], tl[1], br[0], br[1] };
-                glVertexPointer(2, GL_FLOAT, 0, glVertices);
-                
-                if (it->solid)
-                {
-                    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-                }
+                if (!it->solid)
+                    GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementLineLoop, 6);
                 else
-                    glDrawArrays(GL_LINE_LOOP, 0, 4);
+                    GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangleFan, 6);
                 
-                glPopMatrix();
+                GraphicsDevice::Instance()->BindIndexBuffer(0);
+                GraphicsDevice::Instance()->BindVertexBuffer(0);
                 
                 break;
             }
             case PrimitiveInstance::kTypeLine:
             {
-                glPushMatrix();
+                _Material->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
                 
-                GLfloat glVertices[] = { it->position[0], it->position[1], it->size[0], it->size[1] };
+                _LineVertexBuffer->Lock();
                 
-                glVertexPointer(2, GL_FLOAT, 0, glVertices);
+                Vertex_PXYZ* vertices = static_cast<Vertex_PXYZ*>(_LineVertexBuffer->GetData());
                 
-                glDrawArrays(GL_LINES, 0, 2);
+                vertices[0].position[0] = it->position[0];
+                vertices[0].position[1] = it->position[1];
+                vertices[1].position[0] = it->size[0];
+                vertices[1].position[1] = it->size[1];
                 
-                glPopMatrix();
+                _LineVertexBuffer->Unlock();
+                
+                GraphicsDevice::Instance()->BindIndexBuffer(_LineIndexBuffer);
+                GraphicsDevice::Instance()->BindVertexBuffer(_LineVertexBuffer);
+                
+                GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementLines, 2);
+                
+                GraphicsDevice::Instance()->BindIndexBuffer(0);
+                GraphicsDevice::Instance()->BindVertexBuffer(0);
                 
                 break;
             }
         }
     }
     
-    glColor4f(1.f, 1.f, 1.f, 1.f);
-    
     glDisable(GL_BLEND);
-    glDisableClientState(GL_VERTEX_ARRAY);
+    
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
 }
     
-void PrimitiveRenderer::AttachEllipse(pb::RenderLayer *layer, glm::vec2 position, glm::vec2 size, glm::vec3 rotation, glm::vec4 color, int segments)
+void PrimitiveRenderer::AttachEllipse(pb::RenderLayer *layer, glm::vec2 position, glm::vec2 size, glm::vec3 rotation, glm::vec4 color)
 {
     PrimitiveInstance item;
     item.type = PrimitiveInstance::kTypeEllipse;
@@ -140,7 +210,6 @@ void PrimitiveRenderer::AttachEllipse(pb::RenderLayer *layer, glm::vec2 position
     item.size = size;
     item.rotation = rotation;
     item.color = color;
-    item.segments = segments;
     _Items[layer].push_back(item);
 }
     
@@ -164,8 +233,6 @@ void PrimitiveRenderer::AttachBox(pb::RenderLayer *layer, glm::vec2 position, gl
     item.color = color;
     item.solid = solid;
     _Items[layer].push_back(item);
-}
-    
 }
 
 #endif

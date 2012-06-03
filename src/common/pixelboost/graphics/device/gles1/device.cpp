@@ -309,21 +309,6 @@ void GraphicsDeviceGLES1::SetViewport(glm::vec4 viewport)
     glViewport(viewport.x, viewport.y, viewport.z, viewport.w);
 }
 
-void GraphicsDeviceGLES1::SetMatrix(MatrixType matrixType, glm::mat4x4 matrix)
-{
-    switch (matrixType)
-    {
-        case kMatrixTypeModelView:
-            glMatrixMode(GL_MODELVIEW);
-            glLoadMatrixf(glm::value_ptr(matrix));
-            break;
-        case kMatrixTypeProjection:
-            glMatrixMode(GL_PROJECTION);
-            glLoadMatrixf(glm::value_ptr(matrix));
-            break;
-    }
-}
-
 void GraphicsDeviceGLES1::DrawElements(ElementType elementType, int num)
 {
     GLuint type;

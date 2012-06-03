@@ -19,6 +19,9 @@ VertexBuffer::VertexBuffer(GraphicsDevice* device, BufferFormat bufferFormat, Ve
         case kVertexFormat_P_XY_RGBA:
             _Data = new Vertex_PXY_RGBA[length];
             break;
+        case kVertexFormat_P_XYZ:
+            _Data = new Vertex_PXYZ[length];
+            break;
         case kVertexFormat_P_XYZ_UV:
             _Data = new Vertex_PXYZ_UV[length];
             break;
@@ -40,6 +43,9 @@ VertexBuffer::~VertexBuffer()
     {
         case kVertexFormat_P_XY_RGBA:
             delete[] static_cast<Vertex_PXY_RGBA*>(_Data);
+            break;
+        case kVertexFormat_P_XYZ:
+            delete[] static_cast<Vertex_PXYZ*>(_Data);
             break;
         case kVertexFormat_P_XYZ_UV:
             delete[] static_cast<Vertex_PXYZ_UV*>(_Data);

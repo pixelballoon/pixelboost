@@ -172,6 +172,7 @@ void FontRenderer::Update(float time)
 
 void FontRenderer::Render(RenderLayer* layer)
 {
+    /*
     InstanceList& instances = _Instances[layer];
     
     if (instances.size() == 0)
@@ -282,6 +283,7 @@ void FontRenderer::Render(RenderLayer* layer)
     
     glDisable(GL_BLEND);
     glDisable(GL_TEXTURE_2D);
+    */
 }
 
 bool FontRenderer::AttachToRenderer(RenderLayer* layer, const std::string& fontName, const std::string& string, glm::vec2 position, FontAlign alignment, float size, float rotation, glm::vec4 color)

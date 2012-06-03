@@ -16,6 +16,8 @@
 		1C34151F157B9E010016B121 /* networkHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C341519157B9E010016B121 /* networkHelpers.mm */; };
 		1C341525157B9F070016B121 /* device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C341521157B9F070016B121 /* device.cpp */; };
 		1C341526157B9F070016B121 /* texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C341523157B9F070016B121 /* texture.cpp */; };
+		1C341560157BDBA40016B121 /* material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C34155F157BDBA30016B121 /* material.cpp */; };
+		1C341563157BDBFD0016B121 /* material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C341561157BDBFD0016B121 /* material.cpp */; };
 		1C53224F15798536003C756D /* xml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C531F3915798535003C756D /* xml.cpp */; };
 		1C53225015798536003C756D /* database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C531F3D15798535003C756D /* database.cpp */; };
 		1C53225115798536003C756D /* entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C531F4015798535003C756D /* entity.cpp */; };
@@ -253,6 +255,10 @@
 		1C341522157B9F070016B121 /* device.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = device.h; sourceTree = "<group>"; };
 		1C341523157B9F070016B121 /* texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = texture.cpp; sourceTree = "<group>"; };
 		1C341524157B9F070016B121 /* texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = texture.h; sourceTree = "<group>"; };
+		1C34155E157BB9BB0016B121 /* material.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = material.h; sourceTree = "<group>"; };
+		1C34155F157BDBA30016B121 /* material.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = material.cpp; sourceTree = "<group>"; };
+		1C341561157BDBFD0016B121 /* material.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = material.cpp; sourceTree = "<group>"; };
+		1C341562157BDBFD0016B121 /* material.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = material.h; sourceTree = "<group>"; };
 		1C531F3115798535003C756D /* elements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = elements.h; sourceTree = "<group>"; };
 		1C531F3215798535003C756D /* elements.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = elements.inl; sourceTree = "<group>"; };
 		1C531F3315798535003C756D /* reader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = reader.h; sourceTree = "<group>"; };
@@ -904,7 +910,6 @@
 		1C53224B15798535003C756D /* networkHelpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = networkHelpers.mm; sourceTree = "<group>"; };
 		1C53239A15798751003C756D /* game.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = game.cpp; sourceTree = "<group>"; };
 		1C53239C1579876E003C756D /* game.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = game.h; sourceTree = "<group>"; };
-		1C53239E157A05F1003C756D /* material.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = material.h; sourceTree = "<group>"; };
 		1C5323A1157A05F2003C756D /* box2dRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = box2dRenderer.cpp; sourceTree = "<group>"; };
 		1C5323A2157A05F2003C756D /* box2dRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = box2dRenderer.h; sourceTree = "<group>"; };
 		1C5323A4157A05F2003C756D /* irenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = irenderer.cpp; sourceTree = "<group>"; };
@@ -1051,6 +1056,8 @@
 			children = (
 				1C341521157B9F070016B121 /* device.cpp */,
 				1C341522157B9F070016B121 /* device.h */,
+				1C341561157BDBFD0016B121 /* material.cpp */,
+				1C341562157BDBFD0016B121 /* material.h */,
 				1C341523157B9F070016B121 /* texture.cpp */,
 				1C341524157B9F070016B121 /* texture.h */,
 			);
@@ -1183,7 +1190,6 @@
 				1C531F5215798535003C756D /* camera */,
 				1C531F5415798535003C756D /* device */,
 				1C531F6A15798535003C756D /* helper */,
-				1C53239D157A05F1003C756D /* material */,
 				1C53239F157A05F1003C756D /* renderer */,
 			);
 			path = graphics;
@@ -1211,6 +1217,8 @@
 				1C341520157B9F060016B121 /* gles2 */,
 				1C531F6415798535003C756D /* indexBuffer.cpp */,
 				1C531F6515798535003C756D /* indexBuffer.h */,
+				1C34155F157BDBA30016B121 /* material.cpp */,
+				1C34155E157BB9BB0016B121 /* material.h */,
 				1C531F6615798535003C756D /* texture.cpp */,
 				1C531F6715798535003C756D /* texture.h */,
 				1C531F6815798535003C756D /* vertexBuffer.cpp */,
@@ -2300,14 +2308,6 @@
 			path = network;
 			sourceTree = "<group>";
 		};
-		1C53239D157A05F1003C756D /* material */ = {
-			isa = PBXGroup;
-			children = (
-				1C53239E157A05F1003C756D /* material.h */,
-			);
-			path = material;
-			sourceTree = "<group>";
-		};
 		1C53239F157A05F1003C756D /* renderer */ = {
 			isa = PBXGroup;
 			children = (
@@ -2776,6 +2776,8 @@
 				1C34151F157B9E010016B121 /* networkHelpers.mm in Sources */,
 				1C341525157B9F070016B121 /* device.cpp in Sources */,
 				1C341526157B9F070016B121 /* texture.cpp in Sources */,
+				1C341560157BDBA40016B121 /* material.cpp in Sources */,
+				1C341563157BDBFD0016B121 /* material.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

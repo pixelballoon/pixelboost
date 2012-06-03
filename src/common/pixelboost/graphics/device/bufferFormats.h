@@ -11,6 +11,7 @@ namespace pb
     enum VertexFormat
     {
         kVertexFormat_P_XY_RGBA,
+        kVertexFormat_P_XYZ,
         kVertexFormat_P_XYZ_UV,
         kVertexFormat_P_XYZ_RGBA,
         kVertexFormat_P_XYZ_RGBA_UV,
