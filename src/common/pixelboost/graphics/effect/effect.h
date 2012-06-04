@@ -69,5 +69,14 @@ private:
     
     TechniqueMap _Techniques;
 };
+    
+class EffectManager
+{
+public:
+    EffectManager();
+    ~EffectManager();
+    
+    Effect* LoadEffect(const std::string& filename);
+};
 
 }

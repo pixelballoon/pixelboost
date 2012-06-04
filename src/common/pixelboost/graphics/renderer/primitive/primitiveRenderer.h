@@ -6,6 +6,7 @@
 #include "glm/glm.hpp"
 
 #include "pixelboost/graphics/renderer/common/irenderer.h"
+#include "pixelboost/graphics/renderer/common/renderable.h"
 
 namespace pb
 {
@@ -13,6 +14,61 @@ namespace pb
 class Effect;
 class IndexBuffer;
 class VertexBuffer;
+class Viewport;
+    
+class PrimitiveRenderable : public Renderable
+{
+public:
+    virtual Uid GetRenderableType();
+    
+    enum Type
+    {
+        kTypeEllipse,
+        kTypeLine,
+        kTypeRectangle,
+    };
+    
+    virtual Type GetPrimitiveType() = 0;
+    
+public:
+    glm::vec4 Color;
+};
+    
+class PrimitiveRenderableEllipse : public PrimitiveRenderable
+{
+public:
+    virtual Type GetPrimitiveType();
+    
+public:
+    bool Solid;
+    
+    glm::vec3 Position;
+    glm::vec3 Rotation;
+    glm::vec2 Size;
+};
+
+class PrimitiveRenderableLine : public PrimitiveRenderable
+{
+public:
+    virtual Type GetPrimitiveType();
+    
+    glm::vec3 Start;
+    glm::vec3 End;
+};
+
+    
+class PrimitiveRenderableRectangle : public PrimitiveRenderable
+{
+public:
+    virtual Type GetPrimitiveType();
+    
+public:
+    bool Solid;
+    
+    glm::vec3 Position;
+    glm::vec3 Rotation;
+    glm::vec2 Size;
+};
     
 class PrimitiveRenderer : public IRenderer
 {
@@ -21,35 +77,9 @@ public:
     ~PrimitiveRenderer();
     
     void Update(float time);
-    void Render(RenderLayer* layer);
-    
-    void AttachEllipse(RenderLayer* layer, glm::vec2 position, glm::vec2 size, glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec4 color = glm::vec4(1.f, 1.f, 1.f, 1.f));
-    void AttachLine(RenderLayer* layer, glm::vec2 start, glm::vec2 end, glm::vec4 color = glm::vec4(1.f, 1.f, 1.f, 1.f));
-    void AttachBox(RenderLayer* layer, glm::vec2 position, glm::vec2 size, glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec4 color = glm::vec4(1.f, 1.f, 1.f, 1.f), bool solid=true);
+    void Render(int count, Renderable* renderables, Viewport* viewport);
     
 private:
-    struct PrimitiveInstance
-    {
-        enum Type
-        {
-            kTypeEllipse,
-            kTypeLine,
-            kTypeBox,
-        };
-        
-        Type type;
-        glm::vec2 position;
-        glm::vec2 size;
-        glm::vec3 rotation;
-        glm::vec4 color;
-        bool solid;
-    };
-    
-    typedef std::vector<PrimitiveInstance> ItemList;
-    typedef std::map<RenderLayer*, ItemList> ItemListMap;
-    
-    ItemListMap _Items;
-    
     Effect* _Effect;
     
     IndexBuffer* _EllipseIndexBuffer;

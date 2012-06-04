@@ -16,7 +16,7 @@ namespace pb
     class GwenRenderer : public Gwen::Renderer::Base
     {
     public:
-        GwenRenderer(pb::RenderLayer* layer);
+        GwenRenderer(int layer);
         ~GwenRenderer();
         
         virtual void Init();
@@ -39,7 +39,7 @@ namespace pb
         virtual Gwen::Point MeasureText(Gwen::Font* pFont, const Gwen::UnicodeString& text);
         
     private:
-        RenderLayer* _Layer;
+        int _Layer;
         
         glm::vec4 _Colour;
     };

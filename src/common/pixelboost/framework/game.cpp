@@ -32,12 +32,12 @@ Game::Game(void* viewController)
     _TouchManager = new TouchManager();
     
     _Renderer = new Renderer();
-    _CustomRenderer = new CustomRenderer();
-    _ModelRenderer  = new ModelRenderer();
-    _ParticleRenderer = new ParticleRenderer();
-    _SpriteRenderer = new SpriteRenderer();
+    //_CustomRenderer = new CustomRenderer();
+    //_ModelRenderer  = new ModelRenderer();
+    //_ParticleRenderer = new ParticleRenderer();
+    //_SpriteRenderer = new SpriteRenderer();
     _PrimitiveRenderer = new PrimitiveRenderer();
-    _FontRenderer = new FontRenderer();
+    //_FontRenderer = new FontRenderer();
 #endif
     
 #ifndef PIXELBOOST_DISABLE_GAMECENTER

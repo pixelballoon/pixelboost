@@ -223,7 +223,6 @@
 		1CFF4B15157CE1A40064A169 /* screenHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF4AA6157CE1A40064A169 /* screenHelpers.cpp */; };
 		1CFF4B16157CE1A40064A169 /* box2dRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF4AAA157CE1A40064A169 /* box2dRenderer.cpp */; };
 		1CFF4B17157CE1A40064A169 /* irenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF4AAD157CE1A40064A169 /* irenderer.cpp */; };
-		1CFF4B18157CE1A40064A169 /* layer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF4AAF157CE1A40064A169 /* layer.cpp */; };
 		1CFF4B19157CE1A40064A169 /* renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF4AB1157CE1A40064A169 /* renderer.cpp */; };
 		1CFF4B1A157CE1A40064A169 /* customRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF4AB5157CE1A40064A169 /* customRenderer.cpp */; };
 		1CFF4B1B157CE1A40064A169 /* fontRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF4AB8157CE1A40064A169 /* fontRenderer.cpp */; };
@@ -254,6 +253,11 @@
 		1CFF4B3C157CE9E80064A169 /* debug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF4B39157CE9E70064A169 /* debug.cpp */; };
 		1CFF4B3F157CECE60064A169 /* bounds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF4B3D157CECE50064A169 /* bounds.cpp */; };
 		1CFF4B42157CF11C0064A169 /* scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF4B40157CF1140064A169 /* scene.cpp */; };
+		1CFF4B46157CF6740064A169 /* sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF4B44157CF6740064A169 /* sprite.cpp */; };
+		1CFF4B49157D087B0064A169 /* renderable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF4B48157D087A0064A169 /* renderable.cpp */; };
+		1CFF4B4C157D18AC0064A169 /* rectangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF4B4A157D18AB0064A169 /* rectangle.cpp */; };
+		1CFF4B51157D2DB20064A169 /* ellipse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF4B4D157D2DAC0064A169 /* ellipse.cpp */; };
+		1CFF4B52157D2DB20064A169 /* line.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF4B4F157D2DAE0064A169 /* line.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -939,8 +943,6 @@
 		1CFF4AAB157CE1A40064A169 /* box2dRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = box2dRenderer.h; sourceTree = "<group>"; };
 		1CFF4AAD157CE1A40064A169 /* irenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = irenderer.cpp; sourceTree = "<group>"; };
 		1CFF4AAE157CE1A40064A169 /* irenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = irenderer.h; sourceTree = "<group>"; };
-		1CFF4AAF157CE1A40064A169 /* layer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layer.cpp; sourceTree = "<group>"; };
-		1CFF4AB0157CE1A40064A169 /* layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = layer.h; sourceTree = "<group>"; };
 		1CFF4AB1157CE1A40064A169 /* renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = renderer.cpp; sourceTree = "<group>"; };
 		1CFF4AB2157CE1A40064A169 /* renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = renderer.h; sourceTree = "<group>"; };
 		1CFF4AB3157CE1A40064A169 /* renderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = renderItem.h; sourceTree = "<group>"; };
@@ -1004,6 +1006,16 @@
 		1CFF4B3E157CECE60064A169 /* bounds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bounds.h; sourceTree = "<group>"; };
 		1CFF4B40157CF1140064A169 /* scene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scene.cpp; sourceTree = "<group>"; };
 		1CFF4B41157CF1170064A169 /* scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scene.h; sourceTree = "<group>"; };
+		1CFF4B44157CF6740064A169 /* sprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sprite.cpp; sourceTree = "<group>"; };
+		1CFF4B45157CF6740064A169 /* sprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sprite.h; sourceTree = "<group>"; };
+		1CFF4B47157D083F0064A169 /* renderable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = renderable.h; sourceTree = "<group>"; };
+		1CFF4B48157D087A0064A169 /* renderable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = renderable.cpp; sourceTree = "<group>"; };
+		1CFF4B4A157D18AB0064A169 /* rectangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rectangle.cpp; sourceTree = "<group>"; };
+		1CFF4B4B157D18AB0064A169 /* rectangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rectangle.h; sourceTree = "<group>"; };
+		1CFF4B4D157D2DAC0064A169 /* ellipse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ellipse.cpp; sourceTree = "<group>"; };
+		1CFF4B4E157D2DAD0064A169 /* ellipse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ellipse.h; sourceTree = "<group>"; };
+		1CFF4B4F157D2DAE0064A169 /* line.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = line.cpp; sourceTree = "<group>"; };
+		1CFF4B50157D2DB00064A169 /* line.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = line.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2259,6 +2271,7 @@
 			isa = PBXGroup;
 			children = (
 				1CFF4A80157CE1A40064A169 /* camera */,
+				1CFF4B43157CF6720064A169 /* components */,
 				1CFF4A85157CE1A40064A169 /* device */,
 				1CFF4AA2157CE1A40064A169 /* effect */,
 				1CFF4AA5157CE1A40064A169 /* helper */,
@@ -2382,8 +2395,8 @@
 			children = (
 				1CFF4AAD157CE1A40064A169 /* irenderer.cpp */,
 				1CFF4AAE157CE1A40064A169 /* irenderer.h */,
-				1CFF4AAF157CE1A40064A169 /* layer.cpp */,
-				1CFF4AB0157CE1A40064A169 /* layer.h */,
+				1CFF4B48157D087A0064A169 /* renderable.cpp */,
+				1CFF4B47157D083F0064A169 /* renderable.h */,
 				1CFF4AB1157CE1A40064A169 /* renderer.cpp */,
 				1CFF4AB2157CE1A40064A169 /* renderer.h */,
 				1CFF4AB3157CE1A40064A169 /* renderItem.h */,
@@ -2587,6 +2600,21 @@
 				1CFF4AF6157CE1A40064A169 /* trex.h */,
 			);
 			path = regex;
+			sourceTree = "<group>";
+		};
+		1CFF4B43157CF6720064A169 /* components */ = {
+			isa = PBXGroup;
+			children = (
+				1CFF4B4D157D2DAC0064A169 /* ellipse.cpp */,
+				1CFF4B4E157D2DAD0064A169 /* ellipse.h */,
+				1CFF4B4F157D2DAE0064A169 /* line.cpp */,
+				1CFF4B50157D2DB00064A169 /* line.h */,
+				1CFF4B4A157D18AB0064A169 /* rectangle.cpp */,
+				1CFF4B4B157D18AB0064A169 /* rectangle.h */,
+				1CFF4B44157CF6740064A169 /* sprite.cpp */,
+				1CFF4B45157CF6740064A169 /* sprite.h */,
+			);
+			path = components;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2858,7 +2886,6 @@
 				1CFF4B15157CE1A40064A169 /* screenHelpers.cpp in Sources */,
 				1CFF4B16157CE1A40064A169 /* box2dRenderer.cpp in Sources */,
 				1CFF4B17157CE1A40064A169 /* irenderer.cpp in Sources */,
-				1CFF4B18157CE1A40064A169 /* layer.cpp in Sources */,
 				1CFF4B19157CE1A40064A169 /* renderer.cpp in Sources */,
 				1CFF4B1A157CE1A40064A169 /* customRenderer.cpp in Sources */,
 				1CFF4B1B157CE1A40064A169 /* fontRenderer.cpp in Sources */,
@@ -2888,6 +2915,11 @@
 				1CFF4B3C157CE9E80064A169 /* debug.cpp in Sources */,
 				1CFF4B3F157CECE60064A169 /* bounds.cpp in Sources */,
 				1CFF4B42157CF11C0064A169 /* scene.cpp in Sources */,
+				1CFF4B46157CF6740064A169 /* sprite.cpp in Sources */,
+				1CFF4B49157D087B0064A169 /* renderable.cpp in Sources */,
+				1CFF4B4C157D18AC0064A169 /* rectangle.cpp in Sources */,
+				1CFF4B51157D2DB20064A169 /* ellipse.cpp in Sources */,
+				1CFF4B52157D2DB20064A169 /* line.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

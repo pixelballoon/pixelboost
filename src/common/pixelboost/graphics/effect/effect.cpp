@@ -108,7 +108,7 @@ Effect::~Effect()
 
 bool Effect::Load(const std::string& filename)
 {
-    std::string effect = FileHelpers::FileToString(pb::FileHelpers::GetRootPath() + filename);
+    std::string effect = FileHelpers::FileToString(FileHelpers::GetRootPath() + filename);
     
     json::Object object;
     if (!json::Reader::Read(object, effect))
@@ -139,5 +139,21 @@ EffectTechnique* Effect::GetTechnique(Uid techniqueId)
     return 0;
 }
 
+EffectManager::EffectManager()
+{
+    
+}
+
+EffectManager::~EffectManager()
+{
+    
+}
+
+Effect* EffectManager::LoadEffect(const std::string& filename)
+{
+    Effect* effect = new Effect();
+    effect->Load(filename);
+    return effect;
+}
 
 #endif

@@ -3,15 +3,36 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 #include "pixelboost/graphics/camera/camera.h"
+#include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/indexBuffer.h"
 #include "pixelboost/graphics/device/program.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
 #include "pixelboost/graphics/effect/effect.h"
-#include "pixelboost/graphics/renderer/common/layer.h"
+#include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 
 using namespace pb;
+
+Uid PrimitiveRenderable::GetRenderableType()
+{
+    return TypeHash("primitive");
+}
+
+PrimitiveRenderable::Type PrimitiveRenderableEllipse::GetPrimitiveType()
+{
+    return kTypeEllipse;
+}
+
+PrimitiveRenderable::Type PrimitiveRenderableLine::GetPrimitiveType()
+{
+    return kTypeLine;
+}
+
+PrimitiveRenderable::Type PrimitiveRenderableRectangle::GetPrimitiveType()
+{
+    return kTypeRectangle;
+}
 
 PrimitiveRenderer::PrimitiveRenderer()
 {
@@ -83,6 +104,8 @@ PrimitiveRenderer::PrimitiveRenderer()
         indexBuffer[1] = 1;
         _LineIndexBuffer->Unlock();
     }
+    
+    Renderer::Instance()->SetHandler(TypeHash("primitive"), this);
 }
     
 PrimitiveRenderer::~PrimitiveRenderer()
@@ -92,16 +115,13 @@ PrimitiveRenderer::~PrimitiveRenderer()
 
 void PrimitiveRenderer::Update(float time)
 {
-    _Items.clear();
+
 }
 
-void PrimitiveRenderer::Render(RenderLayer* layer)
+void PrimitiveRenderer::Render(int count, Renderable* renderables, Viewport* viewport)
 {
-    ItemList& list = _Items[layer];
+    PrimitiveRenderable* primitives = static_cast<PrimitiveRenderable*>(renderables);
     
-    if (!list.size())
-        return;
-        
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
@@ -114,28 +134,31 @@ void PrimitiveRenderer::Render(RenderLayer* layer)
     
     EffectPass* pass = _Effect->GetTechnique(TypeHash("default"))->GetPass(0);
     
-    for (ItemList::iterator it = list.begin(); it != list.end(); ++it)
+    for (int i=0; i < count; i++)
     {
-        glm::mat4x4 viewProjectionMatrix = layer->GetCamera()->ViewMatrix * layer->GetCamera()->ProjectionMatrix;
-        pass->GetShaderProgram()->SetUniform("diffuseColor", it->color);
+        PrimitiveRenderable& primitive = primitives[i];
+        
+        glm::mat4x4 viewProjectionMatrix = viewport->GetCamera()->ProjectionMatrix * viewport->GetCamera()->ViewMatrix;
+        pass->GetShaderProgram()->SetUniform("diffuseColor", primitive.Color);
         
         pass->Bind();
          
-        switch (it->type)
+        switch (primitive.GetPrimitiveType())
         {
-            case PrimitiveInstance::kTypeEllipse:
+            case PrimitiveRenderable::kTypeEllipse:
             {
-                viewProjectionMatrix = glm::translate(viewProjectionMatrix, glm::vec3(it->position, 0));
-                viewProjectionMatrix = glm::scale(viewProjectionMatrix, glm::vec3(it->size, 1));
-                viewProjectionMatrix = glm::rotate(viewProjectionMatrix, it->rotation[0], glm::vec3(1,0,0));
-                viewProjectionMatrix = glm::rotate(viewProjectionMatrix, it->rotation[1], glm::vec3(0,1,0));
-                viewProjectionMatrix = glm::rotate(viewProjectionMatrix, it->rotation[2], glm::vec3(0,0,1));
+                PrimitiveRenderableEllipse& ellipse = static_cast<PrimitiveRenderableEllipse&>(primitive);
+                viewProjectionMatrix = glm::translate(viewProjectionMatrix, ellipse.Position);
+                viewProjectionMatrix = glm::scale(viewProjectionMatrix, glm::vec3(ellipse.Size, 1));
+                viewProjectionMatrix = glm::rotate(viewProjectionMatrix, ellipse.Rotation[0], glm::vec3(1,0,0));
+                viewProjectionMatrix = glm::rotate(viewProjectionMatrix, ellipse.Rotation[1], glm::vec3(0,1,0));
+                viewProjectionMatrix = glm::rotate(viewProjectionMatrix, ellipse.Rotation[2], glm::vec3(0,0,1));
                 
                 pass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
                 GraphicsDevice::Instance()->BindIndexBuffer(_EllipseIndexBuffer);
                 GraphicsDevice::Instance()->BindVertexBuffer(_EllipseVertexBuffer);
                 
-                if (!it->solid)
+                if (!ellipse.Solid)
                     GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementLineLoop, 32);
                 else
                     GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangleFan, 32);
@@ -148,19 +171,20 @@ void PrimitiveRenderer::Render(RenderLayer* layer)
                 
                 break;
             }
-            case PrimitiveInstance::kTypeBox:
+            case PrimitiveRenderable::kTypeRectangle:
             {
-                viewProjectionMatrix = glm::translate(viewProjectionMatrix, glm::vec3(it->position, 0));
-                viewProjectionMatrix = glm::scale(viewProjectionMatrix, glm::vec3(it->size, 1));
-                viewProjectionMatrix = glm::rotate(viewProjectionMatrix, it->rotation[0], glm::vec3(1,0,0));
-                viewProjectionMatrix = glm::rotate(viewProjectionMatrix, it->rotation[1], glm::vec3(0,1,0));
-                viewProjectionMatrix = glm::rotate(viewProjectionMatrix, it->rotation[2], glm::vec3(0,0,1));
+                PrimitiveRenderableRectangle& rectangle = static_cast<PrimitiveRenderableRectangle&>(primitive);
+                viewProjectionMatrix = glm::translate(viewProjectionMatrix, rectangle.Position);
+                viewProjectionMatrix = glm::scale(viewProjectionMatrix, glm::vec3(rectangle.Size, 1));
+                viewProjectionMatrix = glm::rotate(viewProjectionMatrix, rectangle.Rotation[0], glm::vec3(1,0,0));
+                viewProjectionMatrix = glm::rotate(viewProjectionMatrix, rectangle.Rotation[1], glm::vec3(0,1,0));
+                viewProjectionMatrix = glm::rotate(viewProjectionMatrix, rectangle.Rotation[2], glm::vec3(0,0,1));
 
                 pass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
                 GraphicsDevice::Instance()->BindIndexBuffer(_BoxIndexBuffer);
                 GraphicsDevice::Instance()->BindVertexBuffer(_BoxVertexBuffer);
                 
-                if (!it->solid)
+                if (!rectangle.Solid)
                     GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementLineLoop, 6);
                 else
                     GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangleFan, 6);
@@ -170,20 +194,22 @@ void PrimitiveRenderer::Render(RenderLayer* layer)
                 
                 break;
             }
-            case PrimitiveInstance::kTypeLine:
+            case PrimitiveRenderable::kTypeLine:
             {
+                PrimitiveRenderableLine& line = static_cast<PrimitiveRenderableLine&>(primitive);
+                
                 pass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
                 
                 _LineVertexBuffer->Lock();
                 
                 Vertex_PXYZ* vertices = static_cast<Vertex_PXYZ*>(_LineVertexBuffer->GetData());
                 
-                vertices[0].position[0] = it->position[0];
-                vertices[0].position[1] = it->position[1];
-                vertices[0].position[2] = 0.f;
-                vertices[1].position[0] = it->size[0];
-                vertices[1].position[1] = it->size[1];
-                vertices[1].position[2] = 0.f;
+                vertices[0].position[0] = line.Start[0];
+                vertices[0].position[1] = line.Start[1];
+                vertices[0].position[2] = line.Start[2];
+                vertices[1].position[0] = line.End[0];
+                vertices[1].position[1] = line.End[1];
+                vertices[1].position[2] = line.End[2];
                 
                 _LineVertexBuffer->Unlock();
                 
@@ -200,44 +226,9 @@ void PrimitiveRenderer::Render(RenderLayer* layer)
         }
     }
     
-    glDisable(GL_BLEND);
-    
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
-}
-    
-void PrimitiveRenderer::AttachEllipse(pb::RenderLayer *layer, glm::vec2 position, glm::vec2 size, glm::vec3 rotation, glm::vec4 color)
-{
-    PrimitiveInstance item;
-    item.type = PrimitiveInstance::kTypeEllipse;
-    item.position = position;
-    item.size = size;
-    item.rotation = rotation;
-    item.color = color;
-    _Items[layer].push_back(item);
-}
-    
-void PrimitiveRenderer::AttachLine(pb::RenderLayer *layer, glm::vec2 start, glm::vec2 end, glm::vec4 color)
-{
-    PrimitiveInstance item;
-    item.type = PrimitiveInstance::kTypeLine;
-    item.position = start;
-    item.size = end;
-    item.color = color;
-    _Items[layer].push_back(item);
-}
-    
-void PrimitiveRenderer::AttachBox(pb::RenderLayer *layer, glm::vec2 position, glm::vec2 size, glm::vec3 rotation, glm::vec4 color, bool solid)
-{
-    PrimitiveInstance item;
-    item.type = PrimitiveInstance::kTypeBox;
-    item.position = position;
-    item.size = size;
-    item.rotation = rotation;
-    item.color = color;
-    item.solid = solid;
-    _Items[layer].push_back(item);
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
 }
 
 #endif

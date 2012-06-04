@@ -12,7 +12,7 @@ class RenderLayer;
 class Box2dRenderer : public b2Draw
 {
 public:
-	Box2dRenderer(RenderLayer* layer);    
+	Box2dRenderer(int layer);    
 	virtual ~Box2dRenderer();
     
     virtual void DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color);
@@ -23,7 +23,7 @@ public:
 	virtual void DrawTransform(const b2Transform& xf);
     
 private:
-    RenderLayer* _Layer;
+    int _Layer;
 };
     
 }

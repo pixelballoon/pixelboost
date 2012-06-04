@@ -6,8 +6,8 @@
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/device/device.h"
-#include "pixelboost/graphics/renderer/common/layer.h"
 #include "pixelboost/graphics/renderer/common/irenderer.h"
+#include "pixelboost/graphics/renderer/common/renderable.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 
 using namespace pb;
@@ -15,7 +15,6 @@ using namespace pb;
 Renderer* Renderer::Renderer::_Instance = 0;
 
 Renderer::Renderer()
-    : _FreeRendererId(0)
 {
     _Instance = this;
 }
@@ -32,9 +31,9 @@ Renderer* Renderer::Instance()
 
 void Renderer::Update(float time)
 {
-    for (RendererMap::iterator it = _Renderers.begin(); it != _Renderers.end(); ++it)
+    for (RendererSet::iterator it = _Renderers.begin(); it != _Renderers.end(); ++it)
     {
-        it->second->Update(time);
+        (*it)->Update(time);
     }
 }
 
@@ -43,19 +42,14 @@ void Renderer::Render()
     for (ViewportList::iterator it = _Viewports.begin(); it != _Viewports.end(); ++it)
     {
         (*it)->Render();
+        
+        FlushBuffer(*it);
     }
 }
 
-int Renderer::AddRenderer(IRenderer* renderer)
+void Renderer::AddItem(Renderable* renderable)
 {
-    int id = _FreeRendererId++;
-    _Renderers[id] = renderer;
-    return id;
-}
-
-void Renderer::RemoveRenderer(IRenderer* renderer)
-{
-    _Renderers.erase(_Renderers.find(renderer->GetId()));
+    _Renderables[renderable->GetLayer()].push_back(renderable);
 }
 
 void Renderer::AddViewport(Viewport* viewport)
@@ -73,6 +67,65 @@ void Renderer::RemoveViewport(Viewport* viewport)
             return;
         }
     }
+}
+
+void Renderer::SetHandler(int renderableType, IRenderer* renderer)
+{
+    _RenderableHandlers[renderableType] = renderer;
+}
+
+void Renderer::FlushBuffer(Viewport* viewport)
+{
+    for (LayerRenderableMap::iterator it = _Renderables.begin(); it != _Renderables.end(); ++it)
+    {
+        RenderableList& renderables = it->second;
+        
+        Uid type = _Renderables.size() ? renderables[0]->GetRenderableType() : 0;
+        int start = 0;
+        int count = 0;
+        
+        for (int i=0; i < _Renderables.size(); i++)
+        {
+            Uid newType = renderables[i]->GetRenderableType();
+            
+            if (type == newType)
+            {
+                count++;
+            } else {
+                RenderBatch(viewport, count, renderables[start]);
+                start = i;
+                count = 1;
+                type = newType;
+            }
+        }
+        
+        if (count > 0)
+        {
+            RenderBatch(viewport, count, renderables[start]);
+        }
+    }
+    
+    _Renderables.clear();
+}
+
+void Renderer::RenderBatch(Viewport* viewport, int count, Renderable* renderable)
+{
+    RenderableHandlerMap::iterator it = _RenderableHandlers.find(renderable->GetRenderableType());
+    
+    if (it != _RenderableHandlers.end())
+    {
+        it->second->Render(count, renderable, viewport);
+    }
+}
+
+void Renderer::AddRenderer(IRenderer* renderer)
+{
+    _Renderers.insert(renderer);
+}
+
+void Renderer::RemoveRenderer(IRenderer* renderer)
+{
+    _Renderers.erase(renderer);
 }
 
 #endif
