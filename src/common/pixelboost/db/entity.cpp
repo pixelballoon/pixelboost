@@ -3,7 +3,7 @@
 
 #include "pixelboost/external/lua/lua.hpp"
 
-using namespace pb;
+using namespace pb::db;
     
 Entity::Entity(Uid uid, Uid type, void* data)
     : Struct(uid, type, data)
@@ -18,7 +18,7 @@ Entity::~Entity()
 
 void Entity::Load()
 {
-    lua_State* state = pb::Database::Instance()->GetLuaState();
+    lua_State* state = Database::Instance()->GetLuaState();
     
     lua_getfield(state, -1, "transform");
     

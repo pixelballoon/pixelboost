@@ -4,7 +4,7 @@
 #include "pixelboost/external/lua/lua.hpp"
 #include "pixelboost/file/fileHelpers.h"
 
-using namespace pb;
+using namespace pb::db;
 
 Database* Database::_Instance = 0;
 

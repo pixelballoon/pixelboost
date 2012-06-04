@@ -8,6 +8,9 @@
 namespace pb
 {
     
+namespace db
+{
+    
 class Entity;
 class Record;
     
@@ -57,4 +60,6 @@ private:
     friend class Database;
 };
     
+}
+
 }

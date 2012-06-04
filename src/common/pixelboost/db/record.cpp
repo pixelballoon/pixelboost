@@ -1,8 +1,7 @@
 #include "pixelboost/db/entity.h"
 #include "pixelboost/db/record.h"
 
-namespace pb
-{
+using namespace pb::db;
     
 bool RecordHandle::IsResolved()
 {
@@ -63,6 +62,4 @@ void Record::ResolvePointers()
     }
     
     _Pointers.clear();
-}
-
 }

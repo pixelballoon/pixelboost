@@ -9,6 +9,9 @@
 namespace pb
 {
     
+namespace db
+{
+    
 class Record;
     
 class Entity : public Struct
@@ -28,5 +31,7 @@ private:
     glm::vec3 _Rotation;
     glm::vec3 _Scale;
 };
+    
+}
     
 }

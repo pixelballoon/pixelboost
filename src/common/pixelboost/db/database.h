@@ -10,6 +10,9 @@ struct lua_State;
 namespace pb
 {
     
+namespace db
+{
+    
 class Record;
 
 struct RecordDescription
@@ -72,4 +75,6 @@ private:
     lua_State* _State;
 };
     
+}
+
 }
