@@ -38,6 +38,7 @@ Effect* PrimitiveRenderable::GetEffect()
 
 PrimitiveRenderableEllipse::PrimitiveRenderableEllipse(Uid entityUid)
     : PrimitiveRenderable(entityUid)
+    , Solid(false)
 {
     
 }
@@ -61,6 +62,7 @@ PrimitiveRenderable::Type PrimitiveRenderableLine::GetPrimitiveType()
 
 PrimitiveRenderableRectangle::PrimitiveRenderableRectangle(Uid entityUid)
     : PrimitiveRenderable(entityUid)
+    , Solid(false)
 {
     
 }
