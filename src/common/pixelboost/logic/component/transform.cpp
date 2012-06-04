@@ -2,7 +2,8 @@
 
 using namespace pb;
 
-TransformComponent::TransformComponent()
+TransformComponent::TransformComponent(Entity* parent)
+    : Component(parent)
 {
     
 }

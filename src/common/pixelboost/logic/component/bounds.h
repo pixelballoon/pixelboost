@@ -8,7 +8,7 @@ namespace pb
 class BoundsComponent : public Component
 {
 public:
-    BoundsComponent();
+    BoundsComponent(Entity* parent);
     virtual ~BoundsComponent();
     
     Uid GetType();

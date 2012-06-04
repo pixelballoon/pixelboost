@@ -4,14 +4,21 @@
 
 namespace pb
 {
+    
+class Entity;
 
 class Component
 {
 public:
-    Component();
+    Component(Entity* parent);
     virtual ~Component();
     
     virtual Uid GetType() = 0;
+    
+    Entity* GetParent();
+    
+private:
+    Entity* _Parent;
 };
 
 }

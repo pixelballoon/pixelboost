@@ -2,7 +2,8 @@
 
 using namespace pb;
 
-BoundsComponent::BoundsComponent()
+BoundsComponent::BoundsComponent(Entity* parent)
+    : Component(parent)
 {
     
 }

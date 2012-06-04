@@ -8,7 +8,7 @@ namespace pb
 class TransformComponent : public Component
 {
 public:
-    TransformComponent();
+    TransformComponent(Entity* parent);
     virtual ~TransformComponent();
     
     Uid GetType();
