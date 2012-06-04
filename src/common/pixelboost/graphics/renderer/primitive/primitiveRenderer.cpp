@@ -180,8 +180,10 @@ void PrimitiveRenderer::Render(RenderLayer* layer)
                 
                 vertices[0].position[0] = it->position[0];
                 vertices[0].position[1] = it->position[1];
+                vertices[0].position[2] = 0.f;
                 vertices[1].position[0] = it->size[0];
                 vertices[1].position[1] = it->size[1];
+                vertices[1].position[2] = 0.f;
                 
                 _LineVertexBuffer->Unlock();
                 
