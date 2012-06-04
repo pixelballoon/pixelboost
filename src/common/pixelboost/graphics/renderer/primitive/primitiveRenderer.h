@@ -10,8 +10,8 @@
 namespace pb
 {
     
+class Effect;
 class IndexBuffer;
-class Material;
 class VertexBuffer;
     
 class PrimitiveRenderer : public IRenderer
@@ -50,7 +50,7 @@ private:
     
     ItemListMap _Items;
     
-    Material* _Material;
+    Effect* _Effect;
     
     IndexBuffer* _EllipseIndexBuffer;
     VertexBuffer* _EllipseVertexBuffer;

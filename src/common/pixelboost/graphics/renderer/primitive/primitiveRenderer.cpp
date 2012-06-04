@@ -5,9 +5,9 @@
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/indexBuffer.h"
-#include "pixelboost/graphics/device/material.h"
 #include "pixelboost/graphics/device/program.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
+#include "pixelboost/graphics/effect/effect.h"
 #include "pixelboost/graphics/renderer/common/layer.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 
@@ -15,8 +15,8 @@ using namespace pb;
 
 PrimitiveRenderer::PrimitiveRenderer()
 {
-    _Material = new Material();
-    _Material->Load("/default/materials/primitive.mat");
+    _Effect = new Effect();
+    _Effect->Load("/default/effects/primitive.fx");
     
     {
         _BoxIndexBuffer = GraphicsDevice::Instance()->CreateIndexBuffer(kBufferFormatStatic, 6);
@@ -112,12 +112,14 @@ void PrimitiveRenderer::Render(RenderLayer* layer)
     GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
 #endif
     
+    EffectPass* pass = _Effect->GetTechnique(TypeHash("default"))->GetPass(0);
+    
     for (ItemList::iterator it = list.begin(); it != list.end(); ++it)
     {
         glm::mat4x4 viewProjectionMatrix = layer->GetCamera()->ViewMatrix * layer->GetCamera()->ProjectionMatrix;
-        _Material->GetShaderProgram()->SetUniform("diffuseColor", it->color);
+        pass->GetShaderProgram()->SetUniform("diffuseColor", it->color);
         
-        _Material->Bind();
+        pass->Bind();
          
         switch (it->type)
         {
@@ -129,7 +131,7 @@ void PrimitiveRenderer::Render(RenderLayer* layer)
                 viewProjectionMatrix = glm::rotate(viewProjectionMatrix, it->rotation[1], glm::vec3(0,1,0));
                 viewProjectionMatrix = glm::rotate(viewProjectionMatrix, it->rotation[2], glm::vec3(0,0,1));
                 
-                _Material->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
+                pass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
                 GraphicsDevice::Instance()->BindIndexBuffer(_EllipseIndexBuffer);
                 GraphicsDevice::Instance()->BindVertexBuffer(_EllipseVertexBuffer);
                 
@@ -154,7 +156,7 @@ void PrimitiveRenderer::Render(RenderLayer* layer)
                 viewProjectionMatrix = glm::rotate(viewProjectionMatrix, it->rotation[1], glm::vec3(0,1,0));
                 viewProjectionMatrix = glm::rotate(viewProjectionMatrix, it->rotation[2], glm::vec3(0,0,1));
 
-                _Material->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
+                pass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
                 GraphicsDevice::Instance()->BindIndexBuffer(_BoxIndexBuffer);
                 GraphicsDevice::Instance()->BindVertexBuffer(_BoxVertexBuffer);
                 
@@ -170,7 +172,7 @@ void PrimitiveRenderer::Render(RenderLayer* layer)
             }
             case PrimitiveInstance::kTypeLine:
             {
-                _Material->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
+                pass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
                 
                 _LineVertexBuffer->Lock();
                 

@@ -16,7 +16,6 @@
 		1C34151F157B9E010016B121 /* networkHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C341519157B9E010016B121 /* networkHelpers.mm */; };
 		1C341525157B9F070016B121 /* device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C341521157B9F070016B121 /* device.cpp */; };
 		1C341526157B9F070016B121 /* texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C341523157B9F070016B121 /* texture.cpp */; };
-		1C341560157BDBA40016B121 /* material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C34155F157BDBA30016B121 /* material.cpp */; };
 		1C341563157BDBFD0016B121 /* program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C341561157BDBFD0016B121 /* program.cpp */; };
 		1C53224F15798536003C756D /* xml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C531F3915798535003C756D /* xml.cpp */; };
 		1C53225015798536003C756D /* database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C531F3D15798535003C756D /* database.cpp */; };
@@ -239,6 +238,8 @@
 		1CEC1C761426847F00FEB08C /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEC1C751426847F00FEB08C /* OpenGLES.framework */; };
 		1CFF4A38157C11560064A169 /* default in Resources */ = {isa = PBXBuildFile; fileRef = 1CFF4A37157C11560064A169 /* default */; };
 		1CFF4A3E157C2F710064A169 /* program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF4A3C157C2F6E0064A169 /* program.cpp */; };
+		1CFF4A48157CD14D0064A169 /* effect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF4A46157CD14D0064A169 /* effect.cpp */; };
+		1CFF4A4E157CD8660064A169 /* definitions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF4A4D157CD8650064A169 /* definitions.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -256,8 +257,6 @@
 		1C341522157B9F070016B121 /* device.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = device.h; sourceTree = "<group>"; };
 		1C341523157B9F070016B121 /* texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = texture.cpp; sourceTree = "<group>"; };
 		1C341524157B9F070016B121 /* texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = texture.h; sourceTree = "<group>"; };
-		1C34155E157BB9BB0016B121 /* material.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = material.h; sourceTree = "<group>"; };
-		1C34155F157BDBA30016B121 /* material.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = material.cpp; sourceTree = "<group>"; };
 		1C341561157BDBFD0016B121 /* program.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = program.cpp; sourceTree = "<group>"; };
 		1C341562157BDBFD0016B121 /* program.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = program.h; sourceTree = "<group>"; };
 		1C531F3115798535003C756D /* elements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = elements.h; sourceTree = "<group>"; };
@@ -968,6 +967,9 @@
 		1CFF4A37157C11560064A169 /* default */ = {isa = PBXFileReference; lastKnownFileType = folder; name = default; path = ../../data/default; sourceTree = "<group>"; };
 		1CFF4A3C157C2F6E0064A169 /* program.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = program.cpp; sourceTree = "<group>"; };
 		1CFF4A3D157C2F6F0064A169 /* program.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = program.h; sourceTree = "<group>"; };
+		1CFF4A46157CD14D0064A169 /* effect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = effect.cpp; sourceTree = "<group>"; };
+		1CFF4A47157CD14D0064A169 /* effect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = effect.h; sourceTree = "<group>"; };
+		1CFF4A4D157CD8650064A169 /* definitions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = definitions.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1153,6 +1155,7 @@
 			children = (
 				1C531F3D15798535003C756D /* database.cpp */,
 				1C531F3E15798535003C756D /* database.h */,
+				1CFF4A4D157CD8650064A169 /* definitions.cpp */,
 				1C531F3F15798535003C756D /* definitions.h */,
 				1C531F4015798535003C756D /* entity.cpp */,
 				1C531F4115798535003C756D /* entity.h */,
@@ -1192,6 +1195,7 @@
 			children = (
 				1C531F5215798535003C756D /* camera */,
 				1C531F5415798535003C756D /* device */,
+				1CFF4A45157CD1490064A169 /* effect */,
 				1C531F6A15798535003C756D /* helper */,
 				1C53239F157A05F1003C756D /* renderer */,
 			);
@@ -1220,8 +1224,6 @@
 				1C341520157B9F060016B121 /* gles2 */,
 				1C531F6415798535003C756D /* indexBuffer.cpp */,
 				1C531F6515798535003C756D /* indexBuffer.h */,
-				1C34155F157BDBA30016B121 /* material.cpp */,
-				1C34155E157BB9BB0016B121 /* material.h */,
 				1CFF4A3C157C2F6E0064A169 /* program.cpp */,
 				1CFF4A3D157C2F6F0064A169 /* program.h */,
 				1C531F6615798535003C756D /* texture.cpp */,
@@ -2500,6 +2502,15 @@
 			name = libs;
 			sourceTree = "<group>";
 		};
+		1CFF4A45157CD1490064A169 /* effect */ = {
+			isa = PBXGroup;
+			children = (
+				1CFF4A46157CD14D0064A169 /* effect.cpp */,
+				1CFF4A47157CD14D0064A169 /* effect.h */,
+			);
+			path = effect;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2781,9 +2792,10 @@
 				1C34151F157B9E010016B121 /* networkHelpers.mm in Sources */,
 				1C341525157B9F070016B121 /* device.cpp in Sources */,
 				1C341526157B9F070016B121 /* texture.cpp in Sources */,
-				1C341560157BDBA40016B121 /* material.cpp in Sources */,
 				1C341563157BDBFD0016B121 /* program.cpp in Sources */,
 				1CFF4A3E157C2F710064A169 /* program.cpp in Sources */,
+				1CFF4A48157CD14D0064A169 /* effect.cpp in Sources */,
+				1CFF4A4E157CD8660064A169 /* definitions.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

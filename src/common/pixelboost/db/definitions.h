@@ -39,11 +39,13 @@ namespace pb
         {
         }
         
-        operator const unsigned int&() const {
+        operator const Uid&() const {
             return _Hash;
         }
         
     private:
         Uid _Hash;
     };
+    
+    Uid RuntimeTypeHash(std::string string);
 }
