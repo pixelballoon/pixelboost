@@ -39,14 +39,14 @@ Game::Game(void* viewController)
     _ViewportB->SetPosition(glm::vec2(0, -displaySize.y/4.f));
     _ViewportB->SetScene(_Scene);
     
-    GetRenderer()->AddViewport(_ViewportA);
-    GetRenderer()->AddViewport(_ViewportB);
+    pb::Renderer::Instance()->AddViewport(_ViewportA);
+    pb::Renderer::Instance()->AddViewport(_ViewportB);
 }
 
 Game::~Game()
 {
-    GetRenderer()->RemoveViewport(_ViewportA);
-    GetRenderer()->RemoveViewport(_ViewportB);
+    pb::Renderer::Instance()->RemoveViewport(_ViewportA);
+    pb::Renderer::Instance()->RemoveViewport(_ViewportB);
     
     delete _ViewportA;
     delete _ViewportB;

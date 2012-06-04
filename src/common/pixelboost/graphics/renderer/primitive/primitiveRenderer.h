@@ -11,7 +11,7 @@
 namespace pb
 {
     
-class Effect;
+class EffectPass;
 class IndexBuffer;
 class VertexBuffer;
 class Viewport;
@@ -19,6 +19,8 @@ class Viewport;
 class PrimitiveRenderable : public Renderable
 {
 public:
+    PrimitiveRenderable(Uid entityUid);
+    
     virtual Uid GetRenderableType();
     
     enum Type
@@ -28,6 +30,7 @@ public:
         kTypeRectangle,
     };
     
+    virtual Effect* GetEffect();
     virtual Type GetPrimitiveType() = 0;
     
 public:
@@ -37,6 +40,8 @@ public:
 class PrimitiveRenderableEllipse : public PrimitiveRenderable
 {
 public:
+    PrimitiveRenderableEllipse(Uid entityUid);
+    
     virtual Type GetPrimitiveType();
     
 public:
@@ -50,6 +55,8 @@ public:
 class PrimitiveRenderableLine : public PrimitiveRenderable
 {
 public:
+    PrimitiveRenderableLine(Uid entityUid);
+    
     virtual Type GetPrimitiveType();
     
     glm::vec3 Start;
@@ -60,6 +67,8 @@ public:
 class PrimitiveRenderableRectangle : public PrimitiveRenderable
 {
 public:
+    PrimitiveRenderableRectangle(Uid entityUid);
+    
     virtual Type GetPrimitiveType();
     
 public:
@@ -76,12 +85,9 @@ public:
     PrimitiveRenderer();
     ~PrimitiveRenderer();
     
-    void Update(float time);
-    void Render(int count, Renderable* renderables, Viewport* viewport);
+    virtual void Render(int count, Renderable* renderables, Viewport* viewport, EffectPass* effectPass);
     
 private:
-    Effect* _Effect;
-    
     IndexBuffer* _EllipseIndexBuffer;
     VertexBuffer* _EllipseVertexBuffer;
     

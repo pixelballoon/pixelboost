@@ -44,6 +44,11 @@ bool EffectTechnique::Load(json::Array& array)
     return true;
 }
 
+int EffectTechnique::GetNumPasses()
+{
+    return _Passes.size();
+}
+
 void EffectTechnique::AddPass(EffectPass* pass)
 {
     _Passes.push_back(pass);
@@ -137,23 +142,6 @@ EffectTechnique* Effect::GetTechnique(Uid techniqueId)
         return it->second;
     
     return 0;
-}
-
-EffectManager::EffectManager()
-{
-    
-}
-
-EffectManager::~EffectManager()
-{
-    
-}
-
-Effect* EffectManager::LoadEffect(const std::string& filename)
-{
-    Effect* effect = new Effect();
-    effect->Load(filename);
-    return effect;
 }
 
 #endif

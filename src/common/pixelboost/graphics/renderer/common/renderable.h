@@ -5,25 +5,28 @@
 namespace pb
 {
     
-class Material;
+class Effect;
     
 class Renderable
 {
 public:
-    Renderable();
-    Renderable(Material* material);
+    Renderable(Uid entityUid);
+    Renderable(Uid entityUid, Effect* effect);
     virtual ~Renderable();
+    
+    Uid GetEntityUid();
     
     virtual Uid GetRenderableType() = 0;
     
     virtual void SetLayer(int layer);
     virtual int GetLayer();
     
-    Material* GetMaterial();
+    virtual Effect* GetEffect();
     
 private:
+    Uid _EntityUid;
     int _Layer;
-    Material* _Material;
+    Effect* _Effect;
 };
     
 }

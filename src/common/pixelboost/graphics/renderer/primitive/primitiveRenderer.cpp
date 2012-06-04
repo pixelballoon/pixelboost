@@ -9,14 +9,37 @@
 #include "pixelboost/graphics/device/program.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
 #include "pixelboost/graphics/effect/effect.h"
+#include "pixelboost/graphics/effect/manager.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 
 using namespace pb;
 
+PrimitiveRenderable::PrimitiveRenderable(Uid entityUid)
+    : Renderable(entityUid)
+{
+    
+}
+
+
 Uid PrimitiveRenderable::GetRenderableType()
 {
     return TypeHash("primitive");
+}
+
+Effect* PrimitiveRenderable::GetEffect()
+{
+    Effect* baseEffect = Renderable::GetEffect();
+    if (baseEffect)
+        return baseEffect;
+    
+    return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/primitive.fx");
+}
+
+PrimitiveRenderableEllipse::PrimitiveRenderableEllipse(Uid entityUid)
+    : PrimitiveRenderable(entityUid)
+{
+    
 }
 
 PrimitiveRenderable::Type PrimitiveRenderableEllipse::GetPrimitiveType()
@@ -24,10 +47,24 @@ PrimitiveRenderable::Type PrimitiveRenderableEllipse::GetPrimitiveType()
     return kTypeEllipse;
 }
 
+PrimitiveRenderableLine::PrimitiveRenderableLine(Uid entityUid)
+    : PrimitiveRenderable(entityUid)
+{
+    
+}
+
+
 PrimitiveRenderable::Type PrimitiveRenderableLine::GetPrimitiveType()
 {
     return kTypeLine;
 }
+
+PrimitiveRenderableRectangle::PrimitiveRenderableRectangle(Uid entityUid)
+    : PrimitiveRenderable(entityUid)
+{
+    
+}
+
 
 PrimitiveRenderable::Type PrimitiveRenderableRectangle::GetPrimitiveType()
 {
@@ -36,9 +73,6 @@ PrimitiveRenderable::Type PrimitiveRenderableRectangle::GetPrimitiveType()
 
 PrimitiveRenderer::PrimitiveRenderer()
 {
-    _Effect = new Effect();
-    _Effect->Load("/default/effects/primitive.fx");
-    
     {
         _BoxIndexBuffer = GraphicsDevice::Instance()->CreateIndexBuffer(kBufferFormatStatic, 6);
         _BoxVertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatStatic, kVertexFormat_P_XYZ, 4);
@@ -106,19 +140,16 @@ PrimitiveRenderer::PrimitiveRenderer()
     }
     
     Renderer::Instance()->SetHandler(TypeHash("primitive"), this);
+    
+    Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/primitive.fx");
 }
     
 PrimitiveRenderer::~PrimitiveRenderer()
 {
-    
+    Renderer::Instance()->GetEffectManager()->UnloadEffect("/default/effects/primitive.fx");
 }
 
-void PrimitiveRenderer::Update(float time)
-{
-
-}
-
-void PrimitiveRenderer::Render(int count, Renderable* renderables, Viewport* viewport)
+void PrimitiveRenderer::Render(int count, Renderable* renderables, Viewport* viewport, EffectPass* effectPass)
 {
     PrimitiveRenderable* primitives = static_cast<PrimitiveRenderable*>(renderables);
     
@@ -132,16 +163,12 @@ void PrimitiveRenderer::Render(int count, Renderable* renderables, Viewport* vie
     GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
 #endif
     
-    EffectPass* pass = _Effect->GetTechnique(TypeHash("default"))->GetPass(0);
-    
     for (int i=0; i < count; i++)
     {
         PrimitiveRenderable& primitive = primitives[i];
         
         glm::mat4x4 viewProjectionMatrix = viewport->GetCamera()->ProjectionMatrix * viewport->GetCamera()->ViewMatrix;
-        pass->GetShaderProgram()->SetUniform("diffuseColor", primitive.Color);
-        
-        pass->Bind();
+        effectPass->GetShaderProgram()->SetUniform("diffuseColor", primitive.Color);
          
         switch (primitive.GetPrimitiveType())
         {
@@ -154,7 +181,7 @@ void PrimitiveRenderer::Render(int count, Renderable* renderables, Viewport* vie
                 viewProjectionMatrix = glm::rotate(viewProjectionMatrix, ellipse.Rotation[1], glm::vec3(0,1,0));
                 viewProjectionMatrix = glm::rotate(viewProjectionMatrix, ellipse.Rotation[2], glm::vec3(0,0,1));
                 
-                pass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
+                effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
                 GraphicsDevice::Instance()->BindIndexBuffer(_EllipseIndexBuffer);
                 GraphicsDevice::Instance()->BindVertexBuffer(_EllipseVertexBuffer);
                 
@@ -180,7 +207,7 @@ void PrimitiveRenderer::Render(int count, Renderable* renderables, Viewport* vie
                 viewProjectionMatrix = glm::rotate(viewProjectionMatrix, rectangle.Rotation[1], glm::vec3(0,1,0));
                 viewProjectionMatrix = glm::rotate(viewProjectionMatrix, rectangle.Rotation[2], glm::vec3(0,0,1));
 
-                pass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
+                effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
                 GraphicsDevice::Instance()->BindIndexBuffer(_BoxIndexBuffer);
                 GraphicsDevice::Instance()->BindVertexBuffer(_BoxVertexBuffer);
                 
@@ -198,7 +225,7 @@ void PrimitiveRenderer::Render(int count, Renderable* renderables, Viewport* vie
             {
                 PrimitiveRenderableLine& line = static_cast<PrimitiveRenderableLine&>(primitive);
                 
-                pass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
+                effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
                 
                 _LineVertexBuffer->Lock();
                 

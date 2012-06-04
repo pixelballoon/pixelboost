@@ -10,7 +10,7 @@ using namespace pb;
 RectangleComponent::RectangleComponent(Entity* parent)
     : Component(parent)
 {
-    _Renderable = new PrimitiveRenderableRectangle();
+    _Renderable = new PrimitiveRenderableRectangle(parent->GetUid());
     
     parent->RegisterMessageHandler(RenderMessage::GetStaticType(), sigslot::Delegate2<Uid, Message&>(this, &RectangleComponent::OnRender));
 }

@@ -9,6 +9,8 @@
 namespace pb
 {
 
+class Effect;
+class EffectManager;
 class IRenderer;
 class OrthographicCamera;
 class Renderable;
@@ -28,8 +30,9 @@ public:
     
     static Renderer* Instance();
         
-    void Update(float time);
     void Render();
+    
+    EffectManager* GetEffectManager();
     
     // This should only be called during a Render callback
     void AddItem(Renderable* renderable);
@@ -41,17 +44,20 @@ public:
     
 private:
     void FlushBuffer(Viewport* viewport);
-    void RenderBatch(Viewport* viewport, int count, Renderable* renderable);
+    void RenderBatch(Viewport* viewport, int count, Renderable* renderable, Effect* effect);
     
     void AddRenderer(IRenderer* renderer);
     void RemoveRenderer(IRenderer* renderer);
     
+private:
     typedef std::map<int, IRenderer*> RenderableHandlerMap;
     typedef std::set<IRenderer*> RendererSet;
     typedef std::vector<Viewport*> ViewportList;
-    
     typedef std::vector<Renderable*> RenderableList;
     typedef std::map<int, RenderableList> LayerRenderableMap;
+    
+private:
+    EffectManager* _EffectManager;
     
     RenderableHandlerMap _RenderableHandlers;
     RendererSet _Renderers;

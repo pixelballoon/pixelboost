@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "glm/glm.hpp"
+#include "sigslot/delegate.h"
 
 #include "pixelboost/db/definitions.h"
 
@@ -11,8 +12,12 @@ namespace pb
 {
 
 class Camera;
+class Effect;
+class EffectTechnique;
+class Renderable;
 class RenderLayer;
 class Scene;
+class Technique;
     
 class Viewport
 {
@@ -21,6 +26,8 @@ public:
     ~Viewport();
     
     glm::vec2 GetSize();
+    
+    void SetTechniqueDelegate(sigslot::Delegate2<Renderable*, Effect*, EffectTechnique*> delegate);
     
     void SetResolution(glm::vec2 size);
     glm::vec2 GetResolution();
@@ -42,6 +49,10 @@ public:
     void Render();
 
 private:
+    EffectTechnique* GetTechnique(Renderable* renderable, Effect* effect);
+    
+    sigslot::Delegate2<Renderable*, Effect*, EffectTechnique*> _TechniqueDelegate;
+    
     Camera* _Camera;
     Uid _RenderScheme;
     Scene* _Scene;
@@ -50,6 +61,8 @@ private:
     glm::vec2 _Position;
     glm::vec2 _Resolution;
     float _Density;
+    
+    friend class Renderer;
 };
 
 }

@@ -13,6 +13,7 @@ Viewport::Viewport(int viewportId, Camera* camera)
     , _Scene(0)
     , _ViewportId(viewportId)
 {
+    SetRenderScheme(TypeHash("default"));
     SetResolution(GraphicsDevice::Instance()->GetDisplayResolution());
     SetDensity(GraphicsDevice::Instance()->GetDisplayDensity());
 }
@@ -25,6 +26,11 @@ Viewport::~Viewport()
 glm::vec2 Viewport::GetSize()
 {
     return GetResolution()/GetDensity();
+}
+
+void Viewport::SetTechniqueDelegate(sigslot::Delegate2<Renderable*, Effect*, EffectTechnique*> delegate)
+{
+    _TechniqueDelegate = delegate;
 }
 
 void Viewport::SetResolution(glm::vec2 resolution)
@@ -89,4 +95,12 @@ void Viewport::Render()
     _Camera->CalculateTransform(this);
     
     _Scene->Render(this);
+}
+
+EffectTechnique* Viewport::GetTechnique(Renderable* renderable, Effect* effect)
+{
+    if (_TechniqueDelegate)
+        return _TechniqueDelegate(renderable, effect);
+    
+    return 0;
 }

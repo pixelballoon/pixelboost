@@ -21,12 +21,7 @@ Uid SpriteComponent::GetType()
     return TypeHash("sprite");
 }
 
-Material* SpriteComponent::GetMaterial()
-{
-    return 0;
-}
-
 void SpriteComponent::OnRender(Uid sender, Message& message)
 {
-    RenderMessage& renderMessage = static_cast<RenderMessage&>(message);
+    
 }

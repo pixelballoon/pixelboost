@@ -18,8 +18,6 @@ public:
     
     Uid GetType();
     
-    virtual Material* GetMaterial();
-    
 private:
     void OnRender(Uid sender, Message& message);
     

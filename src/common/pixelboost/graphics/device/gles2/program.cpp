@@ -19,8 +19,6 @@ ShaderProgramGLES2::~ShaderProgramGLES2()
 
 bool ShaderProgramGLES2::Load(const std::string& fragmentSource, const std::string& vertexSource)
 {
-    _Program = glCreateProgram();
-    
     if (!CompileShader(GL_FRAGMENT_SHADER, &_FragmentShader, fragmentSource))
         return false;
     

@@ -10,7 +10,7 @@ using namespace pb;
 EllipseComponent::EllipseComponent(Entity* parent)
     : Component(parent)
 {
-    _Renderable = new PrimitiveRenderableEllipse();
+    _Renderable = new PrimitiveRenderableEllipse(parent->GetUid());
     
     parent->RegisterMessageHandler(RenderMessage::GetStaticType(), sigslot::Delegate2<Uid, Message&>(this, &EllipseComponent::OnRender));
 }

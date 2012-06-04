@@ -3,6 +3,7 @@
 namespace pb
 {
 
+class EffectPass;
 class RenderLayer;
 class Renderable;
 class Viewport;
@@ -13,8 +14,7 @@ public:
     IRenderer();
     virtual ~IRenderer();
     
-    virtual void Update(float time) = 0;
-    virtual void Render(int count, Renderable* renderables, Viewport* viewport) = 0;
+    virtual void Render(int count, Renderable* renderables, Viewport* viewport, EffectPass* effect) = 0;
 };
 
 }

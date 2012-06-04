@@ -124,11 +124,6 @@ PrimitiveRenderer* Game::GetPrimitiveRenderer() const
 {
     return _PrimitiveRenderer;
 }
-    
-Renderer* Game::GetRenderer() const
-{
-    return _Renderer;
-}
 
 SpriteRenderer* Game::GetSpriteRenderer() const
 {
@@ -179,10 +174,6 @@ void Game::Update(float time)
 {
     _GameTime += time;
     _TotalTime += time;
-    
-#ifndef PIXELBOOST_DISABLE_GRAPHICS
-    _Renderer->Update(time);
-#endif
     
 #ifndef PIXELBOOST_DISABLE_SOUND
     SoundManager::Instance()->Update(time);

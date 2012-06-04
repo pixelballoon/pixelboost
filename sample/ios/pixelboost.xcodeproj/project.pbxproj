@@ -258,6 +258,7 @@
 		1CFF4B4C157D18AC0064A169 /* rectangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF4B4A157D18AB0064A169 /* rectangle.cpp */; };
 		1CFF4B51157D2DB20064A169 /* ellipse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF4B4D157D2DAC0064A169 /* ellipse.cpp */; };
 		1CFF4B52157D2DB20064A169 /* line.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF4B4F157D2DAE0064A169 /* line.cpp */; };
+		1CFF4B55157D36E00064A169 /* manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF4B53157D36DE0064A169 /* manager.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1016,6 +1017,8 @@
 		1CFF4B4E157D2DAD0064A169 /* ellipse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ellipse.h; sourceTree = "<group>"; };
 		1CFF4B4F157D2DAE0064A169 /* line.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = line.cpp; sourceTree = "<group>"; };
 		1CFF4B50157D2DB00064A169 /* line.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = line.h; sourceTree = "<group>"; };
+		1CFF4B53157D36DE0064A169 /* manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = manager.cpp; sourceTree = "<group>"; };
+		1CFF4B54157D36DF0064A169 /* manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = manager.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2352,6 +2355,8 @@
 			children = (
 				1CFF4AA3157CE1A40064A169 /* effect.cpp */,
 				1CFF4AA4157CE1A40064A169 /* effect.h */,
+				1CFF4B53157D36DE0064A169 /* manager.cpp */,
+				1CFF4B54157D36DF0064A169 /* manager.h */,
 			);
 			path = effect;
 			sourceTree = "<group>";
@@ -2920,6 +2925,7 @@
 				1CFF4B4C157D18AC0064A169 /* rectangle.cpp in Sources */,
 				1CFF4B51157D2DB20064A169 /* ellipse.cpp in Sources */,
 				1CFF4B52157D2DB20064A169 /* line.cpp in Sources */,
+				1CFF4B55157D36E00064A169 /* manager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

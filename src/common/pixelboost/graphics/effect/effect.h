@@ -1,6 +1,8 @@
 #pragma once
 
+#include <map>
 #include <string>
+#include <vector>
 
 #include "pixelboost/db/definitions.h"
 
@@ -26,6 +28,7 @@ public:
     
     bool Load(json::Array& object);
     
+    int GetNumPasses();
     void AddPass(EffectPass* pass);
     EffectPass* GetPass(int index);
     
@@ -68,15 +71,6 @@ private:
     typedef std::map<Uid, EffectTechnique*> TechniqueMap;
     
     TechniqueMap _Techniques;
-};
-    
-class EffectManager
-{
-public:
-    EffectManager();
-    ~EffectManager();
-    
-    Effect* LoadEffect(const std::string& filename);
 };
 
 }

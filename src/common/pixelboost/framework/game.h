@@ -42,7 +42,6 @@ public:
 	ResourceManager* GetResourceManager() const;
     ParticleRenderer* GetParticleRenderer() const;
     PrimitiveRenderer* GetPrimitiveRenderer() const;
-    Renderer* GetRenderer() const;
 	SpriteRenderer* GetSpriteRenderer() const;
     
     KeyboardManager* GetKeyboardManager() const;

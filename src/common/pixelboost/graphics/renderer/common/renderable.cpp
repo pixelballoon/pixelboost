@@ -2,16 +2,18 @@
 
 using namespace pb;
 
-Renderable::Renderable()
+Renderable::Renderable(Uid entityUid)
     : _Layer(0)
-    , _Material(0)
+    , _Effect(0)
+    , _EntityUid(entityUid)
 {
     
 }
 
-Renderable::Renderable(Material* material)
+Renderable::Renderable(Uid entityUid, Effect* effect)
     : _Layer(0)
-    , _Material(material)
+    , _Effect(effect)
+    , _EntityUid(entityUid)
 {
     
 }
@@ -19,6 +21,11 @@ Renderable::Renderable(Material* material)
 Renderable::~Renderable()
 {
     
+}
+
+Uid Renderable::GetEntityUid()
+{
+    return _EntityUid;
 }
 
 void Renderable::SetLayer(int layer)
@@ -32,7 +39,7 @@ int Renderable::GetLayer()
 }
 
 
-Material* Renderable::GetMaterial()
+Effect* Renderable::GetEffect()
 {
-    return _Material;
+    return _Effect;
 }

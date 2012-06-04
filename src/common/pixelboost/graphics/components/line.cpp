@@ -10,7 +10,7 @@ using namespace pb;
 LineComponent::LineComponent(Entity* parent)
     : Component(parent)
 {
-    _Renderable = new PrimitiveRenderableLine();
+    _Renderable = new PrimitiveRenderableLine(parent->GetUid());
     
     parent->RegisterMessageHandler(RenderMessage::GetStaticType(), sigslot::Delegate2<Uid, Message&>(this, &LineComponent::OnRender));
 }
