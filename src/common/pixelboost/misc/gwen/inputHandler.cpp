@@ -4,9 +4,9 @@
 
 #include "gwen/Controls/Canvas.h"
 
+#include "pixelboost/framework/game.h"
 #include "pixelboost/input/keyboardManager.h"
 #include "pixelboost/input/mouseManager.h"
-#include "pixelboost/logic/game.h"
 #include "pixelboost/misc/gwen/inputHandler.h"
 
 using namespace pb;

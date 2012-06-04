@@ -3,12 +3,12 @@
 #ifndef PIXELBOOST_DISABLE_GWEN
 
 #include "pixelboost/file/fileHelpers.h"
+#include "pixelboost/framework/game.h"
 #include "pixelboost/graphics/renderer/font/fontRenderer.h"
 #include "pixelboost/graphics/renderer/gwen/gwenRenderer.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 #include "pixelboost/graphics/renderer/sprite/sprite.h"
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
-#include "pixelboost/logic/game.h"
 
 #include "Gwen/Utility.h"
 #include "Gwen/Font.h"

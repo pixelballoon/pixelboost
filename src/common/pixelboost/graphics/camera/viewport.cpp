@@ -1,7 +1,7 @@
+#include "pixelboost/framework/game.h"
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/device/device.h"
-#include "pixelboost/logic/game.h"
 #include "pixelboost/graphics/renderer/common/layer.h"
 #include "pixelboost/graphics/renderer/common/irenderer.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"

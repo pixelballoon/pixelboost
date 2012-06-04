@@ -2,11 +2,11 @@
 
 #include "pixelboost/data/json/reader.h"
 #include "pixelboost/file/fileHelpers.h"
+#include "pixelboost/framework/game.h"
 #include "pixelboost/graphics/device/texture.h"
 #include "pixelboost/graphics/helper/screenHelpers.h"
 #include "pixelboost/graphics/renderer/sprite/sprite.h"
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
-#include "pixelboost/logic/game.h"
 
 using namespace pb;
     

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pixelboost/logic/game.h"
+#include "pixelboost/framework/game.h"
 
 namespace pb
 {

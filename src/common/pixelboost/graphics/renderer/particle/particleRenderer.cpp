@@ -1,11 +1,11 @@
 #ifndef PIXELBOOST_DISABLE_GRAPHICS
 
+#include "pixelboost/framework/game.h"
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/indexBuffer.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
 #include "pixelboost/graphics/renderer/particle/particleRenderer.h"
 #include "pixelboost/graphics/renderer/sprite/sprite.h"
-#include "pixelboost/logic/game.h"
 
 using namespace pb;
 

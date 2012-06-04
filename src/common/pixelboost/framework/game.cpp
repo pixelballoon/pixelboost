@@ -1,6 +1,8 @@
 #include "pixelboost/audio/soundManager.h"
 #include "pixelboost/debug/debugDatabaseHandler.h"
 #include "pixelboost/debug/debugVariableManager.h"
+#include "pixelboost/framework/game.h"
+#include "pixelboost/framework/screen.h"
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/custom/customRenderer.h"
@@ -12,8 +14,6 @@
 #include "pixelboost/input/keyboardManager.h"
 #include "pixelboost/input/mouseManager.h"
 #include "pixelboost/input/touchManager.h"
-#include "pixelboost/logic/game.h"
-#include "pixelboost/logic/screen.h"
 #include "pixelboost/network/gameCenter.h"
 #include "pixelboost/network/networkServer.h"
 

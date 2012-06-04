@@ -1,6 +1,6 @@
+#include "pixelboost/framework/game.h"
+#include "pixelboost/framework/screen.h"
 #include "pixelboost/input/touchManager.h"
-#include "pixelboost/logic/game.h"
-#include "pixelboost/logic/screen.h"
 
 namespace pb
 {
