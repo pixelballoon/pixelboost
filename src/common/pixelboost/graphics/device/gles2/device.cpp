@@ -401,6 +401,9 @@ void GraphicsDeviceGLES2::SetState(State state, bool enable)
         case kStateTexture2D:
             glState = GL_TEXTURE_2D;
             break;
+        case kStateScissor:
+            glState = GL_SCISSOR_TEST;
+            break;
     }
     
     if (enable)
@@ -448,6 +451,11 @@ void GraphicsDeviceGLES2::SetBlendMode(Blend source, Blend destination)
 void GraphicsDeviceGLES2::SetViewport(glm::vec4 viewport)
 {
     glViewport(viewport.x, viewport.y, viewport.z, viewport.w);
+}
+
+void GraphicsDeviceGLES2::SetScissor(glm::vec4 scissor)
+{
+    glScissor(scissor.x, scissor.y, scissor.z, scissor.w);
 }
 
 void GraphicsDeviceGLES2::DrawElements(ElementType elementType, int num)

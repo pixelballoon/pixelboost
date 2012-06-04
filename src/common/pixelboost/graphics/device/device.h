@@ -72,6 +72,7 @@ public:
         kStateBlend,
         kStateDepthTest,
         kStateTexture2D,
+        kStateScissor,
     };
     
     enum MatrixType
@@ -85,6 +86,7 @@ public:
     virtual void SetBlendMode(Blend source, Blend destination) = 0;
     
     virtual void SetViewport(glm::vec4 viewport) = 0;
+    virtual void SetScissor(glm::vec4 scissor) = 0;
     
 public:
     enum ElementType

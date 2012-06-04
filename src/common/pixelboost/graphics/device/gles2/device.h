@@ -60,6 +60,7 @@ public:
     virtual void SetBlendMode(Blend source, Blend destination);
     
     virtual void SetViewport(glm::vec4 viewport);
+    virtual void SetScissor(glm::vec4 scissor);
     
 public:
     virtual void DrawElements(ElementType elementType, int num);
