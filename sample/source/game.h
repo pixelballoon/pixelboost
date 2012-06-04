@@ -6,6 +6,7 @@ namespace pb
 {
     class OrthographicCamera; 
     class RenderLayer;
+    class Scene;
     class Viewport;
 }
 
@@ -25,4 +26,6 @@ private:
     pb::Viewport* _ViewportB;
     
     pb::RenderLayer* _Layer;
+    
+    pb::Scene* _Scene;
 };

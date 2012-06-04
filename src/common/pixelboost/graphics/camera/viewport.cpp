@@ -5,11 +5,13 @@
 #include "pixelboost/graphics/renderer/common/layer.h"
 #include "pixelboost/graphics/renderer/common/irenderer.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
+#include "pixelboost/logic/scene.h"
 
 using namespace pb;
 
 Viewport::Viewport(int viewportId)
-    : _ViewportId(viewportId)
+    : _Scene(0)
+    , _ViewportId(viewportId)
 {
     SetResolution(GraphicsDevice::Instance()->GetDisplayResolution());
     SetDensity(GraphicsDevice::Instance()->GetDisplayDensity());
@@ -55,6 +57,16 @@ glm::vec2 Viewport::GetPosition()
     return _Position;
 }
 
+void Viewport::SetScene(Scene* scene)
+{
+    _Scene = scene;
+}
+
+Scene* Viewport::GetScene()
+{
+    return _Scene;
+}
+
 void Viewport::AddLayer(RenderLayer* layer)
 {
     _Layers.push_back(layer);
@@ -85,4 +97,6 @@ void Viewport::Render()
             rendererIt->second->Render(*it);
         }
     }
+    
+    _Scene->Render(this);
 }

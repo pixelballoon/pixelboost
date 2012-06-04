@@ -1,7 +1,7 @@
 #pragma once
 
 #include <map>
-#include <set>
+#include <vector>
 
 #include "sigslot/signal.h"
 
@@ -17,21 +17,29 @@ class Entity
 {
 public:
     Entity(Uid uid);
-    ~Entity();
+    virtual ~Entity();
     
+    Uid GetUid();
+    virtual Uid GetType();    
+
+public:
+    typedef std::vector<Component*> ComponentList;
+    
+public:
     void AddComponent(Component* component);
     void RemoveComponent(Component* component);
+    ComponentList* GetComponentsByType(Uid componentType);
     
-    void SendMessage(Message* message);
+    void SendMessage(Message& message);
     
-    void RegisterMessageHandler(Uid messageType, sigslot::Delegate2<Uid, Message*> handler);
+    void RegisterMessageHandler(Uid messageType, sigslot::Delegate2<Uid, Message&> handler);
+    void UnregisterMessageHandler(Uid messageType, sigslot::Delegate2<Uid, Message&> handler);
     
 private:
-    typedef std::map<Uid, sigslot::Signal2<Uid, Message*> > MessageHandlers;
+    typedef std::map<Uid, sigslot::Signal2<Uid, Message&> > MessageHandlers;
+    typedef std::map<Uid, ComponentList> ComponentMap;
     
-    typedef std::set<Component*> ComponentSet;
-    
-    ComponentSet _Components;
+    ComponentMap _Components;
     MessageHandlers _MessageHandlers;
     
     Uid _Uid;
