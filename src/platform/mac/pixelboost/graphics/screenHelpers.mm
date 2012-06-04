@@ -3,7 +3,6 @@
 #ifdef PIXELBOOST_PLATFORM_OSX
 
 #include "pixelboost/graphics/helper/screenHelpers.h"
-#include "pixelboost/logic/game.h"
 
 #include <sys/sysctl.h>
 #include <string>

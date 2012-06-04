@@ -4,10 +4,11 @@
 
 #ifdef PIXELBOOST_PLATFORM_OSX
 
-#include "pixelboost/math/maths.h"
 #include <map>
 #include <set>
 #include <vector>
+
+#include "glm/glm.hpp"
 
 namespace pb
 {
@@ -19,9 +20,9 @@ class TouchManager;
 class Touch
 {
 public:
-	Vec2 GetDisplayPosition();
-	Vec2 GetScreenPosition();
-	Vec2 GetWorldPosition(OrthographicCamera* camera);
+    glm::vec2 GetDisplayPosition();
+    glm::vec2 GetScreenPosition();
+    glm::vec2 GetWorldPosition(OrthographicCamera* camera);
 	
 private:
 	enum State {
@@ -30,7 +31,7 @@ private:
 		E_STATIC
 	};
 	
-	Vec2 _Position;
+    glm::vec2 _Position;
 	State _State;
 	
 	TouchManager* _Manager;
@@ -59,9 +60,9 @@ public:
 	void AddTouchHandler(TouchHandler* handler);
     void RemoveTouchHandler(TouchHandler* handler);
 	
-	void AddTouch(void* touch, Vec2 position);
+	void AddTouch(void* touch, glm::vec2 position);
 	void RemoveTouch(void* touch);
-	void UpdateTouch(void* touch, Vec2 position);
+	void UpdateTouch(void* touch, glm::vec2 position);
 	
 	int GetNumTouches();
 	Touch* GetTouch(int index);

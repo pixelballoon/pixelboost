@@ -9,14 +9,14 @@
 namespace pb
 {
     
-Vec2 Touch::GetDisplayPosition()
+glm::vec2 Touch::GetDisplayPosition()
 {
     return _Position;
 }
 
-Vec2 Touch::GetScreenPosition()
+glm::vec2 Touch::GetScreenPosition()
 {
-   	Vec2 position = _Position;
+    glm::vec2 position = _Position;
     
     position[0] = position[0] - ScreenHelpers::GetScreenResolution()[0]/2;
     position[1] = ScreenHelpers::GetScreenResolution()[1]/2 - position[1];
@@ -27,7 +27,7 @@ Vec2 Touch::GetScreenPosition()
 	return position;
 }
 
-Vec2 Touch::GetWorldPosition(OrthographicCamera* camera)
+glm::vec2 Touch::GetWorldPosition(OrthographicCamera* camera)
 {
 	Vec2 position = _Position;
     

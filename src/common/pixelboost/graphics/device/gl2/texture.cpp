@@ -51,7 +51,7 @@ void pb::TextureGL2::LoadFromBytes(const unsigned char* data, int width, int hei
 	
     _Device->BindTexture(previousTexture);
     
-    _Size = Vec2(width, height);
+    _Size = glm::vec2(width, height);
 }
 
 #endif
