@@ -80,7 +80,11 @@ bool EffectPass::Load(json::Object& object)
     if (!_Program->Load(fragmentSource, vertexSource))
         return false;
     
-    _Program->BindAttribute(kShaderAttributeVertexPosition, "position");
+    json::Object& attributes = object["attributes"];
+    for (json::Object::iterator it = attributes.Begin(); it != attributes.End(); ++it)
+    {
+        _Program->BindAttribute((json::Number)it->element, it->name);
+    }
     
     if (!_Program->Link())
         return false;

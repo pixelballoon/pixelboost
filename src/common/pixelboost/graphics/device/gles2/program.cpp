@@ -28,13 +28,6 @@ bool ShaderProgramGLES2::Load(const std::string& fragmentSource, const std::stri
     glAttachShader(_Program, _FragmentShader);
     glAttachShader(_Program, _VertexShader);
     
-    glBindAttribLocation(_Program, kShaderAttributeVertexPosition, "position");
-    /*
-     glBindAttribLocation(_Program, kShaderAttributeVertexNormal, "normal");
-     glBindAttribLocation(_Program, kShaderAttributeVertexColor, "color");
-     glBindAttribLocation(_Program, kShaderAttributeVertexTexture0, "texture_0");
-     */
-    
     return true;
 }
 

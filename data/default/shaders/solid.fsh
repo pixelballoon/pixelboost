@@ -1,6 +1,6 @@
-varying lowp vec4 colorVarying;
+uniform lowp vec4 diffuseColor;
 
 void main()
 {
-    gl_FragColor = colorVarying;
+    gl_FragColor = diffuseColor;
 }
