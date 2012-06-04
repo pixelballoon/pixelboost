@@ -4,18 +4,20 @@
 
 #include "pixelboost/graphics/device/gles2/texture.h"
 
-pb::TextureGLES2::TextureGLES2(GraphicsDeviceGLES2* device)
+using namespace pb;
+
+TextureGLES2::TextureGLES2(GraphicsDeviceGLES2* device)
     : _Device(device)
 {
     
 }
 
-pb::TextureGLES2::~TextureGLES2()
+TextureGLES2::~TextureGLES2()
 {
     glDeleteTextures(1, &_Texture);
 }
 
-void pb::TextureGLES2::LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format)
+void TextureGLES2::LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format)
 {
     if (format != kTextureFormatRGBA)
     {
@@ -50,7 +52,7 @@ void pb::TextureGLES2::LoadFromBytes(const unsigned char* data, int width, int h
     _Size = glm::vec2(width, height);
 }
 
-void pb::TextureGLES2::Bind(int unit)
+void TextureGLES2::Bind(int unit)
 {
     _Device->BindTexture(this);
 }

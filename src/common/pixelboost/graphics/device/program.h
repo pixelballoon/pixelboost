@@ -10,6 +10,8 @@
 namespace pb
 {
     
+class Texture;
+    
 enum ShaderAttribute
 {
     kShaderAttributeVertexPosition = 0,
@@ -29,6 +31,7 @@ public:
     
     virtual void BindAttribute(int index, const std::string& name) = 0;
     
+    virtual void SetUniform(const std::string& name, int value) = 0;
     virtual void SetUniform(const std::string& name, float value) = 0;
     virtual void SetUniform(const std::string& name, const glm::vec3& value) = 0;
     virtual void SetUniform(const std::string& name, const glm::vec4& value) = 0;

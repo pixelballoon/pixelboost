@@ -9,6 +9,7 @@ namespace pb
 {
 
 class Message;
+class SpriteRenderable;
     
 class SpriteComponent : public Component
 {
@@ -21,7 +22,7 @@ public:
 private:
     void OnRender(Uid sender, Message& message);
     
-    std::string _Sprite;
+    SpriteRenderable* _Renderable;
 };
     
 }

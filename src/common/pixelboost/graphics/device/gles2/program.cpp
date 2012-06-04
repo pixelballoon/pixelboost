@@ -68,6 +68,12 @@ void ShaderProgramGLES2::BindAttribute(int index, const std::string& name)
     glBindAttribLocation(_Program, index, name.c_str());
 }
 
+void ShaderProgramGLES2::SetUniform(const std::string& name, int value)
+{
+    GLuint uniform = glGetUniformLocation(_Program, name.c_str());
+    glUniform1i(uniform, value);
+}
+
 void ShaderProgramGLES2::SetUniform(const std::string& name, float value)
 {
     GLuint uniform = glGetUniformLocation(_Program, name.c_str());

@@ -21,6 +21,8 @@ protected:
     
 public:
     virtual void BindAttribute(int index, const std::string& name);
+    
+    virtual void SetUniform(const std::string& name, int value);
     virtual void SetUniform(const std::string& name, float value);
     virtual void SetUniform(const std::string& name, const glm::vec3& value);
     virtual void SetUniform(const std::string& name, const glm::vec4& value);

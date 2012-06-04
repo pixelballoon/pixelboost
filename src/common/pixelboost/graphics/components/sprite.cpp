@@ -1,4 +1,6 @@
 #include "pixelboost/graphics/components/sprite.h"
+#include "pixelboost/graphics/renderer/common/renderer.h"
+#include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
 #include "pixelboost/logic/message/render.h"
 #include "pixelboost/logic/entity.h"
 
@@ -6,8 +8,10 @@ using namespace pb;
 
 SpriteComponent::SpriteComponent(Entity* parent, const std::string& sprite)
     : Component(parent)
-    , _Sprite(sprite)
 {
+    _Renderable = new SpriteRenderable(parent->GetUid());
+    _Renderable->Sprite = sprite;
+    
     parent->RegisterMessageHandler(RenderMessage::GetStaticType(), sigslot::Delegate2<Uid, Message&>(this, &SpriteComponent::OnRender));
 }
 
@@ -23,5 +27,5 @@ Uid SpriteComponent::GetType()
 
 void SpriteComponent::OnRender(Uid sender, Message& message)
 {
-    
+    Renderer::Instance()->AddItem(_Renderable);
 }
