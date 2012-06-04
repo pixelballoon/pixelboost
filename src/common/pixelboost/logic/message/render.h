@@ -13,7 +13,8 @@ public:
     RenderMessage(Uid source, Viewport* viewport);
     ~RenderMessage();
     
-    Uid GetType();
+    virtual Uid GetType();
+    static Uid GetStaticType();
     
     Viewport* GetViewport();
     

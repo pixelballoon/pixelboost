@@ -16,6 +16,11 @@ UpdateMessage::~UpdateMessage()
 
 Uid UpdateMessage::GetType()
 {
+    return GetStaticType();
+}
+
+Uid UpdateMessage::GetStaticType()
+{
     return TypeHash("update");
 }
 

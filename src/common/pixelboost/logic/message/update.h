@@ -12,6 +12,7 @@ public:
     virtual ~UpdateMessage();
     
     Uid GetType();
+    static Uid GetStaticType();
     
     float GetDelta();
     

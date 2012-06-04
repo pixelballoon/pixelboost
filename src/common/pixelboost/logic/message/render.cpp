@@ -16,6 +16,11 @@ RenderMessage::~RenderMessage()
 
 Uid RenderMessage::GetType()
 {
+    return GetStaticType();
+}
+
+Uid RenderMessage::GetStaticType()
+{
     return TypeHash("render");
 }
 
