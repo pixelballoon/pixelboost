@@ -54,9 +54,4 @@ void IndexBuffer::Unlock(int numElements)
     }
 }
 
-void IndexBuffer::Bind()
-{
-    _Device->BindIndexBuffer(this);
-}
-
 #endif

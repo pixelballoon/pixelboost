@@ -2,7 +2,7 @@
 
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/indexBuffer.h"
-#include "pixelboost/graphics/device/material.h"
+#include "pixelboost/graphics/device/program.h"
 #include "pixelboost/graphics/device/texture.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
 
@@ -96,9 +96,9 @@ void GraphicsDevice::DestroyTexture(Texture* texture)
     delete texture;
 }
 
-void GraphicsDevice::DestroyMaterial(Material* material)
+void GraphicsDevice::DestroyProgram(ShaderProgram* program)
 {
-    delete material;
+    delete program;
 }
 
 #endif

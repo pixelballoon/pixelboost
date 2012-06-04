@@ -53,8 +53,8 @@ void Game::Render()
 {
     GetPrimitiveRenderer()->AttachBox(_Layer, glm::vec2(0,0), _ViewportA->GetSize(), glm::vec3(0,0,0), glm::vec4(0.5,0.5,0.5,1));
     GetPrimitiveRenderer()->AttachBox(_Layer, glm::vec2(0,0), glm::vec2(5,5), glm::vec3(0,0,0), glm::vec4(1,1,1,1));
-    GetPrimitiveRenderer()->AttachLine(_Layer, glm::vec2(0,0), glm::vec2(5,5), glm::vec4(1,0,0,1));
-    GetPrimitiveRenderer()->AttachEllipse(_Layer, glm::vec2(0,0), glm::vec2(5,5), glm::vec3(0,0,0), glm::vec4(0,1,0,1));
+    GetPrimitiveRenderer()->AttachLine(_Layer, glm::vec2(0,0), glm::vec2(2.5,2.5), glm::vec4(1,0,0,1));
+    GetPrimitiveRenderer()->AttachEllipse(_Layer, glm::vec2(0,0), glm::vec2(6,6), glm::vec3(0,0,0), glm::vec4(0,1,0,1));
     
     pb::Game::Render();
 }

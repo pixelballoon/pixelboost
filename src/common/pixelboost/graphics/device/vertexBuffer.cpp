@@ -102,9 +102,4 @@ void VertexBuffer::Unlock(int numElements)
     }
 }
 
-void VertexBuffer::Bind()
-{
-    _Device->BindVertexBuffer(this);
-}
-
 #endif

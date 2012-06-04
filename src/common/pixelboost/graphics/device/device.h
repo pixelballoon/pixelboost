@@ -12,6 +12,7 @@ namespace pb
 class Texture;
 class IndexBuffer;
 class Material;
+class ShaderProgram;
 class VertexBuffer;
 
 class GraphicsDevice
@@ -53,10 +54,10 @@ public:
     virtual Texture* GetBoundTexture() = 0;
     virtual Texture* BindTexture(Texture* texture) = 0;
     
-    virtual Material* CreateMaterial() = 0;
-    virtual void DestroyMaterial(Material* material);
-    virtual Material* GetBoundMaterial() = 0;
-    virtual Material* BindMaterial(Material* material) = 0;
+    virtual ShaderProgram* CreateProgram() = 0;
+    virtual void DestroyProgram(ShaderProgram* program);
+    virtual ShaderProgram* GetBoundProgram() = 0;
+    virtual ShaderProgram* BindProgram(ShaderProgram* program) = 0;
 
 public:
     enum Blend

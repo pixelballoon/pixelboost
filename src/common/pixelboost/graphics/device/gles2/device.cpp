@@ -2,7 +2,7 @@
 
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/indexBuffer.h"
-#include "pixelboost/graphics/device/material.h"
+#include "pixelboost/graphics/device/program.h"
 #include "pixelboost/graphics/device/texture.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
 
@@ -19,13 +19,13 @@ struct pb::DeviceState
         boundIndexBuffer = 0;
         boundTexture = 0;
         boundVertexBuffer = 0;
-        boundMaterial = 0;
+        boundProgram = 0;
     }
     
     GLuint boundIndexBuffer;
     GLuint boundTexture;
     GLuint boundVertexBuffer;
-    Material* boundMaterial;
+    GLuint boundProgram;
 };
 
 GraphicsDevice* GraphicsDevice::Create()
@@ -341,42 +341,49 @@ Texture* GraphicsDeviceGLES2::BindTexture(Texture* texture)
     return previousTexture;
 }
 
-Material* GraphicsDeviceGLES2::CreateMaterial()
+ShaderProgram* GraphicsDeviceGLES2::CreateProgram()
 {
-    MaterialGLES2* material = new MaterialGLES2(this);
-    _Materials.push_back(material);
-    return material;
+    ShaderProgramGLES2* program = new ShaderProgramGLES2(this);
+    _Programs.push_back(program);
+    return program;
 }
 
-void GraphicsDeviceGLES2::DestroyMaterial(Material* material)
+void GraphicsDeviceGLES2::DestroyProgram(ShaderProgram* program)
 {
-    for (MaterialList::iterator it = _Materials.begin(); it != _Materials.end(); ++it)
+    for (ProgramList::iterator it = _Programs.begin(); it != _Programs.end(); ++it)
     {
-        if (*it == material)
+        if (*it == program)
         {
-            _Materials.erase(it);
-            GraphicsDevice::DestroyMaterial(material);
+            _Programs.erase(it);
+            GraphicsDevice::DestroyProgram(program);
             return;
         }
     }
 }
 
-Material* GraphicsDeviceGLES2::GetBoundMaterial()
+ShaderProgram* GraphicsDeviceGLES2::GetBoundProgram()
 {
-    return _State->boundMaterial;
-}
-
-Material* GraphicsDeviceGLES2::BindMaterial(Material* material)
-{
-    Material* previousMaterial = GetBoundMaterial();
-    
-    if (material != _State->boundMaterial)
+    for (ProgramList::iterator it = _Programs.begin(); it != _Programs.end(); ++it)
     {
-        static_cast<MaterialGLES2*>(material)->Bind();
-        _State->boundMaterial = material;
+        if (static_cast<ShaderProgramGLES2*>(*it)->_Program == _State->boundProgram)
+            return *it;
     }
     
-    return previousMaterial;
+    return 0;
+}
+
+ShaderProgram* GraphicsDeviceGLES2::BindProgram(ShaderProgram* program)
+{
+    GLuint programId = program ? static_cast<ShaderProgramGLES2*>(program)->_Program : 0;
+    ShaderProgramGLES2* previousProgram = static_cast<ShaderProgramGLES2*>(GetBoundProgram());
+    
+    if (static_cast<ShaderProgramGLES2*>(program)->_Program != _State->boundProgram)
+    {
+        glUseProgram(programId);
+        _State->boundProgram = programId;
+    }
+    
+    return previousProgram;
 }
 
 void GraphicsDeviceGLES2::SetState(State state, bool enable)

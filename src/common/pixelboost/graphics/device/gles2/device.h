@@ -51,10 +51,10 @@ public:
     virtual Texture* GetBoundTexture();
     virtual Texture* BindTexture(Texture* texture);
     
-    virtual Material* CreateMaterial();
-    virtual void DestroyMaterial(Material* material);
-    virtual Material* GetBoundMaterial();
-    virtual Material* BindMaterial(Material* material);
+    virtual ShaderProgram* CreateProgram();
+    virtual void DestroyProgram(ShaderProgram* program);
+    virtual ShaderProgram* GetBoundProgram();
+    virtual ShaderProgram* BindProgram(ShaderProgram* program);
     
     virtual void SetState(State state, bool enable);
     virtual void SetBlendMode(Blend source, Blend destination);
@@ -67,10 +67,10 @@ public:
 private:
     DeviceState* _State;
     
-    typedef std::vector<MaterialGLES2*> MaterialList;
+    typedef std::vector<ShaderProgram*> ProgramList;
     typedef std::vector<TextureGLES2*> TextureList;
     
-    MaterialList _Materials;
+    ProgramList _Programs;
     TextureList _Textures;
     
     typedef std::map<IndexBuffer*, GLuint> IndexMap;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "pixelboost/graphics/device/device.h"
-#include "pixelboost/graphics/device/material.h"
+#include "pixelboost/graphics/device/program.h"
 
 #ifdef PIXELBOOST_GRAPHICS_OPENGLES2
 
@@ -10,11 +10,14 @@ namespace pb
 
 class GraphicsDeviceGLES2;
 
-class MaterialGLES2 : public Material
+class ShaderProgramGLES2 : public ShaderProgram
 {
 protected:
-    MaterialGLES2(GraphicsDeviceGLES2* device);
-    virtual ~MaterialGLES2();
+    ShaderProgramGLES2(GraphicsDeviceGLES2* device);
+    virtual ~ShaderProgramGLES2();
+    
+    virtual bool Load(const std::string& vertexSource, const std::string& fragmentSource);
+    virtual bool Link();
     
 public:
     virtual void BindAttribute(int index, const std::string& name);
@@ -25,14 +28,11 @@ public:
     
 private:
     virtual bool CompileShader(GLenum type, GLuint* shader, const std::string& source);
-    virtual bool Link();
-    
-protected:
-    virtual void Load(json::Object& object);
-    virtual void Bind();
     
 private:
     GLuint _Program;
+    GLuint _FragmentShader;
+    GLuint _VertexShader;
     
     friend class GraphicsDeviceGLES2;
 };

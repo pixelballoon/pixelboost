@@ -357,7 +357,7 @@ void SpriteRenderer::RenderCurrentBuffer()
         return;
     
     _VertexBuffers[_CurrentVertexBuffer]->Unlock(_SpritesRendered*4);
-    _VertexBuffers[_CurrentVertexBuffer]->Bind();
+    GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffers[_CurrentVertexBuffer]);
     
     GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, _SpritesRendered*6);
     

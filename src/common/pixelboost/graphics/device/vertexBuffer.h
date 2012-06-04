@@ -63,8 +63,6 @@ public:
     void Lock();
     void Unlock(int numElements=-1);
     
-    void Bind();
-    
 private:
     GraphicsDevice* _Device;
     
