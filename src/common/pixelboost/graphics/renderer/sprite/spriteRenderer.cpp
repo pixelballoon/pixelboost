@@ -91,6 +91,12 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
     
+#ifndef PIXELBOOST_GRAPHICS_PREMULTIPLIED_ALPHA
+    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
+#else
+    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
+#endif
+    
     GraphicsDevice::Instance()->BindIndexBuffer(_IndexBuffer);
     
     Vertex_PXYZ_UV* bufferData = 0;
@@ -101,8 +107,6 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
     
     for (int i=0; i<count; i++)
     {
-        
-        glm::vec4 uv(0,0,1,1);
         SpriteRenderable& renderable = *static_cast<SpriteRenderable*>(renderables[i]);
         
         Sprite* sprite = renderable.Sprite;
@@ -111,29 +115,39 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
         
         texture = sprite->_Sheet->_Texture;
         
+        _VertexBuffer->Lock();
+        bufferData = static_cast<Vertex_PXYZ_UV*>(_VertexBuffer->GetData());
+        
         if (!sprite->_Rotated)
         {
             glm::vec2 min = sprite->_Position + glm::vec2(sprite->_Size[0] * renderable.Crop[0], sprite->_Size[1] * renderable.Crop[1]);
             glm::vec2 max = sprite->_Position + glm::vec2(sprite->_Size[0] * renderable.Crop[2], sprite->_Size[1] * renderable.Crop[3]);
             
-            uv[0] = min[0];
-            uv[1] = min[1];
-            uv[2] = max[0];
-            uv[3] = max[1];
+            bufferData[0].uv[0] = min[0];
+            bufferData[0].uv[1] = max[1];
+            bufferData[1].uv[0] = min[0];
+            bufferData[1].uv[1] = min[1];
+            bufferData[2].uv[0] = max[0];
+            bufferData[2].uv[1] = min[1];
+            bufferData[3].uv[0] = max[0];
+            bufferData[3].uv[1] = max[1];
         } else {
             glm::vec2 min = sprite->_Position + glm::vec2(sprite->_Size[1] * renderable.Crop[3], sprite->_Size[0] * renderable.Crop[2]);
             glm::vec2 max = sprite->_Position + glm::vec2(sprite->_Size[1] * renderable.Crop[1], sprite->_Size[0] * renderable.Crop[0]);
             
-            uv[0] = min[0];
-            uv[1] = min[1];
-            uv[2] = max[0];
-            uv[3] = max[1];
+            bufferData[0].uv[0] = max[0];
+            bufferData[0].uv[1] = max[1];
+            bufferData[1].uv[0] = min[0];
+            bufferData[1].uv[1] = max[1];
+            bufferData[2].uv[0] = min[0];
+            bufferData[2].uv[1] = min[1];
+            bufferData[3].uv[0] = max[0];
+            bufferData[3].uv[1] = min[1];
         }
         
-        GraphicsDevice::Instance()->BindTexture(texture);
+        _VertexBuffer->Unlock();
         
-        _VertexBuffer->Lock();
-        bufferData = static_cast<Vertex_PXYZ_UV*>(_VertexBuffer->GetData());
+        GraphicsDevice::Instance()->BindTexture(texture);
         
         glm::mat4x4 viewProjectionMatrix = viewport->GetCamera()->ProjectionMatrix * viewport->GetCamera()->ViewMatrix;
         viewProjectionMatrix = renderable.Transform * viewProjectionMatrix;
@@ -141,17 +155,6 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
         effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
         effectPass->GetShaderProgram()->SetUniform("diffuseColor", renderable.Tint);
         effectPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
-        
-        bufferData[0].uv[0] = uv[0];
-        bufferData[0].uv[1] = uv[3];
-        bufferData[1].uv[0] = uv[0];
-        bufferData[1].uv[1] = uv[1];
-        bufferData[2].uv[0] = uv[2];
-        bufferData[2].uv[1] = uv[1];
-        bufferData[3].uv[0] = uv[2];
-        bufferData[3].uv[1] = uv[3];
-        
-        _VertexBuffer->Unlock();
         
         GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffer);
         GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, 6);
