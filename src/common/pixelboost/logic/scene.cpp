@@ -22,13 +22,11 @@ void Scene::Update(float time)
         if ((*it)->GetState() == Entity::kEntityDestroyed)
         {
             delete *it;
-            _Entities.erase(it);
-            it = _Entities.begin();
+            _Entities.erase(it++);
         } else {
             ++it;
         }
     }
-    
     
     UpdateMessage message(time);
     
