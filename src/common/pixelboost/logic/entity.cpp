@@ -26,6 +26,11 @@ Uid Entity::GetType()
     return 0;
 }
 
+void Entity::Destroy()
+{
+    _State = kEntityDestroyed;
+}
+
 Entity::EntityState Entity::GetState()
 {
     return _State;

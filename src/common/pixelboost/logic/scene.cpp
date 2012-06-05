@@ -17,6 +17,19 @@ Scene::~Scene()
 
 void Scene::Update(float time)
 {
+    for (EntitySet::iterator it = _Entities.begin(); it != _Entities.end();)
+    {
+        if ((*it)->GetState() == Entity::kEntityDestroyed)
+        {
+            delete *it;
+            _Entities.erase(it);
+            it = _Entities.begin();
+        } else {
+            ++it;
+        }
+    }
+    
+    
     UpdateMessage message(time);
     
     SendMessage(message);
@@ -34,9 +47,17 @@ void Scene::AddEntity(Entity* entity)
     _Entities.insert(entity);
 }
 
-void Scene::RemoveEntity(Entity* entity)
+void Scene::DestroyEntity(Entity* entity)
 {
-    _Entities.erase(entity);
+    entity->Destroy();
+}
+
+void Scene::DestroyAllEntities()
+{
+    for (EntitySet::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
+    {
+        (*it)->Destroy();
+    }
 }
 
 void Scene::SendMessage(Message& message)

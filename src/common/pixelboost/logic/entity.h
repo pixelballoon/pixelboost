@@ -23,13 +23,14 @@ public:
     enum EntityState
     {
         kEntityCreated,
-        kEntityKilled
+        kEntityDestroyed
     };
     
 public:
     Uid GetUid();
     virtual Uid GetType();
 
+    void Destroy();
     EntityState GetState();
 
 public:

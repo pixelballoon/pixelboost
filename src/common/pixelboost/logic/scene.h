@@ -19,7 +19,8 @@ public:
     void Render(Viewport* viewport);
     
     void AddEntity(Entity* entity);
-    void RemoveEntity(Entity* entity);
+    void DestroyEntity(Entity* entity);
+    void DestroyAllEntities();
     
     void SendMessage(Message& message);
     
