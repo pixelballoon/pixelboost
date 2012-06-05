@@ -77,9 +77,9 @@ void Renderer::SetHandler(int renderableType, IRenderer* renderer)
 
 void Renderer::FlushBuffer(Viewport* viewport)
 {
-    for (LayerRenderableMap::iterator it = _Renderables.begin(); it != _Renderables.end(); ++it)
+    for (int i=0; i<8; i++)
     {
-        RenderableList& renderables = it->second;
+        RenderableList& renderables = _Renderables[i];
         
         if (!renderables.size())
             continue;

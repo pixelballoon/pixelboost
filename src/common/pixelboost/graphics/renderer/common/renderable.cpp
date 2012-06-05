@@ -30,7 +30,7 @@ Uid Renderable::GetEntityUid()
 
 void Renderable::SetLayer(int layer)
 {
-    _Layer = 0;
+    _Layer = layer;
 }
 
 int Renderable::GetLayer()
