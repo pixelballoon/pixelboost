@@ -90,11 +90,14 @@ Scene* Viewport::GetScene()
 
 void Viewport::Render()
 {
-    GraphicsDevice::Instance()->SetViewport(glm::vec4(_Position.x + GraphicsDevice::Instance()->GetDisplayResolution().x/2.f - _Resolution.x/2.f, _Position.y + GraphicsDevice::Instance()->GetDisplayResolution().y/2.f - _Resolution.y/2.f, _Resolution.x, _Resolution.y));
-    
-    _Camera->CalculateTransform(this);
-    
-    _Scene->Render(this);
+    if (_Scene)
+    {
+        GraphicsDevice::Instance()->SetViewport(glm::vec4(_Position.x + GraphicsDevice::Instance()->GetDisplayResolution().x/2.f - _Resolution.x/2.f, _Position.y + GraphicsDevice::Instance()->GetDisplayResolution().y/2.f - _Resolution.y/2.f, _Resolution.x, _Resolution.y));
+        
+        _Camera->CalculateTransform(this);
+        
+        _Scene->Render(this);
+    }
 }
 
 EffectTechnique* Viewport::GetTechnique(Renderable* renderable, Effect* effect)
