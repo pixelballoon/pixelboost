@@ -40,9 +40,7 @@ public:
     virtual Effect* GetEffect();
     
     std::string Sprite;
-    glm::vec3 Position;
-    glm::vec3 Rotation;
-    glm::vec2 Scale;
+    glm::mat4x4 Transform;
     glm::vec4 Tint;
     glm::vec4 Crop;
 };

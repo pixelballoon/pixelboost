@@ -22,7 +22,6 @@ SpriteRenderable::SpriteRenderable(Uid entityId)
 {
     Crop = glm::vec4(0,0,1,1);
     Tint = glm::vec4(1,1,1,1);
-    Scale = glm::vec2(1,1);
 }
     
 SpriteRenderable::~SpriteRenderable()
@@ -105,16 +104,12 @@ void SpriteRenderer::Render(int count, Renderable* renderables, Viewport* viewpo
         SpriteRenderable& renderable = static_cast<SpriteRenderable&>(renderables[i]);
         
         glm::vec4 uv(0,0,1,1);
-        glm::vec3 position = renderable.Position;
-        glm::vec2 scale = renderable.Scale;
         
         Sprite* sprite = GetSprite(renderable.Sprite);
         if (!sprite)
             continue;
         
         texture = sprite->_Sheet->_Texture;
-        
-        scale *= sprite->_Dimension;
         
         if (!sprite->_Rotated)
         {
@@ -141,12 +136,8 @@ void SpriteRenderer::Render(int count, Renderable* renderables, Viewport* viewpo
         bufferData = static_cast<Vertex_PXYZ_UV*>(_VertexBuffer->GetData());
         
         glm::mat4x4 viewProjectionMatrix = viewport->GetCamera()->ProjectionMatrix * viewport->GetCamera()->ViewMatrix;
-        viewProjectionMatrix = glm::translate(viewProjectionMatrix, position);
-        viewProjectionMatrix = glm::scale(viewProjectionMatrix, glm::vec3(scale, 1));
-        viewProjectionMatrix = glm::rotate(viewProjectionMatrix, renderable.Rotation[0], glm::vec3(1,0,0));
-        viewProjectionMatrix = glm::rotate(viewProjectionMatrix, renderable.Rotation[1], glm::vec3(0,1,0));
-        viewProjectionMatrix = glm::rotate(viewProjectionMatrix, renderable.Rotation[2], glm::vec3(0,0,1));
-        
+        viewProjectionMatrix = renderable.Transform * viewProjectionMatrix;
+        viewProjectionMatrix = glm::scale(viewProjectionMatrix, glm::vec3(sprite->_Dimension, 1));
         effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
         effectPass->GetShaderProgram()->SetUniform("diffuseColor", renderable.Tint);
         effectPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
