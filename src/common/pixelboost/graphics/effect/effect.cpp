@@ -74,8 +74,19 @@ EffectPass::~EffectPass()
 
 bool EffectPass::Load(json::Object& object)
 {
-    std::string fragmentSource = FileHelpers::FileToString(FileHelpers::GetRootPath() + "/" + ((json::String)object["fragment"]).Value());
-    std::string vertexSource = FileHelpers::FileToString(FileHelpers::GetRootPath() + "/" + ((json::String)object["vertex"]).Value());
+    json::Object shaders = object["shaders"];
+    
+    json::Object platform;
+    
+#ifdef PIXELBOOST_GRAPHICS_OPENGLES2
+    platform = shaders["gles2"];
+#endif
+#ifdef PIXELBOOST_GRAPHICS_OPENGL2
+    platform = shaders["gl2"];
+#endif
+    
+    std::string fragmentSource = FileHelpers::FileToString(FileHelpers::GetRootPath() + "/" + ((json::String)platform["fragment"]).Value());
+    std::string vertexSource = FileHelpers::FileToString(FileHelpers::GetRootPath() + "/" + ((json::String)platform["vertex"]).Value());
     
     if (!_Program->Load(fragmentSource, vertexSource))
         return false;

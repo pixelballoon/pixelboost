@@ -1,23 +1,31 @@
 #include "glm/gtc/type_ptr.hpp"
 
 #include "pixelboost/file/fileHelpers.h"
-#include "pixelboost/graphics/device/gles2/program.h"
+#include "pixelboost/graphics/device/gl/program.h"
+
+#ifdef PIXELBOOST_GRAPHICS_OPENGL
 
 #ifdef PIXELBOOST_GRAPHICS_OPENGLES2
+#include <OpenGLES/ES2/gl.h>
+#endif
+
+#ifdef PIXELBOOST_GRAPHICS_OPENGL2
+#include <OpenGL/gl.h>
+#endif
 
 using namespace pb;
 
-ShaderProgramGLES2::ShaderProgramGLES2(GraphicsDeviceGLES2* device)
+ShaderProgramGL::ShaderProgramGL(GraphicsDeviceGL* device)
 {
     _Program = glCreateProgram();
 }
 
-ShaderProgramGLES2::~ShaderProgramGLES2()
+ShaderProgramGL::~ShaderProgramGL()
 {
     glDeleteProgram(_Program);
 }
 
-bool ShaderProgramGLES2::Load(const std::string& fragmentSource, const std::string& vertexSource)
+bool ShaderProgramGL::Load(const std::string& fragmentSource, const std::string& vertexSource)
 {
     if (!CompileShader(GL_FRAGMENT_SHADER, &_FragmentShader, fragmentSource))
         return false;
@@ -31,7 +39,7 @@ bool ShaderProgramGLES2::Load(const std::string& fragmentSource, const std::stri
     return true;
 }
 
-bool ShaderProgramGLES2::Link()
+bool ShaderProgramGL::Link()
 {
     glLinkProgram(_Program);
     
@@ -63,42 +71,42 @@ bool ShaderProgramGLES2::Link()
     return true;
 }
 
-void ShaderProgramGLES2::BindAttribute(int index, const std::string& name)
+void ShaderProgramGL::BindAttribute(int index, const std::string& name)
 {
     glBindAttribLocation(_Program, index, name.c_str());
 }
 
-void ShaderProgramGLES2::SetUniform(const std::string& name, int value)
+void ShaderProgramGL::SetUniform(const std::string& name, int value)
 {
     GLuint uniform = glGetUniformLocation(_Program, name.c_str());
     glUniform1i(uniform, value);
 }
 
-void ShaderProgramGLES2::SetUniform(const std::string& name, float value)
+void ShaderProgramGL::SetUniform(const std::string& name, float value)
 {
     GLuint uniform = glGetUniformLocation(_Program, name.c_str());
     glUniform1f(uniform, value);
 }
 
-void ShaderProgramGLES2::SetUniform(const std::string& name, const glm::vec3& value)
+void ShaderProgramGL::SetUniform(const std::string& name, const glm::vec3& value)
 {
     GLuint uniform = glGetUniformLocation(_Program, name.c_str());
     glUniform3f(uniform, value.x, value.y, value.z);
 }
 
-void ShaderProgramGLES2::SetUniform(const std::string& name, const glm::vec4& value)
+void ShaderProgramGL::SetUniform(const std::string& name, const glm::vec4& value)
 {
     GLuint uniform = glGetUniformLocation(_Program, name.c_str());
     glUniform4f(uniform, value.x, value.y, value.z, value.w);
 }
 
-void ShaderProgramGLES2::SetUniform(const std::string& name, const glm::mat4x4& value)
+void ShaderProgramGL::SetUniform(const std::string& name, const glm::mat4x4& value)
 {
     GLuint uniform = glGetUniformLocation(_Program, name.c_str());
     glUniformMatrix4fv(uniform, 1, 0, glm::value_ptr(value));
 }
 
-bool ShaderProgramGLES2::CompileShader(GLenum type, GLuint* shader, const std::string& source)
+bool ShaderProgramGL::CompileShader(GLenum type, GLuint* shader, const std::string& source)
 {
     *shader = glCreateShader(type);
     const GLchar* shaderSource = source.c_str();

@@ -3,18 +3,18 @@
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/program.h"
 
-#ifdef PIXELBOOST_GRAPHICS_OPENGLES2
+#ifdef PIXELBOOST_GRAPHICS_OPENGL
 
 namespace pb
 {
 
-class GraphicsDeviceGLES2;
+class GraphicsDeviceGL;
 
-class ShaderProgramGLES2 : public ShaderProgram
+class ShaderProgramGL : public ShaderProgram
 {
 protected:
-    ShaderProgramGLES2(GraphicsDeviceGLES2* device);
-    virtual ~ShaderProgramGLES2();
+    ShaderProgramGL(GraphicsDeviceGL* device);
+    virtual ~ShaderProgramGL();
     
     virtual bool Load(const std::string& vertexSource, const std::string& fragmentSource);
     virtual bool Link();
@@ -36,7 +36,7 @@ private:
     GLuint _FragmentShader;
     GLuint _VertexShader;
     
-    friend class GraphicsDeviceGLES2;
+    friend class GraphicsDeviceGL;
 };
     
 }

@@ -37,7 +37,7 @@ Game::Game(void* viewController)
     //_ParticleRenderer = new ParticleRenderer();
     _SpriteRenderer = new SpriteRenderer();
     _PrimitiveRenderer = new PrimitiveRenderer();
-    //_FontRenderer = new FontRenderer();
+    _FontRenderer = new FontRenderer();
 #endif
     
 #ifndef PIXELBOOST_DISABLE_GAMECENTER

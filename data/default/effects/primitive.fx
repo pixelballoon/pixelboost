@@ -4,8 +4,16 @@
 			"attributes" : {
 				"position" : 0
 			},
-			"fragment" : "default/shaders/solid.fsh",
-			"vertex" : "default/shaders/solid.vsh"
+			"shaders" : {
+				"gles2" : {
+					"fragment" : "default/shaders/gles2/solid.fsh",
+					"vertex" : "default/shaders/gles2/solid.vsh"
+				},
+				"gl2" : {
+					"fragment" : "default/shaders/gl2/solid.fsh",
+					"vertex" : "default/shaders/gl2/solid.vsh"
+				}
+			}
 		}
 	]
 }

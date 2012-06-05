@@ -41,10 +41,6 @@ protected:
 #include "pixelboost/graphics/device/gles1/texture.h"
 #endif
 
-#ifdef PIXELBOOST_GRAPHICS_OPENGLES2
-#include "pixelboost/graphics/device/gles2/texture.h"
-#endif
-
-#ifdef PIXELBOOST_GRAPHICS_OPENGL2
-#include "pixelboost/graphics/device/gl2/texture.h"
+#ifdef PIXELBOOST_GRAPHICS_OPENGL
+#include "pixelboost/graphics/device/gl/texture.h"
 #endif

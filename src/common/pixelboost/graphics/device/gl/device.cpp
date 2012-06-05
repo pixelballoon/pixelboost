@@ -8,9 +8,15 @@
 
 using namespace pb;
 
-#ifdef PIXELBOOST_GRAPHICS_OPENGLES2
+#ifdef PIXELBOOST_GRAPHICS_OPENGL
 
+#ifdef PIXELBOOST_GRAPHICS_OPENGLES2
 #include <OpenGLES/ES2/gl.h>
+#endif
+
+#ifdef PIXELBOOST_GRAPHICS_OPENGL2
+#include <OpenGL/gl.h>
+#endif
 
 struct pb::DeviceState
 {
@@ -30,20 +36,20 @@ struct pb::DeviceState
 
 GraphicsDevice* GraphicsDevice::Create()
 {
-    return new GraphicsDeviceGLES2();
+    return new GraphicsDeviceGL();
 }
 
-GraphicsDeviceGLES2::GraphicsDeviceGLES2()
+GraphicsDeviceGL::GraphicsDeviceGL()
 {
     _State = new DeviceState();
 }
 
-GraphicsDeviceGLES2::~GraphicsDeviceGLES2()
+GraphicsDeviceGL::~GraphicsDeviceGL()
 {
     delete _State;
 }
 
-unsigned char* GraphicsDeviceGLES2::CaptureRenderBuffer()
+unsigned char* GraphicsDeviceGL::CaptureRenderBuffer()
 {    
     int width, height;
     
@@ -56,7 +62,7 @@ unsigned char* GraphicsDeviceGLES2::CaptureRenderBuffer()
     return buffer;
 }
 
-VertexBuffer* GraphicsDeviceGLES2::CreateVertexBuffer(BufferFormat bufferFormat, VertexFormat vertexFormat, int length)
+VertexBuffer* GraphicsDeviceGL::CreateVertexBuffer(BufferFormat bufferFormat, VertexFormat vertexFormat, int length)
 {
     VertexBuffer* vertexBuffer = GraphicsDevice::CreateVertexBuffer(bufferFormat, vertexFormat, length);
     
@@ -69,7 +75,7 @@ VertexBuffer* GraphicsDeviceGLES2::CreateVertexBuffer(BufferFormat bufferFormat,
     return vertexBuffer;
 }
 
-void GraphicsDeviceGLES2::DestroyVertexBuffer(VertexBuffer* vertexBuffer)
+void GraphicsDeviceGL::DestroyVertexBuffer(VertexBuffer* vertexBuffer)
 {
     GLuint buffer = _VertexBuffers[vertexBuffer];
     glDeleteBuffers(1, &buffer);
@@ -80,7 +86,7 @@ void GraphicsDeviceGLES2::DestroyVertexBuffer(VertexBuffer* vertexBuffer)
     GraphicsDevice::DestroyVertexBuffer(vertexBuffer);
 }
 
-VertexBuffer* GraphicsDeviceGLES2::GetBoundVertexBuffer()
+VertexBuffer* GraphicsDeviceGL::GetBoundVertexBuffer()
 {
     VertexReverseMap::iterator it = _VertexReverseBuffers.find(_State->boundVertexBuffer);
     
@@ -90,7 +96,7 @@ VertexBuffer* GraphicsDeviceGLES2::GetBoundVertexBuffer()
     return 0;
 }
 
-VertexBuffer* GraphicsDeviceGLES2::BindVertexBuffer(VertexBuffer* vertexBuffer)
+VertexBuffer* GraphicsDeviceGL::BindVertexBuffer(VertexBuffer* vertexBuffer)
 {
     GLuint vertexBufferId = vertexBuffer ? _VertexBuffers[vertexBuffer] : 0;
     
@@ -176,12 +182,12 @@ VertexBuffer* GraphicsDeviceGLES2::BindVertexBuffer(VertexBuffer* vertexBuffer)
     return previousBuffer;
 }
 
-void GraphicsDeviceGLES2::LockVertexBuffer(VertexBuffer* vertexBuffer)
+void GraphicsDeviceGL::LockVertexBuffer(VertexBuffer* vertexBuffer)
 {
     GraphicsDevice::LockVertexBuffer(vertexBuffer);
 }
 
-void GraphicsDeviceGLES2::UnlockVertexBuffer(VertexBuffer* vertexBuffer, int numElements)
+void GraphicsDeviceGL::UnlockVertexBuffer(VertexBuffer* vertexBuffer, int numElements)
 {
     if (numElements == 0)
         return;
@@ -228,7 +234,7 @@ void GraphicsDeviceGLES2::UnlockVertexBuffer(VertexBuffer* vertexBuffer, int num
     BindVertexBuffer(previousBuffer);
 }
     
-IndexBuffer* GraphicsDeviceGLES2::CreateIndexBuffer(BufferFormat bufferFormat, int length)
+IndexBuffer* GraphicsDeviceGL::CreateIndexBuffer(BufferFormat bufferFormat, int length)
 {
     IndexBuffer* indexBuffer = GraphicsDevice::CreateIndexBuffer(bufferFormat, length);
     
@@ -241,7 +247,7 @@ IndexBuffer* GraphicsDeviceGLES2::CreateIndexBuffer(BufferFormat bufferFormat, i
     return indexBuffer;
 }
 
-void GraphicsDeviceGLES2::DestroyIndexBuffer(IndexBuffer* indexBuffer)
+void GraphicsDeviceGL::DestroyIndexBuffer(IndexBuffer* indexBuffer)
 {
     GLuint buffer = _IndexBuffers[indexBuffer];
     glDeleteBuffers(1, &buffer);
@@ -252,7 +258,7 @@ void GraphicsDeviceGLES2::DestroyIndexBuffer(IndexBuffer* indexBuffer)
     GraphicsDevice::DestroyIndexBuffer(indexBuffer);
 }
 
-IndexBuffer* GraphicsDeviceGLES2::GetBoundIndexBuffer()
+IndexBuffer* GraphicsDeviceGL::GetBoundIndexBuffer()
 {
     IndexReverseMap::iterator it = _IndexReverseBuffers.find(_State->boundIndexBuffer);
     
@@ -262,7 +268,7 @@ IndexBuffer* GraphicsDeviceGLES2::GetBoundIndexBuffer()
     return 0;
 }
 
-IndexBuffer* GraphicsDeviceGLES2::BindIndexBuffer(IndexBuffer* indexBuffer)
+IndexBuffer* GraphicsDeviceGL::BindIndexBuffer(IndexBuffer* indexBuffer)
 {
     GLuint indexBufferId = indexBuffer ? _IndexBuffers[indexBuffer] : 0;
     
@@ -277,12 +283,12 @@ IndexBuffer* GraphicsDeviceGLES2::BindIndexBuffer(IndexBuffer* indexBuffer)
     return previousBuffer;
 }
 
-void GraphicsDeviceGLES2::LockIndexBuffer(IndexBuffer* indexBuffer)
+void GraphicsDeviceGL::LockIndexBuffer(IndexBuffer* indexBuffer)
 {
     GraphicsDevice::LockIndexBuffer(indexBuffer);
 }
 
-void GraphicsDeviceGLES2::UnlockIndexBuffer(IndexBuffer* indexBuffer, int numElements)
+void GraphicsDeviceGL::UnlockIndexBuffer(IndexBuffer* indexBuffer, int numElements)
 {
     if (numElements == 0)
         return;
@@ -295,14 +301,14 @@ void GraphicsDeviceGLES2::UnlockIndexBuffer(IndexBuffer* indexBuffer, int numEle
     BindIndexBuffer(previousBuffer);
 }
     
-Texture* GraphicsDeviceGLES2::CreateTexture()
+Texture* GraphicsDeviceGL::CreateTexture()
 {
-    TextureGLES2* texture = new TextureGLES2(this);
+    TextureGL* texture = new TextureGL(this);
     _Textures.push_back(texture);
     return texture;
 }
 
-void GraphicsDeviceGLES2::DestroyTexture(Texture* texture)
+void GraphicsDeviceGL::DestroyTexture(Texture* texture)
 {
     for (TextureList::iterator it = _Textures.begin(); it != _Textures.end(); ++it)
     {
@@ -315,20 +321,20 @@ void GraphicsDeviceGLES2::DestroyTexture(Texture* texture)
     }
 }
 
-Texture* GraphicsDeviceGLES2::GetBoundTexture()
+Texture* GraphicsDeviceGL::GetBoundTexture()
 {
     for (TextureList::iterator it = _Textures.begin(); it != _Textures.end(); ++it)
     {
-        if ((*it)->_Texture == _State->boundTexture)
+        if (static_cast<TextureGL*>(*it)->_Texture == _State->boundTexture)
             return *it;
     }
     
     return 0;
 }
     
-Texture* GraphicsDeviceGLES2::BindTexture(Texture* texture)
+Texture* GraphicsDeviceGL::BindTexture(Texture* texture)
 {
-    GLuint textureId = texture ? static_cast<TextureGLES2*>(texture)->_Texture : 0;
+    GLuint textureId = texture ? static_cast<TextureGL*>(texture)->_Texture : 0;
     
     Texture* previousTexture = GetBoundTexture();
     
@@ -341,14 +347,14 @@ Texture* GraphicsDeviceGLES2::BindTexture(Texture* texture)
     return previousTexture;
 }
 
-ShaderProgram* GraphicsDeviceGLES2::CreateProgram()
+ShaderProgram* GraphicsDeviceGL::CreateProgram()
 {
-    ShaderProgramGLES2* program = new ShaderProgramGLES2(this);
+    ShaderProgramGL* program = new ShaderProgramGL(this);
     _Programs.push_back(program);
     return program;
 }
 
-void GraphicsDeviceGLES2::DestroyProgram(ShaderProgram* program)
+void GraphicsDeviceGL::DestroyProgram(ShaderProgram* program)
 {
     for (ProgramList::iterator it = _Programs.begin(); it != _Programs.end(); ++it)
     {
@@ -361,23 +367,23 @@ void GraphicsDeviceGLES2::DestroyProgram(ShaderProgram* program)
     }
 }
 
-ShaderProgram* GraphicsDeviceGLES2::GetBoundProgram()
+ShaderProgram* GraphicsDeviceGL::GetBoundProgram()
 {
     for (ProgramList::iterator it = _Programs.begin(); it != _Programs.end(); ++it)
     {
-        if (static_cast<ShaderProgramGLES2*>(*it)->_Program == _State->boundProgram)
+        if (static_cast<ShaderProgramGL*>(*it)->_Program == _State->boundProgram)
             return *it;
     }
     
     return 0;
 }
 
-ShaderProgram* GraphicsDeviceGLES2::BindProgram(ShaderProgram* program)
+ShaderProgram* GraphicsDeviceGL::BindProgram(ShaderProgram* program)
 {
-    GLuint programId = program ? static_cast<ShaderProgramGLES2*>(program)->_Program : 0;
-    ShaderProgramGLES2* previousProgram = static_cast<ShaderProgramGLES2*>(GetBoundProgram());
+    GLuint programId = program ? static_cast<ShaderProgramGL*>(program)->_Program : 0;
+    ShaderProgramGL* previousProgram = static_cast<ShaderProgramGL*>(GetBoundProgram());
     
-    if (static_cast<ShaderProgramGLES2*>(program)->_Program != _State->boundProgram)
+    if (static_cast<ShaderProgramGL*>(program)->_Program != _State->boundProgram)
     {
         glUseProgram(programId);
         _State->boundProgram = programId;
@@ -386,7 +392,7 @@ ShaderProgram* GraphicsDeviceGLES2::BindProgram(ShaderProgram* program)
     return previousProgram;
 }
 
-void GraphicsDeviceGLES2::SetState(State state, bool enable)
+void GraphicsDeviceGL::SetState(State state, bool enable)
 {
     GLenum glState;
     
@@ -414,7 +420,7 @@ void GraphicsDeviceGLES2::SetState(State state, bool enable)
     }
 }
 
-void GraphicsDeviceGLES2::SetBlendMode(Blend source, Blend destination)
+void GraphicsDeviceGL::SetBlendMode(Blend source, Blend destination)
 {
     GLenum glSource;
     GLenum glDest;
@@ -448,17 +454,17 @@ void GraphicsDeviceGLES2::SetBlendMode(Blend source, Blend destination)
     glBlendFunc(glSource, glDest);
 }
 
-void GraphicsDeviceGLES2::SetViewport(glm::vec4 viewport)
+void GraphicsDeviceGL::SetViewport(glm::vec4 viewport)
 {
     glViewport(viewport.x, viewport.y, viewport.z, viewport.w);
 }
 
-void GraphicsDeviceGLES2::SetScissor(glm::vec4 scissor)
+void GraphicsDeviceGL::SetScissor(glm::vec4 scissor)
 {
     glScissor(scissor.x, scissor.y, scissor.z, scissor.w);
 }
 
-void GraphicsDeviceGLES2::DrawElements(ElementType elementType, int num)
+void GraphicsDeviceGL::DrawElements(ElementType elementType, int num)
 {
     GLuint type;
     

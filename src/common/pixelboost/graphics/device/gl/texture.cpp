@@ -1,23 +1,23 @@
 #include "pixelboost/graphics/device/device.h"
 
-#ifdef PIXELBOOST_GRAPHICS_OPENGLES2
+#ifdef PIXELBOOST_GRAPHICS_OPENGL
 
-#include "pixelboost/graphics/device/gles2/texture.h"
+#include "pixelboost/graphics/device/gl/texture.h"
 
 using namespace pb;
 
-TextureGLES2::TextureGLES2(GraphicsDeviceGLES2* device)
+TextureGL::TextureGL(GraphicsDeviceGL* device)
     : _Device(device)
 {
     
 }
 
-TextureGLES2::~TextureGLES2()
+TextureGL::~TextureGL()
 {
     glDeleteTextures(1, &_Texture);
 }
 
-void TextureGLES2::LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format)
+void TextureGL::LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format)
 {
     if (format != kTextureFormatRGBA)
     {
@@ -52,7 +52,7 @@ void TextureGLES2::LoadFromBytes(const unsigned char* data, int width, int heigh
     _Size = glm::vec2(width, height);
 }
 
-void TextureGLES2::Bind(int unit)
+void TextureGL::Bind(int unit)
 {
     _Device->BindTexture(this);
 }

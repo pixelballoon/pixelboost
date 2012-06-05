@@ -107,13 +107,15 @@ private:
 }
 
 #ifdef PIXELBOOST_PLATFORM_IOS
+    #define PIXELBOOST_GRAPHICS_OPENGL
     #define PIXELBOOST_GRAPHICS_OPENGLES2
-    #include "pixelboost/graphics/device/gles2/device.h"
+    #include "pixelboost/graphics/device/gl/device.h"
 #endif
 
 #ifdef PIXELBOOST_PLATFORM_OSX
+    #define PIXELBOOST_GRAPHICS_OPENGL
     #define PIXELBOOST_GRAPHICS_OPENGL2
-    #include "pixelboost/graphics/device/gl2/device.h"
+    #include "pixelboost/graphics/device/gl/device.h"
 #endif
 
 #endif

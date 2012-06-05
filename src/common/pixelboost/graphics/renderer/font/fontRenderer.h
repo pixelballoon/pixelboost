@@ -31,9 +31,9 @@ namespace pb
         void LoadFont(const std::string& fontName, bool createMips=true);
         
         virtual void Update(float time);
-        virtual void Render(RenderLayer* layer);
+        virtual void Render(int count, Renderable* renderables, Viewport* viewport, EffectPass* effectPass);
         
-        bool AttachToRenderer(RenderLayer* layer, const std::string& fontName, const std::string& string, glm::vec2 position, FontAlign alignment = kFontAlignCenter, float size = 1.f, float rotation = 0.f, glm::vec4 color = glm::vec4(1.f, 1.f, 1.f, 1.f));
+        //bool AttachToRenderer(RenderLayer* layer, const std::string& fontName, const std::string& string, glm::vec2 position, FontAlign alignment = kFontAlignCenter, float size = 1.f, float rotation = 0.f, glm::vec4 color = glm::vec4(1.f, 1.f, 1.f, 1.f));
         
         float MeasureString(const std::string& fontName, const std::string& string, float size);
     

@@ -29,7 +29,7 @@ glm::vec2 Touch::GetScreenPosition()
 
 glm::vec2 Touch::GetWorldPosition(OrthographicCamera* camera)
 {
-	Vec2 position = _Position;
+    glm::vec2 position = _Position;
     
     position[0] = position[0] - ScreenHelpers::GetScreenResolution()[0]/2;
     position[1] = ScreenHelpers::GetScreenResolution()[1]/2 - position[1];
@@ -38,7 +38,7 @@ glm::vec2 Touch::GetWorldPosition(OrthographicCamera* camera)
 	position[1] /= ScreenHelpers::GetDpu();
     
     position /= camera->Scale;
-    position += camera->Position;
+    position += glm::vec2(camera->Position.x, camera->Position.y);
 	
 	return position;
 }
@@ -71,7 +71,7 @@ void TouchManager::RemoveTouchHandler(TouchHandler* handler)
     _HandlersToRemove.insert(handler);
 }
 
-void TouchManager::AddTouch(void* uiTouch, Vec2 position)
+void TouchManager::AddTouch(void* uiTouch, glm::vec2 position)
 {
     ClearTouchHandlers();
     
@@ -95,7 +95,7 @@ void TouchManager::RemoveTouch(void* touch)
 	}
 }
 
-void TouchManager::UpdateTouch(void* uiTouch, Vec2 position)
+void TouchManager::UpdateTouch(void* uiTouch, glm::vec2 position)
 {
     ClearTouchHandlers();
     

@@ -2,9 +2,16 @@
 
 #include "pixelboost/graphics/device/device.h"
 
-#ifdef PIXELBOOST_GRAPHICS_OPENGL2
+#ifdef PIXELBOOST_GRAPHICS_OPENGL
 
+#ifdef PIXELBOOST_GRAPHICS_OPENGLES2
+#include <OpenGLES/ES2/gl.h>
+#include <OpenGLES/ES2/glext.h>
+#endif
+
+#ifdef PIXELBOOST_GRAPHICS_OPENGL2
 #include <OpenGL/gl.h>
+#endif
 
 #include <map>
 #include <vector>
@@ -15,13 +22,14 @@ namespace pb
 struct DeviceState;
 class IndexBuffer;
 class Texture;
+class TextureGLES2;
 class VertexBuffer;
     
-class GraphicsDeviceGL2 : public GraphicsDevice
+class GraphicsDeviceGL : public GraphicsDevice
 {
 public:
-    GraphicsDeviceGL2();
-    virtual ~GraphicsDeviceGL2();
+    GraphicsDeviceGL();
+    virtual ~GraphicsDeviceGL();
     
 public:
     virtual unsigned char* CaptureRenderBuffer();
@@ -47,14 +55,27 @@ public:
     virtual Texture* GetBoundTexture();
     virtual Texture* BindTexture(Texture* texture);
     
+    virtual ShaderProgram* CreateProgram();
+    virtual void DestroyProgram(ShaderProgram* program);
+    virtual ShaderProgram* GetBoundProgram();
+    virtual ShaderProgram* BindProgram(ShaderProgram* program);
+    
+    virtual void SetState(State state, bool enable);
+    virtual void SetBlendMode(Blend source, Blend destination);
+    
+    virtual void SetViewport(glm::vec4 viewport);
+    virtual void SetScissor(glm::vec4 scissor);
+    
 public:
     virtual void DrawElements(ElementType elementType, int num);
     
 private:
     DeviceState* _State;
     
+    typedef std::vector<ShaderProgram*> ProgramList;
     typedef std::vector<Texture*> TextureList;
     
+    ProgramList _Programs;
     TextureList _Textures;
     
     typedef std::map<IndexBuffer*, GLuint> IndexMap;

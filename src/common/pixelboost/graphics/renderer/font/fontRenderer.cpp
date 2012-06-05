@@ -170,7 +170,7 @@ void FontRenderer::Update(float time)
     _Instances.clear();
 }
 
-void FontRenderer::Render(RenderLayer* layer)
+void FontRenderer::Render(int count, Renderable* renderables, Viewport* viewport, EffectPass* effectPass)
 {
     /*
     InstanceList& instances = _Instances[layer];
@@ -286,6 +286,7 @@ void FontRenderer::Render(RenderLayer* layer)
     */
 }
 
+/*
 bool FontRenderer::AttachToRenderer(RenderLayer* layer, const std::string& fontName, const std::string& string, glm::vec2 position, FontAlign alignment, float size, float rotation, glm::vec4 color)
 {
     FontInstance instance;
@@ -302,6 +303,7 @@ bool FontRenderer::AttachToRenderer(RenderLayer* layer, const std::string& fontN
     
     return true;
 }
+*/
 
 float FontRenderer::MeasureString(const std::string& fontName, const std::string& string, float size)
 {

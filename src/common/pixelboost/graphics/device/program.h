@@ -6,6 +6,7 @@
 #include "sigslot/delegate.h"
 
 #include "pixelboost/data/json/reader.h"
+#include "pixelboost/graphics/device/device.h"
 
 namespace pb
 {
@@ -40,6 +41,6 @@ public:
     
 }
 
-#ifdef PIXELBOOST_GRAPHICS_OPENGLES2
-#include "pixelboost/graphics/device/gles2/program.h"
+#ifdef PIXELBOOST_GRAPHICS_OPENGL
+#include "pixelboost/graphics/device/gl/program.h"
 #endif
