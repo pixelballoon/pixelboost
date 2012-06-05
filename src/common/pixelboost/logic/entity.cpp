@@ -87,6 +87,8 @@ void Entity::SendMessage(Message& message)
     {
         handlerList->second(_Uid, message);
     }
+    
+    HandleMessage(message);
 }
 
 void Entity::RegisterMessageHandler(Uid messageType, sigslot::Delegate2<Uid, Message&> handler)
@@ -97,4 +99,9 @@ void Entity::RegisterMessageHandler(Uid messageType, sigslot::Delegate2<Uid, Mes
 void Entity::UnregisterMessageHandler(Uid messageType, sigslot::Delegate2<Uid, Message&> handler)
 {
     _MessageHandlers[messageType].Disconnect(handler);
+}
+
+void Entity::HandleMessage(Message& message)
+{
+    
 }

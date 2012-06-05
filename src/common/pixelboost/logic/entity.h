@@ -49,6 +49,9 @@ public:
     void UnregisterMessageHandler(Uid messageType, MessageHandler handler);
     
 private:
+    void HandleMessage(Message& message);
+    
+private:
     typedef std::map<Uid, sigslot::Signal2<Uid, Message&> > MessageHandlers;
     typedef std::map<Uid, ComponentList> ComponentMap;
     
