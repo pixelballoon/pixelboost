@@ -13,7 +13,7 @@ Entity::Entity(Uid uid)
 
 Entity::~Entity()
 {
-    
+    RemoveAllComponents();
 }
 
 Uid Entity::GetUid()
@@ -54,6 +54,19 @@ void Entity::RemoveComponent(Component* component)
             }
         }
     }
+}
+
+void Entity::RemoveAllComponents()
+{
+    for (ComponentMap::iterator groupIt = _Components.begin(); groupIt != _Components.end(); ++groupIt)
+    {
+        for (ComponentList::iterator componentIt = groupIt->second.begin(); componentIt != groupIt->second.end(); ++componentIt)
+        {
+            delete *componentIt;
+        }
+    }
+    
+    _Components.clear();
 }
 
 Entity::ComponentList* Entity::GetComponentsByType(Uid componentType)

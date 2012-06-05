@@ -39,6 +39,8 @@ public:
 public:
     Uid AddComponent(Component* component);
     void RemoveComponent(Component* component);
+    void RemoveAllComponents();
+    
     ComponentList* GetComponentsByType(Uid componentType);
     
     void SendMessage(Message& message);
