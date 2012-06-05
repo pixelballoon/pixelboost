@@ -18,6 +18,7 @@ public:
     virtual ~SpriteComponent();
     
     Uid GetType();
+    static Uid GetStaticType();
     
     void SetLayer(int layer);
     void SetSprite(const std::string& sprite);

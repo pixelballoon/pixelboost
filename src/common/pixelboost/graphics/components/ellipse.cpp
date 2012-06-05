@@ -17,6 +17,8 @@ EllipseComponent::EllipseComponent(Entity* parent)
 
 EllipseComponent::~EllipseComponent()
 {
+    GetParent()->UnregisterMessageHandler(RenderMessage::GetStaticType(), sigslot::Delegate2<Uid, Message&>(this, &EllipseComponent::OnRender));
+    
     delete _Renderable;
 }
 

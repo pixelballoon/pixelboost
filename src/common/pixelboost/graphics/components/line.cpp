@@ -17,6 +17,8 @@ LineComponent::LineComponent(Entity* parent)
 
 LineComponent::~LineComponent()
 {
+    GetParent()->UnregisterMessageHandler(RenderMessage::GetStaticType(), sigslot::Delegate2<Uid, Message&>(this, &LineComponent::OnRender));
+    
     delete _Renderable;
 }
 

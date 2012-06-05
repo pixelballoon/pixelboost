@@ -17,6 +17,8 @@ RectangleComponent::RectangleComponent(Entity* parent)
 
 RectangleComponent::~RectangleComponent()
 {
+    GetParent()->UnregisterMessageHandler(RenderMessage::GetStaticType(), sigslot::Delegate2<Uid, Message&>(this, &RectangleComponent::OnRender));
+    
     delete _Renderable;
 }
 

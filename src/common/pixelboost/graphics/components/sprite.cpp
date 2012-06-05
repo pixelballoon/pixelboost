@@ -18,10 +18,17 @@ SpriteComponent::SpriteComponent(Entity* parent, const std::string& sprite)
 
 SpriteComponent::~SpriteComponent()
 {
+    GetParent()->UnregisterMessageHandler(RenderMessage::GetStaticType(), sigslot::Delegate2<Uid, Message&>(this, &SpriteComponent::OnRender));
     
+    delete _Renderable;
 }
 
 Uid SpriteComponent::GetType()
+{
+    return GetStaticType();
+}
+
+Uid SpriteComponent::GetStaticType()
 {
     return TypeHash("sprite");
 }
