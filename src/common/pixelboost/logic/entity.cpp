@@ -25,9 +25,11 @@ Uid Entity::GetType()
     return 0;
 }
 
-void Entity::AddComponent(Component* component)
+Uid Entity::AddComponent(Component* component)
 {
     _Components[component->GetType()].push_back(component);
+    
+    return 0;
 }
 
 void Entity::RemoveComponent(Component* component)

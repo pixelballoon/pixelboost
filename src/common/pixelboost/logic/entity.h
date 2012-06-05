@@ -24,16 +24,17 @@ public:
 
 public:
     typedef std::vector<Component*> ComponentList;
+    typedef sigslot::Delegate2<Uid, Message&> MessageHandler;
     
 public:
-    void AddComponent(Component* component);
+    Uid AddComponent(Component* component);
     void RemoveComponent(Component* component);
     ComponentList* GetComponentsByType(Uid componentType);
     
     void SendMessage(Message& message);
     
-    void RegisterMessageHandler(Uid messageType, sigslot::Delegate2<Uid, Message&> handler);
-    void UnregisterMessageHandler(Uid messageType, sigslot::Delegate2<Uid, Message&> handler);
+    void RegisterMessageHandler(Uid messageType, MessageHandler handler);
+    void UnregisterMessageHandler(Uid messageType, MessageHandler handler);
     
 private:
     typedef std::map<Uid, sigslot::Signal2<Uid, Message&> > MessageHandlers;
