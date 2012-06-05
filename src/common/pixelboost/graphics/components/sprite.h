@@ -19,6 +19,10 @@ public:
     
     Uid GetType();
     
+    void SetLayer(int layer);
+    void SetSprite(const std::string& sprite);
+    void SetTint(const glm::vec4& tint);
+    
 private:
     void OnRender(Uid sender, Message& message);
     

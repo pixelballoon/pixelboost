@@ -26,6 +26,21 @@ Uid SpriteComponent::GetType()
     return TypeHash("sprite");
 }
 
+void SpriteComponent::SetLayer(int layer)
+{
+    _Renderable->SetLayer(layer);
+}
+
+void SpriteComponent::SetSprite(const std::string& sprite)
+{
+    _Renderable->Sprite = pb::Game::Instance()->GetSpriteRenderer()->GetSprite(sprite);
+}
+
+void SpriteComponent::SetTint(const glm::vec4& tint)
+{
+    _Renderable->Tint = tint;
+}
+
 void SpriteComponent::OnRender(Uid sender, Message& message)
 {
     Renderer::Instance()->AddItem(_Renderable);
