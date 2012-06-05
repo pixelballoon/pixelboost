@@ -30,11 +30,11 @@ const glm::mat4x4& TransformComponent::GetMatrix()
 {
     if (_Dirty)
     {
-        _Matrix = glm::scale(glm::mat4x4(), _Scale);
+        _Matrix = glm::translate(glm::mat4x4(), _Position);
+        _Matrix = glm::scale(_Matrix, _Scale);
         _Matrix = glm::rotate(_Matrix, _Rotation.x, glm::vec3(1,0,0));
         _Matrix = glm::rotate(_Matrix, _Rotation.y, glm::vec3(0,1,0));
         _Matrix = glm::rotate(_Matrix, _Rotation.z, glm::vec3(0,0,1));
-        _Matrix = glm::translate(_Matrix, _Position);
     }
     
     return _Matrix;
