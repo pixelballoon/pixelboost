@@ -2,6 +2,7 @@
 #include "pixelboost/graphics/components/sprite.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
+#include "pixelboost/logic/component/transform.h"
 #include "pixelboost/logic/message/render.h"
 #include "pixelboost/logic/entity.h"
 
@@ -50,5 +51,12 @@ void SpriteComponent::SetTint(const glm::vec4& tint)
 
 void SpriteComponent::OnRender(Uid sender, Message& message)
 {
+    Entity::ComponentList* components = GetParent()->GetComponentsByType(TransformComponent::GetStaticType());
+    
+    if (components && components->size())
+    {
+        _Renderable->Transform = static_cast<TransformComponent*>(components->at(0))->GetMatrix();
+    }
+        
     Renderer::Instance()->AddItem(_Renderable);
 }

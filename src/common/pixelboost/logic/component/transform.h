@@ -14,13 +14,20 @@ public:
     virtual ~TransformComponent();
     
     Uid GetType();
+    static Uid GetStaticType();
     
-    const glm::mat4x4& GetTransformMatrix();
+    const glm::mat4x4& GetMatrix();
     
+    void SetTransform(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale);
+    
+    const glm::vec3& GetPosition();
     void SetPosition(const glm::vec3& position);
-    void SetRotation(const glm::vec3& rotation);
-    void SetScale(const glm::vec3& scale);
     
+    const glm::vec3& GetRotation();
+    void SetRotation(const glm::vec3& rotation);
+    
+    const glm::vec3& GetScale();
+    void SetScale(const glm::vec3& scale);
     
 private:
     bool _Dirty;
