@@ -434,7 +434,7 @@ void GraphicsDeviceGL::SetBlendMode(Blend source, Blend destination)
             glSource = GL_ONE_MINUS_SRC_ALPHA;
             break;
         case kBlendSourceAlpha:
-            glSource = GL_BLEND_SRC_ALPHA;
+            glSource = GL_SRC_ALPHA;
             break;
     }
     
@@ -447,7 +447,7 @@ void GraphicsDeviceGL::SetBlendMode(Blend source, Blend destination)
             glDest = GL_ONE_MINUS_SRC_ALPHA;
             break;
         case kBlendSourceAlpha:
-            glDest = GL_BLEND_SRC_ALPHA;
+            glDest = GL_SRC_ALPHA;
             break;
     }
     
