@@ -12,7 +12,10 @@ Scene::Scene()
 
 Scene::~Scene()
 {
-    
+    for (EntitySet::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
+    {
+        delete *it;
+    }
 }
 
 void Scene::Update(float time)
