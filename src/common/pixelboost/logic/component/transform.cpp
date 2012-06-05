@@ -7,6 +7,7 @@ using namespace pb;
 TransformComponent::TransformComponent(Entity* parent)
     : Component(parent)
     , _Dirty(true)
+    , _Scale(1,1,1)
 {
     
 }
