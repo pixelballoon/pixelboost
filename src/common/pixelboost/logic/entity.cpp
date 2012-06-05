@@ -6,6 +6,7 @@ using namespace pb;
 
 Entity::Entity(Uid uid)
     : _Uid(uid)
+    , _State(kEntityCreated)
 {
     
 }
@@ -23,6 +24,11 @@ Uid Entity::GetUid()
 Uid Entity::GetType()
 {
     return 0;
+}
+
+Entity::EntityState Entity::GetState()
+{
+    return _State;
 }
 
 Uid Entity::AddComponent(Component* component)

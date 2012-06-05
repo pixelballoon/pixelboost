@@ -19,8 +19,18 @@ public:
     Entity(Uid uid);
     virtual ~Entity();
     
+public:
+    enum EntityState
+    {
+        kEntityCreated,
+        kEntityKilled
+    };
+    
+public:
     Uid GetUid();
-    virtual Uid GetType();    
+    virtual Uid GetType();
+
+    EntityState GetState();
 
 public:
     typedef std::vector<Component*> ComponentList;
@@ -43,6 +53,7 @@ private:
     ComponentMap _Components;
     MessageHandlers _MessageHandlers;
     
+    EntityState _State;
     Uid _Uid;
 };
     
