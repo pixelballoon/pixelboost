@@ -151,10 +151,8 @@ PrimitiveRenderer::~PrimitiveRenderer()
     Renderer::Instance()->GetEffectManager()->UnloadEffect("/default/effects/primitive.fx");
 }
 
-void PrimitiveRenderer::Render(int count, Renderable* renderables, Viewport* viewport, EffectPass* effectPass)
+void PrimitiveRenderer::Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass)
 {
-    PrimitiveRenderable* primitives = static_cast<PrimitiveRenderable*>(renderables);
-    
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
@@ -167,7 +165,7 @@ void PrimitiveRenderer::Render(int count, Renderable* renderables, Viewport* vie
     
     for (int i=0; i < count; i++)
     {
-        PrimitiveRenderable& primitive = primitives[i];
+        PrimitiveRenderable& primitive = *static_cast<PrimitiveRenderable*>(renderables[i]);
         
         glm::mat4x4 viewProjectionMatrix = viewport->GetCamera()->ProjectionMatrix * viewport->GetCamera()->ViewMatrix;
         effectPass->GetShaderProgram()->SetUniform("diffuseColor", primitive.Color);

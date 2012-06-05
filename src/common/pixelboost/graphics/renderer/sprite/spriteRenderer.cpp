@@ -85,7 +85,7 @@ SpriteRenderer::~SpriteRenderer()
     pb::GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
 }
     
-void SpriteRenderer::Render(int count, Renderable* renderables, Viewport* viewport, EffectPass* effectPass)
+void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass)
 {
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
@@ -101,9 +101,9 @@ void SpriteRenderer::Render(int count, Renderable* renderables, Viewport* viewpo
     
     for (int i=0; i<count; i++)
     {
-        SpriteRenderable& renderable = static_cast<SpriteRenderable&>(renderables[i]);
         
         glm::vec4 uv(0,0,1,1);
+        SpriteRenderable& renderable = *static_cast<SpriteRenderable*>(renderables[i]);
         
         Sprite* sprite = renderable.Sprite;
         if (!sprite)

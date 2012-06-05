@@ -44,7 +44,7 @@ public:
     
 private:
     void FlushBuffer(Viewport* viewport);
-    void RenderBatch(Viewport* viewport, int count, Renderable* renderable, Effect* effect);
+    void RenderBatch(Viewport* viewport, int count, Renderable** renderable, Effect* effect);
     
     void AddRenderer(IRenderer* renderer);
     void RemoveRenderer(IRenderer* renderer);

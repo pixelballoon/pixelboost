@@ -170,7 +170,7 @@ void FontRenderer::Update(float time)
     _Instances.clear();
 }
 
-void FontRenderer::Render(int count, Renderable* renderables, Viewport* viewport, EffectPass* effectPass)
+void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass)
 {
     /*
     InstanceList& instances = _Instances[layer];

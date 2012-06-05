@@ -89,7 +89,7 @@ void Renderer::FlushBuffer(Viewport* viewport)
         int start = 0;
         int count = 0;
         
-        for (int i=0; i < _Renderables.size(); i++)
+        for (int i=0; i < renderables.size(); i++)
         {
             Uid newType = renderables[i]->GetRenderableType();
             Effect* newEffect = renderables[i]->GetEffect();
@@ -98,7 +98,7 @@ void Renderer::FlushBuffer(Viewport* viewport)
             {
                 count++;
             } else {
-                RenderBatch(viewport, count, renderables[start], effect);
+                RenderBatch(viewport, count, &renderables[start], effect);
                 start = i;
                 count = 1;
                 type = newType;
@@ -108,19 +108,19 @@ void Renderer::FlushBuffer(Viewport* viewport)
         
         if (count > 0)
         {
-            RenderBatch(viewport, count, renderables[start], effect);
+            RenderBatch(viewport, count, &renderables[start], effect);
         }
     }
     
     _Renderables.clear();
 }
 
-void Renderer::RenderBatch(Viewport* viewport, int count, Renderable* renderable, Effect* effect)
+void Renderer::RenderBatch(Viewport* viewport, int count, Renderable** renderable, Effect* effect)
 {
     if (!effect)
         return;
     
-    RenderableHandlerMap::iterator it = _RenderableHandlers.find(renderable->GetRenderableType());
+    RenderableHandlerMap::iterator it = _RenderableHandlers.find(renderable[0]->GetRenderableType());
     
     if (it != _RenderableHandlers.end())
     {
@@ -130,7 +130,7 @@ void Renderer::RenderBatch(Viewport* viewport, int count, Renderable* renderable
         {
             for (int i=0; i < count; i++)
             {
-                technique = viewport->GetTechnique(&renderable[i], effect);
+                technique = viewport->GetTechnique(renderable[i], effect);
                 
                 if (technique)
                 {

@@ -41,7 +41,7 @@ public:
 	SpriteRenderer();
 	~SpriteRenderer();
     
-    void Render(int count, Renderable* renderables, Viewport* viewport, EffectPass* effectPass);
+    void Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass);
 	
     std::shared_ptr<SpriteSheet> CreateSpriteSheet(const std::string& name);
     bool LoadSpriteSheet(const std::string& name, bool createMips=false);

@@ -85,7 +85,7 @@ public:
     PrimitiveRenderer();
     ~PrimitiveRenderer();
     
-    virtual void Render(int count, Renderable* renderables, Viewport* viewport, EffectPass* effectPass);
+    virtual void Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass);
     
 private:
     IndexBuffer* _EllipseIndexBuffer;
