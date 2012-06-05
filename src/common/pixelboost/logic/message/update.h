@@ -8,7 +8,7 @@ namespace pb
 class UpdateMessage : public Message
 {
 public:
-    UpdateMessage(Uid source, float delta);
+    UpdateMessage(float delta);
     virtual ~UpdateMessage();
     
     Uid GetType();

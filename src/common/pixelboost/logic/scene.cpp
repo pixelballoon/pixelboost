@@ -17,7 +17,7 @@ Scene::~Scene()
 
 void Scene::Update(float time)
 {
-    UpdateMessage message(0, time);
+    UpdateMessage message(time);
     
     for (EntitySet::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
     {
@@ -27,7 +27,7 @@ void Scene::Update(float time)
 
 void Scene::Render(Viewport* viewport)
 {
-    RenderMessage message(0, viewport);
+    RenderMessage message(viewport);
     
     for (EntitySet::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
     {

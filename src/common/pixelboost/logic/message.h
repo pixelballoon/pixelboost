@@ -5,16 +5,20 @@
 namespace pb
 {
 
+class Component;
+class Entity;
+    
 class Message
 {
 public:
-    Message(Uid source);
+    Message(Entity* entity, Component* component);
     virtual ~Message();
     
     virtual Uid GetType() = 0;
     
 private:
-    Uid _Source;
+    Entity* _Entity;
+    Component* _Component;
 };
     
 }

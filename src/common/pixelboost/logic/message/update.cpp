@@ -2,8 +2,8 @@
 
 using namespace pb;
 
-UpdateMessage::UpdateMessage(Uid source, float delta)
-    : Message(source)
+UpdateMessage::UpdateMessage(float delta)
+    : Message(0, 0)
     , _Delta(delta)
 {
     

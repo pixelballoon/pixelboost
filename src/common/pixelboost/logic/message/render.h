@@ -10,7 +10,7 @@ class Viewport;
 class RenderMessage : public Message
 {
 public:
-    RenderMessage(Uid source, Viewport* viewport);
+    RenderMessage(Viewport* viewport);
     ~RenderMessage();
     
     virtual Uid GetType();

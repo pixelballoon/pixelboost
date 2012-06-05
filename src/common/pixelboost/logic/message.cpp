@@ -2,8 +2,9 @@
 
 using namespace pb;
 
-Message::Message(Uid source)
-    : _Source(source)
+Message::Message(Entity* entity, Component* component)
+    : _Entity(entity)
+    , _Component(component)
 {
     
 }

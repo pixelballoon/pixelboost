@@ -2,8 +2,8 @@
 
 using namespace pb;
 
-RenderMessage::RenderMessage(Uid source, Viewport* viewport)
-    : Message(source)
+RenderMessage::RenderMessage(Viewport* viewport)
+    : Message(0, 0)
     , _Viewport(viewport)
 {
     
