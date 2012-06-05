@@ -6,6 +6,7 @@ namespace pb
 {
     
 class Entity;
+class Message;
 class Viewport;
     
 class Scene
@@ -19,6 +20,8 @@ public:
     
     void AddEntity(Entity* entity);
     void RemoveEntity(Entity* entity);
+    
+    void SendMessage(Message& message);
     
 private:
     typedef std::set<Entity*> EntitySet;

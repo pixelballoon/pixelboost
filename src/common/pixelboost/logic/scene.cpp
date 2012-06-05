@@ -19,20 +19,14 @@ void Scene::Update(float time)
 {
     UpdateMessage message(time);
     
-    for (EntitySet::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
-    {
-        (*it)->SendMessage(message);
-    }
+    SendMessage(message);
 }
 
 void Scene::Render(Viewport* viewport)
 {
     RenderMessage message(viewport);
     
-    for (EntitySet::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
-    {
-        (*it)->SendMessage(message);
-    }
+    SendMessage(message);
 }
 
 void Scene::AddEntity(Entity* entity)
@@ -43,4 +37,12 @@ void Scene::AddEntity(Entity* entity)
 void Scene::RemoveEntity(Entity* entity)
 {
     _Entities.erase(entity);
+}
+
+void Scene::SendMessage(Message& message)
+{
+    for (EntitySet::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
+    {
+        (*it)->SendMessage(message);
+    }
 }
