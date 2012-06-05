@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "glm/glm.hpp"
+
 #include "pixelboost/graphics/renderer/common/renderable.h"
 #include "pixelboost/logic/component.h"
 
@@ -19,6 +21,8 @@ public:
     
     Uid GetType();
     static Uid GetStaticType();
+    
+    glm::vec2 GetSize();
     
     void SetLayer(int layer);
     void SetSprite(const std::string& sprite);

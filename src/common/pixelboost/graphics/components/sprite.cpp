@@ -1,6 +1,7 @@
 #include "pixelboost/framework/game.h"
 #include "pixelboost/graphics/components/sprite.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
+#include "pixelboost/graphics/renderer/sprite/sprite.h"
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
 #include "pixelboost/logic/component/transform.h"
 #include "pixelboost/logic/message/render.h"
@@ -32,6 +33,14 @@ Uid SpriteComponent::GetType()
 Uid SpriteComponent::GetStaticType()
 {
     return TypeHash("sprite");
+}
+
+glm::vec2 SpriteComponent::GetSize()
+{
+    if (_Renderable->Sprite)
+        return _Renderable->Sprite->_Dimension;
+    
+    return glm::vec2(0,0);
 }
 
 void SpriteComponent::SetLayer(int layer)
