@@ -421,8 +421,9 @@ void ParticleRenderer::Update(float time)
     }
 }
 
-void ParticleRenderer::Render(RenderLayer* layer)
+void ParticleRenderer::Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass)
 {
+    /*
     EmitterListMap::iterator emitterListIt = _Emitters.find(layer);
     if (emitterListIt == _Emitters.end())
         return;
@@ -431,6 +432,7 @@ void ParticleRenderer::Render(RenderLayer* layer)
     {
         (*it)->Render();
     }
+    */
 }
 
 #endif

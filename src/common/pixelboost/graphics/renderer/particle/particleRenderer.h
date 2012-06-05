@@ -165,7 +165,7 @@ public:
     void DestroyEmitter(ParticleEmitter* emitter);
     
     virtual void Update(float time);
-    virtual void Render(RenderLayer* layer);
+    virtual void Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass);
     
 private:
     typedef std::vector<ParticleEmitter*> EmitterList;
