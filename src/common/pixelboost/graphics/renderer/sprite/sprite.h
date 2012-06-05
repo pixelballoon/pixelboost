@@ -41,9 +41,6 @@ private:
 class Sprite
 {
 public:
-    glm::vec4 GetUV();
-    
-public:
     SpriteSheet* _Sheet;
 
     glm::vec2 _Dimension;

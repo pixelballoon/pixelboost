@@ -105,7 +105,7 @@ void SpriteRenderer::Render(int count, Renderable* renderables, Viewport* viewpo
         
         glm::vec4 uv(0,0,1,1);
         
-        Sprite* sprite = GetSprite(renderable.Sprite);
+        Sprite* sprite = renderable.Sprite;
         if (!sprite)
             continue;
         

@@ -286,25 +286,6 @@ void FontRenderer::Render(int count, Renderable* renderables, Viewport* viewport
     */
 }
 
-/*
-bool FontRenderer::AttachToRenderer(RenderLayer* layer, const std::string& fontName, const std::string& string, glm::vec2 position, FontAlign alignment, float size, float rotation, glm::vec4 color)
-{
-    FontInstance instance;
-    
-    instance._Font = fontName;
-    instance._String = string;
-    instance._Position = position;
-    instance._Alignment = alignment;
-    instance._Rotation = rotation;
-    instance._Size = size;
-    instance._Color = color;
-    
-    _Instances[layer].push_back(instance);
-    
-    return true;
-}
-*/
-
 float FontRenderer::MeasureString(const std::string& fontName, const std::string& string, float size)
 {
     Font* font;

@@ -1,3 +1,4 @@
+#include "pixelboost/framework/game.h"
 #include "pixelboost/graphics/components/sprite.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
@@ -10,7 +11,7 @@ SpriteComponent::SpriteComponent(Entity* parent, const std::string& sprite)
     : Component(parent)
 {
     _Renderable = new SpriteRenderable(parent->GetUid());
-    _Renderable->Sprite = sprite;
+    _Renderable->Sprite = pb::Game::Instance()->GetSpriteRenderer()->GetSprite(sprite);
     
     parent->RegisterMessageHandler(RenderMessage::GetStaticType(), sigslot::Delegate2<Uid, Message&>(this, &SpriteComponent::OnRender));
 }

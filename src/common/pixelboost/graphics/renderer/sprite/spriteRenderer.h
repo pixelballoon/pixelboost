@@ -18,17 +18,7 @@ class IndexBuffer;
 class SpriteSheet;
 class Sprite;
 class VertexBuffer;
-    
-enum BlendMode
-{
-    kBlendModeNormal,
-    kBlendModeMultiply,
-    kBlendModeScreen,
-    kBlendModeAdd,
-    kBlendModeOverlay,
-    kBlendModeUnknown,
-};
-    
+
 class SpriteRenderable : public Renderable
 {
 public:
@@ -39,7 +29,7 @@ public:
     
     virtual Effect* GetEffect();
     
-    std::string Sprite;
+    Sprite* Sprite;
     glm::mat4x4 Transform;
     glm::vec4 Tint;
     glm::vec4 Crop;

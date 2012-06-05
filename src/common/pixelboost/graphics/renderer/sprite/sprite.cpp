@@ -132,9 +132,4 @@ Sprite* SpriteSheet::GetSprite(const std::string& name)
     return it->second;
 }
 
-glm::vec4 Sprite::GetUV()
-{
-    return glm::vec4(0, 0, 1, 1);
-}
-
 #endif
