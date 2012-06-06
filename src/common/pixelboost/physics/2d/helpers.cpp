@@ -2,28 +2,28 @@
 
 #include "pixelboost/data/json/reader.h"
 #include "pixelboost/file/fileHelpers.h"
-#include "pixelboost/physics/helpers.h"
+#include "pixelboost/physics/2d/helpers.h"
 
 #include "Box2D/Box2D.h"
 
 using namespace pb;
 
-Box2DHelpers::FixtureCollection Box2DHelpers::LoadDefinition(const std::string& filename)
+FixtureCollection2D* PhysicsHelpers2D::LoadDefinition(const std::string& filename)
 {
     std::string definitionString = pb::FileHelpers::FileToString(pb::FileHelpers::GetRootPath()+"/data/physics/"+filename+".phy");
     
     json::Array fixtures;
     
     if (!json::Reader::Read(fixtures, definitionString))
-        return FixtureCollection();
+        return 0;
     
-    FixtureCollection fixtureCollection;
+    FixtureCollection2D* fixtureCollection = new FixtureCollection2D();
     
     for (json::Array::iterator fixtureIt = fixtures.Begin(); fixtureIt != fixtures.End(); ++fixtureIt)
     {
         json::Object fixture = *fixtureIt;
         
-        FixtureDefinition fixtureDefinition;
+        FixtureDefinition2D fixtureDefinition;
         
         json::Array& hulls = fixture["hulls"];
         
@@ -49,17 +49,17 @@ Box2DHelpers::FixtureCollection Box2DHelpers::LoadDefinition(const std::string& 
                 shape.Set(vertices, elements.Size());
                 delete[] vertices;
                 
-                fixtureDefinition.push_back(shape);
+                fixtureDefinition.Shapes.push_back(shape);
             }
         }
         
-        fixtureCollection[(json::String)fixture["name"]] = fixtureDefinition;
+        fixtureCollection->Definitions[(json::String)fixture["name"]] = fixtureDefinition;
     }
     
     return fixtureCollection;
 }
 
-b2Body* Box2DHelpers::CreateBodyFromDefinition(b2World* world, const FixtureDefinition& fixtureDef, const glm::vec2& position, void* userData, glm::vec2 scale)
+b2Body* PhysicsHelpers2D::CreateBodyFromDefinition(b2World* world, const FixtureDefinition2D& fixtureDef, const glm::vec2& position, void* userData, glm::vec2 scale)
 {
     b2BodyDef bodyDef;
     bodyDef.type = b2_staticBody;
@@ -70,7 +70,7 @@ b2Body* Box2DHelpers::CreateBodyFromDefinition(b2World* world, const FixtureDefi
     
     b2Body* body = world->CreateBody(&bodyDef);
     
-    for (std::vector<b2PolygonShape>::const_iterator it = fixtureDef.begin(); it != fixtureDef.end(); ++it)
+    for (std::vector<b2PolygonShape>::const_iterator it = fixtureDef.Shapes.begin(); it != fixtureDef.Shapes.end(); ++it)
     {
         poly = *it;
         for (int i=0; i<b2_maxPolygonVertices; i++)
