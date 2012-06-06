@@ -4,7 +4,7 @@
 #include "pixelboost/graphics/renderer/sprite/sprite.h"
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
 #include "pixelboost/logic/component/transform.h"
-#include "pixelboost/logic/message/update.h"
+#include "pixelboost/logic/message/transform.h"
 #include "pixelboost/logic/system/graphics/render/render.h"
 #include "pixelboost/logic/entity.h"
 #include "pixelboost/logic/scene.h"
@@ -19,12 +19,14 @@ SpriteComponent::SpriteComponent(Entity* parent, const std::string& sprite)
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
     
-    GetParent()->RegisterMessageHandler(UpdateMessage::GetStaticType(), Entity::MessageHandler(this, &SpriteComponent::OnUpdate));
+    GetParent()->RegisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &SpriteComponent::OnTransformChanged));
+    
+    UpdateTransform();
 }
 
 SpriteComponent::~SpriteComponent()
 {
-    GetParent()->UnregisterMessageHandler(UpdateMessage::GetStaticType(), Entity::MessageHandler(this, &SpriteComponent::OnUpdate));
+    GetParent()->UnregisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &SpriteComponent::OnTransformChanged));
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
     
@@ -64,7 +66,12 @@ void SpriteComponent::SetTint(const glm::vec4& tint)
     _Renderable->Tint = tint;
 }
 
-void SpriteComponent::OnUpdate(Uid sender, Message& message)
+void SpriteComponent::OnTransformChanged(Uid sender, Message& message)
+{
+    UpdateTransform();
+}
+
+void SpriteComponent::UpdateTransform()
 {
     TransformComponent* transform = GetParent()->GetComponentByType<TransformComponent>();    
     

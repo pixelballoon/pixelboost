@@ -1,6 +1,8 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 #include "pixelboost/logic/component/transform.h"
+#include "pixelboost/logic/message/transform.h"
+#include "pixelboost/logic/entity.h"
 
 using namespace pb;
 
@@ -46,7 +48,8 @@ void TransformComponent::SetTransform(const glm::vec3& position, const glm::vec3
     _Position = position;
     _Rotation = rotation;
     _Scale = scale;
-    _Dirty = true;
+    
+    OnChanged();
 }
 
 const glm::vec3& TransformComponent::GetPosition()
@@ -57,7 +60,8 @@ const glm::vec3& TransformComponent::GetPosition()
 void TransformComponent::SetPosition(const glm::vec3& position)
 {
     _Position = position;
-    _Dirty = true;
+    
+    OnChanged();
 }
 
 const glm::vec3& TransformComponent::GetRotation()
@@ -68,7 +72,8 @@ const glm::vec3& TransformComponent::GetRotation()
 void TransformComponent::SetRotation(const glm::vec3& rotation)
 {
     _Rotation = rotation;
-    _Dirty = true;
+    
+    OnChanged();
 }
 
 const glm::vec3& TransformComponent::GetScale()
@@ -79,5 +84,14 @@ const glm::vec3& TransformComponent::GetScale()
 void TransformComponent::SetScale(const glm::vec3& scale)
 {
     _Scale = scale;
+    
+    OnChanged();
+}
+
+void TransformComponent::OnChanged()
+{
     _Dirty = true;
+    
+    TransformChangedMessage message(GetParent(), this);
+    GetParent()->SendMessage(message);
 }

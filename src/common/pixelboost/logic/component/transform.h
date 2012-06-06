@@ -30,6 +30,8 @@ public:
     void SetScale(const glm::vec3& scale);
     
 private:
+    void OnChanged();
+    
     bool _Dirty;
     glm::mat4x4 _Matrix;
     glm::vec3 _Position;
