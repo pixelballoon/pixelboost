@@ -14,7 +14,6 @@ namespace pb
     
 class IndexBuffer;
 class ParticleModifier;
-class RenderLayer;
 class SpriteSheet;
 class VertexBuffer;
     
@@ -161,7 +160,7 @@ public:
     ParticleRenderer();
     ~ParticleRenderer();
     
-    ParticleEmitter* CreateEmitter(RenderLayer* layer, int maxParticles=50);
+    ParticleEmitter* CreateEmitter(int layer, int maxParticles=50);
     void DestroyEmitter(ParticleEmitter* emitter);
     
     virtual void Update(float time);
@@ -169,7 +168,7 @@ public:
     
 private:
     typedef std::vector<ParticleEmitter*> EmitterList;
-    typedef std::map<RenderLayer*, EmitterList> EmitterListMap;
+    typedef std::map<int, EmitterList> EmitterListMap;
     
     EmitterListMap _Emitters;
 };
