@@ -2,11 +2,14 @@
 
 #include <set>
 
+#include "pixelboost/db/definitions.h"
+
 namespace pb
 {
     
 class Entity;
 class Message;
+class SceneSystem;
 class Viewport;
     
 class Scene
@@ -18,6 +21,10 @@ public:
     void Update(float time);
     void Render(Viewport* viewport);
     
+    template <class T>T* GetSystemByType();
+    bool AddSystem(SceneSystem* system);
+    void RemoveSystem(SceneSystem* system);
+    
     void AddEntity(Entity* entity);
     void DestroyEntity(Entity* entity);
     void DestroyAllEntities();
@@ -26,8 +33,12 @@ public:
     
 private:
     typedef std::set<Entity*> EntitySet;
+    typedef std::map<Uid, SceneSystem*> SystemMap;
     
     EntitySet _Entities;
+    SystemMap _Systems;
 };
     
 }
+
+#include "pixelboost/logic/scene.inl"

@@ -29,7 +29,7 @@ public:
     void SetTint(const glm::vec4& tint);
     
 private:
-    void OnRender(Uid sender, Message& message);
+    void OnUpdate(Uid sender, Message& message);
     
     SpriteRenderable* _Renderable;
 };

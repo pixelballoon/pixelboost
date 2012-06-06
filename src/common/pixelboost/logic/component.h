@@ -6,6 +6,7 @@ namespace pb
 {
     
 class Entity;
+class Scene;
 
 class Component
 {
@@ -15,6 +16,7 @@ public:
     
     virtual Uid GetType() = 0;
     
+    Scene* GetScene();
     Entity* GetParent();
     
 private:

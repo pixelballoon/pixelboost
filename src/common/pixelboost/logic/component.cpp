@@ -14,6 +14,11 @@ Component::~Component()
 
 }
 
+Scene* Component::GetScene()
+{
+    return _Parent->GetScene();
+}
+
 Entity* Component::GetParent()
 {
     return _Parent;

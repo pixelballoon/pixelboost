@@ -24,8 +24,6 @@ public:
     void SetLine(glm::vec3 start, glm::vec3 end);
     
 private:
-    void OnRender(Uid sender, Message& message);
-    
     PrimitiveRenderableLine* _Renderable;
 };
     

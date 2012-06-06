@@ -2,8 +2,9 @@
 #include "pixelboost/graphics/components/line.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
-#include "pixelboost/logic/message/render.h"
+#include "pixelboost/logic/system/graphics/render/render.h"
 #include "pixelboost/logic/entity.h"
+#include "pixelboost/logic/scene.h"
 
 using namespace pb;
 
@@ -12,12 +13,12 @@ LineComponent::LineComponent(Entity* parent)
 {
     _Renderable = new PrimitiveRenderableLine(parent->GetUid());
     
-    parent->RegisterMessageHandler(RenderMessage::GetStaticType(), sigslot::Delegate2<Uid, Message&>(this, &LineComponent::OnRender));
+    GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
 }
 
 LineComponent::~LineComponent()
 {
-    GetParent()->UnregisterMessageHandler(RenderMessage::GetStaticType(), sigslot::Delegate2<Uid, Message&>(this, &LineComponent::OnRender));
+    GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
     
     delete _Renderable;
 }
@@ -41,9 +42,4 @@ void LineComponent::SetLine(glm::vec3 start, glm::vec3 end)
 {
     _Renderable->Start = start;
     _Renderable->End = end;
-}
-
-void LineComponent::OnRender(Uid sender, Message& message)
-{
-    pb::Renderer::Instance()->AddItem(_Renderable);
 }

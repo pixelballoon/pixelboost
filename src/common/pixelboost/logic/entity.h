@@ -28,6 +28,8 @@ public:
     };
     
 public:
+    Scene* GetScene();
+    
     Uid GetUid();
     virtual Uid GetType();
 

@@ -1,7 +1,7 @@
 #include "pixelboost/logic/entity.h"
-#include "pixelboost/logic/message/render.h"
 #include "pixelboost/logic/message/update.h"
 #include "pixelboost/logic/scene.h"
+#include "pixelboost/logic/system.h"
 
 using namespace pb;
 
@@ -31,6 +31,11 @@ void Scene::Update(float time)
         }
     }
     
+    for (SystemMap::iterator it = _Systems.begin(); it != _Systems.end(); ++it)
+    {
+        it->second->Update(this, time);
+    }
+    
     UpdateMessage message(time);
     
     SendMessage(message);
@@ -38,9 +43,32 @@ void Scene::Update(float time)
 
 void Scene::Render(Viewport* viewport)
 {
-    RenderMessage message(viewport);
+    for (SystemMap::iterator it = _Systems.begin(); it != _Systems.end(); ++it)
+    {
+        it->second->Render(this, viewport);
+    }
+}
+
+bool Scene::AddSystem(SceneSystem* system)
+{
+    SystemMap::iterator it = _Systems.find(system->GetType());
     
-    SendMessage(message);
+    if (it != _Systems.end())
+        return false;
+        
+    _Systems[system->GetType()] = system;
+    
+    return true;
+}
+
+void Scene::RemoveSystem(SceneSystem* system)
+{
+    SystemMap::iterator it = _Systems.find(system->GetType());
+    
+    if (it != _Systems.end())
+    {
+        _Systems.erase(it);
+    }
 }
 
 void Scene::AddEntity(Entity* entity)

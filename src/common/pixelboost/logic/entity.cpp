@@ -17,6 +17,11 @@ Entity::~Entity()
     RemoveAllComponents();
 }
 
+Scene* Entity::GetScene()
+{
+    return _Scene;
+}
+
 Uid Entity::GetUid()
 {
     return _Uid;

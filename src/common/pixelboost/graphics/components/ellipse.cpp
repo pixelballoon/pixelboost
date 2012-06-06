@@ -2,8 +2,9 @@
 #include "pixelboost/graphics/components/ellipse.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
-#include "pixelboost/logic/message/render.h"
+#include "pixelboost/logic/system/graphics/render/render.h"
 #include "pixelboost/logic/entity.h"
+#include "pixelboost/logic/scene.h"
 
 using namespace pb;
 
@@ -12,12 +13,12 @@ EllipseComponent::EllipseComponent(Entity* parent)
 {
     _Renderable = new PrimitiveRenderableEllipse(parent->GetUid());
     
-    parent->RegisterMessageHandler(RenderMessage::GetStaticType(), sigslot::Delegate2<Uid, Message&>(this, &EllipseComponent::OnRender));
+    GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
 }
 
 EllipseComponent::~EllipseComponent()
 {
-    GetParent()->UnregisterMessageHandler(RenderMessage::GetStaticType(), sigslot::Delegate2<Uid, Message&>(this, &EllipseComponent::OnRender));
+    GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
     
     delete _Renderable;
 }
@@ -45,9 +46,4 @@ void EllipseComponent::SetSize(glm::vec2 size)
 glm::vec2 EllipseComponent::GetSize()
 {
     return _Renderable->Size;
-}
-
-void EllipseComponent::OnRender(Uid sender, Message& message)
-{
-    pb::Renderer::Instance()->AddItem(_Renderable);
 }

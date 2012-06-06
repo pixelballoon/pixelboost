@@ -25,8 +25,6 @@ public:
     glm::vec2 GetSize();
     
 private:
-    void OnRender(Uid sender, Message& message);
-    
     PrimitiveRenderableRectangle* _Renderable;
 };
     

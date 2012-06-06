@@ -2,8 +2,9 @@
 #include "pixelboost/graphics/components/rectangle.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
-#include "pixelboost/logic/message/render.h"
+#include "pixelboost/logic/system/graphics/render/render.h"
 #include "pixelboost/logic/entity.h"
+#include "pixelboost/logic/scene.h"
 
 using namespace pb;
 
@@ -12,12 +13,12 @@ RectangleComponent::RectangleComponent(Entity* parent)
 {
     _Renderable = new PrimitiveRenderableRectangle(parent->GetUid());
     
-    parent->RegisterMessageHandler(RenderMessage::GetStaticType(), sigslot::Delegate2<Uid, Message&>(this, &RectangleComponent::OnRender));
+    GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
 }
 
 RectangleComponent::~RectangleComponent()
 {
-    GetParent()->UnregisterMessageHandler(RenderMessage::GetStaticType(), sigslot::Delegate2<Uid, Message&>(this, &RectangleComponent::OnRender));
+    GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
     
     delete _Renderable;
 }
@@ -45,9 +46,4 @@ void RectangleComponent::SetSize(glm::vec2 size)
 glm::vec2 RectangleComponent::GetSize()
 {
     return _Renderable->Size;
-}
-
-void RectangleComponent::OnRender(Uid sender, Message& message)
-{
-    pb::Renderer::Instance()->AddItem(_Renderable);
 }
