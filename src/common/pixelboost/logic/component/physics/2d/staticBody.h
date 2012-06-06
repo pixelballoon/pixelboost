@@ -11,6 +11,7 @@ namespace pb
 {
     
 struct FixtureDefinition2D;
+class Message;
     
 class StaticBody2DComponent : public PhysicsComponent
 {
@@ -32,6 +33,9 @@ public:
     void SetSensor(bool isSensor);
     
 private:
+    void OnTransformChanged(Uid sender, Message& message);
+    void UpdateTransform();
+    
     b2Body* _Body;
     b2World* _World;
 };

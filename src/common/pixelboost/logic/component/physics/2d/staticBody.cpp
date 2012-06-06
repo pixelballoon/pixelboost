@@ -2,6 +2,7 @@
 
 #include "pixelboost/logic/component/physics/2d/staticBody.h"
 #include "pixelboost/logic/component/transform.h"
+#include "pixelboost/logic/message/transform.h"
 #include "pixelboost/logic/entity.h"
 #include "pixelboost/physics/2d/helpers.h"
 
@@ -42,6 +43,8 @@ StaticBody2DComponent::StaticBody2DComponent(Entity* parent, b2World* world, Bod
     
     _Body = world->CreateBody(&bodyDef);
     _Body->CreateFixture(&fixtureDef);
+    
+    GetParent()->RegisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &StaticBody2DComponent::OnTransformChanged));
 }
 
 StaticBody2DComponent::StaticBody2DComponent(Entity* parent, b2World* world, FixtureDefinition2D& definition)
@@ -54,10 +57,14 @@ StaticBody2DComponent::StaticBody2DComponent(Entity* parent, b2World* world, Fix
     
     _Body = PhysicsHelpers2D::CreateBodyFromDefinition(world, definition, glm::vec2(position.x,position.y), this, glm::vec2(scale.x, scale.y));
     _Body->SetTransform(b2Vec2(position.x, position.y), glm::radians(transform->GetRotation().z));
+    
+    GetParent()->RegisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &StaticBody2DComponent::OnTransformChanged));
 }
 
 StaticBody2DComponent::~StaticBody2DComponent()
 {
+    GetParent()->UnregisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &StaticBody2DComponent::OnTransformChanged));
+    
     _World->DestroyBody(_Body);
 }
 
@@ -79,5 +86,22 @@ void StaticBody2DComponent::SetSensor(bool isSensor)
     {
         fixture->SetSensor(isSensor);
         fixture = fixture->GetNext();
+    }
+}
+
+void StaticBody2DComponent::OnTransformChanged(Uid sender, Message& message)
+{
+    UpdateTransform();
+}
+
+void StaticBody2DComponent::UpdateTransform()
+{
+    TransformComponent* transform = GetParent()->GetComponentByType<TransformComponent>();    
+    
+    if (transform)
+    {
+        glm::vec3 position = transform->GetPosition();
+        glm::vec3 rotation = transform->GetRotation();
+        _Body->SetTransform(b2Vec2(position.x, position.y), rotation.z);
     }
 }
