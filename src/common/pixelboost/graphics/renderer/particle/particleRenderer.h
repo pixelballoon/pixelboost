@@ -7,24 +7,44 @@
 #include "glm/glm.hpp"
 
 #include "pixelboost/graphics/renderer/common/irenderer.h"
+#include "pixelboost/graphics/renderer/common/renderable.h"
 #include "pixelboost/misc/pointer.h"
 
 namespace pb
 {
     
 class IndexBuffer;
+class ParticleEmitter;
 class ParticleModifier;
 class SpriteSheet;
 class VertexBuffer;
     
+class ParticleRenderable : public Renderable
+{
+public:
+    ParticleRenderable(Uid entityId, int maxParticles);
+    ~ParticleRenderable();
+    
+    virtual Uid GetRenderableType();
+    
+    virtual Effect* GetEffect();
+    
+    ParticleEmitter* GetEmitter();
+    
+private:
+    ParticleEmitter* _Emitter;
+    
+    friend class ParticleRenderer;
+};
+    
 class ParticleEmitter
 {
-protected:
+public:
     ParticleEmitter(int maxParticles=50);
     ~ParticleEmitter();
     
     void Update(float time);
-    void Render();
+    void Render(Viewport* viewport, EffectPass* effectPass);
     
 public:
     struct Config
@@ -100,8 +120,8 @@ public:
     void LoadSpriteSheet(const std::string& file, bool createMips);
     void SetSpriteSheet(std::shared_ptr<SpriteSheet> spriteSheet);
     
-    glm::vec2 GetPosition();
-    void SetPosition(const glm::vec2& position);
+    glm::vec3 GetPosition();
+    void SetPosition(const glm::vec3& position);
     
     Config& GetConfig();
     ParticleList& GetParticles();
@@ -113,7 +133,7 @@ private:
     ModifierList _Modifiers;
     
     Config* _Config;
-    glm::vec2 _Position;
+    glm::vec3 _Position;
     float _EmitCount;
     
     IndexBuffer* _IndexBuffer;
@@ -160,17 +180,7 @@ public:
     ParticleRenderer();
     ~ParticleRenderer();
     
-    ParticleEmitter* CreateEmitter(int layer, int maxParticles=50);
-    void DestroyEmitter(ParticleEmitter* emitter);
-    
-    virtual void Update(float time);
     virtual void Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass);
-    
-private:
-    typedef std::vector<ParticleEmitter*> EmitterList;
-    typedef std::map<int, EmitterList> EmitterListMap;
-    
-    EmitterListMap _Emitters;
 };
 
 }

@@ -1,13 +1,50 @@
 #ifndef PIXELBOOST_DISABLE_GRAPHICS
 
 #include "pixelboost/framework/game.h"
+#include "pixelboost/graphics/camera/camera.h"
+#include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/indexBuffer.h"
+#include "pixelboost/graphics/device/program.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
+#include "pixelboost/graphics/effect/effect.h"
+#include "pixelboost/graphics/effect/manager.h"
+#include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/particle/particleRenderer.h"
 #include "pixelboost/graphics/renderer/sprite/sprite.h"
 
 using namespace pb;
+
+
+ParticleRenderable::ParticleRenderable(Uid entityId, int maxParticles)
+    : Renderable(entityId)
+{
+    _Emitter = new ParticleEmitter(maxParticles);
+}
+
+ParticleRenderable::~ParticleRenderable()
+{
+    delete _Emitter;
+}
+
+Uid ParticleRenderable::GetRenderableType()
+{
+    return TypeHash("particle");
+}
+
+Effect* ParticleRenderable::GetEffect()
+{
+    Effect* baseEffect = Renderable::GetEffect();
+    if (baseEffect)
+        return baseEffect;
+    
+    return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/sprite.fx");
+}
+
+ParticleEmitter* ParticleRenderable::GetEmitter()
+{
+    return _Emitter;
+}
 
 ParticleEmitter::Particle::Particle(ParticleEmitter::Config* config)
     : emitterConfig(config)
@@ -175,9 +212,8 @@ void ParticleEmitter::Update(float time)
     }
 }
 
-void ParticleEmitter::Render()
+void ParticleEmitter::Render(Viewport* viewport, EffectPass* effectPass)
 {
-    /*
     if (!_Particles.size())
         return;
     
@@ -202,22 +238,21 @@ void ParticleEmitter::Render()
             glm::vec2 scale = it->emitterConfig->startScale + (it->emitterConfig->endScale-it->emitterConfig->startScale)*tween;
             glm::vec2 size = sprite->_Dimension * scale;
             
-            vertexBuffer[0].position[2] = 0.f;
-            vertexBuffer[1].position[2] = 0.f;
-            vertexBuffer[2].position[2] = 0.f;
-            vertexBuffer[3].position[2] = 0.f;
-            
             float cosRot = cos(((-it->rotation[2]-90.f)/180.f)*M_PI);
             float sinRot = sin(((-it->rotation[2]-90.f)/180.f)*M_PI);
             
             vertexBuffer[0].position[0] = -size[1] * cosRot + size[0] * sinRot + it->position[0];
             vertexBuffer[0].position[1] = size[1] * sinRot + size[0] * cosRot + it->position[1];
+            vertexBuffer[0].position[2] = 0.f;
             vertexBuffer[1].position[0] = size[1] * cosRot + size[0] * sinRot + it->position[0];
             vertexBuffer[1].position[1] = -size[1] * sinRot + size[0] * cosRot + it->position[1];
+            vertexBuffer[1].position[2] = 0.f;
             vertexBuffer[2].position[0] = size[1] * cosRot - size[0] * sinRot + it->position[0];
             vertexBuffer[2].position[1] = -size[1] * sinRot - size[0] * cosRot + it->position[1];
+            vertexBuffer[2].position[2] = 0.f;
             vertexBuffer[3].position[0] = -size[1] * cosRot - size[0] * sinRot + it->position[0];
             vertexBuffer[3].position[1] = size[1] * sinRot - size[0] * cosRot + it->position[1];
+            vertexBuffer[3].position[2] = 0.f;
             
             vertexBuffer[0].color[0] = color[0];
             vertexBuffer[0].color[1] = color[1];
@@ -264,36 +299,39 @@ void ParticleEmitter::Render()
             }
             
             vertexBuffer += 4;
-            
-            sprite->_Sheet->_Texture->Bind();
         }
+        
+        GraphicsDevice::Instance()->BindTexture(_Config->spriteSheet->_Texture);
 
         _VertexBuffer->Unlock(_Particles.size()*4);
     
-        _IndexBuffer->Bind();
-        _VertexBuffer->Bind();
+        GraphicsDevice::Instance()->BindIndexBuffer(_IndexBuffer);
+        GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffer);
         
-        glDisable(GL_DEPTH_TEST);
-        glEnable(GL_BLEND);
-        glEnable(GL_TEXTURE_2D);
-#ifdef PIXELBOOST_GRAPHICS_PREMULTIPLIED_ALPHA
-        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+        GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
+        GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
+        GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
+
+#ifndef PIXELBOOST_GRAPHICS_PREMULTIPLIED_ALPHA
+        GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
 #else
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
 #endif
-        glEnableClientState(GL_COLOR_ARRAY);
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-        glEnableClientState(GL_VERTEX_ARRAY);
+        
+        glm::mat4x4 viewProjectionMatrix = viewport->GetCamera()->ProjectionMatrix * viewport->GetCamera()->ViewMatrix;
+        
+        effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
+        effectPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
+        
         GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, _Particles.size()*6);
-        glDisableClientState(GL_COLOR_ARRAY);
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-        glDisableClientState(GL_VERTEX_ARRAY);
+        
         GraphicsDevice::Instance()->BindIndexBuffer(0);
         GraphicsDevice::Instance()->BindVertexBuffer(0);
-        glDisable(GL_BLEND);
-        glDisable(GL_TEXTURE_2D);
+        
+        GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, true);
+        GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
+        GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
     }
-    */
 }
 
 void ParticleEmitter::AddModifier(ParticleModifier* modifier)
@@ -317,12 +355,12 @@ void ParticleEmitter::SetSpriteSheet(std::shared_ptr<SpriteSheet> spriteSheet)
     _Config->spriteSheet = spriteSheet;
 }
 
-glm::vec2 ParticleEmitter::GetPosition()
+glm::vec3 ParticleEmitter::GetPosition()
 {
     return _Position;
 }
 
-void ParticleEmitter::SetPosition(const glm::vec2& position)
+void ParticleEmitter::SetPosition(const glm::vec3& position)
 {
     _Position = position;
 }
@@ -379,60 +417,25 @@ void ParticleAttractor::UpdateParticles(float time, ParticleEmitter::ParticleLis
 
 ParticleRenderer::ParticleRenderer()
 {
+    Renderer::Instance()->SetHandler(TypeHash("particle"), this);
     
+    Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/particle.fx");
 }
 
 ParticleRenderer::~ParticleRenderer()
 {
-    
-}
-
-ParticleEmitter* ParticleRenderer::CreateEmitter(int layer, int maxParticles)
-{
-    ParticleEmitter* emitter = new ParticleEmitter(maxParticles);
-    _Emitters[layer].push_back(emitter);
-    return emitter;
-}
-    
-void ParticleRenderer::DestroyEmitter(ParticleEmitter* emitter)
-{
-    for (EmitterListMap::iterator emitterListIt = _Emitters.begin(); emitterListIt != _Emitters.end(); ++emitterListIt)
-    {
-        for (EmitterList::iterator emitterIt = emitterListIt->second.begin(); emitterIt != emitterListIt->second.end(); ++emitterIt)
-        {
-            if (emitter == *emitterIt)
-            {
-                emitterListIt->second.erase(emitterIt);
-                delete emitter;
-                return;
-            }
-        }
-    }
-}
-    
-void ParticleRenderer::Update(float time)
-{
-    for (EmitterListMap::iterator emitterListIt = _Emitters.begin(); emitterListIt != _Emitters.end(); ++emitterListIt)
-    {
-        for (EmitterList::iterator it = emitterListIt->second.begin(); it != emitterListIt->second.end(); ++it)
-        {
-            (*it)->Update(time);
-        }
-    }
+    Renderer::Instance()->GetEffectManager()->UnloadEffect("/default/effects/particle.fx");
 }
 
 void ParticleRenderer::Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass)
 {
-    /*
-    EmitterListMap::iterator emitterListIt = _Emitters.find(layer);
-    if (emitterListIt == _Emitters.end())
-        return;
-                                                     
-    for (EmitterList::iterator it = emitterListIt->second.begin(); it != emitterListIt->second.end(); ++it)
+    for (int i=0; i<count; i++)
     {
-        (*it)->Render();
+        ParticleRenderable& renderable = *static_cast<ParticleRenderable*>(renderables[i]);
+        
+        renderable._Emitter->Render(viewport, effectPass);
+        
     }
-    */
 }
 
 #endif
