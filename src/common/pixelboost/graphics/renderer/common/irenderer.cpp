@@ -7,12 +7,12 @@ using namespace pb;
 
 IRenderer::IRenderer()
 {
-    Renderer::Instance()->AddRenderer(this);
+    
 }
 
 IRenderer::~IRenderer()
 {
-    Renderer::Instance()->RemoveRenderer(this);
+    
 }
 
 #endif

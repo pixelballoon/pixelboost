@@ -154,14 +154,4 @@ void Renderer::RenderBatch(Viewport* viewport, int count, Renderable** renderabl
     }
 }
 
-void Renderer::AddRenderer(IRenderer* renderer)
-{
-    _Renderers.insert(renderer);
-}
-
-void Renderer::RemoveRenderer(IRenderer* renderer)
-{
-    _Renderers.erase(renderer);
-}
-
 #endif

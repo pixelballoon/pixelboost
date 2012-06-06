@@ -46,12 +46,8 @@ private:
     void FlushBuffer(Viewport* viewport);
     void RenderBatch(Viewport* viewport, int count, Renderable** renderable, Effect* effect);
     
-    void AddRenderer(IRenderer* renderer);
-    void RemoveRenderer(IRenderer* renderer);
-    
 private:
     typedef std::map<int, IRenderer*> RenderableHandlerMap;
-    typedef std::set<IRenderer*> RendererSet;
     typedef std::vector<Viewport*> ViewportList;
     typedef std::vector<Renderable*> RenderableList;
     typedef std::map<int, RenderableList> LayerRenderableMap;
@@ -60,7 +56,6 @@ private:
     EffectManager* _EffectManager;
     
     RenderableHandlerMap _RenderableHandlers;
-    RendererSet _Renderers;
     ViewportList _Viewports;
     
     LayerRenderableMap _Renderables;
