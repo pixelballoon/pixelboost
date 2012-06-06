@@ -7,6 +7,44 @@
 
 using namespace pb;
 
+StaticBody2DComponent::StaticBody2DComponent(Entity* parent, b2World* world, BodyType type, glm::vec2 size)
+    : PhysicsComponent(parent)
+    , _World(world)
+{
+    pb::TransformComponent* transform = GetParent()->GetComponentByType<pb::TransformComponent>();
+    glm::vec3 position = transform->GetPosition();
+    
+    b2BodyDef bodyDef;
+    bodyDef.position = b2Vec2(position.x, position.y);
+    bodyDef.type = b2_staticBody;
+    bodyDef.userData = this;
+    
+    b2FixtureDef fixtureDef;
+    fixtureDef.isSensor = true;
+    
+    switch (type)
+    {
+        case kBodyTypeCircle:
+        {
+            b2CircleShape circle;
+            circle.m_radius = size.x;
+            fixtureDef.shape = &circle;
+            break;
+        }
+            
+        case kBodyTypeRect:
+        {
+            b2PolygonShape rect;
+            rect.SetAsBox(size.x, size.y);
+            fixtureDef.shape = &rect;
+            break;
+        }
+    }
+    
+    _Body = world->CreateBody(&bodyDef);
+    _Body->CreateFixture(&fixtureDef);
+}
+
 StaticBody2DComponent::StaticBody2DComponent(Entity* parent, b2World* world, FixtureDefinition2D& definition)
     : PhysicsComponent(parent)
     , _World(world)

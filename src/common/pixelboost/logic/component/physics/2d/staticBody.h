@@ -1,5 +1,7 @@
 #pragma once
 
+#include "glm/glm.hpp"
+
 #include "pixelboost/logic/component/physics/physics.h"
 
 class b2Body;
@@ -13,6 +15,14 @@ struct FixtureDefinition2D;
 class StaticBody2DComponent : public PhysicsComponent
 {
 public:
+    enum BodyType
+    {
+        kBodyTypeCircle,
+        kBodyTypeRect,
+    };
+    
+public:
+    StaticBody2DComponent(Entity* parent, b2World* world, BodyType type, glm::vec2 size);
     StaticBody2DComponent(Entity* parent, b2World* world, FixtureDefinition2D& definition);
     ~StaticBody2DComponent();
     
