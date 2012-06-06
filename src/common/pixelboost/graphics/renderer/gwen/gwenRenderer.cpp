@@ -139,6 +139,7 @@ Gwen::Color GwenRenderer::PixelColour( Gwen::Texture* pTexture, unsigned int x, 
 
 void GwenRenderer::RenderText(Gwen::Font* font, Gwen::Point pos, const Gwen::UnicodeString& text)
 {
+    /*
     Translate(pos.x, pos.y);
     
     Gwen::String fontName = Gwen::Utility::UnicodeToString(font->facename);
@@ -150,7 +151,8 @@ void GwenRenderer::RenderText(Gwen::Font* font, Gwen::Point pos, const Gwen::Uni
     if (!text.length())
         return;
         
-    //pb::Game::Instance()->GetFontRenderer()->AttachToRenderer(_Layer, fontName, convertedString, glm::vec2(pos.x, -pos.y - size)/32.f, kFontAlignLeft, size/32.f);
+    pb::Game::Instance()->GetFontRenderer()->AttachToRenderer(_Layer, fontName, convertedString, glm::vec2(pos.x, -pos.y - size)/32.f, kFontAlignLeft, size/32.f);
+    */
 }
 
 Gwen::Point GwenRenderer::MeasureText(Gwen::Font* font, const Gwen::UnicodeString& text)
