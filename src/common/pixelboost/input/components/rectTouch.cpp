@@ -35,12 +35,10 @@ void RectTouchComponent::SetSize(const glm::vec2& size)
 
 glm::vec3 RectTouchComponent::GetPosition()
 {
-    Entity::ComponentList* components = GetParent()->GetComponentsByType(TransformComponent::GetStaticType());
+    TransformComponent* transform = GetParent()->GetComponentByType<TransformComponent>();
     
-    if (components && components->size())
-    {
-        return static_cast<TransformComponent*>(components->at(0))->GetPosition();
-    }
+    if (transform)
+        return transform->GetPosition();
     
     return glm::vec3(0,0,0);
 }

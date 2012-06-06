@@ -60,12 +60,10 @@ void SpriteComponent::SetTint(const glm::vec4& tint)
 
 void SpriteComponent::OnRender(Uid sender, Message& message)
 {
-    Entity::ComponentList* components = GetParent()->GetComponentsByType(TransformComponent::GetStaticType());
+    TransformComponent* transform = GetParent()->GetComponentByType<TransformComponent>();    
     
-    if (components && components->size())
-    {
-        _Renderable->Transform = static_cast<TransformComponent*>(components->at(0))->GetMatrix();
-    }
+    if (transform)
+        _Renderable->Transform = transform->GetMatrix();
         
     Renderer::Instance()->AddItem(_Renderable);
 }

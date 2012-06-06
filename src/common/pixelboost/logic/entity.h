@@ -42,6 +42,7 @@ public:
     void RemoveComponent(Component* component);
     void RemoveAllComponents();
     
+    template <class T>T* GetComponentByType();
     ComponentList* GetComponentsByType(Uid componentType);
     
     void SendMessage(Message& message);
@@ -64,3 +65,5 @@ private:
 };
     
 }
+
+#include "pixelboost/logic/entity.inl"
