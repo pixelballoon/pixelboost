@@ -12,11 +12,12 @@ namespace pb
     
 class Component;
 class Message;
+class Scene;
 
 class Entity
 {
 public:
-    Entity(Uid uid);
+    Entity(Scene* scene, Uid uid);
     virtual ~Entity();
     
 public:
@@ -60,8 +61,10 @@ private:
     ComponentMap _Components;
     MessageHandlers _MessageHandlers;
     
-    EntityState _State;
+    Scene* _Scene;
     Uid _Uid;
+    
+    EntityState _State;
 };
     
 }

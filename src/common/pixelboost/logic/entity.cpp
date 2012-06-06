@@ -4,8 +4,9 @@
 
 using namespace pb;
 
-Entity::Entity(Uid uid)
-    : _Uid(uid)
+Entity::Entity(Scene* scene, Uid uid)
+    : _Scene(scene)
+    , _Uid(uid)
     , _State(kEntityCreated)
 {
     
