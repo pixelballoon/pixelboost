@@ -20,7 +20,6 @@ StaticBody2DComponent::StaticBody2DComponent(Entity* parent, b2World* world, Bod
     bodyDef.userData = this;
     
     b2FixtureDef fixtureDef;
-    fixtureDef.isSensor = true;
     
     switch (type)
     {
@@ -70,4 +69,15 @@ pb::Uid StaticBody2DComponent::GetType()
 pb::Uid StaticBody2DComponent::GetStaticType()
 {
     return TypeHash("staticBody2D");
+}
+
+void StaticBody2DComponent::SetSensor(bool isSensor)
+{
+    b2Fixture* fixture = _Body->GetFixtureList();
+    
+    while (fixture)
+    {
+        fixture->SetSensor(isSensor);
+        fixture = fixture->GetNext();
+    }
 }

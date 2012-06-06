@@ -29,6 +29,8 @@ public:
     virtual pb::Uid GetType();
     static pb::Uid GetStaticType();
     
+    void SetSensor(bool isSensor);
+    
 private:
     b2Body* _Body;
     b2World* _World;
