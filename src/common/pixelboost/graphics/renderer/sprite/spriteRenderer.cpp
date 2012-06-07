@@ -14,8 +14,7 @@
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
 #include "pixelboost/graphics/renderer/sprite/sprite.h"
 
-namespace pb
-{
+using namespace pb;
 
 SpriteRenderable::SpriteRenderable(Uid entityId)
     : Renderable(entityId)
@@ -225,8 +224,6 @@ Sprite* SpriteRenderer::GetSprite(const std::string& spriteName) const
         return 0;
     
     return it->second;
-}
-
 }
 
 #endif
