@@ -40,6 +40,7 @@ private:
     typedef std::map<Uid, Entity*> EntityMap;
     typedef std::map<Uid, SceneSystem*> SystemMap;
     
+    EntityMap _NewEntities;
     EntityMap _Entities;
     SystemMap _Systems;
     

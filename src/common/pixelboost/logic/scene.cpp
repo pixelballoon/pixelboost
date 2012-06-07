@@ -32,6 +32,15 @@ void Scene::Update(float time)
         }
     }
     
+    for (EntityMap::iterator it = _NewEntities.begin(); it != _NewEntities.end(); ++it)
+    {
+#ifndef PIXELBOOST_DISABLE_DEBUG
+        PbAssert(_Entities.find(it->first) == _Entities.end());
+#endif
+        _Entities[it->first] = it->second;
+    }
+    _NewEntities.clear();
+    
     for (SystemMap::iterator it = _Systems.begin(); it != _Systems.end(); ++it)
     {
         it->second->Update(this, time);
@@ -80,9 +89,9 @@ pb::Uid Scene::GenerateEntityId()
 void Scene::AddEntity(Entity* entity)
 {
 #ifndef PIXELBOOST_DISABLE_DEBUG
-    PbAssert(_Entities.find(entity->GetUid()) == _Entities.end());
+    PbAssert(_NewEntities.find(entity->GetUid()) == _NewEntities.end());
 #endif
-    _Entities[entity->GetUid()] = entity;
+    _NewEntities[entity->GetUid()] = entity;
 }
 
 void Scene::DestroyEntity(Entity* entity)
@@ -112,7 +121,8 @@ void Scene::BroadcastMessage(Message& message)
 {
     for (EntityMap::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
     {
-        it->second->SendMessage(message);
+        if (it->second->GetState() != Entity::kEntityDestroyed)
+            it->second->SendMessage(message);
     }
 }
 
@@ -120,6 +130,6 @@ void Scene::SendMessage(Uid uid, Message& message)
 {
     Entity* entity = GetEntityById(uid);
     
-    if (entity)
+    if (entity && entity->GetState() != Entity::kEntityDestroyed)
         entity->SendMessage(message);
 }
