@@ -3,6 +3,7 @@
 #include "pixelboost/graphics/renderer/particle/particleRenderer.h"
 #include "pixelboost/logic/component/graphics/particleEmitter.h"
 #include "pixelboost/logic/component/transform.h"
+#include "pixelboost/logic/message/particle/finished.h"
 #include "pixelboost/logic/message/transform.h"
 #include "pixelboost/logic/message/update.h"
 #include "pixelboost/logic/system/graphics/render/render.h"
@@ -56,7 +57,15 @@ ParticleEmitter* ParticleEmitterComponent::GetEmitter()
 
 void ParticleEmitterComponent::OnUpdate(Uid sender, Message& message)
 {
+    bool wasFinished = _Renderable->GetEmitter()->IsFinished();
+    
     _Renderable->GetEmitter()->Update(static_cast<UpdateMessage&>(message).GetDelta());
+    
+    if (!wasFinished && _Renderable->GetEmitter()->IsFinished())
+    {
+        ParticleFinishedMessage message(GetParent(), this);
+        GetParent()->SendMessage(message);
+    }
 }
 
 void ParticleEmitterComponent::OnTransformChanged(Uid sender, Message& message)

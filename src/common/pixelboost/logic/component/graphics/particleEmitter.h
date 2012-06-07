@@ -11,6 +11,7 @@ namespace pb
 {
     
 class Message;
+class ParticleEmitter;
 class ParticleRenderable;
 
 class ParticleEmitterComponent : public Component
