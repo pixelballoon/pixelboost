@@ -1,3 +1,4 @@
+#include "pixelboost/logic/message/destroy.h"
 #include "pixelboost/logic/component.h"
 #include "pixelboost/logic/entity.h"
 #include "pixelboost/logic/message.h"
@@ -114,5 +115,6 @@ void Entity::UnregisterMessageHandler(Uid messageType, sigslot::Delegate2<Uid, M
 
 void Entity::HandleMessage(Message& message)
 {
-    
+    if (message.GetType() == DestroyMessage::GetStaticType())
+        Destroy();
 }
