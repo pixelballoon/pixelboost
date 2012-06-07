@@ -114,7 +114,9 @@ public:
     
     void AddModifier(ParticleModifier* modifier);
     
-    bool Load(const std::string& file);
+    bool IsFinished();
+    int GetNumParticles();
+    void ResetSpawnCount();
     
     void LoadSpriteSheet(const std::string& file, bool createMips);
     void SetSpriteSheet(std::shared_ptr<SpriteSheet> spriteSheet);

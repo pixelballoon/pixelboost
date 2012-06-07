@@ -88,7 +88,7 @@ void ParticleEmitter::Particle::Assign(const Particle& rhs)
 
 ParticleEmitter::Config::Config()
 {
-    emitCount = 0;
+    emitCount = -1;
     particlesPerUpdate = 1.f;
     
     initialScale = 1.f;
@@ -159,7 +159,8 @@ void ParticleEmitter::Update(float time)
         (*it)->Update(time);
     }
     
-    _EmitCount += _Config.particlesPerUpdate;
+    if (_Config.emitCount == -1 || _SpawnedParticles < _Config.emitCount)
+        _EmitCount += _Config.particlesPerUpdate;
     
     while (_EmitCount >= 1.f)
     {
@@ -329,9 +330,22 @@ void ParticleEmitter::AddModifier(ParticleModifier* modifier)
     _Modifiers.push_back(modifier);
 }
 
-bool ParticleEmitter::Load(const std::string& file)
+bool ParticleEmitter::IsFinished()
 {
-    return false;
+    if (_Config.emitCount == -1)
+        return false;
+    
+    return (_SpawnedParticles >= _Config.emitCount && _Particles.size() == 0);
+}
+
+int ParticleEmitter::GetNumParticles()
+{
+    return _Particles.size();
+}
+
+void ParticleEmitter::ResetSpawnCount()
+{
+    _SpawnedParticles = 0;
 }
 
 void ParticleEmitter::LoadSpriteSheet(const std::string& file, bool createMips)
