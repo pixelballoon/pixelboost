@@ -38,7 +38,7 @@ Effect* ParticleRenderable::GetEffect()
     if (baseEffect)
         return baseEffect;
     
-    return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/sprite.fx");
+    return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/particle.fx");
 }
 
 ParticleEmitter* ParticleRenderable::GetEmitter()

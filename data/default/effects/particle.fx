@@ -10,7 +10,7 @@
 				"gles2" : {
 					"fragment" : "default/shaders/gles2/texturedAlpha.fsh",
 					"vertex" : "default/shaders/gles2/texturedAlpha.vsh"
-				},
+				}
 			}
 		}
 	]
