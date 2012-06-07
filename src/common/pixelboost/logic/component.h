@@ -16,11 +16,14 @@ public:
     
     virtual Uid GetType() = 0;
     
+    Uid GetUid();
+    
     Scene* GetScene();
     Entity* GetParent();
     
 private:
     Entity* _Parent;
+    Uid _Uid;
 };
 
 }

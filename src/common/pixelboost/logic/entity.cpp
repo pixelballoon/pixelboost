@@ -47,11 +47,14 @@ Entity::EntityState Entity::GetState()
     return _State;
 }
 
-Uid Entity::AddComponent(Component* component)
+Uid Entity::GenerateComponentId()
+{
+    return _NextFreeUid++;
+}
+
+void Entity::AddComponent(Component* component)
 {
     _Components[component->GetType()].push_back(component);
-    
-    return 0;
 }
 
 void Entity::RemoveComponent(Component* component)
@@ -83,6 +86,20 @@ void Entity::RemoveAllComponents()
     }
     
     _Components.clear();
+}
+
+Component* Entity::GetComponentById(Uid componentId)
+{
+    for (ComponentMap::iterator groupIt = _Components.begin(); groupIt != _Components.end(); ++groupIt)
+    {
+        for (ComponentList::iterator componentIt = groupIt->second.begin(); componentIt != groupIt->second.end(); ++componentIt)
+        {
+            if ((*componentIt)->GetUid() == componentId)
+                return *componentIt;
+        }
+    }
+    
+    return 0;
 }
 
 Entity::ComponentList* Entity::GetComponentsByType(Uid componentType)

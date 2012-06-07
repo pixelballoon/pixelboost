@@ -41,9 +41,13 @@ public:
     typedef sigslot::Delegate2<Uid, Message&> MessageHandler;
     
 public:
-    Uid AddComponent(Component* component);
+    Uid GenerateComponentId();
+    
+    void AddComponent(Component* component);
     void RemoveComponent(Component* component);
     void RemoveAllComponents();
+    
+    Component* GetComponentById(Uid componentId);
     
     template <class T>T* GetComponentByType();
     ComponentList* GetComponentsByType(Uid componentType);
@@ -65,6 +69,8 @@ private:
     
     Scene* _Scene;
     Uid _Uid;
+    
+    Uid _NextFreeUid;
     
     EntityState _State;
 };

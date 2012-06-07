@@ -6,12 +6,17 @@ using namespace pb;
 Component::Component(Entity* parent)
     : _Parent(parent)
 {
-    
+    _Uid = parent->GenerateComponentId();
 }
 
 Component::~Component()
 {
 
+}
+
+Uid Component::GetUid()
+{
+    return _Uid;
 }
 
 Scene* Component::GetScene()
