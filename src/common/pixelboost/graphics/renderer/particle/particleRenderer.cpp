@@ -46,25 +46,21 @@ ParticleEmitter* ParticleRenderable::GetEmitter()
     return _Emitter;
 }
 
-ParticleEmitter::Particle::Particle(ParticleEmitter::Config* config)
+ParticleEmitter::Particle::Particle(ParticleEmitter::Config& config)
     : emitterConfig(config)
 {
-    emitterConfig->refCount++;
+    
 }
 
 ParticleEmitter::Particle::Particle(const Particle& rhs)
+    : emitterConfig(rhs.emitterConfig)
 {
     Assign(rhs);
 }
 
 ParticleEmitter::Particle::~Particle()
 {
-    emitterConfig->refCount--;
     
-    if (emitterConfig->refCount == 0)
-    {
-        delete emitterConfig;
-    }
 }
 
 ParticleEmitter::Particle& ParticleEmitter::Particle::operator=(const Particle& rhs)
@@ -77,8 +73,7 @@ ParticleEmitter::Particle& ParticleEmitter::Particle::operator=(const Particle& 
 void ParticleEmitter::Particle::Assign(const Particle& rhs)
 {
     emitterConfig = rhs.emitterConfig;
-    emitterConfig->refCount++;
-    
+
     sprite = rhs.sprite;
     
     life = rhs.life;
@@ -93,8 +88,7 @@ void ParticleEmitter::Particle::Assign(const Particle& rhs)
 
 ParticleEmitter::Config::Config()
 {
-    refCount = 1;
-    
+    emitCount = 0;
     particlesPerUpdate = 1.f;
     
     initialScale = 1.f;
@@ -123,9 +117,8 @@ ParticleEmitter::Config::~Config()
 ParticleEmitter::ParticleEmitter(int maxParticles)
     : _EmitCount(0)
     , _MaxParticles(maxParticles)
+    , _SpawnedParticles(0)
 {
-    _Config = new Config();
-    
     _IndexBuffer = pb::GraphicsDevice::Instance()->CreateIndexBuffer(pb::kBufferFormatStatic, _MaxParticles*6);
     _VertexBuffer = pb::GraphicsDevice::Instance()->CreateVertexBuffer(pb::kBufferFormatDynamic, pb::kVertexFormat_P_XYZ_RGBA_UV, _MaxParticles*4);
     
@@ -153,17 +146,12 @@ ParticleEmitter::~ParticleEmitter()
     }
     
     pb::GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
-    pb::GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
-    
-    _Config->refCount--;
-    
-    if (_Config->refCount == 0)
-        delete _Config;
+    pb::GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);    
 }
 
 void ParticleEmitter::Update(float time)
 {
-    if (!_Config->sprites.size())
+    if (!_Config.sprites.size())
         return;
     
     for (ModifierList::iterator it = _Modifiers.begin(); it != _Modifiers.end(); ++it)
@@ -171,22 +159,24 @@ void ParticleEmitter::Update(float time)
         (*it)->Update(time);
     }
     
-    _EmitCount += _Config->particlesPerUpdate;
+    _EmitCount += _Config.particlesPerUpdate;
     
     while (_EmitCount >= 1.f)
     {
         if (_Particles.size() < _MaxParticles)
         {
+            _SpawnedParticles++;
+            
             Particle particle(_Config);
-            particle.position[0] = _Position[0] + _Config->minPosOffset[0] + (_Config->maxPosOffset[0]-_Config->minPosOffset[0]) * (float)rand()/(float)RAND_MAX;
-            particle.position[1] = _Position[1] + _Config->minPosOffset[1] + (_Config->maxPosOffset[1]-_Config->minPosOffset[1]) * (float)rand()/(float)RAND_MAX;
-            particle.rotation = _Config->minRotOffset + (_Config->maxRotOffset-_Config->minRotOffset) * (float)rand()/(float)RAND_MAX;
-            particle.rotationVelocity = _Config->minRotVelocity + (_Config->maxRotVelocity-_Config->minRotVelocity) * (float)rand()/(float)RAND_MAX;
-            particle.positionVelocity[0] = _Config->minPosVelocity[0] + (_Config->maxPosVelocity[0]-_Config->minPosVelocity[0]) * (float)rand()/(float)RAND_MAX;
-            particle.positionVelocity[1] = _Config->minPosVelocity[1] + (_Config->maxPosVelocity[1]-_Config->minPosVelocity[1]) * (float)rand()/(float)RAND_MAX;
+            particle.position[0] = _Position[0] + _Config.minPosOffset[0] + (_Config.maxPosOffset[0]-_Config.minPosOffset[0]) * (float)rand()/(float)RAND_MAX;
+            particle.position[1] = _Position[1] + _Config.minPosOffset[1] + (_Config.maxPosOffset[1]-_Config.minPosOffset[1]) * (float)rand()/(float)RAND_MAX;
+            particle.rotation = _Config.minRotOffset + (_Config.maxRotOffset-_Config.minRotOffset) * (float)rand()/(float)RAND_MAX;
+            particle.rotationVelocity = _Config.minRotVelocity + (_Config.maxRotVelocity-_Config.minRotVelocity) * (float)rand()/(float)RAND_MAX;
+            particle.positionVelocity[0] = _Config.minPosVelocity[0] + (_Config.maxPosVelocity[0]-_Config.minPosVelocity[0]) * (float)rand()/(float)RAND_MAX;
+            particle.positionVelocity[1] = _Config.minPosVelocity[1] + (_Config.maxPosVelocity[1]-_Config.minPosVelocity[1]) * (float)rand()/(float)RAND_MAX;
             particle.life = 0;
-            particle.sprite = _Config->sprites[glm::min((int)((float)rand()/(float)RAND_MAX * _Config->sprites.size()), (int)_Config->sprites.size()-1)];
-            particle.totalLife = _Config->life;
+            particle.sprite = _Config.sprites[glm::min((int)((float)rand()/(float)RAND_MAX * _Config.sprites.size()), (int)_Config.sprites.size()-1)];
+            particle.totalLife = _Config.life;
             
             _Particles.push_back(particle);
         }
@@ -198,7 +188,7 @@ void ParticleEmitter::Update(float time)
     {
         it->life += time;
         
-        it->positionVelocity += it->emitterConfig->gravity;
+        it->positionVelocity += it->emitterConfig.gravity;
         
         it->rotation += it->rotationVelocity;
         it->position += it->positionVelocity;
@@ -225,17 +215,17 @@ void ParticleEmitter::Render(Viewport* viewport, EffectPass* effectPass)
     {
         for (ParticleList::iterator it = _Particles.begin(); it != _Particles.end(); ++it)
         {
-            float tween = it->life/it->emitterConfig->life;
-            glm::vec4 color = it->emitterConfig->startColor + (it->emitterConfig->endColor-it->emitterConfig->startColor)*tween;
+            float tween = it->life/it->emitterConfig.life;
+            glm::vec4 color = it->emitterConfig.startColor + (it->emitterConfig.endColor-it->emitterConfig.startColor)*tween;
             
 #ifdef PIXELBOOST_GRAPHICS_PREMULTIPLIED_ALPHA
             float alpha = color[3];
             color *= alpha;
             color[3] = alpha;
 #endif
-            pb::Sprite* sprite = it->emitterConfig->spriteSheet->GetSprite(it->sprite);
+            pb::Sprite* sprite = it->emitterConfig.spriteSheet->GetSprite(it->sprite);
             
-            glm::vec2 scale = it->emitterConfig->startScale + (it->emitterConfig->endScale-it->emitterConfig->startScale)*tween;
+            glm::vec2 scale = it->emitterConfig.startScale + (it->emitterConfig.endScale-it->emitterConfig.startScale)*tween;
             glm::vec2 size = sprite->_Dimension * scale;
             
             float cosRot = cos(((-it->rotation[2]-90.f)/180.f)*M_PI);
@@ -301,7 +291,7 @@ void ParticleEmitter::Render(Viewport* viewport, EffectPass* effectPass)
             vertexBuffer += 4;
         }
         
-        GraphicsDevice::Instance()->BindTexture(_Config->spriteSheet->_Texture);
+        GraphicsDevice::Instance()->BindTexture(_Config.spriteSheet->_Texture);
 
         _VertexBuffer->Unlock(_Particles.size()*4);
     
@@ -346,13 +336,13 @@ bool ParticleEmitter::Load(const std::string& file)
 
 void ParticleEmitter::LoadSpriteSheet(const std::string& file, bool createMips)
 {
-    _Config->spriteSheet = SpriteSheet::Create();
-    _Config->spriteSheet->LoadSheet(file, createMips);
+    _Config.spriteSheet = SpriteSheet::Create();
+    _Config.spriteSheet->LoadSheet(file, createMips);
 }
 
 void ParticleEmitter::SetSpriteSheet(std::shared_ptr<SpriteSheet> spriteSheet)
 {
-    _Config->spriteSheet = spriteSheet;
+    _Config.spriteSheet = spriteSheet;
 }
 
 glm::vec3 ParticleEmitter::GetPosition()
@@ -367,7 +357,7 @@ void ParticleEmitter::SetPosition(const glm::vec3& position)
 
 ParticleEmitter::Config& ParticleEmitter::GetConfig()
 {
-    return *_Config;
+    return _Config;
 }
 
 ParticleEmitter::ParticleList& ParticleEmitter::GetParticles()

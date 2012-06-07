@@ -52,8 +52,7 @@ public:
         Config();
         ~Config();
         
-        int refCount;
-        
+        int emitCount;
         float particlesPerUpdate;
         
         float initialScale;
@@ -86,7 +85,7 @@ public:
 private:
     struct Particle
     {
-        Particle(ParticleEmitter::Config* config);
+        Particle(ParticleEmitter::Config& config);
         Particle(const Particle& particle);
         ~Particle();
         
@@ -94,7 +93,7 @@ private:
         
         std::string sprite;
         
-        ParticleEmitter::Config* emitterConfig;
+        ParticleEmitter::Config& emitterConfig;
         
         float life;
         float totalLife;
@@ -132,9 +131,10 @@ private:
     
     ModifierList _Modifiers;
     
-    Config* _Config;
+    Config _Config;
     glm::vec3 _Position;
     float _EmitCount;
+    int _SpawnedParticles;
     
     IndexBuffer* _IndexBuffer;
     VertexBuffer* _VertexBuffer;
