@@ -84,6 +84,6 @@ void SpriteComponent::UpdateTransform()
     
     if (transform)
     {
-        _Renderable->Transform = _LocalTransform * transform->GetMatrix();
+        _Renderable->Transform = transform->GetMatrix() * _LocalTransform;
     }
 }
