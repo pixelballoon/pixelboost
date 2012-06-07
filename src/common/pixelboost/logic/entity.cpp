@@ -7,7 +7,8 @@
 using namespace pb;
 
 Entity::Entity(Scene* scene, Uid uid)
-    : _Scene(scene)
+    : _NextFreeUid(1)
+    , _Scene(scene)
     , _Uid(uid)
     , _State(kEntityCreated)
 {
