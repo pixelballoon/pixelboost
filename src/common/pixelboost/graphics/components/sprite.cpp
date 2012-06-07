@@ -66,6 +66,13 @@ void SpriteComponent::SetTint(const glm::vec4& tint)
     _Renderable->Tint = tint;
 }
 
+void SpriteComponent::SetLocalTransform(const glm::mat4x4& transform)
+{
+    _LocalTransform = transform;
+    
+    UpdateTransform();
+}
+
 void SpriteComponent::OnTransformChanged(Uid sender, Message& message)
 {
     UpdateTransform();
@@ -76,5 +83,7 @@ void SpriteComponent::UpdateTransform()
     TransformComponent* transform = GetParent()->GetComponentByType<TransformComponent>();    
     
     if (transform)
-        _Renderable->Transform = transform->GetMatrix();
+    {
+        _Renderable->Transform = _LocalTransform * transform->GetMatrix();
+    }
 }

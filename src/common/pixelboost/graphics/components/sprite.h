@@ -28,10 +28,13 @@ public:
     void SetSprite(const std::string& sprite);
     void SetTint(const glm::vec4& tint);
     
+    void SetLocalTransform(const glm::mat4x4& transform);
+    
 private:
     void OnTransformChanged(Uid sender, Message& message);
     void UpdateTransform();
     
+    glm::mat4x4 _LocalTransform;
     SpriteRenderable* _Renderable;
 };
     
