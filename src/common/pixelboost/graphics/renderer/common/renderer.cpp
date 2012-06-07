@@ -77,7 +77,7 @@ void Renderer::SetHandler(int renderableType, IRenderer* renderer)
 
 void Renderer::FlushBuffer(Viewport* viewport)
 {
-    for (int i=0; i<8; i++)
+    for (int i=0; i<16; i++)
     {
         RenderableList& renderables = _Renderables[i];
         
