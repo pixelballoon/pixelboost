@@ -2,6 +2,7 @@
 #include "pixelboost/logic/component.h"
 #include "pixelboost/logic/entity.h"
 #include "pixelboost/logic/message.h"
+#include "pixelboost/logic/scene.h"
 
 using namespace pb;
 
@@ -10,7 +11,10 @@ Entity::Entity(Scene* scene, Uid uid)
     , _Uid(uid)
     , _State(kEntityCreated)
 {
-    
+    if (_Uid == 0)
+    {
+        _Uid = _Scene->GenerateEntityId();
+    }
 }
 
 Entity::~Entity()

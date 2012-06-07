@@ -1,3 +1,4 @@
+#include "pixelboost/debug/assert.h"
 #include "pixelboost/logic/entity.h"
 #include "pixelboost/logic/message/update.h"
 #include "pixelboost/logic/scene.h"
@@ -7,24 +8,24 @@ using namespace pb;
 
 Scene::Scene()
 {
-    
+    _NextFreeUid = (1<<24) + 1;
 }
 
 Scene::~Scene()
 {
-    for (EntitySet::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
+    for (EntityMap::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
     {
-        delete *it;
+        delete it->second;
     }
 }
 
 void Scene::Update(float time)
 {
-    for (EntitySet::iterator it = _Entities.begin(); it != _Entities.end();)
+    for (EntityMap::iterator it = _Entities.begin(); it != _Entities.end();)
     {
-        if ((*it)->GetState() == Entity::kEntityDestroyed)
+        if (it->second->GetState() == Entity::kEntityDestroyed)
         {
-            delete *it;
+            delete it->second;
             _Entities.erase(it++);
         } else {
             ++it;
@@ -38,7 +39,7 @@ void Scene::Update(float time)
     
     UpdateMessage message(time);
     
-    SendMessage(message);
+    BroadcastMessage(message);
 }
 
 void Scene::Render(Viewport* viewport)
@@ -71,9 +72,17 @@ void Scene::RemoveSystem(SceneSystem* system)
     }
 }
 
+pb::Uid Scene::GenerateEntityId()
+{
+    return _NextFreeUid++;
+}
+
 void Scene::AddEntity(Entity* entity)
 {
-    _Entities.insert(entity);
+#ifndef PIXELBOOST_DISABLE_DEBUG
+    PbAssert(_Entities.find(entity->GetUid()) == _Entities.end());
+#endif
+    _Entities[entity->GetUid()] = entity;
 }
 
 void Scene::DestroyEntity(Entity* entity)
@@ -83,16 +92,34 @@ void Scene::DestroyEntity(Entity* entity)
 
 void Scene::DestroyAllEntities()
 {
-    for (EntitySet::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
+    for (EntityMap::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
     {
-        (*it)->Destroy();
+        it->second->Destroy();
     }
 }
 
-void Scene::SendMessage(Message& message)
+Entity* Scene::GetEntityById(Uid uid)
 {
-    for (EntitySet::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
+    EntityMap::iterator it = _Entities.find(uid);
+    
+    if (it != _Entities.end())
+        return it->second;
+    
+    return 0;
+}
+
+void Scene::BroadcastMessage(Message& message)
+{
+    for (EntityMap::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
     {
-        (*it)->SendMessage(message);
+        it->second->SendMessage(message);
     }
+}
+
+void Scene::SendMessage(Uid uid, Message& message)
+{
+    Entity* entity = GetEntityById(uid);
+    
+    if (entity)
+        entity->SendMessage(message);
 }

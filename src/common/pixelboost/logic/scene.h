@@ -25,18 +25,25 @@ public:
     bool AddSystem(SceneSystem* system);
     void RemoveSystem(SceneSystem* system);
     
+    pb::Uid GenerateEntityId();
+    
     void AddEntity(Entity* entity);
     void DestroyEntity(Entity* entity);
     void DestroyAllEntities();
     
-    void SendMessage(Message& message);
+    Entity* GetEntityById(Uid uid);
+    
+    void BroadcastMessage(Message& message);
+    void SendMessage(Uid uid, Message& message);
     
 private:
-    typedef std::set<Entity*> EntitySet;
+    typedef std::map<Uid, Entity*> EntityMap;
     typedef std::map<Uid, SceneSystem*> SystemMap;
     
-    EntitySet _Entities;
+    EntityMap _Entities;
     SystemMap _Systems;
+    
+    pb::Uid _NextFreeUid;
 };
     
 }
