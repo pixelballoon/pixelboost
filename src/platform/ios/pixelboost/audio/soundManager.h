@@ -11,7 +11,7 @@ namespace pb
 class Sound
 {
 public:
-    Sound(const std::string& name="", bool compressed=false, float volume=1.f, float pitch=1.f, bool looping=false);
+    Sound(const std::string& name="", float volume=1.f, float pitch=1.f, bool looping=false);
     
     int GetId() const;
     
@@ -20,9 +20,6 @@ public:
     bool IsPlaying() const;
     
     const std::string& GetName() const;
-    
-    bool IsCompressed() const;
-    void SetCompressed(bool compressed);
     
     bool IsLooping() const;
     void SetLooping(bool looping);
@@ -35,7 +32,6 @@ public:
     
 private:
     int _Id;
-    bool _Compressed;
     bool _Looping;
     std::string _Name;
     float _Pitch;
@@ -59,12 +55,12 @@ public:
     void MuteSfx(bool mute=true);
     
     void LoadBgm(const std::string& name);
-    void LoadSfx(const std::string& name, bool compressed);
+    void LoadSfx(const std::string& name);
     
     void PlayBgm(const std::string& name, bool loop, float volume=1.f);
     void StopBgm();
     
-    Sound PlaySfx(const std::string& name, bool compressed, float volume=1.f, float pitch=1.f);
+    Sound PlaySfx(const std::string& name, float volume=1.f, float pitch=1.f);
     
 private:
     int SfxGetId();

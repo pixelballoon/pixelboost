@@ -12,9 +12,8 @@
 
 using namespace pb;
 
-Sound::Sound(const std::string& name, bool compressed, float volume, float pitch, bool looping)
-    : _Compressed(compressed)
-    , _Looping(false)
+Sound::Sound(const std::string& name, float volume, float pitch, bool looping)
+    : _Looping(false)
     , _Name(name)
     , _Pitch(pitch)
     , _Volume(volume)
@@ -45,16 +44,6 @@ bool Sound::IsPlaying() const
 const std::string& Sound::GetName() const
 {
     return _Name;
-}
-
-bool Sound::IsCompressed() const
-{
-    return _Compressed;
-}
-
-void Sound::SetCompressed(bool compressed)
-{
-    _Compressed = true;
 }
 
 bool Sound::IsLooping() const
@@ -153,12 +142,12 @@ void SoundManager::LoadBgm(const std::string& name)
 
 }
 
-void SoundManager::LoadSfx(const std::string& name, bool compressed)
+void SoundManager::LoadSfx(const std::string& name)
 {
     //if (compressed)
         return;
     
-    std::string fileName = FileHelpers::GetRootPath() + "/data/audio/sfx/" + name + (compressed ? ".mp3" : ".wav");
+    std::string fileName = FileHelpers::GetRootPath() + "/data/audio/sfx/" + name;
     
     [[OALSimpleAudio sharedInstance] preloadEffect:[NSString stringWithUTF8String:fileName.c_str()]];
 }
@@ -172,7 +161,7 @@ void SoundManager::PlayBgm(const std::string& name, bool loop, float volume)
     if (_MuteBgm || _CurrentBgmName == "")
         return;
     
-     std::string fileName = FileHelpers::GetRootPath() + "/data/audio/bgm/" + name + ".mp3";
+     std::string fileName = FileHelpers::GetRootPath() + "/data/audio/bgm/" + name;
      
     [[OALSimpleAudio sharedInstance] playBg:[NSString stringWithUTF8String:fileName.c_str()] volume:volume pan:0.f loop:loop];
 }
@@ -184,12 +173,12 @@ void SoundManager::StopBgm()
     [[OALSimpleAudio sharedInstance] stopBg];
 }
 
-Sound SoundManager::PlaySfx(const std::string& name, bool compressed, float volume, float pitch)
+Sound SoundManager::PlaySfx(const std::string& name, float volume, float pitch)
 {
     if (_MuteSfx)
         return Sound();
     
-    Sound sound(name, compressed, volume, pitch);
+    Sound sound(name, volume, pitch);
     
     sound.Play();
     
@@ -206,7 +195,7 @@ void SoundManager::SfxPlay(const Sound& sound)
     if (_MuteSfx)
         return;
     
-    std::string filename = FileHelpers::GetRootPath() + "/data/audio/sfx/" + sound.GetName() + (sound.IsCompressed() ? ".mp3" : ".wav");
+    std::string filename = FileHelpers::GetRootPath() + "/data/audio/sfx/" + sound.GetName();
     
     id<ALSoundSource> instance = [[OALSimpleAudio sharedInstance] playEffect:[NSString stringWithUTF8String:filename.c_str()] volume:sound.GetVolume() pitch:sound.GetPitch() pan:0.f loop:sound.IsLooping()];
     [instance retain];
