@@ -1,15 +1,49 @@
 #ifndef PIXELBOOST_DISABLE_GRAPHICS
 
+#include "glm/gtc/matrix_transform.hpp"
+
 #include "pixelboost/file/fileHelpers.h"
 
+#include "pixelboost/graphics/camera/camera.h"
+#include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/indexBuffer.h"
+#include "pixelboost/graphics/device/program.h"
 #include "pixelboost/graphics/device/texture.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
+#include "pixelboost/graphics/effect/effect.h"
+#include "pixelboost/graphics/effect/manager.h"
 #include "pixelboost/graphics/helper/screenHelpers.h"
+#include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/font/fontRenderer.h"
 
 using namespace pb;
+
+FontRenderable::FontRenderable(Uid entityId)
+    : Renderable(entityId)
+{
+    Alignment = kFontAlignCenter;
+    Size = 1.f;
+    Tint = glm::vec4(1,1,1,1);
+}
+
+FontRenderable::~FontRenderable()
+{
+}
+
+Uid FontRenderable::GetRenderableType()
+{
+    return TypeHash("font");
+}
+
+Effect* FontRenderable::GetEffect()
+{
+    Effect* baseEffect = Renderable::GetEffect();
+    if (baseEffect)
+        return baseEffect;
+    
+    return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/sprite.fx");
+}
 
 FontRenderer::FontRenderer(int maxCharacters)
     : _MaxCharacters(maxCharacters)
@@ -32,10 +66,16 @@ FontRenderer::FontRenderer(int maxCharacters)
     }
     
     _IndexBuffer->Unlock();
+    
+    Renderer::Instance()->SetHandler(TypeHash("font"), this);
+    
+    Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/sprite.fx");
 }
 
 FontRenderer::~FontRenderer()
 {
+    Renderer::Instance()->GetEffectManager()->UnloadEffect("/default/effects/sprite.fx");
+    
     GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
     GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
     
@@ -90,6 +130,8 @@ void FontRenderer::LoadFont(const std::string& name, bool createMips)
     std::vector<std::string> lines;
     SplitString(fontContents, '\n', lines);
     
+    glm::vec2 texSize;
+    
     for (std::vector<std::string>::iterator line = lines.begin(); line != lines.end(); ++line)
     {
         std::vector<std::string> elements;
@@ -105,8 +147,6 @@ void FontRenderer::LoadFont(const std::string& name, bool createMips)
         }
         
         std::string elementType = elements[0];
-        
-        glm::vec2 texSize;
         
         if (elementType == "info")
         {
@@ -133,13 +173,13 @@ void FontRenderer::LoadFont(const std::string& name, bool createMips)
             Font::Character character;
             
             char charCode = (char)atoi(data["id"].c_str());
-            int x = (int)atoi(data["x"].c_str());
-            int y = (int)atoi(data["y"].c_str());
-            int width = (int)atoi(data["width"].c_str());
-            int height = (int)atoi(data["height"].c_str());
-            int xoffset = (int)atoi(data["xoffset"].c_str());
-            int yoffset = (int)atoi(data["yoffset"].c_str());
-            int xadvance = (int)atoi(data["xadvance"].c_str());
+            float x = atoi(data["x"].c_str());
+            float y = atoi(data["y"].c_str());
+            float width = atoi(data["width"].c_str());
+            float height = atoi(data["height"].c_str());
+            float xoffset = atoi(data["xoffset"].c_str());
+            float yoffset = atoi(data["yoffset"].c_str());
+            float xadvance = atoi(data["xadvance"].c_str());
             
             character.width = width/(float)font->size;
             character.height = height/(float)font->size;
@@ -165,48 +205,35 @@ void FontRenderer::LoadFont(const std::string& name, bool createMips)
     _Fonts[name] = font;
 }
 
-void FontRenderer::Update(float time)
-{
-    _Instances.clear();
-}
-
 void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass)
 {
-    /*
-    InstanceList& instances = _Instances[layer];
-    
-    if (instances.size() == 0)
-        return;
-    
-    glDisable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glEnable(GL_TEXTURE_2D);
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
     
 #ifndef PIXELBOOST_GRAPHICS_PREMULTIPLIED_ALPHA
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
 #else
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
 #endif
     
-    glDisableClientState(GL_COLOR_ARRAY);
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    GraphicsDevice::Instance()->BindIndexBuffer(_IndexBuffer);
     
-    _IndexBuffer->Bind();
-    
-    for (InstanceList::iterator it = instances.begin(); it != instances.end(); ++it)
+    for (int i=0; i<count; i++)
     {
+        FontRenderable& renderable = *static_cast<FontRenderable*>(renderables[i]);
+
         Font* font;
         
-        FontMap::iterator fontIt = _Fonts.find(it->_Font);
+        FontMap::iterator fontIt = _Fonts.find(renderable.Font);
         if (fontIt == _Fonts.end() || fontIt->second->texture == 0)
         {
             continue;
         }
         
-        if (it->_String.length() > _MaxCharacters)
+        if (renderable.Text.length() > _MaxCharacters)
         {
-            printf("String (%s) is too long for the MaxCharacters value set\n", it->_String.c_str());
+            printf("String (%s) is too long for the MaxCharacters value set\n", renderable.Text.c_str());
             continue;
         }
         
@@ -218,9 +245,9 @@ void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewpor
         Vertex_PXYZ_UV* vertexBuffer = static_cast<Vertex_PXYZ_UV*>(_VertexBuffer->GetData());
         
         float offset = 0.f;
-        for (int i=0; i<it->_String.length(); i++)
+        for (int i=0; i<renderable.Text.length(); i++)
         {
-            std::map<char, Font::Character>::iterator charIt = font->chars.find(it->_String[i]);
+            std::map<char, Font::Character>::iterator charIt = font->chars.find(renderable.Text[i]);
             
             if (charIt == font->chars.end())
                 continue;
@@ -232,9 +259,9 @@ void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewpor
             
             offset += charIt->second.xAdvance;
             
-            if (i<it->_String.length()-1)
+            if (i<renderable.Text.length()-1)
             {
-                std::map<std::pair<char, char>, float>::iterator kerningIt = font->kerning.find(std::pair<char, char>(it->_String[i], it->_String[i+1]));
+                std::map<std::pair<char, char>, float>::iterator kerningIt = font->kerning.find(std::pair<char, char>(renderable.Text[i], renderable.Text[i+1]));
                 
                 if (kerningIt != font->kerning.end())
                     offset += kerningIt->second;
@@ -243,47 +270,40 @@ void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewpor
         
         _VertexBuffer->Unlock(numCharacters*4);
         
-        _VertexBuffer->Bind();
+        GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffer);
         
-        font->texture->Bind(0);
+        GraphicsDevice::Instance()->BindTexture(font->texture);
         
-        glPushMatrix();
-        
-        glTranslatef(it->_Position[0], it->_Position[1], 0.f);
-
-        glRotatef(it->_Rotation, 0, 0, 1);
-        
-        glScalef(it->_Size, it->_Size, 1.f);
-        
-        switch (it->_Alignment) {
+        switch (renderable.Alignment) {
             case kFontAlignLeft:
                 break;
             case kFontAlignCenter:
-                glTranslatef(-offset/2.f, 0, 0);
+                offset = -offset/2.f;
                 break;
             case kFontAlignRight:
-                glTranslatef(-offset, 0, 0);
+                offset = -offset;
                 break;
         }
         
-        glColor4f(it->_Color[0], it->_Color[1], it->_Color[2], it->_Color[3]);
+        glm::mat4x4 viewProjectionMatrix = glm::scale(glm::mat4x4(), glm::vec3(renderable.Size, renderable.Size, 1));
+        viewProjectionMatrix = glm::translate(viewProjectionMatrix, glm::vec3(offset, 0, 0));
+        viewProjectionMatrix = renderable.Transform * viewProjectionMatrix;
+        viewProjectionMatrix = viewport->GetCamera()->ProjectionMatrix * viewport->GetCamera()->ViewMatrix * viewProjectionMatrix;
+        
+        effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
+        effectPass->GetShaderProgram()->SetUniform("diffuseColor", renderable.Tint);
+        effectPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
         
         GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, numCharacters*6);
-        
-        glColor4f(1, 1, 1, 1);
-        
-        glPopMatrix();
     }
     
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-    
+    GraphicsDevice::Instance()->BindTexture(0);
     GraphicsDevice::Instance()->BindIndexBuffer(0);
     GraphicsDevice::Instance()->BindVertexBuffer(0);
     
-    glDisable(GL_BLEND);
-    glDisable(GL_TEXTURE_2D);
-    */
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, true);
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
 }
 
 float FontRenderer::MeasureString(const std::string& fontName, const std::string& string, float size)
