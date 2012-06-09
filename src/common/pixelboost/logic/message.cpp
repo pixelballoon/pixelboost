@@ -13,3 +13,13 @@ Message::~Message()
 {
     
 }
+
+Entity* Message::GetEntity()
+{
+    return _Entity;
+}
+
+Component* Message::GetComponent()
+{
+    return _Component;
+}

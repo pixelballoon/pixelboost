@@ -16,6 +16,9 @@ public:
     
     virtual Uid GetType() = 0;
     
+    Entity* GetEntity();
+    Component* GetComponent();
+    
 private:
     Entity* _Entity;
     Component* _Component;
