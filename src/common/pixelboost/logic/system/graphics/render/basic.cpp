@@ -12,7 +12,7 @@ void BasicRenderSystem::Render(Scene* scene, Viewport* viewport)
 {
     for (RenderableSet::iterator it = _Renderables.begin(); it != _Renderables.end(); ++it)
     {
-        Renderer::Instance()->AddItem(*it);
+        RenderItem(*it);
     }
 }
 

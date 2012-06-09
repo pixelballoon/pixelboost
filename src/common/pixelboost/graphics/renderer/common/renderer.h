@@ -34,15 +34,14 @@ public:
     
     EffectManager* GetEffectManager();
     
-    // This should only be called during a Render callback
-    void AddItem(Renderable* renderable);
-    
     void AddViewport(Viewport* viewport);
     void RemoveViewport(Viewport* viewport);
     
     void SetHandler(int renderableType, IRenderer* renderer);
     
 private:
+    void AttachRenderable(Renderable* renderable);
+    
     void FlushBuffer(Viewport* viewport);
     void RenderBatch(Viewport* viewport, int count, Renderable** renderable, Effect* effect);
     
@@ -63,6 +62,7 @@ private:
     static Renderer* _Instance;
     
     friend class IRenderer;
+    friend class RenderSystem;
     friend class Viewport;
 };
 

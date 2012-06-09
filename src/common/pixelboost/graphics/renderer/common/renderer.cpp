@@ -48,7 +48,7 @@ EffectManager* Renderer::GetEffectManager()
     return _EffectManager;
 }
 
-void Renderer::AddItem(Renderable* renderable)
+void Renderer::AttachRenderable(Renderable* renderable)
 {
     _Renderables[renderable->GetLayer()].push_back(renderable);
 }
