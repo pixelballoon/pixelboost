@@ -38,6 +38,7 @@ public:
     void SetPosition(glm::vec2 position);
     glm::vec2 GetPosition();
     
+    void SetCamera(Camera* camera);
     Camera* GetCamera();
     
     void SetRenderScheme(Uid scheme);

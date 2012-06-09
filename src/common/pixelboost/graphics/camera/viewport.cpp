@@ -63,6 +63,11 @@ glm::vec2 Viewport::GetPosition()
     return _Position;
 }
 
+void Viewport::SetCamera(Camera* camera)
+{
+    _Camera = camera;
+}
+
 Camera* Viewport::GetCamera()
 {
     return _Camera;
@@ -90,7 +95,7 @@ Scene* Viewport::GetScene()
 
 void Viewport::Render()
 {
-    if (_Scene)
+    if (_Scene && _Camera)
     {
         GraphicsDevice::Instance()->SetViewport(glm::vec4(_Position.x + GraphicsDevice::Instance()->GetDisplayResolution().x/2.f - _Resolution.x/2.f, _Position.y + GraphicsDevice::Instance()->GetDisplayResolution().y/2.f - _Resolution.y/2.f, _Resolution.x, _Resolution.y));
         
