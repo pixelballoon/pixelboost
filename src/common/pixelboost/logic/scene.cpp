@@ -114,6 +114,11 @@ Entity* Scene::GetEntityById(Uid uid)
     if (it != _Entities.end())
         return it->second;
     
+    it = _NewEntities.find(uid);
+    
+    if (it != _NewEntities.end())
+        return it->second;
+    
     return 0;
 }
 
