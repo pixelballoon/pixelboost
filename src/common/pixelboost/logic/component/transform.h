@@ -7,36 +7,29 @@
 namespace pb
 {
 
-class TransformComponent : public Component
-{
-public:
-    TransformComponent(Entity* parent);
-    virtual ~TransformComponent();
-    
-    Uid GetType();
-    static Uid GetStaticType();
-    
-    const glm::mat4x4& GetMatrix();
-    
-    void SetTransform(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale);
-    
-    const glm::vec3& GetPosition();
-    void SetPosition(const glm::vec3& position);
-    
-    const glm::vec3& GetRotation();
-    void SetRotation(const glm::vec3& rotation);
-    
-    const glm::vec3& GetScale();
-    void SetScale(const glm::vec3& scale);
-    
-private:
-    void OnChanged();
-    
-    bool _Dirty;
-    glm::mat4x4 _Matrix;
-    glm::vec3 _Position;
-    glm::vec3 _Rotation;
-    glm::vec3 _Scale;
-};
+    class TransformComponent : public Component
+    {
+    public:
+        TransformComponent(Entity* parent, Uid parentTransform);
+        virtual ~TransformComponent();
+        
+        Uid GetType();
+        static Uid GetStaticType();
+        
+        virtual const glm::mat4x4& GetMatrix() = 0;
+        
+        virtual void SetTransform(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale) = 0;
+        
+        virtual glm::vec3 GetPosition() = 0;
+        virtual void SetPosition(const glm::vec3& position) = 0;
+        
+        virtual glm::vec3 GetRotation() = 0;
+        virtual void SetRotation(const glm::vec3& rotation) = 0;
+        
+        virtual glm::vec3 GetScale() = 0;
+        virtual void SetScale(const glm::vec3& scale) = 0;
+        
+    private:
+    };
 
 }
