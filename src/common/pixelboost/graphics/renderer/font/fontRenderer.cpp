@@ -276,6 +276,7 @@ void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewpor
         
         switch (renderable.Alignment) {
             case kFontAlignLeft:
+                offset = 0;
                 break;
             case kFontAlignCenter:
                 offset = -offset/2.f;
