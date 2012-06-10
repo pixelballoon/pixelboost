@@ -11,7 +11,7 @@ public:
     ParticleFinishedMessage(Entity* entity, Component* component);
     virtual ~ParticleFinishedMessage();
     
-    Uid GetType();
+    Uid GetType() const;
     static Uid GetStaticType();
     
 private:

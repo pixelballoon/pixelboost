@@ -30,8 +30,8 @@ public:
     ParticleEmitter* GetEmitter();
     
 private:
-    void OnUpdate(Uid sender, Message& message);
-    void OnTransformChanged(Uid sender, Message& message);
+    void OnUpdate(Uid sender, const Message& message);
+    void OnTransformChanged(Uid sender, const Message& message);
     void UpdateTransform();
     
     ParticleRenderable* _Renderable;

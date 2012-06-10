@@ -25,7 +25,7 @@ namespace pb
         static Uid GetStaticType();
         
     private:
-        void OnTransformChanged(Uid sender, Message& message);
+        void OnTransformChanged(Uid sender, const Message& message);
         void UpdateTransform();
         
         Camera* _Camera;

@@ -13,7 +13,7 @@ TransformChangedMessage::~TransformChangedMessage()
     
 }
 
-Uid TransformChangedMessage::GetType()
+Uid TransformChangedMessage::GetType() const
 {
     return GetStaticType();
 }

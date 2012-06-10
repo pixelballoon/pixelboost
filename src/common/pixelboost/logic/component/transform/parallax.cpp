@@ -113,9 +113,9 @@ void ParallaxTransformComponent::OnChanged()
     GetParent()->SendMessage(message);
 }
 
-void ParallaxTransformComponent::OnTransformChanged(Uid sender, Message& message)
+void ParallaxTransformComponent::OnTransformChanged(Uid sender, const Message& message)
 {
-    _ParallaxPosition = static_cast<TransformChangedMessage&>(message).GetEntity()->GetComponentByType<TransformComponent>()->GetPosition();
+    _ParallaxPosition = static_cast<const TransformChangedMessage&>(message).GetEntity()->GetComponentByType<TransformComponent>()->GetPosition();
     
     OnChanged();
 }

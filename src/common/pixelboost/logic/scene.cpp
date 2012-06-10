@@ -122,7 +122,7 @@ Entity* Scene::GetEntityById(Uid uid)
     return 0;
 }
 
-void Scene::BroadcastMessage(Message& message)
+void Scene::BroadcastMessage(const Message& message)
 {
     for (EntityMap::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
     {
@@ -131,7 +131,7 @@ void Scene::BroadcastMessage(Message& message)
     }
 }
 
-void Scene::SendMessage(Uid uid, Message& message)
+void Scene::SendMessage(Uid uid, const Message& message)
 {
     Entity* entity = GetEntityById(uid);
     

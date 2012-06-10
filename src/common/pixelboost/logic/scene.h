@@ -33,8 +33,9 @@ public:
     
     Entity* GetEntityById(Uid uid);
     
-    void BroadcastMessage(Message& message);
-    void SendMessage(Uid uid, Message& message);
+    void BroadcastMessage(const Message& message);
+    void SendMessage(Uid uid, const Message& message);
+    void SendDelayedMessage(Uid uid, const Message& message);
     
 private:
     typedef std::map<Uid, Entity*> EntityMap;

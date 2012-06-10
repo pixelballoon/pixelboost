@@ -73,7 +73,7 @@ void SpriteComponent::SetLocalTransform(const glm::mat4x4& transform)
     UpdateTransform();
 }
 
-void SpriteComponent::OnTransformChanged(Uid sender, Message& message)
+void SpriteComponent::OnTransformChanged(Uid sender, const Message& message)
 {
     UpdateTransform();
 }

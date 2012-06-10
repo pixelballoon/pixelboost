@@ -38,7 +38,7 @@ public:
 
 public:
     typedef std::vector<Component*> ComponentList;
-    typedef sigslot::Delegate2<Uid, Message&> MessageHandler;
+    typedef sigslot::Delegate2<Uid, const Message&> MessageHandler;
     
 public:
     Uid GenerateComponentId();
@@ -52,16 +52,16 @@ public:
     template <class T>T* GetComponentByType();
     ComponentList* GetComponentsByType(Uid componentType);
     
-    void SendMessage(Message& message);
+    void SendMessage(const Message& message);
     
     void RegisterMessageHandler(Uid messageType, MessageHandler handler);
     void UnregisterMessageHandler(Uid messageType, MessageHandler handler);
     
 private:
-    void HandleMessage(Message& message);
+    void HandleMessage(const Message& message);
     
 private:
-    typedef std::map<Uid, sigslot::Signal2<Uid, Message&> > MessageHandlers;
+    typedef std::map<Uid, sigslot::Signal2<Uid, const Message&> > MessageHandlers;
     typedef std::map<Uid, ComponentList> ComponentMap;
     
     ComponentMap _Components;

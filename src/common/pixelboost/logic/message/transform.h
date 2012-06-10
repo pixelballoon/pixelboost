@@ -11,7 +11,7 @@ public:
     TransformChangedMessage(Entity* entity, Component* component);
     virtual ~TransformChangedMessage();
     
-    Uid GetType();
+    Uid GetType() const;
     static Uid GetStaticType();
     
 private:

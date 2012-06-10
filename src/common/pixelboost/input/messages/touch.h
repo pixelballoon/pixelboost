@@ -11,7 +11,7 @@ public:
     TouchMessage(Entity* entity, Component* component);
     virtual ~TouchMessage();
     
-    Uid GetType();
+    Uid GetType() const;
     static Uid GetStaticType();
 };
     

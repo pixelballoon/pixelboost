@@ -55,11 +55,11 @@ ParticleEmitter* ParticleEmitterComponent::GetEmitter()
     return _Renderable->GetEmitter();
 }
 
-void ParticleEmitterComponent::OnUpdate(Uid sender, Message& message)
+void ParticleEmitterComponent::OnUpdate(Uid sender, const Message& message)
 {
     bool wasFinished = _Renderable->GetEmitter()->IsFinished();
     
-    _Renderable->GetEmitter()->Update(static_cast<UpdateMessage&>(message).GetDelta());
+    _Renderable->GetEmitter()->Update(static_cast<const UpdateMessage&>(message).GetDelta());
     
     if (!wasFinished && _Renderable->GetEmitter()->IsFinished())
     {
@@ -68,7 +68,7 @@ void ParticleEmitterComponent::OnUpdate(Uid sender, Message& message)
     }
 }
 
-void ParticleEmitterComponent::OnTransformChanged(Uid sender, Message& message)
+void ParticleEmitterComponent::OnTransformChanged(Uid sender, const Message& message)
 {
     UpdateTransform();
 }

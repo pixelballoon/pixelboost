@@ -14,10 +14,10 @@ public:
     Message(Entity* entity, Component* component);
     virtual ~Message();
     
-    virtual Uid GetType() = 0;
+    virtual Uid GetType() const = 0;
     
-    Entity* GetEntity();
-    Component* GetComponent();
+    Entity* GetEntity() const;
+    Component* GetComponent() const;
     
 private:
     Entity* _Entity;

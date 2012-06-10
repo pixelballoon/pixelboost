@@ -11,10 +11,10 @@ public:
     UpdateMessage(float delta);
     virtual ~UpdateMessage();
     
-    Uid GetType();
+    Uid GetType() const;
     static Uid GetStaticType();
     
-    float GetDelta();
+    float GetDelta() const;
     
 private:
     float _Delta;

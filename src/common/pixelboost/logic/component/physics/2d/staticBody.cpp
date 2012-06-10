@@ -89,7 +89,7 @@ void StaticBody2DComponent::SetSensor(bool isSensor)
     }
 }
 
-void StaticBody2DComponent::OnTransformChanged(Uid sender, Message& message)
+void StaticBody2DComponent::OnTransformChanged(Uid sender, const Message& message)
 {
     UpdateTransform();
 }

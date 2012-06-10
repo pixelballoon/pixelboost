@@ -31,7 +31,7 @@ public:
     void SetLocalTransform(const glm::mat4x4& transform);
     
 private:
-    void OnTransformChanged(Uid sender, Message& message);
+    void OnTransformChanged(Uid sender, const Message& message);
     void UpdateTransform();
     
     glm::mat4x4 _LocalTransform;

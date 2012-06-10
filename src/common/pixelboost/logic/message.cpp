@@ -14,12 +14,12 @@ Message::~Message()
     
 }
 
-Entity* Message::GetEntity()
+Entity* Message::GetEntity() const
 {
     return _Entity;
 }
 
-Component* Message::GetComponent()
+Component* Message::GetComponent() const
 {
     return _Component;
 }

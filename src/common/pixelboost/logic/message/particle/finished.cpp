@@ -13,7 +13,7 @@ ParticleFinishedMessage::~ParticleFinishedMessage()
     
 }
 
-Uid ParticleFinishedMessage::GetType()
+Uid ParticleFinishedMessage::GetType() const
 {
     return GetStaticType();
 }

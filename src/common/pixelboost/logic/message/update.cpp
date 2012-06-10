@@ -14,7 +14,7 @@ UpdateMessage::~UpdateMessage()
     
 }
 
-Uid UpdateMessage::GetType()
+Uid UpdateMessage::GetType() const
 {
     return GetStaticType();
 }
@@ -24,7 +24,7 @@ Uid UpdateMessage::GetStaticType()
     return TypeHash("update");
 }
 
-float UpdateMessage::GetDelta()
+float UpdateMessage::GetDelta() const
 {
     return _Delta;
 }

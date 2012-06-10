@@ -13,7 +13,7 @@ TouchMessage::~TouchMessage()
     
 }
 
-Uid TouchMessage::GetType()
+Uid TouchMessage::GetType() const
 {
     return GetStaticType();
 }
