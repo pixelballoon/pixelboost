@@ -40,7 +40,7 @@ const glm::mat4x4& ParallaxTransformComponent::GetMatrix()
 {
     if (_Dirty)
     {
-        _Matrix = glm::translate(glm::mat4x4(), GetPosition());
+        _Matrix = glm::translate(glm::mat4x4(), _Position + (_ParallaxPosition * _ParallaxScale));
         _Matrix = glm::scale(_Matrix, _Scale);
         _Matrix = glm::rotate(_Matrix, _Rotation.x, glm::vec3(1,0,0));
         _Matrix = glm::rotate(_Matrix, _Rotation.y, glm::vec3(0,1,0));
@@ -61,7 +61,7 @@ void ParallaxTransformComponent::SetTransform(const glm::vec3& position, const g
 
 glm::vec3 ParallaxTransformComponent::GetPosition()
 {
-    return _Position + (_ParallaxPosition * _ParallaxScale);
+    return _Position;
 }
 
 void ParallaxTransformComponent::SetPosition(const glm::vec3& position)
