@@ -17,6 +17,11 @@ Scene::~Scene()
     {
         delete it->second;
     }
+    
+    for (DelayedMessageList::iterator it = _DelayedMessages.begin(); it != _DelayedMessages.end(); ++it)
+    {
+        delete it->second.second;
+    }
 }
 
 void Scene::Update(float time)
@@ -44,6 +49,25 @@ void Scene::Update(float time)
     for (SystemMap::iterator it = _Systems.begin(); it != _Systems.end(); ++it)
     {
         it->second->Update(this, time);
+    }
+    
+    for (DelayedMessageList::iterator it = _DelayedMessages.begin(); it != _DelayedMessages.end();)
+    {
+        it->first -= time;
+        
+        if (it->first < 0)
+        {
+            if (it->second.first == 0)
+            {
+                BroadcastMessage(*it->second.second);
+            } else {
+                SendMessage(it->second.first, *it->second.second);
+            }
+            delete it->second.second;
+            it = _DelayedMessages.erase(it);
+        } else {
+            ++it;
+        }
     }
     
     UpdateMessage message(time);
@@ -137,4 +161,14 @@ void Scene::SendMessage(Uid uid, const Message& message)
     
     if (entity && entity->GetState() != Entity::kEntityDestroyed)
         entity->SendMessage(message);
+}
+
+void Scene::BroadcastDelayedMessage(float delay, const Message* message)
+{
+    _DelayedMessages.push_back(std::pair<float, DelayedMessage>(delay, DelayedMessage(0, message)));
+}
+
+void Scene::SendDelayedMessage(Uid uid, float delay, const Message* message)
+{
+    _DelayedMessages.push_back(std::pair<float, DelayedMessage>(delay, DelayedMessage(uid, message)));
 }
