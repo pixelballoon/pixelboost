@@ -13,16 +13,14 @@ Screen::Screen(Game* game)
 
 Screen::~Screen()
 {
+    
 }
 
 void Screen::Update(float time)
 {
+    
 }
 
-void Screen::Render()
-{
-}
-    
 void Screen::SetActive(bool active)
 {
     

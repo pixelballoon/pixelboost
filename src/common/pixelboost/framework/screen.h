@@ -12,7 +12,6 @@ public:
 	virtual ~Screen();
 	
 	virtual void Update(float time);
-	virtual void Render();
     
     virtual void SetActive(bool active);
     
