@@ -25,6 +25,16 @@ class Texture;
 class TextureGLES2;
 class VertexBuffer;
     
+struct DeviceState
+{
+    DeviceState();
+    
+    GLuint boundIndexBuffer;
+    GLuint boundTexture;
+    GLuint boundVertexBuffer;
+    GLuint boundProgram;
+};
+    
 class GraphicsDeviceGL : public GraphicsDevice
 {
 public:
@@ -70,7 +80,7 @@ public:
     virtual void DrawElements(ElementType elementType, int num);
     
 private:
-    DeviceState* _State;
+    DeviceState _CurrentState;
     
     typedef std::vector<ShaderProgram*> ProgramList;
     typedef std::vector<Texture*> TextureList;

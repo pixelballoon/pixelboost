@@ -18,21 +18,13 @@ using namespace pb;
 #include <OpenGL/gl.h>
 #endif
 
-struct pb::DeviceState
+DeviceState::DeviceState()
 {
-    DeviceState()
-    {
-        boundIndexBuffer = 0;
-        boundTexture = 0;
-        boundVertexBuffer = 0;
-        boundProgram = 0;
-    }
-    
-    GLuint boundIndexBuffer;
-    GLuint boundTexture;
-    GLuint boundVertexBuffer;
-    GLuint boundProgram;
-};
+    boundIndexBuffer = 0;
+    boundTexture = 0;
+    boundVertexBuffer = 0;
+    boundProgram = 0;
+}
 
 GraphicsDevice* GraphicsDevice::Create()
 {
@@ -41,12 +33,12 @@ GraphicsDevice* GraphicsDevice::Create()
 
 GraphicsDeviceGL::GraphicsDeviceGL()
 {
-    _State = new DeviceState();
+    
 }
 
 GraphicsDeviceGL::~GraphicsDeviceGL()
 {
-    delete _State;
+    
 }
 
 unsigned char* GraphicsDeviceGL::CaptureRenderBuffer()
@@ -88,7 +80,7 @@ void GraphicsDeviceGL::DestroyVertexBuffer(VertexBuffer* vertexBuffer)
 
 VertexBuffer* GraphicsDeviceGL::GetBoundVertexBuffer()
 {
-    VertexReverseMap::iterator it = _VertexReverseBuffers.find(_State->boundVertexBuffer);
+    VertexReverseMap::iterator it = _VertexReverseBuffers.find(_CurrentState.boundVertexBuffer);
     
     if (it != _VertexReverseBuffers.end())
         return it->second;
@@ -100,7 +92,7 @@ VertexBuffer* GraphicsDeviceGL::BindVertexBuffer(VertexBuffer* vertexBuffer)
 {
     GLuint vertexBufferId = vertexBuffer ? _VertexBuffers[vertexBuffer] : 0;
     
-    int previousBinding = _State->boundVertexBuffer;
+    int previousBinding = _CurrentState.boundVertexBuffer;
     
     VertexBuffer* previousBuffer = 0;
     
@@ -109,11 +101,11 @@ VertexBuffer* GraphicsDeviceGL::BindVertexBuffer(VertexBuffer* vertexBuffer)
     if (it != _VertexReverseBuffers.end())
         previousBuffer = it->second;
     
-    if (vertexBufferId != _State->boundVertexBuffer)
+    if (vertexBufferId != _CurrentState.boundVertexBuffer)
     {
         glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
         
-        _State->boundVertexBuffer = vertexBufferId;
+        _CurrentState.boundVertexBuffer = vertexBufferId;
         
         if (vertexBuffer)
         {
@@ -260,7 +252,7 @@ void GraphicsDeviceGL::DestroyIndexBuffer(IndexBuffer* indexBuffer)
 
 IndexBuffer* GraphicsDeviceGL::GetBoundIndexBuffer()
 {
-    IndexReverseMap::iterator it = _IndexReverseBuffers.find(_State->boundIndexBuffer);
+    IndexReverseMap::iterator it = _IndexReverseBuffers.find(_CurrentState.boundIndexBuffer);
     
     if (it != _IndexReverseBuffers.end())
         return it->second;
@@ -274,9 +266,9 @@ IndexBuffer* GraphicsDeviceGL::BindIndexBuffer(IndexBuffer* indexBuffer)
     
     IndexBuffer* previousBuffer = GetBoundIndexBuffer();
     
-    if (indexBufferId != _State->boundIndexBuffer)
+    if (indexBufferId != _CurrentState.boundIndexBuffer)
     {
-        _State->boundIndexBuffer = indexBufferId;
+        _CurrentState.boundIndexBuffer = indexBufferId;
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferId);
     }
     
@@ -325,7 +317,7 @@ Texture* GraphicsDeviceGL::GetBoundTexture()
 {
     for (TextureList::iterator it = _Textures.begin(); it != _Textures.end(); ++it)
     {
-        if (static_cast<TextureGL*>(*it)->_Texture == _State->boundTexture)
+        if (static_cast<TextureGL*>(*it)->_Texture == _CurrentState.boundTexture)
             return *it;
     }
     
@@ -338,9 +330,9 @@ Texture* GraphicsDeviceGL::BindTexture(Texture* texture)
     
     Texture* previousTexture = GetBoundTexture();
     
-    if (textureId != _State->boundTexture)
+    if (textureId != _CurrentState.boundTexture)
     {
-        _State->boundTexture = textureId;
+        _CurrentState.boundTexture = textureId;
         glBindTexture(GL_TEXTURE_2D, textureId);
     }
     
@@ -371,7 +363,7 @@ ShaderProgram* GraphicsDeviceGL::GetBoundProgram()
 {
     for (ProgramList::iterator it = _Programs.begin(); it != _Programs.end(); ++it)
     {
-        if (static_cast<ShaderProgramGL*>(*it)->_Program == _State->boundProgram)
+        if (static_cast<ShaderProgramGL*>(*it)->_Program == _CurrentState.boundProgram)
             return *it;
     }
     
@@ -383,10 +375,10 @@ ShaderProgram* GraphicsDeviceGL::BindProgram(ShaderProgram* program)
     GLuint programId = program ? static_cast<ShaderProgramGL*>(program)->_Program : 0;
     ShaderProgramGL* previousProgram = static_cast<ShaderProgramGL*>(GetBoundProgram());
     
-    if (static_cast<ShaderProgramGL*>(program)->_Program != _State->boundProgram)
+    if (static_cast<ShaderProgramGL*>(program)->_Program != _CurrentState.boundProgram)
     {
         glUseProgram(programId);
-        _State->boundProgram = programId;
+        _CurrentState.boundProgram = programId;
     }
     
     return previousProgram;
