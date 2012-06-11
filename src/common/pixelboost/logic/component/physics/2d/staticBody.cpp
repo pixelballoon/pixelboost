@@ -1,3 +1,5 @@
+#ifndef PIXELBOOST_DISABLE_BOX2D
+
 #include "Box2D/Box2D.h"
 
 #include "pixelboost/logic/component/physics/2d/staticBody.h"
@@ -105,3 +107,5 @@ void StaticBody2DComponent::UpdateTransform()
         _Body->SetTransform(b2Vec2(position.x, position.y), rotation.z);
     }
 }
+
+#endif
