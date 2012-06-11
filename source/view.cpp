@@ -13,11 +13,10 @@
 #include "Gwen/Skins/TexturedBase.h"
 
 #include "pixelboost/graphics/camera/camera.h"
-#include "pixelboost/graphics/render/common/layer.h"
-#include "pixelboost/graphics/render/common/renderer.h"
-#include "pixelboost/graphics/render/gwen/gwenRenderer.h"
-#include "pixelboost/graphics/render/sprite/sprite.h"
-#include "pixelboost/graphics/render/sprite/spriteRenderer.h"
+#include "pixelboost/graphics/renderer/common/renderer.h"
+#include "pixelboost/graphics/renderer/gwen/gwenRenderer.h"
+#include "pixelboost/graphics/renderer/sprite/sprite.h"
+#include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
 #include "pixelboost/misc/gwen/inputHandler.h"
 
 #include "command/manager.h"
@@ -140,10 +139,6 @@ View::~View()
     View::Instance()->GetKeyboardManager()->RemoveHandler(_KeyboardHandler);
     View::Instance()->GetMouseManager()->RemoveHandler(_MouseHandler);
     
-    pb::Game::Instance()->GetRenderer()->RemoveLayer(_BackgroundLayer);
-    pb::Game::Instance()->GetRenderer()->RemoveLayer(_LevelLayer);
-    delete _BackgroundLayer;
-    delete _LevelLayer;
     delete _LevelCamera;
     
     delete _KeyboardHandler;
@@ -151,8 +146,6 @@ View::~View()
     
     delete _GwenInput;
     delete _GwenCanvas;
-    pb::Game::Instance()->GetRenderer()->RemoveLayer(_GwenLayer);
-    delete _GwenLayer;
     delete _GwenCamera;
 }
 
@@ -161,7 +154,7 @@ View* View::Instance()
     return static_cast<View*>(Game::Instance());
 }
 
-void View::Initialise(Vec2 size)
+void View::Initialise(glm::vec2 size)
 {
     _ManipulatorManager = new ManipulatorManager();
     _ManipulatorManager->AddManipulator(new SelectManipulator());
@@ -172,19 +165,12 @@ void View::Initialise(Vec2 size)
     _ManipulatorManager->SetActiveManipulator("select");
     
     _LevelCamera = new pb::OrthographicCamera();
-    _BackgroundLayer = new pb::RenderLayer(50, _LevelCamera);
-    _LevelLayer = new pb::RenderLayer(100, _LevelCamera);
     
     _Level = new Level();
     
     _GwenCamera = new pb::OrthographicCamera();
-    _GwenLayer = new pb::RenderLayer(500, _GwenCamera);
     
-    pb::Game::Instance()->GetRenderer()->AddLayer(_BackgroundLayer);
-    pb::Game::Instance()->GetRenderer()->AddLayer(_LevelLayer);
-    pb::Game::Instance()->GetRenderer()->AddLayer(_GwenLayer);
-
-    pb::GwenRenderer* renderer = new pb::GwenRenderer(_GwenLayer);
+    pb::GwenRenderer* renderer = new pb::GwenRenderer(3);
     renderer->Init();
     
     Gwen::Skin::TexturedBase* skin = new Gwen::Skin::TexturedBase(renderer);
@@ -233,7 +219,7 @@ void View::Initialise(Vec2 size)
     _Level->entityRemoved.Connect(this, &View::OnEntityRemoved);
 }
 
-Vec2 View::GetScreenResolution()
+glm::vec2 View::GetScreenResolution()
 {
     return _CanvasSize;
 }
@@ -242,9 +228,9 @@ void View::Render()
 {
     _GwenCanvas->RenderCanvas();
     
-    _Level->Render(_BackgroundLayer, _LevelLayer);
+    _Level->Render(0, 1);
     
-    _ManipulatorManager->Render(_LevelLayer);
+    _ManipulatorManager->Render(2);
     
     Game::Render();
 }
@@ -261,15 +247,15 @@ void View::SetDirty()
 
 void View::Scroll(glm::vec2 offset)
 {
-    _LevelCamera->Position += Vec2(offset.x, offset.y);
+    _LevelCamera->Position += glm::vec3(offset, 0);
 }
 
 void View::Zoom(float delta)
 {
     float minZoom = 0.1f;
     float maxZoom = 2.f;
-    Vec2 scale = _LevelCamera->Scale;
-    _LevelCamera->Scale = Vec2(Max(Min(maxZoom, scale[0]+delta), minZoom), Max(Min(maxZoom, scale[1]+delta), minZoom));
+    glm::vec2 scale = _LevelCamera->Scale;
+    _LevelCamera->Scale = glm::vec2(glm::max(glm::min(maxZoom, scale[0]+delta), minZoom), glm::max(glm::min(maxZoom, scale[1]+delta), minZoom));
 }
 
 std::string View::GetSpriteFile(const std::string& sprite)
@@ -314,11 +300,11 @@ pb::OrthographicCamera* View::GetLevelCamera()
     return _LevelCamera;
 }
 
-void View::SetCanvasSize(Vec2 size)
+void View::SetCanvasSize(glm::vec2 size)
 {
     _CanvasSize = size;
     _GwenCanvas->SetSize(size[0], size[1]);
-    _GwenCamera->Position = Vec2(size[0]/2.f, -size[1]/2.f)/32.f;
+    _GwenCamera->Position = glm::vec3(size[0]/2.f, -size[1]/2.f, 0.f)/32.f;
 }
 
 void View::SetRecord(Record* record)

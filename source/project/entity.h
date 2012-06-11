@@ -4,9 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "glm/glm.hpp"
 #include "sigslot/signal.h"
-
-#include "pixelboost/math/maths.h"
 
 #include "project/definitions.h"
 #include "project/struct.h"
@@ -42,14 +41,14 @@ public:
     virtual const Record* GetRecord() const;
     
 public:    
-    const Vec3& GetPosition();
-    void SetPosition(const Vec3& position);
+    const glm::vec3& GetPosition();
+    void SetPosition(const glm::vec3& position);
     
     float GetRotation();
     void SetRotation(float rotation);
     
-    const Vec3& GetScale();
-    void SetScale(const Vec3& scale);
+    const glm::vec3& GetScale();
+    void SetScale(const glm::vec3& scale);
     
     sigslot::Signal1<Entity*> entityChanged;
     
@@ -60,9 +59,9 @@ private:
 private:
     Record* _Record;
     
-    Vec3 _Position;
+    glm::vec3 _Position;
     float _Rotation;
-    Vec3 _Scale;
+    glm::vec3 _Scale;
 };
     
 }

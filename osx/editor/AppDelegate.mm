@@ -14,7 +14,7 @@
     _Core = new pixeleditor::Core();
     
     _View = new pixeleditor::View();
-    _View->Initialise(Vec2(1200,1000));
+    _View->Initialise(glm::vec2(1200,1000));
     _View->Render();
 }
 

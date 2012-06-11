@@ -69,7 +69,7 @@ bool CreateEntityCommand::Do(std::string& returnString)
         _EntityUid = entity->GetUid();
     
     entity->SetName(type->GetName());
-    entity->SetPosition(Vec3(x, y, z));
+    entity->SetPosition(glm::vec3(x, y, z));
     
     record->AddEntity(entity);
     

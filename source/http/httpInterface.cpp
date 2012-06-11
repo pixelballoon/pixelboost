@@ -199,7 +199,7 @@ bool HttpInterface::OnHttpRequest(HttpServer::RequestType type, const std::strin
                 
                 if (urlArguments[3] == "transform")
                 {
-                    replied = OnSetTransform(connection, record, entity, Vec3(atof(queryArguments["tx"].c_str()), atof(queryArguments["ty"].c_str()), atof(queryArguments["tz"].c_str())), 0, Vec3(1,1,1));
+                    replied = OnSetTransform(connection, record, entity, glm::vec3(atof(queryArguments["tx"].c_str()), atof(queryArguments["ty"].c_str()), atof(queryArguments["tz"].c_str())), 0, glm::vec3(1,1,1));
                 } else if (urlArguments[3] == "property")
                 {
                     std::string type = queryArguments["type"];
@@ -256,7 +256,7 @@ bool HttpInterface::OnCreateEntity(pb::HttpConnection& connection, Uid recordId,
     return true;
 }
 
-bool HttpInterface::OnSetTransform(pb::HttpConnection& connection, Uid recordId, Uid entityId, const Vec3& position, float rotation, const Vec3& scale)
+bool HttpInterface::OnSetTransform(pb::HttpConnection& connection, Uid recordId, Uid entityId, const glm::vec3& position, float rotation, const glm::vec3& scale)
 {
     Project* project = Core::Instance()->GetProject();
     

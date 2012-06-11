@@ -1,5 +1,5 @@
 #include "pixelboost/graphics/camera/camera.h"
-#include "pixelboost/graphics/render/primitive/primitiveRenderer.h"
+#include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 
 #include "command/manager.h"
 #include "view/entity/entity.h"
@@ -31,7 +31,7 @@ char SelectManipulator::GetKey()
     return 'q';
 }
 
-void SelectManipulator::Render(pb::RenderLayer* layer)
+void SelectManipulator::Render(int layer)
 {
     if (_Active)
     {
@@ -42,8 +42,8 @@ void SelectManipulator::Render(pb::RenderLayer* layer)
         glm::vec2 position = (start+end)/2.f;
         glm::vec2 size = end-start;
         
-        View::Instance()->GetPrimitiveRenderer()->AttachBox(layer, Vec2(position.x, position.y), Vec2(size.x, size.y), Vec3(0,0,0), Vec4(0,0,0.1,0.1));
-        View::Instance()->GetPrimitiveRenderer()->AttachBox(layer, Vec2(position.x, position.y), Vec2(size.x, size.y), Vec3(0,0,0), Vec4(0,0,0.5,0.5), false);
+        //View::Instance()->GetPrimitiveRenderer()->AttachBox(layer, Vec2(position.x, position.y), Vec2(size.x, size.y), Vec3(0,0,0), Vec4(0,0,0.1,0.1));
+        //View::Instance()->GetPrimitiveRenderer()->AttachBox(layer, Vec2(position.x, position.y), Vec2(size.x, size.y), Vec3(0,0,0), Vec4(0,0,0.5,0.5), false);
     }
 }
 

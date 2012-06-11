@@ -80,7 +80,7 @@ char Manipulator::GetKey()
     return 0;
 }
 
-void Manipulator::Render(pb::RenderLayer* layer)
+void Manipulator::Render(int layer)
 {
     
 }
@@ -144,7 +144,7 @@ ManipulatorManager::~ManipulatorManager()
     }
 }
 
-void ManipulatorManager::Render(pb::RenderLayer* layer)
+void ManipulatorManager::Render(int layer)
 {
     _ActiveManipulator->Render(layer);
 }

@@ -36,9 +36,9 @@ bool Entity::Open(json::Object& entity)
     json::Number& sy = transform["sy"];
     json::Number& sz = transform["sz"];
     
-    _Position = Vec3(tx.Value(), ty.Value(), tz.Value());
+    _Position = glm::vec3(tx.Value(), ty.Value(), tz.Value());
     _Rotation = (float)rz.Value();
-    _Scale = Vec3(sx.Value(), sy.Value(), sz.Value());
+    _Scale = glm::vec3(sx.Value(), sy.Value(), sz.Value());
     
     return status;
 }
@@ -82,12 +82,12 @@ const Record* Entity::GetRecord() const
     return _Record;
 }
 
-const Vec3& Entity::GetPosition()
+const glm::vec3& Entity::GetPosition()
 {
     return _Position;
 }
 
-void Entity::SetPosition(const Vec3& position)
+void Entity::SetPosition(const glm::vec3& position)
 {
     _Position = position;
     
@@ -106,12 +106,12 @@ void Entity::SetRotation(float rotation)
     entityChanged(this);
 }
 
-const Vec3& Entity::GetScale()
+const glm::vec3& Entity::GetScale()
 {
     return _Scale;
 }
 
-void Entity::SetScale(const Vec3& scale)
+void Entity::SetScale(const glm::vec3& scale)
 {
     _Scale = scale;
     

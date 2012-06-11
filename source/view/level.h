@@ -28,7 +28,7 @@ namespace pixeleditor
         ~Level();
                 
         void Update(float time);
-        void Render(pb::RenderLayer* backgroundLayer, pb::RenderLayer* levelLayer);
+        void Render(int backgroundLayer, int levelLayer);
         
         void Clear();
         

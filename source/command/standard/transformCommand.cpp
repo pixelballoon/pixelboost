@@ -57,7 +57,7 @@ bool TransformCommand::Do(std::string& returnString)
             
             if (entity)
             {
-                Vec3 position = entity->GetPosition();
+                glm::vec3 position = entity->GetPosition();
                 entity->SetPosition(position+_PositionOffset);
             }
         }
@@ -98,7 +98,7 @@ bool TransformCommand::Do(std::string& returnString)
             
             if (entity)
             {
-                Vec3 scale = entity->GetScale();
+                glm::vec3 scale = entity->GetScale();
                 entity->SetScale(scale*_ScaleOffset);
             }
         }
@@ -119,7 +119,7 @@ bool TransformCommand::Undo()
             
             if (entity)
             {
-                Vec3 position = entity->GetPosition();
+                glm::vec3 position = entity->GetPosition();
                 entity->SetPosition(position-_PositionOffset);
             }
         }
@@ -151,7 +151,7 @@ bool TransformCommand::Undo()
             
             if (entity)
             {
-                Vec3 scale = entity->GetScale();
+                glm::vec3 scale = entity->GetScale();
                 entity->SetScale(scale/_ScaleOffset);
             }
         }

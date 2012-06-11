@@ -1,4 +1,4 @@
-#include "pixelboost/graphics/render/primitive/primitiveRenderer.h"
+#include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 
 #include "core/selection.h"
 #include "core/uidHelpers.h"
@@ -38,13 +38,15 @@ void ViewEntity::Update(float time)
     }
 }
 
-void ViewEntity::Render(pb::RenderLayer* layer)
+void ViewEntity::Render(int layer)
 {
     UpdateBounds();
     
+    /*
     View::Instance()->GetPrimitiveRenderer()->AttachBox(layer, Vec2(_Position.x, _Position.y), Vec2(0.1,0.1));
     View::Instance()->GetPrimitiveRenderer()->AttachLine(layer, Vec2(_Position.x, _Position.y), Vec2(_Position.x, _Position.y+1));
     View::Instance()->GetPrimitiveRenderer()->AttachLine(layer, Vec2(_Position.x, _Position.y), Vec2(_Position.x+1, _Position.y));
+    */
     
     for (PropertyMap::iterator it = _Properties.begin(); it != _Properties.end(); ++it)
     {
@@ -55,8 +57,10 @@ void ViewEntity::Render(pb::RenderLayer* layer)
     {
         glm::vec3 boxCenter = _BoundingBox.GetCenter();
         glm::vec3 boxSize = _BoundingBox.GetSize();
+        /*
         View::Instance()->GetPrimitiveRenderer()->AttachBox(layer, Vec2(boxCenter.x, boxCenter.y), Vec2(boxSize.x, boxSize.y), Vec3(0,0,0), Vec4(0.2,0.2,0.4,0.3));
-           View::Instance()->GetPrimitiveRenderer()->AttachBox(layer, Vec2(boxCenter.x, boxCenter.y), Vec2(boxSize.x, boxSize.y), Vec3(0,0,0), Vec4(0.4,0.2,0.2,0.5), false);
+        View::Instance()->GetPrimitiveRenderer()->AttachBox(layer, Vec2(boxCenter.x, boxCenter.y), Vec2(boxSize.x, boxSize.y), Vec3(0,0,0), Vec4(0.4,0.2,0.2,0.5), false);
+        */
     }
 }
 
@@ -113,9 +117,9 @@ void ViewEntity::Transform(glm::vec3 positionOffset, glm::vec3 rotationOffset, g
 
 void ViewEntity::CommitTransform()
 {
-    _Entity->SetPosition(Vec3(_Position.x, _Position.y, _Position.z));
+    _Entity->SetPosition(glm::vec3(_Position.x, _Position.y, _Position.z));
     _Entity->SetRotation(_Rotation.z);
-    _Entity->SetScale(Vec3(_Scale.x, _Scale.y, _Scale.z));
+    _Entity->SetScale(glm::vec3(_Scale.x, _Scale.y, _Scale.z));
 }
 
 void ViewEntity::ResetTransform()

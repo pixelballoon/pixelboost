@@ -1,5 +1,5 @@
 #include "pixelboost/graphics/camera/camera.h"
-#include "pixelboost/graphics/render/primitive/primitiveRenderer.h"
+#include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 
 #include "command/manager.h"
 #include "project/entity.h"
@@ -40,10 +40,12 @@ void Level::Update(float time)
     }    
 }
 
-void Level::Render(pb::RenderLayer* backgroundLayer, pb::RenderLayer* levelLayer)
+void Level::Render(int backgroundLayer, int levelLayer)
 {
+    /*
     View::Instance()->GetPrimitiveRenderer()->AttachBox(backgroundLayer, Vec2(0,0), Vec2(_Size.x, _Size.y), Vec3(0,0,0), Vec4(0.6, 0.6, 0.6, 1.0), true);
     View::Instance()->GetPrimitiveRenderer()->AttachBox(backgroundLayer, Vec2(0,0), Vec2(_Size.x, _Size.y), Vec3(0,0,0), Vec4(0, 0, 0, 1.0), false);
+    */
     
     for (EntityMap::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
     {

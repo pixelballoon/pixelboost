@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pixelboost/math/maths.h"
+#include "glm/glm.hpp"
 
 #include "command/base.h"
 
@@ -27,8 +27,8 @@ namespace pixeleditor
         bool _TransformRotation;
         bool _TransformScale;
         
-        Vec3 _PositionOffset;
+        glm::vec3 _PositionOffset;
         float _RotationOffset;
-        Vec3 _ScaleOffset;
+        glm::vec3 _ScaleOffset;
     };    
 }

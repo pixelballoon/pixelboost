@@ -7,7 +7,6 @@
 #include "sigslot/signal.h"
 
 #include "pixelboost/data/json/writer.h"
-#include "pixelboost/math/maths.h"
 
 #include "project/definitions.h"
 

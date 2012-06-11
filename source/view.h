@@ -6,8 +6,7 @@
 #include "Gwen/Events.h"
 #include "sigslot/signal.h"
 
-#include "pixelboost/logic/game.h"
-#include "pixelboost/math/maths.h"
+#include "pixelboost/framework/game.h"
 
 #include "core/selection.h"
 
@@ -53,8 +52,8 @@ public:
     
 public:
     static View* Instance();
-    virtual void Initialise(Vec2 size);
-    virtual Vec2 GetScreenResolution();
+    virtual void Initialise(glm::vec2 size);
+    virtual glm::vec2 GetScreenResolution();
     virtual void Render();
     
     ManipulatorManager* GetManipulatorManager();
@@ -65,7 +64,7 @@ public:
     void Zoom(float delta);
     
 public:
-    void SetCanvasSize(Vec2 size);
+    void SetCanvasSize(glm::vec2 size);
     void SetRecord(Record* record);
     Record* GetRecord();
     
@@ -108,15 +107,12 @@ private:
     ManipulatorManager* _ManipulatorManager;
     
     Level* _Level;
-    pb::RenderLayer* _BackgroundLayer;
-    pb::RenderLayer* _LevelLayer;
     pb::OrthographicCamera* _LevelCamera;
     
     pb::GwenInputHandler* _GwenInput;
-    pb::RenderLayer* _GwenLayer;
     pb::OrthographicCamera* _GwenCamera;
     Gwen::Controls::Canvas* _GwenCanvas;
-    Vec2 _CanvasSize;
+    glm::vec2 _CanvasSize;
 
     Gwen::Controls::MenuStrip* _Menu;
     Gwen::Controls::MenuItem* _CreateMenu;

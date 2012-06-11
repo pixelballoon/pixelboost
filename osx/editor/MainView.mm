@@ -10,7 +10,6 @@
 
 #include "pixelboost/input/keyboardManager.h"
 #include "pixelboost/input/mouseManager.h"
-#include "pixelboost/graphics/render/primitive/primitiveRenderer.h"
 
 #include "core.h"
 #include "view.h"
@@ -139,7 +138,7 @@ enum {
     
     if (view)
     {
-        View::Instance()->SetCanvasSize(Vec2(self.frame.size.width, self.frame.size.height));
+        View::Instance()->SetCanvasSize(glm::vec2(self.frame.size.width, self.frame.size.height));
     }
     
     [self setNeedsDisplay:true];

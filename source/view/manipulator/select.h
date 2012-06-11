@@ -11,7 +11,7 @@ namespace pixeleditor
         virtual std::string GetName();
         virtual char GetKey();
         
-        virtual void Render(pb::RenderLayer* layer);
+        virtual void Render(int layer);
         
         virtual bool OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position);
         virtual bool OnMouseUp(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position);

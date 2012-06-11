@@ -5,7 +5,6 @@
 
 #include "glm/glm.hpp"
 
-#include "pixelboost/math/maths.h"
 #include "pixelboost/maths/boundingBox.h"
 
 #include "project/definitions.h"
@@ -30,7 +29,7 @@ namespace pixeleditor
         ~ViewEntity();
         
         void Update(float time);
-        void Render(pb::RenderLayer* layer);
+        void Render(int layer);
         
         Uid GetUid();
         

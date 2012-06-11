@@ -21,7 +21,7 @@ namespace pixeleditor
         virtual ~ViewProperty();
         
         virtual void Update(float time);
-        virtual void Render(pb::RenderLayer* layer);
+        virtual void Render(int layer);
         
         virtual void Refresh();
         

@@ -3,7 +3,9 @@
 #include <map>
 #include <string>
 
+#include "glm/glm.hpp"
 #include "srutil/delegate/delegate.hpp"
+
 #include "pixelboost/network/http/httpServer.h"
 
 #include "project/definitions.h"
@@ -18,8 +20,6 @@ namespace pb
 {
     class DebugVariable;
 }
-
-class Vec3;
 
 namespace pixeleditor
 {
@@ -53,7 +53,7 @@ namespace pixeleditor
         bool OnExport(pb::HttpConnection& connection);
         bool OnCreateRecord(pb::HttpConnection& connection, const std::string& name, const std::string& type);
         bool OnCreateEntity(pb::HttpConnection& connection, Uid recordId, const std::string& type);
-        bool OnSetTransform(pb::HttpConnection& connection, Uid recordId, Uid entityId, const Vec3& position, float rotation, const Vec3& scale);
+        bool OnSetTransform(pb::HttpConnection& connection, Uid recordId, Uid entityId, const glm::vec3& position, float rotation, const glm::vec3& scale);
         
         bool OnGetRecords(pb::HttpConnection& connection);
         bool OnGetRecord(pb::HttpConnection& connection, Uid recordId);

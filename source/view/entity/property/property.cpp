@@ -24,7 +24,7 @@ void ViewProperty::Update(float time)
     
 }
 
-void ViewProperty::Render(pb::RenderLayer* layer)
+void ViewProperty::Render(int layer)
 {
     
 }
