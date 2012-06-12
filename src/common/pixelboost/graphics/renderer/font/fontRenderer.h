@@ -41,45 +41,51 @@ namespace pb
         float Size;
     };
     
+    class Font
+    {
+    public:
+        struct Character
+        {
+            float uvx;
+            float uvy;
+            float uvu;
+            float uvv;
+            float width;
+            float height;
+            float xOffset;
+            float yOffset;
+            float xAdvance;
+        };
+        
+        Texture* texture;
+        int size;
+        float base;
+        float lineHeight;
+        std::map<char, Character> chars;
+        std::map<std::pair<char, char>, float> kerning;
+        
+        float FillVertexBuffer(VertexBuffer* vertexBuffer, const std::string& string);
+        
+    private:
+        void AddCharacter(Vertex_PXYZ_UV* buffer, const Font::Character& character, float offset, float baseline);
+    };
+    
     class FontRenderer : public IRenderer
     {
     public:
         FontRenderer(int maxCharacters=128);
         virtual ~FontRenderer();
         
-        void LoadFont(const std::string& fontName, bool createMips=true);
+        Font* LoadFont(const std::string& name, bool createMips=true);
+        
+        Font* GetFont(const std::string& name);
         
         virtual void Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass);
         
-        float MeasureString(const std::string& fontName, const std::string& string, float size);
+        float MeasureString(const std::string& name, const std::string& string, float size);
     
     private:
         void SplitString(const std::string& string, char seperator, std::vector<std::string>& output);
-        
-        struct Font
-        {
-            struct Character
-            {
-                float uvx;
-                float uvy;
-                float uvu;
-                float uvv;
-                float width;
-                float height;
-                float xOffset;
-                float yOffset;
-                float xAdvance;
-            };
-            
-            Texture* texture;
-            int size;
-            float base;
-            float lineHeight;
-            std::map<char, Character> chars;
-            std::map<std::pair<char, char>, float> kerning;
-        };
-        
-        void AddCharacter(Vertex_PXYZ_UV* buffer, const Font::Character& character, float offset, float baseline);
         
         typedef std::map<std::string, Font*> FontMap;
         

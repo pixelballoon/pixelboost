@@ -45,6 +45,70 @@ Effect* FontRenderable::GetEffect()
     return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/sprite.fx");
 }
 
+float Font::FillVertexBuffer(VertexBuffer* vertexBuffer, const std::string& string)
+{
+    vertexBuffer->Lock();
+    
+    Vertex_PXYZ_UV* vertices = static_cast<Vertex_PXYZ_UV*>(vertexBuffer->GetData());
+    
+    int numCharacters = 0;        
+    
+    float offset = 0.f;
+    for (int i=0; i<string.length(); i++)
+    {
+        std::map<char, Font::Character>::iterator charIt = chars.find(string[i]);
+        
+        if (charIt == chars.end())
+            continue;
+        
+        AddCharacter(vertices, charIt->second, offset, base);
+        
+        vertices += 4;
+        numCharacters++;
+        
+        offset += charIt->second.xAdvance;
+        
+        if (i<string.length()-1)
+        {
+            std::map<std::pair<char, char>, float>::iterator kerningIt = kerning.find(std::pair<char, char>(string[i], string[i+1]));
+            
+            if (kerningIt != kerning.end())
+                offset += kerningIt->second;
+        }
+    }
+    
+    vertexBuffer->Unlock(numCharacters*4);
+    
+    return offset;
+}
+
+void Font::AddCharacter(Vertex_PXYZ_UV* buffer, const Font::Character& character, float offset, float baseline)
+{
+    float xOffset = character.xOffset;
+    float yOffset = -character.yOffset + baseline;
+    
+    buffer[0].position[0] = offset + xOffset;
+    buffer[0].position[1] = yOffset - character.height;
+    buffer[0].position[2] = 0.f;
+    buffer[0].uv[0] = character.uvx;
+    buffer[0].uv[1] = character.uvy + character.uvv;
+    buffer[1].position[0] = offset + xOffset;
+    buffer[1].position[1] = yOffset;
+    buffer[1].position[2] = 0.f;
+    buffer[1].uv[0] = character.uvx;
+    buffer[1].uv[1] = character.uvy;
+    buffer[2].position[0] = offset + character.width + xOffset;
+    buffer[2].position[1] = yOffset;
+    buffer[2].position[2] = 0.f;
+    buffer[2].uv[0] = character.uvx + character.uvu;
+    buffer[2].uv[1] = character.uvy;
+    buffer[3].position[0] = offset + character.width + xOffset;
+    buffer[3].position[1] = yOffset - character.height;
+    buffer[3].position[2] = 0.f;
+    buffer[3].uv[0] = character.uvx + character.uvu;
+    buffer[3].uv[1] = character.uvy + character.uvv;
+}
+
 FontRenderer::FontRenderer(int maxCharacters)
     : _MaxCharacters(maxCharacters)
 {
@@ -85,37 +149,12 @@ FontRenderer::~FontRenderer()
     }
 }
 
-void FontRenderer::AddCharacter(Vertex_PXYZ_UV* buffer, const Font::Character& character, float offset, float baseline)
+Font* FontRenderer::LoadFont(const std::string& name, bool createMips)
 {
-    float xOffset = character.xOffset;
-    float yOffset = -character.yOffset + baseline;
+    FontMap::iterator it = _Fonts.find(name);
     
-    buffer[0].position[0] = offset + xOffset;
-    buffer[0].position[1] = yOffset - character.height;
-    buffer[0].position[2] = 0.f;
-    buffer[0].uv[0] = character.uvx;
-    buffer[0].uv[1] = character.uvy + character.uvv;
-    buffer[1].position[0] = offset + xOffset;
-    buffer[1].position[1] = yOffset;
-    buffer[1].position[2] = 0.f;
-    buffer[1].uv[0] = character.uvx;
-    buffer[1].uv[1] = character.uvy;
-    buffer[2].position[0] = offset + character.width + xOffset;
-    buffer[2].position[1] = yOffset;
-    buffer[2].position[2] = 0.f;
-    buffer[2].uv[0] = character.uvx + character.uvu;
-    buffer[2].uv[1] = character.uvy;
-    buffer[3].position[0] = offset + character.width + xOffset;
-    buffer[3].position[1] = yOffset - character.height;
-    buffer[3].position[2] = 0.f;
-    buffer[3].uv[0] = character.uvx + character.uvu;
-    buffer[3].uv[1] = character.uvy + character.uvv;
-}
-
-void FontRenderer::LoadFont(const std::string& name, bool createMips)
-{
-    if (_Fonts.find(name) != _Fonts.end())
-        return;
+    if (it != _Fonts.end())
+        return it->second;
     
     Font* font = new Font();
     
@@ -203,6 +242,18 @@ void FontRenderer::LoadFont(const std::string& name, bool createMips)
     }
     
     _Fonts[name] = font;
+    
+    return font;
+}
+
+Font* FontRenderer::GetFont(const std::string& name)
+{
+    FontMap::iterator it = _Fonts.find(name);
+    
+    if (it != _Fonts.end())
+        return it->second;
+    
+    return 0;
 }
 
 void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass)
@@ -239,36 +290,7 @@ void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewpor
         
         font = fontIt->second;
         
-        _VertexBuffer->Lock();
-        
-        int numCharacters = 0;
-        Vertex_PXYZ_UV* vertexBuffer = static_cast<Vertex_PXYZ_UV*>(_VertexBuffer->GetData());
-        
-        float offset = 0.f;
-        for (int i=0; i<renderable.Text.length(); i++)
-        {
-            std::map<char, Font::Character>::iterator charIt = font->chars.find(renderable.Text[i]);
-            
-            if (charIt == font->chars.end())
-                continue;
-            
-            AddCharacter(vertexBuffer, charIt->second, offset, font->base);
-            
-            vertexBuffer += 4;
-            numCharacters++;
-            
-            offset += charIt->second.xAdvance;
-            
-            if (i<renderable.Text.length()-1)
-            {
-                std::map<std::pair<char, char>, float>::iterator kerningIt = font->kerning.find(std::pair<char, char>(renderable.Text[i], renderable.Text[i+1]));
-                
-                if (kerningIt != font->kerning.end())
-                    offset += kerningIt->second;
-            }
-        }
-        
-        _VertexBuffer->Unlock(numCharacters*4);
+        float offset = font->FillVertexBuffer(_VertexBuffer, renderable.Text);
         
         GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffer);
         
@@ -295,7 +317,7 @@ void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewpor
         effectPass->GetShaderProgram()->SetUniform("diffuseColor", renderable.Tint);
         effectPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
         
-        GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, numCharacters*6);
+        GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, (_VertexBuffer->GetCurrentSize()/4)*6);
     }
     
     GraphicsDevice::Instance()->BindTexture(0);
@@ -307,11 +329,12 @@ void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewpor
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
 }
 
-float FontRenderer::MeasureString(const std::string& fontName, const std::string& string, float size)
+float FontRenderer::MeasureString(const std::string& name, const std::string& string, float size)
 {
     Font* font;
     
-    FontMap::iterator fontIt = _Fonts.find(fontName);
+    FontMap::iterator fontIt = _Fonts.find(name);
+    
     if (fontIt == _Fonts.end() || fontIt->second->texture == 0)
         return 0.f;
     
