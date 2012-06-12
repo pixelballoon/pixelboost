@@ -9,16 +9,41 @@
 
 #include "glm/glm.hpp"
 
+#include "pixelboost/graphics/renderer/common/irenderer.h"
+#include "pixelboost/graphics/renderer/common/renderable.h"
+
 namespace pb
 {
+    class IndexBuffer;
     class RenderLayer;
+    class VertexBuffer;
+    class Vertex_PXYZ_UV;
     
-    class GwenRenderer : public Gwen::Renderer::Base
+    class GwenRenderable : public pb::Renderable
     {
     public:
-        GwenRenderer(int layer);
-        ~GwenRenderer();
+        GwenRenderable(Gwen::Controls::Canvas* canvas);
+        virtual ~GwenRenderable();
         
+        virtual Uid GetRenderableType();
+        
+        virtual Effect* GetEffect();
+        
+    private:
+        Gwen::Controls::Canvas* _Canvas;
+        
+        friend class GwenRenderer;
+    };
+    
+    class GwenRenderer : public Gwen::Renderer::Base, public pb::IRenderer
+    {
+    public:
+        GwenRenderer();
+        virtual ~GwenRenderer();
+        
+        virtual void Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass);
+        
+    public:
         virtual void Init();
         
         virtual void Begin();
@@ -37,11 +62,22 @@ namespace pb
         
         virtual void RenderText(Gwen::Font* pFont, Gwen::Point pos, const Gwen::UnicodeString& text);
         virtual Gwen::Point MeasureText(Gwen::Font* pFont, const Gwen::UnicodeString& text);
-        
+
     private:
-        int _Layer;
+        void PurgeBuffer(bool force);
         
-        glm::vec4 _Colour;
+        IndexBuffer* _IndexBuffer;
+        VertexBuffer* _VertexBuffer;
+        IndexBuffer* _FontIndexBuffer;
+        VertexBuffer* _FontVertexBuffer;
+        Vertex_PXYZ_UV* _VertexData;
+        int _VertexCount;
+        
+        int _MaxQuads;
+        Viewport* _Viewport;
+        EffectPass* _EffectPass;
+        
+        glm::vec4 _Color;
     };
 }
 
