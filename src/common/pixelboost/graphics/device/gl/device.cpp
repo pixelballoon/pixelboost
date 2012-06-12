@@ -185,7 +185,7 @@ void GraphicsDeviceGL::UnlockVertexBuffer(VertexBuffer* vertexBuffer, int numEle
         return;
 
     if (numElements == -1)
-        numElements = vertexBuffer->GetLength();
+        numElements = vertexBuffer->GetMaxSize();
     
     GLenum bufferType = vertexBuffer->GetBufferFormat() == kBufferFormatStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW;
     

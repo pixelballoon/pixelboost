@@ -50,13 +50,15 @@ struct Vertex_NPXYZ_UV
 class VertexBuffer
 {
 protected:
-    VertexBuffer(GraphicsDevice* device, BufferFormat bufferFormat, VertexFormat vertexFormat, int length);
+    VertexBuffer(GraphicsDevice* device, BufferFormat bufferFormat, VertexFormat vertexFormat, int maxSize);
     ~VertexBuffer();
     
 public:    
     BufferFormat GetBufferFormat();
-    int GetLength();
     VertexFormat GetVertexFormat();
+    
+    int GetMaxSize();
+    int GetCurrentSize();
     
     void* GetData();
     
@@ -68,7 +70,8 @@ private:
     
     BufferFormat _BufferFormat;
     VertexFormat _VertexFormat;
-    int _Length;
+    int _MaxSize;
+    int _CurrentSize;
     
     void* _Data;
     

@@ -9,7 +9,8 @@ VertexBuffer::VertexBuffer(GraphicsDevice* device, BufferFormat bufferFormat, Ve
     : _Device(device)
     , _BufferFormat(bufferFormat)
     , _VertexFormat(vertexFormat)
-    , _Length(length)
+    , _CurrentSize(0)
+    , _MaxSize(length)
 {
     _Data = 0;
     _Locked = 0;
@@ -67,14 +68,19 @@ BufferFormat VertexBuffer::GetBufferFormat()
     return _BufferFormat;
 }
 
-int VertexBuffer::GetLength()
-{
-    return _Length;
-}
-
 VertexFormat VertexBuffer::GetVertexFormat()
 {
     return _VertexFormat;
+}
+
+int VertexBuffer::GetMaxSize()
+{
+    return _MaxSize;
+}
+
+int VertexBuffer::GetCurrentSize()
+{
+    return _CurrentSize;
 }
 
 void VertexBuffer::Lock()
@@ -98,6 +104,7 @@ void VertexBuffer::Unlock(int numElements)
     
     if (_Locked == 0)
     {
+        _CurrentSize = (numElements == -1) ? _MaxSize : numElements;
         _Device->UnlockVertexBuffer(this, numElements);
     }
 }
