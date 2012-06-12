@@ -13,10 +13,14 @@
 #include "Gwen/Skins/TexturedBase.h"
 
 #include "pixelboost/graphics/camera/camera.h"
+#include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/gwen/gwenRenderer.h"
 #include "pixelboost/graphics/renderer/sprite/sprite.h"
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
+#include "pixelboost/logic/system/graphics/render/basic.h"
+#include "pixelboost/logic/system/graphics/render/render.h"
+#include "pixelboost/logic/scene.h"
 #include "pixelboost/misc/gwen/inputHandler.h"
 
 #include "command/manager.h"
@@ -139,14 +143,23 @@ View::~View()
     View::Instance()->GetKeyboardManager()->RemoveHandler(_KeyboardHandler);
     View::Instance()->GetMouseManager()->RemoveHandler(_MouseHandler);
     
+    pb::Renderer::Instance()->RemoveViewport(_LevelViewport);
+    pb::Renderer::Instance()->RemoveViewport(_UiViewport);
+    
+    delete _LevelViewport;
+    delete _UiViewport;
+    
     delete _LevelCamera;
+    delete _UiCamera;
+    
+    delete _LevelScene;
+    delete _UiScene;
     
     delete _KeyboardHandler;
     delete _MouseHandler;
     
     delete _GwenInput;
     delete _GwenCanvas;
-    delete _GwenCamera;
 }
 
 View* View::Instance()
@@ -156,6 +169,29 @@ View* View::Instance()
 
 void View::Initialise(glm::vec2 size)
 {
+    float density = 32.f;
+    
+    pb::GraphicsDevice::Instance()->SetDisplayResolution(size);
+    pb::GraphicsDevice::Instance()->SetDisplayDensity(density);
+    
+    _LevelCamera = new pb::OrthographicCamera();
+    _LevelViewport = new pb::Viewport(0, _LevelCamera);
+    _LevelScene = new pb::Scene();
+    _LevelScene->AddSystem(new pb::BasicRenderSystem());
+    _LevelViewport->SetScene(_LevelScene);
+
+    _UiCamera = new pb::OrthographicCamera();
+    _UiViewport = new pb::Viewport(0, _UiCamera);
+    _UiScene = new pb::Scene();
+    _UiScene->AddSystem(new pb::BasicRenderSystem());
+    _UiViewport->SetScene(_UiScene);
+    _UiViewport->SetDensity(density);
+    _UiViewport->SetResolution(size);
+    _UiViewport->SetPosition(glm::vec2(0,0));
+        
+    pb::Renderer::Instance()->AddViewport(_LevelViewport);
+    pb::Renderer::Instance()->AddViewport(_UiViewport);
+    
     _ManipulatorManager = new ManipulatorManager();
     _ManipulatorManager->AddManipulator(new SelectManipulator());
     _ManipulatorManager->AddManipulator(new MoveManipulator());
@@ -164,16 +200,12 @@ void View::Initialise(glm::vec2 size)
     _ManipulatorManager->AddManipulator(new CreateManipulator());
     _ManipulatorManager->SetActiveManipulator("select");
     
-    _LevelCamera = new pb::OrthographicCamera();
-    
     _Level = new Level();
     
-    _GwenCamera = new pb::OrthographicCamera();
+    _GwenRenderer = new pb::GwenRenderer();
+    _GwenRenderer->Init();
     
-    pb::GwenRenderer* renderer = new pb::GwenRenderer(3);
-    renderer->Init();
-    
-    Gwen::Skin::TexturedBase* skin = new Gwen::Skin::TexturedBase(renderer);
+    Gwen::Skin::TexturedBase* skin = new Gwen::Skin::TexturedBase(_GwenRenderer);
     skin->Init("skin.png");
     skin->SetDefaultFont(Gwen::Utility::StringToUnicode("helvetica"), 12.f);
     
@@ -204,6 +236,9 @@ void View::Initialise(glm::vec2 size)
     Gwen::Controls::MenuItem* deviceAddress = networkMenu->GetMenu()->AddItem("Device Address");
     deviceAddress->onPress.Add(this, &View::OnDeviceAddress);
     
+    _GwenRenderable = new pb::GwenRenderable(_GwenCanvas);
+    _UiScene->GetSystemByType<pb::RenderSystem>()->AddItem(_GwenRenderable);
+    
     _CreateMenu = _Menu->AddItem("Create");
     
     SetCanvasSize(size);
@@ -219,15 +254,8 @@ void View::Initialise(glm::vec2 size)
     _Level->entityRemoved.Connect(this, &View::OnEntityRemoved);
 }
 
-glm::vec2 View::GetScreenResolution()
-{
-    return _CanvasSize;
-}
-
 void View::Render()
 {
-    _GwenCanvas->RenderCanvas();
-    
     _Level->Render(0, 1);
     
     _ManipulatorManager->Render(2);
@@ -302,9 +330,11 @@ pb::OrthographicCamera* View::GetLevelCamera()
 
 void View::SetCanvasSize(glm::vec2 size)
 {
-    _CanvasSize = size;
+    pb::GraphicsDevice::Instance()->SetDisplayResolution(size);
+
     _GwenCanvas->SetSize(size[0], size[1]);
-    _GwenCamera->Position = glm::vec3(size[0]/2.f, -size[1]/2.f, 0.f)/32.f;
+    _UiViewport->SetResolution(size);
+    _UiCamera->Position = glm::vec3(size[0]/2.f, -size[1]/2.f, 0.f)/32.f;
 }
 
 void View::SetRecord(Record* record)

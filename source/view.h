@@ -27,8 +27,12 @@ namespace Gwen
 namespace pb
 {
     class GwenInputHandler;
+    class GwenRenderable;
+    class GwenRenderer;
     class OrthographicCamera;
     class RenderLayer;
+    class Scene;
+    class Viewport;
 }
 
 namespace pixeleditor
@@ -53,7 +57,6 @@ public:
 public:
     static View* Instance();
     virtual void Initialise(glm::vec2 size);
-    virtual glm::vec2 GetScreenResolution();
     virtual void Render();
     
     ManipulatorManager* GetManipulatorManager();
@@ -107,12 +110,19 @@ private:
     ManipulatorManager* _ManipulatorManager;
     
     Level* _Level;
+    
     pb::OrthographicCamera* _LevelCamera;
+    pb::Scene* _LevelScene;
+    pb::Viewport* _LevelViewport;
+    
+    pb::OrthographicCamera* _UiCamera;
+    pb::Scene* _UiScene;
+    pb::Viewport* _UiViewport;
     
     pb::GwenInputHandler* _GwenInput;
-    pb::OrthographicCamera* _GwenCamera;
     Gwen::Controls::Canvas* _GwenCanvas;
-    glm::vec2 _CanvasSize;
+    pb::GwenRenderable* _GwenRenderable;
+    pb::GwenRenderer* _GwenRenderer;
 
     Gwen::Controls::MenuStrip* _Menu;
     Gwen::Controls::MenuItem* _CreateMenu;
