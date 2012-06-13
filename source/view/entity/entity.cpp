@@ -34,13 +34,7 @@ ViewEntity::~ViewEntity()
 {
     Core::Instance()->GetSelection().selectionChanged.Disconnect(this, &ViewEntity::OnSelectionChanged);
     
-    _Entity->propertyChanged.Disconnect(this, &ViewEntity::OnPropertyChanged);
-    
-    if (_BoundsComponent)
-    {
-        DestroyComponent(_BoundsComponent);
-        _BoundsComponent = 0;
-    }
+    _Entity->propertyChanged.Disconnect(this, &ViewEntity::OnPropertyChanged);    
 }
 
 void ViewEntity::Update(float time)
