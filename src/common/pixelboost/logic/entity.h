@@ -44,8 +44,8 @@ public:
     Uid GenerateComponentId();
     
     void AddComponent(Component* component);
-    void RemoveComponent(Component* component);
-    void RemoveAllComponents();
+    void DestroyComponent(Component* component);
+    void DestroyAllComponents();
     
     Component* GetComponentById(Uid componentId);
     

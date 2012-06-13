@@ -20,7 +20,7 @@ Entity::Entity(Scene* scene, Uid uid)
 
 Entity::~Entity()
 {
-    RemoveAllComponents();
+    DestroyAllComponents();
 }
 
 Scene* Entity::GetScene()
@@ -58,7 +58,7 @@ void Entity::AddComponent(Component* component)
     _Components[component->GetType()].push_back(component);
 }
 
-void Entity::RemoveComponent(Component* component)
+void Entity::DestroyComponent(Component* component)
 {
     ComponentMap::iterator groupIt = _Components.find(component->GetType());
     
@@ -76,7 +76,7 @@ void Entity::RemoveComponent(Component* component)
     }
 }
 
-void Entity::RemoveAllComponents()
+void Entity::DestroyAllComponents()
 {
     for (ComponentMap::iterator groupIt = _Components.begin(); groupIt != _Components.end(); ++groupIt)
     {
