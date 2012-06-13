@@ -90,5 +90,7 @@ void RectangleComponent::UpdateTransform()
     if (transform)
     {
         _Renderable->Transform = transform->GetMatrix() * _LocalTransform;
+    } else {
+        _Renderable->Transform = _LocalTransform;
     }
 }
