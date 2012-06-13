@@ -5,6 +5,7 @@
 namespace pb
 {
     class RenderLayer;
+    class SpriteComponent;
 }
 
 namespace pixeleditor
@@ -25,5 +26,7 @@ namespace pixeleditor
         
     private:
         std::string _Sprite;
+        
+        pb::SpriteComponent* _SpriteComponent;
     };
 }

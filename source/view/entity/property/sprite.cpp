@@ -1,3 +1,4 @@
+#include "pixelboost/graphics/components/sprite.h"
 #include "pixelboost/graphics/renderer/sprite/sprite.h"
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
 
@@ -12,12 +13,15 @@ using namespace pixeleditor;
 SpriteViewProperty::SpriteViewProperty(ViewEntity* parent, const std::string& path, const SchemaItem* schemaItem)
     : ViewProperty(parent, path, schemaItem)
 {
+    _SpriteComponent = new pb::SpriteComponent(parent, "");
+    parent->AddComponent(_SpriteComponent);
+    
     Refresh();
 }
 
 SpriteViewProperty::~SpriteViewProperty()
 {
-    
+    _Parent->DestroyComponent(_SpriteComponent);
 }
 
 void SpriteViewProperty::Update(float time)
@@ -42,6 +46,7 @@ void SpriteViewProperty::Refresh()
     {
         _Sprite = sprite;
         View::Instance()->LoadSprite(_Sprite);
+        _SpriteComponent->SetSprite(_Sprite);
         DirtyBounds();
     }
 }

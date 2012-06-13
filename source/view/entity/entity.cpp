@@ -1,4 +1,6 @@
+#include "pixelboost/graphics/components/rectangle.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
+#include "pixelboost/logic/component/transform/basic.h"
 
 #include "core/selection.h"
 #include "core/uidHelpers.h"
@@ -12,22 +14,33 @@
 
 using namespace pixeleditor;
 
-ViewEntity::ViewEntity(Uid uid, Entity* entity)
-    : _Uid(uid)
+ViewEntity::ViewEntity(pb::Scene* scene, Uid uid, pixeleditor::Entity* entity)
+    : pb::Entity(scene, uid)
+    , _BoundsComponent(0)
     , _Entity(entity)
 {
+    AddComponent(new pb::BasicTransformComponent(this));
+
     ParseProperties();
-    
-    _BoundsDirty = true;
     
     ResetTransform();
     
     _Entity->propertyChanged.Connect(this, &ViewEntity::OnPropertyChanged);
+    
+    Core::Instance()->GetSelection().selectionChanged.Connect(this, &ViewEntity::OnSelectionChanged);
 }
 
 ViewEntity::~ViewEntity()
 {
+    Core::Instance()->GetSelection().selectionChanged.Disconnect(this, &ViewEntity::OnSelectionChanged);
+    
     _Entity->propertyChanged.Disconnect(this, &ViewEntity::OnPropertyChanged);
+    
+    if (_BoundsComponent)
+    {
+        DestroyComponent(_BoundsComponent);
+        _BoundsComponent = 0;
+    }
 }
 
 void ViewEntity::Update(float time)
@@ -64,11 +77,6 @@ void ViewEntity::Render(int layer)
     }
 }
 
-Uid ViewEntity::GetUid()
-{
-    return _Uid;
-}
-
 Entity* ViewEntity::GetEntity()
 {
     return _Entity;
@@ -76,57 +84,53 @@ Entity* ViewEntity::GetEntity()
 
 glm::vec3 ViewEntity::GetPosition()
 {
-    return _Position;
+    return GetComponentByType<pb::TransformComponent>()->GetPosition();
 }
 
 glm::vec3 ViewEntity::GetRotation()
 {
-    return _Rotation;
+    return GetComponentByType<pb::TransformComponent>()->GetRotation();
 }
 
 glm::vec3 ViewEntity::GetScale()
 {
-    return _Scale;
+    return GetComponentByType<pb::TransformComponent>()->GetScale();
 }
 
 void ViewEntity::SetPosition(glm::vec3 position)
 {
-    _Position = position;
+    GetComponentByType<pb::TransformComponent>()->SetPosition(position);
     DirtyBounds();
 }
 
 void ViewEntity::SetRotation(glm::vec3 rotation)
 {
-    _Rotation = rotation;
+    GetComponentByType<pb::TransformComponent>()->SetRotation(rotation);
     DirtyBounds();
 }
 
 void ViewEntity::SetScale(glm::vec3 scale)
 {
-    _Scale = scale;
+    GetComponentByType<pb::TransformComponent>()->SetScale(scale);
     DirtyBounds();
 }
 
 void ViewEntity::Transform(glm::vec3 positionOffset, glm::vec3 rotationOffset, glm::vec3 scaleOffset)
 {
-    _Position += positionOffset;
-    _Rotation += rotationOffset;
-    _Scale *= scaleOffset;
+    GetComponentByType<pb::TransformComponent>()->SetTransform(GetPosition()+positionOffset, GetRotation()+rotationOffset, GetScale()*scaleOffset);
     DirtyBounds();
 }
 
 void ViewEntity::CommitTransform()
 {
-    _Entity->SetPosition(glm::vec3(_Position.x, _Position.y, _Position.z));
-    _Entity->SetRotation(_Rotation.z);
-    _Entity->SetScale(glm::vec3(_Scale.x, _Scale.y, _Scale.z));
+    _Entity->SetPosition(GetPosition());
+    _Entity->SetRotation(GetRotation().z);
+    _Entity->SetScale(GetScale());
 }
 
 void ViewEntity::ResetTransform()
 {
-    _Position = glm::vec3(_Entity->GetPosition()[0], _Entity->GetPosition()[1], _Entity->GetPosition()[2]);
-    _Rotation = glm::vec3(0, 0, _Entity->GetRotation());
-    _Scale = glm::vec3(_Entity->GetScale()[0], _Entity->GetScale()[1], _Entity->GetScale()[2]);
+    GetComponentByType<pb::TransformComponent>()->SetTransform(_Entity->GetPosition(), glm::vec3(0,0,_Entity->GetRotation()), _Entity->GetScale());
     DirtyBounds();
 }
 
@@ -199,6 +203,29 @@ Uid ViewEntity::GeneratePropertyId(const std::string& path)
     _PropertyIdMap[path] = uid;
     
     return uid;
+}
+
+void ViewEntity::OnSelectionChanged(const pixeleditor::Selection* selection)
+{
+    if (selection->IsSelected(GenerateSelectionUid(GetUid())))
+    {
+        if (!_BoundsComponent)
+        {
+            _BoundsComponent = new pb::RectangleComponent(this);
+            _BoundsComponent->SetColor(glm::vec4(0.2, 0.2, 0.4, 0.3));
+            _BoundsComponent->SetSolid(true);
+            _BoundsComponent->SetLayer(1);
+            AddComponent(_BoundsComponent);
+        }
+        
+        UpdateBounds();
+    } else {
+        if (_BoundsComponent)
+        {
+            DestroyComponent(_BoundsComponent);
+            _BoundsComponent = 0;
+        }
+    }
 }
 
 Uid ViewEntity::AddProperty(ViewProperty* property)
@@ -294,8 +321,8 @@ void ViewEntity::UpdateBounds()
     {
         _BoundingBox.Invalidate();
         
-        _BoundingBox.Expand(_Position);
-        _BoundingBox.Expand(_Position + glm::vec3(1,1,0));
+        _BoundingBox.Expand(GetPosition());
+        _BoundingBox.Expand(GetPosition() + glm::vec3(1,1,0));
         
         for (PropertyMap::iterator it = _Properties.begin(); it != _Properties.end(); ++it)
         {
@@ -304,4 +331,7 @@ void ViewEntity::UpdateBounds()
         
         _BoundsDirty = false;
     }
+    
+    if (_BoundsComponent)
+        _BoundsComponent->SetSize(glm::vec2(_BoundingBox.GetSize().x, _BoundingBox.GetSize().y));
 }

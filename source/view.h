@@ -74,6 +74,7 @@ public:
     std::string GetSpriteFile(const std::string& sprite);
     void LoadSprite(const std::string& sprite);
     
+    pb::Scene* GetLevelScene();
     Level* GetLevel();
     pb::OrthographicCamera* GetLevelCamera();
     

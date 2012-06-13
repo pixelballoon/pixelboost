@@ -179,6 +179,9 @@ void View::Initialise(glm::vec2 size)
     _LevelScene = new pb::Scene();
     _LevelScene->AddSystem(new pb::BasicRenderSystem());
     _LevelViewport->SetScene(_LevelScene);
+    _LevelViewport->SetDensity(density);
+    _LevelViewport->SetResolution(size);
+    _LevelViewport->SetPosition(glm::vec2(0,0));
 
     _UiCamera = new pb::OrthographicCamera();
     _UiViewport = new pb::Viewport(0, _UiCamera);
@@ -200,7 +203,7 @@ void View::Initialise(glm::vec2 size)
     _ManipulatorManager->AddManipulator(new CreateManipulator());
     _ManipulatorManager->SetActiveManipulator("select");
     
-    _Level = new Level();
+    _Level = new Level(_LevelScene);
     
     _GwenRenderer = new pb::GwenRenderer();
     _GwenRenderer->Init();
@@ -256,6 +259,9 @@ void View::Initialise(glm::vec2 size)
 
 void View::Render()
 {
+    _LevelScene->Update(0.033);
+    _UiScene->Update(0.033);
+    
     _Level->Render(0, 1);
     
     _ManipulatorManager->Render(2);
@@ -318,6 +324,11 @@ void View::LoadSprite(const std::string& sprite)
     spriteSheet->LoadSingle(GetSpriteFile(sprite));
 }
 
+pb::Scene* View::GetLevelScene()
+{
+    return _LevelScene;
+}
+
 Level* View::GetLevel()
 {
     return _Level;
@@ -333,6 +344,7 @@ void View::SetCanvasSize(glm::vec2 size)
     pb::GraphicsDevice::Instance()->SetDisplayResolution(size);
 
     _GwenCanvas->SetSize(size[0], size[1]);
+    _LevelViewport->SetResolution(size);
     _UiViewport->SetResolution(size);
     _UiCamera->Position = glm::vec3(size[0]/2.f, -size[1]/2.f, 0.f)/32.f;
 }

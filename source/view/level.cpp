@@ -1,5 +1,6 @@
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
+#include "pixelboost/logic/scene.h"
 
 #include "command/manager.h"
 #include "project/entity.h"
@@ -13,8 +14,9 @@
 
 using namespace pixeleditor;
 
-Level::Level()
+Level::Level(pb::Scene* scene)
     : _Record(0)
+    , _Scene(scene)
 {
     View::Instance()->GetMouseManager()->AddHandler(this);
     
@@ -117,7 +119,8 @@ void Level::CreateEntity(Uid uid)
 
 void Level::CreateEntity(Entity* entity)
 {
-    ViewEntity* viewEntity = new ViewEntity(entity->GetUid(), entity);
+    ViewEntity* viewEntity = new ViewEntity(_Scene, entity->GetUid(), entity);
+    _Scene->AddEntity(viewEntity);
     _Entities[entity->GetUid()] = viewEntity;
     entityAdded(viewEntity);
 }
@@ -128,8 +131,8 @@ void Level::DestroyEntity(Uid uid)
     
     if (it != _Entities.end())
     {
+        _Scene->DestroyEntity(it->second);
         entityRemoved(it->second);
-        delete it->second;
         _Entities.erase(it);
     }
 }

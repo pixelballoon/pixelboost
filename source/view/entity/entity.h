@@ -5,12 +5,14 @@
 
 #include "glm/glm.hpp"
 
+#include "pixelboost/logic/entity.h"
 #include "pixelboost/maths/boundingBox.h"
 
 #include "project/definitions.h"
 
 namespace pb
 {
+    class RectangleComponent;
     class RenderLayer;
 }
 
@@ -19,21 +21,20 @@ namespace pixeleditor
     class Entity;
     class SchemaItem;
     class SchemaStruct;
+    class Selection;
     class Struct;
     class ViewProperty;
     
-    class ViewEntity
+    class ViewEntity : public pb::Entity
     {
     public:
-        ViewEntity(Uid uid, Entity* entity);
+        ViewEntity(pb::Scene* scene, Uid uid, pixeleditor::Entity* entity);
         ~ViewEntity();
         
         void Update(float time);
         void Render(int layer);
         
-        Uid GetUid();
-        
-        Entity* GetEntity();
+        pixeleditor::Entity* GetEntity();
         
     public:
         glm::vec3 GetPosition();
@@ -57,6 +58,8 @@ namespace pixeleditor
         ViewProperty* GetPropertyById(Uid uid);
 
     private:
+        void OnSelectionChanged(const Selection* selection);
+        
         Uid AddProperty(ViewProperty* property);
         void RemoveProperty(ViewProperty* property);
         void RemovePropertyById(Uid uid);
@@ -77,17 +80,13 @@ namespace pixeleditor
         typedef std::map<Uid, ViewProperty*> PropertyMap;
         
     private:
-        glm::vec3 _Position;
-        glm::vec3 _Rotation;
-        glm::vec3 _Scale;
-        
-        Uid _Uid;
-        Entity* _Entity;
+        pixeleditor::Entity* _Entity;
         PropertyIdMap _PropertyIdMap;
         PropertyMap _Properties;
         
         bool _BoundsDirty;
         pb::BoundingBox _BoundingBox;
+        pb::RectangleComponent* _BoundsComponent;
         
         friend class ViewProperty;
     };

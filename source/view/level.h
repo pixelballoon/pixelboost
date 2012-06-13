@@ -12,6 +12,7 @@
 namespace pb
 {
     class RenderLayer;
+    class Scene;
 }
 
 namespace pixeleditor
@@ -24,7 +25,7 @@ namespace pixeleditor
     class Level : public pb::MouseHandler
     {
     public:
-        Level();
+        Level(pb::Scene* scene);
         ~Level();
                 
         void Update(float time);
@@ -64,6 +65,7 @@ namespace pixeleditor
         virtual void OnPropertyChanged(Struct* structure);
         
     private:
+        pb::Scene* _Scene;
         Record* _Record;
         
         EntityMap _Entities;
