@@ -16,8 +16,8 @@ FontComponent::FontComponent(Entity* parent, const std::string& font, const std:
     : Component(parent)
 {
     _Renderable = new FontRenderable(parent->GetUid());
-    _Renderable->Font = font;
-    _Renderable->Text = text;
+    _Renderable->SetFont(font);
+    _Renderable->SetText(text);
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
     
@@ -52,27 +52,27 @@ void FontComponent::SetLayer(int layer)
 
 void FontComponent::SetAlignment(FontAlign alignment)
 {
-    _Renderable->Alignment = alignment;
+    _Renderable->SetAlignment(alignment);
 }
 
 void FontComponent::SetFont(const std::string& font)
 {
-    _Renderable->Font = font;
+    _Renderable->SetFont(font);
 }
 
 void FontComponent::SetText(const std::string& text)
 {
-    _Renderable->Text = text;
+    _Renderable->SetText(text);
 }
 
 void FontComponent::SetTint(const glm::vec4& tint)
 {
-    _Renderable->Tint = tint;
+    _Renderable->SetTint(tint);
 }
 
 void FontComponent::SetSize(float size)
 {
-    _Renderable->Size = size;
+    _Renderable->SetSize(size);
 }
 
 void FontComponent::SetLocalTransform(const glm::mat4x4& transform)
@@ -93,6 +93,6 @@ void FontComponent::UpdateTransform()
     
     if (transform)
     {
-        _Renderable->Transform = transform->GetMatrix() * _LocalTransform;
+        _Renderable->SetTransform(transform->GetMatrix() * _LocalTransform);
     }
 }

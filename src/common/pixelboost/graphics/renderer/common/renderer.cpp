@@ -75,6 +75,11 @@ void Renderer::SetHandler(int renderableType, IRenderer* renderer)
     _RenderableHandlers[renderableType] = renderer;
 }
 
+bool RenderableSorter(const Renderable* a, const Renderable* b)
+{
+    return a->GetMVP()[3][2] < b->GetMVP()[3][2];
+}
+
 void Renderer::FlushBuffer(Viewport* viewport)
 {
     for (int i=0; i<16; i++)
@@ -83,6 +88,13 @@ void Renderer::FlushBuffer(Viewport* viewport)
         
         if (!renderables.size())
             continue;
+        
+        for (RenderableList::iterator it = renderables.begin(); it != renderables.end(); ++it)
+        {
+            (*it)->CalculateMVP(viewport);
+        }
+        
+        std::sort(renderables.begin(), renderables.end(), &RenderableSorter);
         
         Uid type = renderables[0]->GetRenderableType();
         Effect* effect = renderables[0]->GetEffect();

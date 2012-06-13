@@ -27,6 +27,8 @@ public:
     
     virtual Uid GetRenderableType();
     
+    virtual void CalculateMVP(Viewport* viewport);
+    
     virtual Effect* GetEffect();
     
     Sprite* Sprite;

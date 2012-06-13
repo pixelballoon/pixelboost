@@ -31,14 +31,40 @@ namespace pb
         
         virtual Uid GetRenderableType();
         
+        virtual void CalculateMVP(Viewport* viewport);
+        
         virtual Effect* GetEffect();
         
+        void SetFont(const std::string& font);
+        const std::string& GetFont();
+        
+        void SetText(const std::string& text);
+        const std::string& GetText();
+        
+        void SetTint(const glm::vec4& tint);
+        const glm::vec4& GetTint();
+        
+        void SetSize(float size);
+        float GetSize();
+        
+        void SetTransform(const glm::mat4x4& transform);
+        const glm::mat4x4& GetTransform();
+        
+        void SetAlignment(FontAlign alignment);
+        FontAlign GetAlignment();
+        
+    private:
+        void CalculateOffset();
+        
+        float Offset;
         std::string Font;
         std::string Text;
         glm::mat4x4 Transform;
         FontAlign Alignment;
         glm::vec4 Tint;
         float Size;
+        
+        friend class FontRenderer;
     };
     
     class Font

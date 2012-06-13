@@ -3,7 +3,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 #include "pixelboost/file/fileHelpers.h"
-
+#include "pixelboost/framework/game.h"
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/device/device.h"
@@ -22,6 +22,7 @@ using namespace pb;
 FontRenderable::FontRenderable(Uid entityId)
     : Renderable(entityId)
 {
+    Offset = 0.f;
     Alignment = kFontAlignCenter;
     Size = 1.f;
     Tint = glm::vec4(1,1,1,1);
@@ -36,6 +37,14 @@ Uid FontRenderable::GetRenderableType()
     return TypeHash("font");
 }
 
+void FontRenderable::CalculateMVP(Viewport* viewport)
+{
+    _MVPMatrix = glm::scale(glm::mat4x4(), glm::vec3(Size, Size, 1));
+    _MVPMatrix = glm::translate(_MVPMatrix, glm::vec3(Offset, 0, 0));
+    _MVPMatrix = Transform * _MVPMatrix;
+    _MVPMatrix = viewport->GetCamera()->ViewProjectionMatrix * _MVPMatrix;
+}
+
 Effect* FontRenderable::GetEffect()
 {
     Effect* baseEffect = Renderable::GetEffect();
@@ -43,6 +52,75 @@ Effect* FontRenderable::GetEffect()
         return baseEffect;
     
     return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/sprite.fx");
+}
+
+void FontRenderable::SetFont(const std::string& font)
+{
+    Font = font;
+    CalculateOffset();
+}
+
+const std::string& FontRenderable::GetFont()
+{
+    return Font;
+}
+
+void FontRenderable::SetText(const std::string& text)
+{
+    Text = text;
+    CalculateOffset();
+}
+
+const std::string& FontRenderable::GetText()
+{
+    return Text;
+}
+
+void FontRenderable::SetTint(const glm::vec4& tint)
+{
+    Tint = tint;
+}
+
+const glm::vec4& FontRenderable::GetTint()
+{
+    return Tint;
+}
+
+void FontRenderable::SetSize(float size)
+{
+    Size = size;
+    CalculateOffset();
+}
+
+float FontRenderable::GetSize()
+{
+    return Size;
+}
+
+void FontRenderable::SetTransform(const glm::mat4x4& transform)
+{
+    Transform = transform;
+}
+
+const glm::mat4x4& FontRenderable::GetTransform()
+{
+    return Transform;
+}
+
+void FontRenderable::SetAlignment(FontAlign alignment)
+{
+    Alignment = alignment;
+    CalculateOffset();
+}
+
+FontAlign FontRenderable::GetAlignment()
+{
+    return Alignment;
+}
+
+void FontRenderable::CalculateOffset()
+{
+    Offset = Game::Instance()->GetFontRenderer()->MeasureString(Font, Text, Size);
 }
 
 float Font::FillVertexBuffer(VertexBuffer* vertexBuffer, const std::string& string)
@@ -308,11 +386,7 @@ void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewpor
                 break;
         }
         
-        glm::mat4x4 modelMatrix = glm::scale(glm::mat4x4(), glm::vec3(renderable.Size, renderable.Size, 1));
-        modelMatrix = glm::translate(modelMatrix, glm::vec3(offset, 0, 0));
-        modelMatrix = renderable.Transform * modelMatrix;
-        
-        effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewport->GetCamera()->ViewProjectionMatrix * modelMatrix);
+        effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", renderable.GetMVP());
         effectPass->GetShaderProgram()->SetUniform("diffuseColor", renderable.Tint);
         effectPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
         

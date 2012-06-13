@@ -32,6 +32,11 @@ Uid ParticleRenderable::GetRenderableType()
     return TypeHash("particle");
 }
 
+void ParticleRenderable::CalculateMVP(Viewport* viewport)
+{
+    _MVPMatrix = viewport->GetCamera()->ViewProjectionMatrix;
+}
+
 Effect* ParticleRenderable::GetEffect()
 {
     Effect* baseEffect = Renderable::GetEffect();
@@ -309,7 +314,6 @@ void ParticleEmitter::Render(Viewport* viewport, EffectPass* effectPass)
         GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
 #endif
         
-        effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewport->GetCamera()->ViewProjectionMatrix);
         effectPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
         
         GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, _Particles.size()*6);
@@ -434,6 +438,8 @@ void ParticleRenderer::Render(int count, Renderable** renderables, Viewport* vie
     for (int i=0; i<count; i++)
     {
         ParticleRenderable& renderable = *static_cast<ParticleRenderable*>(renderables[i]);
+        
+        effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", renderable.GetMVP());
         
         renderable._Emitter->Render(viewport, effectPass);
         

@@ -43,6 +43,16 @@ PrimitiveRenderableEllipse::PrimitiveRenderableEllipse(Uid entityUid)
     
 }
 
+void PrimitiveRenderableEllipse::CalculateMVP(Viewport* viewport)
+{
+    _MVPMatrix = glm::translate(glm::mat4x4(), Position);
+    _MVPMatrix = glm::scale(_MVPMatrix, glm::vec3(Size, 1));
+    _MVPMatrix = glm::rotate(_MVPMatrix, Rotation[0], glm::vec3(1,0,0));
+    _MVPMatrix = glm::rotate(_MVPMatrix, Rotation[1], glm::vec3(0,1,0));
+    _MVPMatrix = glm::rotate(_MVPMatrix, Rotation[2], glm::vec3(0,0,1));
+    _MVPMatrix = viewport->GetCamera()->ViewProjectionMatrix * _MVPMatrix;
+}
+
 PrimitiveRenderable::Type PrimitiveRenderableEllipse::GetPrimitiveType()
 {
     return kTypeEllipse;
@@ -54,6 +64,10 @@ PrimitiveRenderableLine::PrimitiveRenderableLine(Uid entityUid)
     
 }
 
+void PrimitiveRenderableLine::CalculateMVP(Viewport* viewport)
+{
+    _MVPMatrix = viewport->GetCamera()->ViewProjectionMatrix;
+}
 
 PrimitiveRenderable::Type PrimitiveRenderableLine::GetPrimitiveType()
 {
@@ -67,6 +81,12 @@ PrimitiveRenderableRectangle::PrimitiveRenderableRectangle(Uid entityUid)
     
 }
 
+void PrimitiveRenderableRectangle::CalculateMVP(Viewport* viewport)
+{
+    _MVPMatrix = glm::scale(glm::mat4x4(), glm::vec3(Size, 1));
+    _MVPMatrix = Transform * _MVPMatrix;
+    _MVPMatrix = viewport->GetCamera()->ViewProjectionMatrix * _MVPMatrix;
+}
 
 PrimitiveRenderable::Type PrimitiveRenderableRectangle::GetPrimitiveType()
 {
@@ -168,19 +188,14 @@ void PrimitiveRenderer::Render(int count, Renderable** renderables, Viewport* vi
         PrimitiveRenderable& primitive = *static_cast<PrimitiveRenderable*>(renderables[i]);
         
         effectPass->GetShaderProgram()->SetUniform("diffuseColor", primitive.Color);
+        effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", primitive.GetMVP());
          
         switch (primitive.GetPrimitiveType())
         {
             case PrimitiveRenderable::kTypeEllipse:
             {
                 PrimitiveRenderableEllipse& ellipse = static_cast<PrimitiveRenderableEllipse&>(primitive);
-                glm::mat4x4 modelMatrix = glm::translate(glm::mat4x4(), ellipse.Position);
-                modelMatrix = glm::scale(modelMatrix, glm::vec3(ellipse.Size, 1));
-                modelMatrix = glm::rotate(modelMatrix, ellipse.Rotation[0], glm::vec3(1,0,0));
-                modelMatrix = glm::rotate(modelMatrix, ellipse.Rotation[1], glm::vec3(0,1,0));
-                modelMatrix = glm::rotate(modelMatrix, ellipse.Rotation[2], glm::vec3(0,0,1));
                 
-                effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewport->GetCamera()->ViewProjectionMatrix * modelMatrix);
                 GraphicsDevice::Instance()->BindIndexBuffer(_EllipseIndexBuffer);
                 GraphicsDevice::Instance()->BindVertexBuffer(_EllipseVertexBuffer);
                 
@@ -201,10 +216,6 @@ void PrimitiveRenderer::Render(int count, Renderable** renderables, Viewport* vi
             {
                 PrimitiveRenderableRectangle& rectangle = static_cast<PrimitiveRenderableRectangle&>(primitive);
 
-                glm::mat4x4 modelMatrix = glm::scale(glm::mat4x4(), glm::vec3(rectangle.Size, 1));
-                modelMatrix = primitive.Transform * modelMatrix;
-
-                effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewport->GetCamera()->ViewProjectionMatrix * modelMatrix);
                 GraphicsDevice::Instance()->BindIndexBuffer(_BoxIndexBuffer);
                 GraphicsDevice::Instance()->BindVertexBuffer(_BoxVertexBuffer);
                 
@@ -221,8 +232,6 @@ void PrimitiveRenderer::Render(int count, Renderable** renderables, Viewport* vi
             case PrimitiveRenderable::kTypeLine:
             {
                 PrimitiveRenderableLine& line = static_cast<PrimitiveRenderableLine&>(primitive);
-                
-                effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewport->GetCamera()->ViewProjectionMatrix);
                 
                 _LineVertexBuffer->Lock();
                 

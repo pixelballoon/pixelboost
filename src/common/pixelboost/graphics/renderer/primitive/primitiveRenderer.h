@@ -43,6 +43,8 @@ class PrimitiveRenderableEllipse : public PrimitiveRenderable
 public:
     PrimitiveRenderableEllipse(Uid entityUid);
     
+    virtual void CalculateMVP(Viewport* viewport);
+    
     virtual Type GetPrimitiveType();
     
 public:
@@ -58,6 +60,8 @@ class PrimitiveRenderableLine : public PrimitiveRenderable
 public:
     PrimitiveRenderableLine(Uid entityUid);
     
+    virtual void CalculateMVP(Viewport* viewport);
+    
     virtual Type GetPrimitiveType();
     
     glm::vec3 Start;
@@ -69,6 +73,8 @@ class PrimitiveRenderableRectangle : public PrimitiveRenderable
 {
 public:
     PrimitiveRenderableRectangle(Uid entityUid);
+    
+    virtual void CalculateMVP(Viewport* viewport);
     
     virtual Type GetPrimitiveType();
     

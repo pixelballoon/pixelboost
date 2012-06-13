@@ -45,6 +45,11 @@ Uid GwenRenderable::GetRenderableType()
     return pb::TypeHash("gwen");
 }
 
+void GwenRenderable::CalculateMVP(Viewport* viewport)
+{
+    _MVPMatrix = viewport->GetCamera()->ViewProjectionMatrix;
+}
+
 Effect* GwenRenderable::GetEffect()
 {
     Effect* baseEffect = Renderable::GetEffect();

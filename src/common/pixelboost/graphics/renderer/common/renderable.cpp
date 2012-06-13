@@ -38,6 +38,10 @@ int Renderable::GetLayer()
     return _Layer;
 }
 
+const glm::mat4x4& Renderable::GetMVP() const
+{
+    return _MVPMatrix;
+}
 
 Effect* Renderable::GetEffect()
 {

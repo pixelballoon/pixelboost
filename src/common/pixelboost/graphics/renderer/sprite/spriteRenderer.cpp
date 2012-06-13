@@ -31,6 +31,16 @@ Uid SpriteRenderable::GetRenderableType()
 {
     return TypeHash("sprite");
 }
+
+void SpriteRenderable::CalculateMVP(Viewport* viewport)
+{
+    if (Sprite)
+    {
+        _MVPMatrix = glm::scale(glm::mat4x4(), glm::vec3(Sprite->_Dimension, 1));
+        _MVPMatrix = Transform * _MVPMatrix;
+        _MVPMatrix = viewport->GetCamera()->ViewProjectionMatrix * _MVPMatrix;
+    }
+}
     
 Effect* SpriteRenderable::GetEffect()
 {
@@ -147,11 +157,8 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
         _VertexBuffer->Unlock();
         
         GraphicsDevice::Instance()->BindTexture(texture);
-        
-        glm::mat4x4 modelMatrix = glm::scale(glm::mat4x4(), glm::vec3(sprite->_Dimension, 1));
-        modelMatrix = renderable.Transform * modelMatrix;
 
-        effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewport->GetCamera()->ViewProjectionMatrix * modelMatrix);
+        effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", renderable.GetMVP());
         effectPass->GetShaderProgram()->SetUniform("diffuseColor", renderable.Tint);
         effectPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
         
