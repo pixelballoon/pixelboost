@@ -33,22 +33,25 @@ Struct::~Struct()
     _Project->ReleaseUid(_Uid);
 }
 
-bool Struct::Open(json::Object& entity)
+bool Struct::Open(json::Object& entity, bool skipUid)
 {
     bool status = true;
     
     // Uid
     
-    if (_Uid)
-        _Project->ReleaseUid(_Uid);
-    
-    json::Number& id = entity["Uid"];
-    _Uid = id.Value();
-    
-    if (_Uid)
-        _Project->RegisterUid(_Uid);
-    else
-        status = false;
+    if (!skipUid)
+    {
+        if (_Uid)
+            _Project->ReleaseUid(_Uid);
+        
+        json::Number& id = entity["Uid"];
+        _Uid = id.Value();
+        
+        if (_Uid)
+            _Project->RegisterUid(_Uid);
+        else
+            status = false;
+    }
     
     // Type
     

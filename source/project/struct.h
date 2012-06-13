@@ -33,7 +33,7 @@ public:
     Struct(Project* project, const SchemaStruct* type = 0);
     virtual ~Struct();
     
-    bool Open(json::Object& object);
+    bool Open(json::Object& object, bool skipUid = false);
     bool Save(json::Object& object);
     
     bool ExportJson(json::Object& object);

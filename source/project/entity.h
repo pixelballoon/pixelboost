@@ -31,7 +31,7 @@ public:
     Entity(Record* record, const SchemaEntity* type = 0);
     virtual ~Entity();
     
-    bool Open(json::Object& entity);
+    bool Open(json::Object& entity, bool skipUid = false);
     bool Save(json::Object& entity);
     
     bool ExportJson(json::Object& entity);

@@ -6,6 +6,11 @@
 
 #include "core/selection.h"
 
+namespace json
+{
+    class Object;
+}
+
 namespace pb
 {
     class NetworkServer;
@@ -38,6 +43,9 @@ public:
     Selection& GetSelection();
     void SetSelection(const Selection& selection);
     
+    json::Object* GetClipboard();
+    void SetClipboard(const json::Object& clipboard);
+    
 private:
     void RegisterCoreCommands();
     
@@ -52,6 +60,8 @@ private:
     Project* _Project;
     
     Selection _Selection;
+    
+    json::Object* _Clipboard;
 };
     
 }

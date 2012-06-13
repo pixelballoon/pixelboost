@@ -10,6 +10,7 @@ using namespace pixeleditor;
 Core* Core::_Instance = 0;
 
 Core::Core()
+    : _Clipboard(0)
 {
     _Instance = this;
     
@@ -70,4 +71,17 @@ Selection& Core::GetSelection()
 void Core::SetSelection(const Selection& selection)
 {
     _Selection = selection;
+}
+
+json::Object* Core::GetClipboard()
+{
+    return _Clipboard;
+}
+
+void Core::SetClipboard(const json::Object& clipboard)
+{
+    if (_Clipboard)
+        delete _Clipboard;
+    
+    _Clipboard = new json::Object(clipboard);
 }

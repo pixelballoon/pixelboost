@@ -29,6 +29,8 @@
 		1C3F423B1558430B00396F50 /* file.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C3F42391558430B00396F50 /* file.cpp */; };
 		1C78EE901567ECD2001441AC /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C78EE8F1567ECD2001441AC /* OpenGL.framework */; };
 		1C78EE931567EDDF001441AC /* MainView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C78EE921567EDDF001441AC /* MainView.mm */; };
+		1CAC1E8015881813002D85D1 /* copy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAC1E7C15881812002D85D1 /* copy.cpp */; };
+		1CAC1E8115881813002D85D1 /* paste.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAC1E7E15881812002D85D1 /* paste.cpp */; };
 		1CD03697157447C1003F9B92 /* networkWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CD03695157447C1003F9B92 /* networkWindow.cpp */; };
 		1CD48E15158697EE002A8E4A /* xml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CD48AC4158697ED002A8E4A /* xml.cpp */; };
 		1CD48E16158697EE002A8E4A /* database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CD48AC8158697ED002A8E4A /* database.cpp */; };
@@ -346,6 +348,10 @@
 		1C78EE8F1567ECD2001441AC /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		1C78EE911567EDDF001441AC /* MainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainView.h; sourceTree = "<group>"; };
 		1C78EE921567EDDF001441AC /* MainView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MainView.mm; sourceTree = "<group>"; };
+		1CAC1E7C15881812002D85D1 /* copy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = copy.cpp; sourceTree = "<group>"; };
+		1CAC1E7D15881812002D85D1 /* copy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = copy.h; sourceTree = "<group>"; };
+		1CAC1E7E15881812002D85D1 /* paste.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = paste.cpp; sourceTree = "<group>"; };
+		1CAC1E7F15881813002D85D1 /* paste.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = paste.h; sourceTree = "<group>"; };
 		1CD03695157447C1003F9B92 /* networkWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = networkWindow.cpp; sourceTree = "<group>"; };
 		1CD03696157447C1003F9B92 /* networkWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = networkWindow.h; sourceTree = "<group>"; };
 		1CD48ABC158697ED002A8E4A /* elements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = elements.h; sourceTree = "<group>"; };
@@ -2983,6 +2989,8 @@
 			isa = PBXGroup;
 			children = (
 				1CEB6DB31540A53000E8D103 /* close.cpp */,
+				1CAC1E7C15881812002D85D1 /* copy.cpp */,
+				1CAC1E7D15881812002D85D1 /* copy.h */,
 				1CEB6DB41540A53000E8D103 /* createEntity.cpp */,
 				1CEB6DB51540A53000E8D103 /* createEntity.h */,
 				1CEB6DB61540A53000E8D103 /* deleteCommand.cpp */,
@@ -2990,6 +2998,8 @@
 				1CEB6DB81540A53000E8D103 /* export.cpp */,
 				1CEB6DB91540A53000E8D103 /* file.h */,
 				1CEB6DBA1540A53000E8D103 /* open.cpp */,
+				1CAC1E7E15881812002D85D1 /* paste.cpp */,
+				1CAC1E7F15881813002D85D1 /* paste.h */,
 				1CEB6DBB1540A53000E8D103 /* save.cpp */,
 				1CEB6DBC1540A53000E8D103 /* selectCommand.cpp */,
 				1CEB6DBD1540A53000E8D103 /* selectCommand.h */,
@@ -3382,6 +3392,8 @@
 				1CD48F6F158697EE002A8E4A /* touchManager.mm in Sources */,
 				1CD48F70158697EE002A8E4A /* gameCenter.mm in Sources */,
 				1CD48F71158697EE002A8E4A /* networkHelpers.mm in Sources */,
+				1CAC1E8015881813002D85D1 /* copy.cpp in Sources */,
+				1CAC1E8115881813002D85D1 /* paste.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

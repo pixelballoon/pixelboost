@@ -1,6 +1,7 @@
 #import "AppDelegate.h"
 
 #include "command/manager.h"
+#include "project/record.h"
 #include "core.h"
 #include "view.h"
 
@@ -59,6 +60,20 @@
 - (IBAction)delete:(id)sender
 {
     _Core->GetCommandManager()->Exec("delete");
+}
+
+- (IBAction)copy:(id)sender
+{
+    _Core->GetCommandManager()->Exec("copy");
+}
+
+- (IBAction)paste:(id)sender
+{
+    pixeleditor::Record* record = _View->GetRecord();
+    
+    char params[32];
+    sprintf(params, "-r %d", record ? record->GetUid() : 0);
+    _Core->GetCommandManager()->Exec("paste", params);
 }
 
 - (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename

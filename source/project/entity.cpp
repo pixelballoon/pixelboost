@@ -23,9 +23,9 @@ Entity::~Entity()
 {
 }
 
-bool Entity::Open(json::Object& entity)
+bool Entity::Open(json::Object& entity, bool skipUid)
 {
-    bool status = Struct::Open(entity);
+    bool status = Struct::Open(entity, skipUid);
     
     json::Object& transform = entity["Transform"];
     json::Number& tx = transform["tx"];

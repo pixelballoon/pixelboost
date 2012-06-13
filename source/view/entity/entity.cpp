@@ -28,6 +28,8 @@ ViewEntity::ViewEntity(pb::Scene* scene, Uid uid, pixeleditor::Entity* entity)
     _Entity->propertyChanged.Connect(this, &ViewEntity::OnPropertyChanged);
     
     Core::Instance()->GetSelection().selectionChanged.Connect(this, &ViewEntity::OnSelectionChanged);
+    
+    OnSelectionChanged(&Core::Instance()->GetSelection());
 }
 
 ViewEntity::~ViewEntity()
@@ -203,6 +205,8 @@ void ViewEntity::OnSelectionChanged(const pixeleditor::Selection* selection)
 {
     if (selection->IsSelected(GenerateSelectionUid(GetUid())))
     {
+        UpdateBounds();
+        
         if (!_BoundsComponent)
         {
             _BoundsComponent = new pb::RectangleComponent(this);
@@ -212,8 +216,6 @@ void ViewEntity::OnSelectionChanged(const pixeleditor::Selection* selection)
             _BoundsComponent->SetSize(glm::vec2(_BoundingBox.GetSize().x, _BoundingBox.GetSize().y)/glm::vec2(GetScale().x, GetScale().y));
             AddComponent(_BoundsComponent);
         }
-        
-        UpdateBounds();
     } else {
         if (_BoundsComponent)
         {

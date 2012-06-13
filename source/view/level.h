@@ -20,6 +20,7 @@ namespace pixeleditor
     class Entity;
     class Project;
     class Record;
+    class Struct;
     class ViewEntity;
     
     class Level : public pb::MouseHandler
