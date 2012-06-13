@@ -309,9 +309,7 @@ void ParticleEmitter::Render(Viewport* viewport, EffectPass* effectPass)
         GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
 #endif
         
-        glm::mat4x4 viewProjectionMatrix = viewport->GetCamera()->ProjectionMatrix * viewport->GetCamera()->ViewMatrix;
-        
-        effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
+        effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewport->GetCamera()->ViewProjectionMatrix);
         effectPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
         
         GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, _Particles.size()*6);

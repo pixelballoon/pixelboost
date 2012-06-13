@@ -317,10 +317,10 @@ void GwenRenderer::RenderText(Gwen::Font* font, Gwen::Point pos, const Gwen::Uni
     
     renderFont->FillVertexBuffer(_FontVertexBuffer, convertedString);
     
-    glm::mat4x4 viewProjectionMatrix = glm::translate(glm::mat4x4(), glm::vec3(pos.x, -pos.y - size, 0)/32.f);
-    viewProjectionMatrix = glm::scale(viewProjectionMatrix, glm::vec3(size, size, 1)/32.f);
-    viewProjectionMatrix = _Viewport->GetCamera()->ProjectionMatrix * _Viewport->GetCamera()->ViewMatrix * viewProjectionMatrix;
-    _EffectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
+    glm::mat4x4 modelMatrix = glm::translate(glm::mat4x4(), glm::vec3(pos.x, -pos.y - size, 0)/32.f);
+    modelMatrix = glm::scale(modelMatrix, glm::vec3(size, size, 1)/32.f);
+    
+    _EffectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", _Viewport->GetCamera()->ViewProjectionMatrix * modelMatrix);
     _EffectPass->GetShaderProgram()->SetUniform("diffuseColor", glm::vec4(0,0,0,1));
     
     pb::Texture* prevTexture = GraphicsDevice::Instance()->BindTexture(renderFont->texture);
@@ -355,8 +355,7 @@ void GwenRenderer::PurgeBuffer(bool force)
     _VertexBuffer->Unlock(_VertexCount);
     if (_VertexCount)
     {
-        glm::mat4x4 viewProjectionMatrix = _Viewport->GetCamera()->ProjectionMatrix * _Viewport->GetCamera()->ViewMatrix;
-        _EffectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
+        _EffectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", _Viewport->GetCamera()->ViewProjectionMatrix);
         
         GraphicsDevice::Instance()->BindIndexBuffer(_IndexBuffer);
         GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffer);

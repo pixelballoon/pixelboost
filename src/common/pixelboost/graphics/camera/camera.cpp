@@ -34,6 +34,7 @@ void OrthographicCamera::CalculateTransform(Viewport* viewport)
     
     ProjectionMatrix = glm::ortho(-viewportSize.x/Scale.x, viewportSize.x/Scale.x, -viewportSize.y/Scale.y, viewportSize.y/Scale.y, ZNear, ZFar);
     ViewMatrix = glm::translate(glm::mat4x4(), -Position);
+    ViewProjectionMatrix = ProjectionMatrix * ViewMatrix;
 }
 
 glm::vec2 OrthographicCamera::ConvertScreenToWorld(glm::vec2 screen)
@@ -64,4 +65,5 @@ void PerspectiveCamera::CalculateTransform(Viewport* viewport)
     
     ProjectionMatrix = glm::perspectiveFov(FieldOfView, viewportSize.x, viewportSize.y, ZNear, ZFar);
     ViewMatrix = glm::translate(glm::mat4x4(), -Position);
+    ViewProjectionMatrix = ProjectionMatrix * ViewMatrix;
 }

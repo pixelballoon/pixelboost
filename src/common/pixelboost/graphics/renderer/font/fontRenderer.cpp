@@ -308,12 +308,11 @@ void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewpor
                 break;
         }
         
-        glm::mat4x4 viewProjectionMatrix = glm::scale(glm::mat4x4(), glm::vec3(renderable.Size, renderable.Size, 1));
-        viewProjectionMatrix = glm::translate(viewProjectionMatrix, glm::vec3(offset, 0, 0));
-        viewProjectionMatrix = renderable.Transform * viewProjectionMatrix;
-        viewProjectionMatrix = viewport->GetCamera()->ProjectionMatrix * viewport->GetCamera()->ViewMatrix * viewProjectionMatrix;
+        glm::mat4x4 modelMatrix = glm::scale(glm::mat4x4(), glm::vec3(renderable.Size, renderable.Size, 1));
+        modelMatrix = glm::translate(modelMatrix, glm::vec3(offset, 0, 0));
+        modelMatrix = renderable.Transform * modelMatrix;
         
-        effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
+        effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewport->GetCamera()->ViewProjectionMatrix * modelMatrix);
         effectPass->GetShaderProgram()->SetUniform("diffuseColor", renderable.Tint);
         effectPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
         

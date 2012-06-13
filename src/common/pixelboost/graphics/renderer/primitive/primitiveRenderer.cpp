@@ -167,7 +167,6 @@ void PrimitiveRenderer::Render(int count, Renderable** renderables, Viewport* vi
     {
         PrimitiveRenderable& primitive = *static_cast<PrimitiveRenderable*>(renderables[i]);
         
-        glm::mat4x4 viewProjectionMatrix = viewport->GetCamera()->ProjectionMatrix * viewport->GetCamera()->ViewMatrix;
         effectPass->GetShaderProgram()->SetUniform("diffuseColor", primitive.Color);
          
         switch (primitive.GetPrimitiveType())
@@ -175,13 +174,13 @@ void PrimitiveRenderer::Render(int count, Renderable** renderables, Viewport* vi
             case PrimitiveRenderable::kTypeEllipse:
             {
                 PrimitiveRenderableEllipse& ellipse = static_cast<PrimitiveRenderableEllipse&>(primitive);
-                viewProjectionMatrix = glm::translate(viewProjectionMatrix, ellipse.Position);
-                viewProjectionMatrix = glm::scale(viewProjectionMatrix, glm::vec3(ellipse.Size, 1));
-                viewProjectionMatrix = glm::rotate(viewProjectionMatrix, ellipse.Rotation[0], glm::vec3(1,0,0));
-                viewProjectionMatrix = glm::rotate(viewProjectionMatrix, ellipse.Rotation[1], glm::vec3(0,1,0));
-                viewProjectionMatrix = glm::rotate(viewProjectionMatrix, ellipse.Rotation[2], glm::vec3(0,0,1));
+                glm::mat4x4 modelMatrix = glm::translate(glm::mat4x4(), ellipse.Position);
+                modelMatrix = glm::scale(modelMatrix, glm::vec3(ellipse.Size, 1));
+                modelMatrix = glm::rotate(modelMatrix, ellipse.Rotation[0], glm::vec3(1,0,0));
+                modelMatrix = glm::rotate(modelMatrix, ellipse.Rotation[1], glm::vec3(0,1,0));
+                modelMatrix = glm::rotate(modelMatrix, ellipse.Rotation[2], glm::vec3(0,0,1));
                 
-                effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
+                effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewport->GetCamera()->ViewProjectionMatrix * modelMatrix);
                 GraphicsDevice::Instance()->BindIndexBuffer(_EllipseIndexBuffer);
                 GraphicsDevice::Instance()->BindVertexBuffer(_EllipseVertexBuffer);
                 
@@ -202,11 +201,10 @@ void PrimitiveRenderer::Render(int count, Renderable** renderables, Viewport* vi
             {
                 PrimitiveRenderableRectangle& rectangle = static_cast<PrimitiveRenderableRectangle&>(primitive);
 
-                glm::mat4x4 viewProjectionMatrix = glm::scale(glm::mat4x4(), glm::vec3(rectangle.Size, 1));
-                viewProjectionMatrix = primitive.Transform * viewProjectionMatrix;
-                viewProjectionMatrix = viewport->GetCamera()->ProjectionMatrix * viewport->GetCamera()->ViewMatrix * viewProjectionMatrix;
+                glm::mat4x4 modelMatrix = glm::scale(glm::mat4x4(), glm::vec3(rectangle.Size, 1));
+                modelMatrix = primitive.Transform * modelMatrix;
 
-                effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
+                effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewport->GetCamera()->ViewProjectionMatrix * modelMatrix);
                 GraphicsDevice::Instance()->BindIndexBuffer(_BoxIndexBuffer);
                 GraphicsDevice::Instance()->BindVertexBuffer(_BoxVertexBuffer);
                 
@@ -224,7 +222,7 @@ void PrimitiveRenderer::Render(int count, Renderable** renderables, Viewport* vi
             {
                 PrimitiveRenderableLine& line = static_cast<PrimitiveRenderableLine&>(primitive);
                 
-                effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
+                effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewport->GetCamera()->ViewProjectionMatrix);
                 
                 _LineVertexBuffer->Lock();
                 

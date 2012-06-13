@@ -148,11 +148,10 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
         
         GraphicsDevice::Instance()->BindTexture(texture);
         
-        glm::mat4x4 viewProjectionMatrix = glm::scale(glm::mat4x4(), glm::vec3(sprite->_Dimension, 1));
-        viewProjectionMatrix = renderable.Transform * viewProjectionMatrix;
-        viewProjectionMatrix = viewport->GetCamera()->ProjectionMatrix * viewport->GetCamera()->ViewMatrix * viewProjectionMatrix;
+        glm::mat4x4 modelMatrix = glm::scale(glm::mat4x4(), glm::vec3(sprite->_Dimension, 1));
+        modelMatrix = renderable.Transform * modelMatrix;
 
-        effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
+        effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewport->GetCamera()->ViewProjectionMatrix * modelMatrix);
         effectPass->GetShaderProgram()->SetUniform("diffuseColor", renderable.Tint);
         effectPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
         
