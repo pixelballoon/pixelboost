@@ -54,12 +54,15 @@ bool CreateManipulator::OnMouseDown(pb::MouseButton button, pb::ModifierKeys mod
             Uid entityId = atoi(entityIdString.c_str());
             pixeleditor::Entity* entity = Core::Instance()->GetProject()->GetEntity(entityId);
             
-            for (int i=0; i<_Fields.size(); i++)
+            if (entity)
             {
-                entity->AcquireAtom(_Fields[i])->SetStringValue(_Values[i]);
+                for (int i=0; i<_Fields.size(); i++)
+                {
+                    entity->AcquireAtom(_Fields[i])->SetStringValue(_Values[i]);
+                }
+                
+                Core::Instance()->GetCommandManager()->Exec("select", "-u " + entityIdString);
             }
-            
-            Core::Instance()->GetCommandManager()->Exec("select", "-u " + entityIdString);
             
             return true;
         }
