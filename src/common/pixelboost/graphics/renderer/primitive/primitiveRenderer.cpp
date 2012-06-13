@@ -84,9 +84,9 @@ PrimitiveRenderer::PrimitiveRenderer()
         indicies[0] = 0;
         indicies[1] = 1;
         indicies[2] = 2;
-        indicies[3] = 1;
+        indicies[3] = 3;
         indicies[4] = 2;
-        indicies[5] = 3;
+        indicies[5] = 0;
         _BoxIndexBuffer->Unlock();
         
         _BoxVertexBuffer->Lock();
@@ -201,20 +201,19 @@ void PrimitiveRenderer::Render(int count, Renderable** renderables, Viewport* vi
             case PrimitiveRenderable::kTypeRectangle:
             {
                 PrimitiveRenderableRectangle& rectangle = static_cast<PrimitiveRenderableRectangle&>(primitive);
-                viewProjectionMatrix = glm::translate(viewProjectionMatrix, rectangle.Position);
-                viewProjectionMatrix = glm::scale(viewProjectionMatrix, glm::vec3(rectangle.Size, 1));
-                viewProjectionMatrix = glm::rotate(viewProjectionMatrix, rectangle.Rotation[0], glm::vec3(1,0,0));
-                viewProjectionMatrix = glm::rotate(viewProjectionMatrix, rectangle.Rotation[1], glm::vec3(0,1,0));
-                viewProjectionMatrix = glm::rotate(viewProjectionMatrix, rectangle.Rotation[2], glm::vec3(0,0,1));
+
+                glm::mat4x4 viewProjectionMatrix = glm::scale(glm::mat4x4(), glm::vec3(rectangle.Size, 1));
+                viewProjectionMatrix = primitive.Transform * viewProjectionMatrix;
+                viewProjectionMatrix = viewport->GetCamera()->ProjectionMatrix * viewport->GetCamera()->ViewMatrix * viewProjectionMatrix;
 
                 effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", viewProjectionMatrix);
                 GraphicsDevice::Instance()->BindIndexBuffer(_BoxIndexBuffer);
                 GraphicsDevice::Instance()->BindVertexBuffer(_BoxVertexBuffer);
                 
                 if (!rectangle.Solid)
-                    GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementLineLoop, 6);
+                    GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementLineLoop, 4);
                 else
-                    GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangleFan, 6);
+                    GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, 6);
                 
                 GraphicsDevice::Instance()->BindIndexBuffer(0);
                 GraphicsDevice::Instance()->BindVertexBuffer(0);

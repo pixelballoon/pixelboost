@@ -34,6 +34,7 @@ public:
     virtual Type GetPrimitiveType() = 0;
     
 public:
+    glm::mat4x4 Transform;
     glm::vec4 Color;
 };
     
@@ -74,8 +75,6 @@ public:
 public:
     bool Solid;
     
-    glm::vec3 Position;
-    glm::vec3 Rotation;
     glm::vec2 Size;
 };
     
