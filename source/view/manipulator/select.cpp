@@ -1,4 +1,7 @@
+#include "glm/gtc/matrix_transform.hpp"
+
 #include "pixelboost/graphics/camera/camera.h"
+#include "pixelboost/graphics/components/rectangle.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 
 #include "command/manager.h"
@@ -10,8 +13,10 @@
 
 using namespace pixeleditor;
 
-SelectManipulator::SelectManipulator()
-    : _Active(false)
+SelectManipulator::SelectManipulator(pb::Scene* scene)
+    : Manipulator(scene)
+    , _Active(false)
+    , _BoundsComponent(0)
 {
     
 }
@@ -35,6 +40,16 @@ void SelectManipulator::Render(int layer)
 {
     if (_Active)
     {
+        if (!_BoundsComponent)
+        {
+            _BoundsComponent = new pb::RectangleComponent(this);
+            _BoundsComponent->SetColor(glm::vec4(0.0, 0.0, 0.1, 0.1));
+            _BoundsComponent->SetSolid(true);
+            _BoundsComponent->SetLayer(1);
+            
+            AddComponent(_BoundsComponent);
+        }
+        
         pb::OrthographicCamera* camera = View::Instance()->GetLevelCamera();
         
         glm::vec2 start = camera->ConvertScreenToWorld(_SelectStart);
@@ -42,8 +57,16 @@ void SelectManipulator::Render(int layer)
         glm::vec2 position = (start+end)/2.f;
         glm::vec2 size = end-start;
         
-        //View::Instance()->GetPrimitiveRenderer()->AttachBox(layer, Vec2(position.x, position.y), Vec2(size.x, size.y), Vec3(0,0,0), Vec4(0,0,0.1,0.1));
-        //View::Instance()->GetPrimitiveRenderer()->AttachBox(layer, Vec2(position.x, position.y), Vec2(size.x, size.y), Vec3(0,0,0), Vec4(0,0,0.5,0.5), false);
+        glm::mat4x4 transform = glm::translate(glm::mat4x4(), glm::vec3(position, 0.f));
+        
+        _BoundsComponent->SetSize(size);
+        _BoundsComponent->SetLocalTransform(transform);
+    } else {
+        if (_BoundsComponent)
+        {
+            DestroyComponent(_BoundsComponent);
+            _BoundsComponent = 0;
+        }
     }
 }
 

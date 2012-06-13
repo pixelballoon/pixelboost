@@ -9,7 +9,8 @@
 
 using namespace pixeleditor;
 
-MoveManipulator::MoveManipulator()
+MoveManipulator::MoveManipulator(pb::Scene* scene)
+    : Manipulator(scene)
 {
     
 }

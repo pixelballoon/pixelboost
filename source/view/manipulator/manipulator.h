@@ -6,6 +6,7 @@
 #include "pixelboost/db/definitions.h"
 #include "pixelboost/input/keyboardManager.h"
 #include "pixelboost/input/mouseManager.h"
+#include "pixelboost/logic/entity.h"
 
 namespace pb
 {
@@ -17,10 +18,10 @@ namespace pixeleditor
     class ManipulatorKeyboardHandler;
     class ManipulatorMouseHandler;
     
-    class Manipulator
+    class Manipulator : public pb::Entity
     {
     public:
-        Manipulator();
+        Manipulator(pb::Scene* scene);
         virtual ~Manipulator();
         
         virtual std::string GetName() = 0;
@@ -41,7 +42,7 @@ namespace pixeleditor
     class ManipulatorManager
     {
     public:
-        ManipulatorManager();
+        ManipulatorManager(pb::Scene* scene);
         ~ManipulatorManager();
         
     public:
@@ -70,6 +71,8 @@ namespace pixeleditor
         ManipulatorMouseHandler* _MouseHandler;
         
         Manipulator* _ActiveManipulator;
+        
+        pb::Scene* _Scene;
         
         friend class ManipulatorKeyboardHandler;
         friend class ManipulatorMouseHandler;

@@ -195,12 +195,12 @@ void View::Initialise(glm::vec2 size)
     pb::Renderer::Instance()->AddViewport(_LevelViewport);
     pb::Renderer::Instance()->AddViewport(_UiViewport);
     
-    _ManipulatorManager = new ManipulatorManager();
-    _ManipulatorManager->AddManipulator(new SelectManipulator());
-    _ManipulatorManager->AddManipulator(new MoveManipulator());
-    _ManipulatorManager->AddManipulator(new RotateManipulator());
-    _ManipulatorManager->AddManipulator(new ScaleManipulator());
-    _ManipulatorManager->AddManipulator(new CreateManipulator());
+    _ManipulatorManager = new ManipulatorManager(_LevelScene);
+    _ManipulatorManager->AddManipulator(new SelectManipulator(_LevelScene));
+    _ManipulatorManager->AddManipulator(new MoveManipulator(_LevelScene));
+    _ManipulatorManager->AddManipulator(new RotateManipulator(_LevelScene));
+    _ManipulatorManager->AddManipulator(new ScaleManipulator(_LevelScene));
+    _ManipulatorManager->AddManipulator(new CreateManipulator(_LevelScene));
     _ManipulatorManager->SetActiveManipulator("select");
     
     _Level = new Level(_LevelScene);

@@ -1,3 +1,5 @@
+#include "pixelboost/logic/scene.h"
+
 #include "view/manipulator/manipulator.h"
 #include "view.h"
 
@@ -65,7 +67,8 @@ public:
     }
 };
     
-Manipulator::Manipulator()
+Manipulator::Manipulator(pb::Scene* scene)
+    : pb::Entity(scene, 0)
 {
     
 }
@@ -120,8 +123,9 @@ void Manipulator::OnSetInactive()
     
 }
 
-ManipulatorManager::ManipulatorManager()
+ManipulatorManager::ManipulatorManager(pb::Scene* scene)
     : _ActiveManipulator(0)
+    , _Scene(scene)
 {
     _KeyboardHandler = new ManipulatorKeyboardHandler();
     _MouseHandler = new ManipulatorMouseHandler();
@@ -140,7 +144,7 @@ ManipulatorManager::~ManipulatorManager()
     
     for (ManipulatorMap::iterator it = _Manipulators.begin(); it != _Manipulators.end(); ++it)
     {
-        delete it->second;
+        _Scene->DestroyEntity(it->second);
     }
 }
 
@@ -152,6 +156,7 @@ void ManipulatorManager::Render(int layer)
 void ManipulatorManager::AddManipulator(pixeleditor::Manipulator* manipulator)
 {
     _Manipulators[manipulator->GetName()] = manipulator;
+    _Scene->AddEntity(manipulator);
 }
 
 Manipulator* ManipulatorManager::GetManipulator(const std::string& name)

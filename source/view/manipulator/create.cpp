@@ -11,7 +11,8 @@
 
 using namespace pixeleditor;
 
-CreateManipulator::CreateManipulator()
+CreateManipulator::CreateManipulator(pb::Scene* scene)
+    : Manipulator(scene)
 {
     
 }
@@ -51,7 +52,7 @@ bool CreateManipulator::OnMouseDown(pb::MouseButton button, pb::ModifierKeys mod
             sprintf(commandArgs, "-r %d -t %s -p %f,%f,%f", View::Instance()->GetRecord()->GetUid(), _EntityType.c_str(), start.x, start.y, 0.f);
             std::string entityIdString = Core::Instance()->GetCommandManager()->Exec("createEntity", commandArgs);
             Uid entityId = atoi(entityIdString.c_str());
-            Entity* entity = Core::Instance()->GetProject()->GetEntity(entityId);
+            pixeleditor::Entity* entity = Core::Instance()->GetProject()->GetEntity(entityId);
             
             for (int i=0; i<_Fields.size(); i++)
             {

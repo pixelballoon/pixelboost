@@ -8,7 +8,7 @@ namespace pixeleditor
     class RotateManipulator : public Manipulator
     {
     public:
-        RotateManipulator();
+        RotateManipulator(pb::Scene* scene);
         virtual ~RotateManipulator();
         
         virtual std::string GetName();

@@ -8,7 +8,7 @@ namespace pixeleditor
     class ScaleManipulator : public Manipulator
     {
     public:
-        ScaleManipulator();
+        ScaleManipulator(pb::Scene* scene);
         virtual ~ScaleManipulator();
         
         virtual std::string GetName();

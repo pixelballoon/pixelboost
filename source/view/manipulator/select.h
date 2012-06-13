@@ -5,7 +5,7 @@ namespace pixeleditor
     class SelectManipulator : public Manipulator
     {
     public:
-        SelectManipulator();
+        SelectManipulator(pb::Scene* scene);
         virtual ~SelectManipulator();
         
         virtual std::string GetName();
@@ -26,5 +26,7 @@ namespace pixeleditor
         bool _Active;
         glm::vec2 _SelectStart;
         glm::vec2 _SelectEnd;
+        
+        pb::RectangleComponent* _BoundsComponent;
     };
 }

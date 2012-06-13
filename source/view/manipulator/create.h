@@ -8,7 +8,7 @@ namespace pixeleditor
     class CreateManipulator : public Manipulator
     {
     public:
-        CreateManipulator();
+        CreateManipulator(pb::Scene* scene);
         virtual ~CreateManipulator();
         
         virtual std::string GetName();

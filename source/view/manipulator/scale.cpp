@@ -9,7 +9,8 @@
 
 using namespace pixeleditor;
 
-ScaleManipulator::ScaleManipulator()
+ScaleManipulator::ScaleManipulator(pb::Scene* scene)
+    : Manipulator(scene)
 {
     
 }

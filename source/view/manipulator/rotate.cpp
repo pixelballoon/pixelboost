@@ -9,7 +9,8 @@
 
 using namespace pixeleditor;
 
-RotateManipulator::RotateManipulator()
+RotateManipulator::RotateManipulator(pb::Scene* scene)
+    : Manipulator(scene)
 {
     
 }
