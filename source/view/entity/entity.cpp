@@ -209,6 +209,7 @@ void ViewEntity::OnSelectionChanged(const pixeleditor::Selection* selection)
             _BoundsComponent->SetColor(glm::vec4(0.2, 0.2, 0.4, 0.3));
             _BoundsComponent->SetSolid(true);
             _BoundsComponent->SetLayer(1);
+            _BoundsComponent->SetSize(glm::vec2(_BoundingBox.GetSize().x, _BoundingBox.GetSize().y)/glm::vec2(GetScale().x, GetScale().y));
             AddComponent(_BoundsComponent);
         }
         
@@ -325,7 +326,4 @@ void ViewEntity::UpdateBounds()
         
         _BoundsDirty = false;
     }
-    
-    if (_BoundsComponent)
-        _BoundsComponent->SetSize(glm::vec2(_BoundingBox.GetSize().x, _BoundingBox.GetSize().y));
 }
