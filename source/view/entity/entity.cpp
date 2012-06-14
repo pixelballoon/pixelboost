@@ -49,28 +49,7 @@ void ViewEntity::Update(float time)
 
 void ViewEntity::Render(int layer)
 {
-    UpdateBounds();
-    
-    /*
-    View::Instance()->GetPrimitiveRenderer()->AttachBox(layer, Vec2(_Position.x, _Position.y), Vec2(0.1,0.1));
-    View::Instance()->GetPrimitiveRenderer()->AttachLine(layer, Vec2(_Position.x, _Position.y), Vec2(_Position.x, _Position.y+1));
-    View::Instance()->GetPrimitiveRenderer()->AttachLine(layer, Vec2(_Position.x, _Position.y), Vec2(_Position.x+1, _Position.y));
-    */
-    
-    for (PropertyMap::iterator it = _Properties.begin(); it != _Properties.end(); ++it)
-    {
-        it->second->Render(layer);
-    }
-    
-    if (Core::Instance()->GetSelection().IsSelected(GenerateSelectionUid(GetUid())))
-    {
-        glm::vec3 boxCenter = _BoundingBox.GetCenter();
-        glm::vec3 boxSize = _BoundingBox.GetSize();
-        /*
-        View::Instance()->GetPrimitiveRenderer()->AttachBox(layer, Vec2(boxCenter.x, boxCenter.y), Vec2(boxSize.x, boxSize.y), Vec3(0,0,0), Vec4(0.2,0.2,0.4,0.3));
-        View::Instance()->GetPrimitiveRenderer()->AttachBox(layer, Vec2(boxCenter.x, boxCenter.y), Vec2(boxSize.x, boxSize.y), Vec3(0,0,0), Vec4(0.4,0.2,0.2,0.5), false);
-        */
-    }
+
 }
 
 Entity* ViewEntity::GetEntity()
