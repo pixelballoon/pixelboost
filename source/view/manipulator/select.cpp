@@ -95,7 +95,6 @@ bool SelectManipulator::OnMouseUp(pb::MouseButton button, pb::ModifierKeys modif
         glm::vec2 max(glm::max(start.x, end.x), glm::max(start.y, end.y));
         
         Level* level = View::Instance()->GetLevel();
-        Level::EntityMap entities = level->GetEntities();
         
         std::string entityIds;
         
@@ -103,22 +102,21 @@ bool SelectManipulator::OnMouseUp(pb::MouseButton button, pb::ModifierKeys modif
 
         bool singleSelection = min == max;
         
-        for (Level::EntityMap::iterator it = entities.begin(); it != entities.end(); ++it)
+        Level::EntityList entities = level->GetEntitiesInBounds(selectionBounds);
+        
+        for (Level::EntityList::iterator it = entities.begin(); it != entities.end(); ++it)
         {
-            if (it->second->GetBoundingBox().Intersects(selectionBounds))
+            char id[32];
+            sprintf(id, "%d", (*it)->GetUid());
+
+            entityIds += std::string((entityIds.length() == 0 ? "" : ",")) + id;
+
+            if (singleSelection)
             {
-                char id[32];
-                sprintf(id, "%d", it->first);
-                
-                entityIds += std::string((entityIds.length() == 0 ? "" : ",")) + id;
-                
-                if (singleSelection)
-                {
-                    break;
-                }
+                break;
             }
         }
-                
+
         if (entityIds.length())
         {
             Core::Instance()->GetCommandManager()->Exec("select", "-u " + entityIds);

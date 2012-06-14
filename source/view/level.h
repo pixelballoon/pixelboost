@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <vector>
 
 #include "glm/glm.hpp"
 #include "sigslot/signal.h"
@@ -11,6 +12,7 @@
 
 namespace pb
 {
+    class BoundingBox;
     class RenderLayer;
     class Scene;
 }
@@ -38,10 +40,12 @@ namespace pixeleditor
         
     public:
         typedef std::map<Uid, ViewEntity*> EntityMap;
+        typedef std::vector<ViewEntity*> EntityList;
         
     public:
         const EntityMap& GetEntities();
         ViewEntity* GetEntityById(Uid uid);
+        EntityList GetEntitiesInBounds(const pb::BoundingBox& bounds);
         
         sigslot::Signal1<ViewEntity*> entityAdded;
         sigslot::Signal1<ViewEntity*> entityRemoved;

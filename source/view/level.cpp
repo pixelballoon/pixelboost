@@ -108,7 +108,22 @@ ViewEntity* Level::GetEntityById(Uid uid)
     
     return 0;
 }
-                     
+
+Level::EntityList Level::GetEntitiesInBounds(const pb::BoundingBox &bounds)
+{
+    EntityList entities;
+    
+    for (Level::EntityMap::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
+    {
+        if (it->second->GetBoundingBox().Intersects(bounds))
+        {
+            entities.push_back(it->second);
+        }
+    }
+    
+    return entities;
+}
+                         
 void Level::CreateEntity(Uid uid)
 {
     Entity* entity = _Record->GetEntity(uid);

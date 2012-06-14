@@ -76,6 +76,16 @@
     _Core->GetCommandManager()->Exec("paste", params);
 }
 
+- (IBAction)sendToBack:(id)sender
+{
+    _Core->GetCommandManager()->Exec("modifyDepth", "-b");
+}
+
+- (IBAction)bringToFront:(id)sender
+{
+    _Core->GetCommandManager()->Exec("modifyDepth", "-f");
+}
+
 - (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename
 {
     if (_Core)

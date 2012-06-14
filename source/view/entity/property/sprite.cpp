@@ -1,3 +1,5 @@
+#include "glm/gtc/matrix_transform.hpp"
+
 #include "pixelboost/graphics/components/sprite.h"
 #include "pixelboost/graphics/renderer/sprite/sprite.h"
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
@@ -31,8 +33,6 @@ void SpriteViewProperty::Update(float time)
 
 void SpriteViewProperty::Render(int layer)
 {
-    //View::Instance()->GetSpriteRenderer()->AttachSprite(layer, _Sprite, Vec2(_Parent->GetPosition().x, _Parent->GetPosition().y), Vec3(_Parent->GetRotation().x, _Parent->GetRotation().y, _Parent->GetRotation().z), Vec2(_Parent->GetScale().x, _Parent->GetScale().y));
-    
     ViewProperty::Render(layer);
 }
 

@@ -346,7 +346,7 @@ void View::SetCanvasSize(glm::vec2 size)
     _GwenCanvas->SetSize(size[0], size[1]);
     _LevelViewport->SetResolution(size);
     _UiViewport->SetResolution(size);
-    _UiCamera->Position = glm::vec3(size[0]/2.f, -size[1]/2.f, 0.f)/32.f;
+    _UiCamera->Position = glm::vec3(size[0]/2.f, -size[1]/2.f, 0.f)/32.f + glm::vec3(0,0,1);
 }
 
 void View::SetRecord(Record* record)
