@@ -121,6 +121,18 @@ FontAlign FontRenderable::GetAlignment()
 void FontRenderable::CalculateOffset()
 {
     Offset = Game::Instance()->GetFontRenderer()->MeasureString(Font, Text, Size);
+    
+    switch (Alignment) {
+        case kFontAlignLeft:
+            Offset = 0;
+            break;
+        case kFontAlignCenter:
+            Offset = -Offset/2.f;
+            break;
+        case kFontAlignRight:
+            Offset = -Offset;
+            break;
+    }
 }
 
 float Font::FillVertexBuffer(VertexBuffer* vertexBuffer, const std::string& string)
@@ -368,23 +380,11 @@ void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewpor
         
         font = fontIt->second;
         
-        float offset = font->FillVertexBuffer(_VertexBuffer, renderable.Text);
+        font->FillVertexBuffer(_VertexBuffer, renderable.Text);
         
         GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffer);
         
         GraphicsDevice::Instance()->BindTexture(font->texture);
-        
-        switch (renderable.Alignment) {
-            case kFontAlignLeft:
-                offset = 0;
-                break;
-            case kFontAlignCenter:
-                offset = -offset/2.f;
-                break;
-            case kFontAlignRight:
-                offset = -offset;
-                break;
-        }
         
         effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", renderable.GetMVP());
         effectPass->GetShaderProgram()->SetUniform("diffuseColor", renderable.Tint);
