@@ -30,7 +30,7 @@ public:
 class OrthographicCamera : public Camera
 {
 public:
-    OrthographicCamera(glm::vec3 position = glm::vec3(0,0,0), glm::vec3 rotation = glm::vec3(0,0,0), glm::vec2 scale = glm::vec2(1,1));
+    OrthographicCamera(glm::vec3 position = glm::vec3(0,0,1), glm::vec3 rotation = glm::vec3(0,0,0), glm::vec2 scale = glm::vec2(1,1));
     virtual void CalculateTransform(Viewport* viewport);
     
     virtual glm::vec2 ConvertScreenToWorld(glm::vec2 screen);
