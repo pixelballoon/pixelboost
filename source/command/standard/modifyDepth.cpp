@@ -77,7 +77,7 @@ bool ModifyDepthCommand::Do(std::string& returnString)
     for (Level::EntityList::iterator it = boundsEntities.begin(); it != boundsEntities.end(); ++it)
     {
         ViewEntity* entity = *it;
-        if (!selection.IsSelected(GenerateSelectionUid((*it)->GetUid())))
+        if (!selection.IsSelected(GenerateSelectionUid(entity->GetUid())))
         {
             modify = true;
             otherMin = glm::min(otherMin, entity->GetPosition().z);
@@ -87,10 +87,10 @@ bool ModifyDepthCommand::Do(std::string& returnString)
     
     if (IsArgumentSet("f"))
     {
-        offset = (otherMax + 1.f) - selectionMax;
+        offset = (otherMax + 1.f) - selectionMin;
     } else if (IsArgumentSet("b"))
     {
-        offset = (otherMin - 1.f) - selectionMin;
+        offset = (otherMin - 1.f) - selectionMax;
     }
     
     if (modify && offset != 0.f)
