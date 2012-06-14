@@ -87,10 +87,10 @@ bool ModifyDepthCommand::Do(std::string& returnString)
     
     if (IsArgumentSet("f"))
     {
-        offset = (otherMin - 1.f) - selectionMin;
+        offset = (otherMax + 1.f) - selectionMax;
     } else if (IsArgumentSet("b"))
     {
-        offset = (otherMax + 1.f) - selectionMax;
+        offset = (otherMin - 1.f) - selectionMin;
     }
     
     if (modify && offset != 0.f)
