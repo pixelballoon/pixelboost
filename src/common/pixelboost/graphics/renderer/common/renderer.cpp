@@ -94,7 +94,7 @@ void Renderer::FlushBuffer(Viewport* viewport)
             (*it)->CalculateMVP(viewport);
         }
         
-        std::sort(renderables.begin(), renderables.end(), &RenderableSorter);
+        std::stable_sort(renderables.begin(), renderables.end(), &RenderableSorter);
         
         Uid type = renderables[0]->GetRenderableType();
         Effect* effect = renderables[0]->GetEffect();
