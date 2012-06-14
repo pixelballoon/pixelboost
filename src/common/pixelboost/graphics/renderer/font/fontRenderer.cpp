@@ -120,7 +120,7 @@ FontAlign FontRenderable::GetAlignment()
 
 void FontRenderable::CalculateOffset()
 {
-    Offset = Game::Instance()->GetFontRenderer()->MeasureString(Font, Text, Size);
+    Offset = Game::Instance()->GetFontRenderer()->MeasureString(Font, Text, 1.f);
     
     switch (Alignment) {
         case kFontAlignLeft:
