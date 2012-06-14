@@ -5,7 +5,9 @@
 #include "project/record.h"
 #include "project/project.h"
 #include "project/property.h"
+#include "view/entity/entity.h"
 #include "view/manipulator/create.h"
+#include "view/level.h"
 #include "core.h"
 #include "view.h"
 
@@ -46,10 +48,12 @@ bool CreateManipulator::OnMouseDown(pb::MouseButton button, pb::ModifierKeys mod
     {
         if (View::Instance()->GetRecord())
         {
+            float defaultDepth = -5000.f;
+            
             glm::vec2 start = View::Instance()->GetLevelCamera()->ConvertScreenToWorld(position);
             
             char commandArgs[1024];
-            sprintf(commandArgs, "-r %d -t %s -p %f,%f,%f", View::Instance()->GetRecord()->GetUid(), _EntityType.c_str(), start.x, start.y, 0.f);
+            sprintf(commandArgs, "-r %d -t %s -p %f,%f,%f", View::Instance()->GetRecord()->GetUid(), _EntityType.c_str(), start.x, start.y, defaultDepth);
             std::string entityIdString = Core::Instance()->GetCommandManager()->Exec("createEntity", commandArgs);
             Uid entityId = atoi(entityIdString.c_str());
             pixeleditor::Entity* entity = Core::Instance()->GetProject()->GetEntity(entityId);
@@ -62,6 +66,25 @@ bool CreateManipulator::OnMouseDown(pb::MouseButton button, pb::ModifierKeys mod
                 }
                 
                 Core::Instance()->GetCommandManager()->Exec("select", "-u " + entityIdString);
+            }
+            
+            pixeleditor::ViewEntity* viewEntity = View::Instance()->GetLevel()->GetEntityById(entityId);
+            
+            if (viewEntity)
+            {
+                Level::EntityList otherEntities = View::Instance()->GetLevel()->GetEntitiesInBounds(viewEntity->GetBoundingBox());
+                
+                if (otherEntities.size())
+                {
+                    float maxDepth = -INFINITY;
+                    for (Level::EntityList::iterator it = otherEntities.begin(); it != otherEntities.end(); ++it)
+                    {
+                        maxDepth = glm::max(maxDepth, (*it)->GetPosition().z);
+                    }
+                    
+                    viewEntity->Transform(glm::vec3(0,0, (maxDepth + 1) - defaultDepth));
+                    viewEntity->CommitTransform();
+                }
             }
             
             return true;
