@@ -79,7 +79,7 @@ bool RotateManipulator::OnMouseMove(glm::vec2 position)
         if (entity)
         {
             entity->ResetTransform();
-            entity->Transform(glm::vec3(0,0,0), glm::vec3(angle,angle,angle));
+            entity->Transform(glm::vec3(0,0,0), glm::vec3(0,0,angle));
         }
     }
     
