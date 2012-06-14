@@ -1,4 +1,5 @@
 #include "command/manager.h"
+#include "command/standard/checkDepth.h"
 #include "command/standard/copy.h"
 #include "command/standard/createEntity.h"
 #include "command/standard/deleteCommand.h"
@@ -25,6 +26,7 @@ void Core::RegisterCoreCommands()
     REGISTER_COMMAND(CopyCommand);
     REGISTER_COMMAND(PasteCommand);
     
+    REGISTER_COMMAND(CheckDepthCommand);
     REGISTER_COMMAND(ModifyDepthCommand);
     
     REGISTER_COMMAND(TransformCommand);

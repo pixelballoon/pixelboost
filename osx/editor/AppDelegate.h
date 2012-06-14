@@ -27,6 +27,7 @@ namespace pixeleditor
 
 - (IBAction)sendToBack:(id)sender;
 - (IBAction)bringToFront:(id)sender;
+- (IBAction)checkDepth:(id)sender;
 
 - (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename;
 

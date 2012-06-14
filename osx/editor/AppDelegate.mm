@@ -86,6 +86,11 @@
     _Core->GetCommandManager()->Exec("modifyDepth", "-f");
 }
 
+- (IBAction)checkDepth:(id)sender
+{
+    _Core->GetCommandManager()->Exec("checkDepth");
+}
+
 - (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename
 {
     if (_Core)
