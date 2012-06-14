@@ -75,9 +75,9 @@ void Renderer::SetHandler(int renderableType, IRenderer* renderer)
     _RenderableHandlers[renderableType] = renderer;
 }
 
-bool RenderableSorter(const Renderable* a, const Renderable* b)
+bool RenderableBackToFrontSorter(const Renderable* a, const Renderable* b)
 {
-    return a->GetMVP()[3][2] < b->GetMVP()[3][2];
+    return a->GetMVP()[3][2] > b->GetMVP()[3][2];
 }
 
 void Renderer::FlushBuffer(Viewport* viewport)
@@ -94,7 +94,7 @@ void Renderer::FlushBuffer(Viewport* viewport)
             (*it)->CalculateMVP(viewport);
         }
         
-        std::stable_sort(renderables.begin(), renderables.end(), &RenderableSorter);
+        std::stable_sort(renderables.begin(), renderables.end(), &RenderableBackToFrontSorter);
         
         Uid type = renderables[0]->GetRenderableType();
         Effect* effect = renderables[0]->GetEffect();
