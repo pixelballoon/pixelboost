@@ -75,7 +75,7 @@ void Renderer::SetHandler(int renderableType, IRenderer* renderer)
     _RenderableHandlers[renderableType] = renderer;
 }
 
-bool RenderableBackToFrontSorter(const Renderable* a, const Renderable* b)
+static bool RenderableBackToFrontSorter(const Renderable* a, const Renderable* b)
 {
     return a->GetMVP()[3][2] > b->GetMVP()[3][2];
 }
