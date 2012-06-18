@@ -115,7 +115,8 @@ void ParallaxTransformComponent::OnChanged()
 
 void ParallaxTransformComponent::OnTransformChanged(Uid sender, const Message& message)
 {
-    _ParallaxPosition = static_cast<const TransformChangedMessage&>(message).GetEntity()->GetComponentByType<TransformComponent>()->GetPosition();
+    glm::vec3 position = static_cast<const TransformChangedMessage&>(message).GetEntity()->GetComponentByType<TransformComponent>()->GetPosition();
+    _ParallaxPosition = glm::vec3(position.x, position.y, 0);
     
     OnChanged();
 }
