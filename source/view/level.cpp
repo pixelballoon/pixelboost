@@ -1,4 +1,5 @@
 #include "pixelboost/graphics/camera/camera.h"
+#include "pixelboost/graphics/components/rectangle.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 #include "pixelboost/logic/scene.h"
 
@@ -15,14 +16,20 @@
 using namespace pixeleditor;
 
 Level::Level(pb::Scene* scene)
-    : _Record(0)
-    , _Scene(scene)
+    : Entity(scene, 0)
+    , _Record(0)
 {
     View::Instance()->GetMouseManager()->AddHandler(this);
     
     Core::Instance()->GetProject()->recordRemoved.Connect(this, &Level::OnRecordRemoved);
     
-    _Size = glm::vec2(0,0);
+    _LevelBounds = new pb::RectangleComponent(this);
+    _LevelBounds->SetColor(glm::vec4(0.6, 0.6, 0.6, 1.0));
+    _LevelBounds->SetSolid(true);
+    _LevelBounds->SetLayer(0);
+    _LevelBounds->SetSize(glm::vec2(0,0));
+        
+    AddComponent(_LevelBounds);
 }
 
 Level::~Level()
@@ -44,11 +51,6 @@ void Level::Update(float time)
 
 void Level::Render(int backgroundLayer, int levelLayer)
 {
-    /*
-    View::Instance()->GetPrimitiveRenderer()->AttachBox(backgroundLayer, Vec2(0,0), Vec2(_Size.x, _Size.y), Vec3(0,0,0), Vec4(0.6, 0.6, 0.6, 1.0), true);
-    View::Instance()->GetPrimitiveRenderer()->AttachBox(backgroundLayer, Vec2(0,0), Vec2(_Size.x, _Size.y), Vec3(0,0,0), Vec4(0, 0, 0, 1.0), false);
-    */
-    
     for (EntityMap::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
     {
         it->second->Render(levelLayer);
@@ -86,7 +88,7 @@ void Level::SetRecord(Record* record)
         
         for (Record::EntityMap::const_iterator it = record->GetEntities().begin(); it != record->GetEntities().end(); ++it)
         {
-            Entity* entity = it->second;
+            pixeleditor::Entity* entity = it->second;
             CreateEntity(entity);
         }
     }
@@ -126,16 +128,16 @@ Level::EntityList Level::GetEntitiesInBounds(const pb::BoundingBox &bounds)
                          
 void Level::CreateEntity(Uid uid)
 {
-    Entity* entity = _Record->GetEntity(uid);
+    pixeleditor::Entity* entity = _Record->GetEntity(uid);
 
     if (entity)
         CreateEntity(entity);
 }
 
-void Level::CreateEntity(Entity* entity)
+void Level::CreateEntity(pixeleditor::Entity* entity)
 {
-    ViewEntity* viewEntity = new ViewEntity(_Scene, entity->GetUid(), entity);
-    _Scene->AddEntity(viewEntity);
+    ViewEntity* viewEntity = new ViewEntity(GetScene(), entity->GetUid(), entity);
+    GetScene()->AddEntity(viewEntity);
     _Entities[entity->GetUid()] = viewEntity;
     entityAdded(viewEntity);
 }
@@ -146,7 +148,7 @@ void Level::DestroyEntity(Uid uid)
     
     if (it != _Entities.end())
     {
-        _Scene->DestroyEntity(it->second);
+        GetScene()->DestroyEntity(it->second);
         entityRemoved(it->second);
         _Entities.erase(it);
     }
@@ -154,7 +156,7 @@ void Level::DestroyEntity(Uid uid)
 
 void Level::UpdateSize()
 {
-    _Size = glm::vec2(0,0);
+    _LevelBounds->SetSize(glm::vec2(0,0));
     
     if (!_Record)
         return;
@@ -165,7 +167,7 @@ void Level::UpdateSize()
     
     std::string width = hasLevel->EvaluateParamValue(_Record, "width");
     std::string height = hasLevel->EvaluateParamValue(_Record, "height");
-    _Size = glm::vec2(atof(width.c_str()), atof(height.c_str()));
+    _LevelBounds->SetSize(glm::vec2(atof(width.c_str()), atof(height.c_str())));
 }
 
 int Level::GetPriority()
@@ -196,12 +198,12 @@ void Level::OnRecordRemoved(Project* project, Record* record)
     }
 }
 
-void Level::OnEntityAdded(Record* record, Entity* entity)
+void Level::OnEntityAdded(Record* record, pixeleditor::Entity* entity)
 {
     CreateEntity(entity);
 }
 
-void Level::OnEntityRemoved(Record* record, Entity* entity)
+void Level::OnEntityRemoved(Record* record, pixeleditor::Entity* entity)
 {
     DestroyEntity(entity->GetUid());
 }

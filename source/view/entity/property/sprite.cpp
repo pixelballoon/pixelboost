@@ -16,6 +16,7 @@ SpriteViewProperty::SpriteViewProperty(ViewEntity* parent, const std::string& pa
     : ViewProperty(parent, path, schemaItem)
 {
     _SpriteComponent = new pb::SpriteComponent(parent, "");
+    _SpriteComponent->SetLayer(1);
     parent->AddComponent(_SpriteComponent);
     
     Refresh();

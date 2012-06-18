@@ -25,7 +25,7 @@ namespace pixeleditor
     class Struct;
     class ViewEntity;
     
-    class Level : public pb::MouseHandler
+    class Level : public pb::MouseHandler, public pb::Entity
     {
     public:
         Level(pb::Scene* scene);
@@ -52,7 +52,7 @@ namespace pixeleditor
         
     private:
         void CreateEntity(Uid uid);
-        void CreateEntity(Entity* entity);
+        void CreateEntity(pixeleditor::Entity* entity);
         void DestroyEntity(Uid uid);
         
         void UpdateSize();
@@ -64,17 +64,15 @@ namespace pixeleditor
         virtual bool OnMouseMove(glm::vec2 position);
         
         virtual void OnRecordRemoved(Project* project, Record* record);
-        virtual void OnEntityAdded(Record* record, Entity* entity);
-        virtual void OnEntityRemoved(Record* record, Entity* entity);
+        virtual void OnEntityAdded(Record* record, pixeleditor::Entity* entity);
+        virtual void OnEntityRemoved(Record* record, pixeleditor::Entity* entity);
         
         virtual void OnPropertyChanged(Struct* structure);
         
     private:
-        pb::Scene* _Scene;
         Record* _Record;
+        pb::RectangleComponent* _LevelBounds;
         
         EntityMap _Entities;
-        
-        glm::vec2 _Size;
     };
 }

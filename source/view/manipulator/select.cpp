@@ -45,7 +45,7 @@ void SelectManipulator::Render(int layer)
             _BoundsComponent = new pb::RectangleComponent(this);
             _BoundsComponent->SetColor(glm::vec4(0.0, 0.0, 0.1, 0.1));
             _BoundsComponent->SetSolid(true);
-            _BoundsComponent->SetLayer(1);
+            _BoundsComponent->SetLayer(2);
             
             AddComponent(_BoundsComponent);
         }

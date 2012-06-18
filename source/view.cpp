@@ -204,6 +204,7 @@ void View::Initialise(glm::vec2 size)
     _ManipulatorManager->SetActiveManipulator("select");
     
     _Level = new Level(_LevelScene);
+    _LevelScene->AddEntity(_Level);
     
     _GwenRenderer = new pb::GwenRenderer();
     _GwenRenderer->Init();

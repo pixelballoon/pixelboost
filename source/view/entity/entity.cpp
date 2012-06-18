@@ -191,7 +191,7 @@ void ViewEntity::OnSelectionChanged(const pixeleditor::Selection* selection)
             _BoundsComponent = new pb::RectangleComponent(this);
             _BoundsComponent->SetColor(glm::vec4(0.2, 0.2, 0.4, 0.3));
             _BoundsComponent->SetSolid(true);
-            _BoundsComponent->SetLayer(1);
+            _BoundsComponent->SetLayer(2);
             _BoundsComponent->SetSize(glm::vec2(_BoundingBox.GetSize().x, _BoundingBox.GetSize().y)/glm::vec2(GetScale().x, GetScale().y));
             AddComponent(_BoundsComponent);
         }
