@@ -55,6 +55,11 @@ ParticleEmitter* ParticleEmitterComponent::GetEmitter()
     return _Renderable->GetEmitter();
 }
 
+void ParticleEmitterComponent::SetLocalTransform(const glm::mat4x4& localTransform)
+{
+    _LocalTransform = localTransform;
+}
+
 void ParticleEmitterComponent::OnUpdate(Uid sender, const Message& message)
 {
     bool wasFinished = _Renderable->GetEmitter()->IsFinished();
@@ -79,6 +84,7 @@ void ParticleEmitterComponent::UpdateTransform()
     
     if (transform)
     {
-        _Renderable->GetEmitter()->SetPosition(transform->GetPosition());
+        glm::mat4x4 matrix = transform->GetMatrix() * _LocalTransform;
+        _Renderable->GetEmitter()->SetPosition(glm::vec3(matrix[3].x, matrix[3].y, matrix[3].z));
     }
 }
