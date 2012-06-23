@@ -6,12 +6,90 @@
 #include <vector>
 
 #include "pixelboost/file/fileHelpers.h"
+#include "pixelboost/graphics/camera/camera.h"
+#include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/indexBuffer.h"
+#include "pixelboost/graphics/device/program.h"
 #include "pixelboost/graphics/device/texture.h"
+#include "pixelboost/graphics/effect/effect.h"
+#include "pixelboost/graphics/effect/manager.h"
+#include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/model/modelRenderer.h"
 
 using namespace pb;
+
+
+ModelRenderable::ModelRenderable(Uid entityId)
+    : Renderable(entityId)
+{
+    _Model = "";
+    _Texture = "";
+    _Tint = glm::vec4(1,1,1,1);
+}
+
+ModelRenderable::~ModelRenderable()
+{
+}
+
+Uid ModelRenderable::GetRenderableType()
+{
+    return TypeHash("model");
+}
+
+void ModelRenderable::CalculateMVP(Viewport* viewport)
+{
+    _MVPMatrix = viewport->GetCamera()->ViewProjectionMatrix * _Transform;
+}
+
+Effect* ModelRenderable::GetEffect()
+{
+    Effect* baseEffect = Renderable::GetEffect();
+    if (baseEffect)
+        return baseEffect;
+    
+    return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/sprite.fx");
+}
+
+void ModelRenderable::SetModel(const std::string& model)
+{
+    _Model = model;
+}
+
+const std::string& ModelRenderable::GetModel()
+{
+    return _Model;
+}
+
+void ModelRenderable::SetTexture(const std::string& texture)
+{
+    _Texture = texture;
+}
+
+const std::string& ModelRenderable::GetTexture()
+{
+    return _Texture;
+}
+
+void ModelRenderable::SetTint(const glm::vec4& tint)
+{
+    _Tint = tint;
+}
+
+const glm::vec4& ModelRenderable::GetTint()
+{
+    return _Tint;
+}
+
+void ModelRenderable::SetTransform(const glm::mat4x4& transform)
+{
+    _Transform = transform;
+}
+
+const glm::mat4x4& ModelRenderable::GetTransform()
+{
+    return _Transform;
+}
 
 Model::Model()
     : _RefCount(1)
@@ -189,11 +267,15 @@ std::vector<std::string> Model::SplitPath(const std::string &string)
 
 ModelRenderer::ModelRenderer()
 {
+    Renderer::Instance()->SetHandler(TypeHash("model"), this);
     
+    Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/sprite.fx");
 }
 
 ModelRenderer::~ModelRenderer()
 {
+    Renderer::Instance()->GetEffectManager()->UnloadEffect("/default/effects/sprite.fx");
+    
     for (ModelMap::iterator it = _Models.begin(); it != _Models.end(); ++it)
     {
         delete it->second;
@@ -205,66 +287,42 @@ ModelRenderer::~ModelRenderer()
     }
 }
 
-void ModelRenderer::Update(float time)
+void ModelRenderer::Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass)
 {
-    _Instances.clear();
-}
-
-void ModelRenderer::Render(RenderLayer* layer)
-{
-    /*
-    InstanceList& instanceList = _Instances[layer];
-    if (!instanceList.size())
-        return;
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, true);
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
     
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_ALPHA_TEST);
-    glEnable(GL_TEXTURE_2D);
-    
-    glAlphaFunc(GL_GREATER, 0.5f);
-    
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_NORMAL_ARRAY);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    
-    for (InstanceList::iterator it = instanceList.begin(); it != instanceList.end(); ++it)
+    //glAlphaFunc(GL_GREATER, 0.5f);
+        
+    for (int i=0; i<count; i++)
     {
-        Model* model = GetModel(it->modelName);
-        Texture* texture = GetTexture(it->textureName);
+        ModelRenderable& renderable = *static_cast<ModelRenderable*>(renderables[i]);
+        
+        Model* model = GetModel(renderable._Model);
+        Texture* texture = GetTexture(renderable._Texture);
         
         if (!model || !texture)
             continue;
         
-        glPushMatrix();
-        
-        glTranslatef(it->position[0], it->position[1], -it->position[2]);
-        glScalef(it->scale[0], it->scale[1], it->scale[2]);
-        glTranslatef(it->offset[0], it->offset[1], it->offset[2]);
-        glRotatef(it->rotation[0], 1, 0, 0);
-        glRotatef(it->rotation[1], 0, 1, 0);
-        glRotatef(it->rotation[2], 0, 0, 1);
+        effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", renderable.GetMVP());
+        effectPass->GetShaderProgram()->SetUniform("diffuseColor", renderable._Tint);
+        effectPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
         
         GraphicsDevice::Instance()->BindIndexBuffer(model->_IndexBuffer);
         GraphicsDevice::Instance()->BindVertexBuffer(model->_VertexBuffer);
         GraphicsDevice::Instance()->BindTexture(texture);
         
         GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, model->_NumVertices);
-        
-        glPopMatrix();
     }
     
     GraphicsDevice::Instance()->BindIndexBuffer(0);
     GraphicsDevice::Instance()->BindTexture(0);
     GraphicsDevice::Instance()->BindVertexBuffer(0);
-    
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_NORMAL_ARRAY);
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
   
-    glDisable(GL_ALPHA_TEST);
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_TEXTURE_2D);
-    */
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
+
 }
     
 bool ModelRenderer::LoadModel(const std::string& modelName)
@@ -329,27 +387,6 @@ bool ModelRenderer::UnloadTexture(const std::string& textureName)
  
     GraphicsDevice::Instance()->DestroyTexture(it->second);
     _Textures.erase(it);
-    
-    return true;
-}
-
-bool ModelRenderer::AttachToRenderer(RenderLayer* layer, const std::string& modelName, const std::string& textureName, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale, glm::vec3 offset)
-{
-    Model* model = GetModel(modelName);
-    Texture* texture = GetTexture(textureName);
-    
-    if (!model || !texture)
-        return false;
-    
-    ModelInstance instance;
-    instance.modelName = modelName;
-    instance.textureName = textureName;
-    instance.position = position;
-    instance.rotation = rotation;
-    instance.scale = scale;
-    instance.offset = offset;
-
-    _Instances[layer].push_back(instance);
     
     return true;
 }

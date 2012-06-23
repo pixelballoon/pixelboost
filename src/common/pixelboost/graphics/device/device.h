@@ -75,12 +75,6 @@ public:
         kStateScissor,
     };
     
-    enum MatrixType
-    {
-        kMatrixTypeProjection,
-        kMatrixTypeModelView,
-    };
-    
 public:
     virtual void SetState(State state, bool enable) = 0;
     virtual void SetBlendMode(Blend source, Blend destination) = 0;
