@@ -22,6 +22,11 @@ Scene::~Scene()
     {
         delete it->second.second;
     }
+    
+    for (SystemMap::iterator it = _Systems.begin(); it != _Systems.end(); ++it)
+    {
+        delete it->second;
+    }
 }
 
 void Scene::Update(float time)
@@ -151,7 +156,7 @@ void Scene::BroadcastMessage(const Message& message)
     for (EntityMap::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
     {
         if (it->second->GetState() != Entity::kEntityDestroyed)
-            it->second->SendMessage(message);
+            it->second->HandleMessage(message);
     }
 }
 
@@ -160,7 +165,7 @@ void Scene::SendMessage(Uid uid, const Message& message)
     Entity* entity = GetEntityById(uid);
     
     if (entity && entity->GetState() != Entity::kEntityDestroyed)
-        entity->SendMessage(message);
+        entity->HandleMessage(message);
 }
 
 void Scene::BroadcastDelayedMessage(float delay, const Message* message)

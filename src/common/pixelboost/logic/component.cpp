@@ -28,3 +28,8 @@ Entity* Component::GetParent()
 {
     return _Parent;
 }
+
+pb::Uid Component::GetParentUid()
+{
+    return _Parent->GetUid();
+}

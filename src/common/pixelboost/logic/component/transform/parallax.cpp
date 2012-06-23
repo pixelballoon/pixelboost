@@ -110,7 +110,7 @@ void ParallaxTransformComponent::OnChanged()
     _Dirty = true;
     
     TransformChangedMessage message(GetParent(), this);
-    GetParent()->SendMessage(message);
+    GetScene()->SendMessage(GetParentUid(), message);
 }
 
 void ParallaxTransformComponent::OnTransformChanged(Uid sender, const Message& message)

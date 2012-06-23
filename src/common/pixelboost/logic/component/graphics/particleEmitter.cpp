@@ -50,14 +50,14 @@ void ParticleEmitterComponent::SetLayer(int layer)
     _Renderable->SetLayer(layer);
 }
 
-ParticleEmitter* ParticleEmitterComponent::GetEmitter()
-{
-    return _Renderable->GetEmitter();
-}
-
 void ParticleEmitterComponent::SetLocalTransform(const glm::mat4x4& localTransform)
 {
     _LocalTransform = localTransform;
+}
+
+ParticleEmitter* ParticleEmitterComponent::GetEmitter()
+{
+    return _Renderable->GetEmitter();
 }
 
 void ParticleEmitterComponent::OnUpdate(Uid sender, const Message& message)
@@ -69,7 +69,7 @@ void ParticleEmitterComponent::OnUpdate(Uid sender, const Message& message)
     if (!wasFinished && _Renderable->GetEmitter()->IsFinished())
     {
         ParticleFinishedMessage message(GetParent(), this);
-        GetParent()->SendMessage(message);
+        GetScene()->SendMessage(GetParentUid(), message);
     }
 }
 

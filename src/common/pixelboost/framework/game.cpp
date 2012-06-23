@@ -86,7 +86,7 @@ Game* Game::Instance()
 void Game::Initialise()
 {
 #ifndef PIXELBOOST_DISABLE_DEBUG
-    _DebugNetwork->StartServer(9090);
+    _DebugNetwork->StartServer(9090, 1);
 #endif
 }
     

@@ -3,6 +3,7 @@
 #include "pixelboost/input/messages/touch.h"
 #include "pixelboost/logic/component/transform.h"
 #include "pixelboost/logic/entity.h"
+#include "pixelboost/logic/scene.h"
 
 using namespace pb;
 
@@ -53,7 +54,7 @@ void RectTouchComponent::OnTouchBegin(Touch* touch)
         screenPos.y > position.y-size.y && screenPos.y < position.y+size.y)
     {
         TouchMessage message(GetParent(), this);
-        GetParent()->SendMessage(message);
+        GetScene()->SendMessage(GetParentUid(), message);
     }
 }
 

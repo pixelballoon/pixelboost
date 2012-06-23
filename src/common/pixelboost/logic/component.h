@@ -20,6 +20,7 @@ public:
     
     Scene* GetScene();
     Entity* GetParent();
+    pb::Uid GetParentUid();
     
 private:
     Entity* _Parent;
