@@ -113,6 +113,9 @@ Record* Database::OpenRecord(Uid recordId)
     sprintf(recordName, "r%X", recordId);
     lua_getglobal(_State, recordName);
     
+    if (!lua_istable(_State, -1))
+        return 0;
+    
     lua_getfield(_State, -1, "type");
     
     if (!lua_isstring(_State, -1))

@@ -1,6 +1,6 @@
 #pragma once
 
-#define NETWORK_MAX_MESSAGE_LENGTH 65535
+#define NETWORK_MAX_MESSAGE_LENGTH 262140
 
 #include <sys/types.h>
 

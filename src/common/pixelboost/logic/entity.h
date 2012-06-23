@@ -52,12 +52,9 @@ public:
     template <class T>T* GetComponentByType();
     ComponentList* GetComponentsByType(Uid componentType);
     
-    void SendMessage(const Message& message);
-    
     void RegisterMessageHandler(Uid messageType, MessageHandler handler);
     void UnregisterMessageHandler(Uid messageType, MessageHandler handler);
     
-private:
     void HandleMessage(const Message& message);
     
 private:

@@ -23,13 +23,9 @@ public:
     Uid GetType();
     static Uid GetStaticType();
     
-    glm::vec2 GetSize();
-    
     void SetLayer(int layer);
-
-    ParticleEmitter* GetEmitter();
-    
     void SetLocalTransform(const glm::mat4x4& localTransform);
+    ParticleEmitter* GetEmitter();
     
 private:
     void OnUpdate(Uid sender, const Message& message);
@@ -37,6 +33,7 @@ private:
     void UpdateTransform();
     
     glm::mat4x4 _LocalTransform;
+    pb::Uid _NotificationTarget;
     ParticleRenderable* _Renderable;
 };
     

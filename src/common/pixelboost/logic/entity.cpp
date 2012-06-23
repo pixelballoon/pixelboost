@@ -113,18 +113,6 @@ Entity::ComponentList* Entity::GetComponentsByType(Uid componentType)
     return 0;
 }
 
-void Entity::SendMessage(const Message& message)
-{
-    MessageHandlers::iterator handlerList = _MessageHandlers.find(message.GetType());
-    
-    if (handlerList != _MessageHandlers.end())
-    {
-        handlerList->second(_Uid, message);
-    }
-    
-    HandleMessage(message);
-}
-
 void Entity::RegisterMessageHandler(Uid messageType, sigslot::Delegate2<Uid, const Message&> handler)
 {
     _MessageHandlers[messageType].Connect(handler);
@@ -137,6 +125,13 @@ void Entity::UnregisterMessageHandler(Uid messageType, sigslot::Delegate2<Uid, c
 
 void Entity::HandleMessage(const Message& message)
 {
+    MessageHandlers::iterator handlerList = _MessageHandlers.find(message.GetType());
+    
+    if (handlerList != _MessageHandlers.end())
+    {
+        handlerList->second(_Uid, message);
+    }
+    
     if (message.GetType() == DestroyMessage::GetStaticType())
         Destroy();
 }

@@ -3,6 +3,7 @@
 #include "pixelboost/logic/component/transform/basic.h"
 #include "pixelboost/logic/message/transform.h"
 #include "pixelboost/logic/entity.h"
+#include "pixelboost/logic/scene.h"
 
 using namespace pb;
 
@@ -93,5 +94,5 @@ void BasicTransformComponent::OnChanged()
     _Dirty = true;
     
     TransformChangedMessage message(GetParent(), this);
-    GetParent()->SendMessage(message);
+    GetScene()->SendMessage(GetParentUid(), message);
 }
