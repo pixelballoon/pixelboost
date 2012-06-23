@@ -29,7 +29,6 @@ public:
     
     pb::Uid GenerateEntityId();
     
-    void AddEntity(Entity* entity);
     void DestroyEntity(Entity* entity);
     void DestroyAllEntities();
     
@@ -41,6 +40,8 @@ public:
     void SendDelayedMessage(Uid uid, float delay, const Message* message);
     
 private:
+    void AddEntity(Entity* entity);
+    
     typedef std::pair<Uid, const Message*> DelayedMessage;
     typedef std::vector<std::pair<float, DelayedMessage> > DelayedMessageList;
     typedef std::map<Uid, Entity*> EntityMap;
@@ -52,6 +53,8 @@ private:
     SystemMap _Systems;
     
     pb::Uid _NextFreeUid;
+    
+    friend class Entity;
 };
     
 }

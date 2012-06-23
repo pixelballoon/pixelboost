@@ -16,6 +16,8 @@ Entity::Entity(Scene* scene, Uid uid)
     {
         _Uid = _Scene->GenerateEntityId();
     }
+    
+    _Scene->AddEntity(this);
 }
 
 Entity::~Entity()
