@@ -180,7 +180,6 @@ void View::Initialise(glm::vec2 size)
     _LevelScene->AddSystem(new pb::BasicRenderSystem());
     _LevelViewport->SetScene(_LevelScene);
     _LevelViewport->SetDensity(density);
-    _LevelViewport->SetResolution(size);
     _LevelViewport->SetPosition(glm::vec2(0,0));
 
     _UiCamera = new pb::OrthographicCamera();
@@ -189,7 +188,6 @@ void View::Initialise(glm::vec2 size)
     _UiScene->AddSystem(new pb::BasicRenderSystem());
     _UiViewport->SetScene(_UiScene);
     _UiViewport->SetDensity(density);
-    _UiViewport->SetResolution(size);
     _UiViewport->SetPosition(glm::vec2(0,0));
         
     pb::Renderer::Instance()->AddViewport(_LevelViewport);
