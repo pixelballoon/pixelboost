@@ -103,9 +103,9 @@ Model::~Model()
     GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
 }
     
-bool Model::Load(const std::string& modelName)
+bool Model::Load(const std::string& fileName)
 {
-    std::string objFilename = FileHelpers::GetRootPath() + "/data/models/" + modelName + ".obj";
+    std::string objFilename = fileName;
     
     FILE* file = fopen(objFilename.c_str(), "r");
     
@@ -325,7 +325,7 @@ void ModelRenderer::Render(int count, Renderable** renderables, Viewport* viewpo
 
 }
     
-bool ModelRenderer::LoadModel(const std::string& modelName)
+bool ModelRenderer::LoadModel(const std::string& modelName, const std::string& fileName)
 {
     ModelMap::iterator it = _Models.find(modelName);
     
@@ -336,7 +336,7 @@ bool ModelRenderer::LoadModel(const std::string& modelName)
     }
     
     Model* model = new Model();
-    model->Load(modelName);
+    model->Load(fileName);
     
     _Models[modelName] = model;
     
@@ -361,7 +361,7 @@ bool ModelRenderer::UnloadModel(const std::string& modelName)
     return true;
 }
     
-bool ModelRenderer::LoadTexture(const std::string& textureName, bool createMips)
+bool ModelRenderer::LoadTexture(const std::string& textureName, const std::string& fileName, bool createMips)
 {
     TextureMap::iterator it = _Textures.find(textureName);
     
@@ -371,7 +371,7 @@ bool ModelRenderer::LoadTexture(const std::string& textureName, bool createMips)
     }
     
     Texture* texture = GraphicsDevice::Instance()->CreateTexture();
-    texture->LoadFromPng(FileHelpers::GetRootPath() + "/data/models/" + textureName + ".png", createMips);
+    texture->LoadFromPng(fileName, createMips);
     
     _Textures[textureName] = texture;
     
@@ -408,7 +408,7 @@ Texture* ModelRenderer::GetTexture(const std::string& textureName)
     if (it == _Textures.end())
         return 0;
     
-    return it->second;   
+    return it->second;
 }
 
 #endif

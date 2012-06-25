@@ -84,10 +84,10 @@ namespace pb
         
         void Render(RenderLayer* layer);
         
-        bool LoadModel(const std::string& modelName);
+        bool LoadModel(const std::string& modelName, const std::string& fileName);
         bool UnloadModel(const std::string& modelName);
         
-        bool LoadTexture(const std::string& textureName, bool createMips=true);
+        bool LoadTexture(const std::string& textureName, const std::string& fileName, bool createMips=true);
         bool UnloadTexture(const std::string& textureName);
         
         void Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass);
