@@ -73,6 +73,10 @@ public:
     
     std::string GetSpriteFile(const std::string& sprite);
     void LoadSprite(const std::string& sprite);
+    std::string GetModelFile(const std::string& model);
+    void LoadModel(const std::string& model);
+    std::string GetTextureFile(const std::string& texture);
+    void LoadTexture(const std::string& texture);
     
     pb::Scene* GetLevelScene();
     Level* GetLevel();

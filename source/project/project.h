@@ -46,6 +46,7 @@ public:
     struct ProjectConfig
     {
         std::vector<std::string> imageRoots;
+        std::vector<std::string> modelRoots;
         std::string exportDir;
         unsigned int pixelUnit;
         json::Object assets;

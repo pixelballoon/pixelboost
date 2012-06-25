@@ -16,6 +16,7 @@
 #include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/gwen/gwenRenderer.h"
+#include "pixelboost/graphics/renderer/model/modelRenderer.h"
 #include "pixelboost/graphics/renderer/sprite/sprite.h"
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
 #include "pixelboost/logic/system/graphics/render/basic.h"
@@ -325,6 +326,66 @@ void View::LoadSprite(const std::string& sprite)
     
     std::shared_ptr<pb::SpriteSheet> spriteSheet = GetSpriteRenderer()->CreateSpriteSheet(sprite);
     spriteSheet->LoadSingle(GetSpriteFile(sprite));
+}
+
+std::string View::GetModelFile(const std::string& model)
+{
+    Project* project = Core::Instance()->GetProject();
+    
+    const Project::ProjectConfig& config = project->GetConfig();
+    
+    std::fstream file;
+    
+    for (std::vector<std::string>::const_iterator it = config.modelRoots.begin(); it != config.modelRoots.end(); ++it)
+    {
+        std::string fileName = *it + model + ".obj";
+        file.open(fileName.c_str());
+        
+        if (file.is_open())
+        {
+            file.close();
+            return fileName;
+        }
+    }
+    
+    return "";
+}
+
+void View::LoadModel(const std::string& model)
+{
+    GetModelRenderer()->LoadModel(model, GetModelFile(model));
+}
+
+
+std::string View::GetTextureFile(const std::string& texture)
+{
+    Project* project = Core::Instance()->GetProject();
+    
+    const Project::ProjectConfig& config = project->GetConfig();
+    
+    std::fstream file;
+    
+    for (std::vector<std::string>::const_iterator it = config.modelRoots.begin(); it != config.modelRoots.end(); ++it)
+    {
+        std::string fileName = *it + texture + ".png";
+        file.open(fileName.c_str());
+        
+        if (file.is_open())
+        {
+            file.close();
+            return fileName;
+        }
+    }
+    
+    return "";
+}
+
+void View::LoadTexture(const std::string& texture)
+{
+    std::string textureFile = GetTextureFile(texture);
+    
+    if (textureFile.length())
+        GetModelRenderer()->LoadTexture(texture, textureFile);
 }
 
 pb::Scene* View::GetLevelScene()

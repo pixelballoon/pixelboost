@@ -96,12 +96,20 @@ bool Project::OpenConfig(const std::string& filename)
     
     json::Reader::Read(config, file);
     
-    // Image root
+    // Image roots
     json::Array& imageRoots = config["image_roots"];
     for (json::Array::iterator it = imageRoots.Begin(); it != imageRoots.End(); ++it)
     {
         json::String imageRoot = *it;
         _Config.imageRoots.push_back(_Location + imageRoot.Value());
+    }
+    
+    // Model roots
+    json::Array& modelRoots = config["model_roots"];
+    for (json::Array::iterator it = modelRoots.Begin(); it != modelRoots.End(); ++it)
+    {
+        json::String modelRoot = *it;
+        _Config.modelRoots.push_back(_Location + modelRoot.Value());
     }
     
     // Export directory

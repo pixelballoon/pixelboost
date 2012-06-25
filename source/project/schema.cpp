@@ -56,6 +56,11 @@ std::string SchemaAttribute::EvaluateParamValue(Struct* structure, const std::st
     return paramValue;
 }
 
+bool SchemaAttribute::HasParamValue(const std::string& param) const
+{
+    return (_ParamValue.find(param) != _ParamValue.end());
+}
+
 std::string SchemaAttribute::GetParamValue(const std::string& param, const std::string& defaultValue) const
 {
     ParamValueMap::const_iterator it = _ParamValue.find(param);

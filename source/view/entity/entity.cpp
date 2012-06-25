@@ -6,6 +6,7 @@
 #include "core/uidHelpers.h"
 #include "project/entity.h"
 #include "project/schema.h"
+#include "view/entity/property/model.h"
 #include "view/entity/property/property.h"
 #include "view/entity/property/sprite.h"
 #include "view/entity/entity.h"
@@ -274,6 +275,9 @@ void ViewEntity::ParseItem(const std::string& path, const SchemaItem* item)
         if (type == "sprite")
         {
             new SpriteViewProperty(this, path, item);
+        } else if (type == "model")
+        {
+            new ModelViewProperty(this, path, item);
         }
     }
 }

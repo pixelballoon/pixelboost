@@ -29,6 +29,8 @@
 		1C3F423B1558430B00396F50 /* file.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C3F42391558430B00396F50 /* file.cpp */; };
 		1C78EE901567ECD2001441AC /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C78EE8F1567ECD2001441AC /* OpenGL.framework */; };
 		1C78EE931567EDDF001441AC /* MainView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C78EE921567EDDF001441AC /* MainView.mm */; };
+		1C8177FE15936C41003A5A9B /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8177FC15936C41003A5A9B /* model.cpp */; };
+		1C81780215936D51003A5A9B /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C81780015936D51003A5A9B /* model.cpp */; };
 		1C8BA1A015987BA200981586 /* moveManipulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8BA19E15987BA200981586 /* moveManipulator.cpp */; };
 		1CAC1E8015881813002D85D1 /* copy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAC1E7C15881812002D85D1 /* copy.cpp */; };
 		1CAC1E8115881813002D85D1 /* paste.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAC1E7E15881812002D85D1 /* paste.cpp */; };
@@ -351,6 +353,10 @@
 		1C78EE8F1567ECD2001441AC /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		1C78EE911567EDDF001441AC /* MainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainView.h; sourceTree = "<group>"; };
 		1C78EE921567EDDF001441AC /* MainView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MainView.mm; sourceTree = "<group>"; };
+		1C8177FC15936C41003A5A9B /* model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = model.cpp; sourceTree = "<group>"; };
+		1C8177FD15936C41003A5A9B /* model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = model.h; sourceTree = "<group>"; };
+		1C81780015936D51003A5A9B /* model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = model.cpp; sourceTree = "<group>"; };
+		1C81780115936D51003A5A9B /* model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = model.h; sourceTree = "<group>"; };
 		1C8BA19C1598632800981586 /* stringHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stringHelpers.h; sourceTree = "<group>"; };
 		1C8BA19E15987BA200981586 /* moveManipulator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moveManipulator.cpp; sourceTree = "<group>"; };
 		1C8BA19F15987BA200981586 /* moveManipulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = moveManipulator.h; sourceTree = "<group>"; };
@@ -1208,6 +1214,8 @@
 		1C1810D7156AFC6A00C738C0 /* property */ = {
 			isa = PBXGroup;
 			children = (
+				1C8177FC15936C41003A5A9B /* model.cpp */,
+				1C8177FD15936C41003A5A9B /* model.h */,
 				1C1810D8156AFC6B00C738C0 /* property.cpp */,
 				1C1810D9156AFC6B00C738C0 /* property.h */,
 				1C1810DA156AFC6B00C738C0 /* sprite.cpp */,
@@ -1746,6 +1754,8 @@
 				1CD48B47158697ED002A8E4A /* camera.h */,
 				1CD48B48158697ED002A8E4A /* font.cpp */,
 				1CD48B49158697ED002A8E4A /* font.h */,
+				1C81780015936D51003A5A9B /* model.cpp */,
+				1C81780115936D51003A5A9B /* model.h */,
 				1CD48B4A158697ED002A8E4A /* particleEmitter.cpp */,
 				1CD48B4B158697ED002A8E4A /* particleEmitter.h */,
 			);
@@ -3413,6 +3423,8 @@
 				1CAC1E8115881813002D85D1 /* paste.cpp in Sources */,
 				1CAC1E8515894E41002D85D1 /* modifyDepth.cpp in Sources */,
 				1CAC1E88158966A4002D85D1 /* checkDepth.cpp in Sources */,
+				1C8177FE15936C41003A5A9B /* model.cpp in Sources */,
+				1C81780215936D51003A5A9B /* model.cpp in Sources */,
 				1C8BA1A015987BA200981586 /* moveManipulator.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3524,6 +3536,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "editor/editor-Prefix.pch";
 				INFOPLIST_FILE = "editor/editor-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
 					"-DPIXELBOOST_DISABLE_BOX2D",
@@ -3541,6 +3554,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "editor/editor-Prefix.pch";
 				INFOPLIST_FILE = "editor/editor-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
 					"-DPIXELBOOST_DISABLE_BOX2D",
