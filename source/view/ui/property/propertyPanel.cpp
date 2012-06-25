@@ -54,6 +54,7 @@ glm::vec2 PropertyPanel::AddStruct(glm::vec2 offset, const SchemaStruct* schemaS
         Gwen::Controls::Label* label = new Gwen::Controls::Label(this);
         label->SetText(it->second->GetName());
         label->SetPos(offset.x, offset.y);
+        label->SetSize(label->GetSize().x, 20);
         
         offset += glm::vec2(0,20);
         
