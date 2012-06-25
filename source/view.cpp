@@ -37,6 +37,7 @@
 #include "view/manipulator/select.h"
 #include "view/ui/create/createPanel.h"
 #include "view/ui/property/propertyPanel.h"
+#include "view/ui/settings/moveManipulator.h"
 #include "view/ui/settings/networkWindow.h"
 #include "view/level.h"
 #include "core.h"
@@ -243,6 +244,10 @@ void View::Initialise(glm::vec2 size)
     
     _CreateMenu = _Menu->AddItem("Create");
     
+    Gwen::Controls::MenuItem* manipulatorMenu = _Menu->AddItem("Manipulator");
+    Gwen::Controls::MenuItem* moveManipulator = manipulatorMenu->GetMenu()->AddItem("Move Manipulator");
+    moveManipulator->onPress.Add(this, &View::OnMoveManipulator);
+    
     SetCanvasSize(size);
     
     // Register events
@@ -442,6 +447,11 @@ void View::OnEntityCreate(Gwen::Controls::Base* item)
 void View::OnDeviceAddress(Gwen::Controls::Base* item)
 {
     new NetworkWindow(_GwenCanvas);
+}
+
+void View::OnMoveManipulator(Gwen::Controls::Base* item)
+{
+    new MoveManipulatorWindow(_GwenCanvas);
 }
 
 void View::OnSelectionChanged()

@@ -156,7 +156,6 @@ void ManipulatorManager::Render(int layer)
 void ManipulatorManager::AddManipulator(pixeleditor::Manipulator* manipulator)
 {
     _Manipulators[manipulator->GetName()] = manipulator;
-    _Scene->AddEntity(manipulator);
 }
 
 Manipulator* ManipulatorManager::GetManipulator(const std::string& name)

@@ -29,6 +29,7 @@
 		1C3F423B1558430B00396F50 /* file.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C3F42391558430B00396F50 /* file.cpp */; };
 		1C78EE901567ECD2001441AC /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C78EE8F1567ECD2001441AC /* OpenGL.framework */; };
 		1C78EE931567EDDF001441AC /* MainView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C78EE921567EDDF001441AC /* MainView.mm */; };
+		1C8BA1A015987BA200981586 /* moveManipulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8BA19E15987BA200981586 /* moveManipulator.cpp */; };
 		1CAC1E8015881813002D85D1 /* copy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAC1E7C15881812002D85D1 /* copy.cpp */; };
 		1CAC1E8115881813002D85D1 /* paste.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAC1E7E15881812002D85D1 /* paste.cpp */; };
 		1CAC1E8515894E41002D85D1 /* modifyDepth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAC1E8315894E3D002D85D1 /* modifyDepth.cpp */; };
@@ -350,6 +351,9 @@
 		1C78EE8F1567ECD2001441AC /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		1C78EE911567EDDF001441AC /* MainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainView.h; sourceTree = "<group>"; };
 		1C78EE921567EDDF001441AC /* MainView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MainView.mm; sourceTree = "<group>"; };
+		1C8BA19C1598632800981586 /* stringHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stringHelpers.h; sourceTree = "<group>"; };
+		1C8BA19E15987BA200981586 /* moveManipulator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moveManipulator.cpp; sourceTree = "<group>"; };
+		1C8BA19F15987BA200981586 /* moveManipulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = moveManipulator.h; sourceTree = "<group>"; };
 		1CAC1E7C15881812002D85D1 /* copy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = copy.cpp; sourceTree = "<group>"; };
 		1CAC1E7D15881812002D85D1 /* copy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = copy.h; sourceTree = "<group>"; };
 		1CAC1E7E15881812002D85D1 /* paste.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = paste.cpp; sourceTree = "<group>"; };
@@ -1328,6 +1332,8 @@
 		1CD03694157447C1003F9B92 /* settings */ = {
 			isa = PBXGroup;
 			children = (
+				1C8BA19E15987BA200981586 /* moveManipulator.cpp */,
+				1C8BA19F15987BA200981586 /* moveManipulator.h */,
 				1CD03695157447C1003F9B92 /* networkWindow.cpp */,
 				1CD03696157447C1003F9B92 /* networkWindow.h */,
 			);
@@ -1844,6 +1850,7 @@
 			children = (
 				1CD48B7E158697ED002A8E4A /* gwen */,
 				1CD48B81158697ED002A8E4A /* pointer.h */,
+				1C8BA19C1598632800981586 /* stringHelpers.h */,
 			);
 			path = misc;
 			sourceTree = "<group>";
@@ -3406,6 +3413,7 @@
 				1CAC1E8115881813002D85D1 /* paste.cpp in Sources */,
 				1CAC1E8515894E41002D85D1 /* modifyDepth.cpp in Sources */,
 				1CAC1E88158966A4002D85D1 /* checkDepth.cpp in Sources */,
+				1C8BA1A015987BA200981586 /* moveManipulator.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -23,6 +23,9 @@ namespace pixeleditor
         virtual void OnSetActive();
         virtual void OnSetInactive();
         
+        glm::vec3 GetSnap() const;
+        void SetSnap(glm::vec3 snap);
+        
     private:
         void Commit();
         void Reset();
@@ -33,6 +36,8 @@ namespace pixeleditor
         bool _Active;
         glm::vec2 _Start;
         glm::vec2 _End;
+        
+        glm::vec3 _Snap;
         
         EntityList _EntityIds;
     };

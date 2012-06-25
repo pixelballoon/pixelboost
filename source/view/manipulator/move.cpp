@@ -11,6 +11,7 @@ using namespace pixeleditor;
 
 MoveManipulator::MoveManipulator(pb::Scene* scene)
     : Manipulator(scene)
+    , _Snap(0,0,0)
 {
     
 }
@@ -72,7 +73,14 @@ bool MoveManipulator::OnMouseMove(glm::vec2 position)
         if (entity)
         {
             entity->ResetTransform();
-            entity->Transform(glm::vec3(transform,0));
+            glm::vec3 position = entity->GetPosition() + glm::vec3(transform,0);
+            if (_Snap.x != 0)
+                position.x = position.x - glm::mod(position.x, _Snap.x);
+            if (_Snap.y != 0)
+                position.y = position.y - glm::mod(position.y, _Snap.y);
+            if (_Snap.z != 0)
+                position.z = position.z - glm::mod(position.z, _Snap.z);
+            entity->Transform(position - entity->GetPosition());
         }
     }
     
@@ -126,4 +134,14 @@ void MoveManipulator::OnSetActive()
 void MoveManipulator::OnSetInactive()
 {
     
+}
+
+glm::vec3 MoveManipulator::GetSnap() const
+{
+    return _Snap;
+}
+
+void MoveManipulator::SetSnap(glm::vec3 snap)
+{
+    _Snap = snap;
 }
