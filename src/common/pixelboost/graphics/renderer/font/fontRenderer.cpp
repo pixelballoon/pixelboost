@@ -120,7 +120,7 @@ FontAlign FontRenderable::GetAlignment()
 
 void FontRenderable::CalculateOffset()
 {
-    Offset = Game::Instance()->GetFontRenderer()->MeasureString(Font, Text, 1.f);
+    Offset = Game::Instance()->GetFontRenderer()->MeasureString(Font, Text, 1.f).x;
     
     switch (Alignment) {
         case kFontAlignLeft:
@@ -135,7 +135,7 @@ void FontRenderable::CalculateOffset()
     }
 }
 
-float Font::FillVertexBuffer(VertexBuffer* vertexBuffer, const std::string& string)
+glm::vec2 Font::FillVertexBuffer(VertexBuffer* vertexBuffer, const std::string& string)
 {
     vertexBuffer->Lock();
     
@@ -143,57 +143,68 @@ float Font::FillVertexBuffer(VertexBuffer* vertexBuffer, const std::string& stri
     
     int numCharacters = 0;        
     
-    float offset = 0.f;
+    float maxLineLength = 0.f;
+    float offsetX = 0.f;
+    float offsetY = 0.f;
     for (int i=0; i<string.length(); i++)
     {
-        std::map<char, Font::Character>::iterator charIt = chars.find(string[i]);
-        
-        if (charIt == chars.end())
-            continue;
-        
-        AddCharacter(vertices, charIt->second, offset, base);
-        
-        vertices += 4;
-        numCharacters++;
-        
-        offset += charIt->second.xAdvance;
-        
-        if (i<string.length()-1)
+        if (string[i] == '\n')
         {
-            std::map<std::pair<char, char>, float>::iterator kerningIt = kerning.find(std::pair<char, char>(string[i], string[i+1]));
+            maxLineLength = glm::max(offsetX, maxLineLength);
+            offsetX = 0.f;
+            offsetY -= 1.f;
+        } else {
+            std::map<char, Font::Character>::iterator charIt = chars.find(string[i]);
             
-            if (kerningIt != kerning.end())
-                offset += kerningIt->second;
+            if (charIt == chars.end())
+                continue;
+            
+            AddCharacter(vertices, charIt->second, glm::vec2(offsetX, offsetY), base);
+            
+            vertices += 4;
+            numCharacters++;
+            
+            offsetX += charIt->second.xAdvance;
+            
+            if (i<string.length()-1)
+            {
+                std::map<std::pair<char, char>, float>::iterator kerningIt = kerning.find(std::pair<char, char>(string[i], string[i+1]));
+                
+                if (kerningIt != kerning.end())
+                    offsetX += kerningIt->second;
+            }
         }
     }
     
+    maxLineLength = glm::max(offsetX, maxLineLength);
+    
     vertexBuffer->Unlock(numCharacters*4);
     
-    return offset;
+    return glm::vec2(maxLineLength, glm::abs(offsetY - 1.f));
 }
 
-void Font::AddCharacter(Vertex_PXYZ_UV* buffer, const Font::Character& character, float offset, float baseline)
+void Font::AddCharacter(Vertex_PXYZ_UV* buffer, const Font::Character& character, glm::vec2 position, float baseline)
 {
     float xOffset = character.xOffset;
     float yOffset = -character.yOffset + baseline;
     
-    buffer[0].position[0] = offset + xOffset;
-    buffer[0].position[1] = yOffset - character.height;
+    buffer[0].position[0] = position.x + xOffset;
+    buffer[0].position[1] = position.y + yOffset - character.height;
     buffer[0].position[2] = 0.f;
     buffer[0].uv[0] = character.uvx;
     buffer[0].uv[1] = character.uvy + character.uvv;
-    buffer[1].position[0] = offset + xOffset;
-    buffer[1].position[1] = yOffset;
+    buffer[1].position[0] = position.x + xOffset;
+    buffer[1].position[1] = position.y + yOffset;
     buffer[1].position[2] = 0.f;
     buffer[1].uv[0] = character.uvx;
     buffer[1].uv[1] = character.uvy;
-    buffer[2].position[0] = offset + character.width + xOffset;
-    buffer[2].position[1] = yOffset;
+    buffer[2].position[0] = position.x + character.width + xOffset;
+    buffer[2].position[1] = position.y + yOffset;
     buffer[2].position[2] = 0.f;
     buffer[2].uv[0] = character.uvx + character.uvu;
     buffer[2].uv[1] = character.uvy;
-    buffer[3].position[0] = offset + character.width + xOffset;
-    buffer[3].position[1] = yOffset - character.height;
+    buffer[3].position[0] = position.x + character.width + xOffset;
+    buffer[3].position[1] = position.y + yOffset - character.height;
     buffer[3].position[2] = 0.f;
     buffer[3].uv[0] = character.uvx + character.uvu;
     buffer[3].uv[1] = character.uvy + character.uvv;
@@ -402,37 +413,48 @@ void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewpor
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
 }
 
-float FontRenderer::MeasureString(const std::string& name, const std::string& string, float size)
+glm::vec2 FontRenderer::MeasureString(const std::string& name, const std::string& string, float size)
 {
     Font* font;
     
     FontMap::iterator fontIt = _Fonts.find(name);
     
     if (fontIt == _Fonts.end() || fontIt->second->texture == 0)
-        return 0.f;
+        return glm::vec2(0.f, 0.f);
     
     font = fontIt->second;
     
-    float offset = 0.f;
+    float maxLineLength = 0.f;
+    float offsetX = 0.f;
+    float offsetY = 0.f;
     for (int i=0; i<string.length(); i++)
     {
-        std::map<char, Font::Character>::iterator charIt = font->chars.find(string[i]);
-        
-        if (charIt == font->chars.end())
-            continue;
-        
-        offset += charIt->second.xAdvance;
-        
-        if (i<string.length()-1)
+        if (string[i] == '\n')
         {
-            std::map<std::pair<char, char>, float>::iterator kerningIt = font->kerning.find(std::pair<char, char>(string[i], string[i+1]));
+            maxLineLength = glm::max(maxLineLength, offsetX);
+            offsetX = 0.f;
+            offsetY -= 1.f;
+        } else {
+            std::map<char, Font::Character>::iterator charIt = font->chars.find(string[i]);
             
-            if (kerningIt != font->kerning.end())
-                offset += kerningIt->second;
+            if (charIt == font->chars.end())
+                continue;
+            
+            offsetX += charIt->second.xAdvance;
+            
+            if (i<string.length()-1)
+            {
+                std::map<std::pair<char, char>, float>::iterator kerningIt = font->kerning.find(std::pair<char, char>(string[i], string[i+1]));
+                
+                if (kerningIt != font->kerning.end())
+                    offsetX += kerningIt->second;
+            }
         }
     }
     
-    return offset * size;
+    maxLineLength = glm::max(maxLineLength, offsetX);
+    
+    return glm::vec2(maxLineLength * size, glm::abs((offsetY-1.f) * size));
 }
 
 void FontRenderer::SplitString(const std::string& string, char seperator, std::vector<std::string>& output)
