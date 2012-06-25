@@ -158,6 +158,11 @@ void Scene::BroadcastMessage(const Message& message)
         if (it->second->GetState() != Entity::kEntityDestroyed)
             it->second->HandleMessage(message);
     }
+    
+    for (SystemMap::iterator it = _Systems.begin(); it != _Systems.end(); ++it)
+    {
+        it->second->HandleMessage(this, message);
+    }
 }
 
 void Scene::SendMessage(Uid uid, const Message& message)

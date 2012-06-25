@@ -347,7 +347,7 @@ Gwen::Point GwenRenderer::MeasureText(Gwen::Font* font, const Gwen::UnicodeStrin
     pb::Game::Instance()->GetFontRenderer()->LoadFont(fontName, false);
     
     float size = font->size * Scale();
-    float length = pb::Game::Instance()->GetFontRenderer()->MeasureString(fontName, convertedString, size/32.f)*32.f;
+    float length = pb::Game::Instance()->GetFontRenderer()->MeasureString(fontName, convertedString, size/32.f).x*32.f;
     
     return Gwen::Point(length, size);
 }

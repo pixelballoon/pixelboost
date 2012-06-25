@@ -90,16 +90,16 @@ namespace pb
         std::map<char, Character> chars;
         std::map<std::pair<char, char>, float> kerning;
         
-        float FillVertexBuffer(VertexBuffer* vertexBuffer, const std::string& string);
+        glm::vec2 FillVertexBuffer(VertexBuffer* vertexBuffer, const std::string& string);
         
     private:
-        void AddCharacter(Vertex_PXYZ_UV* buffer, const Font::Character& character, float offset, float baseline);
+        void AddCharacter(Vertex_PXYZ_UV* buffer, const Font::Character& character, glm::vec2 offset, float baseline);
     };
     
     class FontRenderer : public IRenderer
     {
     public:
-        FontRenderer(int maxCharacters=128);
+        FontRenderer(int maxCharacters=1024);
         virtual ~FontRenderer();
         
         Font* LoadFont(const std::string& name, bool createMips=true);
@@ -108,7 +108,7 @@ namespace pb
         
         virtual void Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass);
         
-        float MeasureString(const std::string& name, const std::string& string, float size);
+        glm::vec2 MeasureString(const std::string& name, const std::string& string, float size);
     
     private:
         void SplitString(const std::string& string, char seperator, std::vector<std::string>& output);
