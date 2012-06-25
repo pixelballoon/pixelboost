@@ -137,7 +137,6 @@ void Level::CreateEntity(Uid uid)
 void Level::CreateEntity(pixeleditor::Entity* entity)
 {
     ViewEntity* viewEntity = new ViewEntity(GetScene(), entity->GetUid(), entity);
-    GetScene()->AddEntity(viewEntity);
     _Entities[entity->GetUid()] = viewEntity;
     entityAdded(viewEntity);
 }

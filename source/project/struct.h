@@ -64,6 +64,7 @@ public:
     bool RemoveProperty(const std::string& path);
     
     sigslot::Signal1<Struct*> propertyChanged;
+    sigslot::Signal1<Struct*> destroyed;
     
 private:
     bool ParseProperties(json::Object& container, std::string path);

@@ -24,6 +24,8 @@ Struct::Struct(Project* project, const SchemaStruct* type)
 
 Struct::~Struct()
 {
+    destroyed(this);
+    
     for (PropertyMap::iterator it = _Properties.begin(); it != _Properties.end(); ++it)
     {
         delete it->second;

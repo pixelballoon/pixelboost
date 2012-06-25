@@ -70,6 +70,7 @@ namespace pixeleditor
         void ParseStruct(const std::string& path, const SchemaStruct* schemaStruct);
         void ParseItem(const std::string& path, const SchemaItem* item);
         
+        void OnDestroyed(Struct* structure);
         void OnPropertyChanged(Struct* structure);
         
         void DirtyBounds();

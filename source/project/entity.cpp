@@ -17,10 +17,12 @@ Entity::Entity(Record* record, const SchemaEntity* type)
     , _Rotation(0)
     , _Scale(1, 1, 1)
 {
+
 }
 
 Entity::~Entity()
 {
+
 }
 
 bool Entity::Open(json::Object& entity, bool skipUid)

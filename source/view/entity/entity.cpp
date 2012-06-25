@@ -26,6 +26,7 @@ ViewEntity::ViewEntity(pb::Scene* scene, Uid uid, pixeleditor::Entity* entity)
     ResetTransform();
     
     _Entity->propertyChanged.Connect(this, &ViewEntity::OnPropertyChanged);
+    _Entity->destroyed.Connect(this, &ViewEntity::OnDestroyed);
     
     Core::Instance()->GetSelection().selectionChanged.Connect(this, &ViewEntity::OnSelectionChanged);
     
@@ -36,7 +37,11 @@ ViewEntity::~ViewEntity()
 {
     Core::Instance()->GetSelection().selectionChanged.Disconnect(this, &ViewEntity::OnSelectionChanged);
     
-    _Entity->propertyChanged.Disconnect(this, &ViewEntity::OnPropertyChanged);    
+    if (_Entity)
+    {
+        _Entity->propertyChanged.Disconnect(this, &ViewEntity::OnPropertyChanged);
+        _Entity->destroyed.Disconnect(this, &ViewEntity::OnDestroyed);
+    }
 }
 
 void ViewEntity::Update(float time)
@@ -271,6 +276,13 @@ void ViewEntity::ParseItem(const std::string& path, const SchemaItem* item)
             new SpriteViewProperty(this, path, item);
         }
     }
+}
+
+void ViewEntity::OnDestroyed(pixeleditor::Struct* structure)
+{
+    _Entity->propertyChanged.Disconnect(this, &ViewEntity::OnPropertyChanged);
+    _Entity->destroyed.Disconnect(this, &ViewEntity::OnDestroyed);
+    _Entity = 0;
 }
 
 void ViewEntity::OnPropertyChanged(pixeleditor::Struct* structure)
