@@ -51,7 +51,9 @@ public:
     
     void Update(float time);
     
+    bool IsBgmMuted();
     void MuteBgm(bool mute=true);
+    bool IsSfxMuted();
     void MuteSfx(bool mute=true);
     
     void LoadBgm(const std::string& name);

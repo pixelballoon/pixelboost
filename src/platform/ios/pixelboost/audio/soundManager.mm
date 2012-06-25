@@ -117,6 +117,11 @@ void SoundManager::Update(float time)
         _Sounds.erase(*it);
     }
 }
+
+bool SoundManager::IsBgmMuted()
+{
+    return _MuteBgm;
+}
     
 void SoundManager::MuteBgm(bool mute)
 {
@@ -130,6 +135,11 @@ void SoundManager::MuteBgm(bool mute)
     } else {
         PlayBgm(_CurrentBgmName, _CurrentBgmLoop, _CurrentBgmVolume);
     }
+}
+
+bool SoundManager::IsSfxMuted()
+{
+    return _MuteSfx;
 }
 
 void SoundManager::MuteSfx(bool mute)
