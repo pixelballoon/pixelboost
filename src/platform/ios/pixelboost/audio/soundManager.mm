@@ -15,6 +15,7 @@ using namespace pb;
 Sound::Sound(const std::string& name, float volume, float pitch, bool looping)
     : _Looping(false)
     , _Name(name)
+    , _IsPlaying(false)
     , _Pitch(pitch)
     , _Volume(volume)
 {
@@ -28,17 +29,19 @@ int Sound::GetId() const
 
 void Sound::Play()
 {
+    _IsPlaying = true;
     SoundManager::Instance()->SfxPlay(*this);
 }
 
 void Sound::Stop()
 {
+    _IsPlaying = false;
     SoundManager::Instance()->SfxStop(*this);
 }
 
 bool Sound::IsPlaying() const
 {
-    return false;
+    return _IsPlaying;
 }
 
 const std::string& Sound::GetName() const

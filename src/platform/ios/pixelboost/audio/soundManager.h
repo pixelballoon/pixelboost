@@ -32,6 +32,7 @@ public:
     
 private:
     int _Id;
+    bool _IsPlaying;
     bool _Looping;
     std::string _Name;
     float _Pitch;
