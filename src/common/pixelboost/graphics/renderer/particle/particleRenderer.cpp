@@ -232,7 +232,7 @@ void ParticleEmitter::Render(Viewport* viewport, EffectPass* effectPass)
             pb::Sprite* sprite = it->emitterConfig.spriteSheet->GetSprite(it->sprite);
             
             glm::vec2 scale = it->emitterConfig.startScale + (it->emitterConfig.endScale-it->emitterConfig.startScale)*tween;
-            glm::vec2 size = sprite->_Dimension * scale;
+            glm::vec2 size = sprite->_Size * scale;
             
             float cosRot = cos(((-it->rotation[2]-90.f)/180.f)*M_PI);
             float sinRot = sin(((-it->rotation[2]-90.f)/180.f)*M_PI);
@@ -269,8 +269,8 @@ void ParticleEmitter::Render(Viewport* viewport, EffectPass* effectPass)
             
             if (!sprite->_Rotated)
             {
-                glm::vec2 min = sprite->_Position;
-                glm::vec2 max = sprite->_Position + sprite->_Size;
+                glm::vec2 min = sprite->_UvPosition;
+                glm::vec2 max = sprite->_UvPosition + sprite->_UvSize;
                 
                 vertexBuffer[0].uv[0] = min[0];
                 vertexBuffer[0].uv[1] = max[1],
@@ -281,8 +281,8 @@ void ParticleEmitter::Render(Viewport* viewport, EffectPass* effectPass)
                 vertexBuffer[3].uv[0] = max[0];
                 vertexBuffer[3].uv[1] = max[1];
             } else {
-                glm::vec2 min = sprite->_Position + glm::vec2(sprite->_Size[1], 0);
-                glm::vec2 max = sprite->_Position + glm::vec2(0, sprite->_Size[0]);
+                glm::vec2 min = sprite->_UvPosition + glm::vec2(sprite->_UvSize[1], 0);
+                glm::vec2 max = sprite->_UvPosition + glm::vec2(0, sprite->_UvSize[0]);
                 
                 vertexBuffer[0].uv[0] = max[0];
                 vertexBuffer[0].uv[1] = max[1];

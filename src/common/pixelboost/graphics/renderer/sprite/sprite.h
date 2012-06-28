@@ -43,10 +43,11 @@ class Sprite
 public:
     SpriteSheet* _Sheet;
 
-    glm::vec2 _Dimension;
-    
     glm::vec2 _Size;
-    glm::vec2 _Position;
+    glm::vec2 _Offset;
+    
+    glm::vec2 _UvSize;
+    glm::vec2 _UvPosition;
     bool _Rotated;
 };
     

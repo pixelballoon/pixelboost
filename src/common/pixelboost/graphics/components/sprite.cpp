@@ -46,7 +46,7 @@ Uid SpriteComponent::GetStaticType()
 glm::vec2 SpriteComponent::GetSize()
 {
     if (_Renderable->Sprite)
-        return _Renderable->Sprite->_Dimension;
+        return _Renderable->Sprite->_Size;
     
     return glm::vec2(0,0);
 }

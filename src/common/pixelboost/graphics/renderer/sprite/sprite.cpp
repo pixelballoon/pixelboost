@@ -44,9 +44,10 @@ bool SpriteSheet::LoadSingle(const std::string& fileName, bool generateMips)
     Sprite* sprite = new Sprite();
     sprite->_Sheet = this;
     sprite->_Rotated = false;
-    sprite->_Dimension = _Texture->GetSize() / ScreenHelpers::GetDpu();
-    sprite->_Position = glm::vec2(0,0);
-    sprite->_Size = glm::vec2(1,1);
+    sprite->_Size = _Texture->GetSize() / ScreenHelpers::GetDpu();
+    sprite->_UvPosition = glm::vec2(0,0);
+    sprite->_UvSize = glm::vec2(1,1);
+    sprite->_Offset = glm::vec2(0,0);
     
     _Sprites[spriteName] = sprite;
     Game::Instance()->GetSpriteRenderer()->_Sprites[spriteName] = sprite;
@@ -80,11 +81,20 @@ bool SpriteSheet::LoadSheet(const std::string& name, bool generateMips)
         json::Object data = it->element;
         
         json::Object frame = data["frame"];
+        json::Number frameX = frame["x"];
+        json::Number frameY = frame["y"];
+        json::Number frameW = frame["w"];
+        json::Number frameH = frame["h"];
         
-        json::Number posX = frame["x"];
-        json::Number posY = frame["y"];
-        json::Number sizeX = frame["w"];
-        json::Number sizeY = frame["h"];
+        json::Object spriteSourceSize = data["spriteSourceSize"];
+        json::Number spriteSourceSizeX = spriteSourceSize["x"];
+        json::Number spriteSourceSizeY = spriteSourceSize["y"];
+        json::Number spriteSourceSizeW = spriteSourceSize["w"];
+        json::Number spriteSourceSizeH = spriteSourceSize["h"];
+        
+        json::Object sourceSize = data["sourceSize"];
+        json::Number sourceSizeW = sourceSize["w"];
+        json::Number sourceSizeH = sourceSize["h"];
         
         json::Boolean rotated = data["rotated"];
         
@@ -92,12 +102,13 @@ bool SpriteSheet::LoadSheet(const std::string& name, bool generateMips)
         
         sprite->_Sheet = this;
         
-        sprite->_Dimension = glm::vec2(sizeX.Value(), sizeY.Value()) / ScreenHelpers::GetDpu();
+        sprite->_Size = glm::vec2(frameW.Value(), frameH.Value()) / ScreenHelpers::GetDpu();
+        sprite->_Offset = glm::vec2(sourceSizeW.Value()/2.f-spriteSourceSizeX.Value()-spriteSourceSizeW.Value()/2.f, -(sourceSizeH.Value()/2.f-spriteSourceSizeY.Value()-spriteSourceSizeH.Value()/2.f)) / ScreenHelpers::GetDpu();
         
         sprite->_Rotated = rotated.Value();
         
-        sprite->_Position = glm::vec2(posX.Value()/width.Value(), posY.Value()/height.Value());
-        sprite->_Size = sprite->_Rotated ? glm::vec2(sizeX.Value()/height.Value(), sizeY.Value()/width.Value()) : glm::vec2(sizeX.Value()/width.Value(), sizeY.Value()/height.Value());
+        sprite->_UvPosition = glm::vec2(frameX.Value()/width.Value(), frameY.Value()/height.Value());
+        sprite->_UvSize = sprite->_Rotated ? glm::vec2(frameW.Value()/height.Value(), frameH.Value()/width.Value()) : glm::vec2(frameW.Value()/width.Value(), frameH.Value()/height.Value());
         
         std::string spriteName = name.substr(0, name.length()-4);
         _Sprites[spriteName] = sprite;

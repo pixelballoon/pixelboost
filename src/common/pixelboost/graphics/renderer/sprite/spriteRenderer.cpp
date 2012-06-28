@@ -36,7 +36,8 @@ void SpriteRenderable::CalculateMVP(Viewport* viewport)
 {
     if (Sprite)
     {
-        _MVPMatrix = glm::scale(glm::mat4x4(), glm::vec3(Sprite->_Dimension, 1));
+        _MVPMatrix = glm::translate(glm::mat4x4(), glm::vec3(-Sprite->_Offset, 0));
+        _MVPMatrix = glm::scale(_MVPMatrix, glm::vec3(Sprite->_Size, 1));
         _MVPMatrix = Transform * _MVPMatrix;
         _MVPMatrix = viewport->GetCamera()->ViewProjectionMatrix * _MVPMatrix;
     }
@@ -129,8 +130,8 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
         
         if (!sprite->_Rotated)
         {
-            glm::vec2 min = sprite->_Position + glm::vec2(sprite->_Size[0] * renderable.Crop[0], sprite->_Size[1] * renderable.Crop[1]);
-            glm::vec2 max = sprite->_Position + glm::vec2(sprite->_Size[0] * renderable.Crop[2], sprite->_Size[1] * renderable.Crop[3]);
+            glm::vec2 min = sprite->_UvPosition + glm::vec2(sprite->_UvSize[0] * renderable.Crop[0], sprite->_UvSize[1] * renderable.Crop[1]);
+            glm::vec2 max = sprite->_UvPosition + glm::vec2(sprite->_UvSize[0] * renderable.Crop[2], sprite->_UvSize[1] * renderable.Crop[3]);
             
             bufferData[0].uv[0] = min[0];
             bufferData[0].uv[1] = max[1];
@@ -141,8 +142,8 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
             bufferData[3].uv[0] = max[0];
             bufferData[3].uv[1] = max[1];
         } else {
-            glm::vec2 min = sprite->_Position + glm::vec2(sprite->_Size[1] * renderable.Crop[3], sprite->_Size[0] * renderable.Crop[2]);
-            glm::vec2 max = sprite->_Position + glm::vec2(sprite->_Size[1] * renderable.Crop[1], sprite->_Size[0] * renderable.Crop[0]);
+            glm::vec2 min = sprite->_UvPosition + glm::vec2(sprite->_UvSize[1] * renderable.Crop[3], sprite->_UvSize[0] * renderable.Crop[2]);
+            glm::vec2 max = sprite->_UvPosition + glm::vec2(sprite->_UvSize[1] * renderable.Crop[1], sprite->_UvSize[0] * renderable.Crop[0]);
             
             bufferData[0].uv[0] = max[0];
             bufferData[0].uv[1] = max[1];
