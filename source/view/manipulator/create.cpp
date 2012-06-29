@@ -48,7 +48,7 @@ bool CreateManipulator::OnMouseDown(pb::MouseButton button, pb::ModifierKeys mod
     {
         if (View::Instance()->GetRecord())
         {
-            float defaultDepth = -5000.f;
+            float defaultDepth = 0.f;
             
             glm::vec2 start = View::Instance()->GetLevelCamera()->ConvertScreenToWorld(position);
             
