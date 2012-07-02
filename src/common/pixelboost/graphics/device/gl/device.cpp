@@ -390,9 +390,6 @@ void GraphicsDeviceGL::SetState(State state, bool enable)
     
     switch (state)
     {
-        case kStateAlphaTest:
-            glState = GL_ALPHA_TEST;
-            break;
         case kStateBlend:
             glState = GL_BLEND;
             break;

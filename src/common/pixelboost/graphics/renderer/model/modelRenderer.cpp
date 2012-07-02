@@ -296,7 +296,6 @@ ModelRenderer::~ModelRenderer()
 
 void ModelRenderer::Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass)
 {
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateAlphaTest, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, true);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
