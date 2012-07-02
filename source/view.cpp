@@ -263,6 +263,8 @@ void View::Initialise(glm::vec2 size)
 
 void View::Render()
 {
+    glClear(GL_DEPTH_BUFFER_BIT);
+    
     _LevelScene->Update(0.033);
     _UiScene->Update(0.033);
     
