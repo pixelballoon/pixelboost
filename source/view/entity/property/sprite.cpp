@@ -59,7 +59,7 @@ pb::BoundingBox SpriteViewProperty::CalculateBounds()
     if (!sprite)
         return pb::BoundingBox();
 
-    glm::vec3 size(sprite->_Dimension[0], sprite->_Dimension[1], 0);
+    glm::vec3 size(sprite->_Size[0], sprite->_Size[1], 0);
     size *= _Parent->GetScale();
     
     glm::vec3 center = glm::vec3(_Parent->GetPosition()[0], _Parent->GetPosition()[1], 0);
