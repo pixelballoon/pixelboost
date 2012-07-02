@@ -176,6 +176,13 @@ bool Model::Load(const std::string& fileName)
                     ParseVert(verts, command[1], vertices, uvs, normals);
                     ParseVert(verts, command[2], vertices, uvs, normals);
                     ParseVert(verts, command[3], vertices, uvs, normals);
+                } else {
+                    ParseVert(verts, command[1], vertices, uvs, normals);
+                    ParseVert(verts, command[2], vertices, uvs, normals);
+                    ParseVert(verts, command[3], vertices, uvs, normals);
+                    ParseVert(verts, command[1], vertices, uvs, normals);
+                    ParseVert(verts, command[3], vertices, uvs, normals);
+                    ParseVert(verts, command[4], vertices, uvs, normals);
                 }
                 break;
             }
