@@ -69,6 +69,7 @@ public:
     
     enum State
     {
+        kStateAlphaTest,
         kStateBlend,
         kStateDepthTest,
         kStateTexture2D,

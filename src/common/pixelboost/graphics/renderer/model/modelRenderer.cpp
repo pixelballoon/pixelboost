@@ -289,12 +289,11 @@ ModelRenderer::~ModelRenderer()
 
 void ModelRenderer::Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass)
 {
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, true);
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateAlphaTest, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, true);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
     
-    //glAlphaFunc(GL_GREATER, 0.5f);
-        
     for (int i=0; i<count; i++)
     {
         ModelRenderable& renderable = *static_cast<ModelRenderable*>(renderables[i]);
