@@ -19,7 +19,7 @@ glm::vec2 Touch::GetScreenPosition()
    	glm::vec2 position = _Position;
     
     // Specifically handle retina displays where the input co-ordinates aren't scaled
-    float inputScale = ScreenHelpers::IsHighResolution() ? 2 : 1;
+    float inputScale = ScreenHelpers::GetDpu()/16.f;
     
     position.x = position.x - ScreenHelpers::GetScreenResolution().x/(2*inputScale);
     position.y = ScreenHelpers::GetScreenResolution()[1]/(2*inputScale) - position[1];

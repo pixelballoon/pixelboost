@@ -61,6 +61,8 @@ bool SpriteSheet::LoadSheet(const std::string& name, bool generateMips)
     
     std::string jsonFilename = fileRoot + "/data/spritesheets/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".json";
     
+    float sheetDensity = ScreenHelpers::IsHighResolution() ? 32.f : 16.f;
+    
     std::string rootData = FileHelpers::FileToString(jsonFilename);
     
     json::Object root;
@@ -102,7 +104,7 @@ bool SpriteSheet::LoadSheet(const std::string& name, bool generateMips)
         
         sprite->_Sheet = this;
         
-        sprite->_Size = glm::vec2(frameW.Value(), frameH.Value()) / ScreenHelpers::GetDpu();
+        sprite->_Size = glm::vec2(frameW.Value(), frameH.Value()) / sheetDensity;
         sprite->_Offset = glm::vec2(sourceSizeW.Value()/2.f-spriteSourceSizeX.Value()-spriteSourceSizeW.Value()/2.f, -(sourceSizeH.Value()/2.f-spriteSourceSizeY.Value()-spriteSourceSizeH.Value()/2.f)) / ScreenHelpers::GetDpu();
         
         sprite->_Rotated = rotated.Value();
