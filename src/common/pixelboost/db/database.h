@@ -19,7 +19,7 @@ struct RecordDescription
 {
     std::string Name;
     Uid Type;
-    Uid Uid;
+    Uid Id;
 };
 
 class Database

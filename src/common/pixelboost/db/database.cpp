@@ -78,7 +78,7 @@ void Database::OpenDatabase()
             lua_pop(_State, 1);
             
             lua_getfield(_State, -1, "uid");
-            record.Uid = lua_tonumber(_State, -1);
+            record.Id = lua_tonumber(_State, -1);
             lua_pop(_State, 1);
             
             lua_getfield(_State, -1, "name");

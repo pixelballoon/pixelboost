@@ -14,7 +14,6 @@
 #define PIXELBOOST_END_REGISTER }
 
 #define PIXELBOOST_START_STRUCT(type, name) \
-    class pb::db::Record; \
     void* PB_Create ## type (); \
     void PB_Register ## type (); \
     void PB_Deserialise ## type (void* data); \
@@ -27,7 +26,7 @@
         return structObject; \
     } \
     void PB_Deserialise ## type (void* data) { \
-        type& object = (type&)*data; \
+        type& object = *static_cast<type*>(data); \
         (void)object; \
         lua_State* state = pb::db::Database::Instance()->GetLuaState(); \
         (void)state;
