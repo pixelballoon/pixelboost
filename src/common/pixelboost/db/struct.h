@@ -7,13 +7,11 @@
 namespace pb
 {
     
-class Record;
-    
-class Struct
+class DbStruct
 {
 public:
-    Struct(Uid uid, Uid type, void* _Data);
-    virtual ~Struct();
+    DbStruct(Uid uid, Uid type, void* _Data);
+    virtual ~DbStruct();
     
     Uid GetType() const;
     Uid GetUid() const;

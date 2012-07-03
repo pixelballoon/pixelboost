@@ -4,7 +4,7 @@
 #include "pixelboost/external/lua/lua.hpp"
 #include "pixelboost/file/fileHelpers.h"
 
-using namespace pb::db;
+using namespace pb;
 
 Database* Database::_Instance = 0;
 
@@ -67,7 +67,7 @@ void Database::OpenDatabase()
         lua_pop(_State, 1);
         for (int i=1; i<=n; i++)
         {
-            RecordDescription record;
+            DbRecordDescription record;
             
             lua_rawgeti(_State, -1, i);
             if (!lua_istable(_State, -1))
@@ -91,7 +91,7 @@ void Database::OpenDatabase()
     }
 }
 
-Record* Database::OpenRecord(Uid recordId)
+DbRecord* Database::OpenRecord(Uid recordId)
 {
     RecordMap::iterator recordIt = _Records.find(recordId);
     
@@ -138,7 +138,7 @@ Record* Database::OpenRecord(Uid recordId)
     
     void* recordData;
     
-    Record* record;
+    DbRecord* record;
     
     if (recordIt != _Records.end())
     {
@@ -150,7 +150,7 @@ Record* Database::OpenRecord(Uid recordId)
     {
         recordData = Create(recordType);
         Deserialise(recordType, recordData);
-        record = new Record(recordId, recordType, recordData);
+        record = new DbRecord(recordId, recordType, recordData);
         _Records[recordId] = record;
     }
     
@@ -198,9 +198,9 @@ Record* Database::OpenRecord(Uid recordId)
             type = lua_tonumber(_State, -1);
             lua_pop(_State, 1);
             
-            Record::EntityMap::iterator entityIt = record->_Entities.find(uid);
+            DbRecord::EntityMap::iterator entityIt = record->_Entities.find(uid);
             
-            Entity* entity;
+            DbEntity* entity;
             
             if (entityIt != record->_Entities.end())
             {
@@ -236,7 +236,7 @@ Record* Database::OpenRecord(Uid recordId)
                 
                 if (entityData)
                 {
-                    entity = new Entity(uid, type, entityData);
+                    entity = new DbEntity(uid, type, entityData);
                     entity->Load();
                     record->AddEntity(entity);
                 } else {
@@ -283,7 +283,7 @@ const Database::RecordMap& Database::GetRecords() const
     return _Records;
 }
 
-const Record* Database::GetRecord(Uid uid) const
+const DbRecord* Database::GetRecord(Uid uid) const
 {
     RecordMap::const_iterator it = _Records.find(uid);
     

@@ -10,12 +10,9 @@ struct lua_State;
 namespace pb
 {
     
-namespace db
-{
-    
-class Record;
+class DbRecord;
 
-struct RecordDescription
+struct DbRecordDescription
 {
     std::string Name;
     Uid Type;
@@ -43,18 +40,18 @@ public:
     void SetLocation(const std::string& location);
     void OpenDatabase();
     
-    Record* OpenRecord(Uid recordId);
+    DbRecord* OpenRecord(Uid recordId);
     
     void* Create(Uid type);
     void Deserialise(Uid type, void* data);
     
 public:
-    typedef std::vector<RecordDescription> RecordDescriptionList;
-    typedef std::map<Uid, Record*> RecordMap;
+    typedef std::vector<DbRecordDescription> RecordDescriptionList;
+    typedef std::map<Uid, DbRecord*> RecordMap;
     
     const RecordDescriptionList& GetRecordDescriptions() const;
     const RecordMap& GetRecords() const;
-    const Record* GetRecord(Uid uid) const;
+    const DbRecord* GetRecord(Uid uid) const;
     
 private:
     std::string GetRoot();
@@ -75,6 +72,4 @@ private:
     lua_State* _State;
 };
     
-}
-
 }

@@ -18,8 +18,8 @@
     void PB_Register ## type (); \
     void PB_Deserialise ## type (void* data); \
     void PB_Register ## type () { \
-        pb::db::Database::Instance()->RegisterCreate(pb::TypeHash(name), &PB_Create ## type ); \
-        pb::db::Database::Instance()->RegisterDeserialise(pb::TypeHash(name), &PB_Deserialise ## type ); \
+        pb::Database::Instance()->RegisterCreate(pb::TypeHash(name), &PB_Create ## type ); \
+        pb::Database::Instance()->RegisterDeserialise(pb::TypeHash(name), &PB_Deserialise ## type ); \
     } \
     void* PB_Create ## type () { \
         type* structObject = new type(); \
@@ -28,7 +28,7 @@
     void PB_Deserialise ## type (void* data) { \
         type& object = *static_cast<type*>(data); \
         (void)object; \
-        lua_State* state = pb::db::Database::Instance()->GetLuaState(); \
+        lua_State* state = pb::Database::Instance()->GetLuaState(); \
         (void)state;
 
 #define PIXELBOOST_FIELD_INT(field, name) { \
