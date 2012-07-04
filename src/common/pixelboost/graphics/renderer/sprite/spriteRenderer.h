@@ -31,7 +31,7 @@ public:
     
     virtual Effect* GetEffect();
     
-    Sprite* Sprite;
+    pb::Sprite* Sprite;
     glm::mat4x4 Transform;
     glm::vec4 Tint;
     glm::vec4 Crop;

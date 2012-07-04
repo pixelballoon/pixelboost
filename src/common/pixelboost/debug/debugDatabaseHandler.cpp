@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include "pixelboost/db/database.h"
 #include "pixelboost/debug/debugDatabaseHandler.h"
 #include "pixelboost/file/fileHelpers.h"
@@ -43,7 +45,7 @@ void DebugDatabaseHandler::OnReceive(NetworkConnection& connection, NetworkMessa
     } else if (file.substr(0,8) == "records/")
     {
         std::string recordIdStr = file.substr(8, 8);
-        Uid recordId = strtoull(recordIdStr.c_str(), 0, 16);
+        Uid recordId = strtoul(recordIdStr.c_str(), 0, 16);
         Database::Instance()->OpenRecord(recordId);
     }
 }

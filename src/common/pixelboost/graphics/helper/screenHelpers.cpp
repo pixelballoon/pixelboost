@@ -4,7 +4,6 @@
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/helper/screenHelpers.h"
 
-#include <sys/sysctl.h>
 #include <string>
 
 using namespace pb;

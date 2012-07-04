@@ -1,5 +1,7 @@
 #pragma once
 
+#include <ostream>
+
 #include "common.h"
 
 namespace polydecomp

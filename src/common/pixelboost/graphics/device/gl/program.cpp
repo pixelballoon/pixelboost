@@ -5,14 +5,6 @@
 
 #ifdef PIXELBOOST_GRAPHICS_OPENGL
 
-#ifdef PIXELBOOST_GRAPHICS_OPENGLES2
-#include <OpenGLES/ES2/gl.h>
-#endif
-
-#ifdef PIXELBOOST_GRAPHICS_OPENGL2
-#include <OpenGL/gl.h>
-#endif
-
 using namespace pb;
 
 ShaderProgramGL::ShaderProgramGL(GraphicsDeviceGL* device)

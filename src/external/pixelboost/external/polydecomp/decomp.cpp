@@ -8,7 +8,7 @@
 //#include <stdio.h>
 //#include <algorithm>
 //#include <FTGL/ftgl.h>
-//#include <limits>
+#include <limits>
 #include "point.h"
 #include "decomp.h"
 

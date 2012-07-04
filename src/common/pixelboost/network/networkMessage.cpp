@@ -1,3 +1,4 @@
+#include <arpa/inet.h>
 #include <string>
 
 #include "pixelboost/network/networkMessage.h"
