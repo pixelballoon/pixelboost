@@ -48,9 +48,11 @@ void Database::SetLocation(const std::string& location)
 
 void Database::OpenDatabase()
 {
-    std::string filename = GetRoot() + "main.lua";
+    std::string filename = _DatabaseRoot + "main.lua";
     
-    if (luaL_loadfile(_State, filename.c_str()) || lua_pcall(_State, 0, 0, 0))
+    std::string contents = pb::FileHelpers::FileToString(GetLocation(), filename);
+    
+    if (luaL_loadstring(_State, contents.c_str()) || lua_pcall(_State, 0, 0, 0))
     {
         printf("Can't open file: %s", lua_tostring(_State, -1));
         return;
@@ -101,9 +103,11 @@ DbRecord* Database::OpenRecord(Uid recordId)
 #endif
 
     char filename[1024];
-    sprintf(filename, "%srecords/%X.lua", GetRoot().c_str(), recordId);
+    sprintf(filename, "%srecords/%X.lua", _DatabaseRoot.c_str(), recordId);
     
-    if (luaL_loadfile(_State, filename) || lua_pcall(_State, 0, 0, 0))
+    std::string contents = pb::FileHelpers::FileToString(GetLocation(), filename);
+    
+    if (luaL_loadstring(_State, contents.c_str()) || lua_pcall(_State, 0, 0, 0))
     {
         printf("Can't open file: %s\n", lua_tostring(_State, -1));
         return 0;
@@ -293,17 +297,17 @@ const DbRecord* Database::GetRecord(Uid uid) const
     return it->second;
 }
 
-std::string Database::GetRoot()
+FileLocation Database::GetLocation()
 {
 #ifndef PIXELBOOST_DISABLE_DEBUG
     int bundleDatabase = FileHelpers::GetTimestamp(FileHelpers::GetRootPath() + _DatabaseRoot + "main.lua");
     int userDatabase = FileHelpers::GetTimestamp(FileHelpers::GetUserPath() + _DatabaseRoot + "main.lua");
     
     if (bundleDatabase >= userDatabase)
-        return FileHelpers::GetRootPath() + _DatabaseRoot;
+        return kFileLocationBundle;
     else
-        return FileHelpers::GetUserPath() + _DatabaseRoot;
+        return kFileLocationUser;
 #else
-    return FileHelpers::GetRootPath() + _DatabaseRoot;
+    return kFileLocationBundle;
 #endif
 }

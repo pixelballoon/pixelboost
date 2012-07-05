@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "pixelboost/db/struct.h"
+#include "pixelboost/file/fileSystem.h"
 
 struct lua_State;
 
@@ -54,7 +55,7 @@ public:
     const DbRecord* GetRecord(Uid uid) const;
     
 private:
-    std::string GetRoot();
+    FileLocation GetLocation();
     
     typedef std::map<Uid, CreateStruct> StructCreateMap;
     typedef std::map<Uid, DeserialiseStruct> StructDeserialiseMap;
