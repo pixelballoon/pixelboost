@@ -1,31 +1,24 @@
 #include "pixelboost/file/fileHelpers.h"
+#include "pixelboost/file/fileSystem.h"
 
 namespace pb
 {
 namespace FileHelpers
 {
     
-std::string FileToString(const std::string& filename)
+std::string FileToString(pb::FileLocation location, const std::string& filename)
 {
-    FILE* file = fopen(filename.c_str(), "rb");
+    File* file = pb::FileSystem::Instance()->OpenFile(location, filename);
     
     if (!file)
         return "";
     
-    long len;
-    char* temp;
-    fseek(file, 0, SEEK_END);
-    len = ftell(file);
-    fseek(file, 0, SEEK_SET);
-    temp = new char[len+1];
-    fread(temp, len, 1, file);
-    fclose(file);
-    temp[len] = 0;
+    std::string data;
+    file->ReadAll(data);
     
-    std::string returnValue = temp;
-    delete[] temp;
-
-    return returnValue;
+    delete file;
+    
+    return data;
 }
     
 void StringToFile(const std::string& filename, const std::string& string)

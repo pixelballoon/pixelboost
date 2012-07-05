@@ -261,11 +261,9 @@ Font* FontRenderer::LoadFont(const std::string& name, bool createMips)
     
     font->texture = 0;
     
-    std::string fileRoot = FileHelpers::GetRootPath();
+    std::string fntFilename = "/data/fonts/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".fnt";
     
-    std::string fntFilename = fileRoot + "/data/fonts/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".fnt";
-    
-    std::string fontContents = FileHelpers::FileToString(fntFilename);
+    std::string fontContents = FileHelpers::FileToString(pb::kFileLocationBundle, fntFilename);
     
     std::vector<std::string> lines;
     SplitString(fontContents, '\n', lines);
@@ -305,7 +303,7 @@ Font* FontRenderer::LoadFont(const std::string& name, bool createMips)
             texSize = glm::vec2(scaleW, scaleH);
         } else if (elementType == "page")
         {
-            std::string texFilename = fileRoot + "/data/fonts/" + data["file"].substr(1, data["file"].find('"', 1)-1);
+            std::string texFilename = "/data/fonts/" + data["file"].substr(1, data["file"].find('"', 1)-1);
             font->texture = GraphicsDevice::Instance()->CreateTexture();
             font->texture->LoadFromPng(texFilename, createMips);
         } else if (elementType == "char")

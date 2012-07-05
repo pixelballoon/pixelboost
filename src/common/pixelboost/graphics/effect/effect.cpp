@@ -85,8 +85,8 @@ bool EffectPass::Load(json::Object& object)
     platform = shaders["gl2"];
 #endif
     
-    std::string fragmentSource = FileHelpers::FileToString(FileHelpers::GetRootPath() + "/" + ((json::String)platform["fragment"]).Value());
-    std::string vertexSource = FileHelpers::FileToString(FileHelpers::GetRootPath() + "/" + ((json::String)platform["vertex"]).Value());
+    std::string fragmentSource = FileHelpers::FileToString(pb::kFileLocationBundle, "/" + ((json::String)platform["fragment"]).Value());
+    std::string vertexSource = FileHelpers::FileToString(pb::kFileLocationBundle, "/" + ((json::String)platform["vertex"]).Value());
     
     if (!_Program->Load(fragmentSource, vertexSource))
         return false;
@@ -128,7 +128,7 @@ Effect::~Effect()
 
 bool Effect::Load(const std::string& filename)
 {
-    std::string effect = FileHelpers::FileToString(FileHelpers::GetRootPath() + filename);
+    std::string effect = FileHelpers::FileToString(pb::kFileLocationBundle, filename);
     
     json::Object object;
     if (!json::Reader::Read(object, effect))

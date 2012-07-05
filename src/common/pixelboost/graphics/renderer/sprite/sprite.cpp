@@ -57,13 +57,11 @@ bool SpriteSheet::LoadSingle(const std::string& fileName, bool generateMips)
 
 bool SpriteSheet::LoadSheet(const std::string& name, bool generateMips)
 {
-    std::string fileRoot = FileHelpers::GetRootPath();
-    
-    std::string jsonFilename = fileRoot + "/data/spritesheets/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".json";
+    std::string jsonFilename = "/data/spritesheets/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".json";
     
     float sheetDensity = ScreenHelpers::IsHighResolution() ? 32.f : 16.f;
     
-    std::string rootData = FileHelpers::FileToString(jsonFilename);
+    std::string rootData = FileHelpers::FileToString(pb::kFileLocationBundle, jsonFilename);
     
     json::Object root;
     
@@ -117,7 +115,7 @@ bool SpriteSheet::LoadSheet(const std::string& name, bool generateMips)
         Game::Instance()->GetSpriteRenderer()->_Sprites[spriteName] = sprite;
     }
     
-    LoadTexture(fileRoot + "/data/spritesheets/images/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".png", generateMips);
+    LoadTexture("/data/spritesheets/images/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".png", generateMips);
     
     return true;
 }
