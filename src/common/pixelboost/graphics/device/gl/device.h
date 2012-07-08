@@ -34,6 +34,8 @@ struct DeviceState
 {
     DeviceState();
     
+    void Reset();
+    
     GLuint boundIndexBuffer;
     GLuint boundTexture;
     GLuint boundVertexBuffer;
@@ -74,6 +76,9 @@ public:
     virtual void DestroyProgram(ShaderProgram* program);
     virtual ShaderProgram* GetBoundProgram();
     virtual ShaderProgram* BindProgram(ShaderProgram* program);
+    
+public:
+    virtual void OnContextLost();
     
     virtual void SetState(State state, bool enable);
     virtual void SetBlendMode(Blend source, Blend destination);

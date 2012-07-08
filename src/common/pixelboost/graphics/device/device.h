@@ -76,6 +76,8 @@ public:
     };
     
 public:
+    virtual void OnContextLost();
+    
     virtual void SetState(State state, bool enable) = 0;
     virtual void SetBlendMode(Blend source, Blend destination) = 0;
     
@@ -107,6 +109,7 @@ private:
 #endif
 
 #ifdef PIXELBOOST_PLATFORM_ANDROID
+    #define PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
     #define PIXELBOOST_GRAPHICS_OPENGL
     #define PIXELBOOST_GRAPHICS_OPENGLES2
     #include "pixelboost/graphics/device/gl/device.h"

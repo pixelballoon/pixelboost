@@ -22,6 +22,8 @@ void pb::TextureGLES1::Bind(int unit)
 
 void pb::TextureGLES1::LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format)
 {
+    LoadFromBytes(data, width, height, createMips, format);
+    
     if (format != kTextureFormatRGBA)
     {
         printf("WARN: Only RGBA texture format is currently supported!");

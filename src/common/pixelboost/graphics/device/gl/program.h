@@ -1,5 +1,7 @@
 #pragma once
 
+#include <map>
+
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/program.h"
 
@@ -28,10 +30,16 @@ public:
     virtual void SetUniform(const std::string& name, const glm::vec4& value);
     virtual void SetUniform(const std::string& name, const glm::mat4x4& value);
     
+    virtual void OnContextLost();
+    
 private:
     virtual bool CompileShader(GLenum type, GLuint* shader, const std::string& source);
     
 private:
+    std::string _FragmentSource;
+    std::string _VertexSource;
+    std::map<int, std::string> _Attributes;
+    
     GLuint _Program;
     GLuint _FragmentShader;
     GLuint _VertexShader;

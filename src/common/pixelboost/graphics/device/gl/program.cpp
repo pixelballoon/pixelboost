@@ -1,5 +1,6 @@
 #include "glm/gtc/type_ptr.hpp"
 
+#include "pixelboost/debug/assert.h"
 #include "pixelboost/file/fileHelpers.h"
 #include "pixelboost/graphics/device/gl/program.h"
 
@@ -9,7 +10,7 @@ using namespace pb;
 
 ShaderProgramGL::ShaderProgramGL(GraphicsDeviceGL* device)
 {
-    _Program = glCreateProgram();
+    
 }
 
 ShaderProgramGL::~ShaderProgramGL()
@@ -19,6 +20,13 @@ ShaderProgramGL::~ShaderProgramGL()
 
 bool ShaderProgramGL::Load(const std::string& fragmentSource, const std::string& vertexSource)
 {
+#ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
+    _FragmentSource = fragmentSource;
+    _VertexSource = vertexSource;
+#endif
+    
+    _Program = glCreateProgram();
+    
     if (!CompileShader(GL_FRAGMENT_SHADER, &_FragmentShader, fragmentSource))
         return false;
     
@@ -66,6 +74,10 @@ bool ShaderProgramGL::Link()
 void ShaderProgramGL::BindAttribute(int index, const std::string& name)
 {
     glBindAttribLocation(_Program, index, name.c_str());
+    
+#ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
+    _Attributes[index] = name;
+#endif
 }
 
 void ShaderProgramGL::SetUniform(const std::string& name, int value)
@@ -126,6 +138,22 @@ bool ShaderProgramGL::CompileShader(GLenum type, GLuint* shader, const std::stri
     }
     
     return true;
+}
+
+void ShaderProgramGL::OnContextLost()
+{
+#ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
+    Load(_FragmentSource, _VertexSource);
+    
+    for (std::map<int, std::string>::iterator it = _Attributes.begin(); it != _Attributes.end(); ++it)
+    {
+        BindAttribute(it->first, it->second);
+    }
+    
+    Link();
+#else
+    PbAssert(!"Context loss has not been enabled");
+#endif
 }
 
 #endif

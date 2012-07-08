@@ -19,6 +19,8 @@ TextureGL::~TextureGL()
 
 void TextureGL::LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format)
 {
+    Texture::LoadFromBytes(data, width, height, createMips, format);
+    
     if (format != kTextureFormatRGBA)
     {
         printf("WARN: Only RGBA texture format is currently supported!");
