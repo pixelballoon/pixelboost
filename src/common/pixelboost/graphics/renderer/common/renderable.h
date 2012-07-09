@@ -7,6 +7,7 @@ namespace pb
 {
     
 class Effect;
+class RenderSystem;
 class Viewport;
     
 class Renderable
@@ -15,6 +16,8 @@ public:
     Renderable(Uid entityUid);
     Renderable(Uid entityUid, Effect* effect);
     virtual ~Renderable();
+    
+    void SetSystem(RenderSystem* system);
     
     Uid GetEntityUid();
     
@@ -27,6 +30,8 @@ public:
     
     void DirtyWorldMatrix();
     void SetWorldMatrix(const glm::mat4x4& worldMatrix);
+    const glm::mat4x4& GetWorldMatrix();
+    
     void CalculateMVP(Viewport* viewport);
     const glm::mat4x4& GetMVP() const;
     
@@ -41,6 +46,7 @@ private:
     glm::mat4x4 _MVPMatrix;
     
 private:
+    RenderSystem* _System;
     Uid _EntityUid;
     int _Layer;
     Effect* _Effect;

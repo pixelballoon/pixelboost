@@ -27,6 +27,11 @@ Renderable::~Renderable()
     
 }
 
+void Renderable::SetSystem(RenderSystem* system)
+{
+    _System = system;
+}
+
 Uid Renderable::GetEntityUid()
 {
     return _EntityUid;
@@ -45,6 +50,17 @@ int Renderable::GetLayer()
 void Renderable::DirtyWorldMatrix()
 {
     _WorldMatrixDirty = true;
+}
+
+const glm::mat4x4& Renderable::GetWorldMatrix()
+{
+    if (_WorldMatrixDirty)
+    {
+        CalculateWorldMatrix();
+        _WorldMatrixDirty = false;
+    }
+    
+    return _WorldMatrix;
 }
 
 void Renderable::CalculateMVP(Viewport* viewport)
