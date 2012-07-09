@@ -50,7 +50,7 @@ Effect* FontRenderable::GetEffect()
     if (baseEffect)
         return baseEffect;
     
-    return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/sprite.fx");
+    return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/textured.fx");
 }
 
 void FontRenderable::SetFont(const std::string& font)
@@ -235,12 +235,12 @@ FontRenderer::FontRenderer(int maxCharacters)
     
     Renderer::Instance()->SetHandler(TypeHash("font"), this);
     
-    Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/sprite.fx");
+    Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/textured.fx");
 }
 
 FontRenderer::~FontRenderer()
 {
-    Renderer::Instance()->GetEffectManager()->UnloadEffect("/default/effects/sprite.fx");
+    Renderer::Instance()->GetEffectManager()->UnloadEffect("/default/effects/textured.fx");
     
     GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
     GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);

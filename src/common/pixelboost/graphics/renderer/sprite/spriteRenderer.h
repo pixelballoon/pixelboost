@@ -63,6 +63,8 @@ public:
     Sprite* GetSprite(const std::string& spriteName) const;
 		
 private:
+    void RenderBatch();
+    
     typedef std::map<std::string, Sprite*> SpriteMap;
     typedef std::map<std::string, std::shared_ptr<SpriteSheet> > SheetMap;
 	
@@ -70,10 +72,10 @@ private:
 	SheetMap _SpriteSheets;
     
 private:
+    int _MaxBatchSize;
+    int _BatchSize;
     IndexBuffer* _IndexBuffer;
     VertexBuffer* _VertexBuffer;
-    
-    int _SpritesRendered;
     
     friend class SpriteSheet;
 };

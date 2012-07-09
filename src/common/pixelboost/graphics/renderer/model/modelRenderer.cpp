@@ -48,7 +48,7 @@ Effect* ModelRenderable::GetEffect()
     if (baseEffect)
         return baseEffect;
     
-    return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/sprite.fx");
+    return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/textured.fx");
 }
 
 void ModelRenderable::SetModel(const std::string& model)
@@ -286,12 +286,12 @@ ModelRenderer::ModelRenderer()
 {
     Renderer::Instance()->SetHandler(TypeHash("model"), this);
     
-    Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/sprite.fx");
+    Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/textured.fx");
 }
 
 ModelRenderer::~ModelRenderer()
 {
-    Renderer::Instance()->GetEffectManager()->UnloadEffect("/default/effects/sprite.fx");
+    Renderer::Instance()->GetEffectManager()->UnloadEffect("/default/effects/textured.fx");
     
     for (ModelMap::iterator it = _Models.begin(); it != _Models.end(); ++it)
     {
