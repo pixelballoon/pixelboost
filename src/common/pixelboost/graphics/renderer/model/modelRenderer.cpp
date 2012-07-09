@@ -37,9 +37,9 @@ Uid ModelRenderable::GetRenderableType()
     return TypeHash("model");
 }
 
-void ModelRenderable::CalculateMVP(Viewport* viewport)
+void ModelRenderable::CalculateWorldMatrix()
 {
-    _MVPMatrix = viewport->GetCamera()->ViewProjectionMatrix * _Transform;
+    _WorldMatrix = _Transform;
 }
 
 Effect* ModelRenderable::GetEffect()
@@ -84,6 +84,7 @@ const glm::vec4& ModelRenderable::GetTint()
 void ModelRenderable::SetTransform(const glm::mat4x4& transform)
 {
     _Transform = transform;
+    DirtyWorldMatrix();
 }
 
 const glm::mat4x4& ModelRenderable::GetTransform()

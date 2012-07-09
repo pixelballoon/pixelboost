@@ -31,7 +31,7 @@ namespace pb
         
         virtual Uid GetRenderableType();
         
-        virtual void CalculateMVP(Viewport* viewport);
+        virtual void CalculateWorldMatrix();
         
         virtual Effect* GetEffect();
         

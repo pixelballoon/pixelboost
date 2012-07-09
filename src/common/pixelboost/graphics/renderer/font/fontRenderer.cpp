@@ -37,12 +37,11 @@ Uid FontRenderable::GetRenderableType()
     return TypeHash("font");
 }
 
-void FontRenderable::CalculateMVP(Viewport* viewport)
+void FontRenderable::CalculateWorldMatrix()
 {
-    _MVPMatrix = glm::scale(glm::mat4x4(), glm::vec3(Size, Size, 1));
-    _MVPMatrix = glm::translate(_MVPMatrix, glm::vec3(Offset, 0, 0));
-    _MVPMatrix = Transform * _MVPMatrix;
-    _MVPMatrix = viewport->GetCamera()->ViewProjectionMatrix * _MVPMatrix;
+    _WorldMatrix = glm::scale(glm::mat4x4(), glm::vec3(Size, Size, 1));
+    _WorldMatrix = glm::translate(_WorldMatrix, glm::vec3(Offset, 0, 0));
+    _WorldMatrix = Transform * _WorldMatrix;
 }
 
 Effect* FontRenderable::GetEffect()
@@ -100,6 +99,7 @@ float FontRenderable::GetSize()
 void FontRenderable::SetTransform(const glm::mat4x4& transform)
 {
     Transform = transform;
+    DirtyWorldMatrix();
 }
 
 const glm::mat4x4& FontRenderable::GetTransform()
@@ -133,6 +133,7 @@ void FontRenderable::CalculateOffset()
             Offset = -Offset;
             break;
     }
+    DirtyWorldMatrix();
 }
 
 glm::vec2 Font::FillVertexBuffer(VertexBuffer* vertexBuffer, const std::string& string)

@@ -19,8 +19,9 @@ using namespace pb;
 SpriteRenderable::SpriteRenderable(Uid entityId)
     : Renderable(entityId)
 {
-    Crop = glm::vec4(0,0,1,1);
-    Tint = glm::vec4(1,1,1,1);
+    _Sprite = 0;
+    _Crop = glm::vec4(0,0,1,1);
+    _Tint = glm::vec4(1,1,1,1);
 }
     
 SpriteRenderable::~SpriteRenderable()
@@ -32,14 +33,13 @@ Uid SpriteRenderable::GetRenderableType()
     return TypeHash("sprite");
 }
 
-void SpriteRenderable::CalculateMVP(Viewport* viewport)
+void SpriteRenderable::CalculateWorldMatrix()
 {
-    if (Sprite)
+    if (_Sprite)
     {
-        _MVPMatrix = glm::translate(glm::mat4x4(), glm::vec3(-Sprite->_Offset, 0));
-        _MVPMatrix = glm::scale(_MVPMatrix, glm::vec3(Sprite->_Size, 1));
-        _MVPMatrix = Transform * _MVPMatrix;
-        _MVPMatrix = viewport->GetCamera()->ViewProjectionMatrix * _MVPMatrix;
+        _WorldMatrix = glm::translate(glm::mat4x4(), glm::vec3(-_Sprite->_Offset, 0));
+        _WorldMatrix = glm::scale(_WorldMatrix, glm::vec3(_Sprite->_Size, 1));
+        _WorldMatrix = _Transform * _WorldMatrix;
     }
 }
     
@@ -50,6 +50,34 @@ Effect* SpriteRenderable::GetEffect()
         return baseEffect;
     
     return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/sprite.fx");
+}
+
+Sprite* SpriteRenderable::GetSprite()
+{
+    return _Sprite;
+}
+
+void SpriteRenderable::SetSprite(Sprite* sprite)
+{
+    _Sprite = sprite;
+    DirtyWorldMatrix();
+}
+
+void SpriteRenderable::SetTransform(const glm::mat4x4& transform)
+{
+    _Transform = transform;
+    DirtyWorldMatrix();
+}
+
+void SpriteRenderable::SetTint(glm::vec4 tint)
+{
+    _Tint = tint;
+}
+
+void SpriteRenderable::SetCrop(glm::vec4 crop)
+{
+    _Crop = crop;
+    DirtyWorldMatrix();
 }
 
 SpriteRenderer::SpriteRenderer()
@@ -119,7 +147,7 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
     {
         SpriteRenderable& renderable = *static_cast<SpriteRenderable*>(renderables[i]);
         
-        Sprite* sprite = renderable.Sprite;
+        Sprite* sprite = renderable._Sprite;
         if (!sprite)
             continue;
         
@@ -130,8 +158,8 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
         
         if (!sprite->_Rotated)
         {
-            glm::vec2 min = sprite->_UvPosition + glm::vec2(sprite->_UvSize[0] * renderable.Crop[0], sprite->_UvSize[1] * renderable.Crop[1]);
-            glm::vec2 max = sprite->_UvPosition + glm::vec2(sprite->_UvSize[0] * renderable.Crop[2], sprite->_UvSize[1] * renderable.Crop[3]);
+            glm::vec2 min = sprite->_UvPosition + glm::vec2(sprite->_UvSize[0] * renderable._Crop[0], sprite->_UvSize[1] * renderable._Crop[1]);
+            glm::vec2 max = sprite->_UvPosition + glm::vec2(sprite->_UvSize[0] * renderable._Crop[2], sprite->_UvSize[1] * renderable._Crop[3]);
             
             bufferData[0].uv[0] = min[0];
             bufferData[0].uv[1] = max[1];
@@ -142,8 +170,8 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
             bufferData[3].uv[0] = max[0];
             bufferData[3].uv[1] = max[1];
         } else {
-            glm::vec2 min = sprite->_UvPosition + glm::vec2(sprite->_UvSize[1] * renderable.Crop[3], sprite->_UvSize[0] * renderable.Crop[2]);
-            glm::vec2 max = sprite->_UvPosition + glm::vec2(sprite->_UvSize[1] * renderable.Crop[1], sprite->_UvSize[0] * renderable.Crop[0]);
+            glm::vec2 min = sprite->_UvPosition + glm::vec2(sprite->_UvSize[1] * renderable._Crop[3], sprite->_UvSize[0] * renderable._Crop[2]);
+            glm::vec2 max = sprite->_UvPosition + glm::vec2(sprite->_UvSize[1] * renderable._Crop[1], sprite->_UvSize[0] * renderable._Crop[0]);
             
             bufferData[0].uv[0] = max[0];
             bufferData[0].uv[1] = max[1];
@@ -160,7 +188,7 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
         GraphicsDevice::Instance()->BindTexture(texture);
 
         effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", renderable.GetMVP());
-        effectPass->GetShaderProgram()->SetUniform("diffuseColor", renderable.Tint);
+        effectPass->GetShaderProgram()->SetUniform("diffuseColor", renderable._Tint);
         effectPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
         
         GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffer);

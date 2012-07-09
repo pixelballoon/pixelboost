@@ -45,9 +45,9 @@ Uid GwenRenderable::GetRenderableType()
     return pb::TypeHash("gwen");
 }
 
-void GwenRenderable::CalculateMVP(Viewport* viewport)
+void GwenRenderable::CalculateWorldMatrix()
 {
-    _MVPMatrix = viewport->GetCamera()->ViewProjectionMatrix;
+    _WorldMatrix = glm::mat4x4();
 }
 
 Effect* GwenRenderable::GetEffect()

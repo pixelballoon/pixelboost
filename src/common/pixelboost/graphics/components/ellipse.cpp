@@ -30,20 +30,20 @@ Uid EllipseComponent::GetType()
 
 void EllipseComponent::SetColor(glm::vec4 color)
 {
-    _Renderable->Color = color;
+    _Renderable->SetColor(color);
 }
 
 glm::vec4 EllipseComponent::GetColor()
 {
-    return _Renderable->Color;
+    return _Renderable->GetColor();
 }
 
 void EllipseComponent::SetSize(glm::vec2 size)
 {
-    _Renderable->Size = size;
+    _Renderable->SetSize(size);
 }
 
 glm::vec2 EllipseComponent::GetSize()
 {
-    return _Renderable->Size;
+    return _Renderable->GetSize();
 }

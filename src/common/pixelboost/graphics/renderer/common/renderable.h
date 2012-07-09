@@ -23,12 +23,20 @@ public:
     virtual void SetLayer(int layer);
     virtual int GetLayer();
     
-    virtual void CalculateMVP(Viewport* viewport) = 0;    
+    virtual void CalculateWorldMatrix() = 0;
+    
+    void DirtyWorldMatrix();
+    void SetWorldMatrix(const glm::mat4x4& worldMatrix);
+    void CalculateMVP(Viewport* viewport);
     const glm::mat4x4& GetMVP() const;
     
     virtual Effect* GetEffect();
     
 protected:
+    glm::mat4x4 _WorldMatrix;
+    
+private:
+    bool _WorldMatrixDirty;
     glm::mat4x4 _MVPMatrix;
     
 private:

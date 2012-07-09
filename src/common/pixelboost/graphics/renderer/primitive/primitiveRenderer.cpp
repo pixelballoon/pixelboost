@@ -2,8 +2,6 @@
 
 #include "glm/gtc/matrix_transform.hpp"
 
-#include "pixelboost/graphics/camera/camera.h"
-#include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/indexBuffer.h"
 #include "pixelboost/graphics/device/program.h"
@@ -36,26 +34,84 @@ Effect* PrimitiveRenderable::GetEffect()
     return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/primitive.fx");
 }
 
+void PrimitiveRenderable::SetTransform(const glm::mat4x4& transform)
+{
+    _Transform = transform;
+    DirtyWorldMatrix();
+}
+
+glm::vec4 PrimitiveRenderable::GetColor()
+{
+    return _Color;
+}
+
+void PrimitiveRenderable::SetColor(glm::vec4 color)
+{
+    _Color = color;
+}
+
 PrimitiveRenderableEllipse::PrimitiveRenderableEllipse(Uid entityUid)
     : PrimitiveRenderable(entityUid)
-    , Solid(false)
+    , _Solid(false)
 {
     
 }
 
-void PrimitiveRenderableEllipse::CalculateMVP(Viewport* viewport)
+void PrimitiveRenderableEllipse::CalculateWorldMatrix()
 {
-    _MVPMatrix = glm::translate(glm::mat4x4(), Position);
-    _MVPMatrix = glm::scale(_MVPMatrix, glm::vec3(Size, 1));
-    _MVPMatrix = glm::rotate(_MVPMatrix, Rotation[0], glm::vec3(1,0,0));
-    _MVPMatrix = glm::rotate(_MVPMatrix, Rotation[1], glm::vec3(0,1,0));
-    _MVPMatrix = glm::rotate(_MVPMatrix, Rotation[2], glm::vec3(0,0,1));
-    _MVPMatrix = viewport->GetCamera()->ViewProjectionMatrix * _MVPMatrix;
+    _WorldMatrix = glm::translate(glm::mat4x4(), _Position);
+    _WorldMatrix = glm::scale(_WorldMatrix, glm::vec3(_Size, 1));
+    _WorldMatrix = glm::rotate(_WorldMatrix, _Rotation[0], glm::vec3(1,0,0));
+    _WorldMatrix = glm::rotate(_WorldMatrix, _Rotation[1], glm::vec3(0,1,0));
+    _WorldMatrix = glm::rotate(_WorldMatrix, _Rotation[2], glm::vec3(0,0,1));
 }
 
 PrimitiveRenderable::Type PrimitiveRenderableEllipse::GetPrimitiveType()
 {
     return kTypeEllipse;
+}
+
+bool PrimitiveRenderableEllipse::GetSolid()
+{
+    return _Solid;
+}
+
+void PrimitiveRenderableEllipse::SetSolid(bool solid)
+{
+    _Solid = solid;
+}
+
+glm::vec3 PrimitiveRenderableEllipse::GetPosition()
+{
+    return _Position;
+}
+
+void PrimitiveRenderableEllipse::SetPosition(glm::vec3 position)
+{
+    _Position = position;
+    DirtyWorldMatrix();
+}
+
+glm::vec3 PrimitiveRenderableEllipse::GetRotation()
+{
+    return _Rotation;
+}
+
+void PrimitiveRenderableEllipse::SetRotation(glm::vec3 rotation)
+{
+    _Rotation = rotation;
+    DirtyWorldMatrix();
+}
+
+glm::vec2 PrimitiveRenderableEllipse::GetSize()
+{
+    return _Size;
+}
+
+void PrimitiveRenderableEllipse::SetSize(glm::vec2 size)
+{
+    _Size = size;
+    DirtyWorldMatrix();
 }
 
 PrimitiveRenderableLine::PrimitiveRenderableLine(Uid entityUid)
@@ -64,9 +120,9 @@ PrimitiveRenderableLine::PrimitiveRenderableLine(Uid entityUid)
     
 }
 
-void PrimitiveRenderableLine::CalculateMVP(Viewport* viewport)
+void PrimitiveRenderableLine::CalculateWorldMatrix()
 {
-    _MVPMatrix = viewport->GetCamera()->ViewProjectionMatrix;
+    _WorldMatrix = glm::mat4x4();
 }
 
 PrimitiveRenderable::Type PrimitiveRenderableLine::GetPrimitiveType()
@@ -74,23 +130,63 @@ PrimitiveRenderable::Type PrimitiveRenderableLine::GetPrimitiveType()
     return kTypeLine;
 }
 
+glm::vec3 PrimitiveRenderableLine::GetStart()
+{
+    return _Start;
+}
+
+void PrimitiveRenderableLine::SetStart(glm::vec3 start)
+{
+    _Start = start;
+}
+
+glm::vec3 PrimitiveRenderableLine::GetEnd()
+{
+    return _End;
+}
+
+void PrimitiveRenderableLine::SetEnd(glm::vec3 end)
+{
+    _End = end;
+}
+
 PrimitiveRenderableRectangle::PrimitiveRenderableRectangle(Uid entityUid)
     : PrimitiveRenderable(entityUid)
-    , Solid(false)
+    , _Solid(false)
 {
     
 }
 
-void PrimitiveRenderableRectangle::CalculateMVP(Viewport* viewport)
+void PrimitiveRenderableRectangle::CalculateWorldMatrix()
 {
-    _MVPMatrix = glm::scale(glm::mat4x4(), glm::vec3(Size, 1));
-    _MVPMatrix = Transform * _MVPMatrix;
-    _MVPMatrix = viewport->GetCamera()->ViewProjectionMatrix * _MVPMatrix;
+    _WorldMatrix = glm::scale(glm::mat4x4(), glm::vec3(_Size, 1));
+    _WorldMatrix = _Transform * _WorldMatrix;
 }
 
 PrimitiveRenderable::Type PrimitiveRenderableRectangle::GetPrimitiveType()
 {
     return kTypeRectangle;
+}
+
+bool PrimitiveRenderableRectangle::GetSolid()
+{
+    return _Solid;
+}
+
+void PrimitiveRenderableRectangle::SetSolid(bool solid)
+{
+    _Solid = solid;
+}
+
+glm::vec2 PrimitiveRenderableRectangle::GetSize()
+{
+    return _Size;
+}
+
+void PrimitiveRenderableRectangle::SetSize(glm::vec2 size)
+{
+    _Size = size;
+    DirtyWorldMatrix();
 }
 
 PrimitiveRenderer::PrimitiveRenderer()
@@ -187,7 +283,7 @@ void PrimitiveRenderer::Render(int count, Renderable** renderables, Viewport* vi
     {
         PrimitiveRenderable& primitive = *static_cast<PrimitiveRenderable*>(renderables[i]);
         
-        effectPass->GetShaderProgram()->SetUniform("diffuseColor", primitive.Color);
+        effectPass->GetShaderProgram()->SetUniform("diffuseColor", primitive._Color);
         effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", primitive.GetMVP());
          
         switch (primitive.GetPrimitiveType())
@@ -199,7 +295,7 @@ void PrimitiveRenderer::Render(int count, Renderable** renderables, Viewport* vi
                 GraphicsDevice::Instance()->BindIndexBuffer(_EllipseIndexBuffer);
                 GraphicsDevice::Instance()->BindVertexBuffer(_EllipseVertexBuffer);
                 
-                if (!ellipse.Solid)
+                if (!ellipse._Solid)
                     GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementLineLoop, 32);
                 else
                     GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangleFan, 32);
@@ -219,7 +315,7 @@ void PrimitiveRenderer::Render(int count, Renderable** renderables, Viewport* vi
                 GraphicsDevice::Instance()->BindIndexBuffer(_BoxIndexBuffer);
                 GraphicsDevice::Instance()->BindVertexBuffer(_BoxVertexBuffer);
                 
-                if (!rectangle.Solid)
+                if (!rectangle._Solid)
                     GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementLineLoop, 4);
                 else
                     GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, 6);
@@ -237,12 +333,12 @@ void PrimitiveRenderer::Render(int count, Renderable** renderables, Viewport* vi
                 
                 Vertex_PXYZ* vertices = static_cast<Vertex_PXYZ*>(_LineVertexBuffer->GetData());
                 
-                vertices[0].position[0] = line.Start[0];
-                vertices[0].position[1] = line.Start[1];
-                vertices[0].position[2] = line.Start[2];
-                vertices[1].position[0] = line.End[0];
-                vertices[1].position[1] = line.End[1];
-                vertices[1].position[2] = line.End[2];
+                vertices[0].position[0] = line._Start[0];
+                vertices[0].position[1] = line._Start[1];
+                vertices[0].position[2] = line._Start[2];
+                vertices[1].position[0] = line._End[0];
+                vertices[1].position[1] = line._End[1];
+                vertices[1].position[2] = line._End[2];
                 
                 _LineVertexBuffer->Unlock();
                 

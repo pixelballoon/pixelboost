@@ -43,32 +43,32 @@ void RectangleComponent::SetLayer(int layer)
 
 void RectangleComponent::SetColor(glm::vec4 color)
 {
-    _Renderable->Color = color;
+    _Renderable->SetColor(color);
 }
 
 glm::vec4 RectangleComponent::GetColor()
 {
-    return _Renderable->Color;
+    return _Renderable->GetColor();
 }
 
 void RectangleComponent::SetSize(glm::vec2 size)
 {
-    _Renderable->Size = size;
+    _Renderable->SetSize(size);
 }
 
 glm::vec2 RectangleComponent::GetSize()
 {
-    return _Renderable->Size;
+    return _Renderable->GetSize();
 }
 
 void RectangleComponent::SetSolid(bool solid)
 {
-    _Renderable->Solid = solid;
+    _Renderable->SetSolid(solid);
 }
 
 bool RectangleComponent::GetSolid()
 {
-    return _Renderable->Solid;
+    return _Renderable->GetSolid();
 }
 
 void RectangleComponent::SetLocalTransform(const glm::mat4x4& transform)
@@ -89,8 +89,8 @@ void RectangleComponent::UpdateTransform()
     
     if (transform)
     {
-        _Renderable->Transform = transform->GetMatrix() * _LocalTransform;
+        _Renderable->SetTransform(transform->GetMatrix() * _LocalTransform);
     } else {
-        _Renderable->Transform = _LocalTransform;
+        _Renderable->SetTransform(_LocalTransform);
     }
 }

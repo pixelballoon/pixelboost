@@ -32,9 +32,9 @@ Uid ParticleRenderable::GetRenderableType()
     return TypeHash("particle");
 }
 
-void ParticleRenderable::CalculateMVP(Viewport* viewport)
+void ParticleRenderable::CalculateWorldMatrix()
 {
-    _MVPMatrix = viewport->GetCamera()->ViewProjectionMatrix;
+    _WorldMatrix = glm::mat4x4();
 }
 
 Effect* ParticleRenderable::GetEffect()
