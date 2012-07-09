@@ -31,6 +31,7 @@ public:
     const glm::mat4x4& GetMVP() const;
     
     virtual Effect* GetEffect();
+    void SetEffect(Effect* effect);
     
 protected:
     glm::mat4x4 _WorldMatrix;

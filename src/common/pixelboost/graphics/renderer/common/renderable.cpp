@@ -67,3 +67,8 @@ Effect* Renderable::GetEffect()
 {
     return _Effect;
 }
+
+void Renderable::SetEffect(Effect* effect)
+{
+    _Effect = effect;
+}
