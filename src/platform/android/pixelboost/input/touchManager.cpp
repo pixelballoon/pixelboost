@@ -3,6 +3,7 @@
 #ifdef PIXELBOOST_PLATFORM_ANDROID
 
 #include "pixelboost/graphics/camera/camera.h"
+#include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/helper/screenHelpers.h"
 #include "pixelboost/input/touchManager.h"
 
@@ -18,11 +19,11 @@ glm::vec2 Touch::GetScreenPosition()
 {
    	glm::vec2 position = _Position;
     
-    position.x = position.x - ScreenHelpers::GetScreenResolution().x/2.f;
-    position.y = ScreenHelpers::GetScreenResolution()[1]/2.f - position[1];
+    position.x = position.x - GraphicsDevice::Instance()->GetDisplayResolution().x/2.f;
+    position.y = GraphicsDevice::Instance()->GetDisplayResolution()[1]/2.f - position[1];
     
-	position.x /= ScreenHelpers::GetDpu();
-	position.y /= ScreenHelpers::GetDpu();
+	position.x /= GraphicsDevice::Instance()->GetDisplayDensity();
+	position.y /= GraphicsDevice::Instance()->GetDisplayDensity();
 
 	return position;
 }
@@ -31,11 +32,11 @@ glm::vec2 Touch::GetWorldPosition(OrthographicCamera* camera)
 {
 	glm::vec2 position = _Position;
     
-    position[0] = position[0] - ScreenHelpers::GetScreenResolution()[0]/2.f;
-    position[1] = ScreenHelpers::GetScreenResolution()[1]/2.f - position[1];
+    position[0] = position[0] - GraphicsDevice::Instance()->GetDisplayResolution()[0]/2.f;
+    position[1] = GraphicsDevice::Instance()->GetDisplayResolution()[1]/2.f - position[1];
 
-	position[0] /= ScreenHelpers::GetDpu();
-	position[1] /= ScreenHelpers::GetDpu();
+	position[0] /= GraphicsDevice::Instance()->GetDisplayDensity();
+	position[1] /= GraphicsDevice::Instance()->GetDisplayDensity();
     
     position /= camera->Scale;
     position += glm::vec2(camera->Position.x, camera->Position.y);

@@ -15,7 +15,7 @@ bool ScreenHelpers::IsLandscape()
 
 bool ScreenHelpers::IsHighResolution()
 {
-    if (GetDpu() >= 32.f)
+    if (GraphicsDevice::Instance()->GetDisplayDensity() >= 32.f)
         return true;
         
     return false;
@@ -23,29 +23,19 @@ bool ScreenHelpers::IsHighResolution()
     
 float ScreenHelpers::GetAspectRatio()
 {
-    return GetScreenResolution()[1]/GetScreenResolution()[0];
-}
-    
-glm::vec2 ScreenHelpers::GetScreenResolution()
-{
-    return pb::GraphicsDevice::Instance()->GetDisplayResolution();
+    return GraphicsDevice::Instance()->GetDisplayResolution()[1]/GraphicsDevice::Instance()->GetDisplayResolution()[0];
 }
     
 glm::vec2 ScreenHelpers::GetScreenUnits()
 {
-    return GetScreenResolution()/GetDpu();
+    return GraphicsDevice::Instance()->GetDisplayResolution()/GraphicsDevice::Instance()->GetDisplayDensity();
 }
     
 glm::vec2 ScreenHelpers::GetWorldScale()
 {
-    float worldScale = 1.f/((GetScreenResolution().y/2)/GetDpu());
+    float worldScale = 1.f/((GraphicsDevice::Instance()->GetDisplayResolution().y/2)/GraphicsDevice::Instance()->GetDisplayDensity());
     
     return glm::vec2(worldScale, worldScale);
-}
-    
-float ScreenHelpers::GetDpu()
-{
-    return GraphicsDevice::Instance()->GetDisplayDensity();
 }
 
 #endif

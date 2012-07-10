@@ -206,15 +206,10 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
         bufferData[3].color[2] = renderable._Tint.b;
         bufferData[3].color[3] = renderable._Tint.a;
         
-        glm::vec4 a(-0.5, -0.5, 0, 1);
-        glm::vec4 b(-0.5, 0.5, 0, 1);
-        glm::vec4 c(0.5, 0.5, 0, 1);
-        glm::vec4 d(0.5, -0.5, 0, 1);
-        
-        a = renderable.GetMVP() * a;
-        b = renderable.GetMVP() * b;
-        c = renderable.GetMVP() * c;
-        d = renderable.GetMVP() * d;
+        glm::vec4 a = renderable.GetMVP() * glm::vec4(-0.5, -0.5, 0, 1);
+        glm::vec4 b = renderable.GetMVP() * glm::vec4(-0.5, 0.5, 0, 1);
+        glm::vec4 c = renderable.GetMVP() * glm::vec4(0.5, 0.5, 0, 1);
+        glm::vec4 d = renderable.GetMVP() * glm::vec4(0.5, -0.5, 0, 1);
         
         bufferData[0].position[0] = a.x;
         bufferData[0].position[1] = a.y;

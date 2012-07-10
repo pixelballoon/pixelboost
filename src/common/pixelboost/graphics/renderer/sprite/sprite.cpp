@@ -44,7 +44,7 @@ bool SpriteSheet::LoadSingle(const std::string& fileName, bool generateMips)
     Sprite* sprite = new Sprite();
     sprite->_Sheet = this;
     sprite->_Rotated = false;
-    sprite->_Size = _Texture->GetSize() / ScreenHelpers::GetDpu();
+    sprite->_Size = _Texture->GetSize() / GraphicsDevice::Instance()->GetDisplayDensity();
     sprite->_UvPosition = glm::vec2(0,0);
     sprite->_UvSize = glm::vec2(1,1);
     sprite->_Offset = glm::vec2(0,0);
@@ -103,7 +103,7 @@ bool SpriteSheet::LoadSheet(const std::string& name, bool generateMips)
         sprite->_Sheet = this;
         
         sprite->_Size = glm::vec2(frameW.Value(), frameH.Value()) / sheetDensity;
-        sprite->_Offset = glm::vec2(sourceSizeW.Value()/2.f-spriteSourceSizeX.Value()-spriteSourceSizeW.Value()/2.f, -(sourceSizeH.Value()/2.f-spriteSourceSizeY.Value()-spriteSourceSizeH.Value()/2.f)) / ScreenHelpers::GetDpu();
+        sprite->_Offset = glm::vec2(sourceSizeW.Value()/2.f-spriteSourceSizeX.Value()-spriteSourceSizeW.Value()/2.f, -(sourceSizeH.Value()/2.f-spriteSourceSizeY.Value()-spriteSourceSizeH.Value()/2.f)) / GraphicsDevice::Instance()->GetDisplayDensity();
         
         sprite->_Rotated = rotated.Value();
         

@@ -3,6 +3,7 @@
 #ifdef PIXELBOOST_PLATFORM_IOS
 
 #include "pixelboost/graphics/camera/camera.h"
+#include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/helper/screenHelpers.h"
 #include "pixelboost/input/touchManager.h"
 
@@ -19,13 +20,13 @@ glm::vec2 Touch::GetScreenPosition()
    	glm::vec2 position = _Position;
     
     // Specifically handle retina displays where the input co-ordinates aren't scaled
-    float inputScale = ScreenHelpers::GetDpu()/16.f;
+    float inputScale = GraphicsDevice::Instance()->GetDisplayDensity()/16.f;
     
-    position.x = position.x - ScreenHelpers::GetScreenResolution().x/(2*inputScale);
-    position.y = ScreenHelpers::GetScreenResolution()[1]/(2*inputScale) - position[1];
+    position.x = position.x - GraphicsDevice::Instance()->GetDisplayResolution().x/(2*inputScale);
+    position.y = GraphicsDevice::Instance()->GetDisplayResolution()[1]/(2*inputScale) - position[1];
     
-	position.x /= (ScreenHelpers::GetDpu()/inputScale);
-	position.y /= (ScreenHelpers::GetDpu()/inputScale);
+	position.x /= (GraphicsDevice::Instance()->GetDisplayDensity()/inputScale);
+	position.y /= (GraphicsDevice::Instance()->GetDisplayDensity()/inputScale);
 	
 	return position;
 }
@@ -37,11 +38,11 @@ glm::vec2 Touch::GetWorldPosition(OrthographicCamera* camera)
     // Specifically handle retina displays where the input co-ordinates aren't scaled
     float inputScale = ScreenHelpers::IsHighResolution() ? 2 : 1;
     
-    position[0] = position[0] - ScreenHelpers::GetScreenResolution()[0]/(2*inputScale);
-    position[1] = ScreenHelpers::GetScreenResolution()[1]/(2*inputScale) - position[1];
+    position[0] = position[0] - GraphicsDevice::Instance()->GetDisplayResolution()[0]/(2*inputScale);
+    position[1] = GraphicsDevice::Instance()->GetDisplayResolution()[1]/(2*inputScale) - position[1];
 
-	position[0] /= (ScreenHelpers::GetDpu()/inputScale);
-	position[1] /= (ScreenHelpers::GetDpu()/inputScale);
+	position[0] /= (GraphicsDevice::Instance()->GetDisplayDensity()/inputScale);
+	position[1] /= (GraphicsDevice::Instance()->GetDisplayDensity()/inputScale);
     
     position /= camera->Scale;
     position += glm::vec2(camera->Position.x, camera->Position.y);
