@@ -173,6 +173,14 @@ void SoundManager::LoadSfx(const std::string& name)
     _Sfx[name] = result;
 }
 
+void SoundManager::ReloadSfx()
+{
+    for (std::map<std::string, int>::iterator it = _Sfx.begin(); it != _Sfx.end(); ++it)
+    {
+        LoadSfx(it->first);
+    }
+}
+
 void SoundManager::PlayBgm(const std::string& name, bool loop, float volume)
 {
     _CurrentBgmName = name;

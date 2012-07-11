@@ -56,9 +56,11 @@ public:
     void MuteBgm(bool mute=true);
     bool IsSfxMuted();
     void MuteSfx(bool mute=true);
-    
+
     void LoadBgm(const std::string& name);
     void LoadSfx(const std::string& name);
+
+    void ReloadSfx();
     
     void PlayBgm(const std::string& name, bool loop, float volume=1.f);
     void StopBgm();
