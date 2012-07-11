@@ -1,8 +1,7 @@
 #ifdef PIXELBOOST_PLATFORM_ANDROID
 
-#include <android/log.h>
-
 #include "pixelboost/debug/assert.h"
+#include "pixelboost/debug/log.h"
 #include "pixelboost/file/fileSystem.h"
 #include "pixelboost/misc/jni.h"
 
@@ -98,7 +97,7 @@ File* FileSystem::OpenFile(FileLocation location, const std::string& path)
     jlong offset = env->GetLongField(result, offsetField);
     jlong length = env->GetLongField(result, lengthField);
 
-    __android_log_print(ANDROID_LOG_INFO, "pixelboost", "File opened (%s): %lld (%lld)\n", actualPath.c_str(), offset, length);
+    PbLogDebug("pixelboost", "File opened (%s): %lld (%lld)\n", actualPath.c_str(), offset, length);
 
     jfieldID fdClassDescriptorFieldID = env->GetFieldID(fdClass, "descriptor", "I");
 
