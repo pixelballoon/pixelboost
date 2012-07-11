@@ -6,17 +6,19 @@
 
 #include "pixelboost/audio/soundManager.h"
 #include "pixelboost/file/fileHelpers.h"
+#include "pixelboost/misc/jni.h"
 
 using namespace pb;
 
-Sound::Sound(const std::string& name, float volume, float pitch, bool looping)
-    : _Looping(false)
+Sound::Sound(int id, const std::string& name, float volume, float pitch, bool looping)
+    : _Id(id)
+    , _Looping(false)
     , _Name(name)
     , _IsPlaying(false)
     , _Pitch(pitch)
     , _Volume(volume)
 {
-    _Id = SoundManager::Instance()->SfxGetId();
+    
 }
 
 int Sound::GetId() const
@@ -84,9 +86,6 @@ SoundManager::SoundManager()
     _CurrentBgmName = "";
     _MuteBgm = false;
     _MuteSfx = false;
-    
-    //[OALSimpleAudio sharedInstance].allowIpod = NO;
-    //[OALSimpleAudio sharedInstance].honorSilentSwitch = YES;
 }
 
 SoundManager::~SoundManager()
@@ -127,7 +126,6 @@ bool SoundManager::IsBgmMuted()
     
 void SoundManager::MuteBgm(bool mute)
 {
-    /*
     _MuteBgm = mute;
     
     if (_MuteBgm)
@@ -138,7 +136,6 @@ void SoundManager::MuteBgm(bool mute)
     } else {
         PlayBgm(_CurrentBgmName, _CurrentBgmLoop, _CurrentBgmVolume);
     }
-    */
 }
 
 bool SoundManager::IsSfxMuted()
@@ -153,20 +150,31 @@ void SoundManager::MuteSfx(bool mute)
 
 void SoundManager::LoadBgm(const std::string& name)
 {
-
+    return;
 }
 
 void SoundManager::LoadSfx(const std::string& name)
 {
-    /*std::string fileName = FileHelpers::GetRootPath() + "/data/audio/sfx/" + name;
-    
-    [[OALSimpleAudio sharedInstance] preloadEffect:[NSString stringWithUTF8String:fileName.c_str()]];
-    */
+    std::string fileName = "data/audio/sfx/" + name;
+
+    JNIEnv* env = pb::Jni::GetJniEnv();
+
+    jstring jstr = env->NewStringUTF(fileName.c_str());
+    jclass classId = env->FindClass("com/pixelballoon/pixelboost/PixelboostHelpers");
+
+    jmethodID methodId = env->GetStaticMethodID(classId, "loadSound", "(Ljava/lang/String;)I");
+    jint result = env->CallStaticIntMethod(classId, methodId, jstr);
+
+    env->DeleteLocalRef(jstr);
+
+    if (!result)
+        return;
+
+    _Sfx[name] = result;
 }
 
 void SoundManager::PlayBgm(const std::string& name, bool loop, float volume)
 {
-    /*
     _CurrentBgmName = name;
     _CurrentBgmLoop = loop;
     _CurrentBgmVolume = volume;
@@ -174,53 +182,58 @@ void SoundManager::PlayBgm(const std::string& name, bool loop, float volume)
     if (_MuteBgm || _CurrentBgmName == "")
         return;
     
-     std::string fileName = FileHelpers::GetRootPath() + "/data/audio/bgm/" + name;
+    std::string fileName = "data/audio/bgm/" + name;
      
-    [[OALSimpleAudio sharedInstance] playBg:[NSString stringWithUTF8String:fileName.c_str()] volume:volume pan:0.f loop:loop];
-    */
+    JNIEnv* env = pb::Jni::GetJniEnv();
+
+    jstring jstr = env->NewStringUTF(fileName.c_str());
+    jclass classId = env->FindClass("com/pixelballoon/pixelboost/PixelboostHelpers");
+    jmethodID methodId = env->GetStaticMethodID(classId, "playMusic", "(Ljava/lang/String;F)V");
+
+    env->CallStaticVoidMethod(classId, methodId, jstr, (jfloat)volume);
+    env->DeleteLocalRef(jstr);
 }
     
 void SoundManager::StopBgm()
 {
-    /*
     _CurrentBgmName = "";
+
+    JNIEnv* env = pb::Jni::GetJniEnv();
     
-    [[OALSimpleAudio sharedInstance] stopBg];
-    */
+    jclass classId = env->FindClass("com/pixelballoon/pixelboost/PixelboostHelpers");
+    jmethodID methodId = env->GetStaticMethodID(classId, "stopMusic", "()V");
+
+    env->CallStaticVoidMethod(classId, methodId);
 }
 
 Sound SoundManager::PlaySfx(const std::string& name, float volume, float pitch)
 {
     if (_MuteSfx)
-        return Sound();
-    
-    Sound sound(name, volume, pitch);
-    
-    sound.Play();
-    
-    return sound;
+        return Sound(0);
+
+    JNIEnv* env = pb::Jni::GetJniEnv();
+
+    if (_Sfx.find(name) == _Sfx.end())
+        return Sound(0);
+
+    jint soundId = _Sfx[name];
+
+    jclass classId = env->FindClass("com/pixelballoon/pixelboost/PixelboostHelpers");
+    jmethodID methodId = env->GetStaticMethodID(classId, "playSound", "(I)I");
+    jint result = env->CallStaticIntMethod(classId, methodId, (jint)soundId);
+
+    if (!result)
+        return Sound(0);
+
+    return Sound(result, name, volume, pitch);
 }
 
-int SoundManager::SfxGetId()
+void SoundManager::SfxPlay(Sound& sound)
 {
-    return _SoundId++;
+    sound = PlaySfx(sound.GetName(), sound.GetVolume(), sound.GetPitch());
 }
 
-void SoundManager::SfxPlay(const Sound& sound)
-{
-    /*
-    if (_MuteSfx)
-        return;
-    
-    std::string filename = FileHelpers::GetRootPath() + "/data/audio/sfx/" + sound.GetName();
-    
-    id<ALSoundSource> instance = [[OALSimpleAudio sharedInstance] playEffect:[NSString stringWithUTF8String:filename.c_str()] volume:sound.GetVolume() pitch:sound.GetPitch() pan:0.f loop:sound.IsLooping()];
-    [instance retain];
-    _Sounds[sound.GetId()] = instance;
-    */
-}
-
-void SoundManager::SfxStop(const Sound& sound)
+void SoundManager::SfxStop(Sound& sound)
 {
     /*
     std::map<int, void*>::iterator it = _Sounds.find(sound.GetId());
@@ -248,7 +261,7 @@ bool SoundManager::SfxIsPlaying(const Sound& sound)
     */
 }
 
-void SoundManager::SfxUpdateLooping(const Sound& sound)
+void SoundManager::SfxUpdateLooping(Sound& sound)
 {
     /*
     std::map<int, void*>::iterator it = _Sounds.find(sound.GetId());
@@ -262,7 +275,7 @@ void SoundManager::SfxUpdateLooping(const Sound& sound)
     */
 }
 
-void SoundManager::SfxUpdatePitch(const Sound& sound)
+void SoundManager::SfxUpdatePitch(Sound& sound)
 {
     /*
     std::map<int, void*>::iterator it = _Sounds.find(sound.GetId());
@@ -276,7 +289,7 @@ void SoundManager::SfxUpdatePitch(const Sound& sound)
     */
 }
 
-void SoundManager::SfxUpdateVolume(const Sound& sound)
+void SoundManager::SfxUpdateVolume(Sound& sound)
 {
     /*
     std::map<int, void*>::iterator it = _Sounds.find(sound.GetId());

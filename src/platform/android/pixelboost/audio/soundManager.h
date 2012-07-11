@@ -11,7 +11,7 @@ namespace pb
 class Sound
 {
 public:
-    Sound(const std::string& name="", float volume=1.f, float pitch=1.f, bool looping=false);
+    Sound(int id=0, const std::string& name="", float volume=1.f, float pitch=1.f, bool looping=false);
     
     int GetId() const;
     
@@ -66,17 +66,19 @@ public:
     Sound PlaySfx(const std::string& name, float volume=1.f, float pitch=1.f);
     
 private:
-    int SfxGetId();
-    void SfxPlay(const Sound& sound);
-    void SfxStop(const Sound& sound);
+    void SfxPlay(Sound& sound);
+    void SfxStop(Sound& sound);
     bool SfxIsPlaying(const Sound& sound);
-    void SfxUpdateLooping(const Sound& sound);
-    void SfxUpdatePitch(const Sound& sound);
-    void SfxUpdateVolume(const Sound& sound);
+    void SfxUpdateLooping(Sound& sound);
+    void SfxUpdatePitch(Sound& sound);
+    void SfxUpdateVolume(Sound& sound);
     
 private:
     int _SoundId;
     std::map<int, void*> _Sounds;
+
+    std::map<std::string, int> _Sfx;
+    std::map<std::string, int> _Bgm;
     
     std::string _CurrentBgmName;
     bool _CurrentBgmLoop;
