@@ -70,6 +70,11 @@ void Renderer::RemoveViewport(Viewport* viewport)
     }
 }
 
+const Renderer::ViewportList& Renderer::GetViewports()
+{
+    return _Viewports;
+}
+
 void Renderer::SetHandler(int renderableType, IRenderer* renderer)
 {
     _RenderableHandlers[renderableType] = renderer;

@@ -32,8 +32,6 @@ Game::Game(void* viewController)
     _FileSystem = new FileSystem();
     
 #ifndef PIXELBOOST_DISABLE_GRAPHICS
-    _TouchManager = new TouchManager();
-    
     _Renderer = new Renderer();
     //_CustomRenderer = new CustomRenderer();
     _ModelRenderer  = new ModelRenderer();
@@ -51,6 +49,7 @@ Game::Game(void* viewController)
 #ifndef PIXELBOOST_DISABLE_INPUT
     _KeyboardManager = new KeyboardManager();
     _MouseManager = new MouseManager();
+    _TouchManager = new TouchManager();
 #endif
     
 #ifndef PIXELBOOST_DISABLE_DEBUG
@@ -78,8 +77,6 @@ Game::~Game()
     delete _PrimitiveRenderer;
     delete _Renderer;
     delete _SpriteRenderer;
-    
-    delete _TouchManager;
 #endif
 }
 

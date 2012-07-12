@@ -28,6 +28,11 @@ OrthographicCamera::OrthographicCamera(glm::vec3 position, glm::vec3 rotation, g
     
 }
 
+Camera::CameraType OrthographicCamera::GetType()
+{
+    return kCameraOrthographic;
+}
+
 void OrthographicCamera::CalculateTransform(Viewport* viewport)
 {
     glm::vec2 viewportSize = viewport->GetSize() / 2.f;
@@ -57,6 +62,12 @@ PerspectiveCamera::PerspectiveCamera(glm::vec3 position, glm::vec3 rotation)
     : Camera(position, rotation)
     , FieldOfView(90.f)
 {
+    
+}
+
+Camera::CameraType PerspectiveCamera::GetType()
+{
+    return kCameraPerspective;
 }
 
 void PerspectiveCamera::CalculateTransform(Viewport* viewport)

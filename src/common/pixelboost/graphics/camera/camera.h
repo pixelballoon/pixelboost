@@ -10,8 +10,17 @@ class Viewport;
 class Camera
 {
 public:
+    enum CameraType
+    {
+        kCameraOrthographic,
+        kCameraPerspective,
+    };
+    
+public:
 	Camera(glm::vec3 position, glm::vec3 rotation);
     virtual ~Camera();
+    
+    virtual CameraType GetType() = 0;
     
 	virtual void CalculateTransform(Viewport* viewport) = 0;
     
@@ -31,6 +40,9 @@ class OrthographicCamera : public Camera
 {
 public:
     OrthographicCamera(glm::vec3 position = glm::vec3(0,0,500), glm::vec3 rotation = glm::vec3(0,0,0), glm::vec2 scale = glm::vec2(1,1));
+    
+    virtual CameraType GetType();
+    
     virtual void CalculateTransform(Viewport* viewport);
     
     virtual glm::vec2 ConvertScreenToWorld(glm::vec2 screen);
@@ -43,6 +55,9 @@ class PerspectiveCamera : public Camera
 {
 public:
     PerspectiveCamera(glm::vec3 position = glm::vec3(0,0,0), glm::vec3 rotation = glm::vec3(0,0,0));
+    
+    virtual CameraType GetType();
+    
     virtual void CalculateTransform(Viewport* viewport);
     
 public:

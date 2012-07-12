@@ -38,62 +38,59 @@ InputManager::~InputManager()
 
 void InputManager::AddHandler(InputHandler* handler)
 {
-    handler->_Enabled = true;
-    
-    for (HandlerList::iterator it = _Handlers.begin(); it != _Handlers.end(); ++it)
+    HandlerMap::iterator it = _HandlerMap.find(handler);
+    if (it != _HandlerMap.end())
     {
-        if (*it == handler)
-            return;
+        it->second = true;
+        return;
     }
     
-    for (HandlerList::iterator it = _HandlersToAdd.begin(); it != _HandlersToAdd.end(); ++it)
-    {
-        if (*it == handler)
-            return;
-    }
-    
-    _HandlersToAdd.push_back(handler);
+    _HandlersToAdd[handler] = true;
 }
 
 void InputManager::RemoveHandler(InputHandler* handler)
 {
-    for (HandlerList::iterator it = _Handlers.begin(); it != _Handlers.end(); ++it)
+    HandlerMap::iterator it = _HandlerMap.find(handler);
+    if (it != _HandlerMap.end())
     {
-        if (*it == handler)
-        {
-            handler->_Enabled = false;
-        }
+        it->second = false;
+        return;
     }
     
-    for (HandlerList::iterator it = _HandlersToAdd.begin(); it != _HandlersToAdd.end(); ++it)
+    it = _HandlersToAdd.find(handler);
+    if (it != _HandlersToAdd.end())
     {
-        if (*it == handler)
-        {
-            handler->_Enabled = false;
-        }
-    }
+        it->second = false;
+        return;
+    }    
 }
 
 void InputManager::UpdateHandlers()
 {
-    for (HandlerList::iterator it = _Handlers.begin(); it != _Handlers.end();)
+    for (HandlerMap::iterator it = _HandlerMap.begin(); it != _HandlerMap.end();)
     {
-        if ((*it)->_Enabled == false)
+        if (it->second == false)
         {
-            it = _Handlers.erase(it);
+            _HandlerMap.erase(it++);
         } else {
             ++it;
         }
     }
     
-    for (HandlerList::iterator it = _HandlersToAdd.begin(); it != _HandlersToAdd.end(); ++it)
+    for (HandlerMap::iterator it = _HandlersToAdd.begin(); it != _HandlersToAdd.end(); ++it)
     {
-        if ((*it)->_Enabled == true)
+        if (it->second == true)
         {
-            _Handlers.push_back(*it);
+            _HandlerMap[it->first] = true;
         }
     }
     _HandlersToAdd.clear();
+    
+    _Handlers.clear();
+    for (HandlerMap::iterator it = _HandlerMap.begin(); it != _HandlerMap.end(); ++it)
+    {
+        _Handlers.push_back(it->first);
+    }
     
     std::sort(_Handlers.begin(), _Handlers.end(), &HandlerSort);
 }
