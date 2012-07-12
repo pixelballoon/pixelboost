@@ -40,6 +40,7 @@
 #include "view/ui/property/propertyPanel.h"
 #include "view/ui/settings/moveManipulator.h"
 #include "view/ui/settings/networkWindow.h"
+#include "view/ui/settings/rotateManipulator.h"
 #include "view/level.h"
 #include "core.h"
 #include "view.h"
@@ -247,6 +248,8 @@ void View::Initialise(glm::vec2 size)
     Gwen::Controls::MenuItem* manipulatorMenu = _Menu->AddItem("Manipulator");
     Gwen::Controls::MenuItem* moveManipulator = manipulatorMenu->GetMenu()->AddItem("Move Manipulator");
     moveManipulator->onPress.Add(this, &View::OnMoveManipulator);
+    Gwen::Controls::MenuItem* rotateManipulator = manipulatorMenu->GetMenu()->AddItem("Rotate Manipulator");
+    rotateManipulator->onPress.Add(this, &View::OnRotateManipulator);
     
     SetCanvasSize(size);
     
@@ -514,6 +517,11 @@ void View::OnDeviceAddress(Gwen::Controls::Base* item)
 void View::OnMoveManipulator(Gwen::Controls::Base* item)
 {
     new MoveManipulatorWindow(_GwenCanvas);
+}
+
+void View::OnRotateManipulator(Gwen::Controls::Base* item)
+{
+    new RotateManipulatorWindow(_GwenCanvas);
 }
 
 void View::OnSelectionChanged()

@@ -79,7 +79,14 @@ bool RotateManipulator::OnMouseMove(glm::vec2 position)
         if (entity)
         {
             entity->ResetTransform();
-            entity->Transform(glm::vec3(0,0,0), glm::vec3(0,0,angle));
+            glm::vec3 rotation = entity->GetRotation() + glm::vec3(0,0,angle);
+            if (_Snap.x != 0)
+                rotation.x = rotation.x - glm::mod(rotation.x, _Snap.x);
+            if (_Snap.y != 0)
+                rotation.y = rotation.y - glm::mod(rotation.y, _Snap.y);
+            if (_Snap.z != 0)
+                rotation.z = rotation.z - glm::mod(rotation.z, _Snap.z);
+            entity->Transform(glm::vec3(0,0,0), rotation-entity->GetRotation());
         }
     }
     
@@ -146,4 +153,14 @@ void RotateManipulator::OnSetActive()
 void RotateManipulator::OnSetInactive()
 {
     
+}
+
+glm::vec3 RotateManipulator::GetSnap() const
+{
+    return _Snap;
+}
+
+void RotateManipulator::SetSnap(glm::vec3 snap)
+{
+    _Snap = snap;
 }

@@ -29,6 +29,7 @@
 		1C3F423B1558430B00396F50 /* file.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C3F42391558430B00396F50 /* file.cpp */; };
 		1C78EE901567ECD2001441AC /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C78EE8F1567ECD2001441AC /* OpenGL.framework */; };
 		1C78EE931567EDDF001441AC /* MainView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C78EE921567EDDF001441AC /* MainView.mm */; };
+		1C7DD6C315AED7870006A24D /* rotateManipulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C7DD6C015AED7860006A24D /* rotateManipulator.cpp */; };
 		1C8177FE15936C41003A5A9B /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8177FC15936C41003A5A9B /* model.cpp */; };
 		1C81780215936D51003A5A9B /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C81780015936D51003A5A9B /* model.cpp */; };
 		1C8BA1A015987BA200981586 /* moveManipulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8BA19E15987BA200981586 /* moveManipulator.cpp */; };
@@ -353,6 +354,8 @@
 		1C78EE8F1567ECD2001441AC /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		1C78EE911567EDDF001441AC /* MainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainView.h; sourceTree = "<group>"; };
 		1C78EE921567EDDF001441AC /* MainView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MainView.mm; sourceTree = "<group>"; };
+		1C7DD6C015AED7860006A24D /* rotateManipulator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rotateManipulator.cpp; sourceTree = "<group>"; };
+		1C7DD6C115AED7860006A24D /* rotateManipulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rotateManipulator.h; sourceTree = "<group>"; };
 		1C8177FC15936C41003A5A9B /* model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = model.cpp; sourceTree = "<group>"; };
 		1C8177FD15936C41003A5A9B /* model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = model.h; sourceTree = "<group>"; };
 		1C81780015936D51003A5A9B /* model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = model.cpp; sourceTree = "<group>"; };
@@ -1344,6 +1347,8 @@
 				1C8BA19F15987BA200981586 /* moveManipulator.h */,
 				1CD03695157447C1003F9B92 /* networkWindow.cpp */,
 				1CD03696157447C1003F9B92 /* networkWindow.h */,
+				1C7DD6C015AED7860006A24D /* rotateManipulator.cpp */,
+				1C7DD6C115AED7860006A24D /* rotateManipulator.h */,
 			);
 			path = settings;
 			sourceTree = "<group>";
@@ -3426,6 +3431,7 @@
 				1C8177FE15936C41003A5A9B /* model.cpp in Sources */,
 				1C81780215936D51003A5A9B /* model.cpp in Sources */,
 				1C8BA1A015987BA200981586 /* moveManipulator.cpp in Sources */,
+				1C7DD6C315AED7870006A24D /* rotateManipulator.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

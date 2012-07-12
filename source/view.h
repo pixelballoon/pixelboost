@@ -107,6 +107,7 @@ private:
     
     void OnDeviceAddress(Gwen::Controls::Base* item);
     void OnMoveManipulator(Gwen::Controls::Base* item);
+    void OnRotateManipulator(Gwen::Controls::Base* item);
     
     void OnSelectionChanged();
     
