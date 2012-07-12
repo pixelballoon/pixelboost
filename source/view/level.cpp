@@ -1,3 +1,5 @@
+#include "glm/gtc/matrix_transform.hpp"
+
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/components/rectangle.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
@@ -166,7 +168,35 @@ void Level::UpdateSize()
     
     std::string width = hasLevel->EvaluateParamValue(_Record, "width");
     std::string height = hasLevel->EvaluateParamValue(_Record, "height");
-    _LevelBounds->SetSize(glm::vec2(atof(width.c_str()), atof(height.c_str())));
+    std::string origin = hasLevel->EvaluateParamValue(_Record, "origin");
+    
+    glm::vec2 size = glm::vec2(atof(width.c_str()), atof(height.c_str()));
+    glm::vec3 offset;
+    
+    if (origin.length() == 2)
+    {
+        switch (origin.at(0))
+        {
+            case 'b':
+                offset.y = size.y/2.f;
+                break;
+            case 't':
+                offset.y = -size.y/2.f;
+                break;
+        }
+        switch (origin.at(1))
+        {
+            case 'l':
+                offset.x = size.x/2.f;
+                break;
+            case 'r':
+                offset.x = -size.x/2.f;
+                break;
+        }
+    }
+    
+    _LevelBounds->SetSize(size);
+    _LevelBounds->SetLocalTransform(glm::translate(glm::mat4x4(), offset));
 }
 
 int Level::GetPriority()
