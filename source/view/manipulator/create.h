@@ -25,6 +25,13 @@ namespace pixeleditor
         virtual bool OnKeyUp(pb::KeyboardKey key, char character);
         
     private:
+        glm::vec3 GetEntityPosition(glm::vec2 start);
+        void CreateEntity(glm::vec3 position);
+        
+    private:
+        bool _CreateMode;
+        glm::vec3 _LastCreate;
+        
         std::string _EntityType;
         std::vector<std::string> _Fields;
         std::vector<std::string> _Values;
