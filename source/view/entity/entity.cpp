@@ -22,9 +22,9 @@ ViewEntity::ViewEntity(pb::Scene* scene, Uid uid, pixeleditor::Entity* entity)
 {
     AddComponent(new pb::BasicTransformComponent(this));
 
-    ParseProperties();
-    
     ResetTransform();
+    
+    ParseProperties();
     
     _Entity->propertyChanged.Connect(this, &ViewEntity::OnPropertyChanged);
     _Entity->destroyed.Connect(this, &ViewEntity::OnDestroyed);
