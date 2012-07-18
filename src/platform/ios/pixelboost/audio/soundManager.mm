@@ -157,9 +157,6 @@ void SoundManager::LoadBgm(const std::string& name)
 
 void SoundManager::LoadSfx(const std::string& name)
 {
-    //if (compressed)
-        return;
-    
     std::string fileName = FileHelpers::GetRootPath() + "/data/audio/sfx/" + name;
     
     [[OALSimpleAudio sharedInstance] preloadEffect:[NSString stringWithUTF8String:fileName.c_str()]];
