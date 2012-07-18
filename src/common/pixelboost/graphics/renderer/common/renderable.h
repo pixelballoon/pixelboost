@@ -2,6 +2,7 @@
 
 #include "glm/glm.hpp"
 #include "pixelboost/db/definitions.h"
+#include "pixelboost/maths/boundingSphere.h"
 
 namespace pb
 {
@@ -28,6 +29,10 @@ public:
     
     virtual void CalculateWorldMatrix() = 0;
     
+    void DirtyBounds();
+    void SetBounds(const BoundingSphere& bounds);
+    const BoundingSphere& GetBounds();
+    
     void DirtyWorldMatrix();
     void SetWorldMatrix(const glm::mat4x4& matrix);
     const glm::mat4x4& GetWorldMatrix();
@@ -41,6 +46,9 @@ public:
 private:
     bool _WorldMatrixDirty;
     glm::mat4x4 _WorldMatrix;
+    
+    bool _BoundsDirty;
+    BoundingSphere _Bounds;
     
     glm::mat4x4 _MVPMatrix;
     

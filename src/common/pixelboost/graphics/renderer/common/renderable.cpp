@@ -47,6 +47,22 @@ int Renderable::GetLayer()
     return _Layer;
 }
 
+void Renderable::DirtyBounds()
+{
+    _BoundsDirty = true;
+}
+
+void Renderable::SetBounds(const BoundingSphere& bounds)
+{
+    _Bounds = bounds;
+    _BoundsDirty = false;
+}
+
+const BoundingSphere& Renderable::GetBounds()
+{
+    return _Bounds;
+}
+
 void Renderable::DirtyWorldMatrix()
 {
     _WorldMatrixDirty = true;
