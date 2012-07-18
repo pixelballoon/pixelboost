@@ -34,7 +34,7 @@ Uid ParticleRenderable::GetRenderableType()
 
 void ParticleRenderable::CalculateWorldMatrix()
 {
-    _WorldMatrix = glm::mat4x4();
+    SetWorldMatrix(glm::mat4x4());
 }
 
 Effect* ParticleRenderable::GetEffect()

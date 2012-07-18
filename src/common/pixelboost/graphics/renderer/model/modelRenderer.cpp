@@ -39,7 +39,7 @@ Uid ModelRenderable::GetRenderableType()
 
 void ModelRenderable::CalculateWorldMatrix()
 {
-    _WorldMatrix = _Transform;
+    SetWorldMatrix(_Transform);
 }
 
 Effect* ModelRenderable::GetEffect()

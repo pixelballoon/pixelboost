@@ -59,11 +59,12 @@ PrimitiveRenderableEllipse::PrimitiveRenderableEllipse(Uid entityUid)
 
 void PrimitiveRenderableEllipse::CalculateWorldMatrix()
 {
-    _WorldMatrix = glm::translate(glm::mat4x4(), _Position);
-    _WorldMatrix = glm::scale(_WorldMatrix, glm::vec3(_Size, 1));
-    _WorldMatrix = glm::rotate(_WorldMatrix, _Rotation[0], glm::vec3(1,0,0));
-    _WorldMatrix = glm::rotate(_WorldMatrix, _Rotation[1], glm::vec3(0,1,0));
-    _WorldMatrix = glm::rotate(_WorldMatrix, _Rotation[2], glm::vec3(0,0,1));
+    glm::mat4x4 worldMatrix = glm::translate(glm::mat4x4(), _Position);
+    worldMatrix = glm::scale(worldMatrix, glm::vec3(_Size, 1));
+    worldMatrix = glm::rotate(worldMatrix, _Rotation[0], glm::vec3(1,0,0));
+    worldMatrix = glm::rotate(worldMatrix, _Rotation[1], glm::vec3(0,1,0));
+    worldMatrix = glm::rotate(worldMatrix, _Rotation[2], glm::vec3(0,0,1));
+    SetWorldMatrix(worldMatrix);
 }
 
 PrimitiveRenderable::Type PrimitiveRenderableEllipse::GetPrimitiveType()
@@ -122,7 +123,7 @@ PrimitiveRenderableLine::PrimitiveRenderableLine(Uid entityUid)
 
 void PrimitiveRenderableLine::CalculateWorldMatrix()
 {
-    _WorldMatrix = glm::mat4x4();
+    SetWorldMatrix(glm::mat4x4());
 }
 
 PrimitiveRenderable::Type PrimitiveRenderableLine::GetPrimitiveType()
@@ -159,8 +160,9 @@ PrimitiveRenderableRectangle::PrimitiveRenderableRectangle(Uid entityUid)
 
 void PrimitiveRenderableRectangle::CalculateWorldMatrix()
 {
-    _WorldMatrix = glm::scale(glm::mat4x4(), glm::vec3(_Size, 1));
-    _WorldMatrix = _Transform * _WorldMatrix;
+    glm::mat4x4 worldMatrix = glm::scale(glm::mat4x4(), glm::vec3(_Size, 1));
+    worldMatrix = _Transform * worldMatrix;
+    SetWorldMatrix(worldMatrix);
 }
 
 PrimitiveRenderable::Type PrimitiveRenderableRectangle::GetPrimitiveType()

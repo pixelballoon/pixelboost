@@ -37,9 +37,10 @@ void SpriteRenderable::CalculateWorldMatrix()
 {
     if (_Sprite)
     {
-        _WorldMatrix = glm::translate(glm::mat4x4(), glm::vec3(-_Sprite->_Offset, 0));
-        _WorldMatrix = glm::scale(_WorldMatrix, glm::vec3(_Sprite->_Size, 1));
-        _WorldMatrix = _Transform * _WorldMatrix;
+        glm::mat4x4 worldMatrix = glm::translate(glm::mat4x4(), glm::vec3(-_Sprite->_Offset, 0));
+        worldMatrix = glm::scale(worldMatrix, glm::vec3(_Sprite->_Size, 1));
+        worldMatrix = _Transform * worldMatrix;
+        SetWorldMatrix(worldMatrix);
     }
 }
     

@@ -29,7 +29,7 @@ public:
     virtual void CalculateWorldMatrix() = 0;
     
     void DirtyWorldMatrix();
-    void SetWorldMatrix(const glm::mat4x4& worldMatrix);
+    void SetWorldMatrix(const glm::mat4x4& matrix);
     const glm::mat4x4& GetWorldMatrix();
     
     void CalculateMVP(Viewport* viewport);
@@ -38,11 +38,10 @@ public:
     virtual Effect* GetEffect();
     void SetEffect(Effect* effect);
     
-protected:
-    glm::mat4x4 _WorldMatrix;
-    
 private:
     bool _WorldMatrixDirty;
+    glm::mat4x4 _WorldMatrix;
+    
     glm::mat4x4 _MVPMatrix;
     
 private:

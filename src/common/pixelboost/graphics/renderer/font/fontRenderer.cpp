@@ -39,9 +39,10 @@ Uid FontRenderable::GetRenderableType()
 
 void FontRenderable::CalculateWorldMatrix()
 {
-    _WorldMatrix = glm::scale(glm::mat4x4(), glm::vec3(Size, Size, 1));
-    _WorldMatrix = glm::translate(_WorldMatrix, glm::vec3(Offset, 0, 0));
-    _WorldMatrix = Transform * _WorldMatrix;
+    glm::mat4x4 worldMatrix = glm::scale(glm::mat4x4(), glm::vec3(Size, Size, 1));
+    worldMatrix = glm::translate(worldMatrix, glm::vec3(Offset, 0, 0));
+    worldMatrix = Transform * worldMatrix;
+    SetWorldMatrix(worldMatrix);
 }
 
 Effect* FontRenderable::GetEffect()

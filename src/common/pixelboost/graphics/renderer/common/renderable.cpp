@@ -52,6 +52,12 @@ void Renderable::DirtyWorldMatrix()
     _WorldMatrixDirty = true;
 }
 
+void Renderable::SetWorldMatrix(const glm::mat4x4& matrix)
+{
+    _WorldMatrix = matrix;
+    _WorldMatrixDirty = false;
+}
+
 const glm::mat4x4& Renderable::GetWorldMatrix()
 {
     if (_WorldMatrixDirty)

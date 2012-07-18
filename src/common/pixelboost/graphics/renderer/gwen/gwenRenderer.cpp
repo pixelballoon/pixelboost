@@ -47,7 +47,7 @@ Uid GwenRenderable::GetRenderableType()
 
 void GwenRenderable::CalculateWorldMatrix()
 {
-    _WorldMatrix = glm::mat4x4();
+    SetWorldMatrix(glm::mat4x4());
 }
 
 Effect* GwenRenderable::GetEffect()
