@@ -65,8 +65,12 @@ glm::vec2 PropertyPanel::AddStruct(glm::vec2 offset, const SchemaStruct* schemaS
                 offset = AddAtom(offset, static_cast<SchemaPropertyAtom*>(it->second), item, propertyPath);
                 break;
             }
+                
             case SchemaProperty::kSchemaPropertyPointer:
+            {
                 break;
+            }
+                
             case SchemaProperty::kSchemaPropertyStruct:
             {
                 SchemaPropertyStruct* schemaPropertyStruct = static_cast<SchemaPropertyStruct*>(it->second);
@@ -74,8 +78,11 @@ glm::vec2 PropertyPanel::AddStruct(glm::vec2 offset, const SchemaStruct* schemaS
                 offset = AddStruct(offset + glm::vec2(STRUCT_INDENT,0), schemaPropertyStruct->GetSchemaStruct(), item, propertyPath) - glm::vec2(STRUCT_INDENT,0);
                 break;
             }
+            
             case SchemaProperty::kSchemaPropertyArray:
+            {
                 break;
+            }
         }
     }
     
