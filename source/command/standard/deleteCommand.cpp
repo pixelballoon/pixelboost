@@ -6,7 +6,10 @@
 #include "project/project.h"
 #include "project/record.h"
 #include "project/schema.h"
+#include "view/entity/entity.h"
+#include "view/level.h"
 #include "core.h"
+#include "view.h"
 
 using namespace pixeleditor;
 
@@ -48,16 +51,20 @@ bool DeleteCommand::Do(std::string& returnString)
 {
     const Selection& selection = Core::Instance()->GetSelection();
     
-    Project* project = Core::Instance()->GetProject();
+    Level* level = View::Instance()->GetLevel();
     
     for (Selection::Entities::const_iterator it = selection.GetSelection().begin(); it != selection.GetSelection().end(); ++it)
     {
-        Entity* entity = project->GetEntity(it->first);
-        if (entity)
+        ViewEntity* viewEntity = level->GetEntityById(it->first);
+        if (viewEntity)
         {
-            Record* record = entity->GetRecord();
-            record->RemoveEntity(entity, false);
-            _Entities.push_back(std::pair<Uid, Entity*>(record->GetUid(), entity));
+            Entity* entity = viewEntity->GetEntity();//project->GetEntity(it->first);
+            if (entity)
+            {
+                Record* record = entity->GetRecord();
+                record->RemoveEntity(entity, false);
+                _Entities.push_back(std::pair<Uid, Entity*>(record->GetUid(), entity));
+            }
         }
     }
     

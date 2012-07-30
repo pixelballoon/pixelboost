@@ -69,7 +69,7 @@ void Level::Clear()
     }
     
     while (_Entities.size())
-        DestroyEntity(_Entities.begin()->second->GetUid());
+        DestroyEntity(_Entities.begin()->second);
     
     _Record = 0;
 }
@@ -138,14 +138,26 @@ void Level::CreateEntity(Uid uid)
 
 void Level::CreateEntity(pixeleditor::Entity* entity)
 {
-    ViewEntity* viewEntity = new ViewEntity(GetScene(), entity->GetUid(), entity);
-    _Entities[entity->GetUid()] = viewEntity;
+    ViewEntity* viewEntity = new ViewEntity(GetScene(), entity);
+    _Entities[viewEntity->GetUid()] = viewEntity;
     entityAdded(viewEntity);
 }
 
-void Level::DestroyEntity(Uid uid)
+void Level::DestroyEntity(pixeleditor::Entity* entity)
 {
-    EntityMap::iterator it = _Entities.find(uid);
+    for (EntityMap::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
+    {
+        if (it->second->GetEntity() == entity)
+        {
+            DestroyEntity(it->second);
+            return;
+        }
+    }
+}
+
+void Level::DestroyEntity(ViewEntity* entity)
+{
+    EntityMap::iterator it = _Entities.find(entity->GetUid());
     
     if (it != _Entities.end())
     {
@@ -234,7 +246,7 @@ void Level::OnEntityAdded(Record* record, pixeleditor::Entity* entity)
 
 void Level::OnEntityRemoved(Record* record, pixeleditor::Entity* entity)
 {
-    DestroyEntity(entity->GetUid());
+    DestroyEntity(entity);
 }
 
 void Level::OnPropertyChanged(Struct* structure)

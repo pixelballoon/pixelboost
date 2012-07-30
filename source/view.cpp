@@ -237,7 +237,7 @@ void View::Initialise(glm::vec2 size)
     _Menu = new Gwen::Controls::MenuStrip(dock);
     
     Gwen::Controls::MenuItem* networkMenu = _Menu->AddItem("Network");
-    Gwen::Controls::MenuItem* deviceAddress = networkMenu->GetMenu()->AddItem("Device Address");
+    Gwen::Controls::MenuItem* deviceAddress = networkMenu->GetMenu()->AddItem("Device Connection");
     deviceAddress->onPress.Add(this, &View::OnDeviceAddress);
     
     _GwenRenderable = new pb::GwenRenderable(_GwenCanvas);
@@ -330,7 +330,7 @@ void View::LoadSprite(const std::string& sprite)
         return;
     
     std::shared_ptr<pb::SpriteSheet> spriteSheet = GetSpriteRenderer()->CreateSpriteSheet(sprite);
-    spriteSheet->LoadSingle(GetSpriteFile(sprite));
+    spriteSheet->LoadSingle(pb::kFileLocationUser, GetSpriteFile(sprite));
 }
 
 std::string View::GetModelFile(const std::string& model)
@@ -358,7 +358,7 @@ std::string View::GetModelFile(const std::string& model)
 
 void View::LoadModel(const std::string& model)
 {
-    GetModelRenderer()->LoadModel(model, GetModelFile(model));
+    GetModelRenderer()->LoadModel(pb::kFileLocationUser, model, GetModelFile(model));
 }
 
 
@@ -390,7 +390,7 @@ void View::LoadTexture(const std::string& texture)
     std::string textureFile = GetTextureFile(texture);
     
     if (textureFile.length())
-        GetModelRenderer()->LoadTexture(texture, textureFile);
+        GetModelRenderer()->LoadTexture(pb::kFileLocationUser, texture, textureFile);
 }
 
 pb::Scene* View::GetLevelScene()

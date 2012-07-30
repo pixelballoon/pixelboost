@@ -28,7 +28,7 @@ namespace pixeleditor
     class ViewEntity : public pb::Entity
     {
     public:
-        ViewEntity(pb::Scene* scene, Uid uid, pixeleditor::Entity* entity);
+        ViewEntity(pb::Scene* scene, pixeleditor::Entity* entity);
         ~ViewEntity();
         
         void Update(float time);

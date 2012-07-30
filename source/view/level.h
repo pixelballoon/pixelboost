@@ -53,7 +53,8 @@ namespace pixeleditor
     private:
         void CreateEntity(Uid uid);
         void CreateEntity(pixeleditor::Entity* entity);
-        void DestroyEntity(Uid uid);
+        void DestroyEntity(pixeleditor::Entity* entity);
+        void DestroyEntity(ViewEntity* entity);
         
         void UpdateSize();
         

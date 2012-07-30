@@ -15,8 +15,8 @@
 
 using namespace pixeleditor;
 
-ViewEntity::ViewEntity(pb::Scene* scene, Uid uid, pixeleditor::Entity* entity)
-    : pb::Entity(scene, uid)
+ViewEntity::ViewEntity(pb::Scene* scene, pixeleditor::Entity* entity)
+    : pb::Entity(scene, 0)
     , _BoundsComponent(0)
     , _Entity(entity)
 {

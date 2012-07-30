@@ -90,7 +90,7 @@ bool Project::Open(const std::string& directory)
     
 bool Project::OpenConfig(const std::string& filename)
 {
-    std::string file = pb::FileHelpers::FileToString(filename.c_str());
+    std::string file = pb::FileHelpers::FileToString(pb::kFileLocationUser, filename.c_str());
     
     json::Object config;
     
@@ -206,7 +206,7 @@ bool Project::Export(bool networkExport)
         pb::NetworkMessage message;
         message.SetProtocol('DBDG');
         message.WriteString("main.lua");
-        std::string main = pb::FileHelpers::FileToString(outputDir+"main.lua");
+        std::string main = pb::FileHelpers::FileToString(pb::kFileLocationUser, outputDir+"main.lua");
         message.WriteString(main.c_str());
         Core::Instance()->GetNetworkManager()->GetClientConnection().Send(message);
         
@@ -218,7 +218,7 @@ bool Project::Export(bool networkExport)
             pb::NetworkMessage message;
             message.SetProtocol('DBDG');
             message.WriteString(recordName);
-            std::string main = pb::FileHelpers::FileToString(outputDir+recordName);
+            std::string main = pb::FileHelpers::FileToString(pb::kFileLocationUser, outputDir+recordName);
             message.WriteString(main.c_str());
             Core::Instance()->GetNetworkManager()->GetClientConnection().Send(message);
         }

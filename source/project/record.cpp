@@ -42,7 +42,7 @@ Record::~Record()
     
 bool Record::Open(const std::string& filename)
 {
-    std::string file = pb::FileHelpers::FileToString(filename.c_str());
+    std::string file = pb::FileHelpers::FileToString(pb::kFileLocationUser, filename.c_str());
     
     json::Object record;
     
