@@ -134,6 +134,7 @@ void FontRenderable::CalculateOffset()
             Offset = -Offset;
             break;
     }
+    
     DirtyWorldMatrix();
 }
 
@@ -277,7 +278,7 @@ Font* FontRenderer::LoadFont(FileLocation location, const std::string& name, boo
         std::vector<std::string> elements;
         SplitString(*line, ' ', elements);
         
-        if (elements.size() < 1 )
+        if (elements.size() < 1)
             continue;
         
         std::map<std::string, std::string> data;

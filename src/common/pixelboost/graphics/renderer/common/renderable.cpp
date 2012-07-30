@@ -77,10 +77,7 @@ void Renderable::SetWorldMatrix(const glm::mat4x4& matrix)
 const glm::mat4x4& Renderable::GetWorldMatrix()
 {
     if (_WorldMatrixDirty)
-    {
         CalculateWorldMatrix();
-        _WorldMatrixDirty = false;
-    }
     
     return _WorldMatrix;
 }
@@ -88,10 +85,7 @@ const glm::mat4x4& Renderable::GetWorldMatrix()
 void Renderable::CalculateMVP(Viewport* viewport)
 {
     if (_WorldMatrixDirty)
-    {
         CalculateWorldMatrix();
-        _WorldMatrixDirty = false;
-    }
     
     _MVPMatrix = viewport->GetCamera()->ViewProjectionMatrix * _WorldMatrix;
 }

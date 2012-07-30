@@ -21,6 +21,8 @@
 #include <map>
 #include <vector>
 
+#include "pixelboost/graphics/device/program.h"
+
 namespace pb
 {
 
@@ -40,6 +42,8 @@ struct DeviceState
     GLuint boundTexture;
     GLuint boundVertexBuffer;
     GLuint boundProgram;
+    
+    bool shaderAttribute[kShaderAttributeCount];
 };
     
 class GraphicsDeviceGL : public GraphicsDevice

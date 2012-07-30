@@ -19,6 +19,7 @@ enum ShaderAttribute
     kShaderAttributeVertexNormal,
     kShaderAttributeVertexColor,
     kShaderAttributeVertexTexture0,
+    kShaderAttributeCount,
 };
 
 class ShaderProgram

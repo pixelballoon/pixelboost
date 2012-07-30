@@ -7,6 +7,8 @@
 
 #ifdef PIXELBOOST_GRAPHICS_OPENGL
 
+#include "pixelboost/graphics/device/gl/device.h"
+
 namespace pb
 {
 
