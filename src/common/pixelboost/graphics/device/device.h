@@ -105,20 +105,17 @@ private:
 #ifdef PIXELBOOST_PLATFORM_IOS
     #define PIXELBOOST_GRAPHICS_OPENGL
     #define PIXELBOOST_GRAPHICS_OPENGLES2
-    #include "pixelboost/graphics/device/gl/device.h"
 #endif
 
 #ifdef PIXELBOOST_PLATFORM_ANDROID
     #define PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
     #define PIXELBOOST_GRAPHICS_OPENGL
     #define PIXELBOOST_GRAPHICS_OPENGLES2
-    #include "pixelboost/graphics/device/gl/device.h"
 #endif
 
 #ifdef PIXELBOOST_PLATFORM_OSX
     #define PIXELBOOST_GRAPHICS_OPENGL
     #define PIXELBOOST_GRAPHICS_OPENGL2
-    #include "pixelboost/graphics/device/gl/device.h"
 #endif
 
 #endif
