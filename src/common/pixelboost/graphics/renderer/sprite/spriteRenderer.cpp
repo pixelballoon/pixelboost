@@ -19,8 +19,9 @@ using namespace pb;
 SpriteRenderable::SpriteRenderable(Uid entityId)
     : Renderable(entityId)
 {
-    Crop = glm::vec4(0,0,1,1);
-    Tint = glm::vec4(1,1,1,1);
+    _Sprite = 0;
+    _Crop = glm::vec4(0,0,1,1);
+    _Tint = glm::vec4(1,1,1,1);
 }
     
 SpriteRenderable::~SpriteRenderable()
@@ -32,14 +33,14 @@ Uid SpriteRenderable::GetRenderableType()
     return TypeHash("sprite");
 }
 
-void SpriteRenderable::CalculateMVP(Viewport* viewport)
+void SpriteRenderable::CalculateWorldMatrix()
 {
-    if (Sprite)
+    if (_Sprite)
     {
-        _MVPMatrix = glm::translate(glm::mat4x4(), glm::vec3(-Sprite->_Offset, 0));
-        _MVPMatrix = glm::scale(_MVPMatrix, glm::vec3(Sprite->_Size, 1));
-        _MVPMatrix = Transform * _MVPMatrix;
-        _MVPMatrix = viewport->GetCamera()->ViewProjectionMatrix * _MVPMatrix;
+        glm::mat4x4 worldMatrix = glm::translate(glm::mat4x4(), glm::vec3(-_Sprite->_Offset, 0));
+        worldMatrix = glm::scale(worldMatrix, glm::vec3(_Sprite->_Size, 1));
+        worldMatrix = _Transform * worldMatrix;
+        SetWorldMatrix(worldMatrix);
     }
 }
     
@@ -52,34 +53,52 @@ Effect* SpriteRenderable::GetEffect()
     return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/sprite.fx");
 }
 
+Sprite* SpriteRenderable::GetSprite()
+{
+    return _Sprite;
+}
+
+void SpriteRenderable::SetSprite(Sprite* sprite)
+{
+    _Sprite = sprite;
+    DirtyWorldMatrix();
+}
+
+void SpriteRenderable::SetTransform(const glm::mat4x4& transform)
+{
+    _Transform = transform;
+    DirtyWorldMatrix();
+}
+
+void SpriteRenderable::SetTint(glm::vec4 tint)
+{
+    _Tint = tint;
+}
+
+void SpriteRenderable::SetCrop(glm::vec4 crop)
+{
+    _Crop = crop;
+    DirtyWorldMatrix();
+}
+
 SpriteRenderer::SpriteRenderer()
 {
-    _IndexBuffer = pb::GraphicsDevice::Instance()->CreateIndexBuffer(pb::kBufferFormatStatic, 6);
-    _VertexBuffer = pb::GraphicsDevice::Instance()->CreateVertexBuffer(pb::kBufferFormatDynamic, pb::kVertexFormat_P_XYZ_UV, 4);
-    _VertexBuffer->Lock();
-    Vertex_PXYZ_UV* vertices = static_cast<Vertex_PXYZ_UV*>(_VertexBuffer->GetData());
-    vertices[0].position[0] = -0.5;
-    vertices[0].position[1] = -0.5;
-    vertices[0].position[2] = 0;
-    vertices[1].position[0] = -0.5;
-    vertices[1].position[1] = 0.5;
-    vertices[1].position[2] = 0;
-    vertices[2].position[0] = 0.5;
-    vertices[2].position[1] = 0.5;
-    vertices[2].position[2] = 0;
-    vertices[3].position[0] = 0.5;
-    vertices[3].position[1] = -0.5;
-    vertices[3].position[2] = 0;
-    _VertexBuffer->Unlock();
+    _MaxBatchSize = 100;
+    _IndexBuffer = pb::GraphicsDevice::Instance()->CreateIndexBuffer(pb::kBufferFormatStatic, _MaxBatchSize * 6);
+    _VertexBuffer = pb::GraphicsDevice::Instance()->CreateVertexBuffer(pb::kBufferFormatDynamic, pb::kVertexFormat_P_XYZ_RGBA_UV, _MaxBatchSize * 4);
     
     _IndexBuffer->Lock();
     unsigned short* indicies = _IndexBuffer->GetData();
-    indicies[0] = 0;
-    indicies[1] = 1;
-    indicies[2] = 2;
-    indicies[3] = 0;
-    indicies[4] = 2;
-    indicies[5] = 3;
+    for (int i=0; i<_MaxBatchSize; i++)
+    {
+        indicies[0] = (i*4) + 0;
+        indicies[1] = (i*4) + 1;
+        indicies[2] = (i*4) + 2;
+        indicies[3] = (i*4) + 0;
+        indicies[4] = (i*4) + 2;
+        indicies[5] = (i*4) + 3;
+        indicies += 6;
+    }
     _IndexBuffer->Unlock();
     
     Renderer::Instance()->SetHandler(TypeHash("sprite"), this);
@@ -109,29 +128,45 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
     
     GraphicsDevice::Instance()->BindIndexBuffer(_IndexBuffer);
     
-    Vertex_PXYZ_UV* bufferData = 0;
+    Vertex_PXYZ_RGBA_UV* bufferData = 0;
     
     Texture* texture = 0;
     
-    _SpritesRendered = 0;
+    _BatchSize = 0;
+    
+    effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", glm::mat4x4());
+    effectPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
+    
+    GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffer);
+    
+    _VertexBuffer->Lock();
     
     for (int i=0; i<count; i++)
     {
         SpriteRenderable& renderable = *static_cast<SpriteRenderable*>(renderables[i]);
         
-        Sprite* sprite = renderable.Sprite;
+        Sprite* sprite = renderable._Sprite;
         if (!sprite)
             continue;
         
-        texture = sprite->_Sheet->_Texture;
+        if (texture != sprite->_Sheet->_Texture)
+        {
+            RenderBatch();
+            texture = sprite->_Sheet->_Texture;
+            GraphicsDevice::Instance()->BindTexture(texture);
+        }
         
-        _VertexBuffer->Lock();
-        bufferData = static_cast<Vertex_PXYZ_UV*>(_VertexBuffer->GetData());
+        if (_BatchSize == _MaxBatchSize)
+        {
+            RenderBatch();
+        }
+        
+        bufferData = static_cast<Vertex_PXYZ_RGBA_UV*>(_VertexBuffer->GetData()) + (_BatchSize * 4);
         
         if (!sprite->_Rotated)
         {
-            glm::vec2 min = sprite->_UvPosition + glm::vec2(sprite->_UvSize[0] * renderable.Crop[0], sprite->_UvSize[1] * renderable.Crop[1]);
-            glm::vec2 max = sprite->_UvPosition + glm::vec2(sprite->_UvSize[0] * renderable.Crop[2], sprite->_UvSize[1] * renderable.Crop[3]);
+            glm::vec2 min = sprite->_UvPosition + glm::vec2(sprite->_UvSize[0] * renderable._Crop[0], sprite->_UvSize[1] * renderable._Crop[1]);
+            glm::vec2 max = sprite->_UvPosition + glm::vec2(sprite->_UvSize[0] * renderable._Crop[2], sprite->_UvSize[1] * renderable._Crop[3]);
             
             bufferData[0].uv[0] = min[0];
             bufferData[0].uv[1] = max[1];
@@ -142,8 +177,8 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
             bufferData[3].uv[0] = max[0];
             bufferData[3].uv[1] = max[1];
         } else {
-            glm::vec2 min = sprite->_UvPosition + glm::vec2(sprite->_UvSize[1] * renderable.Crop[3], sprite->_UvSize[0] * renderable.Crop[2]);
-            glm::vec2 max = sprite->_UvPosition + glm::vec2(sprite->_UvSize[1] * renderable.Crop[1], sprite->_UvSize[0] * renderable.Crop[0]);
+            glm::vec2 min = sprite->_UvPosition + glm::vec2(sprite->_UvSize[1] * renderable._Crop[3], sprite->_UvSize[0] * renderable._Crop[2]);
+            glm::vec2 max = sprite->_UvPosition + glm::vec2(sprite->_UvSize[1] * renderable._Crop[1], sprite->_UvSize[0] * renderable._Crop[0]);
             
             bufferData[0].uv[0] = max[0];
             bufferData[0].uv[1] = max[1];
@@ -155,17 +190,47 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
             bufferData[3].uv[1] = min[1];
         }
         
-        _VertexBuffer->Unlock();
+        bufferData[0].color[0] = renderable._Tint.r;
+        bufferData[0].color[1] = renderable._Tint.g;
+        bufferData[0].color[2] = renderable._Tint.b;
+        bufferData[0].color[3] = renderable._Tint.a;
+        bufferData[1].color[0] = renderable._Tint.r;
+        bufferData[1].color[1] = renderable._Tint.g;
+        bufferData[1].color[2] = renderable._Tint.b;
+        bufferData[1].color[3] = renderable._Tint.a;
+        bufferData[2].color[0] = renderable._Tint.r;
+        bufferData[2].color[1] = renderable._Tint.g;
+        bufferData[2].color[2] = renderable._Tint.b;
+        bufferData[2].color[3] = renderable._Tint.a;
+        bufferData[3].color[0] = renderable._Tint.r;
+        bufferData[3].color[1] = renderable._Tint.g;
+        bufferData[3].color[2] = renderable._Tint.b;
+        bufferData[3].color[3] = renderable._Tint.a;
         
-        GraphicsDevice::Instance()->BindTexture(texture);
-
-        effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", renderable.GetMVP());
-        effectPass->GetShaderProgram()->SetUniform("diffuseColor", renderable.Tint);
-        effectPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
+        glm::vec4 a = renderable.GetMVP() * glm::vec4(-0.5, -0.5, 0, 1);
+        glm::vec4 b = renderable.GetMVP() * glm::vec4(-0.5, 0.5, 0, 1);
+        glm::vec4 c = renderable.GetMVP() * glm::vec4(0.5, 0.5, 0, 1);
+        glm::vec4 d = renderable.GetMVP() * glm::vec4(0.5, -0.5, 0, 1);
         
-        GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffer);
-        GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, 6);
+        bufferData[0].position[0] = a.x;
+        bufferData[0].position[1] = a.y;
+        bufferData[0].position[2] = a.z;
+        bufferData[1].position[0] = b.x;
+        bufferData[1].position[1] = b.y;
+        bufferData[1].position[2] = b.z;
+        bufferData[2].position[0] = c.x;
+        bufferData[2].position[1] = c.y;
+        bufferData[2].position[2] = c.z;
+        bufferData[3].position[0] = d.x;
+        bufferData[3].position[1] = d.y;
+        bufferData[3].position[2] = d.z;
+        
+        _BatchSize++;
     }
+    
+    RenderBatch();
+    
+    _VertexBuffer->Unlock(0);
     
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, true);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
@@ -174,6 +239,17 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
     GraphicsDevice::Instance()->BindIndexBuffer(0);
     GraphicsDevice::Instance()->BindVertexBuffer(0);
     GraphicsDevice::Instance()->BindTexture(0);
+}
+
+void SpriteRenderer::RenderBatch()
+{
+    if (_BatchSize != 0)
+    {
+        _VertexBuffer->Unlock(_BatchSize * 4);
+        GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, _BatchSize * 6);
+        _BatchSize = 0;
+        _VertexBuffer->Lock();
+    }
 }
     
 std::shared_ptr<SpriteSheet> SpriteRenderer::CreateSpriteSheet(const std::string &name)

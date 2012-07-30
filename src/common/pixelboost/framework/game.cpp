@@ -1,6 +1,7 @@
 #include "pixelboost/audio/soundManager.h"
 #include "pixelboost/debug/debugDatabaseHandler.h"
 #include "pixelboost/debug/debugVariableManager.h"
+#include "pixelboost/file/fileSystem.h"
 #include "pixelboost/framework/game.h"
 #include "pixelboost/framework/screen.h"
 #include "pixelboost/graphics/device/device.h"
@@ -28,9 +29,9 @@ Game::Game(void* viewController)
 {
     _Instance = this;
     
-#ifndef PIXELBOOST_DISABLE_GRAPHICS
-    _TouchManager = new TouchManager();
+    _FileSystem = new FileSystem();
     
+#ifndef PIXELBOOST_DISABLE_GRAPHICS
     _Renderer = new Renderer();
     //_CustomRenderer = new CustomRenderer();
     _ModelRenderer  = new ModelRenderer();
@@ -48,6 +49,7 @@ Game::Game(void* viewController)
 #ifndef PIXELBOOST_DISABLE_INPUT
     _KeyboardManager = new KeyboardManager();
     _MouseManager = new MouseManager();
+    _TouchManager = new TouchManager();
 #endif
     
 #ifndef PIXELBOOST_DISABLE_DEBUG
@@ -61,6 +63,8 @@ Game::~Game()
 {
     _Instance = 0;
     
+    delete _FileSystem;
+    
 #ifndef PIXELBOOST_DISABLE_GAMECENTER
     delete _GameCenter;
 #endif
@@ -73,8 +77,6 @@ Game::~Game()
     delete _PrimitiveRenderer;
     delete _Renderer;
     delete _SpriteRenderer;
-    
-    delete _TouchManager;
 #endif
 }
 

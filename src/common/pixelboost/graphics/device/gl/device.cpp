@@ -1,5 +1,6 @@
 #include "glm/gtc/type_ptr.hpp"
 
+#include "pixelboost/debug/assert.h"
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/indexBuffer.h"
 #include "pixelboost/graphics/device/program.h"
@@ -10,15 +11,12 @@ using namespace pb;
 
 #ifdef PIXELBOOST_GRAPHICS_OPENGL
 
-#ifdef PIXELBOOST_GRAPHICS_OPENGLES2
-#include <OpenGLES/ES2/gl.h>
-#endif
-
-#ifdef PIXELBOOST_GRAPHICS_OPENGL2
-#include <OpenGL/gl.h>
-#endif
-
 DeviceState::DeviceState()
+{
+    Reset();
+}
+
+void DeviceState::Reset()
 {
     boundIndexBuffer = 0;
     boundTexture = 0;
@@ -384,15 +382,56 @@ ShaderProgram* GraphicsDeviceGL::BindProgram(ShaderProgram* program)
     return previousProgram;
 }
 
+void GraphicsDeviceGL::OnContextLost()
+{
+#ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
+    _CurrentState.Reset();
+    
+    _IndexReverseBuffers.clear();
+    _VertexReverseBuffers.clear();
+    
+    for (IndexMap::iterator it = _IndexBuffers.begin(); it != _IndexBuffers.end(); ++it)
+    {
+        GLuint buffer = 0;
+        glGenBuffers(1, &buffer);
+        
+        _IndexBuffers[it->first] = buffer;
+        _IndexReverseBuffers[buffer] = it->first;
+        LockIndexBuffer(it->first);
+        UnlockIndexBuffer(it->first);
+    }
+    
+    for (VertexMap::iterator it = _VertexBuffers.begin(); it != _VertexBuffers.end(); ++it)
+    {
+        GLuint buffer = 0;
+        glGenBuffers(1, &buffer);
+        
+        _VertexBuffers[it->first] = buffer;
+        _VertexReverseBuffers[buffer] = it->first;
+        LockVertexBuffer(it->first);
+        UnlockVertexBuffer(it->first, it->first->GetCurrentSize());
+    }
+    
+    for (TextureList::iterator it = _Textures.begin(); it != _Textures.end(); ++it)
+    {
+        (*it)->OnContextLost();
+    }
+    
+    for (ProgramList::iterator it = _Programs.begin(); it != _Programs.end(); ++it)
+    {
+        (*it)->OnContextLost();
+    }
+#else
+    PbAssert(!"Context loss has not been enabled");
+#endif
+}
+
 void GraphicsDeviceGL::SetState(State state, bool enable)
 {
     GLenum glState;
     
     switch (state)
     {
-        case kStateAlphaTest:
-            glState = GL_ALPHA_TEST;
-            break;
         case kStateBlend:
             glState = GL_BLEND;
             break;

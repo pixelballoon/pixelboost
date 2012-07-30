@@ -4,6 +4,8 @@
 
 namespace pb
 {
+
+class Viewport;
     
 class TouchMessage : public Message
 {

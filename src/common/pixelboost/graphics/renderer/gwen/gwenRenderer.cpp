@@ -45,9 +45,9 @@ Uid GwenRenderable::GetRenderableType()
     return pb::TypeHash("gwen");
 }
 
-void GwenRenderable::CalculateMVP(Viewport* viewport)
+void GwenRenderable::CalculateWorldMatrix()
 {
-    _MVPMatrix = viewport->GetCamera()->ViewProjectionMatrix;
+    SetWorldMatrix(glm::mat4x4());
 }
 
 Effect* GwenRenderable::GetEffect()
@@ -56,7 +56,7 @@ Effect* GwenRenderable::GetEffect()
     if (baseEffect)
         return baseEffect;
     
-    return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/sprite.fx");
+    return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/textured.fx");
 }
 
 GwenRenderer::GwenRenderer()
@@ -108,12 +108,12 @@ GwenRenderer::GwenRenderer()
     
     Renderer::Instance()->SetHandler(TypeHash("gwen"), this);
     
-    Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/sprite.fx");
+    Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/textured.fx");
 }
 
 GwenRenderer::~GwenRenderer()
 {
-    Renderer::Instance()->GetEffectManager()->UnloadEffect("/default/effects/sprite.fx");
+    Renderer::Instance()->GetEffectManager()->UnloadEffect("/default/effects/textured.fx");
 }
     
 void GwenRenderer::Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass)

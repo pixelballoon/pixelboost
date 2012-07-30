@@ -2,23 +2,28 @@
 
 #include <string>
 
+#include "sigslot/signal.h"
+
 #include "pixelboost/db/definitions.h"
 
 namespace pb
 {
     
-class Record;
-    
-class Struct
+class DbStruct
 {
 public:
-    Struct(Uid uid, Uid type, void* _Data);
-    virtual ~Struct();
+    DbStruct(Uid uid, Uid type, void* _Data);
+    virtual ~DbStruct();
     
     Uid GetType() const;
     Uid GetUid() const;
     
     void* GetData() const;
+    template<class T> const T* GetData() const;
+    
+public:
+    sigslot::Signal0<> structDestroyed;
+    sigslot::Signal0<> structReloaded;
     
 public:
     Uid _Uid;
@@ -28,3 +33,5 @@ public:
 };
     
 }
+
+#include "pixelboost/db/struct.inl"

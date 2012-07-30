@@ -20,9 +20,9 @@ public:
 private:
     glm::vec3 GetPosition();
     
-    virtual void OnTouchBegin(Touch* touch);
-	virtual void OnTouchUpdate(Touch* touch);
-	virtual void OnTouchEnd(Touch* touch);
+    virtual bool OnTouchDown(Touch touch);
+	virtual bool OnTouchMove(Touch touch);
+	virtual bool OnTouchUp(Touch touch);
     
     glm::vec2 _Size;
 };

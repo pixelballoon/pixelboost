@@ -8,13 +8,10 @@
 namespace pb
 {
     
-namespace db
-{
+class DbEntity;
+class DbRecord;
     
-class Entity;
-class Record;
-    
-class RecordHandle
+class DbRecordHandle
 {
 public:
     bool IsResolved();
@@ -22,23 +19,24 @@ public:
     std::string name;
     Uid uid;
     
-    Record* record;
+    DbRecord* record;
 };
     
-class Record : public Struct
+class DbRecord : public DbStruct
 {
 public:
-    Record(Uid uid, Uid type, void* data);
-    virtual ~Record();
+    DbRecord(Uid uid, Uid type, void* data);
+    virtual ~DbRecord();
     
-    void AddEntity(Entity* entity);    
-    void AddPointer(Uid pointer, void** destination);
+    void AddEntity(DbEntity* entity);
+    DbEntity* RemoveEntity(Uid entityId);
+    void AddPointer(Uid uid, void** pointer);
     
 public:
-    typedef std::map<Uid, Entity*> EntityMap;
+    typedef std::map<Uid, DbEntity*> EntityMap;
     
     const EntityMap& GetEntities() const;
-    const Entity* GetEntity(Uid uid);
+    const DbEntity* GetEntity(Uid uid);
     
 private:
     void ResolvePointers();
@@ -60,6 +58,4 @@ private:
     friend class Database;
 };
     
-}
-
 }

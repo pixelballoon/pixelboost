@@ -5,7 +5,7 @@
 
 #include <vector>
 
-#include "pixelboost/file/fileHelpers.h"
+#include "pixelboost/file/fileSystem.h"
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/device/device.h"
@@ -37,9 +37,9 @@ Uid ModelRenderable::GetRenderableType()
     return TypeHash("model");
 }
 
-void ModelRenderable::CalculateMVP(Viewport* viewport)
+void ModelRenderable::CalculateWorldMatrix()
 {
-    _MVPMatrix = viewport->GetCamera()->ViewProjectionMatrix * _Transform;
+    SetWorldMatrix(_Transform);
 }
 
 Effect* ModelRenderable::GetEffect()
@@ -48,7 +48,7 @@ Effect* ModelRenderable::GetEffect()
     if (baseEffect)
         return baseEffect;
     
-    return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/sprite.fx");
+    return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/textured.fx");
 }
 
 void ModelRenderable::SetModel(const std::string& model)
@@ -84,6 +84,7 @@ const glm::vec4& ModelRenderable::GetTint()
 void ModelRenderable::SetTransform(const glm::mat4x4& transform)
 {
     _Transform = transform;
+    DirtyWorldMatrix();
 }
 
 const glm::mat4x4& ModelRenderable::GetTransform()
@@ -107,10 +108,18 @@ bool Model::Load(const std::string& fileName)
 {
     std::string objFilename = fileName;
     
-    FILE* file = fopen(objFilename.c_str(), "r");
-    
+    pb::File* file = pb::FileSystem::Instance()->OpenFile(pb::kFileLocationBundle, "");
+                                                          
     if (!file)
         return false;
+    
+    std::string model;
+    
+    if (!file->ReadAll(model))
+    {
+        delete file;
+        return false;
+    }
     
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec2> uvs;
@@ -128,12 +137,13 @@ bool Model::Load(const std::string& fileName)
     
     ReadMode readMode;
     
-    char lineChars[1024];
-    while (!feof(file))
+    std::vector<std::string> lines;
+    
+    SplitString(model, '\n', lines);
+    
+    for (std::vector<std::string>::iterator it = lines.begin(); it != lines.end(); ++it)
     {
-        fgets(lineChars, 1024, file);
-        
-        std::string line = lineChars;
+        std::string line = *it;
         
         std::vector<std::string> command = SplitLine(line);
         
@@ -189,7 +199,7 @@ bool Model::Load(const std::string& fileName)
         }
     }
 
-    fclose(file);
+    delete file;
     
     _NumVertices = verts.size();
 
@@ -276,12 +286,12 @@ ModelRenderer::ModelRenderer()
 {
     Renderer::Instance()->SetHandler(TypeHash("model"), this);
     
-    Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/sprite.fx");
+    Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/textured.fx");
 }
 
 ModelRenderer::~ModelRenderer()
 {
-    Renderer::Instance()->GetEffectManager()->UnloadEffect("/default/effects/sprite.fx");
+    Renderer::Instance()->GetEffectManager()->UnloadEffect("/default/effects/textured.fx");
     
     for (ModelMap::iterator it = _Models.begin(); it != _Models.end(); ++it)
     {
@@ -296,7 +306,6 @@ ModelRenderer::~ModelRenderer()
 
 void ModelRenderer::Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass)
 {
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateAlphaTest, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, true);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);

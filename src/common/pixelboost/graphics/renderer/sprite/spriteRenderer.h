@@ -27,14 +27,24 @@ public:
     
     virtual Uid GetRenderableType();
     
-    virtual void CalculateMVP(Viewport* viewport);
+    virtual void CalculateWorldMatrix();
     
     virtual Effect* GetEffect();
     
-    Sprite* Sprite;
-    glm::mat4x4 Transform;
-    glm::vec4 Tint;
-    glm::vec4 Crop;
+    Sprite* GetSprite();
+    void SetSprite(Sprite* sprite);
+    
+    void SetTransform(const glm::mat4x4& transform);
+    void SetTint(glm::vec4 tint);
+    void SetCrop(glm::vec4 crop);
+    
+private:
+    pb::Sprite* _Sprite;
+    glm::mat4x4 _Transform;
+    glm::vec4 _Tint;
+    glm::vec4 _Crop;
+    
+    friend class SpriteRenderer;
 };
 
 class SpriteRenderer : public IRenderer
@@ -53,6 +63,8 @@ public:
     Sprite* GetSprite(const std::string& spriteName) const;
 		
 private:
+    void RenderBatch();
+    
     typedef std::map<std::string, Sprite*> SpriteMap;
     typedef std::map<std::string, std::shared_ptr<SpriteSheet> > SheetMap;
 	
@@ -60,10 +72,10 @@ private:
 	SheetMap _SpriteSheets;
     
 private:
+    int _MaxBatchSize;
+    int _BatchSize;
     IndexBuffer* _IndexBuffer;
     VertexBuffer* _VertexBuffer;
-    
-    int _SpritesRendered;
     
     friend class SpriteSheet;
 };

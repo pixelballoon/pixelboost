@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include <cstdlib>
+
 namespace polydecomp
 {
 

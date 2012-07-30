@@ -8,12 +8,12 @@
 			},
 			"shaders" : {
 				"gles2" : {
-					"fragment" : "default/shaders/gles2/texturedAlpha.fsh",
-					"vertex" : "default/shaders/gles2/texturedAlpha.vsh"
+					"fragment" : "default/shaders/gles2/texturedColor.fsh",
+					"vertex" : "default/shaders/gles2/texturedColor.vsh"
 				},
 				"gl2" : {
-					"fragment" : "default/shaders/gl2/texturedAlpha.fsh",
-					"vertex" : "default/shaders/gl2/texturedAlpha.vsh"
+					"fragment" : "default/shaders/gl2/texturedColor.fsh",
+					"vertex" : "default/shaders/gl2/texturedColor.vsh"
 				}
 			}
 		}

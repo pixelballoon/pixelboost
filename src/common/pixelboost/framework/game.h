@@ -9,6 +9,7 @@ namespace pb
 
 class CustomRenderer;
 class DebugDatabaseHandler;
+class FileSystem;
 class FontRenderer;
 class GameCenter;
 class GraphicsDevice;
@@ -63,6 +64,8 @@ public:
 	
 private:
 	static Game* _Instance;
+    
+    FileSystem* _FileSystem;
 
     CustomRenderer* _CustomRenderer;
     FontRenderer* _FontRenderer;

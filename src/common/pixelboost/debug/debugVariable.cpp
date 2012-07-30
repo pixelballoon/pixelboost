@@ -197,10 +197,10 @@ void DebugFloat::Reset()
     
 DebugColor::DebugColor(const char* name, float r, float g, float b, float a)
     : DebugVariable(name)
-    , _R(r)
-    , _G(g)
-    , _B(b)
-    , _A(a)
+    , _ValueR(r)
+    , _ValueG(g)
+    , _ValueB(b)
+    , _ValueA(a)
     , _OriginalR(r)
     , _OriginalG(g)
     , _OriginalB(b)
@@ -216,68 +216,68 @@ DebugVariable::VariableType DebugColor::GetVariableType()
 
 float DebugColor::R()
 {
-    return _R;
+    return _ValueR;
 }
     
 float DebugColor::G()
 {
-    return _G;
+    return _ValueG;
 }
     
 float DebugColor::B()
 {
-    return _B;
+    return _ValueB;
 }
     
 float DebugColor::A()
 {
-    return _A;
+    return _ValueA;
 }
     
 void DebugColor::SetColor(float r, float g, float b, float a)
 {
-    _R = r;
-    _G = g;
-    _B = b;
-    _A = a;
+    _ValueR = r;
+    _ValueG = g;
+    _ValueB = b;
+    _ValueA = a;
     OnVariableChanged();
 }
 
 void DebugColor::R(float r)
 {
-    _R = r;
+    _ValueR = r;
     OnVariableChanged();
 }
     
 void DebugColor::G(float g)
 {
-    _G = g;
+    _ValueG = g;
     OnVariableChanged();
 }
     
 void DebugColor::B(float b)
 {
-    _B = b;
+    _ValueB = b;
     OnVariableChanged();
 }
     
 void DebugColor::A(float a)
 {
-    _A = a;
+    _ValueA = a;
     OnVariableChanged();
 }
     
 bool DebugColor::HasVariableChanged()
 {
-    return _OriginalR != _R || _OriginalG != _G || _OriginalB != _B || _OriginalA != _A;
+    return _OriginalR != _ValueR || _OriginalG != _ValueG || _OriginalB != _ValueB || _OriginalA != _ValueA;
 }
     
 void DebugColor::Reset()
 {
-    _R = _OriginalR;
-    _G = _OriginalG;
-    _B = _OriginalB;
-    _A = _OriginalA;
+    _ValueR = _OriginalR;
+    _ValueG = _OriginalG;
+    _ValueB = _OriginalB;
+    _ValueA = _OriginalA;
 }
     
 DebugFunction::DebugFunction(const char* name, void(*callback)(void*))

@@ -24,11 +24,13 @@ StaticBody2DComponent::StaticBody2DComponent(Entity* parent, b2World* world, Bod
     
     b2FixtureDef fixtureDef;
     
+    b2CircleShape circle;
+    b2PolygonShape rect;
+    
     switch (type)
     {
         case kBodyTypeCircle:
         {
-            b2CircleShape circle;
             circle.m_radius = size.x;
             fixtureDef.shape = &circle;
             break;
@@ -36,7 +38,6 @@ StaticBody2DComponent::StaticBody2DComponent(Entity* parent, b2World* world, Bod
             
         case kBodyTypeRect:
         {
-            b2PolygonShape rect;
             rect.SetAsBox(size.x, size.y);
             fixtureDef.shape = &rect;
             break;

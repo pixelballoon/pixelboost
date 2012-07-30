@@ -4,7 +4,7 @@
 #include "pixelboost/external/lua/lua.hpp"
 #include "pixelboost/file/fileHelpers.h"
 
-using namespace pb::db;
+using namespace pb;
 
 Database* Database::_Instance = 0;
 
@@ -48,9 +48,11 @@ void Database::SetLocation(const std::string& location)
 
 void Database::OpenDatabase()
 {
-    std::string filename = GetRoot() + "main.lua";
+    std::string filename = _DatabaseRoot + "main.lua";
     
-    if (luaL_loadfile(_State, filename.c_str()) || lua_pcall(_State, 0, 0, 0))
+    std::string contents = pb::FileHelpers::FileToString(GetLocation(), filename);
+    
+    if (luaL_loadstring(_State, contents.c_str()) || lua_pcall(_State, 0, 0, 0))
     {
         printf("Can't open file: %s", lua_tostring(_State, -1));
         return;
@@ -67,7 +69,7 @@ void Database::OpenDatabase()
         lua_pop(_State, 1);
         for (int i=1; i<=n; i++)
         {
-            RecordDescription record;
+            DbRecordDescription record;
             
             lua_rawgeti(_State, -1, i);
             if (!lua_istable(_State, -1))
@@ -78,7 +80,7 @@ void Database::OpenDatabase()
             lua_pop(_State, 1);
             
             lua_getfield(_State, -1, "uid");
-            record.Uid = lua_tonumber(_State, -1);
+            record.Id = lua_tonumber(_State, -1);
             lua_pop(_State, 1);
             
             lua_getfield(_State, -1, "name");
@@ -91,7 +93,7 @@ void Database::OpenDatabase()
     }
 }
 
-Record* Database::OpenRecord(Uid recordId)
+DbRecord* Database::OpenRecord(Uid recordId)
 {
     RecordMap::iterator recordIt = _Records.find(recordId);
     
@@ -101,9 +103,11 @@ Record* Database::OpenRecord(Uid recordId)
 #endif
 
     char filename[1024];
-    sprintf(filename, "%srecords/%X.lua", GetRoot().c_str(), recordId);
+    sprintf(filename, "%srecords/%X.lua", _DatabaseRoot.c_str(), recordId);
     
-    if (luaL_loadfile(_State, filename) || lua_pcall(_State, 0, 0, 0))
+    std::string contents = pb::FileHelpers::FileToString(GetLocation(), filename);
+    
+    if (luaL_loadstring(_State, contents.c_str()) || lua_pcall(_State, 0, 0, 0))
     {
         printf("Can't open file: %s\n", lua_tostring(_State, -1));
         return 0;
@@ -138,7 +142,7 @@ Record* Database::OpenRecord(Uid recordId)
     
     void* recordData;
     
-    Record* record;
+    DbRecord* record;
     
     if (recordIt != _Records.end())
     {
@@ -150,11 +154,13 @@ Record* Database::OpenRecord(Uid recordId)
     {
         recordData = Create(recordType);
         Deserialise(recordType, recordData);
-        record = new Record(recordId, recordType, recordData);
+        record = new DbRecord(recordId, recordType, recordData);
         _Records[recordId] = record;
     }
     
     lua_pop(_State, 1);
+    
+    DbRecord::EntityMap currentEntities = record->_Entities;
     
     lua_getfield(_State, -1, "entities");
     
@@ -198,9 +204,11 @@ Record* Database::OpenRecord(Uid recordId)
             type = lua_tonumber(_State, -1);
             lua_pop(_State, 1);
             
-            Record::EntityMap::iterator entityIt = record->_Entities.find(uid);
+            currentEntities.erase(uid);
             
-            Entity* entity;
+            DbRecord::EntityMap::iterator entityIt = record->_Entities.find(uid);
+            
+            DbEntity* entity;
             
             if (entityIt != record->_Entities.end())
             {
@@ -220,6 +228,8 @@ Record* Database::OpenRecord(Uid recordId)
                 lua_pop(_State, 1);
                 
                 entity->Load();
+                
+                entity->structReloaded();
             } else {
                 lua_getfield(_State, -1, "properties");
                 
@@ -236,7 +246,7 @@ Record* Database::OpenRecord(Uid recordId)
                 
                 if (entityData)
                 {
-                    entity = new Entity(uid, type, entityData);
+                    entity = new DbEntity(uid, type, entityData);
                     entity->Load();
                     record->AddEntity(entity);
                 } else {
@@ -248,9 +258,31 @@ Record* Database::OpenRecord(Uid recordId)
         }
     }
     
+    for (DbRecord::EntityMap::iterator it = currentEntities.begin(); it != currentEntities.end(); ++it)
+    {
+        record->RemoveEntity(it->second->GetUid());
+        delete it->second;
+    }
+    
     lua_pop(_State, 1);
     
     return record;
+}
+
+bool Database::CloseRecord(Uid recordId)
+{
+    RecordMap::iterator it = _Records.find(recordId);
+    
+    if (it == _Records.end())
+        return false;
+    
+    DbRecord* record = it->second;
+    
+    _Records.erase(it);
+    
+    delete record;
+    
+    return true;
 }
 
 void* Database::Create(Uid type)
@@ -283,7 +315,7 @@ const Database::RecordMap& Database::GetRecords() const
     return _Records;
 }
 
-const Record* Database::GetRecord(Uid uid) const
+const DbRecord* Database::GetRecord(Uid uid) const
 {
     RecordMap::const_iterator it = _Records.find(uid);
     
@@ -293,17 +325,17 @@ const Record* Database::GetRecord(Uid uid) const
     return it->second;
 }
 
-std::string Database::GetRoot()
+FileLocation Database::GetLocation()
 {
 #ifndef PIXELBOOST_DISABLE_DEBUG
     int bundleDatabase = FileHelpers::GetTimestamp(FileHelpers::GetRootPath() + _DatabaseRoot + "main.lua");
     int userDatabase = FileHelpers::GetTimestamp(FileHelpers::GetUserPath() + _DatabaseRoot + "main.lua");
     
     if (bundleDatabase >= userDatabase)
-        return FileHelpers::GetRootPath() + _DatabaseRoot;
+        return kFileLocationBundle;
     else
-        return FileHelpers::GetUserPath() + _DatabaseRoot;
+        return kFileLocationUser;
 #else
-    return FileHelpers::GetRootPath() + _DatabaseRoot;
+    return kFileLocationBundle;
 #endif
 }

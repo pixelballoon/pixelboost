@@ -3,6 +3,7 @@
 #include <sys/socket.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <stdio.h>
 
 #include "pixelboost/network/networkMessage.h"
 #include "pixelboost/network/networkServer.h"

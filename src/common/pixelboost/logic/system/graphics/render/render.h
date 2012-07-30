@@ -13,8 +13,8 @@ public:
     virtual Uid GetType();
     static Uid GetStaticType();
     
-    virtual void AddItem(Renderable* renderable) = 0;
-    virtual void RemoveItem(Renderable* renderable) = 0;
+    virtual void AddItem(Renderable* renderable);
+    virtual void RemoveItem(Renderable* renderable);
 
 protected:
     void RenderItem(Renderable* renderable);

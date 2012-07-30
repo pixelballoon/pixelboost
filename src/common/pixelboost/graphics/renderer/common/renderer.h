@@ -37,6 +37,10 @@ public:
     void AddViewport(Viewport* viewport);
     void RemoveViewport(Viewport* viewport);
     
+public:
+    typedef std::vector<Viewport*> ViewportList;
+    const ViewportList& GetViewports();
+    
     void SetHandler(int renderableType, IRenderer* renderer);
     
 private:
@@ -47,7 +51,6 @@ private:
     
 private:
     typedef std::map<int, IRenderer*> RenderableHandlerMap;
-    typedef std::vector<Viewport*> ViewportList;
     typedef std::vector<Renderable*> RenderableList;
     typedef std::map<int, RenderableList> LayerRenderableMap;
     

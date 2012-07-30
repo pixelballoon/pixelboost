@@ -5,12 +5,17 @@
 #ifdef PIXELBOOST_GRAPHICS_OPENGL
 
 #ifdef PIXELBOOST_GRAPHICS_OPENGLES2
-#include <OpenGLES/ES2/gl.h>
-#include <OpenGLES/ES2/glext.h>
+    #ifdef PIXELBOOST_PLATFORM_ANDROID
+        #include <GLES2/gl2.h>
+        #include <GLES2/gl2ext.h>
+    #else
+        #include <OpenGLES/ES2/gl.h>
+        #include <OpenGLES/ES2/glext.h>
+    #endif
 #endif
 
 #ifdef PIXELBOOST_GRAPHICS_OPENGL2
-#include <OpenGL/gl.h>
+    #include <OpenGL/gl.h>
 #endif
 
 #include <map>
@@ -28,6 +33,8 @@ class VertexBuffer;
 struct DeviceState
 {
     DeviceState();
+    
+    void Reset();
     
     GLuint boundIndexBuffer;
     GLuint boundTexture;
@@ -69,6 +76,9 @@ public:
     virtual void DestroyProgram(ShaderProgram* program);
     virtual ShaderProgram* GetBoundProgram();
     virtual ShaderProgram* BindProgram(ShaderProgram* program);
+    
+public:
+    virtual void OnContextLost();
     
     virtual void SetState(State state, bool enable);
     virtual void SetBlendMode(Blend source, Blend destination);

@@ -1,3 +1,4 @@
+#include "pixelboost/db/entity.h"
 #include "pixelboost/logic/message/destroy.h"
 #include "pixelboost/logic/component.h"
 #include "pixelboost/logic/entity.h"
@@ -6,28 +7,45 @@
 
 using namespace pb;
 
-Entity::Entity(Scene* scene, Uid uid)
+Entity::Entity(Scene* scene, DbEntity* entity)
     : _NextFreeUid(1)
     , _Scene(scene)
-    , _Uid(uid)
+    , _Uid(0)
     , _State(kEntityCreated)
 {
-    if (_Uid == 0)
+    _CreationUid = 0;
+    _CreationEntity = entity;
+    if (_CreationEntity)
     {
-        _Uid = _Scene->GenerateEntityId();
+        _CreationUid = _CreationEntity->GetUid();
+        _CreationEntity->structDestroyed.Connect(this, &Entity::HandleCreationEntityDestroyed);
+        _CreationEntity->structReloaded.Connect(this, &Entity::OnCreationEntityReloaded);
     }
+    
+    _Uid = _Scene->GenerateEntityId();
     
     _Scene->AddEntity(this);
 }
 
 Entity::~Entity()
 {
+    if (_CreationEntity)
+    {
+        _CreationEntity->structDestroyed.Disconnect(this, &Entity::OnCreationEntityDestroyed);
+        _CreationEntity->structReloaded.Disconnect(this, &Entity::OnCreationEntityReloaded);
+    }
+    
     DestroyAllComponents();
 }
 
 Scene* Entity::GetScene()
 {
     return _Scene;
+}
+
+Uid Entity::GetCreationUid()
+{
+    return _Uid;
 }
 
 Uid Entity::GetUid()
@@ -136,4 +154,26 @@ void Entity::HandleMessage(const Message& message)
     
     if (message.GetType() == DestroyMessage::GetStaticType())
         Destroy();
+}
+
+void Entity::OnCreationEntityDestroyed()
+{
+    
+}
+
+void Entity::OnCreationEntityReloaded()
+{
+    
+}
+
+void Entity::HandleCreationEntityDestroyed()
+{    
+    _CreationEntity = 0;
+    
+    OnCreationEntityDestroyed();
+}
+
+void Entity::HandleCreationEntityReloaded()
+{
+    OnCreationEntityReloaded();
 }

@@ -10,10 +10,11 @@ namespace pb
         BoundingBox();
         BoundingBox(glm::vec3 min, glm::vec3 max);
         
+        bool IsValid();
+        void Invalidate();
+        
         glm::vec3 GetCenter();
         glm::vec3 GetSize();
-        
-        void Invalidate();
         
         void Expand(glm::vec3 point);
         void Expand(const BoundingBox& box);

@@ -44,7 +44,7 @@ bool SpriteSheet::LoadSingle(const std::string& fileName, bool generateMips)
     Sprite* sprite = new Sprite();
     sprite->_Sheet = this;
     sprite->_Rotated = false;
-    sprite->_Size = _Texture->GetSize() / ScreenHelpers::GetDpu();
+    sprite->_Size = _Texture->GetSize() / GraphicsDevice::Instance()->GetDisplayDensity();
     sprite->_UvPosition = glm::vec2(0,0);
     sprite->_UvSize = glm::vec2(1,1);
     sprite->_Offset = glm::vec2(0,0);
@@ -57,11 +57,11 @@ bool SpriteSheet::LoadSingle(const std::string& fileName, bool generateMips)
 
 bool SpriteSheet::LoadSheet(const std::string& name, bool generateMips)
 {
-    std::string fileRoot = FileHelpers::GetRootPath();
+    std::string jsonFilename = "/data/spritesheets/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".json";
     
-    std::string jsonFilename = fileRoot + "/data/spritesheets/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".json";
+    float sheetDensity = ScreenHelpers::IsHighResolution() ? 32.f : 16.f;
     
-    std::string rootData = FileHelpers::FileToString(jsonFilename);
+    std::string rootData = FileHelpers::FileToString(pb::kFileLocationBundle, jsonFilename);
     
     json::Object root;
     
@@ -102,8 +102,8 @@ bool SpriteSheet::LoadSheet(const std::string& name, bool generateMips)
         
         sprite->_Sheet = this;
         
-        sprite->_Size = glm::vec2(frameW.Value(), frameH.Value()) / ScreenHelpers::GetDpu();
-        sprite->_Offset = glm::vec2(sourceSizeW.Value()/2.f-spriteSourceSizeX.Value()-spriteSourceSizeW.Value()/2.f, -(sourceSizeH.Value()/2.f-spriteSourceSizeY.Value()-spriteSourceSizeH.Value()/2.f)) / ScreenHelpers::GetDpu();
+        sprite->_Size = glm::vec2(frameW.Value(), frameH.Value()) / sheetDensity;
+        sprite->_Offset = glm::vec2(sourceSizeW.Value()/2.f-spriteSourceSizeX.Value()-spriteSourceSizeW.Value()/2.f, -(sourceSizeH.Value()/2.f-spriteSourceSizeY.Value()-spriteSourceSizeH.Value()/2.f)) / GraphicsDevice::Instance()->GetDisplayDensity();
         
         sprite->_Rotated = rotated.Value();
         
@@ -115,7 +115,7 @@ bool SpriteSheet::LoadSheet(const std::string& name, bool generateMips)
         Game::Instance()->GetSpriteRenderer()->_Sprites[spriteName] = sprite;
     }
     
-    LoadTexture(fileRoot + "/data/spritesheets/images/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".png", generateMips);
+    LoadTexture("/data/spritesheets/images/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".png", generateMips);
     
     return true;
 }

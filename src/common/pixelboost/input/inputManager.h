@@ -2,6 +2,7 @@
 
 #ifndef PIXELBOOST_DISABLE_INPUT
 
+#include <map>
 #include <vector>
 
 #include "pixelboost/input/inputManager.h"
@@ -17,8 +18,6 @@ namespace pb
         virtual int GetPriority();
         
     private:
-        bool _Enabled;
-        
         friend class InputManager;
     };
     
@@ -37,7 +36,11 @@ namespace pb
         typedef std::vector<InputHandler*> HandlerList;
         
         HandlerList _Handlers;
-        HandlerList _HandlersToAdd;
+        
+    private:
+        typedef std::map<InputHandler*, bool> HandlerMap;
+        HandlerMap _HandlerMap;
+        HandlerMap _HandlersToAdd;
     };
     
 }

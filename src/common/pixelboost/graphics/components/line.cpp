@@ -30,16 +30,16 @@ Uid LineComponent::GetType()
 
 void LineComponent::SetColor(glm::vec4 color)
 {
-    _Renderable->Color = color;
+    _Renderable->SetColor(color);
 }
 
 glm::vec4 LineComponent::GetColor()
 {
-    return _Renderable->Color;
+    return _Renderable->GetColor();
 }
 
 void LineComponent::SetLine(glm::vec3 start, glm::vec3 end)
 {
-    _Renderable->Start = start;
-    _Renderable->End = end;
+    _Renderable->SetStart(start);
+    _Renderable->SetEnd(end);
 }

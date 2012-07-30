@@ -4,22 +4,20 @@
 #include <vector>
 
 #include "pixelboost/db/struct.h"
+#include "pixelboost/file/fileSystem.h"
 
 struct lua_State;
 
 namespace pb
 {
     
-namespace db
-{
-    
-class Record;
+class DbRecord;
 
-struct RecordDescription
+struct DbRecordDescription
 {
     std::string Name;
     Uid Type;
-    Uid Uid;
+    Uid Id;
 };
 
 class Database
@@ -43,21 +41,22 @@ public:
     void SetLocation(const std::string& location);
     void OpenDatabase();
     
-    Record* OpenRecord(Uid recordId);
+    DbRecord* OpenRecord(Uid recordId);
+    bool CloseRecord(Uid recordId);
     
     void* Create(Uid type);
     void Deserialise(Uid type, void* data);
     
 public:
-    typedef std::vector<RecordDescription> RecordDescriptionList;
-    typedef std::map<Uid, Record*> RecordMap;
+    typedef std::vector<DbRecordDescription> RecordDescriptionList;
+    typedef std::map<Uid, DbRecord*> RecordMap;
     
     const RecordDescriptionList& GetRecordDescriptions() const;
     const RecordMap& GetRecords() const;
-    const Record* GetRecord(Uid uid) const;
+    const DbRecord* GetRecord(Uid uid) const;
     
 private:
-    std::string GetRoot();
+    FileLocation GetLocation();
     
     typedef std::map<Uid, CreateStruct> StructCreateMap;
     typedef std::map<Uid, DeserialiseStruct> StructDeserialiseMap;
@@ -75,6 +74,4 @@ private:
     lua_State* _State;
 };
     
-}
-
 }

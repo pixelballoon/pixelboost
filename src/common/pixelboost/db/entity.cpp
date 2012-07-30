@@ -3,20 +3,20 @@
 
 #include "pixelboost/external/lua/lua.hpp"
 
-using namespace pb::db;
+using namespace pb;
     
-Entity::Entity(Uid uid, Uid type, void* data)
-    : Struct(uid, type, data)
+DbEntity::DbEntity(Uid uid, Uid type, void* data)
+    : DbStruct(uid, type, data)
 {
 
 }
     
-Entity::~Entity()
+DbEntity::~DbEntity()
 {
     
 }
 
-void Entity::Load()
+void DbEntity::Load()
 {
     lua_State* state = Database::Instance()->GetLuaState();
     
@@ -46,17 +46,17 @@ void Entity::Load()
     lua_pop(state, 1);
 }
 
-const glm::vec3& Entity::GetPosition() const
+const glm::vec3& DbEntity::GetPosition() const
 {
     return _Position;
 }
 
-const glm::vec3& Entity::GetRotation() const
+const glm::vec3& DbEntity::GetRotation() const
 {
     return _Rotation;
 }
 
-const glm::vec3& Entity::GetScale() const
+const glm::vec3& DbEntity::GetScale() const
 {
     return _Scale;
 }

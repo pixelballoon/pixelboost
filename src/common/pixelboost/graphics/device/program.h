@@ -37,6 +37,8 @@ public:
     virtual void SetUniform(const std::string& name, const glm::vec3& value) = 0;
     virtual void SetUniform(const std::string& name, const glm::vec4& value) = 0;
     virtual void SetUniform(const std::string& name, const glm::mat4x4& value) = 0;
+    
+    virtual void OnContextLost();
 };
     
 }

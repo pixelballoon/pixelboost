@@ -1,5 +1,6 @@
 #ifndef PIXELBOOST_DISABLE_GRAPHICS
 
+#include "pixelboost/debug/assert.h"
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/indexBuffer.h"
 #include "pixelboost/graphics/device/program.h"
@@ -99,6 +100,11 @@ void GraphicsDevice::DestroyTexture(Texture* texture)
 void GraphicsDevice::DestroyProgram(ShaderProgram* program)
 {
     delete program;
+}
+
+void GraphicsDevice::OnContextLost()
+{
+    PbAssert(!"This device does not support the loss of the graphics context");
 }
 
 #endif

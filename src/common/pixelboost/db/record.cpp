@@ -1,9 +1,9 @@
 #include "pixelboost/db/entity.h"
 #include "pixelboost/db/record.h"
 
-using namespace pb::db;
+using namespace pb;
     
-bool RecordHandle::IsResolved()
+bool DbRecordHandle::IsResolved()
 {
     if (record || !uid)
         return true;
@@ -11,23 +11,23 @@ bool RecordHandle::IsResolved()
     return false;
 }
     
-Record::Record(Uid uid, Uid type, void* data)
-    : Struct(uid, type, data)
+DbRecord::DbRecord(Uid uid, Uid type, void* data)
+    : DbStruct(uid, type, data)
 {
     
 }
     
-Record::~Record()
+DbRecord::~DbRecord()
 {
     
 }
     
-const Record::EntityMap& Record::GetEntities() const
+const DbRecord::EntityMap& DbRecord::GetEntities() const
 {
     return _Entities;
 }
 
-const Entity* Record::GetEntity(Uid uid)
+const DbEntity* DbRecord::GetEntity(Uid uid)
 {
     EntityMap::iterator it = _Entities.find(uid);
     
@@ -37,12 +37,26 @@ const Entity* Record::GetEntity(Uid uid)
     return 0;
 }
     
-void Record::AddEntity(Entity* entity)
+void DbRecord::AddEntity(DbEntity* entity)
 {
     _Entities[entity->GetUid()] = entity;
 }
+
+DbEntity* DbRecord::RemoveEntity(Uid entityId)
+{
+    EntityMap::iterator it = _Entities.find(entityId);
     
-void Record::AddPointer(Uid uid, void** pointer)
+    if (it == _Entities.end())
+        return 0;
+    
+    DbEntity* entity = it->second;
+    
+    _Entities.erase(it);
+    
+    return entity;
+}
+    
+void DbRecord::AddPointer(Uid uid, void** pointer)
 {
     EntityPointer ptr;
     ptr.uid = uid;
@@ -51,7 +65,7 @@ void Record::AddPointer(Uid uid, void** pointer)
     _Pointers.push_back(ptr);
 }
     
-void Record::ResolvePointers()
+void DbRecord::ResolvePointers()
 {
     for (PointerList::iterator it = _Pointers.begin(); it != _Pointers.end(); ++it)
     {

@@ -15,7 +15,7 @@ SpriteComponent::SpriteComponent(Entity* parent, const std::string& sprite)
     : Component(parent)
 {
     _Renderable = new SpriteRenderable(parent->GetUid());
-    _Renderable->Sprite = pb::Game::Instance()->GetSpriteRenderer()->GetSprite(sprite);
+    _Renderable->SetSprite(pb::Game::Instance()->GetSpriteRenderer()->GetSprite(sprite));
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
     
@@ -45,8 +45,8 @@ Uid SpriteComponent::GetStaticType()
 
 glm::vec2 SpriteComponent::GetSize()
 {
-    if (_Renderable->Sprite)
-        return _Renderable->Sprite->_Size;
+    if (_Renderable->GetSprite())
+        return _Renderable->GetSprite()->_Size;
     
     return glm::vec2(0,0);
 }
@@ -58,12 +58,12 @@ void SpriteComponent::SetLayer(int layer)
 
 void SpriteComponent::SetSprite(const std::string& sprite)
 {
-    _Renderable->Sprite = pb::Game::Instance()->GetSpriteRenderer()->GetSprite(sprite);
+    _Renderable->SetSprite(pb::Game::Instance()->GetSpriteRenderer()->GetSprite(sprite));
 }
 
 void SpriteComponent::SetTint(const glm::vec4& tint)
 {
-    _Renderable->Tint = tint;
+    _Renderable->SetTint(tint);
 }
 
 void SpriteComponent::SetLocalTransform(const glm::mat4x4& transform)
@@ -84,6 +84,6 @@ void SpriteComponent::UpdateTransform()
     
     if (transform)
     {
-        _Renderable->Transform = transform->GetMatrix() * _LocalTransform;
+        _Renderable->SetTransform(transform->GetMatrix() * _LocalTransform);
     }
 }

@@ -21,15 +21,21 @@ public:
         kTextureFormatRGBA,
     };
     
-    virtual void LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format) = 0;
+    virtual void LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format);
     virtual void LoadFromPng(const std::string& image, bool createMips);
     
     const glm::vec2& GetSize();
+
+    void OnContextLost();
     
 protected:
     virtual void Bind(int unit = 0) = 0;
     
 protected:
+    TextureFormat _DataFormat;
+    unsigned char* _Data;
+    bool _DataCreateMips;
+    
     glm::vec2 _Size;
     
     friend class GraphicsDevice;

@@ -211,10 +211,10 @@ void DebugVariableManager::OnSetVariable(HttpConnection& connection, DebugVariab
         case DebugVariable::kVariableTypeColor:
         {
             DebugColor* color = static_cast<DebugColor*>(variable);
-            color->_R = static_cast<json::Number>(params["value"]["r"]).Value();
-            color->_G = static_cast<json::Number>(params["value"]["g"]).Value();
-            color->_B = static_cast<json::Number>(params["value"]["b"]).Value();
-            color->_A = static_cast<json::Number>(params["value"]["a"]).Value();
+            color->_ValueR = static_cast<json::Number>(params["value"]["r"]).Value();
+            color->_ValueG = static_cast<json::Number>(params["value"]["g"]).Value();
+            color->_ValueB = static_cast<json::Number>(params["value"]["b"]).Value();
+            color->_ValueA = static_cast<json::Number>(params["value"]["a"]).Value();
             break;
         }
             
@@ -307,10 +307,10 @@ void DebugVariableManager::PopulateVariable(DebugVariable* variable, json::Objec
             original["a"] = json::Number(debugVariable->_OriginalA);
             o["originalValue"] = original;
             json::Object value;
-            value["r"] = json::Number(debugVariable->_R);
-            value["g"] = json::Number(debugVariable->_G);
-            value["b"] = json::Number(debugVariable->_B);
-            value["a"] = json::Number(debugVariable->_A);
+            value["r"] = json::Number(debugVariable->_ValueR);
+            value["g"] = json::Number(debugVariable->_ValueG);
+            value["b"] = json::Number(debugVariable->_ValueB);
+            value["a"] = json::Number(debugVariable->_ValueA);
             o["value"] = value;
             break;
         }

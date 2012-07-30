@@ -37,12 +37,12 @@ Uid FontRenderable::GetRenderableType()
     return TypeHash("font");
 }
 
-void FontRenderable::CalculateMVP(Viewport* viewport)
+void FontRenderable::CalculateWorldMatrix()
 {
-    _MVPMatrix = glm::scale(glm::mat4x4(), glm::vec3(Size, Size, 1));
-    _MVPMatrix = glm::translate(_MVPMatrix, glm::vec3(Offset, 0, 0));
-    _MVPMatrix = Transform * _MVPMatrix;
-    _MVPMatrix = viewport->GetCamera()->ViewProjectionMatrix * _MVPMatrix;
+    glm::mat4x4 worldMatrix = glm::scale(glm::mat4x4(), glm::vec3(Size, Size, 1));
+    worldMatrix = glm::translate(worldMatrix, glm::vec3(Offset, 0, 0));
+    worldMatrix = Transform * worldMatrix;
+    SetWorldMatrix(worldMatrix);
 }
 
 Effect* FontRenderable::GetEffect()
@@ -51,7 +51,7 @@ Effect* FontRenderable::GetEffect()
     if (baseEffect)
         return baseEffect;
     
-    return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/sprite.fx");
+    return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/textured.fx");
 }
 
 void FontRenderable::SetFont(const std::string& font)
@@ -100,6 +100,7 @@ float FontRenderable::GetSize()
 void FontRenderable::SetTransform(const glm::mat4x4& transform)
 {
     Transform = transform;
+    DirtyWorldMatrix();
 }
 
 const glm::mat4x4& FontRenderable::GetTransform()
@@ -133,6 +134,7 @@ void FontRenderable::CalculateOffset()
             Offset = -Offset;
             break;
     }
+    DirtyWorldMatrix();
 }
 
 glm::vec2 Font::FillVertexBuffer(VertexBuffer* vertexBuffer, const std::string& string)
@@ -234,12 +236,12 @@ FontRenderer::FontRenderer(int maxCharacters)
     
     Renderer::Instance()->SetHandler(TypeHash("font"), this);
     
-    Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/sprite.fx");
+    Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/textured.fx");
 }
 
 FontRenderer::~FontRenderer()
 {
-    Renderer::Instance()->GetEffectManager()->UnloadEffect("/default/effects/sprite.fx");
+    Renderer::Instance()->GetEffectManager()->UnloadEffect("/default/effects/textured.fx");
     
     GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
     GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
@@ -261,11 +263,9 @@ Font* FontRenderer::LoadFont(const std::string& name, bool createMips)
     
     font->texture = 0;
     
-    std::string fileRoot = FileHelpers::GetRootPath();
+    std::string fntFilename = "/data/fonts/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".fnt";
     
-    std::string fntFilename = fileRoot + "/data/fonts/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".fnt";
-    
-    std::string fontContents = FileHelpers::FileToString(fntFilename);
+    std::string fontContents = FileHelpers::FileToString(pb::kFileLocationBundle, fntFilename);
     
     std::vector<std::string> lines;
     SplitString(fontContents, '\n', lines);
@@ -305,7 +305,7 @@ Font* FontRenderer::LoadFont(const std::string& name, bool createMips)
             texSize = glm::vec2(scaleW, scaleH);
         } else if (elementType == "page")
         {
-            std::string texFilename = fileRoot + "/data/fonts/" + data["file"].substr(1, data["file"].find('"', 1)-1);
+            std::string texFilename = "/data/fonts/" + data["file"].substr(1, data["file"].find('"', 1)-1);
             font->texture = GraphicsDevice::Instance()->CreateTexture();
             font->texture->LoadFromPng(texFilename, createMips);
         } else if (elementType == "char")

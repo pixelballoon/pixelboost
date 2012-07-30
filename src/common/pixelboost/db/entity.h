@@ -9,16 +9,11 @@
 namespace pb
 {
     
-namespace db
-{
-    
-class Record;
-    
-class Entity : public Struct
+class DbEntity : public DbStruct
 {
 public:
-    Entity(Uid uid, Uid type, void* data);
-    virtual ~Entity();
+    DbEntity(Uid uid, Uid type, void* data);
+    virtual ~DbEntity();
     
     void Load();
     
@@ -31,7 +26,5 @@ private:
     glm::vec3 _Rotation;
     glm::vec3 _Scale;
 };
-    
-}
     
 }

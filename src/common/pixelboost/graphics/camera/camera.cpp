@@ -28,6 +28,11 @@ OrthographicCamera::OrthographicCamera(glm::vec3 position, glm::vec3 rotation, g
     
 }
 
+Camera::CameraType OrthographicCamera::GetType()
+{
+    return kCameraOrthographic;
+}
+
 void OrthographicCamera::CalculateTransform(Viewport* viewport)
 {
     glm::vec2 viewportSize = viewport->GetSize() / 2.f;
@@ -41,11 +46,11 @@ glm::vec2 OrthographicCamera::ConvertScreenToWorld(glm::vec2 screen)
 {
     glm::vec2 position = screen;
     
-    position[0] = position[0] - ScreenHelpers::GetScreenResolution()[0]/2;
-    position[1] = ScreenHelpers::GetScreenResolution()[1]/2 - position[1];
+    position[0] = position[0] - GraphicsDevice::Instance()->GetDisplayResolution()[0]/2;
+    position[1] = GraphicsDevice::Instance()->GetDisplayResolution()[1]/2 - position[1];
     
-	position[0] /= ScreenHelpers::GetDpu();
-	position[1] /= ScreenHelpers::GetDpu();
+	position[0] /= GraphicsDevice::Instance()->GetDisplayDensity();
+	position[1] /= GraphicsDevice::Instance()->GetDisplayDensity();
     
     position /= glm::vec2(Scale[0], Scale[1]);
     position += glm::vec2(Position[0], Position[1]);
@@ -57,11 +62,17 @@ PerspectiveCamera::PerspectiveCamera(glm::vec3 position, glm::vec3 rotation)
     : Camera(position, rotation)
     , FieldOfView(90.f)
 {
+    
+}
+
+Camera::CameraType PerspectiveCamera::GetType()
+{
+    return kCameraPerspective;
 }
 
 void PerspectiveCamera::CalculateTransform(Viewport* viewport)
 {
-    glm::vec2 viewportSize = ScreenHelpers::GetScreenResolution() / ScreenHelpers::GetDpu() / 2.f;
+    glm::vec2 viewportSize = pb::GraphicsDevice::Instance()->GetDisplayResolution() / GraphicsDevice::Instance()->GetDisplayDensity() / 2.f;
     
     ProjectionMatrix = glm::perspectiveFov(FieldOfView, viewportSize.x, viewportSize.y, ZNear, ZFar);
     ViewMatrix = glm::translate(glm::mat4x4(), -Position);

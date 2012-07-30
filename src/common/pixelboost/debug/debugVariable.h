@@ -159,10 +159,10 @@ private:
     float _OriginalG;
     float _OriginalB;
     float _OriginalA;
-    float _R;
-    float _G;
-    float _B;
-    float _A;
+    float _ValueR;
+    float _ValueG;
+    float _ValueB;
+    float _ValueA;
     
     friend class DebugVariableManager;
     friend class DebugVariableHandler;
@@ -193,65 +193,65 @@ class DebugColor
 public:
     DebugColor(float r, float g, float b, float a)
     {
-        _R = r;
-        _G = g;
-        _B = b;
-        _A = a;
+        _ValueR = r;
+        _ValueG = g;
+        _ValueB = b;
+        _ValueA = a;
     }
     
     float R()
     {
-        return _R;
+        return _ValueR;
     }
     
     float G()
     {
-        return _G;
+        return _ValueG;
     }
     
     float B()
     {
-        return _B;
+        return _ValueB;
     }
     
     float A()
     {
-        return _A;
+        return _ValueA;
     }
     
     void SetColor(float r, float g, float b, float a)
     {
-        _R = r;
-        _G = g;
-        _B = b;
-        _A = a;
+        _ValueR = r;
+        _ValueG = g;
+        _ValueB = b;
+        _ValueA = a;
     }
     
     void R(float r)
     {
-        _R = r;
+        _ValueR = r;
     }
     
     void G(float g)
     {
-        _G = g;
+        _ValueG = g;
     }
     
     void B(float b)
     {
-        _B = b;
+        _ValueB = b;
     }
     
     void A(float a)
     {
-        _A = a;
+        _ValueA = a;
     }
     
 private:
-    float _R;
-    float _G;
-    float _B;
-    float _A;
+    float _ValueR;
+    float _ValueG;
+    float _ValueB;
+    float _ValueA;
 };
 
 class DebugFunction

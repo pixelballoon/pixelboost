@@ -2,7 +2,7 @@
 
 using namespace pb;
     
-Struct::Struct(Uid uid, Uid type, void* data)
+DbStruct::DbStruct(Uid uid, Uid type, void* data)
     : _Uid(uid)
     , _Type(type)
     , _Data(data)
@@ -10,22 +10,22 @@ Struct::Struct(Uid uid, Uid type, void* data)
     
 }
     
-Struct::~Struct()
+DbStruct::~DbStruct()
 {
-    
+    structDestroyed();
 }
 
-Uid Struct::GetType() const
+Uid DbStruct::GetType() const
 {
     return _Type;
 }
 
-Uid Struct::GetUid() const
+Uid DbStruct::GetUid() const
 {
     return _Uid;
 }
 
-void* Struct::GetData() const
+void* DbStruct::GetData() const
 {
     return _Data;
 }
