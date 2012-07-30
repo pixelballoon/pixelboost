@@ -2,6 +2,7 @@
 
 #include <map>
 #include <queue>
+#include <string>
 #include <vector>
 
 namespace pb
@@ -80,8 +81,11 @@ namespace pb
         void StartServer(int port, int maxConnections=8);
         void StopServer();
         
-        void OpenClient(const char* host, int port);
+        void OpenClient(const std::string& host, int port);
         void CloseClient();
+        
+        const std::string& GetClientHost();
+        int GetClientPort();
         
         NetworkConnection& GetClientConnection();
         
@@ -122,7 +126,7 @@ namespace pb
         
         int _ServerPort;
         
-        char* _ClientHost;
+        std::string _ClientHost;
         int _ClientPort;
         
         NetworkConnection* _ClientConnection;

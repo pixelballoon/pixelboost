@@ -221,6 +221,7 @@ namespace pb
     : _MaxConnections(0)
     , _ServerState(kStateDisconnected)
     , _ClientState(kStateDisconnected)
+    , _ClientPort(0)
     {
         _ClientConnection = new NetworkConnection(this);
         _ClientHost = new char[255];
@@ -236,7 +237,6 @@ namespace pb
         StopServer();
         CloseClient();
         
-        delete[] _ClientHost;    
         delete _ClientConnection;
     }
     
@@ -272,13 +272,23 @@ namespace pb
         _ServerConnections.clear();
     }
     
-    void NetworkServer::OpenClient(const char* host, int port)
+    void NetworkServer::OpenClient(const std::string& host, int port)
     {
         CloseClient();
         
-        strncpy(_ClientHost, host, 255);
+        _ClientHost = host;
         _ClientPort = port;
         _ClientState = kStateStarting;
+    }
+    
+    const std::string& NetworkServer::GetClientHost()
+    {
+        return _ClientHost;
+    }
+    
+    int NetworkServer::GetClientPort()
+    {
+        return _ClientPort;
     }
     
     void NetworkServer::CloseClient()
@@ -396,7 +406,7 @@ namespace pb
                 sockaddr_in server;
                 
                 server.sin_family = AF_INET;
-                inet_pton(AF_INET, _ClientHost, &(server.sin_addr));
+                inet_pton(AF_INET, _ClientHost.c_str(), &(server.sin_addr));
                 server.sin_port = htons(_ClientPort);
                 
                 if (connect(_ClientSocket, (struct sockaddr*)&server, sizeof(sockaddr_in)) == 0)
