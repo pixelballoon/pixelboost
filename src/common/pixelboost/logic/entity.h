@@ -62,10 +62,12 @@ public:
     
     void HandleMessage(const Message& message);
     
-    virtual void HandleCreationEntityDestroyed();
+    virtual void OnCreationEntityDestroyed();
+    virtual void OnCreationEntityReloaded();
     
 private:
-    void OnCreationEntityDestroyed();
+    void HandleCreationEntityDestroyed();
+    void HandleCreationEntityReloaded();
     
     typedef std::map<Uid, sigslot::Signal2<Uid, const Message&> > MessageHandlers;
     typedef std::map<Uid, ComponentList> ComponentMap;

@@ -23,6 +23,7 @@ public:
     
 public:
     sigslot::Signal0<> structDestroyed;
+    sigslot::Signal0<> structReloaded;
     
 public:
     Uid _Uid;

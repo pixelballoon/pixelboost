@@ -18,7 +18,8 @@ Entity::Entity(Scene* scene, DbEntity* entity)
     if (_CreationEntity)
     {
         _CreationUid = _CreationEntity->GetUid();
-        _CreationEntity->structDestroyed.Connect(this, &Entity::OnCreationEntityDestroyed);
+        _CreationEntity->structDestroyed.Connect(this, &Entity::HandleCreationEntityDestroyed);
+        _CreationEntity->structReloaded.Connect(this, &Entity::OnCreationEntityReloaded);
     }
     
     _Uid = _Scene->GenerateEntityId();
@@ -31,6 +32,7 @@ Entity::~Entity()
     if (_CreationEntity)
     {
         _CreationEntity->structDestroyed.Disconnect(this, &Entity::OnCreationEntityDestroyed);
+        _CreationEntity->structReloaded.Disconnect(this, &Entity::OnCreationEntityReloaded);
     }
     
     DestroyAllComponents();
@@ -154,14 +156,24 @@ void Entity::HandleMessage(const Message& message)
         Destroy();
 }
 
-void Entity::HandleCreationEntityDestroyed()
+void Entity::OnCreationEntityDestroyed()
 {
     
 }
 
-void Entity::OnCreationEntityDestroyed()
+void Entity::OnCreationEntityReloaded()
+{
+    
+}
+
+void Entity::HandleCreationEntityDestroyed()
 {    
     _CreationEntity = 0;
     
-    HandleCreationEntityDestroyed();
+    OnCreationEntityDestroyed();
+}
+
+void Entity::HandleCreationEntityReloaded()
+{
+    OnCreationEntityReloaded();
 }

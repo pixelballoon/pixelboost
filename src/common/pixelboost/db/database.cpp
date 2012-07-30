@@ -228,6 +228,8 @@ DbRecord* Database::OpenRecord(Uid recordId)
                 lua_pop(_State, 1);
                 
                 entity->Load();
+                
+                entity->structReloaded();
             } else {
                 lua_getfield(_State, -1, "properties");
                 
