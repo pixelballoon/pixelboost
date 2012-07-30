@@ -11,7 +11,7 @@ Camera::Camera(glm::vec3 position, glm::vec3 rotation)
     : Position(position)
     , Rotation(rotation)
     , ZNear(1)
-    , ZFar(10000)
+    , ZFar(1000)
 {
     
 }
