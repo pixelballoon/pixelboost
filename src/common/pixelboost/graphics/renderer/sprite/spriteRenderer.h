@@ -6,6 +6,7 @@
 
 #include "glm/glm.hpp"
 
+#include "pixelboost/file/fileSystem.h"
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/renderer/common/irenderer.h"
 #include "pixelboost/graphics/renderer/common/renderable.h"
@@ -56,7 +57,7 @@ public:
     void Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass);
 	
     std::shared_ptr<SpriteSheet> CreateSpriteSheet(const std::string& name);
-    bool LoadSpriteSheet(const std::string& name, bool createMips=false);
+    bool LoadSpriteSheet(FileLocation location, const std::string& name, bool createMips=false);
     bool UnloadSpriteSheet(const std::string& name);
     
     std::shared_ptr<SpriteSheet> GetSpriteSheet(const std::string& sheetName) const;

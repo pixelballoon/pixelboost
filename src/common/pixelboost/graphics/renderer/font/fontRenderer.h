@@ -6,6 +6,7 @@
 
 #include "glm/glm.hpp"
 
+#include "pixelboost/file/fileSystem.h"
 #include "pixelboost/graphics/renderer/common/irenderer.h"
 #include "pixelboost/graphics/renderer/common/renderable.h"
 
@@ -102,7 +103,7 @@ namespace pb
         FontRenderer(int maxCharacters=1024);
         virtual ~FontRenderer();
         
-        Font* LoadFont(const std::string& name, bool createMips=true);
+        Font* LoadFont(FileLocation location, const std::string& name, bool createMips=true);
         
         Font* GetFont(const std::string& name);
         

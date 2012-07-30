@@ -6,6 +6,7 @@
 
 #include "glm/glm.hpp"
 
+#include "pixelboost/file/fileSystem.h"
 #include "pixelboost/graphics/renderer/common/irenderer.h"
 #include "pixelboost/graphics/renderer/common/renderable.h"
 #include "pixelboost/misc/pointer.h"
@@ -120,7 +121,7 @@ public:
     int GetNumParticles();
     void ResetSpawnCount();
     
-    void LoadSpriteSheet(const std::string& file, bool createMips);
+    void LoadSpriteSheet(FileLocation location, const std::string& file, bool createMips);
     void SetSpriteSheet(std::shared_ptr<SpriteSheet> spriteSheet);
     
     glm::vec3 GetPosition();

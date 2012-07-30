@@ -22,9 +22,9 @@ public:
     static std::shared_ptr<SpriteSheet> Create();
     virtual ~SpriteSheet();
     
-    bool LoadSingle(const std::string& fileName, bool generateMips=false);
-    bool LoadSheet(const std::string& name, bool generateMips=false);
-    Texture* LoadTexture(const std::string& fileName, bool generateMips=false);
+    bool LoadSingle(FileLocation location, const std::string& fileName, bool generateMips=false);
+    bool LoadSheet(FileLocation location, const std::string& name, bool generateMips=false);
+    Texture* LoadTexture(FileLocation location, const std::string& fileName, bool generateMips=false);
     
     Sprite* GetSprite(const std::string& name);
     

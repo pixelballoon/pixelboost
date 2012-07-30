@@ -4,6 +4,7 @@
 
 #include "glm/glm.hpp"
 
+#include "pixelboost/file/fileHelpers.h"
 #include "pixelboost/graphics/device/device.h"
 
 namespace pb
@@ -22,7 +23,7 @@ public:
     };
     
     virtual void LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format);
-    virtual void LoadFromPng(const std::string& image, bool createMips);
+    virtual void LoadFromPng(FileLocation location, const std::string& image, bool createMips);
     
     const glm::vec2& GetSize();
 

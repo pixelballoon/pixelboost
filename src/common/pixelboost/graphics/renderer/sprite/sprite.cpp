@@ -33,9 +33,9 @@ SpriteSheet::~SpriteSheet()
     }
 }
 
-bool SpriteSheet::LoadSingle(const std::string& fileName, bool generateMips)
+bool SpriteSheet::LoadSingle(FileLocation location, const std::string& fileName, bool generateMips)
 {
-    if (!LoadTexture(fileName))
+    if (!LoadTexture(location, fileName))
         return false;
     
     std::string spriteName = fileName.substr(fileName.rfind("/")+1);
@@ -55,7 +55,7 @@ bool SpriteSheet::LoadSingle(const std::string& fileName, bool generateMips)
     return true;
 }
 
-bool SpriteSheet::LoadSheet(const std::string& name, bool generateMips)
+bool SpriteSheet::LoadSheet(FileLocation location, const std::string& name, bool generateMips)
 {
     std::string jsonFilename = "/data/spritesheets/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".json";
     
@@ -115,12 +115,12 @@ bool SpriteSheet::LoadSheet(const std::string& name, bool generateMips)
         Game::Instance()->GetSpriteRenderer()->_Sprites[spriteName] = sprite;
     }
     
-    LoadTexture("/data/spritesheets/images/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".png", generateMips);
+    LoadTexture(location, "/data/spritesheets/images/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".png", generateMips);
     
     return true;
 }
 
-Texture* SpriteSheet::LoadTexture(const std::string& fileName, bool generateMips)
+Texture* SpriteSheet::LoadTexture(FileLocation location, const std::string& fileName, bool generateMips)
 {
     if (_Texture)
     {
@@ -128,7 +128,7 @@ Texture* SpriteSheet::LoadTexture(const std::string& fileName, bool generateMips
     }
     
     _Texture = GraphicsDevice::Instance()->CreateTexture();
-    _Texture->LoadFromPng(fileName, generateMips);
+    _Texture->LoadFromPng(location, fileName, generateMips);
     
     return _Texture;
 }

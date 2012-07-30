@@ -54,7 +54,7 @@ void SoundManager::PlayBgm(const std::string& name, bool loop, float volume)
     if (_MuteBgm || _CurrentBgmName == "")
         return;
     
-     std::string fileName = FileHelpers::GetRootPath() + "/data/audio/bgm/" + name + ".mp3";     
+     std::string fileName = "/data/audio/bgm/" + name + ".mp3";     
 }
     
 void SoundManager::StopBgm()
@@ -67,7 +67,7 @@ void SoundManager::PlaySfx(const std::string& name, bool compressed, float volum
     if (_MuteSfx)
         return;
     
-    std::string fileName = FileHelpers::GetRootPath() + "/data/audio/sfx/" + name + (compressed ? ".mp3" : ".wav");
+    std::string fileName = "/data/audio/sfx/" + name + (compressed ? ".mp3" : ".wav");
 }
 
 }

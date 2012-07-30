@@ -56,7 +56,7 @@ namespace pb
         Model();
         virtual ~Model();
         
-        bool Load(const std::string& modelName);
+        bool Load(FileLocation location, const std::string& modelName);
         
     public:
         unsigned long _RefCount;
@@ -84,10 +84,10 @@ namespace pb
         
         void Render(RenderLayer* layer);
         
-        bool LoadModel(const std::string& modelName, const std::string& fileName);
+        bool LoadModel(FileLocation location, const std::string& modelName, const std::string& fileName);
         bool UnloadModel(const std::string& modelName);
         
-        bool LoadTexture(const std::string& textureName, const std::string& fileName, bool createMips=true);
+        bool LoadTexture(FileLocation location, const std::string& textureName, const std::string& fileName, bool createMips=true);
         bool UnloadTexture(const std::string& textureName);
         
         void Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass);

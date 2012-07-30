@@ -1,3 +1,5 @@
+#ifdef PIXELBOOST_PLATFORM_ANDROID
+
 #include <jni.h>
 
 #include "pixelboost/misc/jni.h"
@@ -12,3 +14,5 @@ JNIEnv* Jni::GetJniEnv()
 	g_JavaVM->AttachCurrentThread(&env, 0);
 	return env;
 }
+
+#endif

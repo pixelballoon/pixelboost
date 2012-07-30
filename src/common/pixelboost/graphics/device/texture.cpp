@@ -46,13 +46,13 @@ void Texture::LoadFromBytes(const unsigned char* data, int width, int height, bo
 #endif
 }
 
-void Texture::LoadFromPng(const std::string& path, bool createMips)
+void Texture::LoadFromPng(pb::FileLocation location, const std::string& path, bool createMips)
 {
     LodePNG::Decoder decoder;
     std::vector<unsigned char> data;
     std::vector<unsigned char> decoded;
 
-    pb::File* file = pb::FileSystem::Instance()->OpenFile(pb::kFileLocationBundle, path);
+    pb::File* file = pb::FileSystem::Instance()->OpenFile(location, path);
     file->ReadAll(data);
     decoder.decode(decoded, &data[0], data.size());
 	

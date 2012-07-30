@@ -251,14 +251,17 @@ void GwenRenderer::DrawTexturedRect(Gwen::Texture* definition, Gwen::Rect rect, 
 void GwenRenderer::LoadTexture(Gwen::Texture* definition)
 {
     std::string fileName = definition->name.c_str();
+
+    pb::Texture* texture = GraphicsDevice::Instance()->CreateTexture();
     
     if (fileName[0] != '/')
     {
-        fileName = pb::FileHelpers::GetRootPath() + "/data/" + fileName;
+        fileName = "/data/" + fileName;
+        texture->LoadFromPng(pb::kFileLocationBundle, fileName, false);
+    } else {
+        texture->LoadFromPng(pb::kFileLocationUser, fileName, false);
     }
     
-    pb::Texture* texture = GraphicsDevice::Instance()->CreateTexture();
-    texture->LoadFromPng(fileName, false);        
     definition->width = texture->GetSize()[0];
     definition->height = texture->GetSize()[1];
     definition->data = texture;
@@ -314,7 +317,7 @@ void GwenRenderer::RenderText(Gwen::Font* font, Gwen::Point pos, const Gwen::Uni
     Gwen::String fontName = Gwen::Utility::UnicodeToString(font->facename);
     Gwen::String convertedString = Gwen::Utility::UnicodeToString(text);
 
-    pb::Font* renderFont = pb::Game::Instance()->GetFontRenderer()->LoadFont(fontName, false);
+    pb::Font* renderFont = pb::Game::Instance()->GetFontRenderer()->LoadFont(pb::kFileLocationBundle, fontName, false);
 
     float size = font->size * Scale();
     if (!text.length())
@@ -344,7 +347,7 @@ Gwen::Point GwenRenderer::MeasureText(Gwen::Font* font, const Gwen::UnicodeStrin
     Gwen::String fontName = Gwen::Utility::UnicodeToString(font->facename);
     Gwen::String convertedString = Gwen::Utility::UnicodeToString(text);
     
-    pb::Game::Instance()->GetFontRenderer()->LoadFont(fontName, false);
+    pb::Game::Instance()->GetFontRenderer()->LoadFont(pb::kFileLocationBundle, fontName, false);
     
     float size = font->size * Scale();
     float length = pb::Game::Instance()->GetFontRenderer()->MeasureString(fontName, convertedString, size/32.f).x*32.f;
