@@ -41,6 +41,20 @@ void DbRecord::AddEntity(DbEntity* entity)
 {
     _Entities[entity->GetUid()] = entity;
 }
+
+DbEntity* DbRecord::RemoveEntity(Uid entityId)
+{
+    EntityMap::iterator it = _Entities.find(entityId);
+    
+    if (it == _Entities.end())
+        return 0;
+    
+    DbEntity* entity = it->second;
+    
+    _Entities.erase(it);
+    
+    return entity;
+}
     
 void DbRecord::AddPointer(Uid uid, void** pointer)
 {

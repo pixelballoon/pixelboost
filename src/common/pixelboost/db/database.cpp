@@ -160,6 +160,8 @@ DbRecord* Database::OpenRecord(Uid recordId)
     
     lua_pop(_State, 1);
     
+    DbRecord::EntityMap currentEntities = record->_Entities;
+    
     lua_getfield(_State, -1, "entities");
     
     if (lua_istable(_State, -1))
@@ -201,6 +203,8 @@ DbRecord* Database::OpenRecord(Uid recordId)
             }
             type = lua_tonumber(_State, -1);
             lua_pop(_State, 1);
+            
+            currentEntities.erase(uid);
             
             DbRecord::EntityMap::iterator entityIt = record->_Entities.find(uid);
             
@@ -252,9 +256,31 @@ DbRecord* Database::OpenRecord(Uid recordId)
         }
     }
     
+    for (DbRecord::EntityMap::iterator it = currentEntities.begin(); it != currentEntities.end(); ++it)
+    {
+        record->RemoveEntity(it->second->GetUid());
+        delete it->second;
+    }
+    
     lua_pop(_State, 1);
     
     return record;
+}
+
+bool Database::CloseRecord(Uid recordId)
+{
+    RecordMap::iterator it = _Records.find(recordId);
+    
+    if (it == _Records.end())
+        return false;
+    
+    DbRecord* record = it->second;
+    
+    _Records.erase(it);
+    
+    delete record;
+    
+    return true;
 }
 
 void* Database::Create(Uid type)

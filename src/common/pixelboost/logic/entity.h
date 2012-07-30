@@ -11,13 +11,14 @@ namespace pb
 {
     
 class Component;
+class DbEntity;
 class Message;
 class Scene;
 
 class Entity
 {
 public:
-    Entity(Scene* scene, Uid uid);
+    Entity(Scene* scene, DbEntity* creationEntity);
     virtual ~Entity();
     
 public:
@@ -30,8 +31,12 @@ public:
 public:
     Scene* GetScene();
     
+    Uid GetCreationUid();
+    
     Uid GetUid();
     virtual Uid GetType();
+    
+    template<class T> const T* GetData() const;
 
     void Destroy();
     EntityState GetState();
@@ -57,7 +62,11 @@ public:
     
     void HandleMessage(const Message& message);
     
+    virtual void HandleCreationEntityDestroyed();
+    
 private:
+    void OnCreationEntityDestroyed();
+    
     typedef std::map<Uid, sigslot::Signal2<Uid, const Message&> > MessageHandlers;
     typedef std::map<Uid, ComponentList> ComponentMap;
     
@@ -65,6 +74,10 @@ private:
     MessageHandlers _MessageHandlers;
     
     Scene* _Scene;
+    
+    DbEntity* _CreationEntity;
+    Uid _CreationUid;
+    
     Uid _Uid;
     
     Uid _NextFreeUid;

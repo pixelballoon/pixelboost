@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "sigslot/signal.h"
+
 #include "pixelboost/db/definitions.h"
 
 namespace pb
@@ -17,6 +19,10 @@ public:
     Uid GetUid() const;
     
     void* GetData() const;
+    template<class T> const T* GetData() const;
+    
+public:
+    sigslot::Signal0<> structDestroyed;
     
 public:
     Uid _Uid;
@@ -26,3 +32,5 @@ public:
 };
     
 }
+
+#include "pixelboost/db/struct.inl"

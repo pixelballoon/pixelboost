@@ -12,7 +12,7 @@ DbStruct::DbStruct(Uid uid, Uid type, void* data)
     
 DbStruct::~DbStruct()
 {
-    
+    structDestroyed();
 }
 
 Uid DbStruct::GetType() const

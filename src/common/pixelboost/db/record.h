@@ -28,8 +28,9 @@ public:
     DbRecord(Uid uid, Uid type, void* data);
     virtual ~DbRecord();
     
-    void AddEntity(DbEntity* entity);    
-    void AddPointer(Uid pointer, void** destination);
+    void AddEntity(DbEntity* entity);
+    DbEntity* RemoveEntity(Uid entityId);
+    void AddPointer(Uid uid, void** pointer);
     
 public:
     typedef std::map<Uid, DbEntity*> EntityMap;

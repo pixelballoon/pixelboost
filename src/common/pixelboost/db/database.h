@@ -42,6 +42,7 @@ public:
     void OpenDatabase();
     
     DbRecord* OpenRecord(Uid recordId);
+    bool CloseRecord(Uid recordId);
     
     void* Create(Uid type);
     void Deserialise(Uid type, void* data);
