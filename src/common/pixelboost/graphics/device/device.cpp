@@ -51,6 +51,11 @@ unsigned char* GraphicsDevice::CaptureRenderBuffer()
 {
     return 0;
 }
+
+void GraphicsDevice::ClearBuffers()
+{
+    
+}
     
 VertexBuffer* GraphicsDevice::CreateVertexBuffer(BufferFormat bufferFormat, VertexFormat vertexFormat, int length)
 {

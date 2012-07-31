@@ -55,6 +55,8 @@ public:
 public:
     virtual unsigned char* CaptureRenderBuffer();
     
+    virtual void ClearBuffers();
+    
     virtual VertexBuffer* CreateVertexBuffer(BufferFormat bufferFormat, VertexFormat vertexFormat, int length);
     virtual void DestroyVertexBuffer(VertexBuffer* buffer);
     virtual VertexBuffer* GetBoundVertexBuffer();

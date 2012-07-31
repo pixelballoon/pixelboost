@@ -35,6 +35,8 @@ Renderer* Renderer::Instance()
 
 void Renderer::Render()
 {
+    GraphicsDevice::Instance()->ClearBuffers();
+    
     for (ViewportList::iterator it = _Viewports.begin(); it != _Viewports.end(); ++it)
     {
         (*it)->Render();

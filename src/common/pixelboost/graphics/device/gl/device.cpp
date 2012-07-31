@@ -57,6 +57,11 @@ unsigned char* GraphicsDeviceGL::CaptureRenderBuffer()
     return buffer;
 }
 
+void GraphicsDeviceGL::ClearBuffers()
+{
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+}
+
 VertexBuffer* GraphicsDeviceGL::CreateVertexBuffer(BufferFormat bufferFormat, VertexFormat vertexFormat, int length)
 {
     VertexBuffer* vertexBuffer = GraphicsDevice::CreateVertexBuffer(bufferFormat, vertexFormat, length);
