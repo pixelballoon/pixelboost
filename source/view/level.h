@@ -6,6 +6,7 @@
 #include "glm/glm.hpp"
 #include "sigslot/signal.h"
 
+#include "pixelboost/logic/entity.h"
 #include "pixelboost/input/mouseManager.h"
 
 #include "project/definitions.h"
@@ -13,6 +14,7 @@
 namespace pb
 {
     class BoundingBox;
+    class RectangleComponent;
     class RenderLayer;
     class Scene;
 }

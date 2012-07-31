@@ -7,7 +7,9 @@
 #include "project/property.h"
 #include "project/record.h"
 #include "project/schema.h"
+#include "view/entity/entity.h"
 #include "view/ui/property/propertyPanel.h"
+#include "view/level.h"
 #include "core.h"
 #include "view.h"
 
@@ -117,9 +119,10 @@ void PropertyPanel::OnSelectionChanged(const pixeleditor::Selection* selection)
             return;
         }
         
-        Entity* entity = Core::Instance()->GetProject()->GetEntity(entityIt->first);
+        ViewEntity* entity = View::Instance()->GetLevel()->GetEntityById(entityIt->first);
         
-        SetStruct(entity, "");
+        if (entity)
+            SetStruct(entity->GetEntity(), "");
     }
 }
 
