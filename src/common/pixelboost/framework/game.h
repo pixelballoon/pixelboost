@@ -53,9 +53,12 @@ public:
     float GetTotalTime();
     
     virtual bool IsLandscape();
-    virtual glm::vec2 GetScreenResolution();
     
     virtual void OnMemoryWarning();
+
+    virtual void OnAppLoseFocus();
+    virtual void OnAppGainFocus();
+    virtual void OnAppQuit();
 	
 	virtual void Update(float time);
 	virtual void Render();

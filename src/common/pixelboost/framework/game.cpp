@@ -161,15 +161,25 @@ bool Game::IsLandscape()
 {
     return false;
 }
-
-glm::vec2 Game::GetScreenResolution()
-{
-    return glm::vec2(0,0);
-}
     
 void Game::OnMemoryWarning()
 {
     
+}
+
+void Game::OnAppLoseFocus()
+{
+
+}
+
+void Game::OnAppGainFocus()
+{
+
+}
+
+void Game::OnAppQuit()
+{
+
 }
 
 void Game::Update(float time)
