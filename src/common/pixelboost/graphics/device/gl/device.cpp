@@ -468,8 +468,7 @@ void GraphicsDeviceGL::SetState(State state, bool enable)
             glState = GL_DEPTH_TEST;
             break;
         case kStateTexture2D:
-            glState = GL_TEXTURE_2D;
-            break;
+            return; // There's no state for 2D texturing any more
         case kStateScissor:
             glState = GL_SCISSOR_TEST;
             break;
