@@ -11,7 +11,7 @@ public:
     DestroyMessage(Entity* entity, Component* component);
     virtual ~DestroyMessage();
     
-    Uid GetType();
+    virtual Uid GetType() const;
     static Uid GetStaticType();    
 };
     

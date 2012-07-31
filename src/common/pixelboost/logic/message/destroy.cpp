@@ -13,7 +13,7 @@ DestroyMessage::~DestroyMessage()
     
 }
 
-Uid DestroyMessage::GetType()
+Uid DestroyMessage::GetType() const
 {
     return GetStaticType();
 }
