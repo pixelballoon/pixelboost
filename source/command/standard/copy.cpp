@@ -5,7 +5,10 @@
 #include "project/project.h"
 #include "project/record.h"
 #include "project/schema.h"
+#include "view/entity/entity.h"
+#include "view/level.h"
 #include "core.h"
+#include "view.h"
 
 using namespace pixeleditor;
 
@@ -47,6 +50,7 @@ bool CopyCommand::Do(std::string& returnString)
     json::Array serialisedEntities;
     
     Core* core = Core::Instance();
+    View* view = View::Instance();
     
     Selection& selection = core->GetSelection();
     
@@ -56,7 +60,12 @@ bool CopyCommand::Do(std::string& returnString)
     {
         json::Object serialisedEntity;
         
-        Entity* entity = core->GetProject()->GetEntity(it->first);
+        ViewEntity* viewEntity = view->GetLevel()->GetEntityById(it->first);
+        
+        if (!viewEntity)
+            continue;
+        
+        Entity* entity = viewEntity->GetEntity();
         
         entity->Save(serialisedEntity);
         
