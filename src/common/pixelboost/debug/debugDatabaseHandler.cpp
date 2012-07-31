@@ -37,7 +37,7 @@ void DebugDatabaseHandler::OnReceive(NetworkConnection& connection, NetworkMessa
     const char* contents;
     message.ReadString(contents);
     
-    FileHelpers::StringToFile(FileHelpers::GetUserPath() + "/data/gamedata/" + file, contents);
+    FileHelpers::StringToFile(pb::kFileLocationUser, "/data/gamedata/" + file, contents);
     
     if (file == "main.lua")
     {

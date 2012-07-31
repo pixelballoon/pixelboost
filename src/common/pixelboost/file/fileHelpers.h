@@ -15,7 +15,7 @@ std::string GetUserPath();
 bool CreateDirectory(const std::string& directory);
 std::string FileToString(FileLocation location, const std::string& filename);
 int GetTimestamp(const std::string& filename);
-void StringToFile(const std::string& filename, const std::string& string);
+void StringToFile(FileLocation location, const std::string& filename, const std::string& string);
     
 }
     

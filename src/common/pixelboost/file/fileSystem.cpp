@@ -40,9 +40,15 @@ class StdFile : public File
 {
 public:
     StdFile(FILE* file);
+    ~StdFile();
 
     virtual bool ReadAll(std::vector<unsigned char>& data);
     virtual bool ReadAll(std::string& data);
+    
+    virtual bool Write(const std::vector<unsigned char>& data);
+    virtual bool Write(const std::string& data);
+    
+    virtual bool Seek(SeekMode mode, int offset);
     
 private:
     FILE* _File;
@@ -51,6 +57,12 @@ private:
 StdFile::StdFile(FILE* file)
 {
     _File = file;
+}
+
+StdFile::~StdFile()
+{
+    fclose(_File);
+    _File = 0;
 }
 
 bool StdFile::ReadAll(std::vector<unsigned char>& data)
@@ -97,7 +109,47 @@ bool StdFile::ReadAll(std::string& data)
     return true;
 }
 
-File* FileSystem::OpenFile(FileLocation location, const std::string& path)
+bool StdFile::Write(const std::vector<unsigned char>& data)
+{
+    if (!_File)
+        return false;
+    
+    fwrite(&data[0], 1, data.size(), _File);
+    
+    return true;
+}
+
+bool StdFile::Write(const std::string& data)
+{
+    if (!_File)
+        return false;
+    
+    fwrite(data.c_str(), 1, data.length(), _File);
+    
+    return true;
+}
+
+bool StdFile::Seek(SeekMode mode, int offset)
+{
+    int fseekMode;
+
+    switch (mode)
+    {
+        case kFileSeekStart:
+            fseekMode = SEEK_SET;
+            break;
+        case kFileSeekCurrent:
+            fseekMode = SEEK_CUR;
+            break;
+        case kFileSeekEnd:
+            fseekMode = SEEK_END;
+            break;
+    }
+
+    return fseek(_File, offset, fseekMode) == 0;
+}
+
+File* FileSystem::OpenFile(FileLocation location, const std::string& path, FileMode mode)
 {
     std::string absolutePath;
     
@@ -115,8 +167,23 @@ File* FileSystem::OpenFile(FileLocation location, const std::string& path)
         }
     }
     
+    std::string openMode;
+    
+    switch (mode)
+    {
+        case kFileModeReadOnly:
+            openMode = "rb";
+            break;
+        case kFileModeReadWrite:
+            openMode = "r+b";
+            break;
+        case kFileModeWriteOnly:
+            openMode = "wb";
+            break;
+    }
+    
     absolutePath += path;
-    FILE* handle = fopen(absolutePath.c_str(), "rb");
+    FILE* handle = fopen(absolutePath.c_str(), openMode.c_str());
     
     if (!handle)
         return 0;

@@ -21,11 +21,15 @@ std::string FileToString(pb::FileLocation location, const std::string& filename)
     return data;
 }
     
-void StringToFile(const std::string& filename, const std::string& string)
+void StringToFile(pb::FileLocation location, const std::string& filename, const std::string& string)
 {
-    FILE* file = fopen(filename.c_str(), "wb");
-    fwrite(string.c_str(), string.length(), 1, file);
-    fclose(file);
+    File* file = pb::FileSystem::Instance()->OpenFile(location, filename, pb::kFileModeWriteOnly);
+    
+    if (!file)
+        return;
+    
+    file->Write(string);
+    delete file;
 }
 
 }
