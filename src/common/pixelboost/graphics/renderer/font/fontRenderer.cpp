@@ -379,7 +379,7 @@ void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewpor
         Font* font;
         
         FontMap::iterator fontIt = _Fonts.find(renderable.Font);
-        if (fontIt == _Fonts.end() || fontIt->second->texture == 0)
+        if (fontIt == _Fonts.end() || fontIt->second->texture == 0 || renderable.Text.length() == 0)
         {
             continue;
         }
@@ -402,7 +402,8 @@ void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewpor
         effectPass->GetShaderProgram()->SetUniform("diffuseColor", renderable.Tint);
         effectPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
         
-        GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, (_VertexBuffer->GetCurrentSize()/4)*6);
+        if (_VertexBuffer->GetCurrentSize())
+            GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, (_VertexBuffer->GetCurrentSize()/4)*6);
     }
     
     GraphicsDevice::Instance()->BindTexture(0);
