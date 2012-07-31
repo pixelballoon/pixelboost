@@ -20,6 +20,8 @@ ShaderProgramGL::~ShaderProgramGL()
 
 bool ShaderProgramGL::Load(const std::string& fragmentSource, const std::string& vertexSource)
 {
+    _Uniforms.clear();
+    
 #ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
     _FragmentSource = fragmentSource;
     _VertexSource = vertexSource;
@@ -82,32 +84,39 @@ void ShaderProgramGL::BindAttribute(int index, const std::string& name)
 
 void ShaderProgramGL::SetUniform(const std::string& name, int value)
 {
-    GLuint uniform = glGetUniformLocation(_Program, name.c_str());
-    glUniform1i(uniform, value);
+    glUniform1i(GetUniformLocation(name), value);
 }
 
 void ShaderProgramGL::SetUniform(const std::string& name, float value)
 {
-    GLuint uniform = glGetUniformLocation(_Program, name.c_str());
-    glUniform1f(uniform, value);
+    glUniform1f(GetUniformLocation(name), value);
 }
 
 void ShaderProgramGL::SetUniform(const std::string& name, const glm::vec3& value)
 {
-    GLuint uniform = glGetUniformLocation(_Program, name.c_str());
-    glUniform3f(uniform, value.x, value.y, value.z);
+    glUniform3f(GetUniformLocation(name), value.x, value.y, value.z);
 }
 
 void ShaderProgramGL::SetUniform(const std::string& name, const glm::vec4& value)
 {
-    GLuint uniform = glGetUniformLocation(_Program, name.c_str());
-    glUniform4f(uniform, value.x, value.y, value.z, value.w);
+    glUniform4f(GetUniformLocation(name), value.x, value.y, value.z, value.w);
 }
 
 void ShaderProgramGL::SetUniform(const std::string& name, const glm::mat4x4& value)
 {
-    GLuint uniform = glGetUniformLocation(_Program, name.c_str());
-    glUniformMatrix4fv(uniform, 1, 0, glm::value_ptr(value));
+    glUniformMatrix4fv(GetUniformLocation(name), 1, 0, glm::value_ptr(value));
+}
+
+GLuint ShaderProgramGL::GetUniformLocation(const std::string& name)
+{
+    std::map<std::string, GLuint>::iterator it = _Uniforms.find(name);
+    
+    if (it != _Uniforms.end())
+        return it->second;
+    
+    GLuint location = glGetUniformLocation(_Program, name.c_str());
+    _Uniforms[name] = location;
+    return location;
 }
 
 bool ShaderProgramGL::CompileShader(GLenum type, GLuint* shader, const std::string& source)

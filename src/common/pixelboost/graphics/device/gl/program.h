@@ -35,12 +35,15 @@ public:
     virtual void OnContextLost();
     
 private:
-    virtual bool CompileShader(GLenum type, GLuint* shader, const std::string& source);
+    GLuint GetUniformLocation(const std::string& name);
+    
+    bool CompileShader(GLenum type, GLuint* shader, const std::string& source);
     
 private:
     std::string _FragmentSource;
     std::string _VertexSource;
     std::map<int, std::string> _Attributes;
+    std::map<std::string, GLuint> _Uniforms;
     
     GLuint _Program;
     GLuint _FragmentShader;
