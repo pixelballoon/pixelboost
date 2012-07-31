@@ -1,11 +1,3 @@
-//
-//  MainView.m
-//  editor
-//
-//  Created by Jamie Hales on 19/05/2012.
-//  Copyright (c) 2012 Pixel Balloon. All rights reserved.
-//
-
 #include <OpenGL/gl.h>
 
 #include "pixelboost/input/keyboardManager.h"

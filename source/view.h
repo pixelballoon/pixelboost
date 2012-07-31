@@ -56,7 +56,7 @@ public:
     
 public:
     static View* Instance();
-    virtual void Initialise(glm::vec2 size);
+    virtual void Initialise(glm::vec2 size, float density);
     virtual void Render();
     
     ManipulatorManager* GetManipulatorManager();

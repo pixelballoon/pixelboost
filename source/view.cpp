@@ -171,10 +171,8 @@ View* View::Instance()
     return static_cast<View*>(Game::Instance());
 }
 
-void View::Initialise(glm::vec2 size)
+void View::Initialise(glm::vec2 size, float density)
 {
-    float density = 32.f;
-    
     pb::GraphicsDevice::Instance()->SetDisplayResolution(size);
     pb::GraphicsDevice::Instance()->SetDisplayDensity(density);
     
@@ -183,7 +181,7 @@ void View::Initialise(glm::vec2 size)
     _LevelScene = new pb::Scene();
     _LevelScene->AddSystem(new pb::BasicRenderSystem());
     _LevelViewport->SetScene(_LevelScene);
-    _LevelViewport->SetDensity(density);
+    _LevelViewport->SetDensity(32.f);
     _LevelViewport->SetPosition(glm::vec2(0,0));
 
     _UiCamera = new pb::OrthographicCamera();
