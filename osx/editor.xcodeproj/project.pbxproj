@@ -320,6 +320,7 @@
 		1CF9899A15C6FB20000746F8 /* helpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CF9893B15C6FB20000746F8 /* helpers.cpp */; };
 		1CF9899B15C6FB20000746F8 /* readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1CF9893F15C6FB20000746F8 /* readme.txt */; };
 		1CF9899C15C6FB20000746F8 /* trex.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CF9894115C6FB20000746F8 /* trex.c */; };
+		1CF9899F15C7AFD3000746F8 /* createRecord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CF9899D15C7AFD3000746F8 /* createRecord.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1205,6 +1206,8 @@
 		1CF9894015C6FB20000746F8 /* regex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = regex.h; sourceTree = "<group>"; };
 		1CF9894115C6FB20000746F8 /* trex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = trex.c; sourceTree = "<group>"; };
 		1CF9894215C6FB20000746F8 /* trex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trex.h; sourceTree = "<group>"; };
+		1CF9899D15C7AFD3000746F8 /* createRecord.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = createRecord.cpp; path = create/createRecord.cpp; sourceTree = "<group>"; };
+		1CF9899E15C7AFD3000746F8 /* createRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = createRecord.h; path = create/createRecord.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1352,6 +1355,8 @@
 			children = (
 				1C38847C15718E7600E95986 /* createPanel.cpp */,
 				1C38847D15718E7600E95986 /* createPanel.h */,
+				1CF9899D15C7AFD3000746F8 /* createRecord.cpp */,
+				1CF9899E15C7AFD3000746F8 /* createRecord.h */,
 			);
 			name = create;
 			sourceTree = "<group>";
@@ -3506,6 +3511,7 @@
 				1CF9899915C6FB20000746F8 /* networkServer.cpp in Sources */,
 				1CF9899A15C6FB20000746F8 /* helpers.cpp in Sources */,
 				1CF9899C15C6FB20000746F8 /* trex.c in Sources */,
+				1CF9899F15C7AFD3000746F8 /* createRecord.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -106,6 +106,7 @@ private:
     void OnEntityCreate(Gwen::Controls::Base* item);
     
     void OnDeviceAddress(Gwen::Controls::Base* item);
+    void OnCreateRecord(Gwen::Controls::Base* item);
     void OnMoveManipulator(Gwen::Controls::Base* item);
     void OnRotateManipulator(Gwen::Controls::Base* item);
     

@@ -37,6 +37,7 @@
 #include "view/manipulator/scale.h"
 #include "view/manipulator/select.h"
 #include "view/ui/create/createPanel.h"
+#include "view/ui/create/createRecord.h"
 #include "view/ui/property/propertyPanel.h"
 #include "view/ui/settings/moveManipulator.h"
 #include "view/ui/settings/networkWindow.h"
@@ -244,6 +245,10 @@ void View::Initialise(glm::vec2 size)
     _UiScene->GetSystemByType<pb::RenderSystem>()->AddItem(_GwenRenderable);
     
     _CreateMenu = _Menu->AddItem("Create");
+    
+    Gwen::Controls::MenuItem* recordMenu = _Menu->AddItem("Record");
+    Gwen::Controls::MenuItem* createRecord = recordMenu->GetMenu()->AddItem("Create Record");
+    createRecord->onPress.Add(this, &View::OnCreateRecord);
     
     Gwen::Controls::MenuItem* manipulatorMenu = _Menu->AddItem("Manipulator");
     Gwen::Controls::MenuItem* moveManipulator = manipulatorMenu->GetMenu()->AddItem("Move Manipulator");
@@ -512,6 +517,11 @@ void View::OnEntityCreate(Gwen::Controls::Base* item)
 void View::OnDeviceAddress(Gwen::Controls::Base* item)
 {
     new NetworkWindow(_GwenCanvas);
+}
+
+void View::OnCreateRecord(Gwen::Controls::Base *item)
+{
+    new CreateRecordWindow(_GwenCanvas);
 }
 
 void View::OnMoveManipulator(Gwen::Controls::Base* item)
