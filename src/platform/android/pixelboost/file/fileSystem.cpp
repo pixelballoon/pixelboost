@@ -194,9 +194,13 @@ File* FileSystem::OpenFile(FileLocation location, const std::string& path, FileM
         PbLogDebug("pixelboost", "Opening user file (%s)", totalPath.c_str());
 
         handle = fopen(totalPath.c_str(), openMode.c_str());
-        fseek(handle, 0, SEEK_END);
-        length = ftell(handle);
-        fseek(handle, 0, SEEK_SET);
+
+        if (handle)
+        {
+            fseek(handle, 0, SEEK_END);
+            length = ftell(handle);
+            fseek(handle, 0, SEEK_SET);
+        }
     }
 
     if (handle)
