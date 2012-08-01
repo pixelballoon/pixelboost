@@ -36,6 +36,11 @@ Uid RectangleComponent::GetType()
     return TypeHash("rectangle");
 }
 
+void RectangleComponent::SetRenderPass(RenderPass renderPass)
+{
+    _Renderable->SetRenderPass(renderPass);
+}
+
 void RectangleComponent::SetLayer(int layer)
 {
     _Renderable->SetLayer(layer);

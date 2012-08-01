@@ -39,9 +39,16 @@ void Renderer::Render()
     
     for (ViewportList::iterator it = _Viewports.begin(); it != _Viewports.end(); ++it)
     {
-        (*it)->Render();
+        (*it)->Render(kRenderPassScene);
         
-        FlushBuffer(*it);
+        FlushBuffer(*it, (*it)->GetSceneCamera());
+    }
+    
+    for (ViewportList::iterator it = _Viewports.begin(); it != _Viewports.end(); ++it)
+    {
+        (*it)->Render(kRenderPassUi);
+        
+        FlushBuffer(*it, (*it)->GetUiCamera());
     }
 }
 
@@ -87,7 +94,7 @@ static bool RenderableBackToFrontSorter(const Renderable* a, const Renderable* b
     return a->GetMVP()[3][2] > b->GetMVP()[3][2];
 }
 
-void Renderer::FlushBuffer(Viewport* viewport)
+void Renderer::FlushBuffer(Viewport* viewport, Camera* camera)
 {
     for (int i=0; i<16; i++)
     {
@@ -98,7 +105,7 @@ void Renderer::FlushBuffer(Viewport* viewport)
         
         for (RenderableList::iterator it = renderables.begin(); it != renderables.end(); ++it)
         {
-            (*it)->CalculateMVP(viewport);
+            (*it)->CalculateMVP(viewport, camera);
         }
         
         std::stable_sort(renderables.begin(), renderables.end(), &RenderableBackToFrontSorter);

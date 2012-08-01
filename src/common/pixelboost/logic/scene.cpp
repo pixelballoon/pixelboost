@@ -80,11 +80,11 @@ void Scene::Update(float time)
     BroadcastMessage(message);
 }
 
-void Scene::Render(Viewport* viewport)
+void Scene::Render(Viewport* viewport, RenderPass renderPass)
 {
     for (SystemMap::iterator it = _Systems.begin(); it != _Systems.end(); ++it)
     {
-        it->second->Render(this, viewport);
+        it->second->Render(this, viewport, renderPass);
     }
 }
 

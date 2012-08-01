@@ -51,6 +51,11 @@ glm::vec2 SpriteComponent::GetSize()
     return glm::vec2(0,0);
 }
 
+void SpriteComponent::SetRenderPass(RenderPass renderPass)
+{
+    _Renderable->SetRenderPass(renderPass);
+}
+
 void SpriteComponent::SetLayer(int layer)
 {
     _Renderable->SetLayer(layer);

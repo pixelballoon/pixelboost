@@ -135,8 +135,9 @@ void GwenRenderer::Render(int count, Renderable** renderables, Viewport* viewpor
     
     for (int i=0; i<count; i++)
     {
-        GwenRenderable& renderable = *static_cast<GwenRenderable*>(renderables[i]);
-        renderable._Canvas->RenderCanvas();
+        GwenRenderable* renderable = static_cast<GwenRenderable*>(renderables[i]);
+        _Renderable = renderable;
+        renderable->_Canvas->RenderCanvas();
     }
     
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
@@ -328,7 +329,7 @@ void GwenRenderer::RenderText(Gwen::Font* font, Gwen::Point pos, const Gwen::Uni
     glm::mat4x4 modelMatrix = glm::translate(glm::mat4x4(), glm::vec3(pos.x, -pos.y - size, 0)/32.f);
     modelMatrix = glm::scale(modelMatrix, glm::vec3(size, size, 1)/32.f);
     
-    _EffectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", _Viewport->GetCamera()->ViewProjectionMatrix * modelMatrix);
+    _EffectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", _Renderable->GetMVP() * modelMatrix);
     _EffectPass->GetShaderProgram()->SetUniform("diffuseColor", glm::vec4(0,0,0,1));
     
     pb::Texture* prevTexture = GraphicsDevice::Instance()->BindTexture(renderFont->texture);
@@ -363,7 +364,7 @@ void GwenRenderer::PurgeBuffer(bool force)
     _VertexBuffer->Unlock(_VertexCount);
     if (_VertexCount)
     {
-        _EffectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", _Viewport->GetCamera()->ViewProjectionMatrix);
+        _EffectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", _Renderable->GetMVP());
         
         GraphicsDevice::Instance()->BindIndexBuffer(_IndexBuffer);
         GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffer);

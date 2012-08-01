@@ -45,6 +45,11 @@ Uid FontComponent::GetStaticType()
     return TypeHash("font");
 }
 
+void FontComponent::SetRenderPass(RenderPass renderPass)
+{
+    _Renderable->SetRenderPass(renderPass);
+}
+
 void FontComponent::SetLayer(int layer)
 {
     _Renderable->SetLayer(layer);

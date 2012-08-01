@@ -4,6 +4,7 @@
 
 #include "glm/glm.hpp"
 
+#include "pixelboost/graphics/renderer/common/renderable.h"
 #include "pixelboost/logic/component.h"
 
 namespace pb
@@ -20,6 +21,7 @@ public:
     
     Uid GetType();
     
+    void SetRenderPass(RenderPass renderPass);
     void SetLayer(int layer);
     
     void SetColor(glm::vec4 color);

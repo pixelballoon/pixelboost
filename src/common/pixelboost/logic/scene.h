@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "pixelboost/db/definitions.h"
+#include "pixelboost/graphics/renderer/common/renderable.h"
 
 namespace pb
 {
@@ -21,7 +22,7 @@ public:
     ~Scene();
     
     void Update(float time);
-    void Render(Viewport* viewport);
+    void Render(Viewport* viewport, RenderPass renderPass);
     
     template <class T>T* GetSystemByType();
     bool AddSystem(SceneSystem* system);

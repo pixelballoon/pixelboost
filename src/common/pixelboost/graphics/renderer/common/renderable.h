@@ -6,10 +6,17 @@
 
 namespace pb
 {
-    
+ 
+class Camera;
 class Effect;
 class RenderSystem;
 class Viewport;
+    
+enum RenderPass
+{
+    kRenderPassScene,
+    kRenderPassUi,
+};
     
 class Renderable
 {
@@ -24,6 +31,9 @@ public:
     
     virtual Uid GetRenderableType() = 0;
     
+    virtual void SetRenderPass(RenderPass renderPass);
+    virtual RenderPass GetRenderPass();
+    
     virtual void SetLayer(int layer);
     virtual int GetLayer();
     
@@ -37,13 +47,15 @@ public:
     void SetWorldMatrix(const glm::mat4x4& matrix);
     const glm::mat4x4& GetWorldMatrix();
     
-    void CalculateMVP(Viewport* viewport);
+    void CalculateMVP(Viewport* viewport, Camera* camera);
     const glm::mat4x4& GetMVP() const;
     
     virtual Effect* GetEffect();
     void SetEffect(Effect* effect);
     
 private:
+    void RefreshSystemBinding();
+    
     bool _WorldMatrixDirty;
     glm::mat4x4 _WorldMatrix;
     
@@ -56,6 +68,7 @@ private:
     RenderSystem* _System;
     Uid _EntityUid;
     int _Layer;
+    RenderPass _RenderPass;
     Effect* _Effect;
 };
     

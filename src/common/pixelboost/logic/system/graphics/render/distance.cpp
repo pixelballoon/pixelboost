@@ -17,26 +17,47 @@ Uid DistanceRenderSystem::GetStaticType()
     return RenderSystem::GetStaticType();
 }
 
-void DistanceRenderSystem::Render(Scene* scene, Viewport* viewport)
+void DistanceRenderSystem::Render(Scene* scene, Viewport* viewport, RenderPass renderPass)
 {
-    glm::vec3 cameraPosition = viewport->GetCamera()->Position;
-    cameraPosition.z = 0;
-    
-    for (RenderableSet::iterator it = _Renderables.begin(); it != _Renderables.end(); ++it)
+    if (renderPass == kRenderPassUi)
     {
-        glm::vec4 position = (*it)->GetWorldMatrix()[3];
-        
-        if ((*it)->GetRenderableType() == TypeHash("particle")|| glm::distance(cameraPosition, glm::vec3(position.x, position.y, 0)) < _Distance)
+        for (RenderableSet::iterator it = _UiRenderables.begin(); it != _UiRenderables.end(); ++it)
+        {
             RenderItem(*it);
+        }
+    } else {
+        glm::vec3 cameraPosition = viewport->GetSceneCamera()->Position;
+        cameraPosition.z = 0;
+        
+        for (RenderableSet::iterator it = _SceneRenderables.begin(); it != _SceneRenderables.end(); ++it)
+        {
+            glm::vec4 position = (*it)->GetWorldMatrix()[3];
+            
+            if ((*it)->GetRenderableType() == TypeHash("particle")|| glm::distance(cameraPosition, glm::vec3(position.x, position.y, 0)) < _Distance)
+                RenderItem(*it);
+        }
     }
 }
 
 void DistanceRenderSystem::AddItem(Renderable* renderable)
 {
-    _Renderables.insert(renderable);
+    switch (renderable->GetRenderPass())
+    {
+        case kRenderPassScene:
+            _SceneRenderables.insert(renderable);
+            break;
+        case kRenderPassUi:
+            _UiRenderables.insert(renderable);
+            break;
+    }
+    
+    RenderSystem::AddItem(renderable);
 }
 
 void DistanceRenderSystem::RemoveItem(Renderable* renderable)
 {
-    _Renderables.erase(renderable);
+    _SceneRenderables.erase(renderable);
+    _UiRenderables.erase(renderable);
+    
+    RenderSystem::RemoveItem(renderable);
 }

@@ -9,6 +9,7 @@
 namespace pb
 {
 
+class Camera;
 class Effect;
 class EffectManager;
 class IRenderer;
@@ -46,7 +47,7 @@ public:
 private:
     void AttachRenderable(Renderable* renderable);
     
-    void FlushBuffer(Viewport* viewport);
+    void FlushBuffer(Viewport* viewport, Camera* camera);
     void RenderBatch(Viewport* viewport, int count, Renderable** renderable, Effect* effect);
     
 private:

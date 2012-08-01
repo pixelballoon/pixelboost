@@ -23,6 +23,7 @@ namespace pb
         Uid GetType();
         static Uid GetStaticType();
         
+        void SetRenderPass(RenderPass renderPass);
         void SetLayer(int layer);
         void SetAlignment(FontAlign alignment);
         void SetFont(const std::string& font);

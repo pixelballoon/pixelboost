@@ -1,6 +1,7 @@
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/renderer/common/renderable.h"
+#include "pixelboost/logic/system/graphics/render/render.h"
 
 using namespace pb;
 
@@ -8,6 +9,7 @@ Renderable::Renderable(Uid entityUid)
     : _Layer(0)
     , _Effect(0)
     , _EntityUid(entityUid)
+    , _RenderPass(kRenderPassScene)
     , _WorldMatrixDirty(true)
 {
     
@@ -17,6 +19,7 @@ Renderable::Renderable(Uid entityUid, Effect* effect)
     : _Layer(0)
     , _Effect(effect)
     , _EntityUid(entityUid)
+    , _RenderPass(kRenderPassScene)
     , _WorldMatrixDirty(true)
 {
     
@@ -35,6 +38,17 @@ void Renderable::SetSystem(RenderSystem* system)
 Uid Renderable::GetEntityUid()
 {
     return _EntityUid;
+}
+
+void Renderable::SetRenderPass(RenderPass renderPass)
+{
+    _RenderPass = renderPass;
+    RefreshSystemBinding();
+}
+
+RenderPass Renderable::GetRenderPass()
+{
+    return _RenderPass;
 }
 
 void Renderable::SetLayer(int layer)
@@ -82,12 +96,12 @@ const glm::mat4x4& Renderable::GetWorldMatrix()
     return _WorldMatrix;
 }
 
-void Renderable::CalculateMVP(Viewport* viewport)
+void Renderable::CalculateMVP(Viewport* viewport, Camera* camera)
 {
     if (_WorldMatrixDirty)
         CalculateWorldMatrix();
     
-    _MVPMatrix = viewport->GetCamera()->ViewProjectionMatrix * _WorldMatrix;
+    _MVPMatrix = camera->ViewProjectionMatrix * _WorldMatrix;
 }
 
 const glm::mat4x4& Renderable::GetMVP() const
@@ -103,4 +117,14 @@ Effect* Renderable::GetEffect()
 void Renderable::SetEffect(Effect* effect)
 {
     _Effect = effect;
+}
+
+void Renderable::RefreshSystemBinding()
+{
+    if (_System)
+    {
+        RenderSystem* system = _System;
+        system->RemoveItem(this);
+        system->AddItem(this);
+    }
 }

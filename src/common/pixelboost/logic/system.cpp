@@ -17,7 +17,7 @@ void SceneSystem::Update(Scene* scene, float time)
     
 }
 
-void SceneSystem::Render(Scene* scene, Viewport* viewport)
+void SceneSystem::Render(Scene* scene, Viewport* viewport, RenderPass renderPass)
 {
     
 }

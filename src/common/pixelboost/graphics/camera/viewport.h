@@ -7,6 +7,7 @@
 #include "sigslot/delegate.h"
 
 #include "pixelboost/db/definitions.h"
+#include "pixelboost/graphics/renderer/common/renderable.h"
 
 namespace pb
 {
@@ -14,6 +15,7 @@ namespace pb
 class Camera;
 class Effect;
 class EffectTechnique;
+class OrthographicCamera;
 class Renderable;
 class RenderLayer;
 class Scene;
@@ -38,8 +40,10 @@ public:
     void SetPosition(glm::vec2 position);
     glm::vec2 GetPosition();
     
-    void SetCamera(Camera* camera);
-    Camera* GetCamera();
+    void SetSceneCamera(Camera* camera);
+    Camera* GetSceneCamera();
+    
+    OrthographicCamera* GetUiCamera();
     
     void SetRenderScheme(Uid scheme);
     Uid GetRenderScheme();
@@ -47,14 +51,15 @@ public:
     void SetScene(Scene* scene);
     Scene* GetScene();
     
-    void Render();
+    void Render(RenderPass renderPass);
 
 private:
     EffectTechnique* GetTechnique(Renderable* renderable, Effect* effect);
     
     sigslot::Delegate2<Renderable*, Effect*, EffectTechnique*> _TechniqueDelegate;
     
-    Camera* _Camera;
+    Camera* _SceneCamera;
+    OrthographicCamera* _UiCamera;
     Uid _RenderScheme;
     Scene* _Scene;
     

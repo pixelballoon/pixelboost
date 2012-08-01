@@ -46,7 +46,7 @@ public:
     virtual void CalculateTransform(Viewport* viewport);
     
     virtual glm::vec2 ConvertScreenToWorld(glm::vec2 screen);
-
+    
 public:
     glm::vec2 Scale;
 };

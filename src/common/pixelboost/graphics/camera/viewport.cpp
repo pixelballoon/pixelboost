@@ -9,18 +9,20 @@
 using namespace pb;
 
 Viewport::Viewport(int viewportId, Camera* camera)
-    : _Camera(camera)
+    : _SceneCamera(camera)
     , _Scene(0)
     , _ViewportId(viewportId)
 {
     SetRenderScheme(TypeHash("default"));
     SetResolution(GraphicsDevice::Instance()->GetDisplayResolution());
     SetDensity(GraphicsDevice::Instance()->GetDisplayDensity());
+    
+    _UiCamera = new pb::OrthographicCamera();
 }
 
 Viewport::~Viewport()
 {
-    
+    delete _UiCamera;
 }
 
 glm::vec2 Viewport::GetSize()
@@ -63,14 +65,19 @@ glm::vec2 Viewport::GetPosition()
     return _Position;
 }
 
-void Viewport::SetCamera(Camera* camera)
+void Viewport::SetSceneCamera(Camera* camera)
 {
-    _Camera = camera;
+    _SceneCamera = camera;
 }
 
-Camera* Viewport::GetCamera()
+Camera* Viewport::GetSceneCamera()
 {
-    return _Camera;
+    return _SceneCamera;
+}
+
+OrthographicCamera* Viewport::GetUiCamera()
+{
+    return _UiCamera;
 }
 
 void Viewport::SetRenderScheme(Uid scheme)
@@ -93,15 +100,29 @@ Scene* Viewport::GetScene()
     return _Scene;
 }
 
-void Viewport::Render()
+void Viewport::Render(RenderPass renderPass)
 {
-    if (_Scene && _Camera)
+    if (_Scene)
     {
         GraphicsDevice::Instance()->SetViewport(glm::vec4(_Position.x + GraphicsDevice::Instance()->GetDisplayResolution().x/2.f - _Resolution.x/2.f, _Position.y + GraphicsDevice::Instance()->GetDisplayResolution().y/2.f - _Resolution.y/2.f, _Resolution.x, _Resolution.y));
         
-        _Camera->CalculateTransform(this);
+        switch (renderPass)
+        {
+            case kRenderPassScene:
+                if (!_SceneCamera)
+                    return;
+                _SceneCamera->CalculateTransform(this);
+                break;
+            case kRenderPassUi:
+            {
+                if (!_UiCamera)
+                    return;
+                _UiCamera->CalculateTransform(this);
+                break;
+            }
+        }
         
-        _Scene->Render(this);
+        _Scene->Render(this, renderPass);
     }
 }
 

@@ -76,6 +76,7 @@ namespace pb
         int _VertexCount;
         
         int _MaxQuads;
+        Renderable* _Renderable;
         Viewport* _Viewport;
         EffectPass* _EffectPass;
         

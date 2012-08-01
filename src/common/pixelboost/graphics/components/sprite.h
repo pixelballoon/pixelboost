@@ -24,6 +24,7 @@ public:
     
     glm::vec2 GetSize();
     
+    void SetRenderPass(RenderPass renderPass);
     void SetLayer(int layer);
     void SetSprite(const std::string& sprite);
     void SetTint(const glm::vec4& tint);
