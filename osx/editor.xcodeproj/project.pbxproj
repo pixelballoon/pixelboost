@@ -308,7 +308,6 @@
 		1CF9898E15C6FB20000746F8 /* scene.inl in Resources */ = {isa = PBXBuildFile; fileRef = 1CF9891715C6FB20000746F8 /* scene.inl */; };
 		1CF9898F15C6FB20000746F8 /* basic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CF9891B15C6FB20000746F8 /* basic.cpp */; };
 		1CF9899015C6FB20000746F8 /* distance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CF9891D15C6FB20000746F8 /* distance.cpp */; };
-		1CF9899115C6FB20000746F8 /* quadtree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CF9891F15C6FB20000746F8 /* quadtree.cpp */; };
 		1CF9899215C6FB20000746F8 /* render.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CF9892115C6FB20000746F8 /* render.cpp */; };
 		1CF9899315C6FB20000746F8 /* system.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CF9892315C6FB20000746F8 /* system.cpp */; };
 		1CF9899415C6FB20000746F8 /* boundingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CF9892615C6FB20000746F8 /* boundingBox.cpp */; };
@@ -1179,8 +1178,6 @@
 		1CF9891C15C6FB20000746F8 /* basic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = basic.h; sourceTree = "<group>"; };
 		1CF9891D15C6FB20000746F8 /* distance.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = distance.cpp; sourceTree = "<group>"; };
 		1CF9891E15C6FB20000746F8 /* distance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = distance.h; sourceTree = "<group>"; };
-		1CF9891F15C6FB20000746F8 /* quadtree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = quadtree.cpp; sourceTree = "<group>"; };
-		1CF9892015C6FB20000746F8 /* quadtree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = quadtree.h; sourceTree = "<group>"; };
 		1CF9892115C6FB20000746F8 /* render.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = render.cpp; sourceTree = "<group>"; };
 		1CF9892215C6FB20000746F8 /* render.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = render.h; sourceTree = "<group>"; };
 		1CF9892315C6FB20000746F8 /* system.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = system.cpp; sourceTree = "<group>"; };
@@ -3044,8 +3041,6 @@
 				1CF9891C15C6FB20000746F8 /* basic.h */,
 				1CF9891D15C6FB20000746F8 /* distance.cpp */,
 				1CF9891E15C6FB20000746F8 /* distance.h */,
-				1CF9891F15C6FB20000746F8 /* quadtree.cpp */,
-				1CF9892015C6FB20000746F8 /* quadtree.h */,
 				1CF9892115C6FB20000746F8 /* render.cpp */,
 				1CF9892215C6FB20000746F8 /* render.h */,
 			);
@@ -3500,7 +3495,6 @@
 				1CF9898D15C6FB20000746F8 /* scene.cpp in Sources */,
 				1CF9898F15C6FB20000746F8 /* basic.cpp in Sources */,
 				1CF9899015C6FB20000746F8 /* distance.cpp in Sources */,
-				1CF9899115C6FB20000746F8 /* quadtree.cpp in Sources */,
 				1CF9899215C6FB20000746F8 /* render.cpp in Sources */,
 				1CF9899315C6FB20000746F8 /* system.cpp in Sources */,
 				1CF9899415C6FB20000746F8 /* boundingBox.cpp in Sources */,
