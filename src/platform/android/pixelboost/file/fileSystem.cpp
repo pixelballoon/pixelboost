@@ -72,9 +72,6 @@ bool AndroidFile::ReadAll(std::string& data)
     
     delete[] temp;
 
-    if (_Length < 1000)
-        PbLogDebug("pixelboost", "Reading data (%s) from file (%d/%d bytes read)", data.c_str(), data.length(), _Length);
-
     return true;
 }
 
@@ -95,8 +92,6 @@ bool AndroidFile::Write(const std::string& data)
     
     long written = fwrite(data.c_str(), 1, data.length(), _File);
 
-    PbLogDebug("pixelboost", "Writing data (%s) to file (%d/%d bytes written)", data.c_str(), data.length(), written);
-    
     return true;
 }
 
@@ -199,6 +194,9 @@ File* FileSystem::OpenFile(FileLocation location, const std::string& path, FileM
         PbLogDebug("pixelboost", "Opening user file (%s)", totalPath.c_str());
 
         handle = fopen(totalPath.c_str(), openMode.c_str());
+        fseek(handle, 0, SEEK_END);
+        length = ftell(handle);
+        fseek(handle, 0, SEEK_SET);
     }
 
     if (handle)
