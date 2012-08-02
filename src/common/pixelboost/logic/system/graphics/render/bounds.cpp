@@ -1,23 +1,15 @@
-#include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/camera/viewport.h"
-#include "pixelboost/graphics/renderer/common/renderable.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
-#include "pixelboost/logic/system/graphics/render/distance.h"
+#include "pixelboost/logic/system/graphics/render/bounds.h"
 
 using namespace pb;
 
-DistanceRenderSystem::DistanceRenderSystem(float distance)
-    : _Distance(distance)
-{
-    
-}
-
-Uid DistanceRenderSystem::GetStaticType()
+Uid BoundsRenderSystem::GetStaticType()
 {
     return RenderSystem::GetStaticType();
 }
 
-void DistanceRenderSystem::Render(Scene* scene, Viewport* viewport, RenderPass renderPass)
+void BoundsRenderSystem::Render(Scene* scene, Viewport* viewport, RenderPass renderPass)
 {
     switch (renderPass)
     {
@@ -29,25 +21,22 @@ void DistanceRenderSystem::Render(Scene* scene, Viewport* viewport, RenderPass r
             }
             break;
         }
+            
         case kRenderPassScene:
         {
-            glm::vec3 cameraPosition = viewport->GetSceneCamera()->Position;
-            cameraPosition.z = 0;
-            
+            Camera* camera = viewport->GetSceneCamera();
             for (RenderableSet::iterator it = _SceneRenderables.begin(); it != _SceneRenderables.end(); ++it)
             {
-                glm::vec4 position = (*it)->GetWorldMatrix()[3];
-                
-                if ((*it)->GetRenderableType() == TypeHash("particle")|| glm::distance(cameraPosition, glm::vec3(position.x, position.y, 0)) < _Distance)
+                const BoundingSphere& bounds = (*it)->GetBounds();
+                if (true) // Check if bounds intersect with camera frustum
                     RenderItem(*it);
             }
-            
             break;
         }
     }
 }
 
-void DistanceRenderSystem::AddItem(Renderable* renderable)
+void BoundsRenderSystem::AddItem(Renderable* renderable)
 {
     switch (renderable->GetRenderPass())
     {
@@ -62,10 +51,10 @@ void DistanceRenderSystem::AddItem(Renderable* renderable)
     RenderSystem::AddItem(renderable);
 }
 
-void DistanceRenderSystem::RemoveItem(Renderable* renderable)
+void BoundsRenderSystem::RemoveItem(Renderable* renderable)
 {
     _SceneRenderables.erase(renderable);
     _UiRenderables.erase(renderable);
     
-    RenderSystem::RemoveItem(renderable);
+    RenderSystem::AddItem(renderable);
 }

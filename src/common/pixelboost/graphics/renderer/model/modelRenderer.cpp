@@ -37,6 +37,11 @@ Uid ModelRenderable::GetRenderableType()
     return TypeHash("model");
 }
 
+void ModelRenderable::CalculateBounds()
+{
+    SetBounds(BoundingSphere());
+}
+
 void ModelRenderable::CalculateWorldMatrix()
 {
     SetWorldMatrix(_Transform);

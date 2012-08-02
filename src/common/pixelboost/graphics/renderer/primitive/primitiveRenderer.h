@@ -52,6 +52,7 @@ class PrimitiveRenderableEllipse : public PrimitiveRenderable
 public:
     PrimitiveRenderableEllipse(Uid entityUid);
     
+    virtual void CalculateBounds();
     virtual void CalculateWorldMatrix();
     
     virtual Type GetPrimitiveType();
@@ -82,6 +83,7 @@ class PrimitiveRenderableLine : public PrimitiveRenderable
 public:
     PrimitiveRenderableLine(Uid entityUid);
     
+    virtual void CalculateBounds();
     virtual void CalculateWorldMatrix();
     
     virtual Type GetPrimitiveType();
@@ -105,6 +107,7 @@ class PrimitiveRenderableRectangle : public PrimitiveRenderable
 public:
     PrimitiveRenderableRectangle(Uid entityUid);
     
+    virtual void CalculateBounds();
     virtual void CalculateWorldMatrix();
     
     virtual Type GetPrimitiveType();

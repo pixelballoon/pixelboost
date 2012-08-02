@@ -37,6 +37,13 @@ Uid FontRenderable::GetRenderableType()
     return TypeHash("font");
 }
 
+void FontRenderable::CalculateBounds()
+{
+    glm::vec4 position = GetWorldMatrix()[3];
+    BoundingSphere bounds(glm::vec3(position.x, position.y, position.z), Size);
+    SetBounds(bounds);
+}
+
 void FontRenderable::CalculateWorldMatrix()
 {
     glm::mat4x4 worldMatrix = glm::scale(glm::mat4x4(), glm::vec3(Size, Size, 1));
@@ -101,6 +108,7 @@ void FontRenderable::SetTransform(const glm::mat4x4& transform)
 {
     Transform = transform;
     DirtyWorldMatrix();
+    DirtyBounds();
 }
 
 const glm::mat4x4& FontRenderable::GetTransform()
@@ -136,6 +144,7 @@ void FontRenderable::CalculateOffset()
     }
     
     DirtyWorldMatrix();
+    DirtyBounds();
 }
 
 glm::vec2 Font::FillVertexBuffer(VertexBuffer* vertexBuffer, const std::string& string)

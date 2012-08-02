@@ -32,6 +32,11 @@ Uid ParticleRenderable::GetRenderableType()
     return TypeHash("particle");
 }
 
+void ParticleRenderable::CalculateBounds()
+{
+    SetBounds(BoundingSphere());
+}
+
 void ParticleRenderable::CalculateWorldMatrix()
 {
     SetWorldMatrix(glm::mat4x4());

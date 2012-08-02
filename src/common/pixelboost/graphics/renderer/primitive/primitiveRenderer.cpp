@@ -57,6 +57,12 @@ PrimitiveRenderableEllipse::PrimitiveRenderableEllipse(Uid entityUid)
     
 }
 
+void PrimitiveRenderableEllipse::CalculateBounds()
+{
+    BoundingSphere bounds(_Position, glm::max(_Size.x, _Size.y));
+    SetBounds(bounds);
+}
+
 void PrimitiveRenderableEllipse::CalculateWorldMatrix()
 {
     glm::mat4x4 worldMatrix = glm::translate(glm::mat4x4(), _Position);
@@ -90,6 +96,7 @@ glm::vec3 PrimitiveRenderableEllipse::GetPosition()
 void PrimitiveRenderableEllipse::SetPosition(glm::vec3 position)
 {
     _Position = position;
+    DirtyBounds();
     DirtyWorldMatrix();
 }
 
@@ -112,6 +119,7 @@ glm::vec2 PrimitiveRenderableEllipse::GetSize()
 void PrimitiveRenderableEllipse::SetSize(glm::vec2 size)
 {
     _Size = size;
+    DirtyBounds();
     DirtyWorldMatrix();
 }
 
@@ -119,6 +127,12 @@ PrimitiveRenderableLine::PrimitiveRenderableLine(Uid entityUid)
     : PrimitiveRenderable(entityUid)
 {
     
+}
+
+void PrimitiveRenderableLine::CalculateBounds()
+{
+    BoundingSphere bounds((_Start+_End)/2.f, glm::distance(_Start, _End)/2.f);
+    SetBounds(bounds);
 }
 
 void PrimitiveRenderableLine::CalculateWorldMatrix()
@@ -139,6 +153,7 @@ glm::vec3 PrimitiveRenderableLine::GetStart()
 void PrimitiveRenderableLine::SetStart(glm::vec3 start)
 {
     _Start = start;
+    DirtyBounds();
 }
 
 glm::vec3 PrimitiveRenderableLine::GetEnd()
@@ -149,6 +164,7 @@ glm::vec3 PrimitiveRenderableLine::GetEnd()
 void PrimitiveRenderableLine::SetEnd(glm::vec3 end)
 {
     _End = end;
+    DirtyBounds();
 }
 
 PrimitiveRenderableRectangle::PrimitiveRenderableRectangle(Uid entityUid)
@@ -156,6 +172,13 @@ PrimitiveRenderableRectangle::PrimitiveRenderableRectangle(Uid entityUid)
     , _Solid(false)
 {
     
+}
+
+void PrimitiveRenderableRectangle::CalculateBounds()
+{
+    glm::vec4 position = GetWorldMatrix()[3];
+    BoundingSphere bounds(glm::vec3(position.x, position.y, position.z), glm::max(_Size.x, _Size.y));
+    SetBounds(bounds);
 }
 
 void PrimitiveRenderableRectangle::CalculateWorldMatrix()

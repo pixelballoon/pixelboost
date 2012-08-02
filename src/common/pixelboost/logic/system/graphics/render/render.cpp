@@ -28,3 +28,8 @@ void RenderSystem::RemoveItem(Renderable* renderable)
 {
     renderable->SetSystem(0);
 }
+
+void RenderSystem::UpdateBounds(Renderable* renderable)
+{
+    
+}

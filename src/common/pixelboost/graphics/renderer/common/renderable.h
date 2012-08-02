@@ -37,12 +37,12 @@ public:
     virtual void SetLayer(int layer);
     virtual int GetLayer();
     
-    virtual void CalculateWorldMatrix() = 0;
-    
+    virtual void CalculateBounds() = 0;
     void DirtyBounds();
     void SetBounds(const BoundingSphere& bounds);
     const BoundingSphere& GetBounds();
     
+    virtual void CalculateWorldMatrix() = 0;
     void DirtyWorldMatrix();
     void SetWorldMatrix(const glm::mat4x4& matrix);
     const glm::mat4x4& GetWorldMatrix();

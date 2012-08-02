@@ -15,6 +15,8 @@ public:
     
     virtual void AddItem(Renderable* renderable);
     virtual void RemoveItem(Renderable* renderable);
+    
+    virtual void UpdateBounds(Renderable* renderable);
 
 protected:
     void RenderItem(Renderable* renderable);

@@ -33,6 +33,12 @@ Uid SpriteRenderable::GetRenderableType()
     return TypeHash("sprite");
 }
 
+void SpriteRenderable::CalculateBounds()
+{
+    BoundingSphere bounds;
+    SetBounds(bounds);
+}
+
 void SpriteRenderable::CalculateWorldMatrix()
 {
     if (_Sprite)

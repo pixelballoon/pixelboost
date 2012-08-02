@@ -10,14 +10,25 @@ Uid BasicRenderSystem::GetStaticType()
 
 void BasicRenderSystem::Render(Scene* scene, Viewport* viewport, RenderPass renderPass)
 {
-    for (RenderableSet::iterator it = _UiRenderables.begin(); it != _UiRenderables.end(); ++it)
+    switch (renderPass)
     {
-        RenderItem(*it);
-    }
-    
-    for (RenderableSet::iterator it = _SceneRenderables.begin(); it != _SceneRenderables.end(); ++it)
-    {
-        RenderItem(*it);
+        case kRenderPassUi:
+        {
+            for (RenderableSet::iterator it = _UiRenderables.begin(); it != _UiRenderables.end(); ++it)
+            {
+                RenderItem(*it);
+            }
+            break;
+        }
+            
+        case kRenderPassScene:
+        {
+            for (RenderableSet::iterator it = _SceneRenderables.begin(); it != _SceneRenderables.end(); ++it)
+            {
+                RenderItem(*it);
+            }
+            break;
+        }
     }
 }
 

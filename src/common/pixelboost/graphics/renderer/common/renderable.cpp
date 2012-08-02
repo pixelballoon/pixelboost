@@ -6,7 +6,8 @@
 using namespace pb;
 
 Renderable::Renderable(Uid entityUid)
-    : _Layer(0)
+    : _BoundsDirty(true)
+    , _Layer(0)
     , _Effect(0)
     , _EntityUid(entityUid)
     , _RenderPass(kRenderPassScene)
@@ -16,7 +17,8 @@ Renderable::Renderable(Uid entityUid)
 }
 
 Renderable::Renderable(Uid entityUid, Effect* effect)
-    : _Layer(0)
+    : _BoundsDirty(true)
+    , _Layer(0)
     , _Effect(effect)
     , _EntityUid(entityUid)
     , _RenderPass(kRenderPassScene)
@@ -70,10 +72,16 @@ void Renderable::SetBounds(const BoundingSphere& bounds)
 {
     _Bounds = bounds;
     _BoundsDirty = false;
+    
+    if (_System)
+        _System->UpdateBounds(this);
 }
 
 const BoundingSphere& Renderable::GetBounds()
 {
+    if (_BoundsDirty)
+        CalculateBounds();
+    
     return _Bounds;
 }
 
