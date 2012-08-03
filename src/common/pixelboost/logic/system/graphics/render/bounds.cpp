@@ -1,3 +1,4 @@
+#include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/logic/system/graphics/render/bounds.h"
@@ -28,7 +29,7 @@ void BoundsRenderSystem::Render(Scene* scene, Viewport* viewport, RenderPass ren
             for (RenderableSet::iterator it = _SceneRenderables.begin(); it != _SceneRenderables.end(); ++it)
             {
                 const BoundingSphere& bounds = (*it)->GetBounds();
-                if (true) // Check if bounds intersect with camera frustum
+                if (camera->Frustum.Intersects(bounds))
                     RenderItem(*it);
             }
             break;

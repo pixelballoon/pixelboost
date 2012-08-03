@@ -10,10 +10,8 @@ BoundingBox::BoundingBox()
 }
 
 BoundingBox::BoundingBox(glm::vec3 min, glm::vec3 max)
-    : _Min(min)
-    , _Max(max)
-    , _Valid(true)
 {
+    Set(min, max);
 }
 
 bool BoundingBox::IsValid()
@@ -34,6 +32,13 @@ glm::vec3 BoundingBox::GetCenter()
 glm::vec3 BoundingBox::GetSize()
 {
     return _Max-_Min;
+}
+
+void BoundingBox::Set(glm::vec3 min, glm::vec3 max)
+{
+    _Min = min;
+    _Max = max;
+    _Valid = true;
 }
 
 void BoundingBox::Expand(glm::vec3 point)

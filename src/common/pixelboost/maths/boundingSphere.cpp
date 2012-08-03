@@ -10,10 +10,8 @@ BoundingSphere::BoundingSphere()
 }
 
 BoundingSphere::BoundingSphere(glm::vec3 center, float size)
-    : _Center(center)
-    , _Size(size)
-    , _Valid(true)
 {
+    Set(center, size);
 }
 
 bool BoundingSphere::IsValid()
@@ -26,14 +24,21 @@ void BoundingSphere::Invalidate()
     _Valid = false;
 }
 
-glm::vec3 BoundingSphere::GetCenter()
+glm::vec3 BoundingSphere::GetCenter() const
 {
     return _Center;
 }
 
-float BoundingSphere::GetSize()
+float BoundingSphere::GetSize() const
 {
     return _Size;
+}
+
+void BoundingSphere::Set(glm::vec3 center, float size)
+{
+    _Center = center;
+    _Size = size;
+    _Valid = true;
 }
 
 void BoundingSphere::Expand(glm::vec3 point)
@@ -46,15 +51,15 @@ void BoundingSphere::Expand(glm::vec3 point)
         return;
     }
     
-    // TODO: Expand
+    _Size = glm::max(_Size, glm::distance(_Center, point));
 }
 
-bool BoundingSphere::Contains(glm::vec3 point)
+bool BoundingSphere::Contains(glm::vec3 point) const
 {
     return glm::distance(point, _Center) < _Size;
 }
 
-bool BoundingSphere::Intersects(const BoundingSphere& box)
+bool BoundingSphere::Intersects(const BoundingSphere& box) const
 {
     return glm::distance(_Center, box._Center) < _Size + box._Size;
 }

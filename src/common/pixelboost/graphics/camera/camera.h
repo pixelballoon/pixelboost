@@ -2,6 +2,8 @@
 
 #include "glm/glm.hpp"
 
+#include "pixelboost/maths/boundingFrustum.h"
+
 namespace pb
 {
     
@@ -25,6 +27,7 @@ public:
 	virtual void CalculateTransform(Viewport* viewport) = 0;
     
 public:
+    BoundingFrustum Frustum;
     glm::mat4x4 ViewProjectionMatrix;
     glm::mat4x4 ProjectionMatrix;
     glm::mat4x4 ViewMatrix;

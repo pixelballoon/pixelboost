@@ -16,6 +16,8 @@ namespace pb
         glm::vec3 GetCenter();
         glm::vec3 GetSize();
         
+        void Set(glm::vec3 min, glm::vec3 max);
+        
         void Expand(glm::vec3 point);
         void Expand(const BoundingBox& box);
         
