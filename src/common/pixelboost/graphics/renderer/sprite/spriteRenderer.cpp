@@ -35,8 +35,14 @@ Uid SpriteRenderable::GetRenderableType()
 
 void SpriteRenderable::CalculateBounds()
 {
-    BoundingSphere bounds;
-    SetBounds(bounds);
+    Sprite* sprite = GetSprite();
+    if (sprite)
+    {
+        BoundingSphere bounds;
+        glm::vec4 position = GetWorldMatrix() * glm::vec4(0,0,0,1);
+        bounds.Set(glm::vec3(position.x, position.y, position.z), glm::max(sprite->_Size.x, sprite->_Size.y));
+        SetBounds(bounds);
+    }
 }
 
 void SpriteRenderable::CalculateWorldMatrix()
@@ -73,6 +79,7 @@ void SpriteRenderable::SetSprite(Sprite* sprite)
 void SpriteRenderable::SetTransform(const glm::mat4x4& transform)
 {
     _Transform = transform;
+    DirtyBounds();
     DirtyWorldMatrix();
 }
 

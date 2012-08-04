@@ -39,7 +39,9 @@ Uid ModelRenderable::GetRenderableType()
 
 void ModelRenderable::CalculateBounds()
 {
-    SetBounds(BoundingSphere());
+    // TODO : Properly calculate model bounds
+    glm::vec4 position = GetWorldMatrix() * glm::vec4(0,0,0,1);
+    SetBounds(BoundingSphere(glm::vec3(position.x, position.y, position.z), 5.f));
 }
 
 void ModelRenderable::CalculateWorldMatrix()

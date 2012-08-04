@@ -10,7 +10,7 @@ namespace pb
         BoundingSphere();
         BoundingSphere(glm::vec3 position, float size);
         
-        bool IsValid();
+        bool IsValid() const;
         void Invalidate();
         
         glm::vec3 GetCenter() const;

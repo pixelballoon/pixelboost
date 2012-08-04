@@ -13,14 +13,14 @@ namespace pb
         BoundingFrustum(const glm::mat4x4& viewProjectionMatrix);
         BoundingFrustum(glm::vec4 left, glm::vec4 right, glm::vec4 top, glm::vec4 bottom, glm::vec4 front, glm::vec4 back);
         
-        bool IsValid();
+        bool IsValid() const;
         void Invalidate();
         
         void Set(const glm::mat4x4& viewProjectionMatrix);
         void Set(glm::vec4 left, glm::vec4 right, glm::vec4 top, glm::vec4 bottom, glm::vec4 front, glm::vec4 back);
         
-        bool Contains(glm::vec3 point);
-        bool Intersects(const BoundingSphere& sphere);
+        bool Contains(glm::vec3 point) const;
+        bool Intersects(const BoundingSphere& sphere) const;
         
     private:
         void Normalise();

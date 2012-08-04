@@ -14,7 +14,7 @@ BoundingSphere::BoundingSphere(glm::vec3 center, float size)
     Set(center, size);
 }
 
-bool BoundingSphere::IsValid()
+bool BoundingSphere::IsValid() const
 {
     return _Valid;
 }

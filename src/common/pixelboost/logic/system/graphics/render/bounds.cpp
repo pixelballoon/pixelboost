@@ -26,10 +26,11 @@ void BoundsRenderSystem::Render(Scene* scene, Viewport* viewport, RenderPass ren
         case kRenderPassScene:
         {
             Camera* camera = viewport->GetSceneCamera();
+            const BoundingFrustum& frustum = camera->Frustum;
             for (RenderableSet::iterator it = _SceneRenderables.begin(); it != _SceneRenderables.end(); ++it)
             {
                 const BoundingSphere& bounds = (*it)->GetBounds();
-                if (camera->Frustum.Intersects(bounds))
+                if (!bounds.IsValid() || frustum.Intersects(bounds))
                     RenderItem(*it);
             }
             break;
