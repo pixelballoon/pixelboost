@@ -45,6 +45,11 @@ Uid GwenRenderable::GetRenderableType()
     return pb::TypeHash("gwen");
 }
 
+void GwenRenderable::CalculateBounds()
+{
+    SetBounds(BoundingSphere());
+}
+
 void GwenRenderable::CalculateWorldMatrix()
 {
     SetWorldMatrix(glm::mat4x4());
