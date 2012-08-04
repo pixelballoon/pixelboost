@@ -27,6 +27,8 @@
 		1C3F42361558323400396F50 /* record.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C3F42301558323400396F50 /* record.cpp */; };
 		1C3F42381558323400396F50 /* schema.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C3F42341558323400396F50 /* schema.cpp */; };
 		1C3F423B1558430B00396F50 /* file.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C3F42391558430B00396F50 /* file.cpp */; };
+		1C6269A515CC177300B23098 /* bounds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C6269A415CC177300B23098 /* bounds.cpp */; };
+		1C6269AA15CC179600B23098 /* boundingFrustum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C6269A815CC179600B23098 /* boundingFrustum.cpp */; };
 		1C78EE901567ECD2001441AC /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C78EE8F1567ECD2001441AC /* OpenGL.framework */; };
 		1C78EE931567EDDF001441AC /* MainView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C78EE921567EDDF001441AC /* MainView.mm */; };
 		1C7DD6C315AED7870006A24D /* rotateManipulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C7DD6C015AED7860006A24D /* rotateManipulator.cpp */; };
@@ -365,6 +367,10 @@
 		1C3F42351558323400396F50 /* schema.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = schema.h; path = http/commands/schema.h; sourceTree = "<group>"; };
 		1C3F42391558430B00396F50 /* file.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = file.cpp; path = http/commands/file.cpp; sourceTree = "<group>"; };
 		1C3F423A1558430B00396F50 /* file.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = file.h; path = http/commands/file.h; sourceTree = "<group>"; };
+		1C6269A415CC177300B23098 /* bounds.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bounds.cpp; sourceTree = "<group>"; };
+		1C6269A715CC177A00B23098 /* bounds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bounds.h; sourceTree = "<group>"; };
+		1C6269A815CC179600B23098 /* boundingFrustum.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boundingFrustum.cpp; sourceTree = "<group>"; };
+		1C6269A915CC179600B23098 /* boundingFrustum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boundingFrustum.h; sourceTree = "<group>"; };
 		1C78EE8F1567ECD2001441AC /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		1C78EE911567EDDF001441AC /* MainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainView.h; sourceTree = "<group>"; };
 		1C78EE921567EDDF001441AC /* MainView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MainView.mm; sourceTree = "<group>"; };
@@ -3039,6 +3045,8 @@
 			children = (
 				1CF9891B15C6FB20000746F8 /* basic.cpp */,
 				1CF9891C15C6FB20000746F8 /* basic.h */,
+				1C6269A415CC177300B23098 /* bounds.cpp */,
+				1C6269A715CC177A00B23098 /* bounds.h */,
 				1CF9891D15C6FB20000746F8 /* distance.cpp */,
 				1CF9891E15C6FB20000746F8 /* distance.h */,
 				1CF9892115C6FB20000746F8 /* render.cpp */,
@@ -3052,6 +3060,8 @@
 			children = (
 				1CF9892615C6FB20000746F8 /* boundingBox.cpp */,
 				1CF9892715C6FB20000746F8 /* boundingBox.h */,
+				1C6269A815CC179600B23098 /* boundingFrustum.cpp */,
+				1C6269A915CC179600B23098 /* boundingFrustum.h */,
 				1CF9892815C6FB20000746F8 /* boundingSphere.cpp */,
 				1CF9892915C6FB20000746F8 /* boundingSphere.h */,
 			);
@@ -3506,6 +3516,8 @@
 				1CF9899A15C6FB20000746F8 /* helpers.cpp in Sources */,
 				1CF9899C15C6FB20000746F8 /* trex.c in Sources */,
 				1CF9899F15C7AFD3000746F8 /* createRecord.cpp in Sources */,
+				1C6269A515CC177300B23098 /* bounds.cpp in Sources */,
+				1C6269AA15CC179600B23098 /* boundingFrustum.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
