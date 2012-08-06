@@ -1314,7 +1314,6 @@
 		1C210F31152CF44E00DEAC92 = {
 			isa = PBXGroup;
 			children = (
-				1C78EE8F1567ECD2001441AC /* OpenGL.framework */,
 				1CEB6DF41540AE1D00E8D103 /* data */,
 				1CE09615157D50D9000A9AA7 /* default */,
 				1CEB6DAA1540A52F00E8D103 /* source */,
@@ -1348,6 +1347,7 @@
 				1C210F43152CF44F00DEAC92 /* AppKit.framework */,
 				1C210F44152CF44F00DEAC92 /* CoreData.framework */,
 				1C210F45152CF44F00DEAC92 /* Foundation.framework */,
+				1C78EE8F1567ECD2001441AC /* OpenGL.framework */,
 				1C210F5D152CF60400DEAC92 /* WebKit.framework */,
 			);
 			name = "Other Frameworks";
