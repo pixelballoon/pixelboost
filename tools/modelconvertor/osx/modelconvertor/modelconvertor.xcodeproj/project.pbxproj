@@ -257,6 +257,9 @@
 		1C626E9C15CF9A3A00B23098 /* fileHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C626D8615CF9A3A00B23098 /* fileHelpers.mm */; };
 		1C626E9D15CF9A3A00B23098 /* gameCenter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C626D8915CF9A3A00B23098 /* gameCenter.mm */; };
 		1C626E9E15CF9A3A00B23098 /* networkHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C626D8A15CF9A3A00B23098 /* networkHelpers.mm */; };
+		1C9666D215D04068007ED733 /* modelExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C9666CE15D04068007ED733 /* modelExporter.cpp */; };
+		1C9666D315D04068007ED733 /* modelLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C9666D015D04068007ED733 /* modelLoader.cpp */; };
+		1C9666D715D040C8007ED733 /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C9666D515D040C8007ED733 /* model.cpp */; };
 		1CC7006215CF9E5E00E50CA8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CC7006115CF9E5E00E50CA8 /* Foundation.framework */; };
 		1CC7006515CFA02D00E50CA8 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CC7006415CFA02D00E50CA8 /* OpenGL.framework */; };
 		1CC7007615CFA15C00E50CA8 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC7007415CFA15C00E50CA8 /* main.cpp */; };
@@ -1052,6 +1055,12 @@
 		1C626D8815CF9A3A00B23098 /* gameCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gameCenter.h; sourceTree = "<group>"; };
 		1C626D8915CF9A3A00B23098 /* gameCenter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = gameCenter.mm; sourceTree = "<group>"; };
 		1C626D8A15CF9A3A00B23098 /* networkHelpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = networkHelpers.mm; sourceTree = "<group>"; };
+		1C9666CE15D04068007ED733 /* modelExporter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = modelExporter.cpp; sourceTree = "<group>"; };
+		1C9666CF15D04068007ED733 /* modelExporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = modelExporter.h; sourceTree = "<group>"; };
+		1C9666D015D04068007ED733 /* modelLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = modelLoader.cpp; sourceTree = "<group>"; };
+		1C9666D115D04068007ED733 /* modelLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = modelLoader.h; sourceTree = "<group>"; };
+		1C9666D515D040C8007ED733 /* model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = model.cpp; sourceTree = "<group>"; };
+		1C9666D615D040C8007ED733 /* model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = model.h; sourceTree = "<group>"; };
 		1CC7006115CF9E5E00E50CA8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1CC7006415CFA02D00E50CA8 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		1CC7007415CFA15C00E50CA8 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
@@ -1076,6 +1085,7 @@
 			children = (
 				1C953F1314CD684D00B934D5 /* lib */,
 				1CC7007315CFA15C00E50CA8 /* modelconvertor */,
+				1C9666CD15D04068007ED733 /* source */,
 				1C16CA0314CD6790006B4E65 /* Products */,
 				1CC7006015CF9E3D00E50CA8 /* Frameworks */,
 			);
@@ -2881,6 +2891,20 @@
 			name = lib;
 			sourceTree = "<group>";
 		};
+		1C9666CD15D04068007ED733 /* source */ = {
+			isa = PBXGroup;
+			children = (
+				1C9666D515D040C8007ED733 /* model.cpp */,
+				1C9666D615D040C8007ED733 /* model.h */,
+				1C9666CE15D04068007ED733 /* modelExporter.cpp */,
+				1C9666CF15D04068007ED733 /* modelExporter.h */,
+				1C9666D015D04068007ED733 /* modelLoader.cpp */,
+				1C9666D115D04068007ED733 /* modelLoader.h */,
+			);
+			name = source;
+			path = ../../source;
+			sourceTree = "<group>";
+		};
 		1CC7006015CF9E3D00E50CA8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -3201,6 +3225,9 @@
 				1C626E9D15CF9A3A00B23098 /* gameCenter.mm in Sources */,
 				1C626E9E15CF9A3A00B23098 /* networkHelpers.mm in Sources */,
 				1CC7007615CFA15C00E50CA8 /* main.cpp in Sources */,
+				1C9666D215D04068007ED733 /* modelExporter.cpp in Sources */,
+				1C9666D315D04068007ED733 /* modelLoader.cpp in Sources */,
+				1C9666D715D040C8007ED733 /* model.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3227,6 +3254,7 @@
 					../../../../src/common/,
 					../../../../src/external/,
 					../../../../src/platform/mac/,
+					../../source/,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
@@ -3251,6 +3279,7 @@
 					../../../../src/common/,
 					../../../../src/external/,
 					../../../../src/platform/mac/,
+					../../source/,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;
