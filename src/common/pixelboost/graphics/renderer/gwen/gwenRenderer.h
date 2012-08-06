@@ -27,6 +27,7 @@ namespace pb
         
         virtual Uid GetRenderableType();
         
+        virtual void CalculateBounds();
         virtual void CalculateWorldMatrix();
         
         virtual Effect* GetEffect();
