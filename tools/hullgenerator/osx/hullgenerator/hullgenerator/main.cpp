@@ -2,9 +2,10 @@
 #include <iostream>
 #include <string>
 
+#include "glm/glm.hpp"
+#include "lodepng/lodepng.h"
+
 #include "pixelboost/data/json/writer.h"
-#include "pixelboost/math/maths.h"
-#include "pixelboost/external/lodepng/lodepng.h"
 #include "pixelboost/external/polydecomp/decomp.h"
 
 class HullGenerator
@@ -23,10 +24,10 @@ private:
     void GenerateBorders();
     bool CheckBorder(int x, int y, int angle);
     bool AppendBorder(int startX, int startY, int x, int y, int angle, bool start);
-    void ProcessBorder(const std::vector<Vec2>& border);
+    void ProcessBorder(const std::vector<glm::vec2>& border);
     void GenerateHulls();
     
-    void DebugBorder(const std::vector<Vec2>& border, const std::string& filename);
+    void DebugBorder(const std::vector<glm::vec2>& border, const std::string& filename);
     void DebugFrame(const std::string& filename);
     void DebugFinal(const std::string& filename);
     
@@ -47,10 +48,10 @@ private:
     int _Height;
     
     std::vector<FrameValue> _Frame;
-    std::vector<Vec2> _Border;
+    std::vector<glm::vec2> _Border;
     
-    std::vector<std::vector<Vec2> > _Hulls;
-    std::vector<std::vector<Vec2> > _Objects;
+    std::vector<std::vector<glm::vec2> > _Hulls;
+    std::vector<std::vector<glm::vec2> > _Objects;
     
     std::string _DebugPath;
     bool _DebugMode;
@@ -108,11 +109,11 @@ bool HullGenerator::Save(const std::string& filename)
     json::Object o;
     
     json::Array hulls;
-    for (std::vector<std::vector<Vec2> >::iterator hullIt = _Hulls.begin(); hullIt != _Hulls.end(); ++hullIt)
+    for (std::vector<std::vector<glm::vec2> >::iterator hullIt = _Hulls.begin(); hullIt != _Hulls.end(); ++hullIt)
     {
         json::Array hull;
         
-        for (std::vector<Vec2>::iterator it = hullIt->begin(); it != hullIt->end(); ++it)
+        for (std::vector<glm::vec2>::iterator it = hullIt->begin(); it != hullIt->end(); ++it)
         {
             json::Object pt;
             pt["x"] = json::Number((*it)[0]/32.f-widthOffset);
@@ -220,10 +221,10 @@ void HullGenerator::GenerateBorders()
 
                 AppendBorder(x, y, x, y, 0, true);
                 
-                for (std::vector<Vec2>::iterator it = _Border.begin(); it != _Border.end(); ++it)
+                for (std::vector<glm::vec2>::iterator it = _Border.begin(); it != _Border.end(); ++it)
                 {
                     SetFrame((*it)[0], (*it)[1], kFrameValueEmpty);
-                    *it = Vec2((*it)[0], _Height-1-(*it)[1]);
+                    *it = glm::vec2((*it)[0], _Height-1-(*it)[1]);
                 }
                 std::reverse(_Border.begin(), _Border.end());
                 
@@ -303,7 +304,7 @@ bool HullGenerator::AppendBorder(int startX, int startY, int x, int y, int angle
     if (startX == x && startY == y && !start)
         return true;
     
-    _Border.push_back(Vec2(x, y));
+    _Border.push_back(glm::vec2(x, y));
     
     bool prevBorder = true;
     for (int i=angle-4; i<angle+4; i++)
@@ -361,7 +362,7 @@ bool HullGenerator::AppendBorder(int startX, int startY, int x, int y, int angle
     return false;
 }
 
-void HullGenerator::DebugBorder(const std::vector<Vec2>& border, const std::string& filename)
+void HullGenerator::DebugBorder(const std::vector<glm::vec2>& border, const std::string& filename)
 {
     std::vector<unsigned char> image;
     std::vector<unsigned char> buffer;
@@ -379,7 +380,7 @@ void HullGenerator::DebugBorder(const std::vector<Vec2>& border, const std::stri
     
     for (int i=0; i<border.size(); i++)
     {
-        Vec2 pos = border[i];
+        glm::vec2 pos = border[i];
         int offset = (pos[1]*_Width*4)+(pos[0]*4);
         image[offset] = (i%64)*4;
         image[offset+1] = (i%64)*4;
@@ -438,13 +439,13 @@ void HullGenerator::DebugFinal(const std::string& filename)
     }
     
     //for (std::vector<std::vector<Vec2> >::iterator it = _Objects.begin(); it != _Objects.end(); ++it)
-    for (std::vector<std::vector<Vec2> >::iterator it = _Hulls.begin(); it != _Hulls.end(); ++it)
+    for (std::vector<std::vector<glm::vec2> >::iterator it = _Hulls.begin(); it != _Hulls.end(); ++it)
     {
-        std::vector<Vec2>& hull = *it;
+        std::vector<glm::vec2>& hull = *it;
         for (int i=0; i<hull.size(); i++)
         {
-            Vec2 a = hull[i];
-            Vec2 b = hull[(i+1)%hull.size()];
+            glm::vec2 a = hull[i];
+            glm::vec2 b = hull[(i+1)%hull.size()];
             
             int sx = a[0];
             int sy = a[1];
@@ -453,8 +454,8 @@ void HullGenerator::DebugFinal(const std::string& filename)
             
             if (sx > ex)
             {
-                Swap(sx, ex);
-                Swap(sy, ey);
+                std::swap(sx, ex);
+                std::swap(sy, ey);
             }
             
             int deltaX = ex - sx;
@@ -486,21 +487,21 @@ void HullGenerator::DebugFinal(const std::string& filename)
     LodePNG::saveFile(buffer, filename);
 }
 
-void HullGenerator::ProcessBorder(const std::vector<Vec2>& border)
+void HullGenerator::ProcessBorder(const std::vector<glm::vec2>& border)
 {   
-    std::vector<Vec2> optimisedBorder = border;
+    std::vector<glm::vec2> optimisedBorder = border;
 
     if (!optimisedBorder.size())
         return;
     
     for (int i=0; i<((int)optimisedBorder.size())-1 && optimisedBorder.size() > 3;)
     {
-        Vec2 a = optimisedBorder[i];
+        glm::vec2 a = optimisedBorder[i];
         
         for (int j=i+1; j<optimisedBorder.size();)
         {
-            Vec2 b = optimisedBorder[j];
-            if (len(a-b) < (float)_Width/25.f)
+            glm::vec2 b = optimisedBorder[j];
+            if (glm::length(a-b) < (float)_Width/25.f)
             {
                 optimisedBorder.erase(optimisedBorder.begin() + j);
             } else {
@@ -512,11 +513,11 @@ void HullGenerator::ProcessBorder(const std::vector<Vec2>& border)
     
     for (int i=0; i<((int)optimisedBorder.size())-2 && optimisedBorder.size() > 3;)
     {
-        Vec2 a = optimisedBorder[i];
-        Vec2 b = optimisedBorder[i+1];
-        Vec2 c = optimisedBorder[i+2];
+        glm::vec2 a = optimisedBorder[i];
+        glm::vec2 b = optimisedBorder[i+1];
+        glm::vec2 c = optimisedBorder[i+2];
         
-        float angle = acos(dot(norm(b-a), norm(b-c)));
+        float angle = acos(glm::dot(glm::normalize(b-a), glm::normalize(b-c)));
         float deg = (angle/M_PI)*180.f;
 
         if (deg >= 120.f)
@@ -532,13 +533,13 @@ void HullGenerator::ProcessBorder(const std::vector<Vec2>& border)
 
 void HullGenerator::GenerateHulls()
 {
-    for (std::vector<std::vector<Vec2> >::iterator it = _Objects.begin(); it != _Objects.end(); ++it)
+    for (std::vector<std::vector<glm::vec2> >::iterator it = _Objects.begin(); it != _Objects.end(); ++it)
     {
         polydecomp::PolyDecomp::Polygon poly;
         
-        std::vector<Vec2>& object = *it;
+        std::vector<glm::vec2>& object = *it;
         
-        for (std::vector<Vec2>::iterator it = object.begin(); it != object.end(); ++it)
+        for (std::vector<glm::vec2>::iterator it = object.begin(); it != object.end(); ++it)
         {
             poly.push_back(polydecomp::Point((*it)[0],(*it)[1]));
         }
@@ -548,11 +549,11 @@ void HullGenerator::GenerateHulls()
         
         for (std::vector<polydecomp::PolyDecomp::Polygon>::iterator polyIt = polys.begin(); polyIt != polys.end(); ++polyIt)
         {
-            std::vector<Vec2> hull;
-            Vec2 lastPoint(-1,-1);
+            std::vector<glm::vec2> hull;
+            glm::vec2 lastPoint(-1,-1);
             for (polydecomp::PolyDecomp::Polygon::iterator pointIt = polyIt->begin(); pointIt != polyIt->end(); ++pointIt)
             {
-                Vec2 currentPoint = Vec2(pointIt->x, pointIt->y);
+                glm::vec2 currentPoint = glm::vec2(pointIt->x, pointIt->y);
                 if (lastPoint != currentPoint) // Should never happen!
                 {
                     hull.push_back(currentPoint);
