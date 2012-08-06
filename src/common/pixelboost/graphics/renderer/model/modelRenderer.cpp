@@ -101,7 +101,10 @@ const glm::mat4x4& ModelRenderable::GetTransform()
 }
 
 Model::Model()
-    : _RefCount(1)
+    : _IndexBuffer(0)
+    , _NumVertices(0)
+    , _RefCount(1)
+    , _VertexBuffer(0)
 {
     
 }
@@ -325,7 +328,7 @@ void ModelRenderer::Render(int count, Renderable** renderables, Viewport* viewpo
         Model* model = GetModel(renderable._Model);
         Texture* texture = GetTexture(renderable._Texture);
         
-        if (!model || !texture)
+        if (!model || !texture || !model->_IndexBuffer || !model->_VertexBuffer)
             continue;
         
         effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", renderable.GetMVP());
