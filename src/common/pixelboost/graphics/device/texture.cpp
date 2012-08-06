@@ -20,7 +20,7 @@ Texture::~Texture()
         delete[] _Data;
 }
 
-void Texture::LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format)
+bool Texture::LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format)
 {
 #ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
     if (_Data != 0 && _Data != data)
@@ -44,22 +44,27 @@ void Texture::LoadFromBytes(const unsigned char* data, int width, int height, bo
         }
     }
 #endif
+    
+    return true;
 }
 
-void Texture::LoadFromPng(pb::FileLocation location, const std::string& path, bool createMips)
+bool Texture::LoadFromPng(pb::FileLocation location, const std::string& path, bool createMips)
 {
     LodePNG::Decoder decoder;
     std::vector<unsigned char> data;
     std::vector<unsigned char> decoded;
 
     pb::File* file = pb::FileSystem::Instance()->OpenFile(location, path);
+    if (!file)
+        return false;
+    
     file->ReadAll(data);
     decoder.decode(decoded, &data[0], data.size());
 	
     if (!glm::isPowerOfTwo(decoder.getHeight()) || !glm::isPowerOfTwo(decoder.getWidth()))
         createMips = false;
     
-	LoadFromBytes(&decoded[0], decoder.getWidth(), decoder.getHeight(), createMips, kTextureFormatRGBA);
+	return LoadFromBytes(&decoded[0], decoder.getWidth(), decoder.getHeight(), createMips, kTextureFormatRGBA);
 }
 
 const glm::vec2& Texture::GetSize()

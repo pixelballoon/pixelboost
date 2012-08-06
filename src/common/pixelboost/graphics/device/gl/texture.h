@@ -19,7 +19,7 @@ protected:
     virtual ~TextureGL();
     
 public:
-    void LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format);
+    bool LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format);
     
 protected:
     void Bind(int textureUnit);

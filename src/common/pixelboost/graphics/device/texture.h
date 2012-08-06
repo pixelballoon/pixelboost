@@ -22,8 +22,8 @@ public:
         kTextureFormatRGBA,
     };
     
-    virtual void LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format);
-    virtual void LoadFromPng(FileLocation location, const std::string& image, bool createMips);
+    virtual bool LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format);
+    virtual bool LoadFromPng(FileLocation location, const std::string& image, bool createMips);
     
     const glm::vec2& GetSize();
 

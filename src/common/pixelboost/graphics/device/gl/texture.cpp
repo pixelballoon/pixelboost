@@ -17,14 +17,15 @@ TextureGL::~TextureGL()
     glDeleteTextures(1, &_Texture);
 }
 
-void TextureGL::LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format)
+bool TextureGL::LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format)
 {
-    Texture::LoadFromBytes(data, width, height, createMips, format);
+    if (!Texture::LoadFromBytes(data, width, height, createMips, format))
+        return false;
     
     if (format != kTextureFormatRGBA)
     {
         printf("WARN: Only RGBA texture format is currently supported!");
-        return;
+        return false;
     }
     
     glGenTextures(1, &_Texture);
@@ -52,6 +53,8 @@ void TextureGL::LoadFromBytes(const unsigned char* data, int width, int height, 
     _Device->BindTexture(previousTexture);
 
     _Size = glm::vec2(width, height);
+        
+    return true;
 }
 
 void TextureGL::Bind(int unit)
