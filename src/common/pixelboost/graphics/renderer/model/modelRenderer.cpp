@@ -92,6 +92,7 @@ void ModelRenderable::SetTransform(const glm::mat4x4& transform)
 {
     _Transform = transform;
     DirtyWorldMatrix();
+    DirtyBounds();
 }
 
 const glm::mat4x4& ModelRenderable::GetTransform()
