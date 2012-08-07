@@ -187,12 +187,14 @@ void ParticleEmitter::Update(float time)
             _SpawnedParticles++;
             
             Particle particle(_Config);
-            particle.position[0] = _Position[0] + _Config->minPosOffset[0] + (_Config->maxPosOffset[0]-_Config->minPosOffset[0]) * (float)rand()/(float)RAND_MAX;
-            particle.position[1] = _Position[1] + _Config->minPosOffset[1] + (_Config->maxPosOffset[1]-_Config->minPosOffset[1]) * (float)rand()/(float)RAND_MAX;
+            particle.position.x = _Position.x + _Config->minPosOffset.x + (_Config->maxPosOffset.x-_Config->minPosOffset.x) * (float)rand()/(float)RAND_MAX;
+            particle.position.y = _Position.y + _Config->minPosOffset.y + (_Config->maxPosOffset.y-_Config->minPosOffset.y) * (float)rand()/(float)RAND_MAX;
+            particle.position.z = _Position.z + _Config->minPosOffset.z + (_Config->maxPosOffset.z-_Config->minPosOffset.z) * (float)rand()/(float)RAND_MAX;
             particle.rotation = _Config->minRotOffset + (_Config->maxRotOffset-_Config->minRotOffset) * (float)rand()/(float)RAND_MAX;
             particle.rotationVelocity = _Config->minRotVelocity + (_Config->maxRotVelocity-_Config->minRotVelocity) * (float)rand()/(float)RAND_MAX;
-            particle.positionVelocity[0] = _Config->minPosVelocity[0] + (_Config->maxPosVelocity[0]-_Config->minPosVelocity[0]) * (float)rand()/(float)RAND_MAX;
-            particle.positionVelocity[1] = _Config->minPosVelocity[1] + (_Config->maxPosVelocity[1]-_Config->minPosVelocity[1]) * (float)rand()/(float)RAND_MAX;
+            particle.positionVelocity.x = _Config->minPosVelocity.x + (_Config->maxPosVelocity.x-_Config->minPosVelocity.x) * (float)rand()/(float)RAND_MAX;
+            particle.positionVelocity.y = _Config->minPosVelocity.y + (_Config->maxPosVelocity.y-_Config->minPosVelocity.y) * (float)rand()/(float)RAND_MAX;
+            particle.positionVelocity.z = _Config->minPosVelocity.z + (_Config->maxPosVelocity.z-_Config->minPosVelocity.z) * (float)rand()/(float)RAND_MAX;
             particle.life = 0;
             particle.sprite = _Config->sprites[glm::min((int)((float)rand()/(float)RAND_MAX * _Config->sprites.size()), (int)_Config->sprites.size()-1)];
             particle.totalLife = _Config->life;
