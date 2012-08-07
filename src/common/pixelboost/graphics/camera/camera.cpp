@@ -79,7 +79,7 @@ Camera::CameraType PerspectiveCamera::GetType()
 
 void PerspectiveCamera::CalculateTransform(Viewport* viewport)
 {
-    glm::vec2 viewportSize = pb::GraphicsDevice::Instance()->GetDisplayResolution() / GraphicsDevice::Instance()->GetDisplayDensity() / 2.f;
+    glm::vec2 viewportSize = viewport->GetSize() / 2.f;
     
     ProjectionMatrix = glm::perspectiveFov(FieldOfView, viewportSize.x, viewportSize.y, ZNear, ZFar);
     ViewMatrix = glm::rotate(glm::mat4x4(), Rotation.x, glm::vec3(1,0,0));
