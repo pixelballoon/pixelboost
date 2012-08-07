@@ -151,6 +151,11 @@ Entity* Scene::GetEntityById(Uid uid)
     return 0;
 }
 
+const Scene::EntityMap& Scene::GetEntities() const
+{
+    return _Entities;
+}
+
 void Scene::BroadcastMessage(const Message& message)
 {
     for (EntityMap::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
