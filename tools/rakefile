@@ -5,7 +5,7 @@ namespace :tools do
   puts Rake.application.original_dir
   rakeLocation = File.dirname __FILE__  
   puts rakeLocation
-    task :build => [:svgparser, :hullgenerator] do
+    task :build => [:svgparser, :hullgenerator, :modelconvertor] do
     end
 
     binDir = File.join rakeLocation, 'bin/'
@@ -25,6 +25,15 @@ namespace :tools do
         system 'xcodebuild'
       end
       releaseDir = File.join parserDir, 'build/Release/hullgenerator'      
+      cp releaseDir, binDir
+    end
+
+    task :modelconvertor => binDir do
+      parserDir = File.join rakeLocation, 'modelconvertor/osx/modelconvertor'
+      Dir.chdir parserDir do
+        system 'xcodebuild'
+      end
+      releaseDir = File.join parserDir, 'build/Release/modelconvertor'      
       cp releaseDir, binDir
     end
 end

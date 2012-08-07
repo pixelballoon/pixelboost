@@ -13,3 +13,4 @@ tools/debugscope/osx/debugscope/DebugScope.xcodeproj/project.xcworkspace/
 .svn
 xcuserdata
 project.xcworkspace
+/tools/modelconvertor/osx/modelconvertor/build/

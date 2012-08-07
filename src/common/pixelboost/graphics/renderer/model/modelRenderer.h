@@ -11,11 +11,13 @@
 #include "pixelboost/graphics/device/vertexBuffer.h"
 #include "pixelboost/graphics/renderer/common/irenderer.h"
 #include "pixelboost/graphics/renderer/common/renderable.h"
+#include "pixelboost/maths/boundingSphere.h"
 
 namespace pb
 {
     
     class IndexBuffer;
+    class ModelDefinition;
     
     class ModelRenderable : public Renderable
     {
@@ -53,26 +55,28 @@ namespace pb
     
     class Model
     {
-    public:
+    private:
         Model();
         virtual ~Model();
         
+    public:
         bool Load(FileLocation location, const std::string& modelName);
+        
+        unsigned short GetNumVertices();
+        
+        const BoundingSphere& GetBounds();
         
     public:
         unsigned long _RefCount;
         
-        unsigned int _NumVertices;
+        unsigned short _NumVertices;
         
     private:
-        void ParseVert(std::vector<Vertex_NPXYZ_UV>& verts, const std::string& vert, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec2>& uvs, const std::vector<glm::vec3>& normals);
-        
-        std::vector<std::string>& SplitString(const std::string& string, char delim, std::vector<std::string> &items);
-        std::vector<std::string> SplitLine(const std::string& string);
-        std::vector<std::string> SplitPath(const std::string& string);
-        
+        BoundingSphere _Bounds;
         IndexBuffer* _IndexBuffer;
         VertexBuffer* _VertexBuffer;
+        
+        ModelDefinition* _ModelDefinition;
         
         friend class ModelRenderer;
     };
@@ -93,10 +97,10 @@ namespace pb
         
         void Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass);
         
-    private:
         Model* GetModel(const std::string& modelName);
         Texture* GetTexture(const std::string& textureName);
         
+    private:
         typedef std::map<std::string, Model*> ModelMap;
         typedef std::map<std::string, Texture*> TextureMap;
         

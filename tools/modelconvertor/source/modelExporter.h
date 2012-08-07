@@ -13,7 +13,7 @@ public:
     ModelExporter(ModelLoader* modelLoader);
     virtual ~ModelExporter();
     
-    bool Save(const std::string& filename);
+    bool Save(const std::string& filename) const;
     bool Process();
     
 private:

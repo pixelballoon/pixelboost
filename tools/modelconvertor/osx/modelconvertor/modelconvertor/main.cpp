@@ -21,11 +21,13 @@ int main (int argc, const char * argv[])
     ModelExporter modelExporter(new ObjLoader(inputLocation));
     if (!modelExporter.Process())
     {
-        printf("Failed to process model %s", inputLocation);
+        printf("Failed to process model %s\n", inputLocation);
         return 1;
     }
     
     modelExporter.Save(outputLocation);
+    
+    printf("Saving model %s -> %s\n", inputLocation, outputLocation);
 
     return 0;
 }

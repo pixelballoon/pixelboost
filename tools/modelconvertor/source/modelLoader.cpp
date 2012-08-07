@@ -1,4 +1,9 @@
-#include "model.h"
+#include <sstream>
+#include <string>
+
+#include "pixelboost/file/fileSystem.h"
+#include "pixelboost/graphics/renderer/model/model.h"
+
 #include "modelLoader.h"
 
 ModelLoader::~ModelLoader()
@@ -23,14 +28,7 @@ bool ObjLoader::Process()
     if (_Model)
         return true;
     
-    _Model = new Model();
-    
-    return true;
-    
-    /*
-    std::string objFilename = fileName;
-    
-    pb::File* file = pb::FileSystem::Instance()->OpenFile(location, fileName);
+    pb::File* file = pb::FileSystem::Instance()->OpenFile(pb::kFileLocationUser, _Filename);
     
     if (!file)
         return false;
@@ -47,7 +45,7 @@ bool ObjLoader::Process()
     std::vector<glm::vec2> uvs;
     std::vector<glm::vec3> normals;
     
-    std::vector<Vertex_NPXYZ_UV> verts;
+    std::vector<pb::Vertex_NPXYZ_UV> verts;
     
     enum ReadMode
     {
@@ -67,7 +65,8 @@ bool ObjLoader::Process()
     {
         std::string line = *it;
         
-        std::vector<std::string> command = SplitLine(line);
+        std::vector<std::string> command;
+        SplitString(line, ' ', command);
         
         if (command.size() < 1)
             continue;
@@ -112,6 +111,7 @@ bool ObjLoader::Process()
                     ParseVert(verts, command[1], vertices, uvs, normals);
                     ParseVert(verts, command[2], vertices, uvs, normals);
                     ParseVert(verts, command[3], vertices, uvs, normals);
+                    
                     ParseVert(verts, command[1], vertices, uvs, normals);
                     ParseVert(verts, command[3], vertices, uvs, normals);
                     ParseVert(verts, command[4], vertices, uvs, normals);
@@ -122,37 +122,73 @@ bool ObjLoader::Process()
     }
     
     delete file;
+     
+    _Model = new pb::ModelDefinition();
     
-    _NumVertices = verts.size();
+    pb::ModelObject object;
     
-    _VertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatStatic, kVertexFormat_NP_XYZ_UV, _NumVertices);
-    _VertexBuffer->Lock();
-    Vertex_NPXYZ_UV* vertexBuffer = static_cast<Vertex_NPXYZ_UV*>(_VertexBuffer->GetData());
-    for (int i=0; i<_NumVertices; i++)
+    object.Indexed = false;
+    object.VertexFormat = pb::kVertexFormat_NP_XYZ_UV;
+    
+    for (int i=0; i<verts.size(); i++)
     {
-        vertexBuffer[i].position[0] = verts[i].position[0];
-        vertexBuffer[i].position[1] = verts[i].position[1];
-        vertexBuffer[i].position[2] = verts[i].position[2];
-        vertexBuffer[i].uv[0] = verts[i].uv[0];
-        vertexBuffer[i].uv[1] = verts[i].uv[1];
-        vertexBuffer[i].normal[0] = verts[i].normal[0];
-        vertexBuffer[i].normal[1] = verts[i].normal[1];
-        vertexBuffer[i].normal[2] = verts[i].normal[2];
+        pb::ModelVertex vertex;
+        vertex.Position = glm::vec3(verts[i].position[0], verts[i].position[1], verts[i].position[2]);
+        vertex.Normal = glm::vec3(verts[i].normal[0], verts[i].normal[1], verts[i].normal[2]);
+        vertex.UV = glm::vec2(verts[i].uv[0], verts[i].uv[1]);
+        object.Vertices.push_back(vertex);
     }
-    _VertexBuffer->Unlock();
     
-    _IndexBuffer = GraphicsDevice::Instance()->CreateIndexBuffer(kBufferFormatStatic, _NumVertices);
-    _IndexBuffer->Lock();
-    unsigned short* indexBuffer = _IndexBuffer->GetData();
-    for (int i=0; i<_NumVertices; i++)
-    {
-        indexBuffer[i] = i;
-    }
-    _IndexBuffer->Unlock();
-    */
+    _Model->Objects.push_back(object);
+    
+    return true;
 }
 
-const Model* ObjLoader::GetModel() const
+const pb::ModelDefinition* ObjLoader::GetModel() const
 {
     return _Model;
+}
+
+pb::ModelDefinition* ObjLoader::GetModel()
+{
+    return _Model;
+}
+
+void ObjLoader::ParseVert(std::vector<pb::Vertex_NPXYZ_UV>& verts, const std::string& vert, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec2>& uvs, const std::vector<glm::vec3>& normals)
+{
+    std::vector<std::string> vertIndices;
+    SplitString(vert, '/', vertIndices);
+    
+    if (vertIndices.size() < 3)
+        return;
+    
+    int posIndex = atoi(vertIndices[0].c_str());
+    int uvIndex = atoi(vertIndices[1].c_str());
+    int normalIndex = atoi(vertIndices[2].c_str());
+    
+    glm::vec3 pos = vertices[posIndex-1];
+    glm::vec2 uv = uvs[uvIndex-1];
+    glm::vec3 normal = normals[normalIndex-1];
+    
+    pb::Vertex_NPXYZ_UV vertex;
+    vertex.position[0] = pos[0];
+    vertex.position[1] = pos[1];
+    vertex.position[2] = pos[2];
+    vertex.uv[0] = uv[0];
+    vertex.uv[1] = 1.f-uv[1];
+    vertex.normal[0] = normal[0];
+    vertex.normal[1] = normal[1];
+    vertex.normal[2] = normal[2];
+    
+    verts.push_back(vertex);
+}
+
+std::vector<std::string>& ObjLoader::SplitString(const std::string &string, char delim, std::vector<std::string> &items)
+{
+    std::stringstream stream(string);
+    std::string item;
+    while(std::getline(stream, item, delim)) {
+        items.push_back(item);
+    }
+    return items;
 }

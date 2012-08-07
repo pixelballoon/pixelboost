@@ -259,7 +259,7 @@
 		1C626E9E15CF9A3A00B23098 /* networkHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C626D8A15CF9A3A00B23098 /* networkHelpers.mm */; };
 		1C9666D215D04068007ED733 /* modelExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C9666CE15D04068007ED733 /* modelExporter.cpp */; };
 		1C9666D315D04068007ED733 /* modelLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C9666D015D04068007ED733 /* modelLoader.cpp */; };
-		1C9666D715D040C8007ED733 /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C9666D515D040C8007ED733 /* model.cpp */; };
+		1C9666DA15D10EDF007ED733 /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C9666D815D10EDF007ED733 /* model.cpp */; };
 		1CC7006215CF9E5E00E50CA8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CC7006115CF9E5E00E50CA8 /* Foundation.framework */; };
 		1CC7006515CFA02D00E50CA8 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CC7006415CFA02D00E50CA8 /* OpenGL.framework */; };
 		1CC7007615CFA15C00E50CA8 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC7007415CFA15C00E50CA8 /* main.cpp */; };
@@ -1059,8 +1059,8 @@
 		1C9666CF15D04068007ED733 /* modelExporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = modelExporter.h; sourceTree = "<group>"; };
 		1C9666D015D04068007ED733 /* modelLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = modelLoader.cpp; sourceTree = "<group>"; };
 		1C9666D115D04068007ED733 /* modelLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = modelLoader.h; sourceTree = "<group>"; };
-		1C9666D515D040C8007ED733 /* model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = model.cpp; sourceTree = "<group>"; };
-		1C9666D615D040C8007ED733 /* model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = model.h; sourceTree = "<group>"; };
+		1C9666D815D10EDF007ED733 /* model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = model.cpp; sourceTree = "<group>"; };
+		1C9666D915D10EDF007ED733 /* model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = model.h; sourceTree = "<group>"; };
 		1CC7006115CF9E5E00E50CA8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1CC7006415CFA02D00E50CA8 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		1CC7007415CFA15C00E50CA8 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
@@ -1410,6 +1410,8 @@
 		1C626A3915CF9A3900B23098 /* model */ = {
 			isa = PBXGroup;
 			children = (
+				1C9666D815D10EDF007ED733 /* model.cpp */,
+				1C9666D915D10EDF007ED733 /* model.h */,
 				1C626A3A15CF9A3900B23098 /* modelRenderer.cpp */,
 				1C626A3B15CF9A3900B23098 /* modelRenderer.h */,
 			);
@@ -2894,8 +2896,6 @@
 		1C9666CD15D04068007ED733 /* source */ = {
 			isa = PBXGroup;
 			children = (
-				1C9666D515D040C8007ED733 /* model.cpp */,
-				1C9666D615D040C8007ED733 /* model.h */,
 				1C9666CE15D04068007ED733 /* modelExporter.cpp */,
 				1C9666CF15D04068007ED733 /* modelExporter.h */,
 				1C9666D015D04068007ED733 /* modelLoader.cpp */,
@@ -3227,7 +3227,7 @@
 				1CC7007615CFA15C00E50CA8 /* main.cpp in Sources */,
 				1C9666D215D04068007ED733 /* modelExporter.cpp in Sources */,
 				1C9666D315D04068007ED733 /* modelLoader.cpp in Sources */,
-				1C9666D715D040C8007ED733 /* model.cpp in Sources */,
+				1C9666DA15D10EDF007ED733 /* model.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
