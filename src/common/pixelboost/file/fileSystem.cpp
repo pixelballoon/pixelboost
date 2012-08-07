@@ -44,9 +44,15 @@ public:
 
     virtual bool ReadAll(std::vector<unsigned char>& data);
     virtual bool ReadAll(std::string& data);
+    virtual bool Read(float& data);
+    virtual bool Read(short& data);
+    virtual bool Read(bool& data);
     
     virtual bool Write(const std::vector<unsigned char>& data);
     virtual bool Write(const std::string& data);
+    virtual bool Write(const float& data);
+    virtual bool Write(const short& data);
+    virtual bool Write(const bool& data);
     
     virtual bool Seek(SeekMode mode, int offset);
     
@@ -109,6 +115,24 @@ bool StdFile::ReadAll(std::string& data)
     return true;
 }
 
+bool StdFile::Read(float& data)
+{
+    fread(&data, sizeof(float), 1, _File);
+    return true;
+}
+
+bool StdFile::Read(short& data)
+{
+    fread(&data, sizeof(short), 1, _File);
+    return true;
+}
+
+bool StdFile::Read(bool& data)
+{
+    fread(&data, sizeof(bool), 1, _File);
+    return true;
+}
+
 bool StdFile::Write(const std::vector<unsigned char>& data)
 {
     if (!_File)
@@ -125,6 +149,36 @@ bool StdFile::Write(const std::string& data)
         return false;
     
     fwrite(data.c_str(), 1, data.length(), _File);
+    
+    return true;
+}
+
+bool StdFile::Write(const float& data)
+{
+    if (!_File)
+        return false;
+    
+    fwrite(&data, sizeof(float), 1, _File);
+    
+    return true;
+}
+
+bool StdFile::Write(const short& data)
+{
+    if (!_File)
+        return false;
+    
+    fwrite(&data, sizeof(short), 1, _File);
+    
+    return true;
+}
+
+bool StdFile::Write(const bool& data)
+{
+    if (!_File)
+        return false;
+    
+    fwrite(&data, sizeof(bool), 1, _File);
     
     return true;
 }

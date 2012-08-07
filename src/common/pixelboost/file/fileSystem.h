@@ -19,9 +19,15 @@ namespace pb
         
         virtual bool ReadAll(std::vector<unsigned char>& data) = 0;
         virtual bool ReadAll(std::string& data) = 0;
+        virtual bool Read(float& data) = 0;
+        virtual bool Read(short& data) = 0;
+        virtual bool Read(bool& data) = 0;
 
         virtual bool Write(const std::vector<unsigned char>& data) = 0;
         virtual bool Write(const std::string& data) = 0;
+        virtual bool Write(const float& data) = 0;
+        virtual bool Write(const short& data) = 0;
+        virtual bool Write(const bool& data) = 0;
 
         virtual bool Seek(SeekMode mode, int offset) = 0;
     };

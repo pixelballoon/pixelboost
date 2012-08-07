@@ -15,9 +15,15 @@ public:
 
     virtual bool ReadAll(std::vector<unsigned char>& data);
     virtual bool ReadAll(std::string& data);
+    virtual bool Read(float& data);
+    virtual bool Read(short& data);
+    virtual bool Read(bool& data);
 
     virtual bool Write(const std::vector<unsigned char>& data);
     virtual bool Write(const std::string& data);
+    virtual bool Write(const float& data);
+    virtual bool Write(const short& data);
+    virtual bool Write(const bool& data);
 
     virtual bool Seek(SeekMode mode, int offset);
     
@@ -75,6 +81,25 @@ bool AndroidFile::ReadAll(std::string& data)
     return true;
 }
 
+
+bool AndroidFile::Read(float& data)
+{
+    fread(&data, sizeof(float), 1, _File);
+    return true;
+}
+
+bool AndroidFile::Read(short& data)
+{
+    fread(&data, sizeof(short), 1, _File);
+    return true;
+}
+
+bool AndroidFile::Read(bool& data)
+{
+    fread(&data, sizeof(bool), 1, _File);
+    return true;
+}
+
 bool AndroidFile::Write(const std::vector<unsigned char>& data)
 {
     if (!_File)
@@ -90,8 +115,39 @@ bool AndroidFile::Write(const std::string& data)
     if (!_File)
         return false;
     
-    long written = fwrite(data.c_str(), 1, data.length(), _File);
+    fwrite(data.c_str(), 1, data.length(), _File);
 
+    return true;
+}
+
+
+bool AndroidFile::Write(const float& data)
+{
+    if (!_File)
+        return false;
+    
+    fwrite(&data, sizeof(float), 1, _File);
+    
+    return true;
+}
+
+bool AndroidFile::Write(const short& data)
+{
+    if (!_File)
+        return false;
+    
+    fwrite(&data, sizeof(short), 1, _File);
+    
+    return true;
+}
+
+bool AndroidFile::Write(const bool& data)
+{
+    if (!_File)
+        return false;
+    
+    fwrite(&data, sizeof(bool), 1, _File);
+    
     return true;
 }
 
