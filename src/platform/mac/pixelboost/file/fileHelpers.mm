@@ -18,7 +18,7 @@ std::string GetRootPath()
     
 std::string GetUserPath()
 {
-    return "/";
+    return "";
 }
     
 bool pb::FileHelpers::CreateDirectory(const std::string& directory)
