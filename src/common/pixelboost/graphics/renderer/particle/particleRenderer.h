@@ -41,6 +41,41 @@ private:
     friend class ParticleRenderer;
 };
     
+struct EmitterConfig
+{
+    EmitterConfig();
+    ~EmitterConfig();
+    
+    int emitCount;
+    float particlesPerUpdate;
+    
+    float initialScale;
+    float life;
+    
+    glm::vec2 startScale;
+    glm::vec2 endScale;
+    glm::vec4 startColor;
+    glm::vec4 endColor;
+    glm::vec3 minPosOffset;
+    glm::vec3 maxPosOffset;
+    glm::vec3 minRotOffset;
+    glm::vec3 maxRotOffset;
+    glm::vec3 minRotVelocity;
+    glm::vec3 maxRotVelocity;
+    glm::vec3 minPosVelocity;
+    glm::vec3 maxPosVelocity;
+    glm::vec3 gravity;
+    
+    typedef std::vector<std::string> SpriteList;
+    SpriteList sprites;
+    
+private:
+    std::shared_ptr<SpriteSheet> spriteSheet;
+    
+    friend class ParticleEmitter;
+    friend class ParticleRenderer;
+};
+    
 class ParticleEmitter
 {
 public:
@@ -51,45 +86,9 @@ public:
     void Render(Viewport* viewport, EffectPass* effectPass);
     
 public:
-    struct Config
-    {
-        Config();
-        ~Config();
-        
-        int emitCount;
-        float particlesPerUpdate;
-        
-        float initialScale;
-        float life;
-        
-        glm::vec2 startScale;
-        glm::vec2 endScale;
-        glm::vec4 startColor;
-        glm::vec4 endColor;
-        glm::vec2 minPosOffset;
-        glm::vec2 maxPosOffset;
-        glm::vec3 minRotOffset;
-        glm::vec3 maxRotOffset;
-        glm::vec3 minRotVelocity;
-        glm::vec3 maxRotVelocity;
-        glm::vec2 minPosVelocity;
-        glm::vec2 maxPosVelocity;
-        glm::vec2 gravity;
-        
-        typedef std::vector<std::string> SpriteList;
-        SpriteList sprites;
-        
-    private:
-        std::shared_ptr<SpriteSheet> spriteSheet;
-        
-        friend class ParticleEmitter;
-        friend class ParticleRenderer;
-    };
-    
-private:
     struct Particle
     {
-        Particle(ParticleEmitter::Config& config);
+        Particle(EmitterConfig* config);
         Particle(const Particle& particle);
         ~Particle();
         
@@ -97,16 +96,16 @@ private:
         
         std::string sprite;
         
-        ParticleEmitter::Config& emitterConfig;
+        EmitterConfig* emitterConfig;
         
         float life;
         float totalLife;
         
         glm::vec3 rotation;
-        glm::vec2 position;
+        glm::vec3 position;
         
         glm::vec3 rotationVelocity;
-        glm::vec2 positionVelocity;
+        glm::vec3 positionVelocity;
         
     private:
         void Assign(const Particle& rhs);
@@ -128,7 +127,8 @@ public:
     glm::vec3 GetPosition();
     void SetPosition(const glm::vec3& position);
     
-    Config& GetConfig();
+    void SetConfig(EmitterConfig* config);
+    EmitterConfig* GetConfig();
     ParticleList& GetParticles();
     
 private:
@@ -137,7 +137,7 @@ private:
     
     ModifierList _Modifiers;
     
-    Config _Config;
+    EmitterConfig* _Config;
     glm::vec3 _Position;
     float _EmitCount;
     int _SpawnedParticles;
@@ -170,13 +170,13 @@ private:
 class ParticleAttractor : public ParticleModifier
 {
 public:
-    ParticleAttractor(ParticleEmitter* emitter, const glm::vec2& position, float strength);
+    ParticleAttractor(ParticleEmitter* emitter, const glm::vec3& position, float strength);
     virtual ~ParticleAttractor();
     
     virtual void UpdateParticles(float time, ParticleEmitter::ParticleList& particles);
     
 private:
-    glm::vec2 _Position;
+    glm::vec3 _Position;
     float _Strength;
 };
     
