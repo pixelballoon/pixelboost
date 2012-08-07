@@ -261,6 +261,7 @@
 		1C626E9E15CF9A3A00B23098 /* networkHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C626D8A15CF9A3A00B23098 /* networkHelpers.mm */; };
 		1CC7006215CF9E5E00E50CA8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CC7006115CF9E5E00E50CA8 /* Foundation.framework */; };
 		1CC7006515CFA02D00E50CA8 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CC7006415CFA02D00E50CA8 /* OpenGL.framework */; };
+		1CF5F37515D14D6C005C4F6E /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CF5F37315D14D6C005C4F6E /* model.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -1059,6 +1060,8 @@
 		1CC7006115CF9E5E00E50CA8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1CC7006315CF9EF600E50CA8 /* prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prefix.pch; sourceTree = "<group>"; };
 		1CC7006415CFA02D00E50CA8 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		1CF5F37315D14D6C005C4F6E /* model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = model.cpp; sourceTree = "<group>"; };
+		1CF5F37415D14D6C005C4F6E /* model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = model.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1413,6 +1416,8 @@
 		1C626A3915CF9A3900B23098 /* model */ = {
 			isa = PBXGroup;
 			children = (
+				1CF5F37315D14D6C005C4F6E /* model.cpp */,
+				1CF5F37415D14D6C005C4F6E /* model.h */,
 				1C626A3A15CF9A3900B23098 /* modelRenderer.cpp */,
 				1C626A3B15CF9A3900B23098 /* modelRenderer.h */,
 			);
@@ -3205,6 +3210,7 @@
 				1C626E9C15CF9A3A00B23098 /* fileHelpers.mm in Sources */,
 				1C626E9D15CF9A3A00B23098 /* gameCenter.mm in Sources */,
 				1C626E9E15CF9A3A00B23098 /* networkHelpers.mm in Sources */,
+				1CF5F37515D14D6C005C4F6E /* model.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
