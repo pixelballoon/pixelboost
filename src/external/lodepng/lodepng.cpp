@@ -5686,17 +5686,25 @@ static unsigned can16BitBe8Bit(const unsigned char* image, unsigned w, unsigned 
 {
   size_t i, numpixels = w * h;
   if(info->colorType == 0)
+  {
     for(i = 0; i < numpixels; i++)
       if(image[i * 2 + 1]) return 0;
+  }
   else if(info->colorType == 2)
+  {
     for(i = 0; i < numpixels; i++)
       if(image[i * 6 + 1] || image[i * 6 + 3] || image[i * 6 + 5]) return 0;
+  }
   else if(info->colorType == 4)
+  {
     for(i = 0; i < numpixels; i++)
       if(image[i * 4 + 1] || image[i * 4 + 3]) return 0;
+  }
   else if(info->colorType == 6)
+  {
     for(i = 0; i < numpixels; i++)
       if(image[i * 8 + 1] || image[i * 8 + 3] || image[i * 8 + 5] || image[i * 8 + 7]) return 0;
+  }
   return 1;
 }
 
