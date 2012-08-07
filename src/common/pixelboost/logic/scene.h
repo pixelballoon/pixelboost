@@ -28,13 +28,18 @@ public:
     bool AddSystem(SceneSystem* system);
     void RemoveSystem(SceneSystem* system);
     
+public:
+    typedef std::map<Uid, Entity*> EntityMap;
+    
     pb::Uid GenerateEntityId();
     
     void DestroyEntity(Entity* entity);
     void DestroyAllEntities();
     
     Entity* GetEntityById(Uid uid);
+    const EntityMap& GetEntities() const;
     
+public:
     void BroadcastMessage(const Message& message);
     void SendMessage(Uid uid, const Message& message);
     void BroadcastDelayedMessage(float delay, const Message* message);
@@ -45,7 +50,6 @@ private:
     
     typedef std::pair<Uid, const Message*> DelayedMessage;
     typedef std::vector<std::pair<float, DelayedMessage> > DelayedMessageList;
-    typedef std::map<Uid, Entity*> EntityMap;
     typedef std::map<Uid, SceneSystem*> SystemMap;
     
     DelayedMessageList _DelayedMessages;
