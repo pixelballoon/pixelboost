@@ -11,7 +11,7 @@ Uid RenderSystem::GetType()
 
 Uid RenderSystem::GetStaticType()
 {
-    return TypeHash("render");
+    return TypeHash("pb::RenderSystem");
 }
 
 void RenderSystem::RenderItem(Renderable* renderable)
