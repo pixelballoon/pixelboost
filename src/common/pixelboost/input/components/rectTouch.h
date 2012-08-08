@@ -5,26 +5,35 @@
 
 namespace pb
 {
+    
+    class Message;
 
-class RectTouchComponent : public Component, TouchHandler
-{
-public:
-    RectTouchComponent(Entity* parent);
-    virtual ~RectTouchComponent();
-    
-    Uid GetStaticType();
-    virtual Uid GetType();
-    
-    void SetSize(const glm::vec2& size);
-    
-private:
-    glm::vec3 GetPosition();
-    
-    virtual bool OnTouchDown(Touch touch);
-	virtual bool OnTouchMove(Touch touch);
-	virtual bool OnTouchUp(Touch touch);
-    
-    glm::vec2 _Size;
-};
+    class RectTouchComponent : public Component, TouchHandler
+    {
+    public:
+        RectTouchComponent(Entity* parent, bool debugRender);
+        virtual ~RectTouchComponent();
+        
+        Uid GetStaticType();
+        virtual Uid GetType();
+        
+        void SetSize(const glm::vec2& size);
+        
+    private:
+        glm::vec3 GetPosition();
+        
+        virtual bool OnTouchDown(Touch touch);
+        virtual bool OnTouchMove(Touch touch);
+        virtual bool OnTouchUp(Touch touch);
+        
+        void OnDebugRender(pb::Uid sender, const pb::Message& message);
+        
+        glm::vec2 _Size;
+        
+        int _TouchId;
+        glm::vec2 _TouchPosition;
+        
+        bool _DebugRender;
+    };
 
 }
