@@ -1,3 +1,5 @@
+#pragma once
+
 #include <set>
 
 #include "pixelboost/logic/system/graphics/render/render.h"
