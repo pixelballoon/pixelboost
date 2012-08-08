@@ -15,6 +15,7 @@ using namespace pb;
 
 PrimitiveRenderable::PrimitiveRenderable(Uid entityUid)
     : Renderable(entityUid)
+    , _Color(glm::vec4(1,1,1,1))
 {
     
 }
