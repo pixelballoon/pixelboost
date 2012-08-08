@@ -159,26 +159,30 @@ void ObjLoader::ParseVert(std::vector<pb::Vertex_NPXYZ_UV>& verts, const std::st
     std::vector<std::string> vertIndices;
     SplitString(vert, '/', vertIndices);
     
-    if (vertIndices.size() < 3)
+    if (vertIndices.size() < 2)
         return;
     
-    int posIndex = atoi(vertIndices[0].c_str());
-    int uvIndex = atoi(vertIndices[1].c_str());
-    int normalIndex = atoi(vertIndices[2].c_str());
-    
-    glm::vec3 pos = vertices[posIndex-1];
-    glm::vec2 uv = uvs[uvIndex-1];
-    glm::vec3 normal = normals[normalIndex-1];
-    
     pb::Vertex_NPXYZ_UV vertex;
+    
+    int posIndex = atoi(vertIndices[0].c_str());
+    glm::vec3 pos = vertices[posIndex-1];
     vertex.position[0] = pos[0];
     vertex.position[1] = pos[1];
     vertex.position[2] = pos[2];
+    
+    int uvIndex = atoi(vertIndices[1].c_str());
+    glm::vec2 uv = uvs[uvIndex-1];
     vertex.uv[0] = uv[0];
     vertex.uv[1] = 1.f-uv[1];
-    vertex.normal[0] = normal[0];
-    vertex.normal[1] = normal[1];
-    vertex.normal[2] = normal[2];
+    
+    if (vertIndices.size() > 2)
+    {
+        int normalIndex = atoi(vertIndices[2].c_str());
+        glm::vec3 normal = normals[normalIndex-1];
+        vertex.normal[0] = normal[0];
+        vertex.normal[1] = normal[1];
+        vertex.normal[2] = normal[2];
+    }
     
     verts.push_back(vertex);
 }
