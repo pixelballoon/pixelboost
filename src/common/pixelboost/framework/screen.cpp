@@ -4,8 +4,7 @@
 #include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 
-namespace pb
-{
+using namespace pb;
 
 Screen::Screen()
     : _Active(false)
@@ -72,4 +71,7 @@ void Screen::DestroyViewport(Viewport* viewport)
     }
 }
     
+const Screen::ViewportList& Screen::GetViewports()
+{
+    return _Viewports;
 }

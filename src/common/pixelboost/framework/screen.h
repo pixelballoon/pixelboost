@@ -18,12 +18,14 @@ namespace pb
         
         virtual void SetActive(bool active);
         
-        void AddViewport(Viewport* viewport);
-        void DestroyViewport(Viewport* viewport);
-        
-    private:
+    public:
         typedef std::vector<Viewport*> ViewportList;
         
+        void AddViewport(Viewport* viewport);
+        void DestroyViewport(Viewport* viewport);
+        const ViewportList& GetViewports();
+        
+    private:
         bool _Active;
         ViewportList _Viewports;
     };
