@@ -36,6 +36,8 @@ namespace pixeleditor
         
         pixeleditor::Entity* GetEntity();
         
+        pb::Uid GetEntityUid();
+        
     public:
         glm::vec3 GetPosition();
         glm::vec3 GetRotation();

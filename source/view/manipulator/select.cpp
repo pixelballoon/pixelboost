@@ -107,7 +107,7 @@ bool SelectManipulator::OnMouseUp(pb::MouseButton button, pb::ModifierKeys modif
         for (Level::EntityList::iterator it = entities.begin(); it != entities.end(); ++it)
         {
             char id[32];
-            sprintf(id, "%d", (*it)->GetUid());
+            sprintf(id, "%d", (*it)->GetEntityUid());
 
             entityIds += std::string((entityIds.length() == 0 ? "" : ",")) + id;
 

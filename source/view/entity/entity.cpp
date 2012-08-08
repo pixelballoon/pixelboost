@@ -63,6 +63,13 @@ Entity* ViewEntity::GetEntity()
     return _Entity;
 }
 
+pb::Uid ViewEntity::GetEntityUid()
+{
+    if (_Entity)
+        return _Entity->GetUid();
+    return 0;
+}
+
 glm::vec3 ViewEntity::GetPosition()
 {
     return GetComponentByType<pb::TransformComponent>()->GetPosition();
@@ -188,7 +195,7 @@ Uid ViewEntity::GeneratePropertyId(const std::string& path)
 
 void ViewEntity::OnSelectionChanged(const pixeleditor::Selection* selection)
 {
-    if (selection->IsSelected(GenerateSelectionUid(GetUid())))
+    if (selection->IsSelected(GenerateSelectionUid(GetEntityUid())))
     {
         UpdateBounds();
         

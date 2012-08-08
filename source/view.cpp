@@ -501,7 +501,7 @@ void View::OnEntitySelected(Gwen::Controls::Base* item)
     ViewEntity* entity = item->UserData.Get<ViewEntity*>("entity");
     
     char args[256];
-    sprintf(args, "-u %d", entity->GetUid());
+    sprintf(args, "-u %d", entity->GetEntityUid());
     Core::Instance()->GetCommandManager()->Exec("select", args);
 }
 

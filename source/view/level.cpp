@@ -139,7 +139,7 @@ void Level::CreateEntity(Uid uid)
 void Level::CreateEntity(pixeleditor::Entity* entity)
 {
     ViewEntity* viewEntity = new ViewEntity(GetScene(), entity);
-    _Entities[viewEntity->GetUid()] = viewEntity;
+    _Entities[viewEntity->GetEntityUid()] = viewEntity;
     entityAdded(viewEntity);
 }
 
@@ -157,7 +157,7 @@ void Level::DestroyEntity(pixeleditor::Entity* entity)
 
 void Level::DestroyEntity(ViewEntity* entity)
 {
-    EntityMap::iterator it = _Entities.find(entity->GetUid());
+    EntityMap::iterator it = _Entities.find(entity->GetEntityUid());
     
     if (it != _Entities.end())
     {
