@@ -11,6 +11,7 @@ Renderable::Renderable(Uid entityUid)
     , _Effect(0)
     , _EntityUid(entityUid)
     , _RenderPass(kRenderPassScene)
+    , _System(0)
     , _WorldMatrixDirty(true)
 {
     
@@ -22,6 +23,7 @@ Renderable::Renderable(Uid entityUid, Effect* effect)
     , _Effect(effect)
     , _EntityUid(entityUid)
     , _RenderPass(kRenderPassScene)
+    , _System(0)
     , _WorldMatrixDirty(true)
 {
     
