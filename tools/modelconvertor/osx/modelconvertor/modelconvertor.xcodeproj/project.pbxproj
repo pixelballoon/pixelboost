@@ -70,8 +70,6 @@
 		1C626DC715CF9A3A00B23098 /* transform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C626A6C15CF9A3900B23098 /* transform.cpp */; };
 		1C626DC815CF9A3A00B23098 /* component.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C626A6E15CF9A3900B23098 /* component.cpp */; };
 		1C626DC915CF9A3A00B23098 /* entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C626A7015CF9A3900B23098 /* entity.cpp */; };
-		1C626DCA15CF9A3A00B23098 /* bounds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C626A7415CF9A3900B23098 /* bounds.cpp */; };
-		1C626DCB15CF9A3A00B23098 /* debug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C626A7615CF9A3900B23098 /* debug.cpp */; };
 		1C626DCC15CF9A3A00B23098 /* destroy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C626A7815CF9A3900B23098 /* destroy.cpp */; };
 		1C626DCD15CF9A3A00B23098 /* finished.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C626A7B15CF9A3900B23098 /* finished.cpp */; };
 		1C626DCE15CF9A3A00B23098 /* transform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C626A7D15CF9A3900B23098 /* transform.cpp */; };
@@ -419,10 +417,6 @@
 		1C626A7015CF9A3900B23098 /* entity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = entity.cpp; sourceTree = "<group>"; };
 		1C626A7115CF9A3900B23098 /* entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = entity.h; sourceTree = "<group>"; };
 		1C626A7215CF9A3900B23098 /* entity.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = entity.inl; sourceTree = "<group>"; };
-		1C626A7415CF9A3900B23098 /* bounds.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bounds.cpp; sourceTree = "<group>"; };
-		1C626A7515CF9A3900B23098 /* bounds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bounds.h; sourceTree = "<group>"; };
-		1C626A7615CF9A3900B23098 /* debug.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = debug.cpp; sourceTree = "<group>"; };
-		1C626A7715CF9A3900B23098 /* debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.h; sourceTree = "<group>"; };
 		1C626A7815CF9A3900B23098 /* destroy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = destroy.cpp; sourceTree = "<group>"; };
 		1C626A7915CF9A3900B23098 /* destroy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = destroy.h; sourceTree = "<group>"; };
 		1C626A7B15CF9A3900B23098 /* finished.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = finished.cpp; sourceTree = "<group>"; };
@@ -1564,10 +1558,6 @@
 		1C626A7315CF9A3900B23098 /* message */ = {
 			isa = PBXGroup;
 			children = (
-				1C626A7415CF9A3900B23098 /* bounds.cpp */,
-				1C626A7515CF9A3900B23098 /* bounds.h */,
-				1C626A7615CF9A3900B23098 /* debug.cpp */,
-				1C626A7715CF9A3900B23098 /* debug.h */,
 				1C626A7815CF9A3900B23098 /* destroy.cpp */,
 				1C626A7915CF9A3900B23098 /* destroy.h */,
 				1C626A7A15CF9A3900B23098 /* particle */,
@@ -3037,8 +3027,6 @@
 				1C626DC715CF9A3A00B23098 /* transform.cpp in Sources */,
 				1C626DC815CF9A3A00B23098 /* component.cpp in Sources */,
 				1C626DC915CF9A3A00B23098 /* entity.cpp in Sources */,
-				1C626DCA15CF9A3A00B23098 /* bounds.cpp in Sources */,
-				1C626DCB15CF9A3A00B23098 /* debug.cpp in Sources */,
 				1C626DCC15CF9A3A00B23098 /* destroy.cpp in Sources */,
 				1C626DCD15CF9A3A00B23098 /* finished.cpp in Sources */,
 				1C626DCE15CF9A3A00B23098 /* transform.cpp in Sources */,
