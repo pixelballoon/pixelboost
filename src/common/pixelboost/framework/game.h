@@ -61,7 +61,7 @@ public:
     virtual void OnAppQuit();
 	
 	virtual void Update(float time);
-	virtual void Render();
+	void Render();
     
     void* GetViewController();
 	
