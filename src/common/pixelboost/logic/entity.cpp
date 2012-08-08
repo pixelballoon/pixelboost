@@ -45,7 +45,12 @@ Scene* Entity::GetScene()
 
 Uid Entity::GetCreationUid()
 {
-    return _Uid;
+    if (_CreationEntity)
+    {
+        return _CreationEntity->GetUid();
+    }
+    
+    return 0;
 }
 
 Uid Entity::GetUid()
