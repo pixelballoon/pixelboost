@@ -154,8 +154,7 @@ void TouchManager::OnTouchUp(int touchId, glm::vec2 position)
         for (Renderer::ViewportList::const_iterator viewportIt = viewports.begin(); viewportIt != viewports.end(); ++viewportIt)
         {
             Touch touch(touchId, *viewportIt, position);
-            if (static_cast<TouchHandler*>(*handlerIt)->OnTouchUp(touch))
-                return;
+            static_cast<TouchHandler*>(*handlerIt)->OnTouchUp(touch);
         }
     }
 }
