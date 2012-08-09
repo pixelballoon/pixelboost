@@ -11,7 +11,7 @@ namespace pb
     class RectTouchComponent : public Component, TouchHandler
     {
     public:
-        RectTouchComponent(Entity* parent, bool debugRender);
+        RectTouchComponent(Entity* parent, bool debugRender = false);
         virtual ~RectTouchComponent();
         
         Uid GetStaticType();

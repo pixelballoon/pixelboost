@@ -64,17 +64,16 @@ bool RectTouchComponent::OnTouchDown(Touch touch)
     if (touch.GetViewport()->GetScene() != GetScene())
         return false;
    
-    _TouchId = touch.GetId();
-    
     glm::vec3 position = GetPosition();
     glm::vec2 screenPos = touch.GetViewportPosition();
     glm::vec2 size = _Size/2.f;
     
-    _TouchPosition = screenPos;
-    
     if (screenPos.x > position.x-size.x && screenPos.x < position.x+size.x &&
         screenPos.y > position.y-size.y && screenPos.y < position.y+size.y)
     {
+        _TouchId = touch.GetId();
+        _TouchPosition = screenPos;
+        
         TouchMessage message(GetParent(), this, TouchMessage::kTouchTypeDown, screenPos-glm::vec2(position.x, position.y));
         GetScene()->SendMessage(GetParentUid(), message);
         
