@@ -23,8 +23,8 @@ public:
     };
     
 public:
-    StaticBody2DComponent(Entity* parent, b2World* world, BodyType type, glm::vec2 size);
-    StaticBody2DComponent(Entity* parent, b2World* world, FixtureDefinition2D& definition);
+    StaticBody2DComponent(Entity* parent, BodyType type, glm::vec2 size);
+    StaticBody2DComponent(Entity* parent, FixtureDefinition2D& definition);
     ~StaticBody2DComponent();
     
     virtual pb::Uid GetType();
@@ -37,7 +37,6 @@ private:
     void UpdateTransform();
     
     b2Body* _Body;
-    b2World* _World;
 };
     
 }
