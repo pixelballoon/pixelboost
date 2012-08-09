@@ -19,12 +19,6 @@ namespace pb
             }
             return items;
         }
-
-        static std::vector<std::string> SplitPath(const std::string& string)
-        {
-            std::vector<std::string> items;
-            return SplitString(string, '/', items);
-        }
     };
     
 }

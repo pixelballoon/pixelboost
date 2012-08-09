@@ -9,13 +9,14 @@
 #include "pixelboost/logic/system/graphics/render/render.h"
 #include "pixelboost/logic/entity.h"
 #include "pixelboost/logic/scene.h"
+#include "pixelboost/util/localisation/string.h"
 
 using namespace pb;
 
-FontComponent::FontComponent(Entity* parent, const std::string& font, const std::string& text)
+FontComponent::FontComponent(Entity* parent, const std::string& font, const std::wstring& text)
     : Component(parent)
 {
-    _Renderable = new FontRenderable(parent->GetUid());
+    _Renderable = new FontRenderable(GetParent()->GetUid());
     _Renderable->SetFont(font);
     _Renderable->SetText(text);
     
@@ -65,7 +66,7 @@ void FontComponent::SetFont(const std::string& font)
     _Renderable->SetFont(font);
 }
 
-void FontComponent::SetText(const std::string& text)
+void FontComponent::SetText(const std::wstring& text)
 {
     _Renderable->SetText(text);
 }

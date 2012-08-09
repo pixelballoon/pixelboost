@@ -40,8 +40,8 @@ namespace pb
         void SetFont(const std::string& font);
         const std::string& GetFont();
         
-        void SetText(const std::string& text);
-        const std::string& GetText();
+        void SetText(const std::wstring& text);
+        const std::wstring& GetText();
         
         void SetTint(const glm::vec4& tint);
         const glm::vec4& GetTint();
@@ -60,7 +60,7 @@ namespace pb
         
         float Offset;
         std::string Font;
-        std::string Text;
+        std::wstring Text;
         glm::mat4x4 Transform;
         FontAlign Alignment;
         glm::vec4 Tint;
@@ -89,10 +89,10 @@ namespace pb
         int size;
         float base;
         float lineHeight;
-        std::map<char, Character> chars;
-        std::map<std::pair<char, char>, float> kerning;
+        std::map<wchar_t, Character> chars;
+        std::map<std::pair<wchar_t, wchar_t>, float> kerning;
         
-        glm::vec2 FillVertexBuffer(VertexBuffer* vertexBuffer, const std::string& string);
+        glm::vec2 FillVertexBuffer(VertexBuffer* vertexBuffer, const std::wstring& string);
         
     private:
         void AddCharacter(Vertex_PXYZ_UV* buffer, const Font::Character& character, glm::vec2 offset, float baseline);
@@ -110,10 +110,10 @@ namespace pb
         
         virtual void Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass);
         
-        glm::vec2 MeasureString(const std::string& name, const std::string& string, float size);
+        glm::vec2 MeasureString(const std::string& name, const std::wstring& string, float size);
     
     private:
-        void SplitString(const std::string& string, char seperator, std::vector<std::string>& output);
+        void SplitString(const std::wstring& string, wchar_t seperator, std::vector<std::wstring>& output);
         
         typedef std::map<std::string, Font*> FontMap;
         

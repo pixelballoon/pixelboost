@@ -16,6 +16,7 @@
 #include "pixelboost/graphics/helper/screenHelpers.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/font/fontRenderer.h"
+#include "pixelboost/util/localisation/string.h"
 
 using namespace pb;
 
@@ -72,13 +73,13 @@ const std::string& FontRenderable::GetFont()
     return Font;
 }
 
-void FontRenderable::SetText(const std::string& text)
+void FontRenderable::SetText(const std::wstring& text)
 {
     Text = text;
     CalculateOffset();
 }
 
-const std::string& FontRenderable::GetText()
+const std::wstring& FontRenderable::GetText()
 {
     return Text;
 }
@@ -147,7 +148,7 @@ void FontRenderable::CalculateOffset()
     DirtyBounds();
 }
 
-glm::vec2 Font::FillVertexBuffer(VertexBuffer* vertexBuffer, const std::string& string)
+glm::vec2 Font::FillVertexBuffer(VertexBuffer* vertexBuffer, const std::wstring& string)
 {
     vertexBuffer->Lock();
     
@@ -166,7 +167,7 @@ glm::vec2 Font::FillVertexBuffer(VertexBuffer* vertexBuffer, const std::string& 
             offsetX = 0.f;
             offsetY -= 1.f;
         } else {
-            std::map<char, Font::Character>::iterator charIt = chars.find(string[i]);
+            std::map<wchar_t, Font::Character>::iterator charIt = chars.find(string[i]);
             
             if (charIt == chars.end())
                 continue;
@@ -180,7 +181,7 @@ glm::vec2 Font::FillVertexBuffer(VertexBuffer* vertexBuffer, const std::string& 
             
             if (i<string.length()-1)
             {
-                std::map<std::pair<char, char>, float>::iterator kerningIt = kerning.find(std::pair<char, char>(string[i], string[i+1]));
+                std::map<std::pair<wchar_t, wchar_t>, float>::iterator kerningIt = kerning.find(std::pair<wchar_t, wchar_t>(string[i], string[i+1]));
                 
                 if (kerningIt != kerning.end())
                     offsetX += kerningIt->second;
@@ -275,61 +276,61 @@ Font* FontRenderer::LoadFont(FileLocation location, const std::string& name, boo
     
     std::string fntFilename = "/data/fonts/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".fnt";
     
-    std::string fontContents = FileHelpers::FileToString(pb::kFileLocationBundle, fntFilename);
+    std::wstring fontContents = pb::StringToUnicode(FileHelpers::FileToString(pb::kFileLocationBundle, fntFilename));
     
-    std::vector<std::string> lines;
+    std::vector<std::wstring> lines;
     SplitString(fontContents, '\n', lines);
     
     glm::vec2 texSize;
     
-    for (std::vector<std::string>::iterator line = lines.begin(); line != lines.end(); ++line)
+    for (std::vector<std::wstring>::iterator line = lines.begin(); line != lines.end(); ++line)
     {
-        std::vector<std::string> elements;
+        std::vector<std::wstring> elements;
         SplitString(*line, ' ', elements);
         
         if (elements.size() < 1)
             continue;
         
-        std::map<std::string, std::string> data;
-        for (std::vector<std::string>::iterator element = elements.begin(); element != elements.end(); ++element)
+        std::map<std::wstring, std::wstring> data;
+        for (std::vector<std::wstring>::iterator element = elements.begin(); element != elements.end(); ++element)
         {
             data[element->substr(0, element->find('='))] = element->substr(element->find('=')+1);
         }
         
-        std::string elementType = elements[0];
+        std::wstring elementType = elements[0];
         
-        if (elementType == "info")
+        if (elementType == L"info")
         {
-            int size = (int)atoi(data["size"].c_str());
+            int size = (int)wcstol(data[L"size"].c_str(), 0, 10);
             
             font->size = size;
-        } else if (elementType == "common")
+        } else if (elementType == L"common")
         {
-            int lineHeight = (int)atoi(data["lineHeight"].c_str());
-            int base = (int)atoi(data["base"].c_str());
-            int scaleW = (int)atoi(data["scaleW"].c_str());
-            int scaleH = (int)atoi(data["scaleH"].c_str());
+            int lineHeight = (int)wcstol(data[L"lineHeight"].c_str(), 0, 10);
+            int base = (int)wcstol(data[L"base"].c_str(), 0, 10);
+            int scaleW = (int)wcstol(data[L"scaleW"].c_str(), 0, 10);
+            int scaleH = (int)wcstol(data[L"scaleH"].c_str(), 0, 10);
             
             font->base = (float)base/(float)font->size;
             font->lineHeight = (float)lineHeight / (float)scaleH;
             texSize = glm::vec2(scaleW, scaleH);
-        } else if (elementType == "page")
+        } else if (elementType == L"page")
         {
-            std::string texFilename = "/data/fonts/" + data["file"].substr(1, data["file"].find('"', 1)-1);
+            std::string texFilename = "/data/fonts/" + pb::UnicodeToString(data[L"file"].substr(1, data[L"file"].find('"', 1)-1));
             font->texture = GraphicsDevice::Instance()->CreateTexture();
             font->texture->LoadFromPng(location, texFilename, createMips);
-        } else if (elementType == "char")
+        } else if (elementType == L"char")
         {
             Font::Character character;
             
-            char charCode = (char)atoi(data["id"].c_str());
-            float x = atoi(data["x"].c_str());
-            float y = atoi(data["y"].c_str());
-            float width = atoi(data["width"].c_str());
-            float height = atoi(data["height"].c_str());
-            float xoffset = atoi(data["xoffset"].c_str());
-            float yoffset = atoi(data["yoffset"].c_str());
-            float xadvance = atoi(data["xadvance"].c_str());
+            wchar_t charCode = (wchar_t)wcstol(data[L"id"].c_str(), 0, 10);
+            float x = wcstol(data[L"x"].c_str(), 0, 10);
+            float y = wcstol(data[L"y"].c_str(), 0, 10);
+            float width = wcstol(data[L"width"].c_str(), 0, 10);
+            float height = wcstol(data[L"height"].c_str(), 0, 10);
+            float xoffset = wcstol(data[L"xoffset"].c_str(), 0, 10);
+            float yoffset = wcstol(data[L"yoffset"].c_str(), 0, 10);
+            float xadvance = wcstol(data[L"xadvance"].c_str(), 0, 10);
             
             character.width = width/(float)font->size;
             character.height = height/(float)font->size;
@@ -342,13 +343,13 @@ Font* FontRenderer::LoadFont(FileLocation location, const std::string& name, boo
             character.xAdvance = xadvance/(float)font->size;
             
             font->chars[charCode] = character;
-        } else if (elementType == "kerning")
+        } else if (elementType == L"kerning")
         {
-            char charOne = (char)atoi(data["first"].c_str());
-            char charTwo = (char)atoi(data["second"].c_str());
-            int amount = (int)atoi(data["amount"].c_str());
+            wchar_t charOne = (wchar_t)wcstol(data[L"first"].c_str(), 0, 10);
+            wchar_t charTwo = (wchar_t)wcstol(data[L"second"].c_str(), 0, 10);
+            int amount = (int)wcstol(data[L"amount"].c_str(), 0, 10);
             
-            font->kerning[std::pair<char, char>(charOne, charTwo)] = amount/texSize[0];
+            font->kerning[std::pair<wchar_t, wchar_t>(charOne, charTwo)] = amount/texSize[0];
         }
     }
     
@@ -395,7 +396,7 @@ void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewpor
         
         if (renderable.Text.length() > _MaxCharacters)
         {
-            printf("String (%s) is too long for the MaxCharacters value set\n", renderable.Text.c_str());
+            wprintf(L"String (%s) is too long for the MaxCharacters value set\n", renderable.Text.c_str());
             continue;
         }
         
@@ -424,7 +425,7 @@ void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewpor
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
 }
 
-glm::vec2 FontRenderer::MeasureString(const std::string& name, const std::string& string, float size)
+glm::vec2 FontRenderer::MeasureString(const std::string& name, const std::wstring& string, float size)
 {
     Font* font;
     
@@ -446,7 +447,7 @@ glm::vec2 FontRenderer::MeasureString(const std::string& name, const std::string
             offsetX = 0.f;
             offsetY -= 1.f;
         } else {
-            std::map<char, Font::Character>::iterator charIt = font->chars.find(string[i]);
+            std::map<wchar_t, Font::Character>::iterator charIt = font->chars.find(string[i]);
             
             if (charIt == font->chars.end())
                 continue;
@@ -455,7 +456,7 @@ glm::vec2 FontRenderer::MeasureString(const std::string& name, const std::string
             
             if (i<string.length()-1)
             {
-                std::map<std::pair<char, char>, float>::iterator kerningIt = font->kerning.find(std::pair<char, char>(string[i], string[i+1]));
+                std::map<std::pair<wchar_t, wchar_t>, float>::iterator kerningIt = font->kerning.find(std::pair<wchar_t, wchar_t>(string[i], string[i+1]));
                 
                 if (kerningIt != font->kerning.end())
                     offsetX += kerningIt->second;
@@ -468,9 +469,9 @@ glm::vec2 FontRenderer::MeasureString(const std::string& name, const std::string
     return glm::vec2(maxLineLength * size, glm::abs((offsetY-1.f) * size));
 }
 
-void FontRenderer::SplitString(const std::string& string, char seperator, std::vector<std::string>& output)
+void FontRenderer::SplitString(const std::wstring& string, wchar_t seperator, std::vector<std::wstring>& output)
 {
-    std::string item;
+    std::wstring item;
     
     for (int i=0; i<string.length(); i++)
     {
@@ -482,7 +483,7 @@ void FontRenderer::SplitString(const std::string& string, char seperator, std::v
             {
                 output.push_back(item);
             }
-            item = "";
+            item = L"";
         }
         else
         {
