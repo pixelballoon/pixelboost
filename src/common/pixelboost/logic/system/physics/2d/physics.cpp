@@ -18,7 +18,7 @@ PhysicsSystem2D::PhysicsSystem2D(glm::vec2 gravity)
 
 PhysicsSystem2D::~PhysicsSystem2D()
 {
-    
+    delete _World;
 }
 
 pb::Uid PhysicsSystem2D::GetType()
