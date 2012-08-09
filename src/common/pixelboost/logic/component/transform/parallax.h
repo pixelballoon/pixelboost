@@ -36,7 +36,7 @@ namespace pb
         
     private:
         void OnChanged();
-        void OnTransformChanged(Uid sender, const Message& message);
+        void OnTransformChanged(const Message& message);
         
         Uid _ParallaxEntityId;
         

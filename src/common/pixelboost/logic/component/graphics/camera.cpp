@@ -37,7 +37,7 @@ Uid CameraComponent::GetStaticType()
     return TypeHash("camera");
 }
 
-void CameraComponent::OnTransformChanged(Uid sender, const Message& message)
+void CameraComponent::OnTransformChanged(const Message& message)
 {
     UpdateTransform();
 }

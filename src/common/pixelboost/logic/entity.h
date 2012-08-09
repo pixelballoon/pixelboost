@@ -43,7 +43,7 @@ public:
 
 public:
     typedef std::vector<Component*> ComponentList;
-    typedef sigslot::Delegate2<Uid, const Message&> MessageHandler;
+    typedef sigslot::Delegate1<const Message&> MessageHandler;
     
 public:
     Uid GenerateComponentId();
@@ -69,7 +69,7 @@ private:
     void HandleCreationEntityDestroyed();
     void HandleCreationEntityReloaded();
     
-    typedef std::map<Uid, sigslot::Signal2<Uid, const Message&> > MessageHandlers;
+    typedef std::map<Uid, sigslot::Signal1<const Message&> > MessageHandlers;
     typedef std::map<Uid, ComponentList> ComponentMap;
     
     ComponentMap _Components;

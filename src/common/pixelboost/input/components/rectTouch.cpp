@@ -119,7 +119,7 @@ bool RectTouchComponent::OnTouchUp(Touch touch)
     return true;
 }
 
-void RectTouchComponent::OnDebugRender(pb::Uid sender, const pb::Message& message)
+void RectTouchComponent::OnDebugRender(const pb::Message& message)
 {
     if (_TouchId)
     {

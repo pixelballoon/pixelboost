@@ -87,7 +87,7 @@ void FontComponent::SetLocalTransform(const glm::mat4x4& transform)
     UpdateTransform();
 }
 
-void FontComponent::OnTransformChanged(Uid sender, const Message& message)
+void FontComponent::OnTransformChanged(const Message& message)
 {
     UpdateTransform();
 }

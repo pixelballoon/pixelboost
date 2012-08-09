@@ -72,7 +72,7 @@ void ModelComponent::SetLocalTransform(const glm::mat4x4& transform)
     UpdateTransform();
 }
 
-void ModelComponent::OnTransformChanged(Uid sender, const Message& message)
+void ModelComponent::OnTransformChanged(const Message& message)
 {
     UpdateTransform();
 }

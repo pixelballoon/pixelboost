@@ -33,7 +33,7 @@ public:
     void SetSensor(bool isSensor);
     
 private:
-    void OnTransformChanged(Uid sender, const Message& message);
+    void OnTransformChanged(const Message& message);
     void UpdateTransform();
     
     b2Body* _Body;

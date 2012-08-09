@@ -83,7 +83,7 @@ void RectangleComponent::SetLocalTransform(const glm::mat4x4& transform)
     UpdateTransform();
 }
 
-void RectangleComponent::OnTransformChanged(Uid sender, const Message& message)
+void RectangleComponent::OnTransformChanged(const Message& message)
 {
     UpdateTransform();
 }

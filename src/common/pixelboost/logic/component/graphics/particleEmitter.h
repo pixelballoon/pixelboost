@@ -28,8 +28,8 @@ public:
     ParticleEmitter* GetEmitter();
     
 private:
-    void OnUpdate(Uid sender, const Message& message);
-    void OnTransformChanged(Uid sender, const Message& message);
+    void OnUpdate(const Message& message);
+    void OnTransformChanged(const Message& message);
     void UpdateTransform();
     
     glm::mat4x4 _LocalTransform;

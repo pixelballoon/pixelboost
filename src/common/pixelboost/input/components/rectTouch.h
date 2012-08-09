@@ -26,7 +26,7 @@ namespace pb
         virtual bool OnTouchMove(Touch touch);
         virtual bool OnTouchUp(Touch touch);
         
-        void OnDebugRender(pb::Uid sender, const pb::Message& message);
+        void OnDebugRender(const pb::Message& message);
         
         glm::vec2 _Size;
         
