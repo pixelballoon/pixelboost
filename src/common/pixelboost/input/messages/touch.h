@@ -26,13 +26,11 @@ public:
     static Uid GetStaticType();
     
 public:
-    TouchType GetTouchType();
-    
-    glm::vec2 GetTouchPosition();
+    TouchType GetTouchType() const;
+    glm::vec2 GetTouchPosition() const;
     
 private:
     TouchType _TouchType;
-    
     glm::vec2 _TouchPosition;
 };
     

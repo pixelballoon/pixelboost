@@ -25,12 +25,12 @@ Uid TouchMessage::GetStaticType()
     return TypeHash("touch");
 }
 
-TouchMessage::TouchType TouchMessage::GetTouchType()
+TouchMessage::TouchType TouchMessage::GetTouchType() const
 {
     return _TouchType;
 }
 
-glm::vec2 TouchMessage::GetTouchPosition()
+glm::vec2 TouchMessage::GetTouchPosition() const
 {
     return _TouchPosition;
 }
