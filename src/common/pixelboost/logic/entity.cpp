@@ -58,11 +58,6 @@ Uid Entity::GetUid()
     return _Uid;
 }
 
-Uid Entity::GetType()
-{
-    return 0;
-}
-
 void Entity::Destroy()
 {
     _State = kEntityDestroyed;

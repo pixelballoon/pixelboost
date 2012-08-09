@@ -34,7 +34,7 @@ public:
     Uid GetCreationUid();
     
     Uid GetUid();
-    virtual Uid GetType();
+    virtual Uid GetType() = 0;
     
     template<class T> const T* GetData() const;
 
