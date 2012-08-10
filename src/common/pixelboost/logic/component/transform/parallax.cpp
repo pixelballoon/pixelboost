@@ -33,7 +33,7 @@ Uid ParallaxTransformComponent::GetType()
 
 Uid ParallaxTransformComponent::GetStaticType()
 {
-    return TypeHash("transform");
+    return TransformComponent::GetStaticType();
 }
 
 const glm::mat4x4& ParallaxTransformComponent::GetMatrix()

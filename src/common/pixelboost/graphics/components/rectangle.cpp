@@ -33,7 +33,7 @@ RectangleComponent::~RectangleComponent()
 
 Uid RectangleComponent::GetType()
 {
-    return TypeHash("rectangle");
+    return TypeHash("pb::RectangleComponent");
 }
 
 void RectangleComponent::SetRenderPass(RenderPass renderPass)

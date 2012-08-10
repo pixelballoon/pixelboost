@@ -42,7 +42,7 @@ Uid ModelComponent::GetType()
 
 Uid ModelComponent::GetStaticType()
 {
-    return TypeHash("model");
+    return TypeHash("pb::ModelComponent");
 }
 
 void ModelComponent::SetLayer(int layer)

@@ -27,8 +27,8 @@ public:
     StaticBody2DComponent(Entity* parent, FixtureDefinition2D& definition);
     ~StaticBody2DComponent();
     
-    virtual pb::Uid GetType();
-    static pb::Uid GetStaticType();
+    virtual Uid GetType();
+    static Uid GetStaticType();
     
     void SetSensor(bool isSensor);
     

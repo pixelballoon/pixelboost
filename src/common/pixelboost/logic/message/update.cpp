@@ -21,7 +21,7 @@ Uid UpdateMessage::GetType() const
 
 Uid UpdateMessage::GetStaticType()
 {
-    return TypeHash("update");
+    return TypeHash("pb::UpdateMessage");
 }
 
 float UpdateMessage::GetDelta() const

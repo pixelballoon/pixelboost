@@ -40,7 +40,7 @@ Uid SpriteComponent::GetType()
 
 Uid SpriteComponent::GetStaticType()
 {
-    return TypeHash("sprite");
+    return TypeHash("pb::SpriteComponent");
 }
 
 glm::vec2 SpriteComponent::GetSize()

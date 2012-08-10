@@ -42,7 +42,7 @@ Uid ParticleEmitterComponent::GetType()
 
 Uid ParticleEmitterComponent::GetStaticType()
 {
-    return TypeHash("particle");
+    return TypeHash("pb::ParticleEmitterComponent");
 }
 
 void ParticleEmitterComponent::SetLayer(int layer)

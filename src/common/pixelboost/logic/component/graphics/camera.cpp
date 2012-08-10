@@ -34,7 +34,7 @@ Uid CameraComponent::GetType()
 
 Uid CameraComponent::GetStaticType()
 {
-    return TypeHash("camera");
+    return TypeHash("pb::CameraComponent");
 }
 
 void CameraComponent::OnTransformChanged(const Message& message)

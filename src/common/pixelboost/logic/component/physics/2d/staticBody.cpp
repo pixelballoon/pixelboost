@@ -83,14 +83,14 @@ StaticBody2DComponent::~StaticBody2DComponent()
     world->DestroyBody(_Body);
 }
 
-pb::Uid StaticBody2DComponent::GetType()
+Uid StaticBody2DComponent::GetType()
 {
     return GetStaticType();
 }
 
-pb::Uid StaticBody2DComponent::GetStaticType()
+Uid StaticBody2DComponent::GetStaticType()
 {
-    return TypeHash("staticBody2D");
+    return TypeHash("pb::StaticBody2DComponent");
 }
 
 void StaticBody2DComponent::SetSensor(bool isSensor)

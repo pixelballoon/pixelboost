@@ -40,7 +40,7 @@ Uid RectTouchComponent::GetType()
 
 Uid RectTouchComponent::GetStaticType()
 {
-    return TypeHash("rectTouch");
+    return TypeHash("pb::RectTouchComponent");
 }
 
 

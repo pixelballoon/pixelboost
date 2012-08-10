@@ -27,7 +27,7 @@ Uid BasicTransformComponent::GetType()
 
 Uid BasicTransformComponent::GetStaticType()
 {
-    return TypeHash("transform");
+    return TransformComponent::GetStaticType();
 }
 
 const glm::mat4x4& BasicTransformComponent::GetMatrix()

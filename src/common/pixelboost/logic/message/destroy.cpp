@@ -20,5 +20,5 @@ Uid DestroyMessage::GetType() const
 
 Uid DestroyMessage::GetStaticType()
 {
-    return TypeHash("destroy");
+    return TypeHash("pb::DestroyMessage");
 }

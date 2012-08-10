@@ -20,5 +20,5 @@ Uid ParticleFinishedMessage::GetType() const
 
 Uid ParticleFinishedMessage::GetStaticType()
 {
-    return TypeHash("particleFinished");
+    return TypeHash("pb::ParticleFinishedMessage");
 }

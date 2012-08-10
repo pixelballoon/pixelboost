@@ -20,5 +20,5 @@ Uid TransformChangedMessage::GetType() const
 
 Uid TransformChangedMessage::GetStaticType()
 {
-    return TypeHash("transformChanged");
+    return TypeHash("pb::TransformChangedMessage");
 }

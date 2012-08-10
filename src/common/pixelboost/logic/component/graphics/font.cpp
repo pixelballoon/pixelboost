@@ -43,7 +43,7 @@ Uid FontComponent::GetType()
 
 Uid FontComponent::GetStaticType()
 {
-    return TypeHash("font");
+    return TypeHash("pb::FontComponent");
 }
 
 void FontComponent::SetRenderPass(RenderPass renderPass)

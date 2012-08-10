@@ -22,7 +22,7 @@ Uid TouchMessage::GetType() const
 
 Uid TouchMessage::GetStaticType()
 {
-    return TypeHash("touch");
+    return TypeHash("pb::TouchMessage");
 }
 
 TouchMessage::TouchType TouchMessage::GetTouchType() const

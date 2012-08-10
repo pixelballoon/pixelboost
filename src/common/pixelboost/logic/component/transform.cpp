@@ -24,5 +24,5 @@ Uid TransformComponent::GetType()
 
 Uid TransformComponent::GetStaticType()
 {
-    return TypeHash("transform");
+    return TypeHash("pb::TransformComponent");
 }
