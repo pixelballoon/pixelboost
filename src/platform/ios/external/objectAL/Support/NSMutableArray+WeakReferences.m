@@ -11,7 +11,7 @@
 + (id) newMutableArrayUsingWeakReferencesWithCapacity:(NSUInteger) capacity
 {
 	CFArrayCallBacks callbacks = {0, NULL, NULL, CFCopyDescription, CFEqual};
-	return (__bridge_transfer id)(CFArrayCreateMutable(0, (CFIndex)capacity, &callbacks));
+	return (id)(CFArrayCreateMutable(0, (CFIndex)capacity, &callbacks));
 }
 
 + (id) newMutableArrayUsingWeakReferences
