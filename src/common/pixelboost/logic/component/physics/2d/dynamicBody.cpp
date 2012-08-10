@@ -2,7 +2,7 @@
 
 #include "Box2D/Box2D.h"
 
-#include "pixelboost/logic/component/physics/2d/staticBody.h"
+#include "pixelboost/logic/component/physics/2d/dynamicBody.h"
 #include "pixelboost/logic/component/transform.h"
 #include "pixelboost/logic/message/transform.h"
 #include "pixelboost/logic/system/physics/2d/physics.h"
@@ -12,7 +12,7 @@
 
 using namespace pb;
 
-StaticBody2DComponent::StaticBody2DComponent(Entity* parent, BodyType type, glm::vec2 size)
+DynamicBody2DComponent::DynamicBody2DComponent(Entity* parent, BodyType type, glm::vec2 size)
     : PhysicsComponent(parent)
 {
     pb::PhysicsSystem2D* physicsSystem = GetScene()->GetSystemByType<pb::PhysicsSystem2D>();
@@ -23,11 +23,13 @@ StaticBody2DComponent::StaticBody2DComponent(Entity* parent, BodyType type, glm:
     glm::vec3 position = transform->GetPosition();
     
     b2BodyDef bodyDef;
+    bodyDef.fixedRotation = false;
     bodyDef.position = b2Vec2(position.x, position.y);
-    bodyDef.type = b2_staticBody;
+    bodyDef.type = b2_dynamicBody;
     bodyDef.userData = this;
     
     b2FixtureDef fixtureDef;
+    fixtureDef.density = 1.f;
     
     b2CircleShape circle;
     b2PolygonShape rect;
@@ -52,10 +54,10 @@ StaticBody2DComponent::StaticBody2DComponent(Entity* parent, BodyType type, glm:
     _Body = world->CreateBody(&bodyDef);
     _Body->CreateFixture(&fixtureDef);
     
-    GetParent()->RegisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &StaticBody2DComponent::OnTransformChanged));
+    GetParent()->RegisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &DynamicBody2DComponent::OnTransformChanged));
 }
 
-StaticBody2DComponent::StaticBody2DComponent(Entity* parent, FixtureDefinition2D& fixtureDefinition)
+DynamicBody2DComponent::DynamicBody2DComponent(Entity* parent, FixtureDefinition2D& fixtureDefinition)
     : PhysicsComponent(parent)
 {
     pb::PhysicsSystem2D* physicsSystem = GetScene()->GetSystemByType<pb::PhysicsSystem2D>();
@@ -67,19 +69,19 @@ StaticBody2DComponent::StaticBody2DComponent(Entity* parent, FixtureDefinition2D
     glm::vec3 scale = transform->GetScale();
     
     b2BodyDef bodyDefinition;
-    bodyDefinition.type = b2_staticBody;
+    bodyDefinition.type = b2_dynamicBody;
     bodyDefinition.position = b2Vec2(position.x, position.y);
     bodyDefinition.userData = this;
     
     _Body = PhysicsHelpers2D::CreateBodyFromDefinition(world, bodyDefinition, fixtureDefinition, 1.f, glm::vec2(scale.x, scale.y));
     _Body->SetTransform(b2Vec2(position.x, position.y), glm::radians(transform->GetRotation().z));
     
-    GetParent()->RegisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &StaticBody2DComponent::OnTransformChanged));
+    GetParent()->RegisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &DynamicBody2DComponent::OnTransformChanged));
 }
 
-StaticBody2DComponent::~StaticBody2DComponent()
+DynamicBody2DComponent::~DynamicBody2DComponent()
 {
-    GetParent()->UnregisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &StaticBody2DComponent::OnTransformChanged));
+    GetParent()->UnregisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &DynamicBody2DComponent::OnTransformChanged));
     
     pb::PhysicsSystem2D* physicsSystem = GetScene()->GetSystemByType<pb::PhysicsSystem2D>();
     
@@ -88,17 +90,22 @@ StaticBody2DComponent::~StaticBody2DComponent()
     world->DestroyBody(_Body);
 }
 
-Uid StaticBody2DComponent::GetType()
+Uid DynamicBody2DComponent::GetType()
 {
     return GetStaticType();
 }
 
-Uid StaticBody2DComponent::GetStaticType()
+Uid DynamicBody2DComponent::GetStaticType()
 {
-    return TypeHash("pb::StaticBody2DComponent");
+    return TypeHash("pb::DynamicBody2DComponent");
 }
 
-void StaticBody2DComponent::SetSensor(bool isSensor)
+b2Body* DynamicBody2DComponent::GetBody()
+{
+    return _Body;
+}
+
+void DynamicBody2DComponent::SetSensor(bool isSensor)
 {
     b2Fixture* fixture = _Body->GetFixtureList();
     
@@ -109,14 +116,14 @@ void StaticBody2DComponent::SetSensor(bool isSensor)
     }
 }
 
-void StaticBody2DComponent::OnTransformChanged(const Message& message)
+void DynamicBody2DComponent::OnTransformChanged(const Message& message)
 {
     UpdateTransform();
 }
 
-void StaticBody2DComponent::UpdateTransform()
+void DynamicBody2DComponent::UpdateTransform()
 {
-    TransformComponent* transform = GetParent()->GetComponentByType<TransformComponent>();    
+    TransformComponent* transform = GetParent()->GetComponentByType<TransformComponent>();
     
     if (transform)
     {

@@ -33,7 +33,7 @@ namespace pb
     {
     public:
         static FixtureCollection2D* LoadDefinition(const std::string& filename);
-        static b2Body* CreateBodyFromDefinition(b2World* world, const FixtureDefinition2D& definition, const glm::vec2& position, void* userData, glm::vec2 scale=glm::vec2(1,1));
+        static b2Body* CreateBodyFromDefinition(b2World* world, b2BodyDef bodyDef, const FixtureDefinition2D& definition, float density=1.f, glm::vec2 scale=glm::vec2(1,1));
     };
 }
 

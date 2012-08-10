@@ -59,13 +59,8 @@ FixtureCollection2D* PhysicsHelpers2D::LoadDefinition(const std::string& filenam
     return fixtureCollection;
 }
 
-b2Body* PhysicsHelpers2D::CreateBodyFromDefinition(b2World* world, const FixtureDefinition2D& fixtureDef, const glm::vec2& position, void* userData, glm::vec2 scale)
+b2Body* PhysicsHelpers2D::CreateBodyFromDefinition(b2World* world, b2BodyDef bodyDef, const FixtureDefinition2D& fixtureDef, float density, glm::vec2 scale)
 {
-    b2BodyDef bodyDef;
-    bodyDef.type = b2_staticBody;
-    bodyDef.position = b2Vec2(position.x, position.y);
-    bodyDef.userData = userData;
-    
     b2PolygonShape poly;
     
     b2Body* body = world->CreateBody(&bodyDef);
@@ -73,12 +68,12 @@ b2Body* PhysicsHelpers2D::CreateBodyFromDefinition(b2World* world, const Fixture
     for (std::vector<b2PolygonShape>::const_iterator it = fixtureDef.Shapes.begin(); it != fixtureDef.Shapes.end(); ++it)
     {
         poly = *it;
-        for (int i=0; i<b2_maxPolygonVertices; i++)
+        for (int i=0; i<poly.m_vertexCount; i++)
         {
             poly.m_vertices[i] = b2Vec2(poly.m_vertices[i].x*scale.x, poly.m_vertices[i].y*scale.y);
         }
         
-        body->CreateFixture(&poly, 0.f);
+        body->CreateFixture(&poly, density);
     }
     
     return body;
