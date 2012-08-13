@@ -179,7 +179,6 @@ File* FileSystem::OpenFile(FileLocation location, const std::string& path, FileM
 
     JNIEnv* env = pb::Jni::GetJniEnv();
 
-    jstring jstr = env->NewStringUTF(actualPath.c_str());
     jclass classId = env->FindClass("com/pixelballoon/pixelboost/PixelboostHelpers");
 
     std::string openMode;
@@ -203,6 +202,7 @@ File* FileSystem::OpenFile(FileLocation location, const std::string& path, FileM
 
     if (location == kFileLocationBundle)
     {
+        jstring jstr = env->NewStringUTF(actualPath.c_str());
         jmethodID methodId = env->GetStaticMethodID(classId, "openFileDescriptor", "(Ljava/lang/String;)Lcom/pixelballoon/pixelboost/FileInfo;");
         jobject result = env->CallStaticObjectMethod(classId, methodId, jstr);
 
