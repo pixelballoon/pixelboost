@@ -262,8 +262,8 @@ PrimitiveRenderer::PrimitiveRenderer()
         for (int i=0; i<32; i++)
         {
             indices[i] = i;
-            vertices[i].position[0] = cos(angle)*0.5;
-            vertices[i].position[1] = sin(angle)*0.5;
+            vertices[i].position[0] = cos(angle);
+            vertices[i].position[1] = sin(angle);
             vertices[i].position[2] = 0.f;
             angle += step;
         }
