@@ -263,7 +263,7 @@ FontRenderer::~FontRenderer()
     }
 }
 
-Font* FontRenderer::LoadFont(FileLocation location, const std::string& name, bool createMips)
+Font* FontRenderer::LoadFont(FileLocation location, const std::string& name, const std::string& filename, bool createMips)
 {
     FontMap::iterator it = _Fonts.find(name);
     
@@ -274,7 +274,7 @@ Font* FontRenderer::LoadFont(FileLocation location, const std::string& name, boo
     
     font->texture = 0;
     
-    std::string fntFilename = "/data/fonts/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".fnt";
+    std::string fntFilename = filename + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".fnt";
     
     std::wstring fontContents = pb::StringToUnicode(FileHelpers::FileToString(pb::kFileLocationBundle, fntFilename));
     

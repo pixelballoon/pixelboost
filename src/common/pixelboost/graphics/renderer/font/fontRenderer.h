@@ -104,7 +104,7 @@ namespace pb
         FontRenderer(int maxCharacters=1024);
         virtual ~FontRenderer();
         
-        Font* LoadFont(FileLocation location, const std::string& name, bool createMips=true);
+        Font* LoadFont(FileLocation location, const std::string& name, const std::string& filename, bool createMips=true);
         
         Font* GetFont(const std::string& name);
         

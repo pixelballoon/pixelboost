@@ -49,8 +49,10 @@ void ModelRenderable::CalculateBounds()
         return;
     
     glm::vec4 position = GetWorldMatrix() * glm::vec4(0,0,0,1);
+    float scale = glm::length(GetWorldMatrix() * glm::vec4(0.5774,0.5774,0.5774,0));
+    
     BoundingSphere bounds = model->GetBounds();
-    bounds.Set(glm::vec3(position.x, position.y, position.z), bounds.GetSize());
+    bounds.Set(glm::vec3(position.x, position.y, position.z), bounds.GetSize() * scale);
     SetBounds(bounds);
 }
 

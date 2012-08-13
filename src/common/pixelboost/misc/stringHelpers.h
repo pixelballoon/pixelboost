@@ -19,6 +19,16 @@ namespace pb
             }
             return items;
         }
+        
+        static std::vector<std::wstring>& SplitString(const std::wstring& s, wchar_t delim, std::vector<std::wstring>& items)
+        {
+            std::wstringstream stream(s);
+            std::wstring item;
+            while(std::getline(stream, item, delim)) {
+                items.push_back(item);
+            }
+            return items;
+        }
     };
     
 }
