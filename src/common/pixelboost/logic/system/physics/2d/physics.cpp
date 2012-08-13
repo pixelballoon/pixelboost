@@ -1,3 +1,5 @@
+#ifndef PIXELBOOST_DISABLE_BOX2D
+
 #include "Box2D/Box2D.h"
 
 #include "pixelboost/graphics/renderer/box2d/box2dRenderer.h"
@@ -55,3 +57,5 @@ void PhysicsSystem2D::SetDebugRender(bool debugRender, int layer)
     _DebugRender = debugRender;
     _DebugRenderer->SetLayer(layer);
 }
+
+#endif

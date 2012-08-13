@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef PIXELBOOST_DISABLE_BOX2D
+
 #include "pixelboost/logic/system.h"
 
 class b2World;
@@ -37,3 +39,5 @@ namespace pb
     };
     
 }
+
+#endif
