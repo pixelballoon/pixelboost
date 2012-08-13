@@ -62,7 +62,12 @@ void Box2dRenderer::DrawCircle(const b2Vec2& center, float32 radius, const b2Col
 
 void Box2dRenderer::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color)
 {
+    if (!_DebugRenderSystem)
+        return;
+    
     DrawCircle(center, radius, color);
+    
+    _DebugRenderSystem->AddLine(pb::kRenderPassScene, glm::vec3(center.x, center.y, 0), glm::vec3(center.x+axis.x, center.y+axis.y, 0));
 }
 
 void Box2dRenderer::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color)
@@ -75,7 +80,10 @@ void Box2dRenderer::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Colo
 
 void Box2dRenderer::DrawTransform(const b2Transform& xf)
 {
+    if (!_DebugRenderSystem)
+        return;
     
+    _DebugRenderSystem->AddLine(pb::kRenderPassScene, glm::vec3(xf.p.x, xf.p.y, 0), glm::vec3(xf.p.x + cos(xf.q.GetAngle())*2.f, xf.p.y + sin(xf.q.GetAngle())*2.f, 0));
 }
 
 #endif
