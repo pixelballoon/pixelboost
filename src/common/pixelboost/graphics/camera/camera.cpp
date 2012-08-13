@@ -43,7 +43,10 @@ void OrthographicCamera::CalculateTransform(Viewport* viewport)
     glm::vec2 viewportSize = viewport->GetSize() / 2.f;
     
     ProjectionMatrix = glm::ortho(-viewportSize.x/Scale.x, viewportSize.x/Scale.x, -viewportSize.y/Scale.y, viewportSize.y/Scale.y, ZNear, ZFar);
-    ViewMatrix = glm::translate(glm::mat4x4(), -Position);
+    ViewMatrix = glm::rotate(glm::mat4x4(), Rotation.x, glm::vec3(1,0,0));
+    ViewMatrix = glm::rotate(ViewMatrix, Rotation.y, glm::vec3(0,1,0));
+    ViewMatrix = glm::rotate(ViewMatrix, Rotation.z, glm::vec3(0,0,1));
+    ViewMatrix = glm::translate(ViewMatrix, -Position);
     ViewProjectionMatrix = ProjectionMatrix * ViewMatrix;
     
     Camera::CalculateTransform(viewport);
