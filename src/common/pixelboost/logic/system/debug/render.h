@@ -1,4 +1,4 @@
-#include <set>
+#include <map>
 
 #include "pixelboost/logic/system/graphics/render/render.h"
 
@@ -12,6 +12,7 @@ namespace pb
     class DebugRenderSystem : public RenderSystem
     {
     public:
+        DebugRenderSystem();
         virtual ~DebugRenderSystem();
         
         virtual Uid GetType();
@@ -27,12 +28,14 @@ namespace pb
         virtual void AddItem(Renderable* renderable, float time);
         virtual void RemoveItem(Renderable* renderable);
 
-        void Clear(float time);
+        void Clear();
         
         typedef std::map<Renderable*, float> RenderableMap;
         
         RenderableMap _SceneRenderables;
         RenderableMap _UiRenderables;
+        
+        float _UpdateTime;
     };
     
 }

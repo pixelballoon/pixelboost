@@ -6,6 +6,12 @@
 
 using namespace pb;
 
+DebugRenderSystem::DebugRenderSystem()
+    : _UpdateTime(0)
+{
+    
+}
+
 DebugRenderSystem::~DebugRenderSystem()
 {
     for (RenderableMap::iterator it = _SceneRenderables.begin(); it != _SceneRenderables.end(); ++it)
@@ -31,8 +37,9 @@ Uid DebugRenderSystem::GetStaticType()
 
 void DebugRenderSystem::Update(Scene* scene, float time)
 {
-    Clear(time);
-
+    Clear();
+    _UpdateTime = time;
+    
     DebugRenderMessage debugRenderMessage(this);
     scene->BroadcastMessage(debugRenderMessage);
 }
@@ -46,6 +53,7 @@ void DebugRenderSystem::Render(Scene* scene, Viewport* viewport, RenderPass rend
             for (RenderableMap::iterator it = _UiRenderables.begin(); it != _UiRenderables.end(); ++it)
             {
                 RenderItem(it->first);
+                it->second -= _UpdateTime;
             }
             break;
         }
@@ -55,15 +63,17 @@ void DebugRenderSystem::Render(Scene* scene, Viewport* viewport, RenderPass rend
             for (RenderableMap::iterator it = _SceneRenderables.begin(); it != _SceneRenderables.end(); ++it)
             {
                 RenderItem(it->first);
+                it->second -= _UpdateTime;
             }
             break;
         }
     }
 }
 
-PrimitiveRenderableEllipse* DebugRenderSystem::AddEllipse(RenderPass, glm::vec3 position, glm::vec3 rotation, glm::vec2 size, float time)
+PrimitiveRenderableEllipse* DebugRenderSystem::AddEllipse(RenderPass renderPass, glm::vec3 position, glm::vec3 rotation, glm::vec2 size, float time)
 {
     PrimitiveRenderableEllipse* ellipse = new pb::PrimitiveRenderableEllipse(0);
+    ellipse->SetRenderPass(renderPass);
     ellipse->SetPosition(position);
     ellipse->SetRotation(rotation);
     ellipse->SetSize(size);
@@ -103,25 +113,30 @@ void DebugRenderSystem::RemoveItem(Renderable* renderable)
     _SceneRenderables.erase(renderable);
     _UiRenderables.erase(renderable);
     
-    RenderSystem::AddItem(renderable);
+    RenderSystem::RemoveItem(renderable);
 }
 
-void DebugRenderSystem::Clear(float time)
+void DebugRenderSystem::Clear()
 {
-    for (RenderableMap::iterator it = _SceneRenderables.begin(); it != _SceneRenderables.end(); ++it)
+    for (RenderableMap::iterator it = _SceneRenderables.begin(); it != _SceneRenderables.end();)
     {
-        it->second -= time;
-        if (it->second <= 0.f)
+        if (it->second < 0.f)
+        {
             delete it->first;
+            _SceneRenderables.erase(it++);
+        } else {
+            ++it;
+        }
     }
     
-    for (RenderableMap::iterator it = _UiRenderables.begin(); it != _UiRenderables.end(); ++it)
+    for (RenderableMap::iterator it = _UiRenderables.begin(); it != _UiRenderables.end();)
     {
-        it->second -= time;
-        if (it->second <= 0.f)
+        if (it->second < 0.f)
+        {
             delete it->first;
+            _UiRenderables.erase(it++);
+        } else {
+            ++it;
+        }
     }
-    
-    _SceneRenderables.clear();
-    _UiRenderables.clear();
 }
