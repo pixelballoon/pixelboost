@@ -35,7 +35,7 @@ namespace pb
         void SetSensor(bool isSensor);
         
     private:
-        void OnTransformChanged(const Message& message);
+        void OnUpdate(const Message& message);
         void UpdateTransform();
         
         b2Body* _Body;

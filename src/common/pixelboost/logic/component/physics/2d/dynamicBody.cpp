@@ -4,7 +4,7 @@
 
 #include "pixelboost/logic/component/physics/2d/dynamicBody.h"
 #include "pixelboost/logic/component/transform.h"
-#include "pixelboost/logic/message/transform.h"
+#include "pixelboost/logic/message/update.h"
 #include "pixelboost/logic/system/physics/2d/physics.h"
 #include "pixelboost/logic/entity.h"
 #include "pixelboost/logic/scene.h"
@@ -54,7 +54,7 @@ DynamicBody2DComponent::DynamicBody2DComponent(Entity* parent, BodyType type, gl
     _Body = world->CreateBody(&bodyDef);
     _Body->CreateFixture(&fixtureDef);
     
-    GetParent()->RegisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &DynamicBody2DComponent::OnTransformChanged));
+    GetParent()->RegisterMessageHandler(UpdateMessage::GetStaticType(), Entity::MessageHandler(this, &DynamicBody2DComponent::OnUpdate));
 }
 
 DynamicBody2DComponent::DynamicBody2DComponent(Entity* parent, FixtureDefinition2D& fixtureDefinition)
@@ -76,12 +76,12 @@ DynamicBody2DComponent::DynamicBody2DComponent(Entity* parent, FixtureDefinition
     _Body = PhysicsHelpers2D::CreateBodyFromDefinition(world, bodyDefinition, fixtureDefinition, 1.f, glm::vec2(scale.x, scale.y));
     _Body->SetTransform(b2Vec2(position.x, position.y), glm::radians(transform->GetRotation().z));
     
-    GetParent()->RegisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &DynamicBody2DComponent::OnTransformChanged));
+    GetParent()->RegisterMessageHandler(UpdateMessage::GetStaticType(), Entity::MessageHandler(this, &DynamicBody2DComponent::OnUpdate));
 }
 
 DynamicBody2DComponent::~DynamicBody2DComponent()
 {
-    GetParent()->UnregisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &DynamicBody2DComponent::OnTransformChanged));
+    GetParent()->UnregisterMessageHandler(UpdateMessage::GetStaticType(), Entity::MessageHandler(this, &DynamicBody2DComponent::OnUpdate));
     
     pb::PhysicsSystem2D* physicsSystem = GetScene()->GetSystemByType<pb::PhysicsSystem2D>();
     
@@ -116,7 +116,7 @@ void DynamicBody2DComponent::SetSensor(bool isSensor)
     }
 }
 
-void DynamicBody2DComponent::OnTransformChanged(const Message& message)
+void DynamicBody2DComponent::OnUpdate(const Message& message)
 {
     UpdateTransform();
 }
@@ -127,9 +127,8 @@ void DynamicBody2DComponent::UpdateTransform()
     
     if (transform)
     {
-        glm::vec3 position = transform->GetPosition();
-        glm::vec3 rotation = transform->GetRotation();
-        _Body->SetTransform(b2Vec2(position.x, position.y), rotation.z);
+        transform->SetPosition(glm::vec3(_Body->GetPosition().x, _Body->GetPosition().y, 0));
+        transform->SetRotation(glm::vec3(0, 0, glm::degrees(_Body->GetTransform().q.GetAngle())));
     }
 }
 
