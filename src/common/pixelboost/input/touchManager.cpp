@@ -55,30 +55,8 @@ glm::vec2 Touch::GetViewportPosition()
     
     position /= GraphicsDevice::Instance()->GetDisplayDensity();
     
-    if (_Viewport->GetSceneCamera()->GetType() == Camera::kCameraOrthographic)
-        position /= static_cast<OrthographicCamera*>(_Viewport->GetSceneCamera())->Scale;
-    
-    return position;
-}
-
-glm::vec2 Touch::GetWorldPosition()
-{
-    if (!_Viewport)
-        return glm::vec2(0,0);
-    
-    glm::vec2 position = _Position;
-    
-    position.x = position.x - GraphicsDevice::Instance()->GetDisplayResolution().x/2.f;
-    position.y = GraphicsDevice::Instance()->GetDisplayResolution().y/2.f - position.y;
-    
-    position /= GraphicsDevice::Instance()->GetDisplayDensity();
-    
-    if (_Viewport->GetSceneCamera()->GetType() == Camera::kCameraOrthographic)
-    {
-        OrthographicCamera* camera = static_cast<OrthographicCamera*>(_Viewport->GetSceneCamera());
-        position /= camera->Scale;
-        position += glm::vec2(camera->Position.x, camera->Position.y);
-    }
+    if (_Viewport->GetUiCamera()->GetType() == Camera::kCameraOrthographic)
+        position /= static_cast<OrthographicCamera*>(_Viewport->GetUiCamera())->Scale;
     
     return position;
 }

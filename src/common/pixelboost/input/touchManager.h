@@ -21,7 +21,6 @@ namespace pb
         pb::Viewport* GetViewport();
         glm::vec2 GetScreenPosition();
         glm::vec2 GetViewportPosition();
-        glm::vec2 GetWorldPosition();
         
         bool operator==(Touch const& b);
         bool operator!=(Touch const& b);
