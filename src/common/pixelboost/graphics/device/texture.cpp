@@ -64,6 +64,8 @@ bool Texture::LoadFromPng(pb::FileLocation location, const std::string& path, bo
     if (!glm::isPowerOfTwo(decoder.getHeight()) || !glm::isPowerOfTwo(decoder.getWidth()))
         createMips = false;
     
+    delete file;
+    
 	return LoadFromBytes(&decoded[0], decoder.getWidth(), decoder.getHeight(), createMips, kTextureFormatRGBA);
 }
 

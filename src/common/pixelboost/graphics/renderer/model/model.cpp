@@ -170,15 +170,23 @@ bool ModelDefinition::Open(pb::FileLocation fileLocation, const std::string& fil
     
     short numObjects;
     if (!file->Read(numObjects))
+    {
+        delete file;
         return false;
+    }
     
     for (int i=0; i<numObjects; i++)
     {
         ModelObject o;
         if (!o.Read(file))
+        {
+            delete file;
             return false;
+        }
         Objects.push_back(o);
     }
+    
+    delete file;
     
     return true;
 }
@@ -196,8 +204,13 @@ bool ModelDefinition::Save(pb::FileLocation fileLocation, const std::string& fil
     for (std::vector<ModelObject>::const_iterator it = Objects.begin(); it != Objects.end(); ++it)
     {
         if (!it->Write(file))
+        {
+            delete file;
             return false;
+        }
     }
+    
+    delete file;
     
     return true;
 }
