@@ -4,9 +4,11 @@
 
 namespace pb
 {
-    void StringToUnicode(std::wstring& dest, const std::string& src);
-    void UnicodeToString(std::string& dest, const std::wstring& src);
+    typedef std::basic_string<uint32_t> wstring;
     
-    std::wstring StringToUnicode(const std::string& src);
-    std::string UnicodeToString(const std::wstring& src);
+    void UTF8toUTF32(wstring& dest, const std::string& src);
+    void UTF32toUTF8(std::string& dest, const wstring& src);
+    
+    wstring UTF8toUTF32(const std::string& src);
+    std::string UTF32toUTF8(const wstring& src);
 }

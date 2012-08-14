@@ -328,7 +328,7 @@ void GwenRenderer::RenderText(Gwen::Font* font, Gwen::Point pos, const Gwen::Uni
     if (!text.length())
         return;
     
-    renderFont->FillVertexBuffer(_FontVertexBuffer, text);
+    renderFont->FillVertexBuffer(_FontVertexBuffer, Gwen::Utility::UnicodeToString(text));
     
     glm::mat4x4 modelMatrix = glm::translate(glm::mat4x4(), glm::vec3(pos.x, -pos.y - size, 0)/32.f);
     modelMatrix = glm::scale(modelMatrix, glm::vec3(size, size, 1)/32.f);
@@ -354,7 +354,7 @@ Gwen::Point GwenRenderer::MeasureText(Gwen::Font* font, const Gwen::UnicodeStrin
     pb::Game::Instance()->GetFontRenderer()->LoadFont(pb::kFileLocationBundle, fontName, false);
     
     float size = font->size * Scale();
-    float length = pb::Game::Instance()->GetFontRenderer()->MeasureString(fontName, text, size/32.f).x*32.f;
+    float length = pb::Game::Instance()->GetFontRenderer()->MeasureString(fontName, Gwen::Utility::UnicodeToString(text), size/32.f).x*32.f;
     
     return Gwen::Point(length, size);
 }

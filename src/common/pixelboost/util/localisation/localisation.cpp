@@ -1,5 +1,3 @@
-//#include <wchar.h>
-
 #include "pixelboost/file/fileHelpers.h"
 #include "pixelboost/misc/stringHelpers.h"
 #include "pixelboost/util/localisation/localisation.h"
@@ -8,6 +6,7 @@
 using namespace pb;
 
 Localisation::Localisation()
+    : _Loaded(false)
 {
     
 }
@@ -31,25 +30,32 @@ bool Localisation::Load(pb::FileLocation location, const std::string& directory)
 {
     std::string filename = directory + GetCurrentLocale() + ".po";
     
-    std::wstring contents = pb::StringToUnicode(pb::FileHelpers::FileToString(location, filename));
+    std::string contents = pb::FileHelpers::FileToString(location, filename);
     
-    std::vector<std::wstring> lines;
+    if (!contents.length())
+    {
+        return false;
+    }
+    
+    _Loaded = true;
+    
+    std::vector<std::string> lines;
     pb::StringHelpers::SplitString(contents, L'\n', lines);
     
     bool parsingKey = true;
     std::string key;
-    std::wstring value;
+    std::string value;
     
-    for (std::vector<std::wstring>::iterator it = lines.begin(); it != lines.end(); ++it)
+    for (std::vector<std::string>::iterator it = lines.begin(); it != lines.end(); ++it)
     {
-        std::wstring line = *it;
+        std::string line = *it;
         
         if (line.length() == 0)
             continue;
         
         if (line.at(0) == L'm')
         {
-            if (line.substr(0, 5) == L"msgid")
+            if (line.substr(0, 5) == "msgid")
             {
                 if (key.length())
                 {
@@ -60,7 +66,7 @@ bool Localisation::Load(pb::FileLocation location, const std::string& directory)
                 }
 
                 parsingKey = true;
-                key = pb::UnicodeToString(line.substr(7, line.length()-8));
+                key = line.substr(7, line.length()-8);
             } else {
                 parsingKey = false;
                 value = line.substr(8, line.length()-9);
@@ -72,7 +78,7 @@ bool Localisation::Load(pb::FileLocation location, const std::string& directory)
         {
             if (parsingKey)
             {
-                key.append(pb::UnicodeToString(line.substr(1, line.length()-2)));
+                key.append(line.substr(1, line.length()-2));
             } else {
                 value.append(line.substr(1, line.length()-2));
             }
@@ -109,30 +115,18 @@ void Localisation::ParseString(std::string& str)
     }
 }
 
-void Localisation::ParseString(std::wstring& str)
-{
-    size_t pos;
-    
-    pos = 0;
-    while((pos = str.find(L"\\n", pos)) != std::wstring::npos)
-    {
-        str.replace(pos, 2, L"\n");
-        pos += 1;
-    }
-    
-    pos = 0;
-    while((pos = str.find(L"\\t", pos)) != std::wstring::npos)
-    {
-        str.replace(pos, 2, L"\t");
-        pos += 1;
-    }
-}
-
-std::wstring Localisation::GetString(pb::Uid uid, const std::string& str)
+std::string Localisation::GetString(pb::Uid uid, const std::string& str)
 {
     StringMap::iterator it = _Strings.find(uid);
     if (it != _Strings.end())
         return it->second;
     
-    return pb::StringToUnicode(str);
+#ifndef PIXELBOOST_BUILD_RELEASE
+    if (_Loaded)
+        return "*** MISSING (" + str + ") ***";
+    else
+        return str;
+#else
+    return str;
+#endif
 }

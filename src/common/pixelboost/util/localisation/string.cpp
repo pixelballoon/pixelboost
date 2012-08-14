@@ -23,12 +23,12 @@
 
 #include "pixelboost/util/localisation/string.h"
 
-void pb::StringToUnicode(std::wstring& dest, const std::string& src)
+void pb::UTF8toUTF32(wstring& dest, const std::string& src)
 {
     dest.clear();
-    wchar_t w = 0;
+    uint32_t w = 0;
     int bytes = 0;
-    wchar_t err = L'�';
+    uint32_t err = L'�';
     for (size_t i = 0; i < src.size(); i++){
         unsigned char c = (unsigned char)src[i];
         if (c <= 0x7f){//first byte
@@ -69,10 +69,10 @@ void pb::StringToUnicode(std::wstring& dest, const std::string& src)
         dest.push_back(err);
 }
 
-void pb::UnicodeToString(std::string& dest, const std::wstring& src){
+void pb::UTF32toUTF8(std::string& dest, const wstring& src){
     dest.clear();
     for (size_t i = 0; i < src.size(); i++){
-        wchar_t w = src[i];
+        uint32_t w = src[i];
         if (w <= 0x7f)
             dest.push_back((char)w);
         else if (w <= 0x7ff){
@@ -95,16 +95,16 @@ void pb::UnicodeToString(std::string& dest, const std::wstring& src){
     }
 }
 
-std::wstring pb::StringToUnicode(const std::string& src)
+pb::wstring pb::UTF8toUTF32(const std::string& src)
 {
-    std::wstring tmp;
-    StringToUnicode(tmp, src);
+    wstring tmp;
+    UTF8toUTF32(tmp, src);
     return tmp;
 }
 
-std::string pb::UnicodeToString(const std::wstring& src)
+std::string pb::UTF32toUTF8(const wstring& src)
 {
     std::string tmp;
-    UnicodeToString(tmp, src);
+    UTF32toUTF8(tmp, src);
     return tmp;
 }

@@ -13,7 +13,7 @@
 
 using namespace pb;
 
-FontComponent::FontComponent(Entity* parent, const std::string& font, const std::wstring& text)
+FontComponent::FontComponent(Entity* parent, const std::string& font, const std::string& text)
     : Component(parent)
 {
     _Renderable = new FontRenderable(GetParent()->GetUid());
@@ -66,7 +66,7 @@ void FontComponent::SetFont(const std::string& font)
     _Renderable->SetFont(font);
 }
 
-void FontComponent::SetText(const std::wstring& text)
+void FontComponent::SetText(const std::string& text)
 {
     _Renderable->SetText(text);
 }

@@ -19,14 +19,15 @@ namespace pb
         
         bool Load(pb::FileLocation location, const std::string& directory);
         
-        std::wstring GetString(pb::Uid key, const std::string& str);
+        std::string GetString(pb::Uid key, const std::string& str);
         
     private:
         void ParseString(std::string& str);
-        void ParseString(std::wstring& str);
         
-        typedef std::map<pb::Uid, std::wstring> StringMap;
+        typedef std::map<pb::Uid, std::string> StringMap;
         StringMap _Strings;
+        
+        bool _Loaded;
     };
     
     std::string GetCurrentLocale();

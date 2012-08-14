@@ -17,7 +17,7 @@ namespace pb
     class FontComponent : public Component
     {
     public:
-        FontComponent(Entity* parent, const std::string& font, const std::wstring& text);
+        FontComponent(Entity* parent, const std::string& font, const std::string& text);
         virtual ~FontComponent();
         
         Uid GetType();
@@ -27,7 +27,7 @@ namespace pb
         void SetLayer(int layer);
         void SetAlignment(FontAlign alignment);
         void SetFont(const std::string& font);
-        void SetText(const std::wstring& text);
+        void SetText(const std::string& text);
         void SetTint(const glm::vec4& tint);
         void SetSize(float size);
         
