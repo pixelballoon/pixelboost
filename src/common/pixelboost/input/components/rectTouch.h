@@ -1,5 +1,7 @@
 #pragma once
 
+#include <set>
+
 #include "pixelboost/input/touchManager.h"
 #include "pixelboost/logic/component.h"
 
@@ -18,6 +20,7 @@ namespace pb
         virtual Uid GetType();
         
         void SetSize(const glm::vec2& size);
+        void SetMultiTouch(bool multiTouch);
         
     private:
         glm::vec3 GetPosition();
@@ -28,10 +31,14 @@ namespace pb
         
         void OnDebugRender(const pb::Message& message);
         
+        bool AddTouch(Touch touch, glm::vec2 position);
+        void RemoveTouch(Touch touch);
+        bool HasTouch(Touch touch);
+        
         glm::vec2 _Size;
         
-        int _TouchId;
-        glm::vec2 _TouchPosition;
+        bool _MultiTouch;
+        std::map<int, glm::vec2> _Touches;
         
         bool _DebugRender;
     };

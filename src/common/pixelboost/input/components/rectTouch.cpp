@@ -12,8 +12,8 @@ using namespace pb;
 
 RectTouchComponent::RectTouchComponent(Entity* parent, bool debugRender)
     : Component(parent)
-    , _TouchId(0)
     , _DebugRender(debugRender)
+    , _MultiTouch(false)
 {
     Game::Instance()->GetTouchManager()->AddHandler(this);
     
@@ -49,6 +49,11 @@ void RectTouchComponent::SetSize(const glm::vec2& size)
     _Size = size;
 }
 
+void RectTouchComponent::SetMultiTouch(bool multiTouch)
+{
+    _MultiTouch = multiTouch;
+}
+
 glm::vec3 RectTouchComponent::GetPosition()
 {
     TransformComponent* transform = GetParent()->GetComponentByType<TransformComponent>();
@@ -71,11 +76,11 @@ bool RectTouchComponent::OnTouchDown(Touch touch)
     if (screenPos.x > position.x-size.x && screenPos.x < position.x+size.x &&
         screenPos.y > position.y-size.y && screenPos.y < position.y+size.y)
     {
-        _TouchId = touch.GetId();
-        _TouchPosition = screenPos;
-        
-        TouchMessage message(GetParent(), this, TouchMessage::kTouchTypeDown, screenPos-glm::vec2(position.x, position.y));
-        GetScene()->SendMessage(GetParentUid(), message);
+        if (AddTouch(touch, screenPos))
+        {
+            TouchMessage message(GetParent(), this, touch.GetId(), TouchMessage::kTouchTypeDown, screenPos-glm::vec2(position.x, position.y));
+            GetScene()->SendMessage(GetParentUid(), message);
+        }
         
         return true;
     }
@@ -85,16 +90,16 @@ bool RectTouchComponent::OnTouchDown(Touch touch)
 
 bool RectTouchComponent::OnTouchMove(Touch touch)
 {
-    if (_TouchId != touch.GetId())
+    if (!HasTouch(touch))
         return false;
     
     glm::vec3 position = GetPosition();
     glm::vec2 screenPos = touch.GetViewportPosition();
     glm::vec2 size = _Size/2.f;
     
-    _TouchPosition = screenPos;
+    _Touches[touch.GetId()] = screenPos;
     
-    TouchMessage message(GetParent(), this, TouchMessage::kTouchTypeMove, screenPos-glm::vec2(position.x, position.y));
+    TouchMessage message(GetParent(), this, touch.GetId(), TouchMessage::kTouchTypeMove, screenPos-glm::vec2(position.x, position.y));
     GetScene()->SendMessage(GetParentUid(), message);
     
     return true;
@@ -102,18 +107,16 @@ bool RectTouchComponent::OnTouchMove(Touch touch)
 
 bool RectTouchComponent::OnTouchUp(Touch touch)
 {
-    if (_TouchId != touch.GetId())
+    if (!HasTouch(touch))
         return false;
     
-    _TouchId = 0;
+    RemoveTouch(touch);
     
     glm::vec3 position = GetPosition();
     glm::vec2 screenPos = touch.GetViewportPosition();
     glm::vec2 size = _Size/2.f;
     
-    _TouchPosition = screenPos;
-    
-    TouchMessage message(GetParent(), this, TouchMessage::kTouchTypeUp, screenPos-glm::vec2(position.x, position.y));
+    TouchMessage message(GetParent(), this, touch.GetId(), TouchMessage::kTouchTypeUp, screenPos-glm::vec2(position.x, position.y));
     GetScene()->SendMessage(GetParentUid(), message);
     
     return true;
@@ -121,10 +124,32 @@ bool RectTouchComponent::OnTouchUp(Touch touch)
 
 void RectTouchComponent::OnDebugRender(const pb::Message& message)
 {
-    if (_TouchId)
+    for (std::map<int, glm::vec2>::iterator it = _Touches.begin(); it != _Touches.end(); ++it)
     {
         const pb::DebugRenderMessage& debugRenderMessage = static_cast<const pb::DebugRenderMessage&>(message);
-        debugRenderMessage.GetDebugRenderSystem()->AddEllipse(pb::kRenderPassUi, glm::vec3(_TouchPosition, 0.f), glm::vec3(0,0,0), glm::vec2(0.2,0.2));
-        debugRenderMessage.GetDebugRenderSystem()->AddEllipse(pb::kRenderPassUi, glm::vec3(_TouchPosition, 0.f), glm::vec3(0,0,0), glm::vec2(3,3));
+        debugRenderMessage.GetDebugRenderSystem()->AddEllipse(pb::kRenderPassUi, glm::vec3(it->second, 0.f), glm::vec3(0,0,0), glm::vec2(0.2,0.2));
+        debugRenderMessage.GetDebugRenderSystem()->AddEllipse(pb::kRenderPassUi, glm::vec3(it->second, 0.f), glm::vec3(0,0,0), glm::vec2(3,3));
     }
+}
+
+bool RectTouchComponent::AddTouch(Touch touch, glm::vec2 position)
+{
+    if (_Touches.size() && !_MultiTouch)
+        return false;
+    
+    _Touches[touch.GetId()] = position;
+    
+    return true;
+}
+
+void RectTouchComponent::RemoveTouch(Touch touch)
+{
+    std::map<int, glm::vec2>::iterator it = _Touches.find(touch.GetId());
+    if (it != _Touches.end())
+        _Touches.erase(it);
+}
+
+bool RectTouchComponent::HasTouch(Touch touch)
+{
+    return _Touches.find(touch.GetId()) != _Touches.end();
 }
