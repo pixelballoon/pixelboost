@@ -2,8 +2,9 @@
 
 using namespace pb;
 
-TouchMessage::TouchMessage(Entity* entity, Component* component, TouchType touchType, glm::vec2 touchPosition)
+TouchMessage::TouchMessage(Entity* entity, Component* component, int touchIndex, TouchType touchType, glm::vec2 touchPosition)
     : Message(entity, component)
+    , _TouchIndex(touchIndex)
     , _TouchType(touchType)
     , _TouchPosition(touchPosition)
 {
@@ -23,6 +24,11 @@ Uid TouchMessage::GetType() const
 Uid TouchMessage::GetStaticType()
 {
     return TypeHash("pb::TouchMessage");
+}
+
+int TouchMessage::GetTouchIndex() const
+{
+    return _TouchIndex;
 }
 
 TouchMessage::TouchType TouchMessage::GetTouchType() const
