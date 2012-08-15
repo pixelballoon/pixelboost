@@ -21,7 +21,8 @@ class PrimitiveRenderable : public Renderable
 public:
     PrimitiveRenderable(Uid entityUid);
     
-    virtual Uid GetRenderableType();
+    virtual Uid GetType();
+    static Uid GetStaticType();
     
     enum Type
     {

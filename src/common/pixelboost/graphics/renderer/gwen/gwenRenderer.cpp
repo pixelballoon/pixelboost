@@ -40,9 +40,14 @@ GwenRenderable::~GwenRenderable()
 
 }
 
-Uid GwenRenderable::GetRenderableType()
+Uid GwenRenderable::GetType()
 {
-    return pb::TypeHash("gwen");
+    return GwenRenderable::GetStaticType();
+}
+
+Uid GwenRenderable::GetStaticType()
+{
+    return TypeHash("pb::GwenRenderable");
 }
 
 void GwenRenderable::CalculateBounds()
@@ -111,7 +116,7 @@ GwenRenderer::GwenRenderer()
     }
     _FontIndexBuffer->Unlock();
     
-    Renderer::Instance()->SetHandler(TypeHash("gwen"), this);
+    Renderer::Instance()->SetHandler(GwenRenderable::GetStaticType(), this);
     
     Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/textured.fx");
 }

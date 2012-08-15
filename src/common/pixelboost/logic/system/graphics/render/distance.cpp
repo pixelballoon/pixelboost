@@ -38,7 +38,7 @@ void DistanceRenderSystem::Render(Scene* scene, Viewport* viewport, RenderPass r
             {
                 glm::vec4 position = (*it)->GetWorldMatrix()[3];
                 
-                if ((*it)->GetRenderableType() == TypeHash("particle")|| glm::distance(cameraPosition, glm::vec3(position.x, position.y, 0)) < _Distance)
+                if ((*it)->GetType() == TypeHash("pb::ParticleSystem")|| glm::distance(cameraPosition, glm::vec3(position.x, position.y, 0)) < _Distance)
                     RenderItem(*it);
             }
             

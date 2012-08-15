@@ -26,7 +26,8 @@ public:
     SpriteRenderable(Uid entityId);
     ~SpriteRenderable();
     
-    virtual Uid GetRenderableType();
+    virtual Uid GetType();
+    static Uid GetStaticType();
     
     virtual void CalculateBounds();
     virtual void CalculateWorldMatrix();

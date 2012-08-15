@@ -25,7 +25,8 @@ namespace pb
         ModelRenderable(Uid entityId);
         ~ModelRenderable();
         
-        virtual Uid GetRenderableType();
+        virtual Uid GetType();
+        static Uid GetStaticType();
         
         virtual void CalculateBounds();
         virtual void CalculateWorldMatrix();

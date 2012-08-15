@@ -26,7 +26,8 @@ public:
     ParticleRenderable(Uid entityId, int maxParticles);
     ~ParticleRenderable();
     
-    virtual Uid GetRenderableType();
+    virtual Uid GetType();
+    static Uid GetStaticType();
     
     virtual void CalculateBounds();
     virtual void CalculateWorldMatrix();

@@ -33,9 +33,14 @@ FontRenderable::~FontRenderable()
 {
 }
 
-Uid FontRenderable::GetRenderableType()
+Uid FontRenderable::GetType()
 {
-    return TypeHash("font");
+    return FontRenderable::GetStaticType();
+}
+
+Uid FontRenderable::GetStaticType()
+{
+    return TypeHash("pb::FontRenderable");
 }
 
 void FontRenderable::CalculateBounds()
@@ -247,7 +252,7 @@ FontRenderer::FontRenderer(int maxCharacters)
     
     _IndexBuffer->Unlock();
     
-    Renderer::Instance()->SetHandler(TypeHash("font"), this);
+    Renderer::Instance()->SetHandler(FontRenderable::GetStaticType(), this);
     
     Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/textured.fx");
 }

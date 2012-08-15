@@ -21,9 +21,14 @@ PrimitiveRenderable::PrimitiveRenderable(Uid entityUid)
 }
 
 
-Uid PrimitiveRenderable::GetRenderableType()
+Uid PrimitiveRenderable::GetType()
 {
-    return TypeHash("primitive");
+    return PrimitiveRenderable::GetStaticType();
+}
+
+Uid PrimitiveRenderable::GetStaticType()
+{
+    return TypeHash("pb::PrimitiveRenderable");
 }
 
 Effect* PrimitiveRenderable::GetEffect()
@@ -287,7 +292,7 @@ PrimitiveRenderer::PrimitiveRenderer()
         _LineIndexBuffer->Unlock();
     }
     
-    Renderer::Instance()->SetHandler(TypeHash("primitive"), this);
+    Renderer::Instance()->SetHandler(PrimitiveRenderable::GetStaticType(), this);
     
     Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/primitive.fx");
 }

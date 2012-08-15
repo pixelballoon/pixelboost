@@ -29,13 +29,13 @@ public:
     
     Uid GetEntityUid();
     
-    virtual Uid GetRenderableType() = 0;
+    virtual Uid GetType() = 0;
     
-    virtual void SetRenderPass(RenderPass renderPass);
-    virtual RenderPass GetRenderPass();
+    void SetRenderPass(RenderPass renderPass);
+    RenderPass GetRenderPass();
     
-    virtual void SetLayer(int layer);
-    virtual int GetLayer();
+    void SetLayer(int layer);
+    int GetLayer();
     
     virtual void CalculateBounds() = 0;
     void DirtyBounds();

@@ -110,14 +110,14 @@ void Renderer::FlushBuffer(Viewport* viewport, Camera* camera)
         
         std::stable_sort(renderables.begin(), renderables.end(), &RenderableBackToFrontSorter);
         
-        Uid type = renderables[0]->GetRenderableType();
+        Uid type = renderables[0]->GetType();
         Effect* effect = renderables[0]->GetEffect();
         int start = 0;
         int count = 0;
         
         for (int i=0; i < renderables.size(); i++)
         {
-            Uid newType = renderables[i]->GetRenderableType();
+            Uid newType = renderables[i]->GetType();
             Effect* newEffect = renderables[i]->GetEffect();
             
             if (type == newType && effect == newEffect)
@@ -146,7 +146,7 @@ void Renderer::RenderBatch(Viewport* viewport, int count, Renderable** renderabl
     if (!effect)
         return;
     
-    RenderableHandlerMap::iterator it = _RenderableHandlers.find(renderable[0]->GetRenderableType());
+    RenderableHandlerMap::iterator it = _RenderableHandlers.find(renderable[0]->GetType());
     
     if (it != _RenderableHandlers.end())
     {

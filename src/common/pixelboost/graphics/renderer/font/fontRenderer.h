@@ -30,7 +30,8 @@ namespace pb
         FontRenderable(Uid entityId);
         ~FontRenderable();
         
-        virtual Uid GetRenderableType();
+        virtual Uid GetType();
+        static Uid GetStaticType();
         
         virtual void CalculateBounds();
         virtual void CalculateWorldMatrix();

@@ -36,9 +36,14 @@ ModelRenderable::~ModelRenderable()
 {
 }
 
-Uid ModelRenderable::GetRenderableType()
+Uid ModelRenderable::GetType()
 {
-    return TypeHash("model");
+    return ModelRenderable::GetStaticType();
+}
+
+Uid ModelRenderable::GetStaticType()
+{
+    return TypeHash("pb::ModelRenderable");
 }
 
 void ModelRenderable::CalculateBounds()
@@ -199,7 +204,7 @@ const BoundingSphere& Model::GetBounds()
 
 ModelRenderer::ModelRenderer()
 {
-    Renderer::Instance()->SetHandler(TypeHash("model"), this);
+    Renderer::Instance()->SetHandler(ModelRenderable::GetStaticType(), this);
     
     Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/textured.fx");
 }

@@ -29,9 +29,14 @@ ParticleRenderable::~ParticleRenderable()
     delete _Emitter;
 }
 
-Uid ParticleRenderable::GetRenderableType()
+Uid ParticleRenderable::GetType()
 {
-    return TypeHash("particle");
+    return ParticleRenderable::GetStaticType();
+}
+
+Uid ParticleRenderable::GetStaticType()
+{
+    return TypeHash("pb::ParticleRenderable");
 }
 
 void ParticleRenderable::CalculateBounds()
@@ -481,7 +486,7 @@ void ParticleAttractor::UpdateParticles(float time, ParticleEmitter::ParticleLis
 
 ParticleRenderer::ParticleRenderer()
 {
-    Renderer::Instance()->SetHandler(TypeHash("particle"), this);
+    Renderer::Instance()->SetHandler(ParticleRenderable::GetStaticType(), this);
     
     Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/particle.fx");
 }

@@ -28,9 +28,14 @@ SpriteRenderable::~SpriteRenderable()
 {
 }
     
-Uid SpriteRenderable::GetRenderableType()
+Uid SpriteRenderable::GetType()
 {
-    return TypeHash("sprite");
+    return SpriteRenderable::GetStaticType();
+}
+
+Uid SpriteRenderable::GetStaticType()
+{
+    return TypeHash("pb::SpriteRenderable");
 }
 
 void SpriteRenderable::CalculateBounds()
@@ -114,7 +119,7 @@ SpriteRenderer::SpriteRenderer()
     }
     _IndexBuffer->Unlock();
     
-    Renderer::Instance()->SetHandler(TypeHash("sprite"), this);
+    Renderer::Instance()->SetHandler(SpriteRenderable::GetStaticType(), this);
     
     Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/sprite.fx");
 }

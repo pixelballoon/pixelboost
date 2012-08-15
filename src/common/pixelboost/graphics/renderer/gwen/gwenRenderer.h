@@ -25,7 +25,8 @@ namespace pb
         GwenRenderable(Gwen::Controls::Canvas* canvas);
         virtual ~GwenRenderable();
         
-        virtual Uid GetRenderableType();
+        virtual Uid GetType();
+        static Uid GetStaticType();
         
         virtual void CalculateBounds();
         virtual void CalculateWorldMatrix();
