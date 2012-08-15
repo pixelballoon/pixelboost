@@ -38,6 +38,7 @@ Effect* PrimitiveRenderable::GetEffect()
 void PrimitiveRenderable::SetTransform(const glm::mat4x4& transform)
 {
     _Transform = transform;
+    DirtyBounds();
     DirtyWorldMatrix();
 }
 
@@ -60,7 +61,9 @@ PrimitiveRenderableEllipse::PrimitiveRenderableEllipse(Uid entityUid)
 
 void PrimitiveRenderableEllipse::CalculateBounds()
 {
-    BoundingSphere bounds(_Position, glm::max(_Size.x, _Size.y));
+    BoundingSphere bounds;
+    glm::vec4 position = GetWorldMatrix() * glm::vec4(0,0,0,1);
+    bounds.Set(glm::vec3(position.x, position.y, position.z), glm::max(_Size.x, _Size.y));
     SetBounds(bounds);
 }
 
