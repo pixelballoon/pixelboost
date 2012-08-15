@@ -6,7 +6,7 @@
 #include "pixelboost/framework/screen.h"
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
-#include "pixelboost/graphics/renderer/custom/customRenderer.h"
+#include "pixelboost/graphics/renderer/buffer/bufferRenderer.h"
 #include "pixelboost/graphics/renderer/font/fontRenderer.h"
 #include "pixelboost/graphics/renderer/model/modelRenderer.h"
 #include "pixelboost/graphics/renderer/particle/particleRenderer.h"
@@ -33,7 +33,7 @@ Game::Game(void* viewController)
     
 #ifndef PIXELBOOST_DISABLE_GRAPHICS
     _Renderer = new Renderer();
-    //_CustomRenderer = new CustomRenderer();
+    _BufferRenderer = new BufferRenderer();
     _ModelRenderer  = new ModelRenderer();
     _ParticleRenderer = new ParticleRenderer();
     _SpriteRenderer = new SpriteRenderer();
@@ -70,7 +70,7 @@ Game::~Game()
 #endif
     
 #ifndef PIXELBOOST_DISABLE_GRAPHICS
-    delete _CustomRenderer;
+    delete _BufferRenderer;
     delete _FontRenderer;
     delete _ModelRenderer;
     delete _ParticleRenderer;
@@ -91,20 +91,20 @@ void Game::Initialise()
     _DebugNetwork->StartServer(9090, 1);
 #endif
 }
-    
-CustomRenderer* Game::GetCustomRenderer() const
+
+GameCenter* Game::GetGameCenter() const
 {
-    return _CustomRenderer;
+    return _GameCenter;
+}
+    
+BufferRenderer* Game::GetBufferRenderer() const
+{
+    return _BufferRenderer;
 }
     
 FontRenderer* Game::GetFontRenderer() const
 {
     return _FontRenderer;
-}
-    
-GameCenter* Game::GetGameCenter() const
-{
-    return _GameCenter;
 }
 
 ModelRenderer* Game::GetModelRenderer() const

@@ -7,7 +7,7 @@
 namespace pb
 {
 
-class CustomRenderer;
+class BufferRenderer;
 class DebugDatabaseHandler;
 class FileSystem;
 class FontRenderer;
@@ -35,10 +35,11 @@ public:
 	static Game* Instance();
 	
 	virtual void Initialise();
-
-    CustomRenderer* GetCustomRenderer() const;
-    FontRenderer* GetFontRenderer() const;
+    
     GameCenter* GetGameCenter() const;
+
+    BufferRenderer* GetBufferRenderer() const;
+    FontRenderer* GetFontRenderer() const;
     ModelRenderer* GetModelRenderer() const;
 	ResourceManager* GetResourceManager() const;
     ParticleRenderer* GetParticleRenderer() const;
@@ -69,16 +70,17 @@ private:
 	static Game* _Instance;
     
     FileSystem* _FileSystem;
-
-    CustomRenderer* _CustomRenderer;
-    FontRenderer* _FontRenderer;
+    
     GameCenter* _GameCenter;
+    ResourceManager* _ResourceManager;
+	SoundManager* _SoundManager;
+
+    BufferRenderer* _BufferRenderer;
+    FontRenderer* _FontRenderer;
     ModelRenderer* _ModelRenderer;
     ParticleRenderer* _ParticleRenderer;
     PrimitiveRenderer* _PrimitiveRenderer;
     Renderer* _Renderer;
-	ResourceManager* _ResourceManager;
-	SoundManager* _SoundManager;
 	SpriteRenderer* _SpriteRenderer;
     
     KeyboardManager* _KeyboardManager;
