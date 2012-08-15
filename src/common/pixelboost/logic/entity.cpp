@@ -75,35 +75,27 @@ Uid Entity::GenerateComponentId()
 
 void Entity::AddComponent(Component* component)
 {
-    _Components[component->GetType()].push_back(component);
+    _Components.push_back(component);
 }
 
 void Entity::DestroyComponent(Component* component)
 {
-    ComponentMap::iterator groupIt = _Components.find(component->GetType());
-    
-    if (groupIt != _Components.end())
+    for (ComponentList::iterator componentIt = _Components.begin(); componentIt != _Components.end(); ++componentIt)
     {
-        for (ComponentList::iterator componentIt = groupIt->second.begin(); componentIt != groupIt->second.end(); ++componentIt)
+        if (*componentIt == component)
         {
-            if (*componentIt == component)
-            {
-                groupIt->second.erase(componentIt);
-                delete component;
-                return;
-            }
+            _Components.erase(componentIt);
+            delete component;
+            return;
         }
     }
 }
 
 void Entity::DestroyAllComponents()
 {
-    for (ComponentMap::iterator groupIt = _Components.begin(); groupIt != _Components.end(); ++groupIt)
+    for (ComponentList::iterator componentIt = _Components.begin(); componentIt != _Components.end(); ++componentIt)
     {
-        for (ComponentList::iterator componentIt = groupIt->second.begin(); componentIt != groupIt->second.end(); ++componentIt)
-        {
-            delete *componentIt;
-        }
+        delete *componentIt;
     }
     
     _Components.clear();
@@ -111,26 +103,28 @@ void Entity::DestroyAllComponents()
 
 Component* Entity::GetComponentById(Uid componentId)
 {
-    for (ComponentMap::iterator groupIt = _Components.begin(); groupIt != _Components.end(); ++groupIt)
+    for (ComponentList::iterator componentIt = _Components.begin(); componentIt != _Components.end(); ++componentIt)
     {
-        for (ComponentList::iterator componentIt = groupIt->second.begin(); componentIt != groupIt->second.end(); ++componentIt)
-        {
-            if ((*componentIt)->GetUid() == componentId)
-                return *componentIt;
-        }
+        if ((*componentIt)->GetUid() == componentId)
+            return *componentIt;
     }
     
     return 0;
 }
 
-Entity::ComponentList* Entity::GetComponentsByType(Uid componentType)
+Entity::ComponentList Entity::GetComponentsByType(Uid componentType)
 {
-    ComponentMap::iterator it = _Components.find(componentType);
+    ComponentList components;
     
-    if (it != _Components.end())
-        return &it->second;
+    for (ComponentList::iterator componentIt = _Components.begin(); componentIt != _Components.end(); ++componentIt)
+    {
+        if ((*componentIt)->GetType() == componentType)
+        {
+            components.push_back(*componentIt);
+        }
+    }
     
-    return 0;
+    return components;
 }
 
 void Entity::RegisterMessageHandler(Uid messageType, MessageHandler handler)

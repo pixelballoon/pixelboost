@@ -47,15 +47,15 @@ public:
     
 public:
     Uid GenerateComponentId();
-    
-    void AddComponent(Component* component);
+        
+public:
     void DestroyComponent(Component* component);
     void DestroyAllComponents();
     
     Component* GetComponentById(Uid componentId);
     
     template <class T>T* GetComponentByType();
-    ComponentList* GetComponentsByType(Uid componentType);
+    ComponentList GetComponentsByType(Uid componentType);
     
     void RegisterMessageHandler(Uid messageType, MessageHandler handler);
     void UnregisterMessageHandler(Uid messageType, MessageHandler handler);
@@ -66,13 +66,14 @@ public:
     virtual void OnCreationEntityReloaded();
     
 private:
+    void AddComponent(Component* component);
+    
     void HandleCreationEntityDestroyed();
     void HandleCreationEntityReloaded();
     
     typedef std::map<Uid, sigslot::Signal1<const Message&> > MessageHandlers;
-    typedef std::map<Uid, ComponentList> ComponentMap;
     
-    ComponentMap _Components;
+    ComponentList _Components;
     MessageHandlers _MessageHandlers;
     
     Scene* _Scene;
@@ -85,6 +86,8 @@ private:
     Uid _NextFreeUid;
     
     EntityState _State;
+    
+    friend class Component;
 };
     
 }

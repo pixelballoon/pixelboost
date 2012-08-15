@@ -7,6 +7,7 @@ Component::Component(Entity* parent)
     : _Parent(parent)
 {
     _Uid = parent->GenerateComponentId();
+    parent->AddComponent(this);
 }
 
 Component::~Component()
