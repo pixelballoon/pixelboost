@@ -2,6 +2,8 @@
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 #include "pixelboost/logic/component/graphics/ellipse.h"
+#include "pixelboost/logic/component/transform.h"
+#include "pixelboost/logic/message/transform.h"
 #include "pixelboost/logic/system/graphics/render/render.h"
 #include "pixelboost/logic/entity.h"
 #include "pixelboost/logic/scene.h"
@@ -14,11 +16,17 @@ EllipseComponent::EllipseComponent(Entity* parent)
     _Renderable = new PrimitiveRenderableEllipse(parent->GetUid());
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
+    
+    GetParent()->RegisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &EllipseComponent::OnTransformChanged));
+    
+    UpdateTransform();
 }
 
 EllipseComponent::~EllipseComponent()
 {
-    GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
+    GetParent()->UnregisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &EllipseComponent::OnTransformChanged));
+    
+    GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
     
     delete _Renderable;
 }
@@ -46,4 +54,38 @@ void EllipseComponent::SetSize(glm::vec2 size)
 glm::vec2 EllipseComponent::GetSize()
 {
     return _Renderable->GetSize();
+}
+
+void EllipseComponent::SetSolid(bool solid)
+{
+    _Renderable->SetSolid(true);
+}
+
+bool EllipseComponent::GetSolid()
+{
+    return _Renderable->GetSolid();
+}
+
+void EllipseComponent::SetLocalTransform(const glm::mat4x4& transform)
+{
+    _LocalTransform = transform;
+    
+    UpdateTransform();
+}
+
+void EllipseComponent::OnTransformChanged(const Message& message)
+{
+    UpdateTransform();
+}
+
+void EllipseComponent::UpdateTransform()
+{
+    TransformComponent* transform = GetParent()->GetComponentByType<TransformComponent>();
+    
+    if (transform)
+    {
+        _Renderable->SetTransform(transform->GetMatrix() * _LocalTransform);
+    } else {
+        _Renderable->SetTransform(_LocalTransform);
+    }
 }

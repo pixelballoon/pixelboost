@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "glm/glm.hpp"
+
 #include "pixelboost/logic/component.h"
 
 namespace pb
@@ -24,7 +26,17 @@ public:
     void SetSize(glm::vec2 size);
     glm::vec2 GetSize();
     
+    void SetSolid(bool solid);
+    bool GetSolid();
+    
+    void SetLocalTransform(const glm::mat4x4& transform);
+    
 private:
+    void OnTransformChanged(const Message& message);
+    void UpdateTransform();
+    
+private:
+    glm::mat4x4 _LocalTransform;
     PrimitiveRenderableEllipse* _Renderable;
 };
     

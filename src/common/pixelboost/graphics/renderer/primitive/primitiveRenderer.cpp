@@ -71,6 +71,7 @@ void PrimitiveRenderableEllipse::CalculateWorldMatrix()
     worldMatrix = glm::rotate(worldMatrix, _Rotation[0], glm::vec3(1,0,0));
     worldMatrix = glm::rotate(worldMatrix, _Rotation[1], glm::vec3(0,1,0));
     worldMatrix = glm::rotate(worldMatrix, _Rotation[2], glm::vec3(0,0,1));
+    worldMatrix = _Transform * worldMatrix;
     SetWorldMatrix(worldMatrix);
 }
 
