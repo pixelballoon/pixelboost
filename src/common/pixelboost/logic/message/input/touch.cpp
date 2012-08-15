@@ -1,4 +1,4 @@
-#include "pixelboost/input/messages/touch.h"
+#include "pixelboost/logic/message/input/touch.h"
 
 using namespace pb;
 

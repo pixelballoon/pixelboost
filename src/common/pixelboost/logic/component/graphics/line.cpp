@@ -1,7 +1,7 @@
 #include "pixelboost/framework/game.h"
-#include "pixelboost/graphics/components/line.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
+#include "pixelboost/logic/component/graphics/line.h"
 #include "pixelboost/logic/system/graphics/render/render.h"
 #include "pixelboost/logic/entity.h"
 #include "pixelboost/logic/scene.h"
