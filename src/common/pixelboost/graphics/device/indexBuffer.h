@@ -15,7 +15,9 @@ protected:
     
 public:    
     BufferFormat GetBufferFormat();
-    int GetLength();
+
+    int GetMaxSize();
+    int GetCurrentSize();
     
     unsigned short* GetData();
     
@@ -26,7 +28,8 @@ private:
     GraphicsDevice* _Device;
     
     BufferFormat _BufferFormat;
-    int _Length;
+    int _MaxSize;
+    int _CurrentSize;
     
     unsigned short* _Data;
     

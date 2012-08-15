@@ -313,7 +313,7 @@ void GraphicsDeviceGL::UnlockIndexBuffer(IndexBuffer* indexBuffer, int numElemen
         return;
         
     if (numElements == -1)
-        numElements = indexBuffer->GetLength();
+        numElements = indexBuffer->GetMaxSize();
     
     IndexBuffer* previousBuffer = BindIndexBuffer(indexBuffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * numElements, indexBuffer->GetData(), indexBuffer->GetBufferFormat() == kBufferFormatStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);

@@ -5,12 +5,13 @@
 
 using namespace pb;
 
-IndexBuffer::IndexBuffer(GraphicsDevice* device, BufferFormat bufferFormat, int length)
+IndexBuffer::IndexBuffer(GraphicsDevice* device, BufferFormat bufferFormat, int maxSize)
     : _Device(device)
     , _BufferFormat(bufferFormat)
-    , _Length(length)
+    , _MaxSize(maxSize)
+    , _CurrentSize(0)
 {
-    _Data = new unsigned short[length];
+    _Data = new unsigned short[maxSize];
     _Locked = 0;
 }
     
@@ -24,9 +25,14 @@ BufferFormat IndexBuffer::GetBufferFormat()
     return _BufferFormat;
 }
 
-int IndexBuffer::GetLength()
+int IndexBuffer::GetMaxSize()
 {
-    return _Length;
+    return _MaxSize;
+}
+
+int IndexBuffer::GetCurrentSize()
+{
+    return _CurrentSize;
 }
 
 void IndexBuffer::Lock()
@@ -50,6 +56,7 @@ void IndexBuffer::Unlock(int numElements)
     
     if (_Locked == 0)
     {
+        _CurrentSize = (numElements == -1) ? _MaxSize : numElements;
         _Device->UnlockIndexBuffer(this, numElements);
     }
 }
