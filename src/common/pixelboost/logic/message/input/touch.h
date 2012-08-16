@@ -9,31 +9,49 @@ namespace pb
 
 class Viewport;
     
-class TouchMessage : public Message
-{
-public:
-    enum TouchType
+    class TouchMessage : public Message
     {
-        kTouchTypeDown,
-        kTouchTypeMove,
-        kTouchTypeUp,
+    public:
+        TouchMessage(Entity* entity, Component* component, int touchIndex, glm::vec2 touchPosition);
+        virtual ~TouchMessage();
+        
+    public:
+        int GetTouchIndex() const;
+        glm::vec2 GetTouchPosition() const;
+        
+    private:
+        int _TouchIndex;
+        glm::vec2 _TouchPosition;
     };
     
-    TouchMessage(Entity* entity, Component* component, int touchIndex, TouchType touchType, glm::vec2 touchPosition);
-    virtual ~TouchMessage();
+    class TouchDownMessage : public TouchMessage
+    {
+    public:
+        TouchDownMessage(Entity* entity, Component* component, int touchIndex, glm::vec2 touchPosition);
+        virtual ~TouchDownMessage();
+        
+        Uid GetType() const;
+        static Uid GetStaticType();
+    };
     
-    Uid GetType() const;
-    static Uid GetStaticType();
+    class TouchMoveMessage : public TouchMessage
+    {
+    public:
+        TouchMoveMessage(Entity* entity, Component* component, int touchIndex, glm::vec2 touchPosition);
+        virtual ~TouchMoveMessage();
+        
+        Uid GetType() const;
+        static Uid GetStaticType();
+    };
     
-public:
-    int GetTouchIndex() const;
-    TouchType GetTouchType() const;
-    glm::vec2 GetTouchPosition() const;
-    
-private:
-    int _TouchIndex;
-    TouchType _TouchType;
-    glm::vec2 _TouchPosition;
-};
+    class TouchUpMessage : public TouchMessage
+    {
+    public:
+        TouchUpMessage(Entity* entity, Component* component, int touchIndex, glm::vec2 touchPosition);
+        virtual ~TouchUpMessage();
+        
+        Uid GetType() const;
+        static Uid GetStaticType();
+    };
     
 }

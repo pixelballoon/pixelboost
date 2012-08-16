@@ -78,7 +78,7 @@ bool RectTouchComponent::OnTouchDown(Touch touch)
     {
         if (AddTouch(touch, screenPos))
         {
-            TouchMessage message(GetParent(), this, touch.GetId(), TouchMessage::kTouchTypeDown, screenPos-glm::vec2(position.x, position.y));
+            TouchDownMessage message(GetParent(), this, touch.GetId(), screenPos-glm::vec2(position.x, position.y));
             GetScene()->SendMessage(GetParentUid(), message);
         }
         
@@ -99,7 +99,7 @@ bool RectTouchComponent::OnTouchMove(Touch touch)
     
     _Touches[touch.GetId()] = screenPos;
     
-    TouchMessage message(GetParent(), this, touch.GetId(), TouchMessage::kTouchTypeMove, screenPos-glm::vec2(position.x, position.y));
+    TouchMoveMessage message(GetParent(), this, touch.GetId(), screenPos-glm::vec2(position.x, position.y));
     GetScene()->SendMessage(GetParentUid(), message);
     
     return true;
@@ -116,7 +116,7 @@ bool RectTouchComponent::OnTouchUp(Touch touch)
     glm::vec2 screenPos = touch.GetViewportPosition();
     glm::vec2 size = _Size/2.f;
     
-    TouchMessage message(GetParent(), this, touch.GetId(), TouchMessage::kTouchTypeUp, screenPos-glm::vec2(position.x, position.y));
+    TouchUpMessage message(GetParent(), this, touch.GetId(), screenPos-glm::vec2(position.x, position.y));
     GetScene()->SendMessage(GetParentUid(), message);
     
     return true;

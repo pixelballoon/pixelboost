@@ -10,7 +10,7 @@ namespace pb
     
     class Message;
 
-    class RectTouchComponent : public Component, TouchHandler
+    class RectTouchComponent : public Component, public TouchHandler
     {
     public:
         RectTouchComponent(Entity* parent, bool debugRender = false);
