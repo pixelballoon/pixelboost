@@ -18,7 +18,7 @@ public:
         : _Canvas(canvas)
         , _Root(root)
     {
-        
+        SetPriority(1000);
     }
     
     bool OnKeyDown(KeyboardKey key, char character)
@@ -47,11 +47,6 @@ public:
         return true;
     }
     
-    int GetPriority()
-    {
-        return 1000;
-    }
-    
 private:
     Gwen::Controls::Base* _Root;
     Gwen::Controls::Canvas*	_Canvas;
@@ -64,12 +59,7 @@ public:
         : _Canvas(canvas)
         , _Root(root)
     {
-        
-    }
-    
-    int GetPriority()
-    {
-        return 1000;
+        SetPriority(1000);
     }
     
     bool OnMouseDown(MouseButton button, ModifierKeys modifierKeys, glm::vec2 position)
