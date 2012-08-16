@@ -10,7 +10,7 @@ class Renderable;
 class RenderSystem : public SceneSystem
 {
 public:
-    virtual Uid GetType();
+    virtual Uid GetType() const;
     static Uid GetStaticType();
     
     virtual void AddItem(Renderable* renderable);

@@ -16,7 +16,7 @@ public:
     SceneSystem();
     virtual ~SceneSystem();
     
-    virtual pb::Uid GetType() = 0;
+    virtual pb::Uid GetType() const = 0;
     
     virtual void Update(Scene* scene, float time);
     virtual void Render(Scene* scene, Viewport* viewport, RenderPass renderPass);

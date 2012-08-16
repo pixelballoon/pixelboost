@@ -28,7 +28,7 @@ PhysicsSystem2D::~PhysicsSystem2D()
     delete _World;
 }
 
-pb::Uid PhysicsSystem2D::GetType()
+pb::Uid PhysicsSystem2D::GetType() const
 {
     return PhysicsSystem2D::GetStaticType();
 }

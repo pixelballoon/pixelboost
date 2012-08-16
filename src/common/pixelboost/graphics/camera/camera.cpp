@@ -33,7 +33,7 @@ OrthographicCamera::OrthographicCamera(glm::vec3 position, glm::vec3 rotation, g
     
 }
 
-Camera::CameraType OrthographicCamera::GetType()
+Camera::CameraType OrthographicCamera::GetType() const
 {
     return kCameraOrthographic;
 }
@@ -75,7 +75,7 @@ PerspectiveCamera::PerspectiveCamera(glm::vec3 position, glm::vec3 rotation)
     
 }
 
-Camera::CameraType PerspectiveCamera::GetType()
+Camera::CameraType PerspectiveCamera::GetType() const
 {
     return kCameraPerspective;
 }

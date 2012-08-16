@@ -17,7 +17,7 @@ namespace pb
         PhysicsSystem2D(glm::vec2 gravity = glm::vec2(0,0));
         ~PhysicsSystem2D();
         
-        virtual pb::Uid GetType();
+        virtual pb::Uid GetType() const;
         static pb::Uid GetStaticType();
         
         virtual void Update(Scene* scene, float time);

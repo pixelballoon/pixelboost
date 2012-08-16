@@ -4,7 +4,7 @@
 
 using namespace pb;
 
-Uid RenderSystem::GetType()
+Uid RenderSystem::GetType() const
 {
     return GetStaticType();
 }
