@@ -45,7 +45,8 @@ void SpriteRenderable::CalculateBounds()
     {
         BoundingSphere bounds;
         glm::vec4 position = GetWorldMatrix() * glm::vec4(0,0,0,1);
-        bounds.Set(glm::vec3(position.x, position.y, position.z), glm::max(sprite->_Size.x, sprite->_Size.y));
+        float scale = glm::length(GetWorldMatrix() * glm::vec4(0.5774,0.5774,0.5774,0));
+        bounds.Set(glm::vec3(position.x, position.y, position.z), glm::max(sprite->_Size.x, sprite->_Size.y)*scale/2.f);
         SetBounds(bounds);
     }
 }
