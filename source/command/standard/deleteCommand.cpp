@@ -30,7 +30,7 @@ DeleteCommand::DeleteCommand()
     
 DeleteCommand::~DeleteCommand()
 {
-    for (std::vector<std::pair<Uid, Entity*> >::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
+    for (std::vector<std::pair<Uid, ProjectEntity*> >::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
     {
         delete it->second;
     }
@@ -58,12 +58,12 @@ bool DeleteCommand::Do(std::string& returnString)
         ViewEntity* viewEntity = level->GetEntityById(it->first);
         if (viewEntity)
         {
-            Entity* entity = viewEntity->GetEntity();//project->GetEntity(it->first);
+            ProjectEntity* entity = viewEntity->GetEntity();
             if (entity)
             {
-                Record* record = entity->GetRecord();
+                ProjectRecord* record = entity->GetRecord();
                 record->RemoveEntity(entity, false);
-                _Entities.push_back(std::pair<Uid, Entity*>(record->GetUid(), entity));
+                _Entities.push_back(std::pair<Uid, ProjectEntity*>(record->GetUid(), entity));
             }
         }
     }
@@ -75,9 +75,9 @@ bool DeleteCommand::Undo()
 {
     Project* project = Core::Instance()->GetProject();
 
-    for (std::vector<std::pair<Uid, Entity*> >::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
+    for (std::vector<std::pair<Uid, ProjectEntity*> >::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
     {
-        Record* record = project->GetRecord(it->first);
+        ProjectRecord* record = project->GetRecord(it->first);
         // TODO: Assert record is valid
         record->AddEntity(it->second);
     }

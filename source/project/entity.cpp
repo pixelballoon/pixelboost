@@ -10,8 +10,8 @@
 
 using namespace pixeleditor;
 
-Entity::Entity(Record* record, const SchemaEntity* type)
-    : Struct(record->GetProject(), type)
+ProjectEntity::ProjectEntity(ProjectRecord* record, const SchemaEntity* type)
+    : ProjectStruct(record->GetProject(), type)
     , _Record(record)
     , _Position(0, 0, 0)
     , _Rotation(0)
@@ -20,14 +20,14 @@ Entity::Entity(Record* record, const SchemaEntity* type)
 
 }
 
-Entity::~Entity()
+ProjectEntity::~ProjectEntity()
 {
 
 }
 
-bool Entity::Open(json::Object& entity, bool skipUid)
+bool ProjectEntity::Open(json::Object& entity, bool skipUid)
 {
-    bool status = Struct::Open(entity, skipUid);
+    bool status = ProjectStruct::Open(entity, skipUid);
     
     json::Object& transform = entity["Transform"];
     json::Number& tx = transform["tx"];
@@ -45,27 +45,27 @@ bool Entity::Open(json::Object& entity, bool skipUid)
     return status;
 }
   
-bool Entity::Save(json::Object& entity)
+bool ProjectEntity::Save(json::Object& entity)
 {
-    bool status = Struct::Save(entity);
+    bool status = ProjectStruct::Save(entity);
 
     status &= WriteTransformDataJson(entity);
     
     return status;
 }
     
-bool Entity::ExportJson(json::Object& entity)
+bool ProjectEntity::ExportJson(json::Object& entity)
 {
-    bool status = Struct::ExportJson(entity);
+    bool status = ProjectStruct::ExportJson(entity);
     
     status &= WriteTransformDataJson(entity);
     
     return status;
 }
 
-bool Entity::ExportLua(std::iostream &output)
+bool ProjectEntity::ExportLua(std::iostream &output)
 {
-    bool status = Struct::ExportLua(output, false);
+    bool status = ProjectStruct::ExportLua(output, false);
     
     output << "," << std::endl;
     
@@ -74,53 +74,53 @@ bool Entity::ExportLua(std::iostream &output)
     return status;
 }
 
-Record* Entity::GetRecord()
+ProjectRecord* ProjectEntity::GetRecord()
 {
     return _Record;
 }
     
-const Record* Entity::GetRecord() const
+const ProjectRecord* ProjectEntity::GetRecord() const
 {
     return _Record;
 }
 
-const glm::vec3& Entity::GetPosition()
+const glm::vec3& ProjectEntity::GetPosition()
 {
     return _Position;
 }
 
-void Entity::SetPosition(const glm::vec3& position)
+void ProjectEntity::SetPosition(const glm::vec3& position)
 {
     _Position = position;
     
     entityChanged(this);
 }
     
-float Entity::GetRotation()
+float ProjectEntity::GetRotation()
 {
     return _Rotation;
 }
     
-void Entity::SetRotation(float rotation)
+void ProjectEntity::SetRotation(float rotation)
 {
     _Rotation = rotation;
     
     entityChanged(this);
 }
 
-const glm::vec3& Entity::GetScale()
+const glm::vec3& ProjectEntity::GetScale()
 {
     return _Scale;
 }
 
-void Entity::SetScale(const glm::vec3& scale)
+void ProjectEntity::SetScale(const glm::vec3& scale)
 {
     _Scale = scale;
     
     entityChanged(this);
 }
     
-bool Entity::WriteTransformDataJson(json::Object& entity)
+bool ProjectEntity::WriteTransformDataJson(json::Object& entity)
 {
     json::Object transform;
     transform["tx"] = json::Number(_Position[0]);
@@ -138,7 +138,7 @@ bool Entity::WriteTransformDataJson(json::Object& entity)
     return true;
 }
 
-bool Entity::WriteTransformDataLua(std::iostream& output)
+bool ProjectEntity::WriteTransformDataLua(std::iostream& output)
 {
     output << "transform = { t = {" << _Position[0] << "," << _Position[1] << "," << _Position[2] << "}, r = {0,0," << _Rotation << "}, s = {" << _Scale[0] << "," << _Scale[1] << "," << _Scale[2] << "} }";
     

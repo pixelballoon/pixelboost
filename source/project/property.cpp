@@ -6,9 +6,9 @@
 
 using namespace pixeleditor;
 
-Property::Property(Struct* s, const SchemaProperty* schemaProperty)
-: _Struct(s)
-, _SchemaProperty(schemaProperty)
+Property::Property(ProjectStruct* s, const SchemaProperty* schemaProperty)
+    : _Struct(s)
+    , _SchemaProperty(schemaProperty)
 {
     
 }
@@ -53,8 +53,8 @@ const PropertyPointer* Property::AsPointer() const
     return 0;
 }
 
-PropertyAtom::PropertyAtom(Struct* s, const SchemaProperty* schemaProperty)
-: Property(s, schemaProperty)
+PropertyAtom::PropertyAtom(ProjectStruct* s, const SchemaProperty* schemaProperty)
+    : Property(s, schemaProperty)
 {
     
 }
@@ -117,7 +117,7 @@ const std::string& PropertyAtom::GetStringValue() const
 }
 
 
-PropertyPointer::PropertyPointer(Struct* s, const SchemaProperty* schemaProperty)
+PropertyPointer::PropertyPointer(ProjectStruct* s, const SchemaProperty* schemaProperty)
     : Property(s, schemaProperty)
 {
     
@@ -154,15 +154,15 @@ void PropertyPointer::SetPointerValue(Uid uid)
     _Struct->propertyChanged(_Struct);
 }
 
-Entity* PropertyPointer::ResolvePointer() const
+ProjectEntity* PropertyPointer::ResolvePointer() const
 {
     Project* project = _Struct->GetProject();
     
     return project->GetEntity(_Value);
 }
 
-PropertyArray::PropertyArray(Struct* s, const SchemaProperty* schemaProperty)
-: Property(s, schemaProperty)
+PropertyArray::PropertyArray(ProjectStruct* s, const SchemaProperty* schemaProperty)
+    : Property(s, schemaProperty)
 {
     
 }

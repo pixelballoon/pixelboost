@@ -15,7 +15,7 @@
 
 using namespace pixeleditor;
 
-ViewEntity::ViewEntity(pb::Scene* scene, pixeleditor::Entity* entity)
+ViewEntity::ViewEntity(pb::Scene* scene, ProjectEntity* entity)
     : pb::Entity(scene, 0)
     , _BoundsComponent(0)
     , _Entity(entity)
@@ -68,7 +68,7 @@ void ViewEntity::Render(int layer)
 
 }
 
-Entity* ViewEntity::GetEntity()
+ProjectEntity* ViewEntity::GetEntity()
 {
     return _Entity;
 }
@@ -298,14 +298,14 @@ void ViewEntity::ParseItem(const std::string& path, const SchemaItem* item)
     }
 }
 
-void ViewEntity::OnDestroyed(pixeleditor::Struct* structure)
+void ViewEntity::OnDestroyed(ProjectStruct* structure)
 {
     _Entity->propertyChanged.Disconnect(this, &ViewEntity::OnPropertyChanged);
     _Entity->destroyed.Disconnect(this, &ViewEntity::OnDestroyed);
     _Entity = 0;
 }
 
-void ViewEntity::OnPropertyChanged(pixeleditor::Struct* structure)
+void ViewEntity::OnPropertyChanged(ProjectStruct* structure)
 {
     for (PropertyMap::iterator it = _Properties.begin(); it != _Properties.end(); ++it)
     {

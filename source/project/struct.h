@@ -19,19 +19,19 @@ namespace pixeleditor
 {
 
 class Project;
+class ProjectRecord;
 class Property;
 class PropertyAtom;
 class PropertyArray;
 class PropertyPointer;
-class Record;
 class SchemaProperty;
 class SchemaStruct;
 
-class Struct
+class ProjectStruct
 {
 public:
-    Struct(Project* project, const SchemaStruct* type = 0);
-    virtual ~Struct();
+    ProjectStruct(Project* project, const SchemaStruct* type = 0);
+    virtual ~ProjectStruct();
     
     bool Open(json::Object& object, bool skipUid = false);
     bool Save(json::Object& object);
@@ -41,8 +41,8 @@ public:
     
 public:    
     Project* GetProject();
-    virtual Record* GetRecord() = 0;
-    virtual const Record* GetRecord() const = 0;
+    virtual ProjectRecord* GetRecord() = 0;
+    virtual const ProjectRecord* GetRecord() const = 0;
     
     const std::string& GetTypeName() const;
     Uid GetTypeHash() const;
@@ -63,8 +63,8 @@ public:
     
     bool RemoveProperty(const std::string& path);
     
-    sigslot::Signal1<Struct*> propertyChanged;
-    sigslot::Signal1<Struct*> destroyed;
+    sigslot::Signal1<ProjectStruct*> propertyChanged;
+    sigslot::Signal1<ProjectStruct*> destroyed;
     
 private:
     bool ParseProperties(json::Object& container, std::string path);

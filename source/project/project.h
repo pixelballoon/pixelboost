@@ -14,8 +14,8 @@
 namespace pixeleditor
 {
 
-class Entity;
-class Record;
+class ProjectEntity;
+class ProjectRecord;
 class Schema;
 
 class Project
@@ -34,9 +34,9 @@ public:
     const std::string& GetLocation() const;
     const std::string& GetName() const;
     
-    Entity* GetEntity(Uid uid) const;
-    Record* GetRecord(Uid uid) const;
-    Record* GetRecordByName(const std::string& recordName) const;
+    ProjectEntity* GetEntity(Uid uid) const;
+    ProjectRecord* GetRecord(Uid uid) const;
+    ProjectRecord* GetRecordByName(const std::string& recordName) const;
     
     Uid CalculateUid(Uid min=1, Uid max=0xffffffUL);
     bool RegisterUid(Uid uid);
@@ -57,7 +57,7 @@ public:
     Schema* GetSchema();
     
 public:
-    typedef std::map<Uid, Record*> RecordMap;
+    typedef std::map<Uid, ProjectRecord*> RecordMap;
     
     const RecordMap& GetRecords() const;
     bool AddRecord(const std::string& name, const std::string& type);
@@ -70,8 +70,8 @@ public:
     sigslot::Signal1<Project*> projectSaved;
     sigslot::Signal1<Project*> projectExported;
     
-    sigslot::Signal2<Project*, Record*> recordAdded;
-    sigslot::Signal2<Project*, Record*> recordRemoved;
+    sigslot::Signal2<Project*, ProjectRecord*> recordAdded;
+    sigslot::Signal2<Project*, ProjectRecord*> recordRemoved;
     
 private:
     bool OpenConfig(const std::string& filename);

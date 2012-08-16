@@ -18,17 +18,17 @@ namespace pb
 
 namespace pixeleditor
 {
-    class Entity;
+    class ProjectEntity;
+    class ProjectStruct;
     class SchemaItem;
     class SchemaStruct;
     class Selection;
-    class Struct;
     class ViewProperty;
     
     class ViewEntity : public pb::Entity
     {
     public:
-        ViewEntity(pb::Scene* scene, pixeleditor::Entity* entity);
+        ViewEntity(pb::Scene* scene, ProjectEntity* entity);
         ~ViewEntity();
         
         virtual pb::Uid GetType() const;
@@ -37,7 +37,7 @@ namespace pixeleditor
         void Update(float time);
         void Render(int layer);
         
-        pixeleditor::Entity* GetEntity();
+        ProjectEntity* GetEntity();
         
         pb::Uid GetEntityUid();
         
@@ -75,8 +75,8 @@ namespace pixeleditor
         void ParseStruct(const std::string& path, const SchemaStruct* schemaStruct);
         void ParseItem(const std::string& path, const SchemaItem* item);
         
-        void OnDestroyed(Struct* structure);
-        void OnPropertyChanged(Struct* structure);
+        void OnDestroyed(ProjectStruct* structure);
+        void OnPropertyChanged(ProjectStruct* structure);
         
         void DirtyBounds();
         void UpdateBounds();
@@ -86,7 +86,7 @@ namespace pixeleditor
         typedef std::map<Uid, ViewProperty*> PropertyMap;
         
     private:
-        pixeleditor::Entity* _Entity;
+        ProjectEntity* _Entity;
         PropertyIdMap _PropertyIdMap;
         PropertyMap _Properties;
         

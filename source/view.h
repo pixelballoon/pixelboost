@@ -43,7 +43,7 @@ class HttpInterface;
 class Level;
 class ManipulatorManager;
 class Project;
-class Record;
+class ProjectRecord;
 class ViewEntity;
 class ViewKeyboardHandler;
 class ViewMouseHandler;
@@ -68,8 +68,8 @@ public:
     
 public:
     void SetCanvasSize(glm::vec2 size);
-    void SetRecord(Record* record);
-    Record* GetRecord();
+    void SetRecord(ProjectRecord* record);
+    ProjectRecord* GetRecord();
     
     std::string GetSpriteFile(const std::string& sprite);
     void LoadSprite(const std::string& sprite);
@@ -86,7 +86,7 @@ public:
     sigslot::Signal0<> onRedraw;
     
 private:
-    Record* _Record;
+    ProjectRecord* _Record;
     
 private:
     void OnProjectOpened(Project* project);
@@ -94,8 +94,8 @@ private:
     void OnProjectSaved(Project* project);
     void OnProjectExported(Project* project);
     
-    void OnRecordAdded(Project* project, Record* record);
-    void OnRecordRemoved(Project* project, Record* record);
+    void OnRecordAdded(Project* project, ProjectRecord* record);
+    void OnRecordRemoved(Project* project, ProjectRecord* record);
     
     void OnRecordSelected(Gwen::Controls::Base* item);
     

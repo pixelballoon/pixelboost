@@ -41,7 +41,7 @@ void SchemaAttribute::AddParam(const std::string& param, const std::string& valu
     _ParamValue[param] = value;
 }
 
-std::string SchemaAttribute::EvaluateParamValue(Struct* structure, const std::string& param, const std::string& prefix, const std::string& defaultValue) const
+std::string SchemaAttribute::EvaluateParamValue(ProjectStruct* structure, const std::string& param, const std::string& prefix, const std::string& defaultValue) const
 {
     ParamValueMap::const_iterator it = _ParamValue.find(param);
     

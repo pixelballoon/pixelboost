@@ -37,7 +37,7 @@ void PropertyPanel::SetPinned(bool pinned)
     _Pinned = pinned;
 }
 
-void PropertyPanel::SetStruct(Struct* item, const std::string& focusPath)
+void PropertyPanel::SetStruct(ProjectStruct* item, const std::string& focusPath)
 {
     Clear();
     
@@ -47,7 +47,7 @@ void PropertyPanel::SetStruct(Struct* item, const std::string& focusPath)
     }
 }
 
-glm::vec2 PropertyPanel::AddStruct(glm::vec2 offset, const SchemaStruct* schemaStruct, Struct* item, const std::string& path)
+glm::vec2 PropertyPanel::AddStruct(glm::vec2 offset, const SchemaStruct* schemaStruct, ProjectStruct* item, const std::string& path)
 {
     for (SchemaStruct::PropertyMap::const_iterator it = schemaStruct->GetProperties().begin(); it != schemaStruct->GetProperties().end(); ++it)
     {
@@ -91,7 +91,7 @@ glm::vec2 PropertyPanel::AddStruct(glm::vec2 offset, const SchemaStruct* schemaS
     return offset;
 }
 
-glm::vec2 PropertyPanel::AddAtom(glm::vec2 offset, SchemaPropertyAtom* atom, Struct* item, const std::string& path)
+glm::vec2 PropertyPanel::AddAtom(glm::vec2 offset, SchemaPropertyAtom* atom, ProjectStruct* item, const std::string& path)
 {
     const Property* property = item->GetProperty(path);
     const PropertyAtom* propertyAtom = property ? property->AsAtom() : 0;
@@ -128,7 +128,7 @@ void PropertyPanel::OnSelectionChanged(const pixeleditor::Selection* selection)
 
 void PropertyPanel::OnAtomChanged(Gwen::Controls::Base* input)
 {
-    Struct* structItem = input->UserData.Get<Struct*>("struct");
+    ProjectStruct* structItem = input->UserData.Get<ProjectStruct*>("struct");
     std::string path = input->UserData.Get<std::string>("path");
 
     PropertyAtom* atom = structItem->AcquireAtom(path);

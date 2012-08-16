@@ -53,7 +53,7 @@ bool TransformCommand::Do(std::string& returnString)
         
         for (Selection::Entities::const_iterator it = selection.GetSelection().begin(); it != selection.GetSelection().end(); ++it)
         {
-            Entity* entity = Core::Instance()->GetProject()->GetEntity(it->first);
+            ProjectEntity* entity = Core::Instance()->GetProject()->GetEntity(it->first);
             
             if (entity)
             {
@@ -73,7 +73,7 @@ bool TransformCommand::Do(std::string& returnString)
         
         for (Selection::Entities::const_iterator it = selection.GetSelection().begin(); it != selection.GetSelection().end(); ++it)
         {
-            Entity* entity = Core::Instance()->GetProject()->GetEntity(it->first);
+            ProjectEntity* entity = Core::Instance()->GetProject()->GetEntity(it->first);
             
             if (entity)
             {
@@ -94,7 +94,7 @@ bool TransformCommand::Do(std::string& returnString)
         
         for (Selection::Entities::const_iterator it = selection.GetSelection().begin(); it != selection.GetSelection().end(); ++it)
         {
-            Entity* entity = Core::Instance()->GetProject()->GetEntity(it->first);
+            ProjectEntity* entity = Core::Instance()->GetProject()->GetEntity(it->first);
             
             if (entity)
             {
@@ -115,7 +115,7 @@ bool TransformCommand::Undo()
         
         for (Selection::Entities::const_iterator it = selection.GetSelection().begin(); it != selection.GetSelection().end(); ++it)
         {
-            Entity* entity = Core::Instance()->GetProject()->GetEntity(it->first);
+            ProjectEntity* entity = Core::Instance()->GetProject()->GetEntity(it->first);
             
             if (entity)
             {
@@ -131,7 +131,7 @@ bool TransformCommand::Undo()
         
         for (Selection::Entities::const_iterator it = selection.GetSelection().begin(); it != selection.GetSelection().end(); ++it)
         {
-            Entity* entity = Core::Instance()->GetProject()->GetEntity(it->first);
+            ProjectEntity* entity = Core::Instance()->GetProject()->GetEntity(it->first);
             
             if (entity)
             {
@@ -147,7 +147,7 @@ bool TransformCommand::Undo()
         
         for (Selection::Entities::const_iterator it = selection.GetSelection().begin(); it != selection.GetSelection().end(); ++it)
         {
-            Entity* entity = Core::Instance()->GetProject()->GetEntity(it->first);
+            ProjectEntity* entity = Core::Instance()->GetProject()->GetEntity(it->first);
             
             if (entity)
             {

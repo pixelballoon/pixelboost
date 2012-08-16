@@ -260,12 +260,12 @@ bool HttpInterface::OnSetTransform(pb::HttpConnection& connection, Uid recordId,
 {
     Project* project = Core::Instance()->GetProject();
     
-    Record* record = project->GetRecord(recordId);
+    ProjectRecord* record = project->GetRecord(recordId);
     
     if (!record)
         return false;
     
-    Entity* entity = record->GetEntity(entityId);
+    ProjectEntity* entity = record->GetEntity(entityId);
     
     if (!entity)
         return false;
@@ -283,7 +283,7 @@ bool HttpInterface::OnGetRecord(pb::HttpConnection& connection, Uid recordId)
     
     Project* project = Core::Instance()->GetProject();
     
-    Record* record = project->GetRecord(recordId);
+    ProjectRecord* record = project->GetRecord(recordId);
     
     if (!record)
         return false;
@@ -309,12 +309,12 @@ bool HttpInterface::OnGetEntity(pb::HttpConnection& connection, Uid recordId, Ui
     
     Project* project = Core::Instance()->GetProject();
     
-    Record* record = project->GetRecord(recordId);
+    ProjectRecord* record = project->GetRecord(recordId);
     
     if (!record)
         return false;
     
-    Entity* entity = record->GetEntity(entityId);
+    ProjectEntity* entity = record->GetEntity(entityId);
     
     if (!entity)
         return false;
@@ -338,7 +338,7 @@ bool HttpInterface::OnGetRecordProperty(pb::HttpConnection& connection, Uid reco
 {
     Project* project = Core::Instance()->GetProject();
     
-    Record* record = project->GetRecord(recordId);
+    ProjectRecord* record = project->GetRecord(recordId);
     
     if (!record)
         return true;
@@ -350,12 +350,12 @@ bool HttpInterface::OnGetEntityProperty(pb::HttpConnection& connection, Uid reco
 {
     Project* project = Core::Instance()->GetProject();
     
-    Record* record = project->GetRecord(recordId);
+    ProjectRecord* record = project->GetRecord(recordId);
     
     if (!record)
         return true;
     
-    Entity* entity = record->GetEntity(entityId);
+    ProjectEntity* entity = record->GetEntity(entityId);
     
     if (!entity)
         return true;
@@ -397,7 +397,7 @@ bool HttpInterface::OnSetRecordProperty(pb::HttpConnection& connection, Uid reco
     
     Project* project = Core::Instance()->GetProject();
     
-    Record* record = project->GetRecord(recordId);
+    ProjectRecord* record = project->GetRecord(recordId);
     
     if (!record)
         return false;
@@ -423,12 +423,12 @@ bool HttpInterface::OnSetEntityProperty(pb::HttpConnection& connection, Uid reco
     
     Project* project = Core::Instance()->GetProject();
     
-    Record* record = project->GetRecord(recordId);
+    ProjectRecord* record = project->GetRecord(recordId);
     
     if (!record)
         return false;
     
-    Entity* entity = record->GetEntity(entityId);
+    ProjectEntity* entity = record->GetEntity(entityId);
     
     if (!entity)
         return false;

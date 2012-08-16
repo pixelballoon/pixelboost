@@ -138,7 +138,7 @@ void CreateManipulator::CreateEntity(glm::vec3 position)
     sprintf(commandArgs, "-r %d -t %s -p %f,%f,%f", View::Instance()->GetRecord()->GetUid(), _EntityType.c_str(), position.x, position.y, position.z);
     std::string entityIdString = Core::Instance()->GetCommandManager()->Exec("createEntity", commandArgs);
     Uid entityId = atoi(entityIdString.c_str());
-    pixeleditor::Entity* entity = Core::Instance()->GetProject()->GetEntity(entityId);
+    ProjectEntity* entity = Core::Instance()->GetProject()->GetEntity(entityId);
     
     if (entity)
     {

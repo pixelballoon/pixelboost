@@ -84,7 +84,7 @@ void Level::Clear()
     _Record = 0;
 }
 
-void Level::SetRecord(Record* record)
+void Level::SetRecord(ProjectRecord* record)
 {
     Clear();
     
@@ -98,9 +98,9 @@ void Level::SetRecord(Record* record)
         _Record->entityAdded.Connect(this, &Level::OnEntityAdded);
         _Record->entityRemoved.Connect(this, &Level::OnEntityRemoved);
         
-        for (Record::EntityMap::const_iterator it = record->GetEntities().begin(); it != record->GetEntities().end(); ++it)
+        for (ProjectRecord::EntityMap::const_iterator it = record->GetEntities().begin(); it != record->GetEntities().end(); ++it)
         {
-            pixeleditor::Entity* entity = it->second;
+            ProjectEntity* entity = it->second;
             CreateEntity(entity);
         }
     }
@@ -140,20 +140,20 @@ Level::EntityList Level::GetEntitiesInBounds(const pb::BoundingBox &bounds)
                          
 void Level::CreateEntity(Uid uid)
 {
-    pixeleditor::Entity* entity = _Record->GetEntity(uid);
+    ProjectEntity* entity = _Record->GetEntity(uid);
 
     if (entity)
         CreateEntity(entity);
 }
 
-void Level::CreateEntity(pixeleditor::Entity* entity)
+void Level::CreateEntity(ProjectEntity* entity)
 {
     ViewEntity* viewEntity = new ViewEntity(GetScene(), entity);
     _Entities[viewEntity->GetEntityUid()] = viewEntity;
     entityAdded(viewEntity);
 }
 
-void Level::DestroyEntity(pixeleditor::Entity* entity)
+void Level::DestroyEntity(ProjectEntity* entity)
 {
     for (EntityMap::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
     {
@@ -236,7 +236,7 @@ bool Level::OnMouseMove(glm::vec2 position)
     return false;
 }
 
-void Level::OnRecordRemoved(Project* project, Record* record)
+void Level::OnRecordRemoved(Project* project, ProjectRecord* record)
 {
     if (record == _Record)
     {
@@ -244,17 +244,17 @@ void Level::OnRecordRemoved(Project* project, Record* record)
     }
 }
 
-void Level::OnEntityAdded(Record* record, pixeleditor::Entity* entity)
+void Level::OnEntityAdded(ProjectRecord* record, ProjectEntity* entity)
 {
     CreateEntity(entity);
 }
 
-void Level::OnEntityRemoved(Record* record, pixeleditor::Entity* entity)
+void Level::OnEntityRemoved(ProjectRecord* record, ProjectEntity* entity)
 {
     DestroyEntity(entity);
 }
 
-void Level::OnPropertyChanged(Struct* structure)
+void Level::OnPropertyChanged(ProjectStruct* structure)
 {
     UpdateSize();
 }

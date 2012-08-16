@@ -412,7 +412,7 @@ void View::SetCanvasSize(glm::vec2 size)
     _UiCamera->Position = glm::vec3(size[0]/2.f, -size[1]/2.f, 0.f)/32.f + glm::vec3(0,0,1);
 }
 
-void View::SetRecord(Record* record)
+void View::SetRecord(ProjectRecord* record)
 {
     _EntityPage->Clear();
     _Entities = new Gwen::Controls::CollapsibleCategory(_EntityPage);
@@ -423,7 +423,7 @@ void View::SetRecord(Record* record)
     _Level->SetRecord(_Record);
 }
 
-Record* View::GetRecord()
+ProjectRecord* View::GetRecord()
 {
     return _Record;
 }
@@ -455,7 +455,7 @@ void View::OnProjectExported(Project* project)
     
 }
 
-void View::OnRecordAdded(Project* project, Record* record)
+void View::OnRecordAdded(Project* project, ProjectRecord* record)
 {
     Gwen::TextObject recordItem(record->GetName());
     Gwen::Controls::Button* button = _Records->Add(recordItem);
@@ -463,14 +463,14 @@ void View::OnRecordAdded(Project* project, Record* record)
     button->onToggleOn.Add(this, &View::OnRecordSelected);
 }
 
-void View::OnRecordRemoved(Project* project, Record* record)
+void View::OnRecordRemoved(Project* project, ProjectRecord* record)
 {
     
 }
 
 void View::OnRecordSelected(Gwen::Controls::Base* item)
 {
-    Record* record = item->UserData.Get<Record*>("record");
+    ProjectRecord* record = item->UserData.Get<ProjectRecord*>("record");
     SetRecord(record);
 }
 

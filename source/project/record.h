@@ -12,17 +12,17 @@
 namespace pixeleditor
 {
 
-class Entity;
 class Project;
+class ProjectEntity;
 class Schema;
 class SchemaRecord;
 
-class Record : public Struct
+class ProjectRecord : public ProjectStruct
 {
 public:
-    Record(Project* project);
-    Record(Project* project, const SchemaRecord* type, const std::string& name);
-    virtual ~Record();
+    ProjectRecord(Project* project);
+    ProjectRecord(Project* project, const SchemaRecord* type, const std::string& name);
+    virtual ~ProjectRecord();
     
     bool Open(const std::string& filename);
     bool Close();
@@ -33,21 +33,21 @@ public:
     bool ExportJson(json::Object& object);
     bool ExportLua(std::iostream& output);
     
-    virtual Record* GetRecord();
-    virtual const Record* GetRecord() const;
+    virtual ProjectRecord* GetRecord();
+    virtual const ProjectRecord* GetRecord() const;
     
 public:
-    typedef std::map<Uid, Entity*> EntityMap;
+    typedef std::map<Uid, ProjectEntity*> EntityMap;
     
-    bool AddEntity(Entity* entity);
-    bool RemoveEntity(Entity* entity, bool erase=true);
+    bool AddEntity(ProjectEntity* entity);
+    bool RemoveEntity(ProjectEntity* entity, bool erase=true);
     
-    Entity* GetEntity(Uid uid) const;
+    ProjectEntity* GetEntity(Uid uid) const;
     const EntityMap& GetEntities() const;
     
 public:
-    sigslot::Signal2<Record*, Entity*> entityAdded;
-    sigslot::Signal2<Record*, Entity*> entityRemoved;
+    sigslot::Signal2<ProjectRecord*, ProjectEntity*> entityAdded;
+    sigslot::Signal2<ProjectRecord*, ProjectEntity*> entityRemoved;
     
 private:
     bool _IsOpen;

@@ -8,10 +8,10 @@
 
 namespace pixeleditor
 {
-    
+
+class ProjectStruct;
 class SchemaPropertyAtom;
 class Selection;
-class Struct;
 
 class PropertyPanel : public Gwen::Controls::ScrollControl
 {
@@ -21,11 +21,11 @@ public:
     
     void SetPinned(bool pinned);
     
-    void SetStruct(Struct* item, const std::string& focusPath = "/");
+    void SetStruct(ProjectStruct* item, const std::string& focusPath = "/");
     
 private:
-    glm::vec2 AddStruct(glm::vec2 offset, const SchemaStruct* schemaPropertyStruct, Struct* item, const std::string& path);
-    glm::vec2 AddAtom(glm::vec2 offset, SchemaPropertyAtom* atom, Struct* item, const std::string& path);
+    glm::vec2 AddStruct(glm::vec2 offset, const SchemaStruct* schemaPropertyStruct, ProjectStruct* item, const std::string& path);
+    glm::vec2 AddAtom(glm::vec2 offset, SchemaPropertyAtom* atom, ProjectStruct* item, const std::string& path);
     
     void OnSelectionChanged(const pixeleditor::Selection* selection);
     

@@ -242,11 +242,11 @@ const std::string& Project::GetName() const
     return _Name;
 }
     
-Entity* Project::GetEntity(Uid uid) const
+ProjectEntity* Project::GetEntity(Uid uid) const
 {
     for (RecordMap::const_iterator it = _Records.begin(); it != _Records.end(); ++it)
     {
-        Entity* entity = it->second->GetEntity(uid);
+        ProjectEntity* entity = it->second->GetEntity(uid);
         if (entity)
             return entity;
     }
@@ -254,7 +254,7 @@ Entity* Project::GetEntity(Uid uid) const
     return 0;
 }
     
-Record* Project::GetRecord(Uid uid) const
+ProjectRecord* Project::GetRecord(Uid uid) const
 {
     RecordMap::const_iterator it = _Records.find(uid);
     
@@ -264,7 +264,7 @@ Record* Project::GetRecord(Uid uid) const
     return 0;
 }
     
-Record* Project::GetRecordByName(const std::string& recordName) const
+ProjectRecord* Project::GetRecordByName(const std::string& recordName) const
 {
     for (RecordMap::const_iterator it = _Records.begin(); it != _Records.end(); ++it)
     {
@@ -333,7 +333,7 @@ bool Project::AddRecord(const std::string& name, const std::string& type)
     
     const SchemaRecord* schemaRecord = GetSchema()->GetRecordByName(type);
     
-    Record* record = new Record(this, schemaRecord, name);
+    ProjectRecord* record = new ProjectRecord(this, schemaRecord, name);
     
     _Records[record->GetUid()] = record;
     
@@ -344,13 +344,13 @@ bool Project::AddRecord(const std::string& name, const std::string& type)
     
 bool Project::LoadRecord(const std::string& filename)
 {
-    Record* record = new Record(this);
+    ProjectRecord* record = new ProjectRecord(this);
     
     record->Open(filename);
     
     std::string name = record->GetName();
     
-    Record* existing = GetRecordByName(name);
+    ProjectRecord* existing = GetRecordByName(name);
     
     if (existing)
     {
@@ -367,7 +367,7 @@ bool Project::LoadRecord(const std::string& filename)
 
 bool Project::RemoveRecord(std::string const &name, bool erase)
 {
-    Record* record = GetRecordByName(name);
+    ProjectRecord* record = GetRecordByName(name);
     
     if (!record)
         return false;

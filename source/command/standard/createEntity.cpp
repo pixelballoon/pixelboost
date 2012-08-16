@@ -45,7 +45,7 @@ bool CreateEntityCommand::Do(std::string& returnString)
     
     _RecordId = atoi(GetArgument("r").c_str());
     
-    Record* record = core->GetProject()->GetRecord(_RecordId);
+    ProjectRecord* record = core->GetProject()->GetRecord(_RecordId);
     
     if (!record)
         return false;
@@ -61,7 +61,7 @@ bool CreateEntityCommand::Do(std::string& returnString)
     float y = (float)atof(GetArgument("p", 1).c_str());
     float z = (float)atof(GetArgument("p", 2).c_str());
     
-    Entity* entity = new Entity(record, type);
+    ProjectEntity* entity = new ProjectEntity(record, type);
 
     if (_EntityUid)
         entity->SetUid(_EntityUid);
@@ -84,9 +84,9 @@ bool CreateEntityCommand::Undo()
 {
     Core* core = Core::Instance();
     
-    Record* record = core->GetProject()->GetRecord(_RecordId);
+    ProjectRecord* record = core->GetProject()->GetRecord(_RecordId);
 
-    Entity* entity = record->GetEntity(_EntityUid);
+    ProjectEntity* entity = record->GetEntity(_EntityUid);
     
     record->RemoveEntity(entity);
     

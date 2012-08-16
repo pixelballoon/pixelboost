@@ -18,18 +18,18 @@ namespace json
 namespace pixeleditor
 {
 
+class ProjectRecord;
 class Property;
 class PropertyAtom;
 class PropertyArray;
 class PropertyPointer;
-class Record;
 class SchemaEntity;
         
-class Entity : public Struct
+class ProjectEntity : public ProjectStruct
 {
 public:
-    Entity(Record* record, const SchemaEntity* type = 0);
-    virtual ~Entity();
+    ProjectEntity(ProjectRecord* record, const SchemaEntity* type = 0);
+    virtual ~ProjectEntity();
     
     bool Open(json::Object& entity, bool skipUid = false);
     bool Save(json::Object& entity);
@@ -37,8 +37,8 @@ public:
     bool ExportJson(json::Object& entity);
     bool ExportLua(std::iostream& output);
     
-    virtual Record* GetRecord();
-    virtual const Record* GetRecord() const;
+    virtual ProjectRecord* GetRecord();
+    virtual const ProjectRecord* GetRecord() const;
     
 public:    
     const glm::vec3& GetPosition();
@@ -50,14 +50,14 @@ public:
     const glm::vec3& GetScale();
     void SetScale(const glm::vec3& scale);
     
-    sigslot::Signal1<Entity*> entityChanged;
+    sigslot::Signal1<ProjectEntity*> entityChanged;
     
 private:
     bool WriteTransformDataJson(json::Object& entity);
     bool WriteTransformDataLua(std::iostream& output);
     
 private:
-    Record* _Record;
+    ProjectRecord* _Record;
     
     glm::vec3 _Position;
     float _Rotation;

@@ -12,7 +12,7 @@
 
 using namespace pixeleditor;
 
-Struct::Struct(Project* project, const SchemaStruct* type)
+ProjectStruct::ProjectStruct(Project* project, const SchemaStruct* type)
     : _Uid(0)
     , _Name("")
     , _Type(type)
@@ -22,7 +22,7 @@ Struct::Struct(Project* project, const SchemaStruct* type)
     _TypeName = _Type ? _Type->GetName() : "";
 }
 
-Struct::~Struct()
+ProjectStruct::~ProjectStruct()
 {
     destroyed(this);
     
@@ -35,7 +35,7 @@ Struct::~Struct()
     _Project->ReleaseUid(_Uid);
 }
 
-bool Struct::Open(json::Object& entity, bool skipUid)
+bool ProjectStruct::Open(json::Object& entity, bool skipUid)
 {
     bool status = true;
     
@@ -78,7 +78,7 @@ bool Struct::Open(json::Object& entity, bool skipUid)
     return status;
 }
 
-bool Struct::Save(json::Object& entity)
+bool ProjectStruct::Save(json::Object& entity)
 {
     entity["Type"] = json::String(_TypeName);
     entity["Name"] = json::String(_Name);
@@ -125,26 +125,26 @@ bool Struct::Save(json::Object& entity)
 class JsonExporter
 {
 public:
-    static bool ExportProperty(Struct* s, const std::string& path, const SchemaProperty* schemaItem, json::Object& container, bool appendPath = true);
+    static bool ExportProperty(ProjectStruct* s, const std::string& path, const SchemaProperty* schemaItem, json::Object& container, bool appendPath = true);
     
 private:
     static json::UnknownElement ExportAtom(const PropertyAtom* atom, const SchemaPropertyAtom* schemaAtom);
     static json::UnknownElement ExportPointer(const PropertyPointer* pointer, const SchemaPropertyPointer* schemaPointer);
-    static json::Object ExportStruct(Struct* s, const std::string& path, const SchemaStruct* schemaStruct);    
+    static json::Object ExportStruct(ProjectStruct* s, const std::string& path, const SchemaStruct* schemaStruct);    
 };
 
 class LuaExporter
 {
 public:
-    static bool ExportProperty(std::iostream& output, Struct* s, const std::string& path, const SchemaProperty* schemaItem, bool appendPath = true);
+    static bool ExportProperty(std::iostream& output, ProjectStruct* s, const std::string& path, const SchemaProperty* schemaItem, bool appendPath = true);
     
 private:
     static bool ExportAtom(std::iostream& output, const PropertyAtom* atom, const SchemaPropertyAtom* schemaAtom);
     static bool ExportPointer(std::iostream& output, const PropertyPointer* pointer, const SchemaPropertyPointer* schemaPointer);
-    static bool ExportStruct(std::iostream& output, Struct* s, const std::string& path, const SchemaStruct* schemaStruct);    
+    static bool ExportStruct(std::iostream& output, ProjectStruct* s, const std::string& path, const SchemaStruct* schemaStruct);    
 };
 
-bool Struct::ExportJson(json::Object& entity)
+bool ProjectStruct::ExportJson(json::Object& entity)
 {
     entity["Type"] = json::String(_TypeName);
     entity["Uid"] = json::Number(_Uid);
@@ -164,7 +164,7 @@ bool Struct::ExportJson(json::Object& entity)
     return true;
 }
 
-Uid Struct::GetTypeHash() const
+Uid ProjectStruct::GetTypeHash() const
 {
     const size_t length = _TypeName.length()+1;
     Uid hash = 2166136261u;
@@ -177,7 +177,7 @@ Uid Struct::GetTypeHash() const
     return hash;
 }
 
-bool Struct::ExportLua(std::iostream& output, bool appendNewLine)
+bool ProjectStruct::ExportLua(std::iostream& output, bool appendNewLine)
 {
     output << "type = " << GetTypeHash() << "," << std::endl;
     output << "uid = " << _Uid << "," << std::endl;
@@ -237,7 +237,7 @@ json::UnknownElement JsonExporter::ExportPointer(const PropertyPointer* pointer,
     return json::Number(pointer->GetPointerValue());
 }
     
-json::Object JsonExporter::ExportStruct(Struct* s, const std::string& path, const SchemaStruct* schemaStruct)
+json::Object JsonExporter::ExportStruct(ProjectStruct* s, const std::string& path, const SchemaStruct* schemaStruct)
 {
     json::Object container;
     
@@ -249,7 +249,7 @@ json::Object JsonExporter::ExportStruct(Struct* s, const std::string& path, cons
     return container;
 }
     
-bool JsonExporter::ExportProperty(Struct* s, const std::string& path, const SchemaProperty* schemaItem, json::Object& container, bool appendPath)
+bool JsonExporter::ExportProperty(ProjectStruct* s, const std::string& path, const SchemaProperty* schemaItem, json::Object& container, bool appendPath)
 {
     std::string propertyPath = path;
     
@@ -350,7 +350,7 @@ bool LuaExporter::ExportPointer(std::iostream& output, const PropertyPointer* po
     return true;
 }
 
-bool LuaExporter::ExportStruct(std::iostream& output, Struct* s, const std::string& path, const SchemaStruct* schemaStruct)
+bool LuaExporter::ExportStruct(std::iostream& output, ProjectStruct* s, const std::string& path, const SchemaStruct* schemaStruct)
 {
     output << "{";
     
@@ -377,7 +377,7 @@ bool LuaExporter::ExportStruct(std::iostream& output, Struct* s, const std::stri
     return true;
 }
 
-bool LuaExporter::ExportProperty(std::iostream& output, Struct* s, const std::string& path, const SchemaProperty* schemaItem, bool appendPath)
+bool LuaExporter::ExportProperty(std::iostream& output, ProjectStruct* s, const std::string& path, const SchemaProperty* schemaItem, bool appendPath)
 {
     std::string propertyPath = path;
     
@@ -465,44 +465,44 @@ bool LuaExporter::ExportProperty(std::iostream& output, Struct* s, const std::st
     return status;
 }
 
-Project* Struct::GetProject()
+Project* ProjectStruct::GetProject()
 {
     return _Project;
 }
 
-const std::string& Struct::GetTypeName() const
+const std::string& ProjectStruct::GetTypeName() const
 {
     return _TypeName;
 }
 
-const SchemaStruct* Struct::GetType() const
+const SchemaStruct* ProjectStruct::GetType() const
 {
     return _Type;
 }
 
-void Struct::SetUid(Uid uid)
+void ProjectStruct::SetUid(Uid uid)
 {
     _Project->ReleaseUid(_Uid);
     _Uid = uid;
     _Project->RegisterUid(_Uid);
 }
 
-Uid Struct::GetUid() const
+Uid ProjectStruct::GetUid() const
 {
     return _Uid;
 }
 
-const std::string& Struct::GetName() const
+const std::string& ProjectStruct::GetName() const
 {
     return _Name;
 }
 
-void Struct::SetName(const std::string& name)
+void ProjectStruct::SetName(const std::string& name)
 {
     _Name = name;
 }
 
-std::string Struct::EvaluateProperty(const std::string& path, const std::string& defaultValue)
+std::string ProjectStruct::EvaluateProperty(const std::string& path, const std::string& defaultValue)
 {
     const Property* property = GetProperty(path);
     
@@ -512,7 +512,7 @@ std::string Struct::EvaluateProperty(const std::string& path, const std::string&
     return property->AsAtom()->GetStringValue();
 }
 
-const Property* Struct::GetProperty(const std::string& path) const
+const Property* ProjectStruct::GetProperty(const std::string& path) const
 {
     PropertyMap::const_iterator it = _Properties.find(path);
     
@@ -522,7 +522,7 @@ const Property* Struct::GetProperty(const std::string& path) const
     return 0;
 }
 
-PropertyAtom* Struct::AcquireAtom(const std::string& path)
+PropertyAtom* ProjectStruct::AcquireAtom(const std::string& path)
 {
     PropertyMap::const_iterator it = _Properties.find(path);
     
@@ -542,7 +542,7 @@ PropertyAtom* Struct::AcquireAtom(const std::string& path)
     return property;
 }
 
-PropertyPointer* Struct::AcquirePointer(const std::string& path)
+PropertyPointer* ProjectStruct::AcquirePointer(const std::string& path)
 {
     PropertyMap::const_iterator it = _Properties.find(path);
     
@@ -562,7 +562,7 @@ PropertyPointer* Struct::AcquirePointer(const std::string& path)
     return property;
 }
 
-PropertyArray* Struct::AcquireArray(const std::string& path)
+PropertyArray* ProjectStruct::AcquireArray(const std::string& path)
 {
     PropertyMap::const_iterator it = _Properties.find(path);
     
@@ -582,7 +582,7 @@ PropertyArray* Struct::AcquireArray(const std::string& path)
     return property;
 }
 
-bool Struct::ParseProperties(json::Object& container, std::string path)
+bool ProjectStruct::ParseProperties(json::Object& container, std::string path)
 {
     for (json::Object::iterator it = container.Begin(); it != container.End(); ++it)
     {
@@ -635,7 +635,7 @@ bool Struct::ParseProperties(json::Object& container, std::string path)
     return true;
 }
 
-json::Object& Struct::GetPropertyContainer(std::string path, json::Object& parent)
+json::Object& ProjectStruct::GetPropertyContainer(std::string path, json::Object& parent)
 {
     size_t seperator = path.find('/');
     if (seperator == std::string::npos)

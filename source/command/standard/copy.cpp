@@ -65,7 +65,7 @@ bool CopyCommand::Do(std::string& returnString)
         if (!viewEntity)
             continue;
         
-        Entity* entity = viewEntity->GetEntity();
+        ProjectEntity* entity = viewEntity->GetEntity();
         
         entity->Save(serialisedEntity);
         

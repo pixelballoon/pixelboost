@@ -17,7 +17,7 @@ class Struct;
 class Property
 {
 public:
-    Property(Struct* s, const SchemaProperty* schemaProperty);
+    Property(ProjectStruct* s, const SchemaProperty* schemaProperty);
     virtual ~Property();
     
     const SchemaProperty* GetSchemaProperty();
@@ -43,13 +43,13 @@ public:
 protected:
     const SchemaProperty* _SchemaProperty;
     
-    Struct* _Struct;
+    ProjectStruct* _Struct;
 };
 
 class PropertyAtom : public Property
 {
 public:
-    PropertyAtom(Struct* s, const SchemaProperty* schemaProperty);
+    PropertyAtom(ProjectStruct* s, const SchemaProperty* schemaProperty);
     virtual ~PropertyAtom();
     
     virtual PropertyType GetType() const;
@@ -73,7 +73,7 @@ protected:
 class PropertyPointer : public Property
 {
 public:
-    PropertyPointer(Struct* s, const SchemaProperty* schemaProperty);
+    PropertyPointer(ProjectStruct* s, const SchemaProperty* schemaProperty);
     virtual ~PropertyPointer();
     
     virtual PropertyType GetType() const;
@@ -84,7 +84,7 @@ public:
     Uid GetPointerValue() const;
     void SetPointerValue(Uid uid);
     
-    Entity* ResolvePointer() const;
+    ProjectEntity* ResolvePointer() const;
     
 protected:
     bool _HasValue;
@@ -94,7 +94,7 @@ protected:
 class PropertyArray : public Property
 {
 public:
-    PropertyArray(Struct* s, const SchemaProperty* schemaProperty);
+    PropertyArray(ProjectStruct* s, const SchemaProperty* schemaProperty);
     virtual ~PropertyArray();
     
     virtual PropertyType GetType() const;

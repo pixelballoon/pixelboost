@@ -46,7 +46,7 @@ bool PasteCommand::Do(std::string& returnString)
     
     Uid recordId = atoi(GetArgument("r").c_str());
     
-    Record* record = core->GetProject()->GetRecord(recordId);
+    ProjectRecord* record = core->GetProject()->GetRecord(recordId);
     
     if (!record)
         return false;
@@ -70,7 +70,7 @@ bool PasteCommand::Do(std::string& returnString)
         
         for (json::Array::iterator it = entities.Begin(); it != entities.End(); ++it)
         {   
-            Entity* entity = new Entity(record);
+            ProjectEntity* entity = new ProjectEntity(record);
             entity->Open(*it, true);
             record->AddEntity(entity);
             

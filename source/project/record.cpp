@@ -20,27 +20,27 @@ extern "C" {
 
 using namespace pixeleditor;
 
-Record::Record(Project* project)
-    : Struct(project)
+ProjectRecord::ProjectRecord(Project* project)
+    : ProjectStruct(project)
     , _IsOpen(false)
 {
     
 }
 
-Record::Record(Project* project, const SchemaRecord* type, const std::string& name)
-    : Struct(project, type)
+ProjectRecord::ProjectRecord(Project* project, const SchemaRecord* type, const std::string& name)
+    : ProjectStruct(project, type)
     , _IsOpen(true)
 {
     SetName(name);
 }
 
-Record::~Record()
+ProjectRecord::~ProjectRecord()
 {
     if (_IsOpen)
         Close();
 }
     
-bool Record::Open(const std::string& filename)
+bool ProjectRecord::Open(const std::string& filename)
 {
     std::string file = pb::FileHelpers::FileToString(pb::kFileLocationUser, filename.c_str());
     
@@ -48,7 +48,7 @@ bool Record::Open(const std::string& filename)
     
     json::Reader::Read(record, file);
     
-    bool status = Struct::Open(record);
+    bool status = ProjectStruct::Open(record);
     
     // Entities
     json::Array& entities = record["Entities"];
@@ -57,7 +57,7 @@ bool Record::Open(const std::string& filename)
     {
         json::Object& entity = *it;
         
-        Entity* newEntity = new Entity(this);
+        ProjectEntity* newEntity = new ProjectEntity(this);
         
         newEntity->Open(entity);
         
@@ -73,7 +73,7 @@ bool Record::Open(const std::string& filename)
     return status;
 }
     
-bool Record::Close()
+bool ProjectRecord::Close()
 {
     if (!_IsOpen)
         return false;
@@ -90,7 +90,7 @@ bool Record::Close()
     return true;
 }
 
-bool Record::Save()
+bool ProjectRecord::Save()
 {
     // TODO: Make OS independant
     char cmd[2048];
@@ -103,7 +103,7 @@ bool Record::Save()
 
     json::Object record;
     
-    bool status = Struct::Save(record);
+    bool status = ProjectStruct::Save(record);
     
     json::Array entities;
     
@@ -126,7 +126,7 @@ bool Record::Save()
     return status;
 }
 
-bool Record::ExportJson()
+bool ProjectRecord::ExportJson()
 {
     // TODO: Make OS independant
     char cmd[2048];
@@ -154,7 +154,7 @@ static int writeLua(lua_State*, const void* p, size_t size, void* u)
     return (fwrite(p,size,1,(FILE*)u)!=1) && (size!=0);
 }
 
-bool Record::ExportLua(bool exportByteCode)
+bool ProjectRecord::ExportLua(bool exportByteCode)
 {
     // TODO: Make OS independant
     char cmd[2048];
@@ -192,9 +192,9 @@ bool Record::ExportLua(bool exportByteCode)
     return status;
 }
 
-bool Record::ExportJson(json::Object& record)
+bool ProjectRecord::ExportJson(json::Object& record)
 {
-    bool status = Struct::ExportJson(record);
+    bool status = ProjectStruct::ExportJson(record);
     
     json::Array entities;
     
@@ -212,13 +212,13 @@ bool Record::ExportJson(json::Object& record)
     return status;
 }
 
-bool Record::ExportLua(std::iostream& output)
+bool ProjectRecord::ExportLua(std::iostream& output)
 {
     char record[64];
     sprintf(record, "r%X", GetUid());
     
     output << record << " = {" << std::endl;
-    bool status = Struct::ExportLua(output);
+    bool status = ProjectStruct::ExportLua(output);
     output << "}" << std::endl << std::endl;
     
     output << record << ".entities = {}" << std::endl << std::endl;
@@ -235,17 +235,17 @@ bool Record::ExportLua(std::iostream& output)
     return status;
 }
     
-Record* Record::GetRecord()
+ProjectRecord* ProjectRecord::GetRecord()
 {
     return this;
 }
     
-const Record* Record::GetRecord() const
+const ProjectRecord* ProjectRecord::GetRecord() const
 {
     return this;
 }
 
-bool Record::AddEntity(Entity* entity)
+bool ProjectRecord::AddEntity(ProjectEntity* entity)
 {
     Uid uid = entity->GetUid();
     
@@ -263,7 +263,7 @@ bool Record::AddEntity(Entity* entity)
     return false;        
 }
 
-bool Record::RemoveEntity(Entity* entity, bool erase)
+bool ProjectRecord::RemoveEntity(ProjectEntity* entity, bool erase)
 {
     EntityMap::iterator it = _Entities.find(entity->GetUid());
     
@@ -282,7 +282,7 @@ bool Record::RemoveEntity(Entity* entity, bool erase)
     return false;
 }
 
-Entity* Record::GetEntity(Uid uid) const
+ProjectEntity* ProjectRecord::GetEntity(Uid uid) const
 {
     EntityMap::const_iterator it = _Entities.find(uid);
     
@@ -292,7 +292,7 @@ Entity* Record::GetEntity(Uid uid) const
     return 0;
 }
 
-const Record::EntityMap& Record::GetEntities() const
+const ProjectRecord::EntityMap& ProjectRecord::GetEntities() const
 {
     return _Entities;
 }

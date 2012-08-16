@@ -69,7 +69,7 @@
 
 - (IBAction)paste:(id)sender
 {
-    pixeleditor::Record* record = _View->GetRecord();
+    pixeleditor::ProjectRecord* record = _View->GetRecord();
     
     char params[32];
     sprintf(params, "-r %d", record ? record->GetUid() : 0);

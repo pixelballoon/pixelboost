@@ -8,7 +8,7 @@
 namespace pixeleditor
 {
     
-class Entity;
+class ProjectEntity;
 
 class DeleteCommand : public Command
 {
@@ -27,7 +27,7 @@ public:
     virtual bool Undo();
     
 private:
-    std::vector<std::pair<Uid, Entity*> > _Entities;
+    std::vector<std::pair<Uid, ProjectEntity*> > _Entities;
 };
     
 }

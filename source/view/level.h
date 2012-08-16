@@ -21,10 +21,11 @@ namespace pb
 
 namespace pixeleditor
 {
-    class Entity;
+    
     class Project;
-    class Record;
-    class Struct;
+    class ProjectEntity;
+    class ProjectRecord;
+    class ProjectStruct;
     class ViewEntity;
     
     class Level : public pb::MouseHandler, public pb::Entity
@@ -41,7 +42,7 @@ namespace pixeleditor
         
         void Clear();
         
-        void SetRecord(Record* record);
+        void SetRecord(ProjectRecord* record);
         
     public:
         typedef std::map<Uid, ViewEntity*> EntityMap;
@@ -57,8 +58,8 @@ namespace pixeleditor
         
     private:
         void CreateEntity(Uid uid);
-        void CreateEntity(pixeleditor::Entity* entity);
-        void DestroyEntity(pixeleditor::Entity* entity);
+        void CreateEntity(ProjectEntity* entity);
+        void DestroyEntity(ProjectEntity* entity);
         void DestroyEntity(ViewEntity* entity);
         
         void UpdateSize();
@@ -68,16 +69,17 @@ namespace pixeleditor
         virtual bool OnMouseUp(pb::MouseButton button, glm::vec2 position);
         virtual bool OnMouseMove(glm::vec2 position);
         
-        virtual void OnRecordRemoved(Project* project, Record* record);
-        virtual void OnEntityAdded(Record* record, pixeleditor::Entity* entity);
-        virtual void OnEntityRemoved(Record* record, pixeleditor::Entity* entity);
+        virtual void OnRecordRemoved(Project* project, ProjectRecord* record);
+        virtual void OnEntityAdded(ProjectRecord* record, ProjectEntity* entity);
+        virtual void OnEntityRemoved(ProjectRecord* record, ProjectEntity* entity);
         
-        virtual void OnPropertyChanged(Struct* structure);
+        virtual void OnPropertyChanged(ProjectStruct* structure);
         
     private:
-        Record* _Record;
+        ProjectRecord* _Record;
         pb::RectangleComponent* _LevelBounds;
         
         EntityMap _Entities;
     };
+    
 }
