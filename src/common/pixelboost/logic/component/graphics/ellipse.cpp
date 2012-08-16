@@ -33,7 +33,12 @@ EllipseComponent::~EllipseComponent()
 
 Uid EllipseComponent::GetType()
 {
-    return TypeHash("ellipse");
+    return EllipseComponent::GetStaticType();
+}
+
+Uid EllipseComponent::GetStaticType()
+{
+    return TypeHash("pb::EllipseComponent");
 }
 
 void EllipseComponent::SetColor(glm::vec4 color)

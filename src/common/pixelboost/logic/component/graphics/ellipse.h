@@ -18,7 +18,8 @@ public:
     EllipseComponent(Entity* parent);
     virtual ~EllipseComponent();
     
-    Uid GetType();
+    virtual Uid GetType();
+    static Uid GetStaticType();
     
     void SetColor(glm::vec4 color);
     glm::vec4 GetColor();
