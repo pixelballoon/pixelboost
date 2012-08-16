@@ -112,21 +112,6 @@ Component* Entity::GetComponentById(Uid componentId)
     return 0;
 }
 
-Entity::ComponentList Entity::GetComponentsByType(Uid componentType)
-{
-    ComponentList components;
-    
-    for (ComponentList::iterator componentIt = _Components.begin(); componentIt != _Components.end(); ++componentIt)
-    {
-        if ((*componentIt)->GetType() == componentType)
-        {
-            components.push_back(*componentIt);
-        }
-    }
-    
-    return components;
-}
-
 void Entity::RegisterMessageHandler(Uid messageType, MessageHandler handler)
 {
     _MessageHandlers[messageType].Connect(handler);

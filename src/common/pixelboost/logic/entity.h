@@ -55,7 +55,7 @@ public:
     Component* GetComponentById(Uid componentId);
     
     template <class T>T* GetComponentByType();
-    ComponentList GetComponentsByType(Uid componentType);
+    template <class T> ComponentList GetComponentsByType();
     
     void RegisterMessageHandler(Uid messageType, MessageHandler handler);
     void UnregisterMessageHandler(Uid messageType, MessageHandler handler);
