@@ -20,6 +20,16 @@ RotateManipulator::~RotateManipulator()
     
 }
 
+pb::Uid RotateManipulator::GetType() const
+{
+    return RotateManipulator::GetStaticType();
+}
+
+pb::Uid RotateManipulator::GetStaticType()
+{
+    return pb::TypeHash("RotateManipulator");
+}
+
 std::string RotateManipulator::GetName()
 {
     return "rotate";

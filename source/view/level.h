@@ -32,6 +32,9 @@ namespace pixeleditor
     public:
         Level(pb::Scene* scene);
         ~Level();
+        
+        virtual pb::Uid GetType() const;
+        static pb::Uid GetStaticType();
                 
         void Update(float time);
         void Render(int backgroundLayer, int levelLayer);
@@ -61,7 +64,6 @@ namespace pixeleditor
         void UpdateSize();
         
     private:
-        virtual int GetPriority();
         virtual bool OnMouseDown(pb::MouseButton button, glm::vec2 position);
         virtual bool OnMouseUp(pb::MouseButton button, glm::vec2 position);
         virtual bool OnMouseMove(glm::vec2 position);

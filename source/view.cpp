@@ -19,7 +19,7 @@
 #include "pixelboost/graphics/renderer/model/modelRenderer.h"
 #include "pixelboost/graphics/renderer/sprite/sprite.h"
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
-#include "pixelboost/logic/system/graphics/render/basic.h"
+#include "pixelboost/logic/system/graphics/render/bounds.h"
 #include "pixelboost/logic/system/graphics/render/render.h"
 #include "pixelboost/logic/scene.h"
 #include "pixelboost/misc/gwen/inputHandler.h"
@@ -53,17 +53,12 @@ class pixeleditor::ViewKeyboardHandler : public pb::KeyboardHandler
 public:
     ViewKeyboardHandler()
     {
-        
+        SetPriority(0);
     }
     
     ~ViewKeyboardHandler()
     {
         
-    }
-    
-    virtual int GetPriority()
-    {
-        return 0;
     }
     
     virtual bool OnKeyDown(pb::KeyboardKey key, char character)
@@ -88,16 +83,12 @@ class pixeleditor::ViewMouseHandler : public pb::MouseHandler
 public:
     ViewMouseHandler()
     {
-        
+        SetPriority(0);
     }
     
     ~ViewMouseHandler()
     {
-    }
-    
-    virtual int GetPriority()
-    {
-        return 0;
+        
     }
     
     virtual bool OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position)
@@ -179,7 +170,7 @@ void View::Initialise(glm::vec2 size, float density)
     _LevelCamera = new pb::OrthographicCamera();
     _LevelViewport = new pb::Viewport(0, _LevelCamera);
     _LevelScene = new pb::Scene();
-    _LevelScene->AddSystem(new pb::BasicRenderSystem());
+    _LevelScene->AddSystem(new pb::BoundsRenderSystem());
     _LevelViewport->SetScene(_LevelScene);
     _LevelViewport->SetDensity(32.f);
     _LevelViewport->SetPosition(glm::vec2(0,0));
@@ -187,7 +178,7 @@ void View::Initialise(glm::vec2 size, float density)
     _UiCamera = new pb::OrthographicCamera();
     _UiViewport = new pb::Viewport(0, _UiCamera);
     _UiScene = new pb::Scene();
-    _UiScene->AddSystem(new pb::BasicRenderSystem());
+    _UiScene->AddSystem(new pb::BoundsRenderSystem());
     _UiViewport->SetScene(_UiScene);
     _UiViewport->SetDensity(density);
     _UiViewport->SetPosition(glm::vec2(0,0));
@@ -346,7 +337,7 @@ std::string View::GetModelFile(const std::string& model)
     
     for (std::vector<std::string>::const_iterator it = config.modelRoots.begin(); it != config.modelRoots.end(); ++it)
     {
-        std::string fileName = *it + model + ".obj";
+        std::string fileName = *it + model + ".mdl";
         file.open(fileName.c_str());
         
         if (file.is_open())

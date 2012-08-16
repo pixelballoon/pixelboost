@@ -20,6 +20,16 @@ ScaleManipulator::~ScaleManipulator()
     
 }
 
+pb::Uid ScaleManipulator::GetType() const
+{
+    return ScaleManipulator::GetStaticType();
+}
+
+pb::Uid ScaleManipulator::GetStaticType()
+{
+    return pb::TypeHash("ScaleManipulator");
+}
+
 std::string ScaleManipulator::GetName()
 {
     return "scale";

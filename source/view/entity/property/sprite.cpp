@@ -1,8 +1,8 @@
 #include "glm/gtc/matrix_transform.hpp"
 
-#include "pixelboost/graphics/components/sprite.h"
 #include "pixelboost/graphics/renderer/sprite/sprite.h"
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
+#include "pixelboost/logic/component/graphics/sprite.h"
 
 #include "project/entity.h"
 #include "project/schema.h"
@@ -17,7 +17,6 @@ SpriteViewProperty::SpriteViewProperty(ViewEntity* parent, const std::string& pa
 {
     _SpriteComponent = new pb::SpriteComponent(parent, "");
     _SpriteComponent->SetLayer(1);
-    parent->AddComponent(_SpriteComponent);
     
     Refresh();
 }

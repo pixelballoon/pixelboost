@@ -1,8 +1,8 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 #include "pixelboost/graphics/camera/camera.h"
-#include "pixelboost/graphics/components/rectangle.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
+#include "pixelboost/logic/component/graphics/rectangle.h"
 
 #include "command/manager.h"
 #include "view/entity/entity.h"
@@ -26,6 +26,16 @@ SelectManipulator::~SelectManipulator()
     
 }
 
+pb::Uid SelectManipulator::GetType() const
+{
+    return SelectManipulator::GetStaticType();
+}
+
+pb::Uid SelectManipulator::GetStaticType()
+{
+    return pb::TypeHash("SelectManipulator");
+}
+
 std::string SelectManipulator::GetName()
 {
     return "select";
@@ -46,8 +56,6 @@ void SelectManipulator::Render(int layer)
             _BoundsComponent->SetColor(glm::vec4(0.0, 0.0, 0.1, 0.1));
             _BoundsComponent->SetSolid(true);
             _BoundsComponent->SetLayer(2);
-            
-            AddComponent(_BoundsComponent);
         }
         
         pb::OrthographicCamera* camera = View::Instance()->GetLevelCamera();

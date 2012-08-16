@@ -11,6 +11,9 @@ namespace pixeleditor
         ScaleManipulator(pb::Scene* scene);
         virtual ~ScaleManipulator();
         
+        virtual pb::Uid GetType() const;
+        static pb::Uid GetStaticType();
+        
         virtual std::string GetName();
         virtual char GetKey();
         

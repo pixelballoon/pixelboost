@@ -17,7 +17,6 @@ ModelViewProperty::ModelViewProperty(ViewEntity* parent, const std::string& path
 {
     _ModelComponent = new pb::ModelComponent(parent, "", "");
     _ModelComponent->SetLayer(1);
-    parent->AddComponent(_ModelComponent);
     
     Refresh();
 }

@@ -11,6 +11,9 @@ namespace pixeleditor
         MoveManipulator(pb::Scene* scene);
         virtual ~MoveManipulator();
         
+        virtual pb::Uid GetType() const;
+        static pb::Uid GetStaticType();
+        
         virtual std::string GetName();
         virtual char GetKey();
         

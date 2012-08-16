@@ -26,6 +26,16 @@ CreateManipulator::~CreateManipulator()
     
 }
 
+pb::Uid CreateManipulator::GetType() const
+{
+    return CreateManipulator::GetStaticType();
+}
+
+pb::Uid CreateManipulator::GetStaticType()
+{
+    return pb::TypeHash("CreateManipulator");
+}
+
 std::string CreateManipulator::GetName()
 {
     return "create";

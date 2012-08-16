@@ -1,8 +1,8 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 #include "pixelboost/graphics/camera/camera.h"
-#include "pixelboost/graphics/components/rectangle.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
+#include "pixelboost/logic/component/graphics/rectangle.h"
 #include "pixelboost/logic/scene.h"
 
 #include "command/manager.h"
@@ -30,8 +30,8 @@ Level::Level(pb::Scene* scene)
     _LevelBounds->SetSolid(true);
     _LevelBounds->SetLayer(0);
     _LevelBounds->SetSize(glm::vec2(0,0));
-        
-    AddComponent(_LevelBounds);
+    
+    SetPriority(0);
 }
 
 Level::~Level()
@@ -41,6 +41,16 @@ Level::~Level()
     View::Instance()->GetMouseManager()->RemoveHandler(this);
     
     Clear();
+}
+
+pb::Uid Level::GetType() const
+{
+    return Level::GetStaticType();
+}
+
+pb::Uid Level::GetStaticType()
+{
+    return pb::TypeHash("Level");
 }
 
 void Level::Update(float time)
@@ -209,11 +219,6 @@ void Level::UpdateSize()
     
     _LevelBounds->SetSize(size);
     _LevelBounds->SetLocalTransform(glm::translate(glm::mat4x4(), offset));
-}
-
-int Level::GetPriority()
-{
-    return 0;
 }
 
 bool Level::OnMouseDown(pb::MouseButton button, glm::vec2 position)

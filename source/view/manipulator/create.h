@@ -11,6 +11,9 @@ namespace pixeleditor
         CreateManipulator(pb::Scene* scene);
         virtual ~CreateManipulator();
         
+        virtual pb::Uid GetType() const;
+        static pb::Uid GetStaticType();
+        
         virtual std::string GetName();
         
     public:

@@ -1,5 +1,5 @@
-#include "pixelboost/graphics/components/rectangle.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
+#include "pixelboost/logic/component/graphics/rectangle.h"
 #include "pixelboost/logic/component/transform/basic.h"
 
 #include "core/selection.h"
@@ -20,7 +20,7 @@ ViewEntity::ViewEntity(pb::Scene* scene, pixeleditor::Entity* entity)
     , _BoundsComponent(0)
     , _Entity(entity)
 {
-    AddComponent(new pb::BasicTransformComponent(this));
+    new pb::BasicTransformComponent(this);
 
     ResetTransform();
     
@@ -43,6 +43,16 @@ ViewEntity::~ViewEntity()
         _Entity->propertyChanged.Disconnect(this, &ViewEntity::OnPropertyChanged);
         _Entity->destroyed.Disconnect(this, &ViewEntity::OnDestroyed);
     }
+}
+
+pb::Uid ViewEntity::GetType() const
+{
+    return ViewEntity::GetStaticType();
+}
+
+pb::Uid ViewEntity::GetStaticType()
+{
+    return pb::TypeHash("ViewEntity");
 }
 
 void ViewEntity::Update(float time)
@@ -206,7 +216,6 @@ void ViewEntity::OnSelectionChanged(const pixeleditor::Selection* selection)
             _BoundsComponent->SetSolid(true);
             _BoundsComponent->SetLayer(2);
             _BoundsComponent->SetSize(glm::vec2(_BoundingBox.GetSize().x, _BoundingBox.GetSize().y)/glm::vec2(GetScale().x, GetScale().y));
-            AddComponent(_BoundsComponent);
         }
     } else {
         if (_BoundsComponent)

@@ -21,6 +21,16 @@ MoveManipulator::~MoveManipulator()
     
 }
 
+pb::Uid MoveManipulator::GetType() const
+{
+    return MoveManipulator::GetStaticType();
+}
+
+pb::Uid MoveManipulator::GetStaticType()
+{
+    return pb::TypeHash("MoveManipulator");
+}
+
 std::string MoveManipulator::GetName()
 {
     return "move";
