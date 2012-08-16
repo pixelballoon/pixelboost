@@ -12,6 +12,7 @@ static bool HandlerSort (InputHandler* a, InputHandler* b)
 }
 
 InputHandler::InputHandler()
+    : _Priority(-1)
 {
     
 }
@@ -21,9 +22,14 @@ InputHandler::~InputHandler()
     
 }
 
+void InputHandler::SetPriority(int priority)
+{
+    _Priority = priority;
+}
+
 int InputHandler::GetPriority()
 {
-    return -1;
+    return _Priority;
 }
 
 InputManager::InputManager()

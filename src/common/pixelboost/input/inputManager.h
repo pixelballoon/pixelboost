@@ -9,15 +9,19 @@
 
 namespace pb
 {
+    
     class InputHandler
     {
     public:
         InputHandler();
         virtual ~InputHandler();
         
-        virtual int GetPriority();
+        void SetPriority(int priority);
+        int GetPriority();
         
     private:
+        int _Priority;
+        
         friend class InputManager;
     };
     
