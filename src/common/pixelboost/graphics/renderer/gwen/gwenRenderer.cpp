@@ -327,7 +327,7 @@ void GwenRenderer::RenderText(Gwen::Font* font, Gwen::Point pos, const Gwen::Uni
 
     Gwen::String fontName = Gwen::Utility::UnicodeToString(font->facename);
 
-    pb::Font* renderFont = pb::Game::Instance()->GetFontRenderer()->LoadFont(pb::kFileLocationBundle, fontName, false);
+    pb::Font* renderFont = pb::Game::Instance()->GetFontRenderer()->LoadFont(pb::kFileLocationBundle, fontName, "/data/fonts/"+fontName, false);
 
     float size = font->size * Scale();
     if (!text.length())
@@ -356,7 +356,7 @@ Gwen::Point GwenRenderer::MeasureText(Gwen::Font* font, const Gwen::UnicodeStrin
 {
     Gwen::String fontName = Gwen::Utility::UnicodeToString(font->facename);
     
-    pb::Game::Instance()->GetFontRenderer()->LoadFont(pb::kFileLocationBundle, fontName, false);
+    pb::Game::Instance()->GetFontRenderer()->LoadFont(pb::kFileLocationBundle, fontName, "/data/fonts/"+fontName, false);
     
     float size = font->size * Scale();
     float length = pb::Game::Instance()->GetFontRenderer()->MeasureString(fontName, Gwen::Utility::UnicodeToString(text), size/32.f).x*32.f;
