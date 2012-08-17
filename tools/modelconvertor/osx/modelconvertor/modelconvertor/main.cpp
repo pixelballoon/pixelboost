@@ -8,7 +8,6 @@
 
 #include "pixelboost/data/json/writer.h"
 
-#include "model.h"
 #include "modelExporter.h"
 #include "modelLoader.h"
 
