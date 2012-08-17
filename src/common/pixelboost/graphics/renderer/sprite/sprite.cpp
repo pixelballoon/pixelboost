@@ -25,6 +25,7 @@ SpriteSheet::~SpriteSheet()
     for (SpriteMap::iterator it = _Sprites.begin(); it != _Sprites.end(); ++it)
     {
         Game::Instance()->GetSpriteRenderer()->_Sprites.erase(it->first);
+        delete it->second;
     }
     
     if (_Texture)

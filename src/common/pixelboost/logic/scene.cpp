@@ -18,6 +18,11 @@ Scene::~Scene()
         delete it->second;
     }
     
+    for (EntityMap::iterator it = _NewEntities.begin(); it != _NewEntities.end(); ++it)
+    {
+        delete it->second;
+    }
+    
     for (DelayedMessageList::iterator it = _DelayedMessages.begin(); it != _DelayedMessages.end(); ++it)
     {
         delete it->second.second;
