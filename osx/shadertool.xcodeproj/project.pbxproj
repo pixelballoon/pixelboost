@@ -1,0 +1,349 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1C89652F15DE94B300AB3196 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89652E15DE94B300AB3196 /* main.cpp */; };
+		1C897DD915DED09100AB3196 /* libhlsl2glsl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C897DD815DEB89B00AB3196 /* libhlsl2glsl.a */; };
+		1C897DDA15DED09100AB3196 /* libmesaglsl2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C897DCF15DEB89300AB3196 /* libmesaglsl2.a */; };
+		1C897E3815DEEA4000AB3196 /* libpixelboost_osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C897E3715DEEA1800AB3196 /* libpixelboost_osx.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1C897DCE15DEB89300AB3196 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1C897DC715DEB89200AB3196 /* mesaglsl2.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC046055464E500DB518D;
+			remoteInfo = mesaglsl2;
+		};
+		1C897DD715DEB89B00AB3196 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1C897DD015DEB89A00AB3196 /* hlslang.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2B951C991135194700DBAF46;
+			remoteInfo = hlsl2glsl;
+		};
+		1C897E3415DEEA1800AB3196 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1C897E2C15DEEA1700AB3196 /* pixelboost.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1C897C5F15DEA3D600AB3196;
+			remoteInfo = pixelboost_ios;
+		};
+		1C897E3615DEEA1800AB3196 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1C897E2C15DEEA1700AB3196 /* pixelboost.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1C897D8615DEA3E500AB3196;
+			remoteInfo = pixelboost_osx;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1C89652815DE94B300AB3196 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		1C89652A15DE94B300AB3196 /* shadertool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = shadertool; sourceTree = BUILT_PRODUCTS_DIR; };
+		1C89652E15DE94B300AB3196 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		1C897DC715DEB89200AB3196 /* mesaglsl2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = mesaglsl2.xcodeproj; path = "../libs/glsl-optimizer/src/glsl/xcode/mesaglsl2.xcodeproj"; sourceTree = "<group>"; };
+		1C897DD015DEB89A00AB3196 /* hlslang.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = hlslang.xcodeproj; path = ../libs/hlsl2glsl/hlslang.xcodeproj; sourceTree = "<group>"; };
+		1C897E2C15DEEA1700AB3196 /* pixelboost.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = pixelboost.xcodeproj; path = ../libs/pixelboost/osx_ios/pixelboost.xcodeproj; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1C89652715DE94B300AB3196 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1C897E3815DEEA4000AB3196 /* libpixelboost_osx.a in Frameworks */,
+				1C897DD915DED09100AB3196 /* libhlsl2glsl.a in Frameworks */,
+				1C897DDA15DED09100AB3196 /* libmesaglsl2.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1C89651F15DE94B300AB3196 = {
+			isa = PBXGroup;
+			children = (
+				1C89653715DE94BD00AB3196 /* libs */,
+				1C89652D15DE94B300AB3196 /* shadertool */,
+				1C89652B15DE94B300AB3196 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1C89652B15DE94B300AB3196 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1C89652A15DE94B300AB3196 /* shadertool */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1C89652D15DE94B300AB3196 /* shadertool */ = {
+			isa = PBXGroup;
+			children = (
+				1C89652E15DE94B300AB3196 /* main.cpp */,
+			);
+			path = shadertool;
+			sourceTree = "<group>";
+		};
+		1C89653715DE94BD00AB3196 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				1C897E2C15DEEA1700AB3196 /* pixelboost.xcodeproj */,
+				1C897DD015DEB89A00AB3196 /* hlslang.xcodeproj */,
+				1C897DC715DEB89200AB3196 /* mesaglsl2.xcodeproj */,
+			);
+			name = libs;
+			sourceTree = "<group>";
+		};
+		1C897DC815DEB89200AB3196 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1C897DCF15DEB89300AB3196 /* libmesaglsl2.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1C897DD115DEB89A00AB3196 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1C897DD815DEB89B00AB3196 /* libhlsl2glsl.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1C897E2D15DEEA1700AB3196 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1C897E3515DEEA1800AB3196 /* libpixelboost_ios.a */,
+				1C897E3715DEEA1800AB3196 /* libpixelboost_osx.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1C89652915DE94B300AB3196 /* shadertool */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1C89653415DE94B300AB3196 /* Build configuration list for PBXNativeTarget "shadertool" */;
+			buildPhases = (
+				1C89652615DE94B300AB3196 /* Sources */,
+				1C89652715DE94B300AB3196 /* Frameworks */,
+				1C89652815DE94B300AB3196 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = shadertool;
+			productName = shadertool;
+			productReference = 1C89652A15DE94B300AB3196 /* shadertool */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1C89652115DE94B300AB3196 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0440;
+				ORGANIZATIONNAME = "Pixel Balloon";
+			};
+			buildConfigurationList = 1C89652415DE94B300AB3196 /* Build configuration list for PBXProject "shadertool" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 1C89651F15DE94B300AB3196;
+			productRefGroup = 1C89652B15DE94B300AB3196 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 1C897DD115DEB89A00AB3196 /* Products */;
+					ProjectRef = 1C897DD015DEB89A00AB3196 /* hlslang.xcodeproj */;
+				},
+				{
+					ProductGroup = 1C897DC815DEB89200AB3196 /* Products */;
+					ProjectRef = 1C897DC715DEB89200AB3196 /* mesaglsl2.xcodeproj */;
+				},
+				{
+					ProductGroup = 1C897E2D15DEEA1700AB3196 /* Products */;
+					ProjectRef = 1C897E2C15DEEA1700AB3196 /* pixelboost.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				1C89652915DE94B300AB3196 /* shadertool */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		1C897DCF15DEB89300AB3196 /* libmesaglsl2.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libmesaglsl2.a;
+			remoteRef = 1C897DCE15DEB89300AB3196 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1C897DD815DEB89B00AB3196 /* libhlsl2glsl.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libhlsl2glsl.a;
+			remoteRef = 1C897DD715DEB89B00AB3196 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1C897E3515DEEA1800AB3196 /* libpixelboost_ios.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libpixelboost_ios.a;
+			remoteRef = 1C897E3415DEEA1800AB3196 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1C897E3715DEEA1800AB3196 /* libpixelboost_osx.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libpixelboost_osx.a;
+			remoteRef = 1C897E3615DEEA1800AB3196 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1C89652615DE94B300AB3196 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1C89652F15DE94B300AB3196 /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1C89653215DE94B300AB3196 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"../libs/glsl-optimizer",
+					../libs/hlsl2glsl/include,
+					../libs/pixelboost/src/external,
+					../libs/pixelboost/src/common,
+					../libs/pixelboost/src/platform/ios,
+					../libs/pixelboost/src/platform/ios/external,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		1C89653315DE94B300AB3196 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"../libs/glsl-optimizer",
+					../libs/hlsl2glsl/include,
+					../libs/pixelboost/src/external,
+					../libs/pixelboost/src/common,
+					../libs/pixelboost/src/platform/ios,
+					../libs/pixelboost/src/platform/ios/external,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		1C89653515DE94B300AB3196 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = i386;
+			};
+			name = Debug;
+		};
+		1C89653615DE94B300AB3196 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = i386;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1C89652415DE94B300AB3196 /* Build configuration list for PBXProject "shadertool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1C89653215DE94B300AB3196 /* Debug */,
+				1C89653315DE94B300AB3196 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1C89653415DE94B300AB3196 /* Build configuration list for PBXNativeTarget "shadertool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1C89653515DE94B300AB3196 /* Debug */,
+				1C89653615DE94B300AB3196 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1C89652115DE94B300AB3196 /* Project object */;
+}
