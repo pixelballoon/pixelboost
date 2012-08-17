@@ -45,6 +45,11 @@ Uid ModelComponent::GetStaticType()
     return TypeHash("pb::ModelComponent");
 }
 
+void ModelComponent::SetEffect(Effect* effect)
+{
+    _Renderable->SetEffect(effect);
+}
+
 void ModelComponent::SetLayer(int layer)
 {
     _Renderable->SetLayer(layer);
