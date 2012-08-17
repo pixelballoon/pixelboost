@@ -2,6 +2,8 @@
 
 #ifdef PIXELBOOST_BUILD_RELEASE
 	#define PbLogDebug(system, format, ...) do {} while(0)
+    #define PbLogError(system, format, ...) do {} while(0)
+    #define PbLogWarn(system, format, ...) do {} while(0)
 #else
 	#ifdef PIXELBOOST_PLATFORM_ANDROID
 		#include <android/log.h>
