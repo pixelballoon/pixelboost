@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'pixelboost' target in the 'pixelboost' project
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+#endif
