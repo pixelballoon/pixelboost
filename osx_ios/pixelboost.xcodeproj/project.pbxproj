@@ -544,32 +544,7 @@
 		1C897D5915DEA3E500AB3196 /* gameCenter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89798915DE9B3A00AB3196 /* gameCenter.cpp */; };
 		1C897D5A15DEA3E500AB3196 /* networkHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89798B15DE9B3A00AB3196 /* networkHelpers.cpp */; };
 		1C897D5B15DEA3E500AB3196 /* localisation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89798E15DE9B3A00AB3196 /* localisation.cpp */; };
-		1C897D5C15DEA3E500AB3196 /* OALAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C89799515DE9B3A00AB3196 /* OALAction.m */; };
-		1C897D5D15DEA3E500AB3196 /* OALActionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C89799715DE9B3A00AB3196 /* OALActionManager.m */; };
-		1C897D5E15DEA3E500AB3196 /* OALAudioActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C89799915DE9B3A00AB3196 /* OALAudioActions.m */; };
-		1C897D5F15DEA3E500AB3196 /* OALFunction.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C89799B15DE9B3A00AB3196 /* OALFunction.m */; };
-		1C897D6015DEA3E500AB3196 /* OALUtilityActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C89799D15DE9B3A00AB3196 /* OALUtilityActions.m */; };
-		1C897D6115DEA3E500AB3196 /* OALAudioTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8979A015DE9B3A00AB3196 /* OALAudioTrack.m */; };
-		1C897D6215DEA3E500AB3196 /* OALAudioTrackNotifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8979A215DE9B3A00AB3196 /* OALAudioTrackNotifications.m */; };
-		1C897D6315DEA3E500AB3196 /* OALAudioTracks.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8979A415DE9B3A00AB3196 /* OALAudioTracks.m */; };
-		1C897D6415DEA3E500AB3196 /* OALSimpleAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8979A715DE9B3A00AB3196 /* OALSimpleAudio.m */; };
-		1C897D6515DEA3E500AB3196 /* ALBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8979AC15DE9B3A00AB3196 /* ALBuffer.m */; };
-		1C897D6615DEA3E500AB3196 /* ALCaptureDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8979AE15DE9B3A00AB3196 /* ALCaptureDevice.m */; };
-		1C897D6715DEA3E500AB3196 /* ALChannelSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8979B015DE9B3A00AB3196 /* ALChannelSource.m */; };
-		1C897D6815DEA3E500AB3196 /* ALContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8979B215DE9B3A00AB3196 /* ALContext.m */; };
-		1C897D6915DEA3E500AB3196 /* ALDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8979B415DE9B3A00AB3196 /* ALDevice.m */; };
-		1C897D6A15DEA3E500AB3196 /* ALListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8979B615DE9B3A00AB3196 /* ALListener.m */; };
-		1C897D6B15DEA3E500AB3196 /* ALSoundSourcePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8979B915DE9B3A00AB3196 /* ALSoundSourcePool.m */; };
-		1C897D6C15DEA3E500AB3196 /* ALSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8979BB15DE9B3A00AB3196 /* ALSource.m */; };
-		1C897D6D15DEA3E500AB3196 /* ALWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8979BE15DE9B3A00AB3196 /* ALWrapper.m */; };
-		1C897D6E15DEA3E500AB3196 /* OpenALManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8979C015DE9B3A00AB3196 /* OpenALManager.m */; };
-		1C897D6F15DEA3E500AB3196 /* OALAudioSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8979C315DE9B3A00AB3196 /* OALAudioSession.m */; };
-		1C897D7015DEA3E500AB3196 /* OALSuspendHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8979C515DE9B3A00AB3196 /* OALSuspendHandler.m */; };
-		1C897D7115DEA3E500AB3196 /* IOSVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8979C815DE9B3A00AB3196 /* IOSVersion.m */; };
 		1C897D7215DEA3E500AB3196 /* mach_timing.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C8979C915DE9B3A00AB3196 /* mach_timing.c */; };
-		1C897D7315DEA3E500AB3196 /* NSMutableArray+WeakReferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8979CC15DE9B3A00AB3196 /* NSMutableArray+WeakReferences.m */; };
-		1C897D7415DEA3E500AB3196 /* OALAudioFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8979CE15DE9B3A00AB3196 /* OALAudioFile.m */; };
-		1C897D7515DEA3E500AB3196 /* OALTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8979D115DE9B3A00AB3196 /* OALTools.m */; };
 		1C897D7615DEA3E500AB3196 /* soundManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C8979D715DE9B3A00AB3196 /* soundManager.mm */; };
 		1C897D7715DEA3E500AB3196 /* fileHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C8979D915DE9B3A00AB3196 /* fileHelpers.mm */; };
 		1C897D7815DEA3E500AB3196 /* gameCenter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C8979DC15DE9B3A00AB3196 /* gameCenter.mm */; };
@@ -3986,32 +3961,7 @@
 				1C897D5915DEA3E500AB3196 /* gameCenter.cpp in Sources */,
 				1C897D5A15DEA3E500AB3196 /* networkHelpers.cpp in Sources */,
 				1C897D5B15DEA3E500AB3196 /* localisation.cpp in Sources */,
-				1C897D5C15DEA3E500AB3196 /* OALAction.m in Sources */,
-				1C897D5D15DEA3E500AB3196 /* OALActionManager.m in Sources */,
-				1C897D5E15DEA3E500AB3196 /* OALAudioActions.m in Sources */,
-				1C897D5F15DEA3E500AB3196 /* OALFunction.m in Sources */,
-				1C897D6015DEA3E500AB3196 /* OALUtilityActions.m in Sources */,
-				1C897D6115DEA3E500AB3196 /* OALAudioTrack.m in Sources */,
-				1C897D6215DEA3E500AB3196 /* OALAudioTrackNotifications.m in Sources */,
-				1C897D6315DEA3E500AB3196 /* OALAudioTracks.m in Sources */,
-				1C897D6415DEA3E500AB3196 /* OALSimpleAudio.m in Sources */,
-				1C897D6515DEA3E500AB3196 /* ALBuffer.m in Sources */,
-				1C897D6615DEA3E500AB3196 /* ALCaptureDevice.m in Sources */,
-				1C897D6715DEA3E500AB3196 /* ALChannelSource.m in Sources */,
-				1C897D6815DEA3E500AB3196 /* ALContext.m in Sources */,
-				1C897D6915DEA3E500AB3196 /* ALDevice.m in Sources */,
-				1C897D6A15DEA3E500AB3196 /* ALListener.m in Sources */,
-				1C897D6B15DEA3E500AB3196 /* ALSoundSourcePool.m in Sources */,
-				1C897D6C15DEA3E500AB3196 /* ALSource.m in Sources */,
-				1C897D6D15DEA3E500AB3196 /* ALWrapper.m in Sources */,
-				1C897D6E15DEA3E500AB3196 /* OpenALManager.m in Sources */,
-				1C897D6F15DEA3E500AB3196 /* OALAudioSession.m in Sources */,
-				1C897D7015DEA3E500AB3196 /* OALSuspendHandler.m in Sources */,
-				1C897D7115DEA3E500AB3196 /* IOSVersion.m in Sources */,
 				1C897D7215DEA3E500AB3196 /* mach_timing.c in Sources */,
-				1C897D7315DEA3E500AB3196 /* NSMutableArray+WeakReferences.m in Sources */,
-				1C897D7415DEA3E500AB3196 /* OALAudioFile.m in Sources */,
-				1C897D7515DEA3E500AB3196 /* OALTools.m in Sources */,
 				1C897D7615DEA3E500AB3196 /* soundManager.mm in Sources */,
 				1C897D7715DEA3E500AB3196 /* fileHelpers.mm in Sources */,
 				1C897D7815DEA3E500AB3196 /* gameCenter.mm in Sources */,
@@ -4123,6 +4073,7 @@
 		1C897D8415DEA3E500AB3196 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				DSTROOT = /tmp/pixelboost.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "pixelboost/pixelboost-Prefix.pch";
@@ -4131,6 +4082,12 @@
 					"$(inherited)",
 				);
 				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					../src/external/,
+					../src/platform/mac/,
+					../src/platform/mac/external/,
+					../src/common/,
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = pixelboost_osx;
 				SDKROOT = macosx;
@@ -4141,6 +4098,7 @@
 		1C897D8515DEA3E500AB3196 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				DSTROOT = /tmp/pixelboost.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "pixelboost/pixelboost-Prefix.pch";
@@ -4150,6 +4108,12 @@
 					"$(inherited)",
 				);
 				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					../src/external/,
+					../src/platform/mac/,
+					../src/platform/mac/external/,
+					../src/common/,
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = pixelboost_osx;
 				SDKROOT = macosx;

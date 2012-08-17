@@ -12,10 +12,26 @@
 		1C14BCD7148FA5D5001C38B8 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C14BCD6148FA5D5001C38B8 /* main.mm */; };
 		1C14BDBB148FA759001C38B8 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C14BDBA148FA759001C38B8 /* AppKit.framework */; };
 		1C14BDBD148FA815001C38B8 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C14BDBC148FA815001C38B8 /* OpenGL.framework */; };
-		1C14BE07148FAB74001C38B8 /* fileHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C14BDF2148FAB74001C38B8 /* fileHelpers.mm */; };
 		1C14BE10148FAC68001C38B8 /* svgParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C14BE0E148FAC68001C38B8 /* svgParser.cpp */; };
-		1C852ED814BB47E0000477C4 /* xml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C852ED514BB47E0000477C4 /* xml.cpp */; };
+		1C897E2B15DEE83900AB3196 /* libpixelboost_osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C897E2A15DEE82500AB3196 /* libpixelboost_osx.a */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1C897E2715DEE82500AB3196 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1C897E1F15DEE82400AB3196 /* pixelboost.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1C897C5F15DEA3D600AB3196;
+			remoteInfo = pixelboost_ios;
+		};
+		1C897E2915DEE82500AB3196 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1C897E1F15DEE82400AB3196 /* pixelboost.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1C897D8615DEA3E500AB3196;
+			remoteInfo = pixelboost_osx;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		1C14BCCB148FA5D5001C38B8 /* CopyFiles */ = {
@@ -37,19 +53,9 @@
 		1C14BCD9148FA5D5001C38B8 /* svgparser-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "svgparser-Prefix.pch"; sourceTree = "<group>"; };
 		1C14BDBA148FA759001C38B8 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		1C14BDBC148FA815001C38B8 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
-		1C14BDF2148FAB74001C38B8 /* fileHelpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = fileHelpers.mm; sourceTree = "<group>"; };
 		1C14BE0E148FAC68001C38B8 /* svgParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = svgParser.cpp; sourceTree = "<group>"; };
 		1C14BE0F148FAC68001C38B8 /* svgParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = svgParser.h; sourceTree = "<group>"; };
-		1C852ECD14BB47E0000477C4 /* elements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = elements.h; sourceTree = "<group>"; };
-		1C852ECE14BB47E0000477C4 /* elements.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = elements.inl; sourceTree = "<group>"; };
-		1C852ECF14BB47E0000477C4 /* reader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = reader.h; sourceTree = "<group>"; };
-		1C852ED014BB47E0000477C4 /* reader.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = reader.inl; sourceTree = "<group>"; };
-		1C852ED114BB47E0000477C4 /* visitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = visitor.h; sourceTree = "<group>"; };
-		1C852ED214BB47E0000477C4 /* writer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = writer.h; sourceTree = "<group>"; };
-		1C852ED314BB47E0000477C4 /* writer.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = writer.inl; sourceTree = "<group>"; };
-		1C852ED514BB47E0000477C4 /* xml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xml.cpp; sourceTree = "<group>"; };
-		1C852ED614BB47E0000477C4 /* xml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xml.h; sourceTree = "<group>"; };
-		1C852ED714BB47E0000477C4 /* xmlconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlconfig.h; sourceTree = "<group>"; };
+		1C897E1F15DEE82400AB3196 /* pixelboost.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = pixelboost.xcodeproj; path = ../../../../osx_ios/pixelboost.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C897E2B15DEE83900AB3196 /* libpixelboost_osx.a in Frameworks */,
 				1C14BDBB148FA759001C38B8 /* AppKit.framework in Frameworks */,
 				1C14BCD2148FA5D5001C38B8 /* CoreData.framework in Frameworks */,
 				1C14BCD4148FA5D5001C38B8 /* Foundation.framework in Frameworks */,
@@ -70,8 +77,7 @@
 		1C14BCC2148FA5D5001C38B8 = {
 			isa = PBXGroup;
 			children = (
-				1C14BDBC148FA815001C38B8 /* OpenGL.framework */,
-				1C14BCE4148FA5EC001C38B8 /* pixelboost */,
+				1C897E1E15DEE7CA00AB3196 /* libs */,
 				1C14BE0D148FAC68001C38B8 /* source */,
 				1C14BCD5148FA5D5001C38B8 /* svgparser */,
 				1C14BCD0148FA5D5001C38B8 /* Frameworks */,
@@ -90,6 +96,7 @@
 		1C14BCD0148FA5D5001C38B8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1C14BDBC148FA815001C38B8 /* OpenGL.framework */,
 				1C14BDBA148FA759001C38B8 /* AppKit.framework */,
 				1C14BCD1148FA5D5001C38B8 /* CoreData.framework */,
 				1C14BCD3148FA5D5001C38B8 /* Foundation.framework */,
@@ -114,64 +121,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		1C14BCE4148FA5EC001C38B8 /* pixelboost */ = {
-			isa = PBXGroup;
-			children = (
-				1C14BCE5148FA5EC001C38B8 /* common */,
-				1C14BDD5148FAB74001C38B8 /* platform */,
-			);
-			name = pixelboost;
-			path = ../../../../src;
-			sourceTree = "<group>";
-		};
-		1C14BCE5148FA5EC001C38B8 /* common */ = {
-			isa = PBXGroup;
-			children = (
-				1C14BCE6148FA5EC001C38B8 /* pixelboost */,
-			);
-			path = common;
-			sourceTree = "<group>";
-		};
-		1C14BCE6148FA5EC001C38B8 /* pixelboost */ = {
-			isa = PBXGroup;
-			children = (
-				1C852ECB14BB47E0000477C4 /* data */,
-			);
-			path = pixelboost;
-			sourceTree = "<group>";
-		};
-		1C14BDD5148FAB74001C38B8 /* platform */ = {
-			isa = PBXGroup;
-			children = (
-				1C14BDEC148FAB74001C38B8 /* mac */,
-			);
-			path = platform;
-			sourceTree = "<group>";
-		};
-		1C14BDEC148FAB74001C38B8 /* mac */ = {
-			isa = PBXGroup;
-			children = (
-				1C14BDED148FAB74001C38B8 /* pixelboost */,
-			);
-			path = mac;
-			sourceTree = "<group>";
-		};
-		1C14BDED148FAB74001C38B8 /* pixelboost */ = {
-			isa = PBXGroup;
-			children = (
-				1C14BDF1148FAB74001C38B8 /* file */,
-			);
-			path = pixelboost;
-			sourceTree = "<group>";
-		};
-		1C14BDF1148FAB74001C38B8 /* file */ = {
-			isa = PBXGroup;
-			children = (
-				1C14BDF2148FAB74001C38B8 /* fileHelpers.mm */,
-			);
-			path = file;
-			sourceTree = "<group>";
-		};
 		1C14BE0D148FAC68001C38B8 /* source */ = {
 			isa = PBXGroup;
 			children = (
@@ -182,37 +131,21 @@
 			path = ../../source;
 			sourceTree = "<group>";
 		};
-		1C852ECB14BB47E0000477C4 /* data */ = {
+		1C897E1E15DEE7CA00AB3196 /* libs */ = {
 			isa = PBXGroup;
 			children = (
-				1C852ECC14BB47E0000477C4 /* json */,
-				1C852ED414BB47E0000477C4 /* xml */,
+				1C897E1F15DEE82400AB3196 /* pixelboost.xcodeproj */,
 			);
-			path = data;
+			name = libs;
 			sourceTree = "<group>";
 		};
-		1C852ECC14BB47E0000477C4 /* json */ = {
+		1C897E2015DEE82400AB3196 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1C852ECD14BB47E0000477C4 /* elements.h */,
-				1C852ECE14BB47E0000477C4 /* elements.inl */,
-				1C852ECF14BB47E0000477C4 /* reader.h */,
-				1C852ED014BB47E0000477C4 /* reader.inl */,
-				1C852ED114BB47E0000477C4 /* visitor.h */,
-				1C852ED214BB47E0000477C4 /* writer.h */,
-				1C852ED314BB47E0000477C4 /* writer.inl */,
+				1C897E2815DEE82500AB3196 /* libpixelboost_ios.a */,
+				1C897E2A15DEE82500AB3196 /* libpixelboost_osx.a */,
 			);
-			path = json;
-			sourceTree = "<group>";
-		};
-		1C852ED414BB47E0000477C4 /* xml */ = {
-			isa = PBXGroup;
-			children = (
-				1C852ED514BB47E0000477C4 /* xml.cpp */,
-				1C852ED614BB47E0000477C4 /* xml.h */,
-				1C852ED714BB47E0000477C4 /* xmlconfig.h */,
-			);
-			path = xml;
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -254,6 +187,12 @@
 			mainGroup = 1C14BCC2148FA5D5001C38B8;
 			productRefGroup = 1C14BCCE148FA5D5001C38B8 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 1C897E2015DEE82400AB3196 /* Products */;
+					ProjectRef = 1C897E1F15DEE82400AB3196 /* pixelboost.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				1C14BCCC148FA5D5001C38B8 /* svgparser */,
@@ -261,15 +200,30 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXReferenceProxy section */
+		1C897E2815DEE82500AB3196 /* libpixelboost_ios.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libpixelboost_ios.a;
+			remoteRef = 1C897E2715DEE82500AB3196 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1C897E2A15DEE82500AB3196 /* libpixelboost_osx.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libpixelboost_osx.a;
+			remoteRef = 1C897E2915DEE82500AB3196 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
 /* Begin PBXSourcesBuildPhase section */
 		1C14BCC9148FA5D5001C38B8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				1C14BCD7148FA5D5001C38B8 /* main.mm in Sources */,
-				1C14BE07148FAB74001C38B8 /* fileHelpers.mm in Sources */,
 				1C14BE10148FAC68001C38B8 /* svgParser.cpp in Sources */,
-				1C852ED814BB47E0000477C4 /* xml.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
