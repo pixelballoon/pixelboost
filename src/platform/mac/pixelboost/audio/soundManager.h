@@ -9,9 +9,14 @@ namespace pb
 
 class SoundManager
 {
-public:
+private:
     SoundManager();
     ~SoundManager();
+    
+public:
+    static SoundManager* Instance();
+    
+    void Update(float time);
     
     void MuteBgm(bool mute=true);
     void MuteSfx(bool mute=true);

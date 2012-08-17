@@ -18,6 +18,17 @@ SoundManager::~SoundManager()
     
 }
     
+SoundManager* SoundManager::Instance()
+{
+    static SoundManager* instance = new SoundManager();
+    return instance;
+}
+    
+void SoundManager::Update(float time)
+{
+    
+}
+    
 void SoundManager::MuteBgm(bool mute)
 {
     _MuteBgm = mute;
