@@ -10,7 +10,6 @@
 		1C89652F15DE94B300AB3196 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89652E15DE94B300AB3196 /* main.cpp */; };
 		1C897DD915DED09100AB3196 /* libhlsl2glsl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C897DD815DEB89B00AB3196 /* libhlsl2glsl.a */; };
 		1C897DDA15DED09100AB3196 /* libmesaglsl2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C897DCF15DEB89300AB3196 /* libmesaglsl2.a */; };
-		1C897E3815DEEA4000AB3196 /* libpixelboost_osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C897E3715DEEA1800AB3196 /* libpixelboost_osx.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,7 +68,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1C897E3815DEEA4000AB3196 /* libpixelboost_osx.a in Frameworks */,
 				1C897DD915DED09100AB3196 /* libhlsl2glsl.a in Frameworks */,
 				1C897DDA15DED09100AB3196 /* libmesaglsl2.a in Frameworks */,
 			);
@@ -245,7 +243,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
@@ -271,8 +269,8 @@
 					../libs/pixelboost/src/platform/ios/external,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				VALID_ARCHS = i386;
 			};
 			name = Debug;
 		};
@@ -280,7 +278,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
@@ -301,24 +299,21 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
+				VALID_ARCHS = i386;
 			};
 			name = Release;
 		};
 		1C89653515DE94B300AB3196 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				VALID_ARCHS = i386;
 			};
 			name = Debug;
 		};
 		1C89653615DE94B300AB3196 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				VALID_ARCHS = i386;
 			};
 			name = Release;
 		};

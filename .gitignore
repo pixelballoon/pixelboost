@@ -1,2 +1,7 @@
 .DS_Store
 xcuserdata
+/osx/build/
+/libs/hlsl2glsl/test/
+/libs/hlsl2glsl/build/
+/libs/glsl-optimizer/src/glsl/xcode/test/
+/libs/glsl-optimizer/src/glsl/xcode/build/
