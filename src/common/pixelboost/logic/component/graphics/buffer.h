@@ -28,8 +28,8 @@ namespace pb
         void SetTexture(Texture* texture);
         Texture* GetTexture();
         
-        void SetEffect(Effect* effect);
-        Effect* GetEffect();
+        void SetShader(Shader* shader);
+        Shader* GetShader();
         
         void SetNumElements(int numElements);
         int GetNumElements();
