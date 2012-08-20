@@ -1865,7 +1865,7 @@ type_specifier_nonarray
         SET_BASIC_TYPE($$,$1,EbtVoid,EbpUndefined);
     }
     | FLOAT_TYPE {
-        SET_BASIC_TYPE($$,$1,EbtFloat,EbpHigh);
+        SET_BASIC_TYPE($$,$1,EbtFloat,EbpMedium);
     }
     | HALF_TYPE {
         SET_BASIC_TYPE($$,$1,EbtFloat,EbpMedium);
@@ -1874,10 +1874,10 @@ type_specifier_nonarray
         SET_BASIC_TYPE($$,$1,EbtFloat,EbpLow);
     }
     | INT_TYPE {
-        SET_BASIC_TYPE($$,$1,EbtInt,EbpHigh);
+        SET_BASIC_TYPE($$,$1,EbtInt,EbpMedium);
     }
     | BOOL_TYPE {
-        SET_BASIC_TYPE($$,$1,EbtBool,EbpHigh);
+        SET_BASIC_TYPE($$,$1,EbtBool,EbpLow);
     }
     | VECTOR LEFT_ANGLE FLOAT_TYPE COMMA INTCONSTANT RIGHT_ANGLE {
         TQualifier qual = parseContext.getDefaultQualifier();
@@ -1913,15 +1913,15 @@ type_specifier_nonarray
         }
     }
     | VEC2 {
-        SET_BASIC_TYPE($$,$1,EbtFloat,EbpHigh);
+        SET_BASIC_TYPE($$,$1,EbtFloat,EbpMedium);
         $$.setAggregate(2);
     }
     | VEC3 {
-        SET_BASIC_TYPE($$,$1,EbtFloat,EbpHigh);
+        SET_BASIC_TYPE($$,$1,EbtFloat,EbpMedium);
         $$.setAggregate(3);
     }
     | VEC4 {
-        SET_BASIC_TYPE($$,$1,EbtFloat,EbpHigh);
+        SET_BASIC_TYPE($$,$1,EbtFloat,EbpMedium);
         $$.setAggregate(4);
     }
     | HVEC2 {
@@ -1949,42 +1949,42 @@ type_specifier_nonarray
         $$.setAggregate(4);
     }
     | BVEC2 {
-        SET_BASIC_TYPE($$,$1,EbtBool,EbpHigh);
+        SET_BASIC_TYPE($$,$1,EbtBool,EbpLow);
         $$.setAggregate(2);
     }
     | BVEC3 {
-        SET_BASIC_TYPE($$,$1,EbtBool,EbpHigh);
+        SET_BASIC_TYPE($$,$1,EbtBool,EbpLow);
         $$.setAggregate(3);
     }
     | BVEC4 {
-        SET_BASIC_TYPE($$,$1,EbtBool,EbpHigh);
+        SET_BASIC_TYPE($$,$1,EbtBool,EbpLow);
         $$.setAggregate(4);
     }
     | IVEC2 {
-        SET_BASIC_TYPE($$,$1,EbtInt,EbpHigh);
+        SET_BASIC_TYPE($$,$1,EbtInt,EbpMedium);
         $$.setAggregate(2);
     }
     | IVEC3 {
-        SET_BASIC_TYPE($$,$1,EbtInt,EbpHigh);
+        SET_BASIC_TYPE($$,$1,EbtInt,EbpMedium);
         $$.setAggregate(3);
     }
     | IVEC4 {
-        SET_BASIC_TYPE($$,$1,EbtInt,EbpHigh);
+        SET_BASIC_TYPE($$,$1,EbtInt,EbpMedium);
         $$.setAggregate(4);
     }
     | MATRIX2 {
         FRAG_VERT_ONLY("mat2", $1.line); 
-        SET_BASIC_TYPE($$,$1,EbtFloat,EbpHigh);
+        SET_BASIC_TYPE($$,$1,EbtFloat,EbpMedium);
         $$.setAggregate(2, true);
     }
     | MATRIX3 { 
         FRAG_VERT_ONLY("mat3", $1.line); 
-        SET_BASIC_TYPE($$,$1,EbtFloat,EbpHigh);
+        SET_BASIC_TYPE($$,$1,EbtFloat,EbpMedium);
         $$.setAggregate(3, true);
     }
     | MATRIX4 { 
         FRAG_VERT_ONLY("mat4", $1.line);
-        SET_BASIC_TYPE($$,$1,EbtFloat,EbpHigh);
+        SET_BASIC_TYPE($$,$1,EbtFloat,EbpMedium);
         $$.setAggregate(4, true);
     }
 	| HMATRIX2 {

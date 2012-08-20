@@ -4570,7 +4570,7 @@ yyreduce:
   case 134:
 #line 1867 "hlslang.y"
     {
-        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtFloat,EbpHigh);
+        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtFloat,EbpMedium);
     ;}
     break;
 
@@ -4591,14 +4591,14 @@ yyreduce:
   case 137:
 #line 1876 "hlslang.y"
     {
-        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtInt,EbpHigh);
+        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtInt,EbpMedium);
     ;}
     break;
 
   case 138:
 #line 1879 "hlslang.y"
     {
-        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtBool,EbpHigh);
+        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtBool,EbpLow);
     ;}
     break;
 
@@ -4650,7 +4650,7 @@ yyreduce:
   case 142:
 #line 1915 "hlslang.y"
     {
-        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtFloat,EbpHigh);
+        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtFloat,EbpMedium);
         (yyval.interm.type).setAggregate(2);
     ;}
     break;
@@ -4658,7 +4658,7 @@ yyreduce:
   case 143:
 #line 1919 "hlslang.y"
     {
-        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtFloat,EbpHigh);
+        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtFloat,EbpMedium);
         (yyval.interm.type).setAggregate(3);
     ;}
     break;
@@ -4666,7 +4666,7 @@ yyreduce:
   case 144:
 #line 1923 "hlslang.y"
     {
-        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtFloat,EbpHigh);
+        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtFloat,EbpMedium);
         (yyval.interm.type).setAggregate(4);
     ;}
     break;
@@ -4722,7 +4722,7 @@ yyreduce:
   case 151:
 #line 1951 "hlslang.y"
     {
-        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtBool,EbpHigh);
+        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtBool,EbpLow);
         (yyval.interm.type).setAggregate(2);
     ;}
     break;
@@ -4730,7 +4730,7 @@ yyreduce:
   case 152:
 #line 1955 "hlslang.y"
     {
-        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtBool,EbpHigh);
+        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtBool,EbpLow);
         (yyval.interm.type).setAggregate(3);
     ;}
     break;
@@ -4738,7 +4738,7 @@ yyreduce:
   case 153:
 #line 1959 "hlslang.y"
     {
-        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtBool,EbpHigh);
+        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtBool,EbpLow);
         (yyval.interm.type).setAggregate(4);
     ;}
     break;
@@ -4746,7 +4746,7 @@ yyreduce:
   case 154:
 #line 1963 "hlslang.y"
     {
-        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtInt,EbpHigh);
+        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtInt,EbpMedium);
         (yyval.interm.type).setAggregate(2);
     ;}
     break;
@@ -4754,7 +4754,7 @@ yyreduce:
   case 155:
 #line 1967 "hlslang.y"
     {
-        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtInt,EbpHigh);
+        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtInt,EbpMedium);
         (yyval.interm.type).setAggregate(3);
     ;}
     break;
@@ -4762,7 +4762,7 @@ yyreduce:
   case 156:
 #line 1971 "hlslang.y"
     {
-        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtInt,EbpHigh);
+        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtInt,EbpMedium);
         (yyval.interm.type).setAggregate(4);
     ;}
     break;
@@ -4771,7 +4771,7 @@ yyreduce:
 #line 1975 "hlslang.y"
     {
         FRAG_VERT_ONLY("mat2", (yyvsp[(1) - (1)].lex).line); 
-        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtFloat,EbpHigh);
+        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtFloat,EbpMedium);
         (yyval.interm.type).setAggregate(2, true);
     ;}
     break;
@@ -4780,7 +4780,7 @@ yyreduce:
 #line 1980 "hlslang.y"
     { 
         FRAG_VERT_ONLY("mat3", (yyvsp[(1) - (1)].lex).line); 
-        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtFloat,EbpHigh);
+        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtFloat,EbpMedium);
         (yyval.interm.type).setAggregate(3, true);
     ;}
     break;
@@ -4789,7 +4789,7 @@ yyreduce:
 #line 1985 "hlslang.y"
     { 
         FRAG_VERT_ONLY("mat4", (yyvsp[(1) - (1)].lex).line);
-        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtFloat,EbpHigh);
+        SET_BASIC_TYPE((yyval.interm.type),(yyvsp[(1) - (1)].lex),EbtFloat,EbpMedium);
         (yyval.interm.type).setAggregate(4, true);
     ;}
     break;
