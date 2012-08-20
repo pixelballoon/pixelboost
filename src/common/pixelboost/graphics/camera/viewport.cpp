@@ -30,7 +30,7 @@ glm::vec2 Viewport::GetSize()
     return GetResolution()/GetDensity();
 }
 
-void Viewport::SetTechniqueDelegate(sigslot::Delegate2<Renderable*, Effect*, EffectTechnique*> delegate)
+void Viewport::SetTechniqueDelegate(sigslot::Delegate2<Renderable*, Shader*, ShaderTechnique*> delegate)
 {
     _TechniqueDelegate = delegate;
 }
@@ -126,10 +126,10 @@ void Viewport::Render(RenderPass renderPass)
     }
 }
 
-EffectTechnique* Viewport::GetTechnique(Renderable* renderable, Effect* effect)
+ShaderTechnique* Viewport::GetTechnique(Renderable* renderable, Shader* shader)
 {
     if (_TechniqueDelegate)
-        return _TechniqueDelegate(renderable, effect);
+        return _TechniqueDelegate(renderable, shader);
     
     return 0;
 }

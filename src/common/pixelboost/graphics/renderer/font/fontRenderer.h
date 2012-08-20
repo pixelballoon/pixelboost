@@ -36,7 +36,7 @@ namespace pb
         virtual void CalculateBounds();
         virtual void CalculateWorldMatrix();
         
-        virtual Effect* GetEffect();
+        virtual Shader* GetShader();
         
         void SetFont(const std::string& font);
         const std::string& GetFont();
@@ -109,7 +109,7 @@ namespace pb
         
         Font* GetFont(const std::string& name);
         
-        virtual void Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass);
+        virtual void Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass);
         
         glm::vec2 MeasureString(const std::string& name, const std::string& string, float size);
     

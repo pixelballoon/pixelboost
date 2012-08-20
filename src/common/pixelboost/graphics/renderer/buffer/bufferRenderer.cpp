@@ -46,13 +46,13 @@ void BufferRenderable::CalculateWorldMatrix()
     SetWorldMatrix(_LocalTransform);
 }
 
-Effect* BufferRenderable::GetEffect()
+Shader* BufferRenderable::GetShader()
 {
-    Effect* baseEffect = Renderable::GetEffect();
-    if (baseEffect)
-        return baseEffect;
+    Shader* baseShader = Renderable::GetShader();
+    if (baseShader)
+        return baseShader;
     
-    return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/textured.fx");
+    return Renderer::Instance()->GetShaderManager()->GetShader("/default/effects/textured.fx");
 }
 
 void BufferRenderable::SetBounds(BoundingSphere bounds)
@@ -109,7 +109,7 @@ BufferRenderer::BufferRenderer()
 {
     Renderer::Instance()->SetHandler(BufferRenderable::GetStaticType(), this);
     
-    Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/textured.fx");
+    Renderer::Instance()->GetShaderManager()->LoadShader("/default/effects/textured.fx");
 }
     
 BufferRenderer::~BufferRenderer()
@@ -117,7 +117,7 @@ BufferRenderer::~BufferRenderer()
     
 }
 
-void BufferRenderer::Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass)
+void BufferRenderer::Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass)
 {
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, true);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
@@ -133,13 +133,13 @@ void BufferRenderer::Render(int count, Renderable** renderables, Viewport* viewp
     
     Texture* texture = 0;
     
-    effectPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
+    shaderPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
     
     for (int i=0; i<count; i++)
     {
         BufferRenderable& renderable = *static_cast<BufferRenderable*>(renderables[i]);
         
-        effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", renderable.GetMVP());
+        shaderPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", renderable.GetMVP());
         
         GraphicsDevice::Instance()->BindTexture(renderable._Texture);
         GraphicsDevice::Instance()->BindIndexBuffer(renderable._IndexBuffer);

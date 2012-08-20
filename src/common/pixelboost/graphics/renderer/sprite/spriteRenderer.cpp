@@ -62,13 +62,13 @@ void SpriteRenderable::CalculateWorldMatrix()
     }
 }
     
-Effect* SpriteRenderable::GetEffect()
+Shader* SpriteRenderable::GetShader()
 {
-    Effect* baseEffect = Renderable::GetEffect();
-    if (baseEffect)
-        return baseEffect;
+    Shader* baseShader = Renderable::GetShader();
+    if (baseShader)
+        return baseShader;
     
-    return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/sprite.fx");
+    return Renderer::Instance()->GetShaderManager()->GetShader("/default/effects/sprite.fx");
 }
 
 Sprite* SpriteRenderable::GetSprite()
@@ -122,18 +122,18 @@ SpriteRenderer::SpriteRenderer()
     
     Renderer::Instance()->SetHandler(SpriteRenderable::GetStaticType(), this);
     
-    Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/sprite.fx");
+    Renderer::Instance()->GetShaderManager()->LoadShader("/default/effects/sprite.fx");
 }
 
 SpriteRenderer::~SpriteRenderer()
 {
-    Renderer::Instance()->GetEffectManager()->UnloadEffect("/default/effects/sprite.fx");
+    Renderer::Instance()->GetShaderManager()->UnloadShader("/default/effects/sprite.fx");
     
     pb::GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
     pb::GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
 }
     
-void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass)
+void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass)
 {
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
@@ -153,8 +153,8 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
     
     _BatchSize = 0;
     
-    effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", glm::mat4x4());
-    effectPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
+    shaderPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", glm::mat4x4());
+    shaderPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
     
     GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffer);
     

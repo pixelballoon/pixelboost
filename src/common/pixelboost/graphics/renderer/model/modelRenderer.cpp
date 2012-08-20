@@ -66,13 +66,13 @@ void ModelRenderable::CalculateWorldMatrix()
     SetWorldMatrix(_Transform);
 }
 
-Effect* ModelRenderable::GetEffect()
+Shader* ModelRenderable::GetShader()
 {
-    Effect* baseEffect = Renderable::GetEffect();
-    if (baseEffect)
-        return baseEffect;
+    Shader* baseShader = Renderable::GetShader();
+    if (baseShader)
+        return baseShader;
     
-    return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/textured.fx");
+    return Renderer::Instance()->GetShaderManager()->GetShader("/default/effects/textured.fx");
 }
 
 void ModelRenderable::SetModel(const std::string& model)
@@ -206,12 +206,12 @@ ModelRenderer::ModelRenderer()
 {
     Renderer::Instance()->SetHandler(ModelRenderable::GetStaticType(), this);
     
-    Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/textured.fx");
+    Renderer::Instance()->GetShaderManager()->LoadShader("/default/effects/textured.fx");
 }
 
 ModelRenderer::~ModelRenderer()
 {
-    Renderer::Instance()->GetEffectManager()->UnloadEffect("/default/effects/textured.fx");
+    Renderer::Instance()->GetShaderManager()->UnloadShader("/default/effects/textured.fx");
     
     for (ModelMap::iterator it = _Models.begin(); it != _Models.end(); ++it)
     {
@@ -224,7 +224,7 @@ ModelRenderer::~ModelRenderer()
     }
 }
 
-void ModelRenderer::Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass)
+void ModelRenderer::Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass)
 {
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, true);
@@ -240,9 +240,9 @@ void ModelRenderer::Render(int count, Renderable** renderables, Viewport* viewpo
         if (!model || !texture || !model->_IndexBuffer || !model->_VertexBuffer)
             continue;
         
-        effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", renderable.GetMVP());
-        effectPass->GetShaderProgram()->SetUniform("diffuseColor", renderable._Tint);
-        effectPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
+        shaderPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", renderable.GetMVP());
+        shaderPass->GetShaderProgram()->SetUniform("diffuseColor", renderable._Tint);
+        shaderPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
         
         GraphicsDevice::Instance()->BindIndexBuffer(model->_IndexBuffer);
         GraphicsDevice::Instance()->BindVertexBuffer(model->_VertexBuffer);

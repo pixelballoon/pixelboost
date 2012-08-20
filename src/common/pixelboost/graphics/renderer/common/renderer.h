@@ -10,11 +10,11 @@ namespace pb
 {
 
 class Camera;
-class Effect;
-class EffectManager;
 class IRenderer;
 class OrthographicCamera;
 class Renderable;
+class Shader;
+class ShaderManager;
 class Viewport;
     
 struct RenderItem
@@ -33,7 +33,7 @@ public:
         
     void Render();
     
-    EffectManager* GetEffectManager();
+    ShaderManager* GetShaderManager();
     
     void AddViewport(Viewport* viewport);
     void RemoveViewport(Viewport* viewport);
@@ -48,7 +48,7 @@ private:
     void AttachRenderable(Renderable* renderable);
     
     void FlushBuffer(Viewport* viewport, Camera* camera);
-    void RenderBatch(Viewport* viewport, int count, Renderable** renderable, Effect* effect);
+    void RenderBatch(Viewport* viewport, int count, Renderable** renderable, Shader* shader);
     
 private:
     typedef std::map<int, IRenderer*> RenderableHandlerMap;
@@ -56,7 +56,7 @@ private:
     typedef std::map<int, RenderableList> LayerRenderableMap;
     
 private:
-    EffectManager* _EffectManager;
+    ShaderManager* _ShaderManager;
     
     RenderableHandlerMap _RenderableHandlers;
     ViewportList _Viewports;

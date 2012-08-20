@@ -8,8 +8,8 @@ namespace pb
 {
  
 class Camera;
-class Effect;
 class RenderSystem;
+class Shader;
 class Viewport;
     
 enum RenderPass
@@ -22,7 +22,7 @@ class Renderable
 {
 public:
     Renderable(Uid entityUid);
-    Renderable(Uid entityUid, Effect* effect);
+    Renderable(Uid entityUid, Shader* shader);
     virtual ~Renderable();
     
     void SetSystem(RenderSystem* system);
@@ -50,8 +50,8 @@ public:
     void CalculateMVP(Viewport* viewport, Camera* camera);
     const glm::mat4x4& GetMVP() const;
     
-    virtual Effect* GetEffect();
-    void SetEffect(Effect* effect);
+    virtual Shader* GetShader();
+    void SetShader(Shader* shader);
     
 private:
     void RefreshSystemBinding();
@@ -69,7 +69,7 @@ private:
     Uid _EntityUid;
     int _Layer;
     RenderPass _RenderPass;
-    Effect* _Effect;
+    Shader* _Shader;
 };
     
 }

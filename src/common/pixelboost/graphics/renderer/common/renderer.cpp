@@ -20,7 +20,7 @@ Renderer::Renderer()
 {
     _Instance = this;
     
-    _EffectManager = new EffectManager();
+    _ShaderManager = new ShaderManager();
 }
 
 Renderer::~Renderer()
@@ -52,9 +52,9 @@ void Renderer::Render()
     }
 }
 
-EffectManager* Renderer::GetEffectManager()
+ShaderManager* Renderer::GetShaderManager()
 {
-    return _EffectManager;
+    return _ShaderManager;
 }
 
 void Renderer::AttachRenderable(Renderable* renderable)
@@ -111,58 +111,58 @@ void Renderer::FlushBuffer(Viewport* viewport, Camera* camera)
         std::stable_sort(renderables.begin(), renderables.end(), &RenderableBackToFrontSorter);
         
         Uid type = renderables[0]->GetType();
-        Effect* effect = renderables[0]->GetEffect();
+        Shader* shader = renderables[0]->GetShader();
         int start = 0;
         int count = 0;
         
         for (int i=0; i < renderables.size(); i++)
         {
             Uid newType = renderables[i]->GetType();
-            Effect* newEffect = renderables[i]->GetEffect();
+            Shader* newShader = renderables[i]->GetShader();
             
-            if (type == newType && effect == newEffect)
+            if (type == newType && shader == newShader)
             {
                 count++;
             } else {
-                RenderBatch(viewport, count, &renderables[start], effect);
+                RenderBatch(viewport, count, &renderables[start], shader);
                 start = i;
                 count = 1;
                 type = newType;
-                effect = newEffect;
+                shader = newShader;
             }
         }
         
         if (count > 0)
         {
-            RenderBatch(viewport, count, &renderables[start], effect);
+            RenderBatch(viewport, count, &renderables[start], shader);
         }
     }
     
     _Renderables.clear();
 }
 
-void Renderer::RenderBatch(Viewport* viewport, int count, Renderable** renderable, Effect* effect)
+void Renderer::RenderBatch(Viewport* viewport, int count, Renderable** renderable, Shader* shader)
 {
-    if (!effect)
+    if (!shader)
         return;
     
     RenderableHandlerMap::iterator it = _RenderableHandlers.find(renderable[0]->GetType());
     
     if (it != _RenderableHandlers.end())
     {
-        EffectTechnique* technique = effect->GetTechnique(viewport->GetRenderScheme());
+        ShaderTechnique* technique = shader->GetTechnique(viewport->GetRenderScheme());
         
         if (!technique)
         {
             for (int i=0; i < count; i++)
             {
-                technique = viewport->GetTechnique(renderable[i], effect);
+                technique = viewport->GetTechnique(renderable[i], shader);
                 
                 if (technique)
                 {
                     for (int j=0; j<technique->GetNumPasses(); j++)
                     {
-                        EffectPass* pass = technique->GetPass(j);
+                        ShaderPass* pass = technique->GetPass(j);
                         pass->Bind();
                         it->second->Render(1, &renderable[i], viewport, pass);
                     }
@@ -172,7 +172,7 @@ void Renderer::RenderBatch(Viewport* viewport, int count, Renderable** renderabl
         {
             for (int i=0; i<technique->GetNumPasses(); i++)
             {
-                EffectPass* pass = technique->GetPass(i);
+                ShaderPass* pass = technique->GetPass(i);
                 pass->Bind();
                 it->second->Render(count, renderable, viewport, pass);
             }

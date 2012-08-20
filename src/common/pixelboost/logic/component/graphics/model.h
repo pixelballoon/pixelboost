@@ -24,7 +24,7 @@ namespace pb
         Uid GetType();
         static Uid GetStaticType();
         
-        void SetEffect(Effect* effect);
+        void SetShader(Shader* shader);
         void SetLayer(int layer);
         void SetModel(const std::string& model);
         void SetTexture(const std::string& texture);
