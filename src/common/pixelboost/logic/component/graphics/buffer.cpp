@@ -60,6 +60,16 @@ Texture* BufferComponent::GetTexture()
     return _Renderable->GetTexture();
 }
 
+void BufferComponent::SetEffect(Effect* effect)
+{
+    _Renderable->SetEffect(effect);
+}
+
+Effect* BufferComponent::GetEffect()
+{
+    return _Renderable->GetEffect();
+}
+
 void BufferComponent::SetNumElements(int numElements)
 {
     _Renderable->SetNumElements(numElements);

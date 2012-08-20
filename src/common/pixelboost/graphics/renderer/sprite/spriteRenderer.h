@@ -32,7 +32,7 @@ public:
     virtual void CalculateBounds();
     virtual void CalculateWorldMatrix();
     
-    virtual Effect* GetEffect();
+    virtual Shader* GetShader();
     
     Sprite* GetSprite();
     void SetSprite(Sprite* sprite);
@@ -56,7 +56,7 @@ public:
 	SpriteRenderer();
 	~SpriteRenderer();
     
-    void Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass);
+    void Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass);
 	
     std::shared_ptr<SpriteSheet> CreateSpriteSheet(const std::string& name);
     bool LoadSpriteSheet(FileLocation location, const std::string& name, bool createMips=false);

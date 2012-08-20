@@ -15,36 +15,36 @@ namespace json
 namespace pb
 {
 
-class EffectPass;
+class ShaderPass;
 class ShaderProgram;
     
-class EffectTechnique
+class ShaderTechnique
 {
 public:
-    EffectTechnique(Uid uid);
-    ~EffectTechnique();
+    ShaderTechnique(Uid uid);
+    ~ShaderTechnique();
     
     Uid GetId();
     
     bool Load(json::Array& object);
     
     int GetNumPasses();
-    void AddPass(EffectPass* pass);
-    EffectPass* GetPass(int index);
+    void AddPass(ShaderPass* pass);
+    ShaderPass* GetPass(int index);
     
 private:
-    typedef std::vector<EffectPass*> PassList;
+    typedef std::vector<ShaderPass*> PassList;
     
 private:
     Uid _Uid;
     PassList _Passes;
 };
     
-class EffectPass
+class ShaderPass
 {
 public:
-    EffectPass();
-    ~EffectPass();
+    ShaderPass();
+    ~ShaderPass();
     
     bool Load(json::Object& object);
     
@@ -56,19 +56,19 @@ private:
     ShaderProgram* _Program;
 };
     
-class Effect
+class Shader
 {
 public:
-    Effect();
-    ~Effect();
+    Shader();
+    ~Shader();
     
     bool Load(const std::string& filename);
     
-    void AddTechnique(EffectTechnique* technique);
-    EffectTechnique* GetTechnique(Uid techniqueId);
+    void AddTechnique(ShaderTechnique* technique);
+    ShaderTechnique* GetTechnique(Uid techniqueId);
     
 private:
-    typedef std::map<Uid, EffectTechnique*> TechniqueMap;
+    typedef std::map<Uid, ShaderTechnique*> TechniqueMap;
     
     TechniqueMap _Techniques;
 };

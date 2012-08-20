@@ -49,13 +49,13 @@ void ParticleRenderable::CalculateWorldMatrix()
     SetWorldMatrix(glm::mat4x4());
 }
 
-Effect* ParticleRenderable::GetEffect()
+Shader* ParticleRenderable::GetShader()
 {
-    Effect* baseEffect = Renderable::GetEffect();
-    if (baseEffect)
-        return baseEffect;
+    Shader* baseShader = Renderable::GetShader();
+    if (baseShader)
+        return baseShader;
     
-    return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/particle.fx");
+    return Renderer::Instance()->GetShaderManager()->GetShader("/default/effects/particle.fx");
 }
 
 ParticleEmitter* ParticleRenderable::GetEmitter()
@@ -228,7 +228,7 @@ void ParticleEmitter::Update(float time)
     }
 }
 
-void ParticleEmitter::Render(Viewport* viewport, EffectPass* effectPass)
+void ParticleEmitter::Render(Viewport* viewport, ShaderPass* shaderPass)
 {
     if (!_Config || !_Particles.size())
         return;
@@ -277,24 +277,6 @@ void ParticleEmitter::Render(Viewport* viewport, EffectPass* effectPass)
             vertexBuffer[3].position[0] = d.x;
             vertexBuffer[3].position[1] = d.y;
             vertexBuffer[3].position[2] = d.z;
-            
-            /*
-            float cosRot = cos(((-it->rotation[2]-90.f)/180.f)*M_PI);
-            float sinRot = sin(((-it->rotation[2]-90.f)/180.f)*M_PI);
-            
-            vertexBuffer[0].position[0] = -size[1] * cosRot + size[0] * sinRot + it->position[0];
-            vertexBuffer[0].position[1] = size[1] * sinRot + size[0] * cosRot + it->position[1];
-            vertexBuffer[0].position[2] = 0.f;
-            vertexBuffer[1].position[0] = size[1] * cosRot + size[0] * sinRot + it->position[0];
-            vertexBuffer[1].position[1] = -size[1] * sinRot + size[0] * cosRot + it->position[1];
-            vertexBuffer[1].position[2] = 0.f;
-            vertexBuffer[2].position[0] = size[1] * cosRot - size[0] * sinRot + it->position[0];
-            vertexBuffer[2].position[1] = -size[1] * sinRot - size[0] * cosRot + it->position[1];
-            vertexBuffer[2].position[2] = 0.f;
-            vertexBuffer[3].position[0] = -size[1] * cosRot - size[0] * sinRot + it->position[0];
-            vertexBuffer[3].position[1] = size[1] * sinRot - size[0] * cosRot + it->position[1];
-            vertexBuffer[3].position[2] = 0.f;
-             */
             
             vertexBuffer[0].color[0] = color[0];
             vertexBuffer[0].color[1] = color[1];
@@ -360,7 +342,7 @@ void ParticleEmitter::Render(Viewport* viewport, EffectPass* effectPass)
         GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
 #endif
         
-        effectPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
+        shaderPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
         
         GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, _Particles.size()*6);
         
@@ -488,23 +470,23 @@ ParticleRenderer::ParticleRenderer()
 {
     Renderer::Instance()->SetHandler(ParticleRenderable::GetStaticType(), this);
     
-    Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/particle.fx");
+    Renderer::Instance()->GetShaderManager()->LoadShader("/default/effects/particle.fx");
 }
 
 ParticleRenderer::~ParticleRenderer()
 {
-    Renderer::Instance()->GetEffectManager()->UnloadEffect("/default/effects/particle.fx");
+    Renderer::Instance()->GetShaderManager()->UnloadShader("/default/effects/particle.fx");
 }
 
-void ParticleRenderer::Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass)
+void ParticleRenderer::Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass)
 {
     for (int i=0; i<count; i++)
     {
         ParticleRenderable& renderable = *static_cast<ParticleRenderable*>(renderables[i]);
         
-        effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", renderable.GetMVP());
+        shaderPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", renderable.GetMVP());
         
-        renderable._Emitter->Render(viewport, effectPass);
+        renderable._Emitter->Render(viewport, shaderPass);
         
     }
 }

@@ -6,22 +6,22 @@
 namespace pb
 {
     
-class Effect;
+class Shader;
 
-class EffectManager
+class ShaderManager
 {
 public:
-    EffectManager();
-    ~EffectManager();
+    ShaderManager();
+    ~ShaderManager();
     
-    Effect* LoadEffect(const std::string& file, bool reload = false);
-    void UnloadEffect(const std::string& file);
+    Shader* LoadShader(const std::string& file, bool reload = false);
+    void UnloadShader(const std::string& file);
     
-    Effect* GetEffect(const std::string& file);
+    Shader* GetShader(const std::string& file);
     
 private:
-    typedef std::map<std::string, Effect*> EffectMap;
-    EffectMap _Effects;
+    typedef std::map<std::string, Shader*> ShaderMap;
+    ShaderMap _Shaders;
 };
 
 }

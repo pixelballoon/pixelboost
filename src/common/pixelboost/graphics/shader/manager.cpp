@@ -3,21 +3,21 @@
 
 using namespace pb;
 
-EffectManager::EffectManager()
+ShaderManager::ShaderManager()
 {
     
 }
 
-EffectManager::~EffectManager()
+ShaderManager::~ShaderManager()
 {
     
 }
 
-Effect* EffectManager::LoadEffect(const std::string& file, bool reload)
+Shader* ShaderManager::LoadShader(const std::string& file, bool reload)
 {
-    EffectMap::iterator it = _Effects.find(file);
+    ShaderMap::iterator it = _Shaders.find(file);
     
-    if (it != _Effects.end())
+    if (it != _Shaders.end())
     {
         if (reload)
         {
@@ -27,28 +27,28 @@ Effect* EffectManager::LoadEffect(const std::string& file, bool reload)
         return it->second;
     }
     
-    Effect* effect = new Effect();
-    effect->Load(file);
-    _Effects[file] = effect;
-    return effect;
+    Shader* shader = new Shader();
+    shader->Load(file);
+    _Shaders[file] = shader;
+    return shader;
 }
 
-void EffectManager::UnloadEffect(const std::string& file)
+void ShaderManager::UnloadShader(const std::string& file)
 {
-    EffectMap::iterator it = _Effects.find(file);
+    ShaderMap::iterator it = _Shaders.find(file);
     
-    if (it != _Effects.end())
+    if (it != _Shaders.end())
     {
         delete it->second;
-        _Effects.erase(it);
+        _Shaders.erase(it);
     }
 }
 
-Effect* EffectManager::GetEffect(const std::string& file)
+Shader* ShaderManager::GetShader(const std::string& file)
 {
-    EffectMap::iterator it = _Effects.find(file);
+    ShaderMap::iterator it = _Shaders.find(file);
     
-    if (it != _Effects.end())
+    if (it != _Shaders.end())
         return it->second;
     
     return 0;

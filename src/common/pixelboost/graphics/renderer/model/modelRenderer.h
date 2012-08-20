@@ -31,7 +31,7 @@ namespace pb
         virtual void CalculateBounds();
         virtual void CalculateWorldMatrix();
         
-        virtual Effect* GetEffect();
+        virtual Shader* GetShader();
         
         void SetModel(const std::string& model);
         const std::string& GetModel();
@@ -96,7 +96,7 @@ namespace pb
         bool LoadTexture(FileLocation location, const std::string& textureName, const std::string& fileName, bool createMips=true);
         bool UnloadTexture(const std::string& textureName);
         
-        void Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass);
+        void Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass);
         
         Model* GetModel(const std::string& modelName);
         Texture* GetTexture(const std::string& textureName);

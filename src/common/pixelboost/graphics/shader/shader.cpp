@@ -8,13 +8,13 @@
 
 using namespace pb;
 
-EffectTechnique::EffectTechnique(Uid uid)
+ShaderTechnique::ShaderTechnique(Uid uid)
     : _Uid(uid)
 {
     
 }
 
-EffectTechnique::~EffectTechnique()
+ShaderTechnique::~ShaderTechnique()
 {
     for (PassList::iterator it = _Passes.begin(); it != _Passes.end(); ++it)
     {
@@ -22,16 +22,16 @@ EffectTechnique::~EffectTechnique()
     }
 }
 
-Uid EffectTechnique::GetId()
+Uid ShaderTechnique::GetId()
 {
     return _Uid;
 }
 
-bool EffectTechnique::Load(json::Array& array)
+bool ShaderTechnique::Load(json::Array& array)
 {
     for (json::Array::iterator it = array.Begin(); it != array.End(); ++it)
     {
-        EffectPass* pass = new EffectPass();
+        ShaderPass* pass = new ShaderPass();
         if (!pass->Load(*it))
         {
             delete pass;
@@ -44,17 +44,17 @@ bool EffectTechnique::Load(json::Array& array)
     return true;
 }
 
-int EffectTechnique::GetNumPasses()
+int ShaderTechnique::GetNumPasses()
 {
     return _Passes.size();
 }
 
-void EffectTechnique::AddPass(EffectPass* pass)
+void ShaderTechnique::AddPass(ShaderPass* pass)
 {
     _Passes.push_back(pass);
 }
 
-EffectPass* EffectTechnique::GetPass(int index)
+ShaderPass* ShaderTechnique::GetPass(int index)
 {
     if (index < _Passes.size())
         return _Passes[index];
@@ -62,17 +62,17 @@ EffectPass* EffectTechnique::GetPass(int index)
     return 0;
 }
 
-EffectPass::EffectPass()
+ShaderPass::ShaderPass()
 {
     _Program = GraphicsDevice::Instance()->CreateProgram();
 }
 
-EffectPass::~EffectPass()
+ShaderPass::~ShaderPass()
 {
     GraphicsDevice::Instance()->DestroyProgram(_Program);
 }
 
-bool EffectPass::Load(json::Object& object)
+bool ShaderPass::Load(json::Object& object)
 {
     json::Object shaders = object["shaders"];
     
@@ -103,22 +103,22 @@ bool EffectPass::Load(json::Object& object)
     return true;
 }
 
-void EffectPass::Bind()
+void ShaderPass::Bind()
 {
     GraphicsDevice::Instance()->BindProgram(_Program);
 }
 
-ShaderProgram* EffectPass::GetShaderProgram()
+ShaderProgram* ShaderPass::GetShaderProgram()
 {
     return _Program;
 }
 
-Effect::Effect()
+Shader::Shader()
 {
     
 }
 
-Effect::~Effect()
+Shader::~Shader()
 {
     for (TechniqueMap::iterator it = _Techniques.begin(); it != _Techniques.end(); ++it)
     {
@@ -126,7 +126,7 @@ Effect::~Effect()
     }
 }
 
-bool Effect::Load(const std::string& filename)
+bool Shader::Load(const std::string& filename)
 {
     std::string effect = FileHelpers::FileToString(pb::kFileLocationBundle, filename);
     
@@ -137,7 +137,7 @@ bool Effect::Load(const std::string& filename)
     for (json::Object::iterator it = object.Begin(); it != object.End(); ++it)
     {
         const char* techniqueId = it->name.c_str();
-        EffectTechnique* technique = new EffectTechnique(RuntimeTypeHash(techniqueId));
+        ShaderTechnique* technique = new ShaderTechnique(RuntimeTypeHash(techniqueId));
         technique->Load(it->element);
         AddTechnique(technique);
     }
@@ -145,12 +145,12 @@ bool Effect::Load(const std::string& filename)
     return true;
 }
 
-void Effect::AddTechnique(EffectTechnique* technique)
+void Shader::AddTechnique(ShaderTechnique* technique)
 {
     _Techniques[technique->GetId()] = technique;
 }
 
-EffectTechnique* Effect::GetTechnique(Uid techniqueId)
+ShaderTechnique* Shader::GetTechnique(Uid techniqueId)
 {
     TechniqueMap::iterator it = _Techniques.find(techniqueId);
     if (it != _Techniques.end())

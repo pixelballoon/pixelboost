@@ -8,21 +8,21 @@ using namespace pb;
 Renderable::Renderable(Uid entityUid)
     : _BoundsDirty(true)
     , _Layer(0)
-    , _Effect(0)
     , _EntityUid(entityUid)
     , _RenderPass(kRenderPassScene)
+    , _Shader(0)
     , _System(0)
     , _WorldMatrixDirty(true)
 {
     
 }
 
-Renderable::Renderable(Uid entityUid, Effect* effect)
+Renderable::Renderable(Uid entityUid, Shader* shader)
     : _BoundsDirty(true)
     , _Layer(0)
-    , _Effect(effect)
     , _EntityUid(entityUid)
     , _RenderPass(kRenderPassScene)
+    , _Shader(shader)
     , _System(0)
     , _WorldMatrixDirty(true)
 {
@@ -119,14 +119,14 @@ const glm::mat4x4& Renderable::GetMVP() const
     return _MVPMatrix;
 }
 
-Effect* Renderable::GetEffect()
+Shader* Renderable::GetShader()
 {
-    return _Effect;
+    return _Shader;
 }
 
-void Renderable::SetEffect(Effect* effect)
+void Renderable::SetShader(Shader* shader)
 {
-    _Effect = effect;
+    _Shader = shader;
 }
 
 void Renderable::RefreshSystemBinding()
