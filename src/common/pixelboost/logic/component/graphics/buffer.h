@@ -6,6 +6,7 @@ namespace pb
 {
     
     class BufferRenderable;
+    class Effect;
     class IndexBuffer;
     class VertexBuffer;
     
@@ -26,6 +27,9 @@ namespace pb
         
         void SetTexture(Texture* texture);
         Texture* GetTexture();
+        
+        void SetEffect(Effect* effect);
+        Effect* GetEffect();
         
         void SetNumElements(int numElements);
         int GetNumElements();
