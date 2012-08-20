@@ -13,7 +13,7 @@ namespace :tools do
     task :svgparser => binDir do
       parserDir = File.join rakeLocation, 'svgparser/osx/svgparser'
       Dir.chdir parserDir do
-        system 'xcodebuild'
+        system 'xcodebuild ONLY_ACTIVE_ARCH=NO CONFIGURATION_BUILD_DIR="build/Release" -scheme svgparser -arch i386 -configuration Release'
       end
       releaseDir = File.join parserDir, 'build/Release/svgparser'      
       cp releaseDir, binDir
@@ -22,7 +22,7 @@ namespace :tools do
     task :hullgenerator => binDir do
       parserDir = File.join rakeLocation, 'hullgenerator/osx/hullgenerator'
       Dir.chdir parserDir do
-        system 'xcodebuild'
+        system 'xcodebuild ONLY_ACTIVE_ARCH=NO CONFIGURATION_BUILD_DIR="build/Release" -scheme hullgenerator -arch i386 -configuration Release'
       end
       releaseDir = File.join parserDir, 'build/Release/hullgenerator'      
       cp releaseDir, binDir
@@ -31,7 +31,7 @@ namespace :tools do
     task :modelconvertor => binDir do
       parserDir = File.join rakeLocation, 'modelconvertor/osx/modelconvertor'
       Dir.chdir parserDir do
-        system 'xcodebuild'
+        system 'xcodebuild ONLY_ACTIVE_ARCH=NO CONFIGURATION_BUILD_DIR="build/Release" -scheme modelconvertor -arch i386 -configuration Release'
       end
       releaseDir = File.join parserDir, 'build/Release/modelconvertor'      
       cp releaseDir, binDir

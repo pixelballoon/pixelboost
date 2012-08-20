@@ -13,7 +13,7 @@
 		1C14BDBB148FA759001C38B8 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C14BDBA148FA759001C38B8 /* AppKit.framework */; };
 		1C14BDBD148FA815001C38B8 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C14BDBC148FA815001C38B8 /* OpenGL.framework */; };
 		1C14BE10148FAC68001C38B8 /* svgParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C14BE0E148FAC68001C38B8 /* svgParser.cpp */; };
-		1C897E2B15DEE83900AB3196 /* libpixelboost_osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C897E2A15DEE82500AB3196 /* libpixelboost_osx.a */; };
+		1C9B249315E2EEB400898C3D /* libpixelboost_osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C897E2A15DEE82500AB3196 /* libpixelboost_osx.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,7 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1C897E2B15DEE83900AB3196 /* libpixelboost_osx.a in Frameworks */,
+				1C9B249315E2EEB400898C3D /* libpixelboost_osx.a in Frameworks */,
 				1C14BDBB148FA759001C38B8 /* AppKit.framework in Frameworks */,
 				1C14BCD2148FA5D5001C38B8 /* CoreData.framework in Frameworks */,
 				1C14BCD4148FA5D5001C38B8 /* Foundation.framework in Frameworks */,
