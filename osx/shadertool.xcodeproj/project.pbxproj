@@ -10,6 +10,8 @@
 		1C89652F15DE94B300AB3196 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89652E15DE94B300AB3196 /* main.cpp */; };
 		1C897DD915DED09100AB3196 /* libhlsl2glsl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C897DD815DEB89B00AB3196 /* libhlsl2glsl.a */; };
 		1C897DDA15DED09100AB3196 /* libmesaglsl2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C897DCF15DEB89300AB3196 /* libmesaglsl2.a */; };
+		1CAD29BE15E2149800510183 /* libpixelboost_osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C897E3715DEEA1800AB3196 /* libpixelboost_osx.a */; };
+		1CAD29D615E2B1D500510183 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CAD29D515E2B1D500510183 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +63,7 @@
 		1C897DC715DEB89200AB3196 /* mesaglsl2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = mesaglsl2.xcodeproj; path = "../libs/glsl-optimizer/src/glsl/xcode/mesaglsl2.xcodeproj"; sourceTree = "<group>"; };
 		1C897DD015DEB89A00AB3196 /* hlslang.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = hlslang.xcodeproj; path = ../libs/hlsl2glsl/hlslang.xcodeproj; sourceTree = "<group>"; };
 		1C897E2C15DEEA1700AB3196 /* pixelboost.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = pixelboost.xcodeproj; path = ../libs/pixelboost/osx_ios/pixelboost.xcodeproj; sourceTree = "<group>"; };
+		1CAD29D515E2B1D500510183 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +71,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1CAD29D615E2B1D500510183 /* Foundation.framework in Frameworks */,
+				1CAD29BE15E2149800510183 /* libpixelboost_osx.a in Frameworks */,
 				1C897DD915DED09100AB3196 /* libhlsl2glsl.a in Frameworks */,
 				1C897DDA15DED09100AB3196 /* libmesaglsl2.a in Frameworks */,
 			);
@@ -79,6 +84,7 @@
 		1C89651F15DE94B300AB3196 = {
 			isa = PBXGroup;
 			children = (
+				1CAD29D515E2B1D500510183 /* Foundation.framework */,
 				1C89653715DE94BD00AB3196 /* libs */,
 				1C89652D15DE94B300AB3196 /* shadertool */,
 				1C89652B15DE94B300AB3196 /* Products */,
