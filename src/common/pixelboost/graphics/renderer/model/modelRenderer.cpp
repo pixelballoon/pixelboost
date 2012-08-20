@@ -15,11 +15,11 @@
 #include "pixelboost/graphics/device/indexBuffer.h"
 #include "pixelboost/graphics/device/program.h"
 #include "pixelboost/graphics/device/texture.h"
-#include "pixelboost/graphics/effect/effect.h"
-#include "pixelboost/graphics/effect/manager.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/model/modelRenderer.h"
 #include "pixelboost/graphics/renderer/model/model.h"
+#include "pixelboost/graphics/shader/shader.h"
+#include "pixelboost/graphics/shader/manager.h"
 
 using namespace pb;
 

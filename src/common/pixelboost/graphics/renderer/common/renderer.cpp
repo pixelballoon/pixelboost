@@ -6,11 +6,11 @@
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/device/device.h"
-#include "pixelboost/graphics/effect/effect.h"
-#include "pixelboost/graphics/effect/manager.h"
 #include "pixelboost/graphics/renderer/common/irenderer.h"
 #include "pixelboost/graphics/renderer/common/renderable.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
+#include "pixelboost/graphics/shader/shader.h"
+#include "pixelboost/graphics/shader/manager.h"
 
 using namespace pb;
 

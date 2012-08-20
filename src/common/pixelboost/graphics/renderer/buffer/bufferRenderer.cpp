@@ -4,10 +4,10 @@
 #include "pixelboost/graphics/device/program.h"
 #include "pixelboost/graphics/device/indexBuffer.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
-#include "pixelboost/graphics/effect/effect.h"
-#include "pixelboost/graphics/effect/manager.h"
 #include "pixelboost/graphics/renderer/buffer/bufferRenderer.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
+#include "pixelboost/graphics/shader/shader.h"
+#include "pixelboost/graphics/shader/manager.h"
 
 using namespace pb;
 

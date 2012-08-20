@@ -2,7 +2,7 @@
 #include "pixelboost/file/fileHelpers.h"
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/program.h"
-#include "pixelboost/graphics/effect/effect.h"
+#include "pixelboost/graphics/shader/shader.h"
 
 #ifndef PIXELBOOST_DISABLE_GRAPHICS
 

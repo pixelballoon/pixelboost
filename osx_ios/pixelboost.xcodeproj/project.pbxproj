@@ -34,8 +34,6 @@
 		1C897B5315DEA3D600AB3196 /* program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89766915DE9B3A00AB3196 /* program.cpp */; };
 		1C897B5415DEA3D600AB3196 /* texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89766B15DE9B3A00AB3196 /* texture.cpp */; };
 		1C897B5515DEA3D600AB3196 /* vertexBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89766D15DE9B3A00AB3196 /* vertexBuffer.cpp */; };
-		1C897B5615DEA3D600AB3196 /* effect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89767015DE9B3A00AB3196 /* effect.cpp */; };
-		1C897B5715DEA3D600AB3196 /* manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89767215DE9B3A00AB3196 /* manager.cpp */; };
 		1C897B5815DEA3D600AB3196 /* screenHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89767515DE9B3A00AB3196 /* screenHelpers.cpp */; };
 		1C897B5915DEA3D600AB3196 /* box2dRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89767915DE9B3A00AB3196 /* box2dRenderer.cpp */; };
 		1C897B5A15DEA3D600AB3196 /* bufferRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89767C15DE9B3A00AB3196 /* bufferRenderer.cpp */; };
@@ -321,8 +319,6 @@
 		1C897C7A15DEA3E500AB3196 /* program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89766915DE9B3A00AB3196 /* program.cpp */; };
 		1C897C7B15DEA3E500AB3196 /* texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89766B15DE9B3A00AB3196 /* texture.cpp */; };
 		1C897C7C15DEA3E500AB3196 /* vertexBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89766D15DE9B3A00AB3196 /* vertexBuffer.cpp */; };
-		1C897C7D15DEA3E500AB3196 /* effect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89767015DE9B3A00AB3196 /* effect.cpp */; };
-		1C897C7E15DEA3E500AB3196 /* manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89767215DE9B3A00AB3196 /* manager.cpp */; };
 		1C897C7F15DEA3E500AB3196 /* screenHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89767515DE9B3A00AB3196 /* screenHelpers.cpp */; };
 		1C897C8015DEA3E500AB3196 /* box2dRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89767915DE9B3A00AB3196 /* box2dRenderer.cpp */; };
 		1C897C8115DEA3E500AB3196 /* bufferRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89767C15DE9B3A00AB3196 /* bufferRenderer.cpp */; };
@@ -556,6 +552,10 @@
 		1C897D7E15DEA3E500AB3196 /* networkHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C8979EB15DE9B3A00AB3196 /* networkHelpers.mm */; };
 		1C897D7F15DEA3E500AB3196 /* localisation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C8979EE15DE9B3A00AB3196 /* localisation.mm */; };
 		1C897D8115DEA3E500AB3196 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C89760515DE99F900AB3196 /* Foundation.framework */; };
+		1C9B246815E2EAF500898C3D /* manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C9B246415E2EAF500898C3D /* manager.cpp */; };
+		1C9B246915E2EAF500898C3D /* manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C9B246415E2EAF500898C3D /* manager.cpp */; };
+		1C9B246A15E2EAF500898C3D /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C9B246615E2EAF500898C3D /* shader.cpp */; };
+		1C9B246B15E2EAF500898C3D /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C9B246615E2EAF500898C3D /* shader.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -648,10 +648,6 @@
 		1C89766C15DE9B3A00AB3196 /* texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = texture.h; sourceTree = "<group>"; };
 		1C89766D15DE9B3A00AB3196 /* vertexBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vertexBuffer.cpp; sourceTree = "<group>"; };
 		1C89766E15DE9B3A00AB3196 /* vertexBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vertexBuffer.h; sourceTree = "<group>"; };
-		1C89767015DE9B3A00AB3196 /* effect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = effect.cpp; sourceTree = "<group>"; };
-		1C89767115DE9B3A00AB3196 /* effect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = effect.h; sourceTree = "<group>"; };
-		1C89767215DE9B3A00AB3196 /* manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = manager.cpp; sourceTree = "<group>"; };
-		1C89767315DE9B3A00AB3196 /* manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = manager.h; sourceTree = "<group>"; };
 		1C89767515DE9B3A00AB3196 /* screenHelpers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = screenHelpers.cpp; sourceTree = "<group>"; };
 		1C89767615DE9B3A00AB3196 /* screenHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = screenHelpers.h; sourceTree = "<group>"; };
 		1C89767915DE9B3A00AB3196 /* box2dRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = box2dRenderer.cpp; sourceTree = "<group>"; };
@@ -1438,6 +1434,10 @@
 		1C8979EE15DE9B3A00AB3196 /* localisation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = localisation.mm; sourceTree = "<group>"; };
 		1C897C5F15DEA3D600AB3196 /* libpixelboost_ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpixelboost_ios.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C897D8615DEA3E500AB3196 /* libpixelboost_osx.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpixelboost_osx.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		1C9B246415E2EAF500898C3D /* manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = manager.cpp; sourceTree = "<group>"; };
+		1C9B246515E2EAF500898C3D /* manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = manager.h; sourceTree = "<group>"; };
+		1C9B246615E2EAF500898C3D /* shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shader.cpp; sourceTree = "<group>"; };
+		1C9B246715E2EAF500898C3D /* shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shader.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1647,9 +1647,9 @@
 			children = (
 				1C89765215DE9B3A00AB3196 /* camera */,
 				1C89765715DE9B3A00AB3196 /* device */,
-				1C89766F15DE9B3A00AB3196 /* effect */,
 				1C89767415DE9B3A00AB3196 /* helper */,
 				1C89767715DE9B3A00AB3196 /* renderer */,
+				1C9B246315E2EAF500898C3D /* shader */,
 			);
 			path = graphics;
 			sourceTree = "<group>";
@@ -1707,17 +1707,6 @@
 				1C89766615DE9B3A00AB3196 /* texture.h */,
 			);
 			path = gles1;
-			sourceTree = "<group>";
-		};
-		1C89766F15DE9B3A00AB3196 /* effect */ = {
-			isa = PBXGroup;
-			children = (
-				1C89767015DE9B3A00AB3196 /* effect.cpp */,
-				1C89767115DE9B3A00AB3196 /* effect.h */,
-				1C89767215DE9B3A00AB3196 /* manager.cpp */,
-				1C89767315DE9B3A00AB3196 /* manager.h */,
-			);
-			path = effect;
 			sourceTree = "<group>";
 		};
 		1C89767415DE9B3A00AB3196 /* helper */ = {
@@ -3349,6 +3338,17 @@
 			path = localisation;
 			sourceTree = "<group>";
 		};
+		1C9B246315E2EAF500898C3D /* shader */ = {
+			isa = PBXGroup;
+			children = (
+				1C9B246415E2EAF500898C3D /* manager.cpp */,
+				1C9B246515E2EAF500898C3D /* manager.h */,
+				1C9B246615E2EAF500898C3D /* shader.cpp */,
+				1C9B246715E2EAF500898C3D /* shader.h */,
+			);
+			path = shader;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -3445,8 +3445,6 @@
 				1C897B5315DEA3D600AB3196 /* program.cpp in Sources */,
 				1C897B5415DEA3D600AB3196 /* texture.cpp in Sources */,
 				1C897B5515DEA3D600AB3196 /* vertexBuffer.cpp in Sources */,
-				1C897B5615DEA3D600AB3196 /* effect.cpp in Sources */,
-				1C897B5715DEA3D600AB3196 /* manager.cpp in Sources */,
 				1C897B5815DEA3D600AB3196 /* screenHelpers.cpp in Sources */,
 				1C897B5915DEA3D600AB3196 /* box2dRenderer.cpp in Sources */,
 				1C897B5A15DEA3D600AB3196 /* bufferRenderer.cpp in Sources */,
@@ -3704,6 +3702,8 @@
 				1C897C5615DEA3D600AB3196 /* gameCenter.mm in Sources */,
 				1C897C5715DEA3D600AB3196 /* networkHelpers.mm in Sources */,
 				1C897C5815DEA3D600AB3196 /* localisation.mm in Sources */,
+				1C9B246815E2EAF500898C3D /* manager.cpp in Sources */,
+				1C9B246A15E2EAF500898C3D /* shader.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3738,8 +3738,6 @@
 				1C897C7A15DEA3E500AB3196 /* program.cpp in Sources */,
 				1C897C7B15DEA3E500AB3196 /* texture.cpp in Sources */,
 				1C897C7C15DEA3E500AB3196 /* vertexBuffer.cpp in Sources */,
-				1C897C7D15DEA3E500AB3196 /* effect.cpp in Sources */,
-				1C897C7E15DEA3E500AB3196 /* manager.cpp in Sources */,
 				1C897C7F15DEA3E500AB3196 /* screenHelpers.cpp in Sources */,
 				1C897C8015DEA3E500AB3196 /* box2dRenderer.cpp in Sources */,
 				1C897C8115DEA3E500AB3196 /* bufferRenderer.cpp in Sources */,
@@ -3972,6 +3970,8 @@
 				1C897D7D15DEA3E500AB3196 /* gameCenter.mm in Sources */,
 				1C897D7E15DEA3E500AB3196 /* networkHelpers.mm in Sources */,
 				1C897D7F15DEA3E500AB3196 /* localisation.mm in Sources */,
+				1C9B246915E2EAF500898C3D /* manager.cpp in Sources */,
+				1C9B246B15E2EAF500898C3D /* shader.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
