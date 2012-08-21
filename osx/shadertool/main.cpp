@@ -237,6 +237,8 @@ int main(int argc, const char * argv[])
     {
         pugi::xml_node subshaderOutput = shaderOutput.append_child("subshader");
         
+        subshaderOutput.append_copy(subshaderInput.attribute("class"));
+        
         pugi::xml_node passInput = subshaderInput.child("pass");
         
         while (!passInput.empty())
