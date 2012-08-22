@@ -55,7 +55,7 @@ Shader* ParticleRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return Renderer::Instance()->GetShaderManager()->GetShader("/default/effects/particle.fx");
+    return Renderer::Instance()->GetShaderManager()->GetShader("/data/shaders/pb_texturedColor.shc");
 }
 
 ParticleEmitter* ParticleRenderable::GetEmitter()
@@ -342,7 +342,7 @@ void ParticleEmitter::Render(Viewport* viewport, ShaderPass* shaderPass)
         GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
 #endif
         
-        shaderPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
+        shaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
         
         GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, _Particles.size()*6);
         
@@ -470,12 +470,12 @@ ParticleRenderer::ParticleRenderer()
 {
     Renderer::Instance()->SetHandler(ParticleRenderable::GetStaticType(), this);
     
-    Renderer::Instance()->GetShaderManager()->LoadShader("/default/effects/particle.fx");
+    Renderer::Instance()->GetShaderManager()->LoadShader("/data/shaders/pb_texturedColor.shc");
 }
 
 ParticleRenderer::~ParticleRenderer()
 {
-    Renderer::Instance()->GetShaderManager()->UnloadShader("/default/effects/particle.fx");
+    Renderer::Instance()->GetShaderManager()->UnloadShader("/data/shaders/pb_texturedColor.shc");
 }
 
 void ParticleRenderer::Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass)
@@ -484,7 +484,7 @@ void ParticleRenderer::Render(int count, Renderable** renderables, Viewport* vie
     {
         ParticleRenderable& renderable = *static_cast<ParticleRenderable*>(renderables[i]);
         
-        shaderPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", renderable.GetMVP());
+        shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", renderable.GetMVP());
         
         renderable._Emitter->Render(viewport, shaderPass);
         

@@ -68,7 +68,7 @@ Shader* SpriteRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return Renderer::Instance()->GetShaderManager()->GetShader("/default/effects/sprite.fx");
+    return Renderer::Instance()->GetShaderManager()->GetShader("/data/shaders/pb_texturedColor.shc");
 }
 
 Sprite* SpriteRenderable::GetSprite()
@@ -122,12 +122,12 @@ SpriteRenderer::SpriteRenderer()
     
     Renderer::Instance()->SetHandler(SpriteRenderable::GetStaticType(), this);
     
-    Renderer::Instance()->GetShaderManager()->LoadShader("/default/effects/sprite.fx");
+    Renderer::Instance()->GetShaderManager()->LoadShader("/data/shaders/pb_texturedColor.shc");
 }
 
 SpriteRenderer::~SpriteRenderer()
 {
-    Renderer::Instance()->GetShaderManager()->UnloadShader("/default/effects/sprite.fx");
+    Renderer::Instance()->GetShaderManager()->UnloadShader("/data/shaders/pb_texturedColor.shc");
     
     pb::GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
     pb::GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
@@ -153,8 +153,8 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
     
     _BatchSize = 0;
     
-    shaderPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", glm::mat4x4());
-    shaderPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
+    shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", glm::mat4x4());
+    shaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
     
     GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffer);
     

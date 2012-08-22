@@ -1,0 +1,48 @@
+<shader name="pixelboost/solid">    
+  <attributes>
+    <attribute name="_DiffuseColor" type="color" description="Diffuse Color" default="1,1,1,1"/>
+    <attribute name="_Decal" type="texture2D" description="Decal Color Texture"/>
+    <attribute name="_FogDensity" type="float" description="Fog Density" default="1"/>
+  </attributes>
+  
+  <subshader class="default">
+    <pass>
+      <program language="glsl">
+        #ifdef VERTEX
+          attribute vec4 PB_Attr_Position;
+   
+          uniform mat4 PB_ModelViewProj;
+           
+          void main()
+          {
+              gl_Position = PB_ModelViewProj * PB_Attr_Position;
+          }
+        #endif
+        #ifdef FRAGMENT
+          uniform lowp vec4 _DiffuseColor;
+     
+          void main()
+          {
+              gl_FragColor = _DiffuseColor;
+          }
+        #endif
+      </program>
+      <program language="cg">
+        void frag(
+          out float4 oColor  : COLOR,
+          uniform float4 _DiffuseColor)
+        {
+            oColor.xyzw = _DiffuseColor;
+        }
+        
+        void vert(
+          float4 position    : POSITION,
+          out float4 oPosition    : POSITION,
+          uniform float4x4 PB_ModelViewProj)
+        {
+            oPosition = mul(PB_ModelViewProj, position);
+        }
+      </program>
+    </pass>
+  </subshader>
+</shader>

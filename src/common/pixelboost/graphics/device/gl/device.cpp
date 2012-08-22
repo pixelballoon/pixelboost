@@ -129,9 +129,9 @@ VertexBuffer* GraphicsDeviceGL::BindVertexBuffer(VertexBuffer* vertexBuffer)
                 {
                     GLsizei stride = sizeof(Vertex_PXY_RGBA);
                     desiredShaderAttribute[kShaderAttributeVertexPosition] = true;
-                    desiredShaderAttribute[kShaderAttributeVertexColor] = true;
+                    desiredShaderAttribute[kShaderAttributeVertexColor0] = true;
                     glVertexAttribPointer(kShaderAttributeVertexPosition, 2, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXY_RGBA, position));
-                    glVertexAttribPointer(kShaderAttributeVertexColor, 4, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXY_RGBA, color));
+                    glVertexAttribPointer(kShaderAttributeVertexColor0, 4, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXY_RGBA, color));
                     break;
                 }
                 case kVertexFormat_P_XYZ:
@@ -154,19 +154,19 @@ VertexBuffer* GraphicsDeviceGL::BindVertexBuffer(VertexBuffer* vertexBuffer)
                 {
                     GLsizei stride = sizeof(Vertex_PXYZ_RGBA);
                     desiredShaderAttribute[kShaderAttributeVertexPosition] = true;
-                    desiredShaderAttribute[kShaderAttributeVertexColor] = true;
+                    desiredShaderAttribute[kShaderAttributeVertexColor0] = true;
                     glVertexAttribPointer(kShaderAttributeVertexPosition, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXYZ_RGBA, position));
-                    glVertexAttribPointer(kShaderAttributeVertexColor, 4, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXYZ_RGBA, color));
+                    glVertexAttribPointer(kShaderAttributeVertexColor0, 4, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXYZ_RGBA, color));
                     break;
                 }
                 case kVertexFormat_P_XYZ_RGBA_UV:
                 {
                     GLsizei stride = sizeof(Vertex_PXYZ_RGBA_UV);
                     desiredShaderAttribute[kShaderAttributeVertexPosition] = true;
-                    desiredShaderAttribute[kShaderAttributeVertexColor] = true;
+                    desiredShaderAttribute[kShaderAttributeVertexColor0] = true;
                     desiredShaderAttribute[kShaderAttributeVertexTexture0] = true;
                     glVertexAttribPointer(kShaderAttributeVertexPosition, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXYZ_RGBA_UV, position));
-                    glVertexAttribPointer(kShaderAttributeVertexColor, 4, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXYZ_RGBA_UV, color));
+                    glVertexAttribPointer(kShaderAttributeVertexColor0, 4, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXYZ_RGBA_UV, color));
                     glVertexAttribPointer(kShaderAttributeVertexTexture0, 2, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXYZ_RGBA_UV, uv));
                     break;
                 }

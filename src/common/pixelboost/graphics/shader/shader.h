@@ -6,10 +6,9 @@
 
 #include "pixelboost/db/definitions.h"
 
-namespace json
+namespace pugi
 {
-    class Array;
-    class Object;
+    class xml_node;
 }
 
 namespace pb
@@ -21,12 +20,12 @@ class ShaderProgram;
 class ShaderTechnique
 {
 public:
-    ShaderTechnique(Uid uid);
+    ShaderTechnique();
     ~ShaderTechnique();
     
     Uid GetId();
     
-    bool Load(json::Array& object);
+    bool Load(const pugi::xml_node& attributes, const pugi::xml_node& technique);
     
     int GetNumPasses();
     void AddPass(ShaderPass* pass);
@@ -46,7 +45,7 @@ public:
     ShaderPass();
     ~ShaderPass();
     
-    bool Load(json::Object& object);
+    bool Load(const pugi::xml_node& attributes, const pugi::xml_node& pass);
     
     void Bind();
     

@@ -37,7 +37,7 @@ Shader* PrimitiveRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return Renderer::Instance()->GetShaderManager()->GetShader("/default/effects/primitive.fx");
+    return Renderer::Instance()->GetShaderManager()->GetShader("/data/shaders/pb_solid.shc");
 }
 
 void PrimitiveRenderable::SetTransform(const glm::mat4x4& transform)
@@ -294,12 +294,12 @@ PrimitiveRenderer::PrimitiveRenderer()
     
     Renderer::Instance()->SetHandler(PrimitiveRenderable::GetStaticType(), this);
     
-    Renderer::Instance()->GetShaderManager()->LoadShader("/default/effects/primitive.fx");
+    Renderer::Instance()->GetShaderManager()->LoadShader("/data/shaders/pb_solid.shc");
 }
     
 PrimitiveRenderer::~PrimitiveRenderer()
 {
-    Renderer::Instance()->GetShaderManager()->UnloadShader("/default/effects/primitive.fx");
+    Renderer::Instance()->GetShaderManager()->UnloadShader("/data/shaders/pb_solid.shc");
 }
 
 void PrimitiveRenderer::Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass)
@@ -318,8 +318,8 @@ void PrimitiveRenderer::Render(int count, Renderable** renderables, Viewport* vi
     {
         PrimitiveRenderable& primitive = *static_cast<PrimitiveRenderable*>(renderables[i]);
         
-        shaderPass->GetShaderProgram()->SetUniform("diffuseColor", primitive._Color);
-        shaderPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", primitive.GetMVP());
+        shaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", primitive._Color);
+        shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", primitive.GetMVP());
          
         switch (primitive.GetPrimitiveType())
         {

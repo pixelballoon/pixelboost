@@ -8,6 +8,11 @@
 #include "pixelboost/data/json/reader.h"
 #include "pixelboost/graphics/device/device.h"
 
+namespace pugi
+{
+    class xml_node;
+}
+
 namespace pb
 {
     
@@ -16,9 +21,23 @@ class Texture;
 enum ShaderAttribute
 {
     kShaderAttributeVertexPosition = 0,
+    kShaderAttributeVertexWeight,
     kShaderAttributeVertexNormal,
-    kShaderAttributeVertexColor,
+    kShaderAttributeVertexColor0,
+    kShaderAttributeVertexColor1,
+    kShaderAttributeVertexFog,
+    kShaderAttributeVertexPointSize,
+    kShaderAttributeVertexBlend,
     kShaderAttributeVertexTexture0,
+    kShaderAttributeVertexTexture1,
+    kShaderAttributeVertexTexture2,
+    kShaderAttributeVertexTexture3,
+    kShaderAttributeVertexTexture4,
+    kShaderAttributeVertexTexture5,
+    kShaderAttributeVertexTexture6,
+    kShaderAttributeVertexTexture7,
+    kShaderAttributeVertexTangent = 14,
+    kShaderAttributeVertexBinormal,
     kShaderAttributeCount,
 };
 
@@ -28,7 +47,7 @@ public:
     ShaderProgram();
     virtual ~ShaderProgram();
     
-    virtual bool Load(const std::string& vertexSource, const std::string& fragmentSource) = 0;
+    virtual bool Load(const pugi::xml_node& attributes, const pugi::xml_node& pass) = 0;
     virtual bool Link() = 0;
     
     virtual void BindAttribute(int index, const std::string& name) = 0;

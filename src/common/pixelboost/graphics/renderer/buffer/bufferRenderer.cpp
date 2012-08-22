@@ -52,7 +52,7 @@ Shader* BufferRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return Renderer::Instance()->GetShaderManager()->GetShader("/default/effects/textured.fx");
+    return Renderer::Instance()->GetShaderManager()->GetShader("/data/shaders/pb_textured.shc");
 }
 
 void BufferRenderable::SetBounds(BoundingSphere bounds)
@@ -109,7 +109,7 @@ BufferRenderer::BufferRenderer()
 {
     Renderer::Instance()->SetHandler(BufferRenderable::GetStaticType(), this);
     
-    Renderer::Instance()->GetShaderManager()->LoadShader("/default/effects/textured.fx");
+    Renderer::Instance()->GetShaderManager()->LoadShader("/data/shaders/pb_textured.shc");
 }
     
 BufferRenderer::~BufferRenderer()
@@ -133,13 +133,13 @@ void BufferRenderer::Render(int count, Renderable** renderables, Viewport* viewp
     
     Texture* texture = 0;
     
-    shaderPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
+    shaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
     
     for (int i=0; i<count; i++)
     {
         BufferRenderable& renderable = *static_cast<BufferRenderable*>(renderables[i]);
         
-        shaderPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", renderable.GetMVP());
+        shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", renderable.GetMVP());
         
         GraphicsDevice::Instance()->BindTexture(renderable._Texture);
         GraphicsDevice::Instance()->BindIndexBuffer(renderable._IndexBuffer);

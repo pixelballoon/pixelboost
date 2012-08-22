@@ -64,7 +64,7 @@ Shader* FontRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return Renderer::Instance()->GetShaderManager()->GetShader("/default/effects/textured.fx");
+    return Renderer::Instance()->GetShaderManager()->GetShader("/data/shaders/pb_textured.shc");
 }
 
 void FontRenderable::SetFont(const std::string& font)
@@ -254,12 +254,12 @@ FontRenderer::FontRenderer(int maxCharacters)
     
     Renderer::Instance()->SetHandler(FontRenderable::GetStaticType(), this);
     
-    Renderer::Instance()->GetShaderManager()->LoadShader("/default/effects/textured.fx");
+    Renderer::Instance()->GetShaderManager()->LoadShader("/data/shaders/pb_textured.shc");
 }
 
 FontRenderer::~FontRenderer()
 {
-    Renderer::Instance()->GetShaderManager()->UnloadShader("/default/effects/textured.fx");
+    Renderer::Instance()->GetShaderManager()->UnloadShader("/data/shaders/pb_textured.shc");
     
     GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
     GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
@@ -415,9 +415,9 @@ void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewpor
         
         GraphicsDevice::Instance()->BindTexture(font->texture);
         
-        shaderPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", renderable.GetMVP());
-        shaderPass->GetShaderProgram()->SetUniform("diffuseColor", renderable.Tint);
-        shaderPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
+        shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", renderable.GetMVP());
+        shaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", renderable.Tint);
+        shaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
         
         if (_VertexBuffer->GetCurrentSize())
             GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, (_VertexBuffer->GetCurrentSize()/4)*6);

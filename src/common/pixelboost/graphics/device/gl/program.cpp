@@ -1,5 +1,6 @@
 #include "glm/gtc/type_ptr.hpp"
 
+#include "pixelboost/data/xml/xml.h"
 #include "pixelboost/debug/assert.h"
 #include "pixelboost/file/fileHelpers.h"
 #include "pixelboost/graphics/device/gl/program.h"
@@ -18,21 +19,37 @@ ShaderProgramGL::~ShaderProgramGL()
     glDeleteProgram(_Program);
 }
 
-bool ShaderProgramGL::Load(const std::string& fragmentSource, const std::string& vertexSource)
+bool ShaderProgramGL::Load(const pugi::xml_node& attributes, const pugi::xml_node& pass)
 {
+    std::string programType;
+    
+#ifdef PIXELBOOST_GRAPHICS_OPENGLES2
+    programType = "gles2";
+#endif
+#ifdef PIXELBOOST_GRAPHICS_OPENGL2
+    programType = "gl2";
+#endif
+    
+    pugi::xml_node program = pass.find_child_by_attribute("program", "type", programType.c_str());
+    pugi::xml_node vertex = program.child("vertexProgram");
+    pugi::xml_node fragment = program.child("fragmentProgram");
+    
+    if (program.empty() || vertex.empty() || fragment.empty())
+        return false;
+
     _Uniforms.clear();
     
 #ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
-    _FragmentSource = fragmentSource;
-    _VertexSource = vertexSource;
+    _FragmentSource = fragment.child("source").child_value();
+    _VertexSource = vertex.child("source").child_value();
 #endif
     
     _Program = glCreateProgram();
     
-    if (!CompileShader(GL_FRAGMENT_SHADER, &_FragmentShader, fragmentSource))
+    if (!CompileShader(GL_FRAGMENT_SHADER, &_FragmentShader, fragment.child("source").child_value()))
         return false;
     
-    if (!CompileShader(GL_VERTEX_SHADER, &_VertexShader, vertexSource))
+    if (!CompileShader(GL_VERTEX_SHADER, &_VertexShader, vertex.child("source").child_value()))
         return false;
     
     glAttachShader(_Program, _FragmentShader);
@@ -43,6 +60,20 @@ bool ShaderProgramGL::Load(const std::string& fragmentSource, const std::string&
 
 bool ShaderProgramGL::Link()
 {
+    glLinkProgram(_Program);
+    
+    if (glGetAttribLocation(_Program, "PB_Attr_Position") >= 0)
+        glBindAttribLocation(_Program, kShaderAttributeVertexPosition, "PB_Attr_Position");
+    
+    if (glGetAttribLocation(_Program, "PB_Attr_Normal") >= 0)
+        glBindAttribLocation(_Program, kShaderAttributeVertexNormal, "PB_Attr_Normal");
+    
+    if (glGetAttribLocation(_Program, "PB_Attr_Color0") >= 0)
+        glBindAttribLocation(_Program, kShaderAttributeVertexColor0, "PB_Attr_Color0");
+    
+    if (glGetAttribLocation(_Program, "PB_Attr_Texture0") >= 0)
+        glBindAttribLocation(_Program, kShaderAttributeVertexTexture0, "PB_Attr_Texture0");
+
     glLinkProgram(_Program);
     
 #ifndef PIXELBOOST_DISABLE_DEBUG
@@ -113,8 +144,13 @@ GLuint ShaderProgramGL::GetUniformLocation(const std::string& name)
     
     if (it != _Uniforms.end())
         return it->second;
-    
+ 
+#ifdef PIXELBOOST_GRAPHICS_OPENGLES2
+    GLuint location = glGetUniformLocation(_Program, ("xlu_"+name).c_str());
+#endif
+#ifdef PIXELBOOST_GRAPHICS_OPENGL2
     GLuint location = glGetUniformLocation(_Program, name.c_str());
+#endif
     _Uniforms[name] = location;
     return location;
 }
@@ -122,8 +158,13 @@ GLuint ShaderProgramGL::GetUniformLocation(const std::string& name)
 bool ShaderProgramGL::CompileShader(GLenum type, GLuint* shader, const std::string& source)
 {
     *shader = glCreateShader(type);
-    const GLchar* shaderSource = source.c_str();
-    glShaderSource(*shader, 1, &shaderSource, NULL);
+#ifdef PIXELBOOST_GRAPHICS_OPENGLES2
+    const GLchar* shaderSource[3] = {"#version 100\n", type == GL_VERTEX_SHADER ? "#define VERTEX\n" : "#define FRAGMENT\n", source.c_str()};
+#endif
+#ifdef PIXELBOOST_GRAPHICS_OPENGL2
+    const GLchar* shaderSource[3] = {"#version 120\n#define lowp\n#define mediump\n#define highp\n", type == GL_VERTEX_SHADER ? "#define VERTEX\n" : "#define FRAGMENT\n", source.c_str()};
+#endif
+    glShaderSource(*shader, 3, shaderSource, NULL);
     glCompileShader(*shader);
 
 #ifndef PIXELBOOST_DISABLE_DEBUG

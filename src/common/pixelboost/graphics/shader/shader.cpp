@@ -1,4 +1,4 @@
-#include "pixelboost/data/json/reader.h"
+#include "pixelboost/data/xml/xml.h"
 #include "pixelboost/file/fileHelpers.h"
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/program.h"
@@ -8,8 +8,8 @@
 
 using namespace pb;
 
-ShaderTechnique::ShaderTechnique(Uid uid)
-    : _Uid(uid)
+ShaderTechnique::ShaderTechnique()
+    : _Uid(-1)
 {
     
 }
@@ -27,18 +27,23 @@ Uid ShaderTechnique::GetId()
     return _Uid;
 }
 
-bool ShaderTechnique::Load(json::Array& array)
+bool ShaderTechnique::Load(const pugi::xml_node& attributes, const pugi::xml_node& technique)
 {
-    for (json::Array::iterator it = array.Begin(); it != array.End(); ++it)
+    _Uid = RuntimeTypeHash(technique.attribute("class").value());
+    
+    pugi::xml_node pass = technique.child("pass");
+    while (!pass.empty())
     {
-        ShaderPass* pass = new ShaderPass();
-        if (!pass->Load(*it))
+        ShaderPass* shaderPass = new ShaderPass();
+        if (!shaderPass->Load(attributes, pass))
         {
-            delete pass;
+            delete shaderPass;
             return false;
         }
         
-        AddPass(pass);
+        AddPass(shaderPass);
+        
+        pass = pass.next_sibling("pass");
     }
     
     return true;
@@ -72,34 +77,14 @@ ShaderPass::~ShaderPass()
     GraphicsDevice::Instance()->DestroyProgram(_Program);
 }
 
-bool ShaderPass::Load(json::Object& object)
+bool ShaderPass::Load(const pugi::xml_node& attributes, const pugi::xml_node& pass)
 {
-    json::Object shaders = object["shaders"];
-    
-    json::Object platform;
-    
-#ifdef PIXELBOOST_GRAPHICS_OPENGLES2
-    platform = shaders["gles2"];
-#endif
-#ifdef PIXELBOOST_GRAPHICS_OPENGL2
-    platform = shaders["gl2"];
-#endif
-    
-    std::string fragmentSource = FileHelpers::FileToString(pb::kFileLocationBundle, "/" + ((json::String)platform["fragment"]).Value());
-    std::string vertexSource = FileHelpers::FileToString(pb::kFileLocationBundle, "/" + ((json::String)platform["vertex"]).Value());
-    
-    if (!_Program->Load(fragmentSource, vertexSource))
+    if (!_Program->Load(attributes, pass))
         return false;
-    
-    json::Object& attributes = object["attributes"];
-    for (json::Object::iterator it = attributes.Begin(); it != attributes.End(); ++it)
-    {
-        _Program->BindAttribute((json::Number)it->element, it->name);
-    }
     
     if (!_Program->Link())
         return false;
-    
+
     return true;
 }
 
@@ -130,18 +115,28 @@ bool Shader::Load(const std::string& filename)
 {
     std::string effect = FileHelpers::FileToString(pb::kFileLocationBundle, filename);
     
-    json::Object object;
-    if (!json::Reader::Read(object, effect))
+    pugi::xml_document document;
+    if (!document.load(effect.c_str()))
+        return false;
+
+    pugi::xml_node root = document.child("shader");
+    
+    if (root.empty())
         return false;
     
-    for (json::Object::iterator it = object.Begin(); it != object.End(); ++it)
-    {
-        const char* techniqueId = it->name.c_str();
-        ShaderTechnique* technique = new ShaderTechnique(RuntimeTypeHash(techniqueId));
-        technique->Load(it->element);
-        AddTechnique(technique);
-    }
+    pugi::xml_node attributes = root.child("attributes");
     
+    pugi::xml_node subShader = root.child("subshader");
+    
+    while (!subShader.empty())
+    {
+        ShaderTechnique* technique = new ShaderTechnique();
+        technique->Load(attributes, subShader);
+        AddTechnique(technique);
+        
+        subShader = subShader.next_sibling("subshader");
+    }
+        
     return true;
 }
 
