@@ -16,10 +16,14 @@ namespace pb
         RectTouchComponent(Entity* parent, bool debugRender = false);
         virtual ~RectTouchComponent();
         
-        Uid GetStaticType();
         virtual Uid GetType();
+        static Uid GetStaticType();
+        
+        void SetLocalTransform(const glm::mat4x4& localTransform);
+        const glm::mat4x4& GetLocalTransform();
         
         void SetSize(const glm::vec2& size);
+        void SetCaptureEvents(bool captureEvents);
         void SetMultiTouch(bool multiTouch);
         
     private:
@@ -36,7 +40,9 @@ namespace pb
         bool HasTouch(Touch touch);
         
         glm::vec2 _Size;
+        glm::mat4x4 _LocalTransform;
         
+        bool _CaptureEvents;
         bool _MultiTouch;
         std::map<int, glm::vec2> _Touches;
         

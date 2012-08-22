@@ -12,6 +12,7 @@ using namespace pb;
 
 RectTouchComponent::RectTouchComponent(Entity* parent, bool debugRender)
     : Component(parent)
+    , _CaptureEvents(true)
     , _DebugRender(debugRender)
     , _MultiTouch(false)
 {
@@ -43,10 +44,24 @@ Uid RectTouchComponent::GetStaticType()
     return TypeHash("pb::RectTouchComponent");
 }
 
+void RectTouchComponent::SetLocalTransform(const glm::mat4x4& localTransform)
+{
+    _LocalTransform = localTransform;
+}
+
+const glm::mat4x4& RectTouchComponent::GetLocalTransform()
+{
+    return _LocalTransform;
+}
 
 void RectTouchComponent::SetSize(const glm::vec2& size)
 {
     _Size = size;
+}
+
+void RectTouchComponent::SetCaptureEvents(bool captureEvents)
+{
+    _CaptureEvents = captureEvents;
 }
 
 void RectTouchComponent::SetMultiTouch(bool multiTouch)
@@ -56,12 +71,19 @@ void RectTouchComponent::SetMultiTouch(bool multiTouch)
 
 glm::vec3 RectTouchComponent::GetPosition()
 {
+    glm::vec4 position;
+    
     TransformComponent* transform = GetParent()->GetComponentByType<TransformComponent>();
     
     if (transform)
-        return transform->GetPosition();
+    {
+        glm::mat4x4 transformMatrix = transform->GetMatrix() * _LocalTransform;
+        position = transformMatrix * glm::vec4(0,0,0,1);
+    } else {
+        position = _LocalTransform * glm::vec4(0,0,0,1);
+    }
     
-    return glm::vec3(0,0,0);
+    return glm::vec3(position.x, position.y, position.z);
 }
 
 bool RectTouchComponent::OnTouchDown(Touch touch)
@@ -82,7 +104,7 @@ bool RectTouchComponent::OnTouchDown(Touch touch)
             GetScene()->SendMessage(GetParentUid(), message);
         }
         
-        return true;
+        return _CaptureEvents;
     }
     
     return false;
@@ -102,7 +124,7 @@ bool RectTouchComponent::OnTouchMove(Touch touch)
     TouchMoveMessage message(GetParent(), this, touch.GetId(), screenPos-glm::vec2(position.x, position.y));
     GetScene()->SendMessage(GetParentUid(), message);
     
-    return true;
+    return _CaptureEvents;
 }
 
 bool RectTouchComponent::OnTouchUp(Touch touch)
@@ -119,7 +141,7 @@ bool RectTouchComponent::OnTouchUp(Touch touch)
     TouchUpMessage message(GetParent(), this, touch.GetId(), screenPos-glm::vec2(position.x, position.y));
     GetScene()->SendMessage(GetParentUid(), message);
     
-    return true;
+    return _CaptureEvents;
 }
 
 void RectTouchComponent::OnDebugRender(const pb::Message& message)
