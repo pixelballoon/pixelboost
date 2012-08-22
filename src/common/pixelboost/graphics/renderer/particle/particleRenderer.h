@@ -138,6 +138,7 @@ private:
     
     ModifierList _Modifiers;
     
+    std::shared_ptr<SpriteSheet> _SpriteSheet;
     EmitterConfig* _Config;
     glm::vec3 _Position;
     float _EmitCount;
