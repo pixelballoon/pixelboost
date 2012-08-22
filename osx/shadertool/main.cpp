@@ -2,6 +2,8 @@
 #include <sstream>
 #include <string>
 
+#include <Cg/cg.h>
+
 #include "pixelboost/data/xml/xml.h"
 #include "pixelboost/file/fileHelpers.h"
 
@@ -22,7 +24,7 @@ enum ShaderType
     kShaderTypeFragment,
 };
 
-bool CompileShaderGLES(ShaderType type, const std::string& input, const std::string& entry, std::string& output)
+bool CompileShaderCg_GLES(ShaderType type, const std::string& input, const std::string& entry, pugi::xml_node& output)
 {
     // Compile Cg to GLSL and optimize
     
@@ -57,29 +59,29 @@ bool CompileShaderGLES(ShaderType type, const std::string& input, const std::str
     };
     
     const char* semanticNames[] = {
-        "__Position",
-        "__VertexPosition",
-        "__VertexFace",
-        "__Normal",
-        "__Color0",
-        "__Color1",
-        "__Color2",
-        "__Color3",
-        "__Tex0",
-        "__Tex1",
-        "__Tex2",
-        "__Tex3",
-        "__Tex4",
-        "__Tex5",
-        "__Tex6",
-        "__Tex7",
-        "__Tex8",
-        "__Tex9",
-        "__Tangent",
-        "__Binormal",
-        "__BlendWeight",
-        "__BlendIndices",
-        "__Depth",
+        "PB_Attr_Position",
+        "PB_Attr_VertexPosition",
+        "PB_Attr_VertexFace",
+        "PB_Attr_Normal",
+        "PB_Attr_Color0",
+        "PB_Attr_Color1",
+        "PB_Attr_Color2",
+        "PB_Attr_Color3",
+        "PB_Attr_Texture0",
+        "PB_Attr_Texture1",
+        "PB_Attr_Texture2",
+        "PB_Attr_Texture3",
+        "PB_Attr_Texture4",
+        "PB_Attr_Texture5",
+        "PB_Attr_Texture6",
+        "PB_Attr_Texture7",
+        "PB_Attr_Texture8",
+        "PB_Attr_Texture9",
+        "PB_Attr_Tangent",
+        "PB_Attr_Binormal",
+        "PB_Attr_BlendWeight",
+        "PB_Attr_BlendIndices",
+        "PB_Attr_Depth",
     };
     
     Hlsl2Glsl_SetUserAttributeNames(handle, semanticEnums, semanticNames, 23);
@@ -88,17 +90,21 @@ bool CompileShaderGLES(ShaderType type, const std::string& input, const std::str
     
     Hlsl2Glsl_Translate(handle, entry.c_str(), ETranslateOpUsePrecision);
     
+    int count = Hlsl2Glsl_GetUniformCount(handle);
+    
+    const ShUniformInfo* uniforms = Hlsl2Glsl_GetUniformInfo(handle);
+    for (int i = 0; i < count; i++)
+    {
+        //printf("UNIFORM --- %s, %s\n", uniforms[i].name, uniforms[i].semantic);
+    }
+    
     const char* shader = Hlsl2Glsl_GetShader(handle);
-    
-    output = shader;
-    
-    Hlsl2Glsl_DestructCompiler(handle);
     
     glslopt_ctx* ctx = glslopt_initialize(true);
     
-    glslopt_shader* optimisedShader = glslopt_optimize(ctx, type == kShaderTypeVertex ? kGlslOptShaderVertex : kGlslOptShaderFragment, output.c_str(), 0);
+    glslopt_shader* optimisedShader = glslopt_optimize(ctx, type == kShaderTypeVertex ? kGlslOptShaderVertex : kGlslOptShaderFragment, shader, 0);
     if (glslopt_get_status(optimisedShader)) {
-        output = glslopt_get_output(optimisedShader);
+        output.append_child("source").append_child(pugi::node_cdata).set_value(glslopt_get_output(optimisedShader));
     } else {
         printf("Error: %s\n", glslopt_get_log(optimisedShader));
         return false;
@@ -107,110 +113,119 @@ bool CompileShaderGLES(ShaderType type, const std::string& input, const std::str
     
     glslopt_cleanup (ctx);
     
+    Hlsl2Glsl_DestructCompiler(handle);
+    
     return true;
 }
 
-bool CompileShaderCGC(ShaderPlatform platform, ShaderType type, const std::string& input, const std::string& entry, std::string& output)
+bool CompileShaderCg_CGC(ShaderPlatform platform, ShaderType type, const std::string& input, const std::string& entry, pugi::xml_node& output)
 {
-    fflush(0);
+    CGcontext context = cgCreateContext();
     
-    char tempInputFilename[L_tmpnam];
-    char tempOutputFilename[L_tmpnam];
+    CGprogram program;
     
-    tmpnam(tempInputFilename);
-    tmpnam(tempOutputFilename);
-    
-    std::string profile;
+    CGprofile profile;
     
     switch (platform)
     {
         case kShaderPlatformOpenGL2:
-            profile = type == kShaderTypeVertex ? "arbvp1" : "arbfp1";
+            profile = type == kShaderTypeVertex ? CG_PROFILE_GLSLV : CG_PROFILE_GLSLF;
             break;
         case kShaderPlatformD3D9_SM2:
-            profile = type == kShaderTypeVertex ? "vs_2_0" : "ps_2_0";
+            profile = type == kShaderTypeVertex ? CG_PROFILE_VS_2_0 : CG_PROFILE_PS_2_0;
             break;
         case kShaderPlatformD3D9_SM3:
-            profile = type == kShaderTypeVertex ? "vs_3_0" : "ps_3_0";
+            profile = type == kShaderTypeVertex ? CG_PROFILE_VS_3_0 : CG_PROFILE_PS_3_0;
             break;
         case kShaderPlatformGLES2:
-            break;
+            return false;
     }
     
-    FILE* shaderFile = fopen(tempInputFilename, "w");
+    program = cgCreateProgram(context, CG_SOURCE, input.c_str(), profile, entry.c_str(), 0);
     
-    fputs(input.c_str(), shaderFile);
+    cgCompileProgram(program);
     
-    fclose(shaderFile);
+    const char* programCompiled = cgGetProgramString(program, CG_COMPILED_PROGRAM);
     
-    std::string command = "cgc -entry " + entry + " -profile " + profile + " " + tempInputFilename + " -o " + tempOutputFilename;
-    
-    system(command.c_str());
-    
-    FILE* cgcOutput = fopen(tempOutputFilename, "r");
-    
-    if (cgcOutput)
+    CGparameter param = cgGetFirstParameter(program, CG_PROGRAM);
+    while (param)
     {
-        char buffer[1024];
-        while (char* line = fgets(buffer, sizeof(buffer), cgcOutput))
+        if (cgGetParameterDirection(param) == CG_IN)
         {
-            output += line;
+            //printf("PARAM --- %s [%s] (%lu)\n", cgGetParameterName(param), cgGetParameterSemantic(param), cgGetParameterResourceIndex(param));
         }
         
-        fclose(cgcOutput);
-    } else {
-        return false;
+        param = cgGetNextParameter(param);
     }
     
-    remove(tempInputFilename);
-    remove(tempOutputFilename);
+    cgDestroyProgram(program);
+    cgDestroyContext(context);
+    
+    output.append_child("source").append_child(pugi::node_cdata).set_value(programCompiled);
     
     return true;
 }
 
-bool CompileShader(ShaderPlatform platform, const std::string& input, const std::string& vertexEntry, const std::string& fragmentEntry, std::string& vertex, std::string& fragment)
+bool CompileShaderCg(ShaderPlatform platform, const std::string& input, const std::string& vertexEntry, const std::string& fragmentEntry, pugi::xml_node& vertex, pugi::xml_node& fragment)
 {
     bool status = true;
     
     if (platform == kShaderPlatformGLES2)
     {
-        status &= CompileShaderGLES(kShaderTypeVertex, input, vertexEntry, vertex);
-        status &= CompileShaderGLES(kShaderTypeFragment, input, fragmentEntry, fragment);
+        status &= CompileShaderCg_GLES(kShaderTypeVertex, input, vertexEntry, vertex);
+        status &= CompileShaderCg_GLES(kShaderTypeFragment, input, fragmentEntry, fragment);
     } else {
-        status &= CompileShaderCGC(platform, kShaderTypeVertex, input, vertexEntry, vertex);
-        status &= CompileShaderCGC(platform, kShaderTypeFragment, input, fragmentEntry, fragment);
+        status &= CompileShaderCg_CGC(platform, kShaderTypeVertex, input, vertexEntry, vertex);
+        status &= CompileShaderCg_CGC(platform, kShaderTypeFragment, input, fragmentEntry, fragment);
     }
     
     return status;
 }
 
-bool AppendProgram(ShaderPlatform platform, pugi::xml_node& programOutput, pugi::xml_node& passInput)
+//bool CompileShaderGLSL(ShaderType type, const std::string& input, pugi::xml_node& output)
+bool CompileShaderGLSL(ShaderPlatform platform, const std::string& input, pugi::xml_node& vertex, pugi::xml_node& fragment)
 {
-    pugi::xml_node fragmentProgramOutput = programOutput.append_child("fragmentProgram");
-    pugi::xml_node vertexProgramOutput = programOutput.append_child("vertexProgram");
-    
-    std::string vertexEntry = "vert";
-    std::string fragmentEntry = "frag";
-    
-    std::string vertex;
-    std::string fragment;
-    
-    if (CompileShader(platform, passInput.child_value(), vertexEntry, fragmentEntry, vertex, fragment))
+    if (platform == kShaderPlatformGLES2 || platform == kShaderPlatformOpenGL2)
     {
-        vertexProgramOutput.append_child(pugi::node_cdata).set_value(vertex.c_str());
-        fragmentProgramOutput.append_child(pugi::node_cdata).set_value(fragment.c_str());
-
+        vertex.append_child("source").append_child(pugi::node_cdata).set_value(input.c_str());
+        fragment.append_child("source").append_child(pugi::node_cdata).set_value(input.c_str());
         return true;
     }
     
     return false;
 }
 
+bool AppendProgram(ShaderPlatform platform, pugi::xml_node& programOutput, pugi::xml_node& programInput)
+{
+    pugi::xml_node fragmentProgramOutput = programOutput.append_child("fragmentProgram");
+    pugi::xml_node vertexProgramOutput = programOutput.append_child("vertexProgram");
+    
+    std::string language = programInput.attribute("language").value();
+    
+    if (language == "cg")
+    {
+        std::string vertexEntry = "vert";
+        std::string fragmentEntry = "frag";
+        
+        if (!CompileShaderCg(platform, programInput.child_value(), vertexEntry, fragmentEntry, vertexProgramOutput, fragmentProgramOutput))
+            return false;
+    } else if (language == "glsl")
+    {
+        if (!CompileShaderGLSL(platform, programInput.child_value(), vertexProgramOutput, fragmentProgramOutput))
+            return false;
+    } else {
+        // Unknown language
+        return false;
+    }
+    
+    return true;
+}
+
 int main(int argc, const char * argv[])
 {
     Hlsl2Glsl_Initialize();
     
-    bool status;
+    bool status = true;
     
     std::string vertex, fragment;
     
@@ -243,30 +258,38 @@ int main(int argc, const char * argv[])
         
         while (!passInput.empty())
         {
-            pugi::xml_node passOutput = subshaderOutput.append_child("pass");
+        
+            pugi::xml_node programInput = passInput.child("program");
             
+            while (!programInput.empty())
             {
-                pugi::xml_node programOutput = passOutput.append_child("program");
-                programOutput.append_attribute("type").set_value("d3d9_sm3");
-                AppendProgram(kShaderPlatformD3D9_SM3, programOutput, passInput);
-            }
-            
-            {
-                pugi::xml_node programOutput = passOutput.append_child("program");
-                programOutput.append_attribute("type").set_value("d3d9_sm2");
-                AppendProgram(kShaderPlatformD3D9_SM2, programOutput, passInput);
-            }
-            
-            {
-                pugi::xml_node programOutput = passOutput.append_child("program");
-                programOutput.append_attribute("type").set_value("gl2");
-                AppendProgram(kShaderPlatformOpenGL2, programOutput, passInput);
-            }
-            
-            {
-                pugi::xml_node programOutput = passOutput.append_child("program");
-                programOutput.append_attribute("type").set_value("gles2");
-                AppendProgram(kShaderPlatformGLES2, programOutput, passInput);
+                pugi::xml_node passOutput = subshaderOutput.append_child("pass");
+                
+                {
+                    pugi::xml_node programOutput = passOutput.append_child("program");
+                    programOutput.append_attribute("type").set_value("d3d9_sm3");
+                    status &= AppendProgram(kShaderPlatformD3D9_SM3, programOutput, programInput);
+                }
+                
+                {
+                    pugi::xml_node programOutput = passOutput.append_child("program");
+                    programOutput.append_attribute("type").set_value("d3d9_sm2");
+                    status &= AppendProgram(kShaderPlatformD3D9_SM2, programOutput, programInput);
+                }
+                
+                {
+                    pugi::xml_node programOutput = passOutput.append_child("program");
+                    programOutput.append_attribute("type").set_value("gl2");
+                    status &= AppendProgram(kShaderPlatformOpenGL2, programOutput, programInput);
+                }
+                
+                {
+                    pugi::xml_node programOutput = passOutput.append_child("program");
+                    programOutput.append_attribute("type").set_value("gles2");
+                    status &= AppendProgram(kShaderPlatformGLES2, programOutput, programInput);
+                }
+                
+                programInput = passInput.next_sibling("program");
             }
             
             passInput = passInput.next_sibling("pass");

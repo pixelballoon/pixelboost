@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C7F878C15E4D82A00D460DE /* Cg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C7F878B15E4D82A00D460DE /* Cg.framework */; };
 		1C89652F15DE94B300AB3196 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89652E15DE94B300AB3196 /* main.cpp */; };
 		1C897DD915DED09100AB3196 /* libhlsl2glsl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C897DD815DEB89B00AB3196 /* libhlsl2glsl.a */; };
 		1C897DDA15DED09100AB3196 /* libmesaglsl2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C897DCF15DEB89300AB3196 /* libmesaglsl2.a */; };
@@ -58,6 +59,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1C7F878B15E4D82A00D460DE /* Cg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cg.framework; path = /Library/Frameworks/Cg.framework; sourceTree = "<absolute>"; };
 		1C89652A15DE94B300AB3196 /* shadertool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = shadertool; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C89652E15DE94B300AB3196 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		1C897DC715DEB89200AB3196 /* mesaglsl2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = mesaglsl2.xcodeproj; path = "../libs/glsl-optimizer/src/glsl/xcode/mesaglsl2.xcodeproj"; sourceTree = "<group>"; };
@@ -71,6 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C7F878C15E4D82A00D460DE /* Cg.framework in Frameworks */,
 				1CAD29D615E2B1D500510183 /* Foundation.framework in Frameworks */,
 				1CAD29BE15E2149800510183 /* libpixelboost_osx.a in Frameworks */,
 				1C897DD915DED09100AB3196 /* libhlsl2glsl.a in Frameworks */,
@@ -81,10 +84,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1C7F878A15E4D6F800D460DE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1C7F878B15E4D82A00D460DE /* Cg.framework */,
+				1CAD29D515E2B1D500510183 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		1C89651F15DE94B300AB3196 = {
 			isa = PBXGroup;
 			children = (
-				1CAD29D515E2B1D500510183 /* Foundation.framework */,
+				1C7F878A15E4D6F800D460DE /* Frameworks */,
 				1C89653715DE94BD00AB3196 /* libs */,
 				1C89652D15DE94B300AB3196 /* shadertool */,
 				1C89652B15DE94B300AB3196 /* Products */,
@@ -253,6 +265,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks/;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -289,6 +302,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks/;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
