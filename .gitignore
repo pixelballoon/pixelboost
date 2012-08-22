@@ -2,3 +2,4 @@
 */*.xcodeproj/xcuserdata/
 /builds/
 .DS_Store
+/osx/build/
