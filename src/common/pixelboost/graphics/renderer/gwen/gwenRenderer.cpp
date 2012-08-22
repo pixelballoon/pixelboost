@@ -11,14 +11,14 @@
 #include "pixelboost/graphics/device/indexBuffer.h"
 #include "pixelboost/graphics/device/program.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
-#include "pixelboost/graphics/effect/effect.h"
-#include "pixelboost/graphics/effect/manager.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/font/fontRenderer.h"
 #include "pixelboost/graphics/renderer/gwen/gwenRenderer.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 #include "pixelboost/graphics/renderer/sprite/sprite.h"
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
+#include "pixelboost/graphics/shader/shader.h"
+#include "pixelboost/graphics/shader/manager.h"
 
 #include "Gwen/Utility.h"
 #include "Gwen/Font.h"
@@ -60,13 +60,13 @@ void GwenRenderable::CalculateWorldMatrix()
     SetWorldMatrix(glm::mat4x4());
 }
 
-Effect* GwenRenderable::GetEffect()
+Shader* GwenRenderable::GetShader()
 {
-    Effect* baseEffect = Renderable::GetEffect();
-    if (baseEffect)
-        return baseEffect;
+    Shader* baseShader = Renderable::GetShader();
+    if (baseShader)
+        return baseShader;
     
-    return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/textured.fx");
+    return Renderer::Instance()->GetShaderManager()->GetShader("/data/shaders/pb_textured.shc");
 }
 
 GwenRenderer::GwenRenderer()
@@ -118,20 +118,20 @@ GwenRenderer::GwenRenderer()
     
     Renderer::Instance()->SetHandler(GwenRenderable::GetStaticType(), this);
     
-    Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/textured.fx");
+    Renderer::Instance()->GetShaderManager()->LoadShader("/data/shaders/pb_textured.shc");
 }
 
 GwenRenderer::~GwenRenderer()
 {
-    Renderer::Instance()->GetEffectManager()->UnloadEffect("/default/effects/textured.fx");
+    Renderer::Instance()->GetShaderManager()->UnloadShader("/data/shaders/pb_textured.shc");
 }
     
-void GwenRenderer::Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass)
+void GwenRenderer::Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass)
 {
     _Viewport = viewport;
-    _EffectPass = effectPass;
-    _EffectPass->GetShaderProgram()->SetUniform("diffuseColor", glm::vec4(1,1,1,1));
-    _EffectPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
+    _ShaderPass = shaderPass;
+    _ShaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", glm::vec4(1,1,1,1));
+    _ShaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
     
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
@@ -204,11 +204,11 @@ void GwenRenderer::DrawFilledRect( Gwen::Rect rect )
     _VertexData += 4;
     _VertexCount += 4;
     
-    _EffectPass->GetShaderProgram()->SetUniform("diffuseColor", _Color);
+    _ShaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", _Color);
 
     PurgeBuffer(true);
     
-    _EffectPass->GetShaderProgram()->SetUniform("diffuseColor", glm::vec4(1,1,1,1));
+    _ShaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", glm::vec4(1,1,1,1));
 }
 
 void GwenRenderer::StartClip()
@@ -338,8 +338,8 @@ void GwenRenderer::RenderText(Gwen::Font* font, Gwen::Point pos, const Gwen::Uni
     glm::mat4x4 modelMatrix = glm::translate(glm::mat4x4(), glm::vec3(pos.x, -pos.y - size, 0)/32.f);
     modelMatrix = glm::scale(modelMatrix, glm::vec3(size, size, 1)/32.f);
     
-    _EffectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", _Renderable->GetMVP() * modelMatrix);
-    _EffectPass->GetShaderProgram()->SetUniform("diffuseColor", glm::vec4(0,0,0,1));
+    _ShaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", _Renderable->GetMVP() * modelMatrix);
+    _ShaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", glm::vec4(0,0,0,1));
     
     pb::Texture* prevTexture = GraphicsDevice::Instance()->BindTexture(renderFont->texture);
     GraphicsDevice::Instance()->BindIndexBuffer(_FontIndexBuffer);
@@ -349,7 +349,7 @@ void GwenRenderer::RenderText(Gwen::Font* font, Gwen::Point pos, const Gwen::Uni
     GraphicsDevice::Instance()->BindVertexBuffer(0);
     GraphicsDevice::Instance()->BindTexture(prevTexture);
     
-    _EffectPass->GetShaderProgram()->SetUniform("diffuseColor", glm::vec4(1,1,1,1));
+    _ShaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", glm::vec4(1,1,1,1));
 }
 
 Gwen::Point GwenRenderer::MeasureText(Gwen::Font* font, const Gwen::UnicodeString& text)
@@ -372,7 +372,7 @@ void GwenRenderer::PurgeBuffer(bool force)
     _VertexBuffer->Unlock(_VertexCount);
     if (_VertexCount)
     {
-        _EffectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", _Renderable->GetMVP());
+        _ShaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", _Renderable->GetMVP());
         
         GraphicsDevice::Instance()->BindIndexBuffer(_IndexBuffer);
         GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffer);

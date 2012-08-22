@@ -26,7 +26,7 @@ namespace pb
     public:
         b2World* GetPhysicsWorld();
         
-        void SetDebugRender(bool debugRender, int flags = b2Draw::e_shapeBit|b2Draw::e_jointBit/*|b2Draw::e_aabbBit|b2Draw::e_pairBit|b2Draw::e_centerOfMassBit*/, int layer = 0);
+        void SetDebugRender(bool debugRender, int layer = 0, int flags = b2Draw::e_shapeBit|b2Draw::e_jointBit/*|b2Draw::e_aabbBit|b2Draw::e_pairBit|b2Draw::e_centerOfMassBit*/);
         
     private:
         void BeginContact(b2Contact* contact);

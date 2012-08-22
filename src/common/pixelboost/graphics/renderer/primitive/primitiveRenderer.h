@@ -11,8 +11,8 @@
 namespace pb
 {
     
-class EffectPass;
 class IndexBuffer;
+class ShaderPass;
 class VertexBuffer;
 class Viewport;
     
@@ -31,7 +31,7 @@ public:
         kTypeRectangle,
     };
     
-    virtual Effect* GetEffect();
+    virtual Shader* GetShader();
     virtual Type GetPrimitiveType() = 0;
     
     void SetTransform(const glm::mat4x4& transform);
@@ -133,7 +133,7 @@ public:
     PrimitiveRenderer();
     ~PrimitiveRenderer();
     
-    virtual void Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass);
+    virtual void Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass);
     
 private:
     IndexBuffer* _EllipseIndexBuffer;

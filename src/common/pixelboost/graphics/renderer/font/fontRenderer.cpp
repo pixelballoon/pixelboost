@@ -11,11 +11,11 @@
 #include "pixelboost/graphics/device/program.h"
 #include "pixelboost/graphics/device/texture.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
-#include "pixelboost/graphics/effect/effect.h"
-#include "pixelboost/graphics/effect/manager.h"
 #include "pixelboost/graphics/helper/screenHelpers.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/font/fontRenderer.h"
+#include "pixelboost/graphics/shader/shader.h"
+#include "pixelboost/graphics/shader/manager.h"
 #include "pixelboost/util/localisation/string.h"
 
 using namespace pb;
@@ -58,13 +58,13 @@ void FontRenderable::CalculateWorldMatrix()
     SetWorldMatrix(worldMatrix);
 }
 
-Effect* FontRenderable::GetEffect()
+Shader* FontRenderable::GetShader()
 {
-    Effect* baseEffect = Renderable::GetEffect();
-    if (baseEffect)
-        return baseEffect;
+    Shader* baseShader = Renderable::GetShader();
+    if (baseShader)
+        return baseShader;
     
-    return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/textured.fx");
+    return Renderer::Instance()->GetShaderManager()->GetShader("/data/shaders/pb_textured.shc");
 }
 
 void FontRenderable::SetFont(const std::string& font)
@@ -254,12 +254,12 @@ FontRenderer::FontRenderer(int maxCharacters)
     
     Renderer::Instance()->SetHandler(FontRenderable::GetStaticType(), this);
     
-    Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/textured.fx");
+    Renderer::Instance()->GetShaderManager()->LoadShader("/data/shaders/pb_textured.shc");
 }
 
 FontRenderer::~FontRenderer()
 {
-    Renderer::Instance()->GetEffectManager()->UnloadEffect("/default/effects/textured.fx");
+    Renderer::Instance()->GetShaderManager()->UnloadShader("/data/shaders/pb_textured.shc");
     
     GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
     GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
@@ -375,7 +375,7 @@ Font* FontRenderer::GetFont(const std::string& name)
     return 0;
 }
 
-void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass)
+void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass)
 {
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
@@ -415,9 +415,9 @@ void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewpor
         
         GraphicsDevice::Instance()->BindTexture(font->texture);
         
-        effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", renderable.GetMVP());
-        effectPass->GetShaderProgram()->SetUniform("diffuseColor", renderable.Tint);
-        effectPass->GetShaderProgram()->SetUniform("diffuseTexture", 0);
+        shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", renderable.GetMVP());
+        shaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", renderable.Tint);
+        shaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
         
         if (_VertexBuffer->GetCurrentSize())
             GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, (_VertexBuffer->GetCurrentSize()/4)*6);

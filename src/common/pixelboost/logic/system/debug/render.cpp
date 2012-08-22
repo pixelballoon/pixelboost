@@ -25,7 +25,7 @@ DebugRenderSystem::~DebugRenderSystem()
     }
 }
 
-Uid DebugRenderSystem::GetType()
+Uid DebugRenderSystem::GetType() const
 {
     return DebugRenderSystem::GetStaticType();
 }

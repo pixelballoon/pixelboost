@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1C897E1815DEE75600AB3196 /* libpixelboost_osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C897E1715DEE73B00AB3196 /* libpixelboost_osx.a */; };
+		1C25E9A115E56FEB00833738 /* libpixelboost_osx_x86_64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C25E99F15E56FE300833738 /* libpixelboost_osx_x86_64.a */; };
 		1C9666D215D04068007ED733 /* modelExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C9666CE15D04068007ED733 /* modelExporter.cpp */; };
 		1C9666D315D04068007ED733 /* modelLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C9666D015D04068007ED733 /* modelLoader.cpp */; };
 		1CC7006215CF9E5E00E50CA8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CC7006115CF9E5E00E50CA8 /* Foundation.framework */; };
@@ -16,6 +16,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		1C25E99E15E56FE300833738 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1C897E0C15DEE73A00AB3196 /* pixelboost.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1C25E97015E55AEF00833738;
+			remoteInfo = pixelboost_osx_x86_64;
+		};
 		1C897E1415DEE73B00AB3196 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1C897E0C15DEE73A00AB3196 /* pixelboost.xcodeproj */;
@@ -62,7 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1C897E1815DEE75600AB3196 /* libpixelboost_osx.a in Frameworks */,
+				1C25E9A115E56FEB00833738 /* libpixelboost_osx_x86_64.a in Frameworks */,
 				1CC7006515CFA02D00E50CA8 /* OpenGL.framework in Frameworks */,
 				1CC7006215CF9E5E00E50CA8 /* Foundation.framework in Frameworks */,
 			);
@@ -95,6 +102,7 @@
 			children = (
 				1C897E1515DEE73B00AB3196 /* libpixelboost_ios.a */,
 				1C897E1715DEE73B00AB3196 /* libpixelboost_osx.a */,
+				1C25E99F15E56FE300833738 /* libpixelboost_osx_x86_64.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -190,6 +198,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		1C25E99F15E56FE300833738 /* libpixelboost_osx_x86_64.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libpixelboost_osx_x86_64.a;
+			remoteRef = 1C25E99E15E56FE300833738 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		1C897E1515DEE73B00AB3196 /* libpixelboost_ios.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -245,6 +260,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				VALID_ARCHS = x86_64;
 			};
 			name = Debug;
 		};
@@ -269,6 +285,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;
+				VALID_ARCHS = x86_64;
 			};
 			name = Release;
 		};

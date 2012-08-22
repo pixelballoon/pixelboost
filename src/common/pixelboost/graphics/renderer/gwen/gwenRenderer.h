@@ -31,7 +31,7 @@ namespace pb
         virtual void CalculateBounds();
         virtual void CalculateWorldMatrix();
         
-        virtual Effect* GetEffect();
+        virtual Shader* GetShader();
         
     private:
         Gwen::Controls::Canvas* _Canvas;
@@ -45,7 +45,7 @@ namespace pb
         GwenRenderer();
         virtual ~GwenRenderer();
         
-        virtual void Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass);
+        virtual void Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass);
         
     public:
         virtual void Init();
@@ -80,7 +80,7 @@ namespace pb
         int _MaxQuads;
         Renderable* _Renderable;
         Viewport* _Viewport;
-        EffectPass* _EffectPass;
+        ShaderPass* _ShaderPass;
         
         glm::vec4 _Color;
     };

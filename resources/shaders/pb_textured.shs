@@ -1,0 +1,60 @@
+<shader name="pixelboost/textured">    
+  <attributes>
+    <attribute name="_DiffuseColor" type="color" description="Diffuse Color" default="1,1,1,1"/>
+    <attribute name="_DiffuseTexture" type="texture2D" description="Diffuse Texture"/>
+  </attributes>
+  
+  <subshader class="default">
+    <pass>
+      <program language="glsl">
+        varying lowp vec2 textureVarying;
+        #ifdef VERTEX
+          attribute vec4 PB_Attr_Position;
+          attribute vec2 PB_Attr_Texture0;
+          
+          uniform mat4 PB_ModelViewProj;
+           
+          void main()
+          {
+              textureVarying = PB_Attr_Texture0;
+              
+              gl_Position = PB_ModelViewProj * PB_Attr_Position;
+          }
+        #endif
+        #ifdef FRAGMENT
+          uniform lowp vec4 _DiffuseColor;
+          uniform sampler2D _DiffuseTexture;
+           
+          void main()
+          {
+              gl_FragColor = texture2D(_DiffuseTexture, textureVarying) * _DiffuseColor;
+          }
+        #endif
+      </program>
+      <program language="cg">
+        void frag(
+          float2 texCoord    : TEXCOORD0,
+          out float4 oColor  : COLOR,
+          uniform sampler2D _DiffuseTexture,
+          uniform float4 _DiffuseColor)
+        {
+            float4 diffuseTexture = tex2D(_DiffuseTexture, texCoord);
+            
+            oColor.xyzw = diffuseTexture * _DiffuseColor;
+        }
+        
+        void vert(
+          float4 position    : POSITION,
+          float4 color       : COLOR,
+          float2 textureCoords : TEXCOORD0,
+          out float4 oPosition    : POSITION,
+          out float2 oTextureCoords : TEXCOORD0,
+          uniform float4x4 PB_ModelViewProj)
+        {
+            oPosition			= mul(PB_ModelViewProj, position);
+            oTextureCoords	= textureCoords;
+        }
+      </program>
+    </pass>
+  </subshader>
+</shader>

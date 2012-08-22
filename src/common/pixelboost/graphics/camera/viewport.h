@@ -13,13 +13,12 @@ namespace pb
 {
 
 class Camera;
-class Effect;
-class EffectTechnique;
 class OrthographicCamera;
 class Renderable;
 class RenderLayer;
 class Scene;
-class Technique;
+class Shader;
+class ShaderTechnique;
     
 class Viewport
 {
@@ -30,7 +29,7 @@ public:
     glm::vec4 GetNativeRegion();
     glm::vec2 GetSize();
     
-    void SetTechniqueDelegate(sigslot::Delegate2<Renderable*, Effect*, EffectTechnique*> delegate);
+    void SetTechniqueDelegate(sigslot::Delegate2<Renderable*, Shader*, ShaderTechnique*> delegate);
     
     void SetResolution(glm::vec2 size);
     glm::vec2 GetResolution();
@@ -55,9 +54,9 @@ public:
     void Render(RenderPass renderPass);
 
 private:
-    EffectTechnique* GetTechnique(Renderable* renderable, Effect* effect);
+    ShaderTechnique* GetTechnique(Renderable* renderable, Shader* shader);
     
-    sigslot::Delegate2<Renderable*, Effect*, EffectTechnique*> _TechniqueDelegate;
+    sigslot::Delegate2<Renderable*, Shader*, ShaderTechnique*> _TechniqueDelegate;
     
     Camera* _SceneCamera;
     OrthographicCamera* _UiCamera;

@@ -6,10 +6,10 @@
 #include "pixelboost/graphics/device/indexBuffer.h"
 #include "pixelboost/graphics/device/program.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
-#include "pixelboost/graphics/effect/effect.h"
-#include "pixelboost/graphics/effect/manager.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
+#include "pixelboost/graphics/shader/shader.h"
+#include "pixelboost/graphics/shader/manager.h"
 
 using namespace pb;
 
@@ -31,13 +31,13 @@ Uid PrimitiveRenderable::GetStaticType()
     return TypeHash("pb::PrimitiveRenderable");
 }
 
-Effect* PrimitiveRenderable::GetEffect()
+Shader* PrimitiveRenderable::GetShader()
 {
-    Effect* baseEffect = Renderable::GetEffect();
-    if (baseEffect)
-        return baseEffect;
+    Shader* baseShader = Renderable::GetShader();
+    if (baseShader)
+        return baseShader;
     
-    return Renderer::Instance()->GetEffectManager()->GetEffect("/default/effects/primitive.fx");
+    return Renderer::Instance()->GetShaderManager()->GetShader("/data/shaders/pb_solid.shc");
 }
 
 void PrimitiveRenderable::SetTransform(const glm::mat4x4& transform)
@@ -294,15 +294,15 @@ PrimitiveRenderer::PrimitiveRenderer()
     
     Renderer::Instance()->SetHandler(PrimitiveRenderable::GetStaticType(), this);
     
-    Renderer::Instance()->GetEffectManager()->LoadEffect("/default/effects/primitive.fx");
+    Renderer::Instance()->GetShaderManager()->LoadShader("/data/shaders/pb_solid.shc");
 }
     
 PrimitiveRenderer::~PrimitiveRenderer()
 {
-    Renderer::Instance()->GetEffectManager()->UnloadEffect("/default/effects/primitive.fx");
+    Renderer::Instance()->GetShaderManager()->UnloadShader("/data/shaders/pb_solid.shc");
 }
 
-void PrimitiveRenderer::Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass)
+void PrimitiveRenderer::Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass)
 {
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
@@ -318,8 +318,8 @@ void PrimitiveRenderer::Render(int count, Renderable** renderables, Viewport* vi
     {
         PrimitiveRenderable& primitive = *static_cast<PrimitiveRenderable*>(renderables[i]);
         
-        effectPass->GetShaderProgram()->SetUniform("diffuseColor", primitive._Color);
-        effectPass->GetShaderProgram()->SetUniform("modelViewProjectionMatrix", primitive.GetMVP());
+        shaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", primitive._Color);
+        shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", primitive.GetMVP());
          
         switch (primitive.GetPrimitiveType())
         {

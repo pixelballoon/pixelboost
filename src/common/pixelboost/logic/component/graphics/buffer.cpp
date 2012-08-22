@@ -60,14 +60,14 @@ Texture* BufferComponent::GetTexture()
     return _Renderable->GetTexture();
 }
 
-void BufferComponent::SetEffect(Effect* effect)
+void BufferComponent::SetShader(Shader* shader)
 {
-    _Renderable->SetEffect(effect);
+    _Renderable->SetShader(shader);
 }
 
-Effect* BufferComponent::GetEffect()
+Shader* BufferComponent::GetShader()
 {
-    return _Renderable->GetEffect();
+    return _Renderable->GetShader();
 }
 
 void BufferComponent::SetNumElements(int numElements)

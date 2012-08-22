@@ -27,7 +27,7 @@ namespace pb
         virtual void CalculateBounds();
         virtual void CalculateWorldMatrix();
         
-        virtual Effect* GetEffect();
+        virtual Shader* GetShader();
         
         void SetBounds(BoundingSphere bounds);
         void SetLocalTransform(const glm::mat4x4& localTransform);
@@ -62,7 +62,7 @@ namespace pb
         BufferRenderer();
         virtual ~BufferRenderer();
         
-        virtual void Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass);
+        virtual void Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass);
     };
     
 }

@@ -20,7 +20,7 @@ protected:
     ShaderProgramGL(GraphicsDeviceGL* device);
     virtual ~ShaderProgramGL();
     
-    virtual bool Load(const std::string& vertexSource, const std::string& fragmentSource);
+    virtual bool Load(const pugi::xml_node& attributes, const pugi::xml_node& pass);
     virtual bool Link();
     
 public:

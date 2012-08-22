@@ -32,7 +32,7 @@ public:
     virtual void CalculateBounds();
     virtual void CalculateWorldMatrix();
     
-    virtual Effect* GetEffect();
+    virtual Shader* GetShader();
     
     ParticleEmitter* GetEmitter();
     
@@ -84,7 +84,7 @@ public:
     ~ParticleEmitter();
     
     void Update(float time);
-    void Render(Viewport* viewport, EffectPass* effectPass);
+    void Render(Viewport* viewport, ShaderPass* shaderPass);
     
 public:
     struct Particle
@@ -188,7 +188,7 @@ public:
     ParticleRenderer();
     ~ParticleRenderer();
     
-    virtual void Render(int count, Renderable** renderables, Viewport* viewport, EffectPass* effectPass);
+    virtual void Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass);
 };
 
 }
