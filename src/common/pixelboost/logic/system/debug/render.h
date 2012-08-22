@@ -15,7 +15,7 @@ namespace pb
         DebugRenderSystem();
         virtual ~DebugRenderSystem();
         
-        virtual Uid GetType();
+        virtual Uid GetType() const;
         static Uid GetStaticType();
         
         virtual void Update(Scene* scene, float time);
