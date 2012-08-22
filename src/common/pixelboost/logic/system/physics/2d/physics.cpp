@@ -57,7 +57,7 @@ b2World* PhysicsSystem2D::GetPhysicsWorld()
     return _World;
 }
 
-void PhysicsSystem2D::SetDebugRender(bool debugRender, int flags, int layer)
+void PhysicsSystem2D::SetDebugRender(bool debugRender, int layer, int flags)
 {
     _DebugRender = debugRender;
     _DebugRenderer->SetLayer(layer);
