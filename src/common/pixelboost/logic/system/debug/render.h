@@ -21,8 +21,8 @@ namespace pb
         virtual void Update(Scene* scene, float time);
         virtual void Render(Scene* scene, Viewport* viewport, RenderPass renderPass);
         
-        PrimitiveRenderableEllipse* AddEllipse(RenderPass renderPass, glm::vec3 position, glm::vec3 rotation, glm::vec2 size, float time = 0.f);
-        PrimitiveRenderableLine* AddLine(RenderPass renderPass, glm::vec3 start, glm::vec3 end, float time = 0.f);
+        PrimitiveRenderableEllipse* AddEllipse(RenderPass renderPass, int layer, glm::vec3 position, glm::vec3 rotation, glm::vec2 size, glm::vec4 color = glm::vec4(1,1,1,1), float time = 0.f);
+        PrimitiveRenderableLine* AddLine(RenderPass renderPass, int layer, glm::vec3 start, glm::vec3 end, glm::vec4 color = glm::vec4(1,1,1,1), float time = 0.f);
         
     private:
         virtual void AddItem(Renderable* renderable, float time);

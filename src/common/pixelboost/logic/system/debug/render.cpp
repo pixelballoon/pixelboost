@@ -70,24 +70,28 @@ void DebugRenderSystem::Render(Scene* scene, Viewport* viewport, RenderPass rend
     }
 }
 
-PrimitiveRenderableEllipse* DebugRenderSystem::AddEllipse(RenderPass renderPass, glm::vec3 position, glm::vec3 rotation, glm::vec2 size, float time)
+PrimitiveRenderableEllipse* DebugRenderSystem::AddEllipse(RenderPass renderPass, int layer, glm::vec3 position, glm::vec3 rotation, glm::vec2 size, glm::vec4 color, float time)
 {
     PrimitiveRenderableEllipse* ellipse = new pb::PrimitiveRenderableEllipse(0);
     ellipse->SetRenderPass(renderPass);
     ellipse->SetPosition(position);
     ellipse->SetRotation(rotation);
     ellipse->SetSize(size);
+    ellipse->SetColor(color);
+    ellipse->SetLayer(layer);
     AddItem(ellipse, time);
     
     return ellipse;
 }
 
-PrimitiveRenderableLine* DebugRenderSystem::AddLine(RenderPass renderPass, glm::vec3 start, glm::vec3 end, float time)
+PrimitiveRenderableLine* DebugRenderSystem::AddLine(RenderPass renderPass, int layer, glm::vec3 start, glm::vec3 end, glm::vec4 color, float time)
 {
     PrimitiveRenderableLine* line = new pb::PrimitiveRenderableLine(0);
     line->SetRenderPass(renderPass);
     line->SetStart(start);
     line->SetEnd(end);
+    line->SetColor(color);
+    line->SetLayer(layer);
     AddItem(line, time);
     
     return line;
