@@ -21,7 +21,7 @@
             colorVarying = PB_Attr_Color0;
             textureVarying = PB_Attr_Texture0;
             
-            gl_Position = PB_ModelViewProj * position;
+            gl_Position = PB_ModelViewProj * PB_Attr_Position;
           }
         #endif
         #ifdef FRAGMENT
