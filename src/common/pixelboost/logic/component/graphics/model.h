@@ -26,8 +26,13 @@ namespace pb
         
         void SetShader(Shader* shader);
         void SetLayer(int layer);
+        
         void SetModel(const std::string& model);
+        const std::string& GetModel();
+        
         void SetTexture(const std::string& texture);
+        const std::string& GetTexture();
+        
         void SetTint(const glm::vec4& tint);
         
         void SetLocalTransform(const glm::mat4x4& transform);
