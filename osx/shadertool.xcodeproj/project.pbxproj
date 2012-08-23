@@ -7,29 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1C7F878C15E4D82A00D460DE /* Cg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C7F878B15E4D82A00D460DE /* Cg.framework */; };
 		1C89652F15DE94B300AB3196 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89652E15DE94B300AB3196 /* main.cpp */; };
-		1C897DD915DED09100AB3196 /* libhlsl2glsl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C897DD815DEB89B00AB3196 /* libhlsl2glsl.a */; };
-		1C897DDA15DED09100AB3196 /* libmesaglsl2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C897DCF15DEB89300AB3196 /* libmesaglsl2.a */; };
 		1CAD29BE15E2149800510183 /* libpixelboost_osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C897E3715DEEA1800AB3196 /* libpixelboost_osx.a */; };
 		1CAD29D615E2B1D500510183 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CAD29D515E2B1D500510183 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		1C897DCE15DEB89300AB3196 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1C897DC715DEB89200AB3196 /* mesaglsl2.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC046055464E500DB518D;
-			remoteInfo = mesaglsl2;
-		};
-		1C897DD715DEB89B00AB3196 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1C897DD015DEB89A00AB3196 /* hlslang.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 2B951C991135194700DBAF46;
-			remoteInfo = hlsl2glsl;
-		};
 		1C897E3415DEEA1800AB3196 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1C897E2C15DEEA1700AB3196 /* pixelboost.xcodeproj */;
@@ -59,11 +42,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1C7F878B15E4D82A00D460DE /* Cg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cg.framework; path = /Library/Frameworks/Cg.framework; sourceTree = "<absolute>"; };
 		1C89652A15DE94B300AB3196 /* shadertool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = shadertool; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C89652E15DE94B300AB3196 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		1C897DC715DEB89200AB3196 /* mesaglsl2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = mesaglsl2.xcodeproj; path = "../libs/glsl-optimizer/src/glsl/xcode/mesaglsl2.xcodeproj"; sourceTree = "<group>"; };
-		1C897DD015DEB89A00AB3196 /* hlslang.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = hlslang.xcodeproj; path = ../libs/hlsl2glsl/hlslang.xcodeproj; sourceTree = "<group>"; };
 		1C897E2C15DEEA1700AB3196 /* pixelboost.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = pixelboost.xcodeproj; path = ../libs/pixelboost/osx_ios/pixelboost.xcodeproj; sourceTree = "<group>"; };
 		1CAD29D515E2B1D500510183 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -73,11 +53,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1C7F878C15E4D82A00D460DE /* Cg.framework in Frameworks */,
 				1CAD29D615E2B1D500510183 /* Foundation.framework in Frameworks */,
 				1CAD29BE15E2149800510183 /* libpixelboost_osx.a in Frameworks */,
-				1C897DD915DED09100AB3196 /* libhlsl2glsl.a in Frameworks */,
-				1C897DDA15DED09100AB3196 /* libmesaglsl2.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,7 +64,6 @@
 		1C7F878A15E4D6F800D460DE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				1C7F878B15E4D82A00D460DE /* Cg.framework */,
 				1CAD29D515E2B1D500510183 /* Foundation.framework */,
 			);
 			name = Frameworks;
@@ -123,26 +99,8 @@
 			isa = PBXGroup;
 			children = (
 				1C897E2C15DEEA1700AB3196 /* pixelboost.xcodeproj */,
-				1C897DD015DEB89A00AB3196 /* hlslang.xcodeproj */,
-				1C897DC715DEB89200AB3196 /* mesaglsl2.xcodeproj */,
 			);
 			name = libs;
-			sourceTree = "<group>";
-		};
-		1C897DC815DEB89200AB3196 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				1C897DCF15DEB89300AB3196 /* libmesaglsl2.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		1C897DD115DEB89A00AB3196 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				1C897DD815DEB89B00AB3196 /* libhlsl2glsl.a */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		1C897E2D15DEEA1700AB3196 /* Products */ = {
@@ -195,14 +153,6 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 1C897DD115DEB89A00AB3196 /* Products */;
-					ProjectRef = 1C897DD015DEB89A00AB3196 /* hlslang.xcodeproj */;
-				},
-				{
-					ProductGroup = 1C897DC815DEB89200AB3196 /* Products */;
-					ProjectRef = 1C897DC715DEB89200AB3196 /* mesaglsl2.xcodeproj */;
-				},
-				{
 					ProductGroup = 1C897E2D15DEEA1700AB3196 /* Products */;
 					ProjectRef = 1C897E2C15DEEA1700AB3196 /* pixelboost.xcodeproj */;
 				},
@@ -215,20 +165,6 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		1C897DCF15DEB89300AB3196 /* libmesaglsl2.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libmesaglsl2.a;
-			remoteRef = 1C897DCE15DEB89300AB3196 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1C897DD815DEB89B00AB3196 /* libhlsl2glsl.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libhlsl2glsl.a;
-			remoteRef = 1C897DD715DEB89B00AB3196 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		1C897E3515DEEA1800AB3196 /* libpixelboost_ios.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
