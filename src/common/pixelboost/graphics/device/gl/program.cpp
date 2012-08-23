@@ -145,12 +145,7 @@ GLuint ShaderProgramGL::GetUniformLocation(const std::string& name)
     if (it != _Uniforms.end())
         return it->second;
  
-#ifdef PIXELBOOST_GRAPHICS_OPENGLES2
-    GLuint location = glGetUniformLocation(_Program, ("xlu_"+name).c_str());
-#endif
-#ifdef PIXELBOOST_GRAPHICS_OPENGL2
     GLuint location = glGetUniformLocation(_Program, name.c_str());
-#endif
     _Uniforms[name] = location;
     return location;
 }
