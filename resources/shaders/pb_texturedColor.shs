@@ -21,7 +21,7 @@
             colorVarying = PB_Attr_Color0;
             textureVarying = PB_Attr_Texture0;
             
-            gl_Position = PB_ModelViewProj * position;
+            gl_Position = PB_ModelViewProj * PB_Attr_Position;
           }
         #endif
         #ifdef FRAGMENT
@@ -33,23 +33,23 @@
           }
         #endif
       </program>
-      <program language="cg">
+      <program language="hlsl">
         void frag(
-          float2 texCoord   	: TEXCOORD0,
-          float4 iColor		: TEXCOORD1,
-          out float4 oColor 	: COLOR,
+          float2 texCoord     : TEXCOORD0,
+          float4 iColor		    : TEXCOORD1,
+          out float4 oColor   : COLOR,
           uniform sampler2D _DiffuseTexture)
         {
             oColor.xyzw = tex2D(_DiffuseTexture, texCoord) * iColor;
         }
         
         void vert(
-          float4 position    			: POSITION,
-          float4 color       			: COLOR,
-          float2 textureCoords 		: TEXCOORD0,
-          out float4 oPosition    	: POSITION,
-          out float2 oTextureCoords 	: TEXCOORD0,
-          out float4 oColor 			: TEXCOORD1,
+          float4 position    			     : POSITION,
+          float4 color       			     : COLOR,
+          float2 textureCoords 		     : TEXCOORD0,
+          out float4 oPosition    	   : POSITION,
+          out float2 oTextureCoords 	 : TEXCOORD0,
+          out float4 oColor 			     : TEXCOORD1,
           uniform float4x4 PB_ModelViewProj)
         {
             oPosition			= mul(PB_ModelViewProj, position);

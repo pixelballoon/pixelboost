@@ -27,7 +27,7 @@
           }
         #endif
       </program>
-      <program language="cg">
+      <program language="hlsl">
         void frag(
           out float4 oColor  : COLOR,
           uniform float4 _DiffuseColor)
@@ -36,7 +36,7 @@
         }
         
         void vert(
-          float4 position    : POSITION,
+          float4 position         : POSITION,
           out float4 oPosition    : POSITION,
           uniform float4x4 PB_ModelViewProj)
         {

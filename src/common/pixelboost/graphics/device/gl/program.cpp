@@ -23,18 +23,9 @@ bool ShaderProgramGL::Load(const pugi::xml_node& attributes, const pugi::xml_nod
 {
     std::string programType;
     
-#ifdef PIXELBOOST_GRAPHICS_OPENGLES2
-    programType = "gles2";
-#endif
-#ifdef PIXELBOOST_GRAPHICS_OPENGL2
-    programType = "gl2";
-#endif
+    pugi::xml_node program = pass.find_child_by_attribute("program", "language", "glsl");
     
-    pugi::xml_node program = pass.find_child_by_attribute("program", "type", programType.c_str());
-    pugi::xml_node vertex = program.child("vertexProgram");
-    pugi::xml_node fragment = program.child("fragmentProgram");
-    
-    if (program.empty() || vertex.empty() || fragment.empty())
+    if (program.empty())
         return false;
 
     _Uniforms.clear();
@@ -46,10 +37,10 @@ bool ShaderProgramGL::Load(const pugi::xml_node& attributes, const pugi::xml_nod
     
     _Program = glCreateProgram();
     
-    if (!CompileShader(GL_FRAGMENT_SHADER, &_FragmentShader, fragment.child("source").child_value()))
+    if (!CompileShader(GL_FRAGMENT_SHADER, &_FragmentShader, program.child_value()))
         return false;
     
-    if (!CompileShader(GL_VERTEX_SHADER, &_VertexShader, vertex.child("source").child_value()))
+    if (!CompileShader(GL_VERTEX_SHADER, &_VertexShader, program.child_value()))
         return false;
     
     glAttachShader(_Program, _FragmentShader);
@@ -145,12 +136,7 @@ GLuint ShaderProgramGL::GetUniformLocation(const std::string& name)
     if (it != _Uniforms.end())
         return it->second;
  
-#ifdef PIXELBOOST_GRAPHICS_OPENGLES2
-    GLuint location = glGetUniformLocation(_Program, ("xlu_"+name).c_str());
-#endif
-#ifdef PIXELBOOST_GRAPHICS_OPENGL2
     GLuint location = glGetUniformLocation(_Program, name.c_str());
-#endif
     _Uniforms[name] = location;
     return location;
 }
@@ -159,10 +145,10 @@ bool ShaderProgramGL::CompileShader(GLenum type, GLuint* shader, const std::stri
 {
     *shader = glCreateShader(type);
 #ifdef PIXELBOOST_GRAPHICS_OPENGLES2
-    const GLchar* shaderSource[3] = {"#version 100\n", type == GL_VERTEX_SHADER ? "#define VERTEX\n" : "#define FRAGMENT\n", source.c_str()};
+    const GLchar* shaderSource[3] = {"#version 100\n#define PLATFORM_GLES\n#define PLATFORM_GLSL1\n", type == GL_VERTEX_SHADER ? "#define VERTEX\n" : "#define FRAGMENT\n", source.c_str()};
 #endif
 #ifdef PIXELBOOST_GRAPHICS_OPENGL2
-    const GLchar* shaderSource[3] = {"#version 120\n#define lowp\n#define mediump\n#define highp\n", type == GL_VERTEX_SHADER ? "#define VERTEX\n" : "#define FRAGMENT\n", source.c_str()};
+    const GLchar* shaderSource[3] = {"#version 120\n#define PLATFORM_GL\n#define PLATFORM_GLSL1\n#define lowp\n#define mediump\n#define highp\n", type == GL_VERTEX_SHADER ? "#define VERTEX\n" : "#define FRAGMENT\n", source.c_str()};
 #endif
     glShaderSource(*shader, 3, shaderSource, NULL);
     glCompileShader(*shader);

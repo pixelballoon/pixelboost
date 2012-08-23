@@ -11,7 +11,7 @@
         #ifdef VERTEX
           attribute vec4 PB_Attr_Position;
           attribute vec2 PB_Attr_Texture0;
-          
+
           uniform mat4 PB_ModelViewProj;
            
           void main()
@@ -31,7 +31,7 @@
           }
         #endif
       </program>
-      <program language="cg">
+      <program language="hlsl">
         void frag(
           float2 texCoord    : TEXCOORD0,
           out float4 oColor  : COLOR,
@@ -44,10 +44,10 @@
         }
         
         void vert(
-          float4 position    : POSITION,
-          float4 color       : COLOR,
-          float2 textureCoords : TEXCOORD0,
-          out float4 oPosition    : POSITION,
+          float4 position           : POSITION,
+          float4 color              : COLOR,
+          float2 textureCoords      : TEXCOORD0,
+          out float4 oPosition      : POSITION,
           out float2 oTextureCoords : TEXCOORD0,
           uniform float4x4 PB_ModelViewProj)
         {
