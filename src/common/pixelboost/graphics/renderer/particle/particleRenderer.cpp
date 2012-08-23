@@ -389,6 +389,8 @@ void ParticleEmitter::LoadSpriteSheet(FileLocation location, const std::string& 
 
 void ParticleEmitter::SetSpriteSheet(std::shared_ptr<SpriteSheet> spriteSheet)
 {
+    _SpriteSheet = spriteSheet;
+    
     if (!_Config)
         return;
     
@@ -414,6 +416,7 @@ void ParticleEmitter::SetConfig(EmitterConfig* config)
     }
     
     _Config = config;
+    _Config->spriteSheet = _SpriteSheet;
 }
 
 EmitterConfig* ParticleEmitter::GetConfig()

@@ -60,9 +60,19 @@ void ModelComponent::SetModel(const std::string& model)
     _Renderable->SetModel(model);
 }
 
+const std::string& ModelComponent::GetModel()
+{
+    return _Renderable->GetModel();
+}
+
 void ModelComponent::SetTexture(const std::string& texture)
 {
     _Renderable->SetTexture(texture);
+}
+
+const std::string& ModelComponent::GetTexture()
+{
+    return _Renderable->GetTexture();
 }
 
 void ModelComponent::SetTint(const glm::vec4& tint)

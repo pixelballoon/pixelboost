@@ -26,6 +26,7 @@ public:
     Viewport(int viewportId, Camera* camera);
     ~Viewport();
     
+    glm::vec4 GetNativeRegion();
     glm::vec2 GetSize();
     
     void SetTechniqueDelegate(sigslot::Delegate2<Renderable*, Shader*, ShaderTechnique*> delegate);

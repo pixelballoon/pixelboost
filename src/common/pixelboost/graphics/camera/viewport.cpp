@@ -25,6 +25,11 @@ Viewport::~Viewport()
     delete _UiCamera;
 }
 
+glm::vec4 Viewport::GetNativeRegion()
+{
+    return glm::vec4(_Position.x + GraphicsDevice::Instance()->GetDisplayResolution().x/2.f - _Resolution.x/2.f, _Position.y + GraphicsDevice::Instance()->GetDisplayResolution().y/2.f - _Resolution.y/2.f, _Resolution.x, _Resolution.y);
+}
+
 glm::vec2 Viewport::GetSize()
 {
     return GetResolution()/GetDensity();
@@ -104,7 +109,7 @@ void Viewport::Render(RenderPass renderPass)
 {
     if (_Scene)
     {
-        GraphicsDevice::Instance()->SetViewport(glm::vec4(_Position.x + GraphicsDevice::Instance()->GetDisplayResolution().x/2.f - _Resolution.x/2.f, _Position.y + GraphicsDevice::Instance()->GetDisplayResolution().y/2.f - _Resolution.y/2.f, _Resolution.x, _Resolution.y));
+        GraphicsDevice::Instance()->SetViewport(GetNativeRegion());
         
         switch (renderPass)
         {
