@@ -7,9 +7,6 @@
 #include "pixelboost/data/xml/xml.h"
 #include "pixelboost/file/fileHelpers.h"
 
-#include "hlsl2glsl.h"
-#include "src/glsl/glsl_optimizer.h"
-
 enum ShaderLanguage
 {
     kShaderLanguageGLSL,
@@ -58,8 +55,6 @@ bool AppendProgram(pugi::xml_node& programOutput, pugi::xml_node& programInput)
 
 int main(int argc, const char * argv[])
 {
-    Hlsl2Glsl_Initialize();
-    
     bool status = true;
     
     std::string vertex, fragment;
@@ -117,8 +112,6 @@ int main(int argc, const char * argv[])
     outputDocument.save(output);
     
     pb::FileHelpers::StringToFile(pb::kFileLocationUser, outputLocation, output.str());
-    
-    Hlsl2Glsl_Finalize();
     
     if (!status)
         return 1;
