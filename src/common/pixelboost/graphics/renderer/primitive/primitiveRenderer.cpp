@@ -339,9 +339,6 @@ void PrimitiveRenderer::Render(int count, Renderable** renderables, Viewport* vi
                 GraphicsDevice::Instance()->BindVertexBuffer(0);
                 
                 break;
-
-                
-                break;
             }
             case PrimitiveRenderable::kTypeRectangle:
             {
