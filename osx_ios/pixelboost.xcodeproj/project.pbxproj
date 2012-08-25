@@ -63,8 +63,8 @@
 		1C25E89A15E55AEF00833738 /* rectangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976B815DE9B3A00AB3196 /* rectangle.cpp */; };
 		1C25E89B15E55AEF00833738 /* sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976BA15DE9B3A00AB3196 /* sprite.cpp */; };
 		1C25E89C15E55AEF00833738 /* rectTouch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976BD15DE9B3A00AB3196 /* rectTouch.cpp */; };
-		1C25E89D15E55AEF00833738 /* dynamicBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976C115DE9B3A00AB3196 /* dynamicBody.cpp */; };
-		1C25E89E15E55AEF00833738 /* staticBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976C315DE9B3A00AB3196 /* staticBody.cpp */; };
+		1C25E89D15E55AEF00833738 /* physicsBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976C115DE9B3A00AB3196 /* physicsBody.cpp */; };
+		1C25E89E15E55AEF00833738 /* userBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976C315DE9B3A00AB3196 /* userBody.cpp */; };
 		1C25E89F15E55AEF00833738 /* physics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976C515DE9B3A00AB3196 /* physics.cpp */; };
 		1C25E8A015E55AEF00833738 /* basic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976C815DE9B3A00AB3196 /* basic.cpp */; };
 		1C25E8A115E55AEF00833738 /* parallax.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976CA15DE9B3A00AB3196 /* parallax.cpp */; };
@@ -325,8 +325,8 @@
 		1C897B7215DEA3D600AB3196 /* rectangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976B815DE9B3A00AB3196 /* rectangle.cpp */; };
 		1C897B7315DEA3D600AB3196 /* sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976BA15DE9B3A00AB3196 /* sprite.cpp */; };
 		1C897B7415DEA3D600AB3196 /* rectTouch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976BD15DE9B3A00AB3196 /* rectTouch.cpp */; };
-		1C897B7515DEA3D600AB3196 /* dynamicBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976C115DE9B3A00AB3196 /* dynamicBody.cpp */; };
-		1C897B7615DEA3D600AB3196 /* staticBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976C315DE9B3A00AB3196 /* staticBody.cpp */; };
+		1C897B7515DEA3D600AB3196 /* physicsBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976C115DE9B3A00AB3196 /* physicsBody.cpp */; };
+		1C897B7615DEA3D600AB3196 /* userBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976C315DE9B3A00AB3196 /* userBody.cpp */; };
 		1C897B7715DEA3D600AB3196 /* physics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976C515DE9B3A00AB3196 /* physics.cpp */; };
 		1C897B7815DEA3D600AB3196 /* basic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976C815DE9B3A00AB3196 /* basic.cpp */; };
 		1C897B7915DEA3D600AB3196 /* parallax.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976CA15DE9B3A00AB3196 /* parallax.cpp */; };
@@ -610,8 +610,8 @@
 		1C897C9915DEA3E500AB3196 /* rectangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976B815DE9B3A00AB3196 /* rectangle.cpp */; };
 		1C897C9A15DEA3E500AB3196 /* sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976BA15DE9B3A00AB3196 /* sprite.cpp */; };
 		1C897C9B15DEA3E500AB3196 /* rectTouch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976BD15DE9B3A00AB3196 /* rectTouch.cpp */; };
-		1C897C9C15DEA3E500AB3196 /* dynamicBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976C115DE9B3A00AB3196 /* dynamicBody.cpp */; };
-		1C897C9D15DEA3E500AB3196 /* staticBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976C315DE9B3A00AB3196 /* staticBody.cpp */; };
+		1C897C9C15DEA3E500AB3196 /* physicsBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976C115DE9B3A00AB3196 /* physicsBody.cpp */; };
+		1C897C9D15DEA3E500AB3196 /* userBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976C315DE9B3A00AB3196 /* userBody.cpp */; };
 		1C897C9E15DEA3E500AB3196 /* physics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976C515DE9B3A00AB3196 /* physics.cpp */; };
 		1C897C9F15DEA3E500AB3196 /* basic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976C815DE9B3A00AB3196 /* basic.cpp */; };
 		1C897CA015DEA3E500AB3196 /* parallax.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8976CA15DE9B3A00AB3196 /* parallax.cpp */; };
@@ -979,10 +979,10 @@
 		1C8976BB15DE9B3A00AB3196 /* sprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sprite.h; sourceTree = "<group>"; };
 		1C8976BD15DE9B3A00AB3196 /* rectTouch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rectTouch.cpp; sourceTree = "<group>"; };
 		1C8976BE15DE9B3A00AB3196 /* rectTouch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rectTouch.h; sourceTree = "<group>"; };
-		1C8976C115DE9B3A00AB3196 /* dynamicBody.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dynamicBody.cpp; sourceTree = "<group>"; };
-		1C8976C215DE9B3A00AB3196 /* dynamicBody.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dynamicBody.h; sourceTree = "<group>"; };
-		1C8976C315DE9B3A00AB3196 /* staticBody.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = staticBody.cpp; sourceTree = "<group>"; };
-		1C8976C415DE9B3A00AB3196 /* staticBody.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = staticBody.h; sourceTree = "<group>"; };
+		1C8976C115DE9B3A00AB3196 /* physicsBody.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = physicsBody.cpp; sourceTree = "<group>"; };
+		1C8976C215DE9B3A00AB3196 /* physicsBody.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = physicsBody.h; sourceTree = "<group>"; };
+		1C8976C315DE9B3A00AB3196 /* userBody.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = userBody.cpp; sourceTree = "<group>"; };
+		1C8976C415DE9B3A00AB3196 /* userBody.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = userBody.h; sourceTree = "<group>"; };
 		1C8976C515DE9B3A00AB3196 /* physics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = physics.cpp; sourceTree = "<group>"; };
 		1C8976C615DE9B3A00AB3196 /* physics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = physics.h; sourceTree = "<group>"; };
 		1C8976C815DE9B3A00AB3196 /* basic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = basic.cpp; sourceTree = "<group>"; };
@@ -2204,10 +2204,10 @@
 		1C8976C015DE9B3A00AB3196 /* 2d */ = {
 			isa = PBXGroup;
 			children = (
-				1C8976C115DE9B3A00AB3196 /* dynamicBody.cpp */,
-				1C8976C215DE9B3A00AB3196 /* dynamicBody.h */,
-				1C8976C315DE9B3A00AB3196 /* staticBody.cpp */,
-				1C8976C415DE9B3A00AB3196 /* staticBody.h */,
+				1C8976C115DE9B3A00AB3196 /* physicsBody.cpp */,
+				1C8976C215DE9B3A00AB3196 /* physicsBody.h */,
+				1C8976C315DE9B3A00AB3196 /* userBody.cpp */,
+				1C8976C415DE9B3A00AB3196 /* userBody.h */,
 			);
 			path = 2d;
 			sourceTree = "<group>";
@@ -3773,8 +3773,8 @@
 				1C25E89A15E55AEF00833738 /* rectangle.cpp in Sources */,
 				1C25E89B15E55AEF00833738 /* sprite.cpp in Sources */,
 				1C25E89C15E55AEF00833738 /* rectTouch.cpp in Sources */,
-				1C25E89D15E55AEF00833738 /* dynamicBody.cpp in Sources */,
-				1C25E89E15E55AEF00833738 /* staticBody.cpp in Sources */,
+				1C25E89D15E55AEF00833738 /* physicsBody.cpp in Sources */,
+				1C25E89E15E55AEF00833738 /* userBody.cpp in Sources */,
 				1C25E89F15E55AEF00833738 /* physics.cpp in Sources */,
 				1C25E8A015E55AEF00833738 /* basic.cpp in Sources */,
 				1C25E8A115E55AEF00833738 /* parallax.cpp in Sources */,
@@ -4041,8 +4041,8 @@
 				1C897B7215DEA3D600AB3196 /* rectangle.cpp in Sources */,
 				1C897B7315DEA3D600AB3196 /* sprite.cpp in Sources */,
 				1C897B7415DEA3D600AB3196 /* rectTouch.cpp in Sources */,
-				1C897B7515DEA3D600AB3196 /* dynamicBody.cpp in Sources */,
-				1C897B7615DEA3D600AB3196 /* staticBody.cpp in Sources */,
+				1C897B7515DEA3D600AB3196 /* physicsBody.cpp in Sources */,
+				1C897B7615DEA3D600AB3196 /* userBody.cpp in Sources */,
 				1C897B7715DEA3D600AB3196 /* physics.cpp in Sources */,
 				1C897B7815DEA3D600AB3196 /* basic.cpp in Sources */,
 				1C897B7915DEA3D600AB3196 /* parallax.cpp in Sources */,
@@ -4334,8 +4334,8 @@
 				1C897C9915DEA3E500AB3196 /* rectangle.cpp in Sources */,
 				1C897C9A15DEA3E500AB3196 /* sprite.cpp in Sources */,
 				1C897C9B15DEA3E500AB3196 /* rectTouch.cpp in Sources */,
-				1C897C9C15DEA3E500AB3196 /* dynamicBody.cpp in Sources */,
-				1C897C9D15DEA3E500AB3196 /* staticBody.cpp in Sources */,
+				1C897C9C15DEA3E500AB3196 /* physicsBody.cpp in Sources */,
+				1C897C9D15DEA3E500AB3196 /* userBody.cpp in Sources */,
 				1C897C9E15DEA3E500AB3196 /* physics.cpp in Sources */,
 				1C897C9F15DEA3E500AB3196 /* basic.cpp in Sources */,
 				1C897CA015DEA3E500AB3196 /* parallax.cpp in Sources */,

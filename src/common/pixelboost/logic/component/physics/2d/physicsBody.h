@@ -13,19 +13,26 @@ namespace pb
     struct FixtureDefinition2D;
     class Message;
     
-    class DynamicBody2DComponent : public PhysicsComponent
+    class PhysicsBody2DComponent : public PhysicsComponent
     {
     public:
         enum BodyType
         {
-            kBodyTypeCircle,
-            kBodyTypeRect,
+            kBodyTypeDynamic,
+            kBodyTypeStatic,
+            kBodyTypeKinematic,
+        };
+        
+        enum BodyShape
+        {
+            kBodyShapeCircle,
+            kBodyShapeRect,
         };
         
     public:
-        DynamicBody2DComponent(Entity* parent, BodyType type, glm::vec2 size);
-        DynamicBody2DComponent(Entity* parent, FixtureDefinition2D& fixtureDefinition);
-        ~DynamicBody2DComponent();
+        PhysicsBody2DComponent(Entity* parent, BodyType type, BodyShape shape, glm::vec2 size);
+        PhysicsBody2DComponent(Entity* parent, BodyType type, FixtureDefinition2D& fixtureDefinition);
+        ~PhysicsBody2DComponent();
         
         virtual Uid GetType();
         static Uid GetStaticType();

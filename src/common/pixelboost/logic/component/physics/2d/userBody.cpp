@@ -2,9 +2,9 @@
 
 #include "Box2D/Box2D.h"
 
-#include "pixelboost/logic/component/physics/2d/dynamicBody.h"
+#include "pixelboost/logic/component/physics/2d/userBody.h"
 #include "pixelboost/logic/component/transform.h"
-#include "pixelboost/logic/message/update.h"
+#include "pixelboost/logic/message/transform.h"
 #include "pixelboost/logic/system/physics/2d/physics.h"
 #include "pixelboost/logic/entity.h"
 #include "pixelboost/logic/scene.h"
@@ -12,7 +12,7 @@
 
 using namespace pb;
 
-DynamicBody2DComponent::DynamicBody2DComponent(Entity* parent, BodyType type, glm::vec2 size)
+PhysicsUserBody2DComponent::PhysicsUserBody2DComponent(Entity* parent, BodyType type, BodyShape shape, glm::vec2 size)
     : PhysicsComponent(parent)
 {
     pb::PhysicsSystem2D* physicsSystem = GetScene()->GetSystemByType<pb::PhysicsSystem2D>();
@@ -23,29 +23,38 @@ DynamicBody2DComponent::DynamicBody2DComponent(Entity* parent, BodyType type, gl
     glm::vec3 position = transform->GetPosition();
     
     b2BodyDef bodyDef;
-    bodyDef.fixedRotation = false;
     bodyDef.position = b2Vec2(position.x, position.y);
-    bodyDef.type = b2_dynamicBody;
+    switch (type)
+    {
+        case kBodyTypeDynamic:
+            bodyDef.type = b2_dynamicBody;
+            break;
+        case kBodyTypeStatic:
+            bodyDef.type = b2_staticBody;
+            break;
+        case kBodyTypeKinematic:
+            bodyDef.type = b2_kinematicBody;
+            break;
+    }
     bodyDef.userData = this;
     
     b2FixtureDef fixtureDef;
-    fixtureDef.density = 1.f;
     
     b2CircleShape circle;
     b2PolygonShape rect;
     
-    switch (type)
+    switch (shape)
     {
-        case kBodyTypeCircle:
+        case kBodyShapeCircle:
         {
             circle.m_radius = size.x;
             fixtureDef.shape = &circle;
             break;
         }
             
-        case kBodyTypeRect:
+        case kBodyShapeRect:
         {
-            rect.SetAsBox(size.x, size.y);
+            rect.SetAsBox(size.x/2.f, size.y/2.f);
             fixtureDef.shape = &rect;
             break;
         }
@@ -53,11 +62,12 @@ DynamicBody2DComponent::DynamicBody2DComponent(Entity* parent, BodyType type, gl
     
     _Body = world->CreateBody(&bodyDef);
     _Body->CreateFixture(&fixtureDef);
+    _Body->SetTransform(b2Vec2(position.x, position.y), glm::radians(transform->GetRotation().z));
     
-    GetParent()->RegisterMessageHandler<UpdateMessage>(Entity::MessageHandler(this, &DynamicBody2DComponent::OnUpdate));
+    GetParent()->RegisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &PhysicsUserBody2DComponent::OnTransformChanged));
 }
 
-DynamicBody2DComponent::DynamicBody2DComponent(Entity* parent, FixtureDefinition2D& fixtureDefinition)
+PhysicsUserBody2DComponent::PhysicsUserBody2DComponent(Entity* parent, BodyType type, FixtureDefinition2D& fixtureDefinition)
     : PhysicsComponent(parent)
 {
     pb::PhysicsSystem2D* physicsSystem = GetScene()->GetSystemByType<pb::PhysicsSystem2D>();
@@ -69,19 +79,30 @@ DynamicBody2DComponent::DynamicBody2DComponent(Entity* parent, FixtureDefinition
     glm::vec3 scale = transform->GetScale();
     
     b2BodyDef bodyDefinition;
-    bodyDefinition.type = b2_dynamicBody;
+    switch (type)
+    {
+        case kBodyTypeDynamic:
+            bodyDefinition.type = b2_dynamicBody;
+            break;
+        case kBodyTypeStatic:
+            bodyDefinition.type = b2_staticBody;
+            break;
+        case kBodyTypeKinematic:
+            bodyDefinition.type = b2_kinematicBody;
+            break;
+    }
     bodyDefinition.position = b2Vec2(position.x, position.y);
     bodyDefinition.userData = this;
     
     _Body = PhysicsHelpers2D::CreateBodyFromDefinition(world, bodyDefinition, fixtureDefinition, 1.f, glm::vec2(scale.x, scale.y));
     _Body->SetTransform(b2Vec2(position.x, position.y), glm::radians(transform->GetRotation().z));
     
-    GetParent()->RegisterMessageHandler<UpdateMessage>(Entity::MessageHandler(this, &DynamicBody2DComponent::OnUpdate));
+    GetParent()->RegisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &PhysicsUserBody2DComponent::OnTransformChanged));
 }
 
-DynamicBody2DComponent::~DynamicBody2DComponent()
+PhysicsUserBody2DComponent::~PhysicsUserBody2DComponent()
 {
-    GetParent()->UnregisterMessageHandler<UpdateMessage>(Entity::MessageHandler(this, &DynamicBody2DComponent::OnUpdate));
+    GetParent()->UnregisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &PhysicsUserBody2DComponent::OnTransformChanged));
     
     pb::PhysicsSystem2D* physicsSystem = GetScene()->GetSystemByType<pb::PhysicsSystem2D>();
     
@@ -90,22 +111,17 @@ DynamicBody2DComponent::~DynamicBody2DComponent()
     world->DestroyBody(_Body);
 }
 
-Uid DynamicBody2DComponent::GetType()
+Uid PhysicsUserBody2DComponent::GetType()
 {
     return GetStaticType();
 }
 
-Uid DynamicBody2DComponent::GetStaticType()
+Uid PhysicsUserBody2DComponent::GetStaticType()
 {
-    return TypeHash("pb::DynamicBody2DComponent");
+    return TypeHash("pb::PhysicsUserBody2DComponent");
 }
 
-b2Body* DynamicBody2DComponent::GetBody()
-{
-    return _Body;
-}
-
-void DynamicBody2DComponent::SetSensor(bool isSensor)
+void PhysicsUserBody2DComponent::SetSensor(bool isSensor)
 {
     b2Fixture* fixture = _Body->GetFixtureList();
     
@@ -116,19 +132,20 @@ void DynamicBody2DComponent::SetSensor(bool isSensor)
     }
 }
 
-void DynamicBody2DComponent::OnUpdate(const Message& message)
+void PhysicsUserBody2DComponent::OnTransformChanged(const Message& message)
 {
     UpdateTransform();
 }
 
-void DynamicBody2DComponent::UpdateTransform()
+void PhysicsUserBody2DComponent::UpdateTransform()
 {
-    TransformComponent* transform = GetParent()->GetComponentByType<TransformComponent>();
+    TransformComponent* transform = GetParent()->GetComponentByType<TransformComponent>();    
     
     if (transform)
     {
-        transform->SetPosition(glm::vec3(_Body->GetPosition().x, _Body->GetPosition().y, 0));
-        transform->SetRotation(glm::vec3(0, 0, glm::degrees(_Body->GetTransform().q.GetAngle())));
+        glm::vec3 position = transform->GetPosition();
+        glm::vec3 rotation = transform->GetRotation();
+        _Body->SetTransform(b2Vec2(position.x, position.y), glm::radians(rotation.z));
     }
 }
 
