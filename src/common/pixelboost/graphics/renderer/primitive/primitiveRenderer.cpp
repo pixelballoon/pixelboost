@@ -308,11 +308,7 @@ void PrimitiveRenderer::Render(int count, Renderable** renderables, Viewport* vi
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
             
-#ifdef PIXELBOOST_GRAPHICS_PREMULTIPLIED_ALPHA
     GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
-#else
-    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
-#endif
     
     for (int i=0; i < count; i++)
     {

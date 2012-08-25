@@ -19,7 +19,8 @@ public:
     RectangleComponent(Entity* parent);
     virtual ~RectangleComponent();
     
-    Uid GetType();
+    virtual Uid GetType();
+    static Uid GetStaticType();    
     
     void SetRenderPass(RenderPass renderPass);
     void SetLayer(int layer);

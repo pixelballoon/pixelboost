@@ -33,6 +33,11 @@ RectangleComponent::~RectangleComponent()
 
 Uid RectangleComponent::GetType()
 {
+    return RectangleComponent::GetStaticType();
+}
+
+Uid RectangleComponent::GetStaticType()
+{
     return TypeHash("pb::RectangleComponent");
 }
 

@@ -63,7 +63,7 @@ glm::vec2 EllipseComponent::GetSize()
 
 void EllipseComponent::SetSolid(bool solid)
 {
-    _Renderable->SetSolid(true);
+    _Renderable->SetSolid(solid);
 }
 
 bool EllipseComponent::GetSolid()
