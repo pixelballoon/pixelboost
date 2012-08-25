@@ -38,6 +38,7 @@ public:
     
     Entity* GetEntityById(Uid uid);
     const EntityMap& GetEntities() const;
+    template <class T> EntityMap GetEntitiesByType();
     
 public:
     void BroadcastMessage(const Message& message);
