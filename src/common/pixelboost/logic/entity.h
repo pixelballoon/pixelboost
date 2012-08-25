@@ -57,8 +57,8 @@ public:
     template <class T>T* GetComponentByType();
     template <class T> ComponentList GetComponentsByType();
     
-    void RegisterMessageHandler(Uid messageType, MessageHandler handler);
-    void UnregisterMessageHandler(Uid messageType, MessageHandler handler);
+    template <class T> void RegisterMessageHandler(MessageHandler handler);
+    template <class T> void UnregisterMessageHandler(MessageHandler handler);
     
     void HandleMessage(const Message& message);
     

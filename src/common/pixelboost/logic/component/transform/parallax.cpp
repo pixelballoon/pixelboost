@@ -17,7 +17,7 @@ ParallaxTransformComponent::ParallaxTransformComponent(Entity* parent, Uid paral
     
     if (parallaxEntity)
     {
-        parallaxEntity->RegisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &ParallaxTransformComponent::OnTransformChanged));
+        parallaxEntity->RegisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &ParallaxTransformComponent::OnTransformChanged));
     }
 }
 

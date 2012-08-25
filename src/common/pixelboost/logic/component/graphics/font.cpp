@@ -22,14 +22,14 @@ FontComponent::FontComponent(Entity* parent, const std::string& font, const std:
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
     
-    GetParent()->RegisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &FontComponent::OnTransformChanged));
+    GetParent()->RegisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &FontComponent::OnTransformChanged));
     
     UpdateTransform();
 }
 
 FontComponent::~FontComponent()
 {
-    GetParent()->UnregisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &FontComponent::OnTransformChanged));
+    GetParent()->UnregisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &FontComponent::OnTransformChanged));
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
     

@@ -112,16 +112,6 @@ Component* Entity::GetComponentById(Uid componentId)
     return 0;
 }
 
-void Entity::RegisterMessageHandler(Uid messageType, MessageHandler handler)
-{
-    _MessageHandlers[messageType].Connect(handler);
-}
-
-void Entity::UnregisterMessageHandler(Uid messageType, MessageHandler handler)
-{
-    _MessageHandlers[messageType].Disconnect(handler);
-}
-
 void Entity::HandleMessage(const Message& message)
 {
     MessageHandlers::iterator handlerList = _MessageHandlers.find(message.GetType());

@@ -52,7 +52,7 @@ StaticBody2DComponent::StaticBody2DComponent(Entity* parent, BodyType type, glm:
     _Body = world->CreateBody(&bodyDef);
     _Body->CreateFixture(&fixtureDef);
     
-    GetParent()->RegisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &StaticBody2DComponent::OnTransformChanged));
+    GetParent()->RegisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &StaticBody2DComponent::OnTransformChanged));
 }
 
 StaticBody2DComponent::StaticBody2DComponent(Entity* parent, FixtureDefinition2D& fixtureDefinition)
@@ -74,12 +74,12 @@ StaticBody2DComponent::StaticBody2DComponent(Entity* parent, FixtureDefinition2D
     _Body = PhysicsHelpers2D::CreateBodyFromDefinition(world, bodyDefinition, fixtureDefinition, 1.f, glm::vec2(scale.x, scale.y));
     _Body->SetTransform(b2Vec2(position.x, position.y), glm::radians(transform->GetRotation().z));
     
-    GetParent()->RegisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &StaticBody2DComponent::OnTransformChanged));
+    GetParent()->RegisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &StaticBody2DComponent::OnTransformChanged));
 }
 
 StaticBody2DComponent::~StaticBody2DComponent()
 {
-    GetParent()->UnregisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &StaticBody2DComponent::OnTransformChanged));
+    GetParent()->UnregisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &StaticBody2DComponent::OnTransformChanged));
     
     pb::PhysicsSystem2D* physicsSystem = GetScene()->GetSystemByType<pb::PhysicsSystem2D>();
     

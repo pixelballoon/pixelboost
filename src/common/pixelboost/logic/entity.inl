@@ -38,5 +38,15 @@ template <class T> Entity::ComponentList Entity::GetComponentsByType()
     
     return components;
 }
+
+template <class T> void Entity::RegisterMessageHandler(MessageHandler handler)
+{
+    _MessageHandlers[T::GetStaticType()].Connect(handler);
+}
+
+template <class T> void Entity::UnregisterMessageHandler(MessageHandler handler)
+{
+    _MessageHandlers[T::GetStaticType()].Disconnect(handler);
+}
     
 }

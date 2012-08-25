@@ -54,7 +54,7 @@ DynamicBody2DComponent::DynamicBody2DComponent(Entity* parent, BodyType type, gl
     _Body = world->CreateBody(&bodyDef);
     _Body->CreateFixture(&fixtureDef);
     
-    GetParent()->RegisterMessageHandler(UpdateMessage::GetStaticType(), Entity::MessageHandler(this, &DynamicBody2DComponent::OnUpdate));
+    GetParent()->RegisterMessageHandler<UpdateMessage>(Entity::MessageHandler(this, &DynamicBody2DComponent::OnUpdate));
 }
 
 DynamicBody2DComponent::DynamicBody2DComponent(Entity* parent, FixtureDefinition2D& fixtureDefinition)
@@ -76,12 +76,12 @@ DynamicBody2DComponent::DynamicBody2DComponent(Entity* parent, FixtureDefinition
     _Body = PhysicsHelpers2D::CreateBodyFromDefinition(world, bodyDefinition, fixtureDefinition, 1.f, glm::vec2(scale.x, scale.y));
     _Body->SetTransform(b2Vec2(position.x, position.y), glm::radians(transform->GetRotation().z));
     
-    GetParent()->RegisterMessageHandler(UpdateMessage::GetStaticType(), Entity::MessageHandler(this, &DynamicBody2DComponent::OnUpdate));
+    GetParent()->RegisterMessageHandler<UpdateMessage>(Entity::MessageHandler(this, &DynamicBody2DComponent::OnUpdate));
 }
 
 DynamicBody2DComponent::~DynamicBody2DComponent()
 {
-    GetParent()->UnregisterMessageHandler(UpdateMessage::GetStaticType(), Entity::MessageHandler(this, &DynamicBody2DComponent::OnUpdate));
+    GetParent()->UnregisterMessageHandler<UpdateMessage>(Entity::MessageHandler(this, &DynamicBody2DComponent::OnUpdate));
     
     pb::PhysicsSystem2D* physicsSystem = GetScene()->GetSystemByType<pb::PhysicsSystem2D>();
     

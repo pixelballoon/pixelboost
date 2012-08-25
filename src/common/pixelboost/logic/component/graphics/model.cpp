@@ -21,14 +21,14 @@ ModelComponent::ModelComponent(Entity* parent, const std::string& model, const s
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
     
-    GetParent()->RegisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &ModelComponent::OnTransformChanged));
+    GetParent()->RegisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &ModelComponent::OnTransformChanged));
     
     UpdateTransform();
 }
 
 ModelComponent::~ModelComponent()
 {
-    GetParent()->UnregisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &ModelComponent::OnTransformChanged));
+    GetParent()->UnregisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &ModelComponent::OnTransformChanged));
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
     

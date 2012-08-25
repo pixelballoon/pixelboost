@@ -17,14 +17,14 @@ EllipseComponent::EllipseComponent(Entity* parent)
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
     
-    GetParent()->RegisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &EllipseComponent::OnTransformChanged));
+    GetParent()->RegisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &EllipseComponent::OnTransformChanged));
     
     UpdateTransform();
 }
 
 EllipseComponent::~EllipseComponent()
 {
-    GetParent()->UnregisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &EllipseComponent::OnTransformChanged));
+    GetParent()->UnregisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &EllipseComponent::OnTransformChanged));
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
     

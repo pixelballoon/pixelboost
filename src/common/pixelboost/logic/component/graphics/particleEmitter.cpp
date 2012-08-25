@@ -19,16 +19,16 @@ ParticleEmitterComponent::ParticleEmitterComponent(Entity* parent, int maxPartic
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
     
-    GetParent()->RegisterMessageHandler(UpdateMessage::GetStaticType(), Entity::MessageHandler(this, &ParticleEmitterComponent::OnUpdate));
-    GetParent()->RegisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &ParticleEmitterComponent::OnTransformChanged));
+    GetParent()->RegisterMessageHandler<UpdateMessage>(Entity::MessageHandler(this, &ParticleEmitterComponent::OnUpdate));
+    GetParent()->RegisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &ParticleEmitterComponent::OnTransformChanged));
     
     UpdateTransform();
 }
 
 ParticleEmitterComponent::~ParticleEmitterComponent()
 {
-    GetParent()->UnregisterMessageHandler(UpdateMessage::GetStaticType(), Entity::MessageHandler(this, &ParticleEmitterComponent::OnUpdate));
-    GetParent()->UnregisterMessageHandler(TransformChangedMessage::GetStaticType(), Entity::MessageHandler(this, &ParticleEmitterComponent::OnTransformChanged));
+    GetParent()->UnregisterMessageHandler<UpdateMessage>(Entity::MessageHandler(this, &ParticleEmitterComponent::OnUpdate));
+    GetParent()->UnregisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &ParticleEmitterComponent::OnTransformChanged));
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
     
