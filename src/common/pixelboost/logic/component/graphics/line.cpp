@@ -2,6 +2,7 @@
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 #include "pixelboost/logic/component/graphics/line.h"
+#include "pixelboost/logic/component/transform.h"
 #include "pixelboost/logic/system/graphics/render/render.h"
 #include "pixelboost/logic/entity.h"
 #include "pixelboost/logic/scene.h"
@@ -42,4 +43,28 @@ void LineComponent::SetLine(glm::vec3 start, glm::vec3 end)
 {
     _Renderable->SetStart(start);
     _Renderable->SetEnd(end);
+}
+
+void LineComponent::SetLocalTransform(const glm::mat4x4& transform)
+{
+    _LocalTransform = transform;
+    
+    UpdateTransform();
+}
+
+void LineComponent::OnTransformChanged(const Message& message)
+{
+    UpdateTransform();
+}
+
+void LineComponent::UpdateTransform()
+{
+    TransformComponent* transform = GetParent()->GetComponentByType<TransformComponent>();
+    
+    if (transform)
+    {
+        _Renderable->SetTransform(transform->GetMatrix() * _LocalTransform);
+    } else {
+        _Renderable->SetTransform(_LocalTransform);
+    }
 }

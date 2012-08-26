@@ -23,7 +23,14 @@ public:
     
     void SetLine(glm::vec3 start, glm::vec3 end);
     
+    void SetLocalTransform(const glm::mat4x4& localTransform);
+    
 private:
+    void OnTransformChanged(const Message& message);
+    void UpdateTransform();
+    
+private:
+    glm::mat4x4 _LocalTransform;
     PrimitiveRenderableLine* _Renderable;
 };
     

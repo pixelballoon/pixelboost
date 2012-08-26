@@ -147,7 +147,7 @@ void PrimitiveRenderableLine::CalculateBounds()
 
 void PrimitiveRenderableLine::CalculateWorldMatrix()
 {
-    SetWorldMatrix(glm::mat4x4());
+    SetWorldMatrix(_Transform);
 }
 
 PrimitiveRenderable::Type PrimitiveRenderableLine::GetPrimitiveType()
