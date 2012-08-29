@@ -255,7 +255,7 @@ void ParticleEmitter::Render(Viewport* viewport, ShaderPass* shaderPass)
             glm::vec2 size = sprite->_Size * scale;
             
             glm::mat4x4 transform = glm::translate(glm::mat4x4(), it->position);
-            transform = glm::scale(transform, glm::vec3(scale, 1));
+            transform = glm::scale(transform, glm::vec3(size, 1));
             transform = glm::rotate(transform, it->rotation.x, glm::vec3(1,0,0));
             transform = glm::rotate(transform, it->rotation.y, glm::vec3(0,1,0));
             transform = glm::rotate(transform, it->rotation.y, glm::vec3(0,0,1));
