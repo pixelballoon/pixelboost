@@ -131,8 +131,6 @@ void BufferRenderer::Render(int count, Renderable** renderables, Viewport* viewp
     
     Vertex_PXYZ_RGBA_UV* bufferData = 0;
     
-    Texture* texture = 0;
-    
     shaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
     
     for (int i=0; i<count; i++)
