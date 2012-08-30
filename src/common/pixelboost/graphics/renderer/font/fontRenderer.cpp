@@ -45,8 +45,9 @@ Uid FontRenderable::GetStaticType()
 
 void FontRenderable::CalculateBounds()
 {
-    glm::vec4 position = GetWorldMatrix()[3];
-    BoundingSphere bounds(glm::vec3(position.x, position.y, position.z), Size);
+    glm::vec4 position = GetWorldMatrix() * glm::vec4(0,0,0,1);
+    glm::vec2 size = Game::Instance()->GetFontRenderer()->MeasureString(Font, Text, Size);
+    BoundingSphere bounds(glm::vec3(position.x, position.y, position.z), glm::max(size.x, size.y));
     SetBounds(bounds);
 }
 
@@ -432,6 +433,16 @@ void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewpor
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
 }
 
+float FontRenderer::FitString(glm::vec2 region, const std::string& name, const std::string& font, float preferredSize)
+{
+    glm::vec2 size = MeasureString(name, font, preferredSize);
+    
+    float x = glm::max(glm::max(region.x, size.x)/region.x, 1.f);
+    float y = glm::max(glm::max(region.y, size.y)/region.y, 1.f);
+    
+    return preferredSize / glm::max(x, y);
+}
+
 glm::vec2 FontRenderer::MeasureString(const std::string& name, const std::string& string, float size)
 {
     Font* font;
@@ -476,7 +487,7 @@ glm::vec2 FontRenderer::MeasureString(const std::string& name, const std::string
     
     maxLineLength = glm::max(maxLineLength, offsetX);
     
-    return glm::vec2(maxLineLength * size, glm::abs((offsetY-1.f) * size));
+    return glm::vec2(maxLineLength * size, glm::abs((offsetY-2.f) * size));
 }
 
 void FontRenderer::SplitString(const std::string& string, char seperator, std::vector<std::string>& output)

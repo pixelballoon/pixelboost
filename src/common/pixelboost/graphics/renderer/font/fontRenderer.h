@@ -111,6 +111,7 @@ namespace pb
         
         virtual void Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass);
         
+        float FitString(glm::vec2 region, const std::string& name, const std::string& string, float preferredSize);
         glm::vec2 MeasureString(const std::string& name, const std::string& string, float size);
     
     private:
