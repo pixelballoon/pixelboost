@@ -31,22 +31,10 @@ bool ShaderProgramGL::Load(const pugi::xml_node& attributes, const pugi::xml_nod
     _Uniforms.clear();
     
 #ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
-    _FragmentSource = fragment.child("source").child_value();
-    _VertexSource = vertex.child("source").child_value();
+    _Source = program.child_value();
 #endif
     
-    _Program = glCreateProgram();
-    
-    if (!CompileShader(GL_FRAGMENT_SHADER, &_FragmentShader, program.child_value()))
-        return false;
-    
-    if (!CompileShader(GL_VERTEX_SHADER, &_VertexShader, program.child_value()))
-        return false;
-    
-    glAttachShader(_Program, _FragmentShader);
-    glAttachShader(_Program, _VertexShader);
-    
-    return true;
+    return CreateShader(program.child_value());
 }
 
 bool ShaderProgramGL::Link()
@@ -141,6 +129,22 @@ GLuint ShaderProgramGL::GetUniformLocation(const std::string& name)
     return location;
 }
 
+bool ShaderProgramGL::CreateShader(const std::string& source)
+{
+    _Program = glCreateProgram();
+    
+    if (!CompileShader(GL_FRAGMENT_SHADER, &_FragmentShader, source))
+        return false;
+    
+    if (!CompileShader(GL_VERTEX_SHADER, &_VertexShader, source))
+        return false;
+    
+    glAttachShader(_Program, _FragmentShader);
+    glAttachShader(_Program, _VertexShader);
+    
+    return true;
+}
+
 bool ShaderProgramGL::CompileShader(GLenum type, GLuint* shader, const std::string& source)
 {
     *shader = glCreateShader(type);
@@ -179,7 +183,7 @@ bool ShaderProgramGL::CompileShader(GLenum type, GLuint* shader, const std::stri
 void ShaderProgramGL::OnContextLost()
 {
 #ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
-    Load(_FragmentSource, _VertexSource);
+    CreateShader(_Source);
     
     for (std::map<int, std::string>::iterator it = _Attributes.begin(); it != _Attributes.end(); ++it)
     {

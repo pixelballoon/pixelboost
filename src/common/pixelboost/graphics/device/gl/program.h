@@ -37,11 +37,13 @@ public:
 private:
     GLuint GetUniformLocation(const std::string& name);
     
+    bool CreateShader(const std::string& source);
     bool CompileShader(GLenum type, GLuint* shader, const std::string& source);
     
 private:
-    std::string _FragmentSource;
-    std::string _VertexSource;
+#ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
+    std::string _Source;
+#endif
     std::map<int, std::string> _Attributes;
     std::map<std::string, GLuint> _Uniforms;
     
