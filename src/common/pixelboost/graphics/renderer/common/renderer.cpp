@@ -14,7 +14,7 @@
 
 using namespace pb;
 
-Renderer* Renderer::Renderer::_Instance = 0;
+Renderer* Renderer::_Instance = 0;
 
 Renderer::Renderer()
 {

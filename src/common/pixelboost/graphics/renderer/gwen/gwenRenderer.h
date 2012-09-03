@@ -17,7 +17,7 @@ namespace pb
     class IndexBuffer;
     class RenderLayer;
     class VertexBuffer;
-    class Vertex_PXYZ_UV;
+    struct Vertex_PXYZ_UV;
     
     class GwenRenderable : public pb::Renderable
     {

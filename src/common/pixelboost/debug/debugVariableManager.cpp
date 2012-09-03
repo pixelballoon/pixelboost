@@ -1,3 +1,7 @@
+#ifdef PIXELBOOST_PLATFORM_WINDOWS
+	#include <BaseTsd.h>
+#endif
+
 #include <cstdio>
 #include <cstdlib>
 #include <sstream>
@@ -46,7 +50,7 @@ const DebugVariableManager::VariableMap& DebugVariableManager::GetVariables() co
 
 bool DebugVariableManager::OnHttpRequest(HttpServer::RequestType type, const std::string& uri, const std::string& query, const std::string& data, HttpConnection& connection)
 {
-    ssize_t split = uri.find('/', 1);
+    int split = uri.find('/', 1);
     
     std::string command;
     std::string argumentString;
@@ -62,7 +66,7 @@ bool DebugVariableManager::OnHttpRequest(HttpServer::RequestType type, const std
     
     while (argumentString.length() > 1)
     {
-        ssize_t split = argumentString.find('/', 1);
+        int split = argumentString.find('/', 1);
         
         std::string argument;
         

@@ -1,6 +1,11 @@
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
+#ifndef PIXELBOOST_PLATFORM_WINDOWS
+	#include <arpa/inet.h>
+	#include <netinet/in.h>
+	#include <sys/socket.h>
+#else
+	#include <WinSock.h>
+#endif
+
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -66,6 +71,7 @@ namespace pb
     
     void NetworkConnection::Close()
     {
+#ifndef PIXELBOOST_PLATFORM_WINDOWS
         if (_IsOpen)
         {
             close(_Connection);
@@ -80,6 +86,7 @@ namespace pb
             _RecvLength = 0;
             _IsReading = false;
         }
+#endif
     }
     
     bool NetworkConnection::IsOpen()
@@ -99,7 +106,7 @@ namespace pb
     }
     
     void NetworkConnection::Send(NetworkMessage& message)
-    {
+	{
         if (!_IsOpen)
             return;
         
@@ -108,6 +115,7 @@ namespace pb
     
     void NetworkConnection::ProcessSend()
     {
+#ifndef PIXELBOOST_PLATFORM_WINDOWS
         int sendProcessed = 0;
         
         while (sendProcessed < 50)
@@ -142,10 +150,12 @@ namespace pb
             
             sendProcessed++;
         }
+#endif
     }
     
     void NetworkConnection::ProcessRecv()
     {
+#ifndef PIXELBOOST_PLATFORM_WINDOWS
         int recvProcessed = 0;
         
         while (recvProcessed < 50)
@@ -192,7 +202,7 @@ namespace pb
             
             if (!_IsReading && (_RecvOffset+recvLength) == 4)
             {
-                __int32_t messageLength;
+                int32_t messageLength;
                 memcpy(&messageLength, _RecvBuffer, 4);
                 _RecvLength = ntohl(messageLength);
                 _IsReading = true;
@@ -202,6 +212,7 @@ namespace pb
             
             recvProcessed++;
         }
+#endif
     }
     
     
@@ -310,6 +321,7 @@ namespace pb
     
     void NetworkServer::Update()
     {
+#ifndef PIXELBOOST_PLATFORM_WINDOWS
         switch (_ServerState)
         {
             case kStateStarting:
@@ -451,6 +463,7 @@ namespace pb
             default:
                 break;
         }
+#endif
     }
     
     bool NetworkServer::RegisterHandler(NetworkHandler* handler)

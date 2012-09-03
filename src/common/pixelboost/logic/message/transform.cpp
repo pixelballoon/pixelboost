@@ -1,6 +1,7 @@
 #include "pixelboost/logic/message/transform.h"
 
-using namespace pb;
+namespace pb
+{
 
 TransformChangedMessage::TransformChangedMessage(Entity* entity, Component* component)
     : Message(entity, component)
@@ -21,4 +22,6 @@ Uid TransformChangedMessage::GetType() const
 Uid TransformChangedMessage::GetStaticType()
 {
     return TypeHash("pb::TransformChangedMessage");
+}
+
 }

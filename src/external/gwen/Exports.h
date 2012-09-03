@@ -5,6 +5,9 @@
 */
 
 #pragma once
+
+#define GWEN_COMPILE_STATIC
+
 #ifndef GWEN_EXPORTS_H
 #define GWEN_EXPORTS_H
 

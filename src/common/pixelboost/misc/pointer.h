@@ -1,6 +1,10 @@
 #pragma once
 
-#include <tr1/memory>
+#ifdef PIXELBOOST_PLATFORM_WINDOWS
+	#include <memory>
+#else
+	#include <tr1/memory>
+#endif
 
 namespace std
 {

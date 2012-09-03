@@ -15,7 +15,14 @@
 #endif
 
 #ifdef PIXELBOOST_GRAPHICS_OPENGL2
-    #include <OpenGL/gl.h>
+	#ifdef PIXELBOOST_PLATFORM_WINDOWS
+        #include "GL/glew.h"
+        #include <windows.h>
+        #include <gl/gl.h>
+	#endif
+    #ifdef PIXELBOOST_PLATFORM_OSX
+		#include <OpenGL/gl.h>
+	#endif
 #endif
 
 #include <map>

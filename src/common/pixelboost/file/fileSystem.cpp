@@ -10,9 +10,13 @@
 #define PIXELBOOST_STANDARD_FILESYSTEM
 #endif
 
+#ifdef PIXELBOOST_PLATFORM_WINDOWS
+#define PIXELBOOST_STANDARD_FILESYSTEM
+#endif
+
 using namespace pb;
 
-FileSystem* FileSystem::FileSystem::_Instance = 0;
+FileSystem* FileSystem::_Instance = 0;
 
 File::~File()
 {

@@ -1,4 +1,8 @@
-#include <arpa/inet.h>
+#ifndef PIXELBOOST_PLATFORM_WINDOWS
+	#include <arpa/inet.h>
+#else
+	#include <Winsock2.h>
+#endif
 #include <string>
 
 #include "pixelboost/network/networkMessage.h"
@@ -39,7 +43,7 @@ bool NetworkMessage::ReadChar(char &value)
     return true;
 }
 
-bool NetworkMessage::ReadByte(__uint8_t &value)
+bool NetworkMessage::ReadByte(uint8_t &value)
 {
     if (!HasRemaining(1))
         return false;
@@ -50,12 +54,12 @@ bool NetworkMessage::ReadByte(__uint8_t &value)
     return true;
 }
 
-bool NetworkMessage::ReadInt(__int32_t &value)
+bool NetworkMessage::ReadInt(int32_t &value)
 {
     if (!HasRemaining(4))
         return false;
     
-    __uint32_t netValue;
+    uint32_t netValue;
     memcpy(&netValue, &_Buffer[_Offset], 4);
     value = ntohl(netValue);
     
@@ -69,9 +73,9 @@ bool NetworkMessage::ReadFloat(float &value)
     if (!HasRemaining(4))
         return false;
     
-    __uint32_t netValue;
+    uint32_t netValue;
     memcpy(&netValue, &_Buffer[_Offset], 4);
-    __uint32_t hostValue = ntohl(netValue);
+    uint32_t hostValue = ntohl(netValue);
     value = *reinterpret_cast<float*>(&hostValue);
     
     _Offset += 4;
@@ -81,7 +85,7 @@ bool NetworkMessage::ReadFloat(float &value)
 
 bool NetworkMessage::ReadString(const char*& value)
 {
-    __int32_t length;
+    int32_t length;
     
     if (!ReadInt(length))
         return false;
@@ -108,7 +112,7 @@ bool NetworkMessage::WriteChar(char value)
     return true;
 }
 
-bool NetworkMessage::WriteByte(__uint8_t value)
+bool NetworkMessage::WriteByte(uint8_t value)
 {
     if (!HasRemaining(1))
         return false;
@@ -120,12 +124,12 @@ bool NetworkMessage::WriteByte(__uint8_t value)
     return true;
 }
 
-bool NetworkMessage::WriteInt(__int32_t value)
+bool NetworkMessage::WriteInt(int32_t value)
 {
     if (!HasRemaining(4))
         return false;
     
-    __uint32_t netValue = htonl(value);
+    uint32_t netValue = htonl(value);
     
     memcpy(&_Buffer[_Offset], &netValue, 4);
     _Offset += 4;
@@ -139,7 +143,7 @@ bool NetworkMessage::WriteFloat(float value)
     if (!HasRemaining(4))
         return false;
     
-    __uint32_t netValue = htonl(*reinterpret_cast<int *>(&value));
+    uint32_t netValue = htonl(*reinterpret_cast<int *>(&value));
     
     memcpy(&_Buffer[_Offset], &netValue, 4);
     _Offset += 4;
@@ -163,7 +167,7 @@ bool NetworkMessage::WriteString(const char* value)
     return true;
 }
 
-bool NetworkMessage::SetData(__int32_t length, char* data)
+bool NetworkMessage::SetData(int32_t length, char* data)
 {
     if (length < 4 || length > NETWORK_MAX_MESSAGE_LENGTH)
         return false;
@@ -171,7 +175,7 @@ bool NetworkMessage::SetData(__int32_t length, char* data)
     // Parse protocol data before adding data to buffer
     length -= 4;
     
-    __uint32_t protocol;
+    uint32_t protocol;
     memcpy(&protocol, data, 4);
     
     _Protocol = ntohl(protocol);
@@ -185,12 +189,12 @@ bool NetworkMessage::SetData(__int32_t length, char* data)
     return true;
 }
 
-void NetworkMessage::SetProtocol(__uint32_t protocol)
+void NetworkMessage::SetProtocol(uint32_t protocol)
 {
     _Protocol = protocol;
 }
 
-__uint32_t NetworkMessage::GetProtocol()
+uint32_t NetworkMessage::GetProtocol()
 {
     return _Protocol;
 }
@@ -210,9 +214,9 @@ int NetworkMessage::ConstructMessage(char* buffer, int maxLength)
     if (GetMessageLength() > maxLength)
         return 0;
     
-    __int32_t messageLength = htonl(GetMessageLength());
+    int32_t messageLength = htonl(GetMessageLength());
     
-    __uint32_t protocol = htonl(_Protocol);
+    uint32_t protocol = htonl(_Protocol);
     
     memcpy(buffer, &messageLength, 4);
     memcpy(&buffer[4], &protocol, 4);

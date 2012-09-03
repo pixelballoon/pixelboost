@@ -75,8 +75,8 @@ Game::~Game()
     delete _ModelRenderer;
     delete _ParticleRenderer;
     delete _PrimitiveRenderer;
+	delete _SpriteRenderer;
     delete _Renderer;
-    delete _SpriteRenderer;
 #endif
 }
 

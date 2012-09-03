@@ -2,6 +2,7 @@
 
 #define NETWORK_MAX_MESSAGE_LENGTH 262140
 
+#include <stdint.h>
 #include <sys/types.h>
 
 namespace pb
@@ -15,35 +16,35 @@ public:
     ~NetworkMessage();
     
     bool ReadChar(char& value);
-    bool ReadByte(__uint8_t& value);
-    bool ReadInt(__int32_t& value);
+    bool ReadByte(uint8_t& value);
+    bool ReadInt(int32_t& value);
     bool ReadFloat(float& value);
     bool ReadString(const char*& value);
     
     bool WriteChar(char value);
-    bool WriteByte(__uint8_t value);
-    bool WriteInt(__int32_t value);
+    bool WriteByte(uint8_t value);
+    bool WriteInt(int32_t value);
     bool WriteFloat(float value);
     bool WriteString(const char* value);
     
-    bool SetData(__int32_t length, char* data);
+    bool SetData(int32_t length, char* data);
     
-    void SetProtocol(__uint32_t protocol);
-    __uint32_t GetProtocol();
+    void SetProtocol(uint32_t protocol);
+    uint32_t GetProtocol();
     
     int GetDataLength();
     int GetMessageLength();
     
-    int ConstructMessage(char* buffer, __int32_t maxLength);
+    int ConstructMessage(char* buffer, int32_t maxLength);
     
 private:
-    bool HasRemaining(__int32_t length);
+    bool HasRemaining(int32_t length);
     
-    __uint32_t _Protocol;
+    uint32_t _Protocol;
     
     char* _Buffer;
     int _Offset;
-    __int32_t _Length;
+    int32_t _Length;
 };
 
 }
