@@ -25,6 +25,14 @@ template <class T> Scene::EntityMap Scene::GetEntitiesByType()
         }
     }
     
+    for (EntityMap::iterator it = _NewEntities.begin(); it != _NewEntities.end(); ++it)
+    {
+        if (it->second->GetType() == T::GetStaticType())
+        {
+            entities[it->first] = it->second;
+        }
+    }
+    
     return entities;
 }
 
