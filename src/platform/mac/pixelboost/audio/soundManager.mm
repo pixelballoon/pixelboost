@@ -5,6 +5,66 @@
 
 namespace pb
 {
+    
+Sound::Sound(const std::string& name, float volume, float pitch, bool looping)
+{
+    
+}
+
+int Sound::GetId() const
+{
+    return 0;
+}
+
+void Sound::Play()
+{
+    _IsPlaying = true;
+}
+    
+void Sound::Stop()
+{
+    _IsPlaying = false;
+}
+
+bool Sound::IsPlaying() const
+{
+    return _IsPlaying;
+}
+
+const std::string& Sound::GetName() const
+{
+    return _Name;
+}
+
+bool Sound::IsLooping() const
+{
+    return _Looping;
+}
+    
+void Sound::SetLooping(bool looping)
+{
+    _Looping = looping;
+}
+
+float Sound::GetPitch() const
+{
+    return _Pitch;
+}
+    
+void Sound::SetPitch(float pitch)
+{
+    _Pitch = pitch;
+}
+
+float Sound::GetVolume() const
+{
+    return _Volume;
+}
+    
+void Sound::SetVolume(float volume)
+{
+    _Volume = volume;
+}
 
 SoundManager::SoundManager()
 {
@@ -29,6 +89,11 @@ void SoundManager::Update(float time)
     
 }
     
+bool SoundManager::IsBgmMuted()
+{
+    return _MuteBgm;
+}
+    
 void SoundManager::MuteBgm(bool mute)
 {
     _MuteBgm = mute;
@@ -42,6 +107,11 @@ void SoundManager::MuteBgm(bool mute)
         PlayBgm(_CurrentBgmName, _CurrentBgmLoop, _CurrentBgmVolume);
     }
 }
+    
+bool SoundManager::IsSfxMuted()
+{
+    return _MuteSfx;
+}
 
 void SoundManager::MuteSfx(bool mute)
 {
@@ -52,7 +122,7 @@ void SoundManager::LoadBgm(const std::string& name)
 {
 }
 
-void SoundManager::LoadSfx(const std::string& name, bool compressed)
+void SoundManager::LoadSfx(const std::string& name)
 {
 }
 
@@ -73,12 +143,14 @@ void SoundManager::StopBgm()
     _CurrentBgmName = "";
 }
 
-void SoundManager::PlaySfx(const std::string& name, bool compressed, float volume, float pitch)
+Sound SoundManager::PlaySfx(const std::string& name, float volume, float pitch)
 {
     if (_MuteSfx)
-        return;
+        return Sound();
     
-    std::string fileName = "/data/audio/sfx/" + name + (compressed ? ".mp3" : ".wav");
+    std::string fileName = "/data/audio/sfx/" + name;
+    
+    return Sound();
 }
 
 }
