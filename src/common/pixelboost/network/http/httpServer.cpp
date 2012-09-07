@@ -1,10 +1,14 @@
 #include <cstddef>
+#include <cstdio>
 #include <cstring>
 
-#include  "pixelboost/external/mongoose/mongoose.h"
-#include  "pixelboost/network/http/httpServer.h"
+#include "pixelboost/debug/log.h"
+#include "pixelboost/external/mongoose/mongoose.h"
+#include "pixelboost/network/http/httpServer.h"
 
 using namespace pb;
+
+#if !defined(PIXELBOOST_DISABLE_MONGOOSE)
 
 static void* MongooseCallback(enum mg_event event, struct mg_connection *conn, const struct mg_request_info *requestInfo)
 {
@@ -37,7 +41,7 @@ static void* MongooseCallback(enum mg_event event, struct mg_connection *conn, c
         }
             
         case MG_EVENT_LOG:
-            printf("%s", requestInfo->log_message);
+            PbLogDebug("mongoose", "%s", requestInfo->log_message);
             break;
             
         // Don't handle these for now
@@ -49,10 +53,14 @@ static void* MongooseCallback(enum mg_event event, struct mg_connection *conn, c
     return 0;
 }
 
+#endif
+
 pb::HttpConnection::HttpConnection(mg_connection* connection)
     : _Connection(connection)
 {
+#if !defined(PIXELBOOST_DISABLE_MONGOOSE)
     _Data = "HTTP/1.1 200 OK\r\n";
+#endif
 }
 
 pb::HttpConnection::~HttpConnection()
@@ -62,18 +70,24 @@ pb::HttpConnection::~HttpConnection()
 
 void pb::HttpConnection::AddHeader(const std::string& headerName, const std::string& headerValue)
 {
+#if !defined(PIXELBOOST_DISABLE_MONGOOSE)
     _Data += headerName + ": " + headerValue + "\r\n";
+#endif
 }
 
 void pb::HttpConnection::SetContent(const std::string& data)
 {
+#if !defined(PIXELBOOST_DISABLE_MONGOOSE)
     _Data += "\r\n";
     _Data += data;
+#endif
 }
 
 void pb::HttpConnection::Send()
 {
+#if !defined(PIXELBOOST_DISABLE_MONGOOSE)
     mg_write(_Connection, _Data.c_str(), _Data.length()+1);
+#endif
 }
 
 pb::HttpServer::HttpServer()
@@ -89,6 +103,7 @@ pb::HttpServer::~HttpServer()
 
 void pb::HttpServer::Start(int port, const std::string& documentRoot)
 {
+#if !defined(PIXELBOOST_DISABLE_MONGOOSE)
     if (_Context != 0)
         return;
     
@@ -112,12 +127,15 @@ void pb::HttpServer::Start(int port, const std::string& documentRoot)
         
         _Context = mg_start(&MongooseCallback, this, options);
     }
+#endif
 }
                         
 void pb::HttpServer::Stop()
 {
+#if !defined(PIXELBOOST_DISABLE_MONGOOSE)
     mg_stop(_Context);
     _Context = 0;
+#endif
 }
 
 void pb::HttpServer::Update()

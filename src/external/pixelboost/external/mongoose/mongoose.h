@@ -21,6 +21,10 @@
 #ifndef MONGOOSE_HEADER_INCLUDED
 #define  MONGOOSE_HEADER_INCLUDED
 
+#if defined(PIXELBOOST_PLATFORM_NACL)
+  #define PIXELBOOST_DISABLE_MONGOOSE
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus

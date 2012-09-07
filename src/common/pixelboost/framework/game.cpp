@@ -18,6 +18,8 @@
 #include "pixelboost/network/gameCenter.h"
 #include "pixelboost/network/networkServer.h"
 
+#include "pixelboost/debug/log.h"
+
 using namespace pb;
 
 Game* Game::_Instance = 0;
@@ -28,9 +30,9 @@ Game::Game(void* viewController)
     , _ViewController(viewController)
 {
     _Instance = this;
-    
+
     _FileSystem = new FileSystem();
-    
+
 #ifndef PIXELBOOST_DISABLE_GRAPHICS
     _Renderer = new Renderer();
     _BufferRenderer = new BufferRenderer();
@@ -40,18 +42,18 @@ Game::Game(void* viewController)
     _PrimitiveRenderer = new PrimitiveRenderer();
     _FontRenderer = new FontRenderer();
 #endif
-    
+
 #ifndef PIXELBOOST_DISABLE_GAMECENTER
     _GameCenter = new GameCenter();
     _GameCenter->Connect();
 #endif
-    
+
 #ifndef PIXELBOOST_DISABLE_INPUT
     _KeyboardManager = new KeyboardManager();
     _MouseManager = new MouseManager();
     _TouchManager = new TouchManager();
 #endif
-    
+
 #ifndef PIXELBOOST_DISABLE_DEBUG
     _DebugNetwork = new NetworkServer();
     _DebugDatabaseHandler = new DebugDatabaseHandler();

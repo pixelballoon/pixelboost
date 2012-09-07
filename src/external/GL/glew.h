@@ -76,6 +76,8 @@
 ** MATERIALS OR THE USE OR OTHER DEALINGS IN THE MATERIALS.
 */
 
+#if defined(PIXELBOOST_PLATFORM_WINDOWS)
+
 #ifndef __glew_h__
 #define __glew_h__
 #define __GLEW_H__
@@ -17130,3 +17132,5 @@ GLEWAPI const GLubyte * GLEWAPIENTRY glewGetString (GLenum name);
 /* #undef GLEWAPI */
 
 #endif /* __glew_h__ */
+
+#endif

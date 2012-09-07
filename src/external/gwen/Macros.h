@@ -4,7 +4,7 @@
 #define GWEN_MACROS_H
 #include <stdlib.h>
 #include <stdarg.h>
-#include <memory.h>
+#include <memory>
 #include <algorithm>
 
 // Not tied to platform api.
@@ -31,6 +31,12 @@
 	//#define GwenUtil_WideStringToFloat( _Str ) wcstof(_Str, NULL)
 
 #elif defined(__linux__)
+
+	#define GwenUtil_OutputDebugCharString( lpOutputString ) //printf( lpOutputString )
+	#define GwenUtil_OutputDebugWideString( lpOutputString ) //wprintf( lpOutputString  )
+	//#define GwenUtil_WideStringToFloat( _Str ) wcstof(_Str, NULL)
+
+#elif defined(PIXELBOOST_PLATFORM_NACL)
 
 	#define GwenUtil_OutputDebugCharString( lpOutputString ) //printf( lpOutputString )
 	#define GwenUtil_OutputDebugWideString( lpOutputString ) //wprintf( lpOutputString  )
