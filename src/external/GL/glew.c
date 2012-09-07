@@ -29,6 +29,8 @@
 ** THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#if defined(PIXELBOOST_PLATFORM_WINDOWS)
+
 #include <GL/glew.h>
 
 #if defined(_WIN32)
@@ -16970,3 +16972,5 @@ GLboolean glxewIsSupported (const char* name)
 }
 
 #endif /* _WIN32 */
+
+#endif

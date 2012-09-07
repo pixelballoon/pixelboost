@@ -18,6 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#if defined(PIXELBOOST_PLATFORM_NACL)
+  #define PIXELBOOST_DISABLE_MONGOOSE
+#endif
+
+#if !defined(PIXELBOOST_DISABLE_MONGOOSE)
+
 #if defined(_WIN32)
 #define _CRT_SECURE_NO_WARNINGS // Disable deprecation warning in VS2005
 #else
@@ -4121,3 +4127,5 @@ struct mg_context *mg_start(mg_callback_t user_callback, void *user_data,
 
   return ctx;
 }
+
+#endif

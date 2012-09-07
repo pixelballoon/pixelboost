@@ -1,9 +1,12 @@
-#ifndef PIXELBOOST_PLATFORM_WINDOWS
-	#include <arpa/inet.h>
-	#include <netinet/in.h>
-	#include <sys/socket.h>
-#else
+#if defined(PIXELBOOST_PLATFORM_WINDOWS)
 	#include <WinSock.h>
+    #define PIXELBOOST_DISABLE_NETWORKING
+#elif defined(PIXELBOOST_PLATFORM_NACL)
+    #define PIXELBOOST_DISABLE_NETWORKING
+#else
+    #include <arpa/inet.h>
+    #include <netinet/in.h>
+    #include <sys/socket.h>
 #endif
 
 #include <errno.h>
@@ -115,7 +118,7 @@ namespace pb
     
     void NetworkConnection::ProcessSend()
     {
-#ifndef PIXELBOOST_PLATFORM_WINDOWS
+#ifndef PIXELBOOST_DISABLE_NETWORKING
         int sendProcessed = 0;
         
         while (sendProcessed < 50)
@@ -155,7 +158,7 @@ namespace pb
     
     void NetworkConnection::ProcessRecv()
     {
-#ifndef PIXELBOOST_PLATFORM_WINDOWS
+#ifndef PIXELBOOST_DISABLE_NETWORKING
         int recvProcessed = 0;
         
         while (recvProcessed < 50)
@@ -321,7 +324,7 @@ namespace pb
     
     void NetworkServer::Update()
     {
-#ifndef PIXELBOOST_PLATFORM_WINDOWS
+#ifndef PIXELBOOST_DISABLE_NETWORKING
         switch (_ServerState)
         {
             case kStateStarting:

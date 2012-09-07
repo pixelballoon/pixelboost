@@ -1,9 +1,12 @@
-#ifndef PIXELBOOST_PLATFORM_WINDOWS
-	#include <arpa/inet.h>
+#if defined(PIXELBOOST_PLATFORM_WINDOWS)
+    #include <Winsock2.h>
+#elif defined(PIXELBOOST_PLATFORM_NACL)
+    #define PIXELBOOST_DISABLE_NETWORKING
 #else
-	#include <Winsock2.h>
+	#include <arpa/inet.h>
 #endif
-#include <string>
+
+#include <cstring>
 
 #include "pixelboost/network/networkMessage.h"
 
@@ -14,8 +17,11 @@ NetworkMessage::NetworkMessage()
 : _Length(0)
 , _Offset(0)
 , _Protocol(0)
+, _Buffer(0)
 {
+#ifndef PIXELBOOST_DISABLE_NETWORKING
     _Buffer = new char[NETWORK_MAX_MESSAGE_LENGTH];
+#endif
 }
 
 NetworkMessage::NetworkMessage(const NetworkMessage& src)
@@ -23,17 +29,22 @@ NetworkMessage::NetworkMessage(const NetworkMessage& src)
 , _Offset(src._Offset)
 , _Length(src._Length)
 {
+#ifndef PIXELBOOST_DISABLE_NETWORKING
     _Buffer = new char[NETWORK_MAX_MESSAGE_LENGTH];
     memcpy(_Buffer, src._Buffer, NETWORK_MAX_MESSAGE_LENGTH);
+#endif
 }
 
 NetworkMessage::~NetworkMessage()
 {
+#ifndef PIXELBOOST_DISABLE_NETWORKING
     delete[] _Buffer;
+#endif
 }
 
 bool NetworkMessage::ReadChar(char &value)
 {
+#ifndef PIXELBOOST_DISABLE_NETWORKING
     if (!HasRemaining(1))
         return false;
     
@@ -41,10 +52,14 @@ bool NetworkMessage::ReadChar(char &value)
     _Offset += 1;
     
     return true;
+#else
+    return false;
+#endif
 }
 
 bool NetworkMessage::ReadByte(uint8_t &value)
 {
+#ifndef PIXELBOOST_DISABLE_NETWORKING
     if (!HasRemaining(1))
         return false;
     
@@ -52,10 +67,14 @@ bool NetworkMessage::ReadByte(uint8_t &value)
     _Offset += 1;
     
     return true;
+#else
+    return false;
+#endif
 }
 
 bool NetworkMessage::ReadInt(int32_t &value)
 {
+#ifndef PIXELBOOST_DISABLE_NETWORKING
     if (!HasRemaining(4))
         return false;
     
@@ -66,10 +85,14 @@ bool NetworkMessage::ReadInt(int32_t &value)
     _Offset += 4;
     
     return true;
+#else
+    return false;
+#endif
 }
 
 bool NetworkMessage::ReadFloat(float &value)
 {
+#ifndef PIXELBOOST_DISABLE_NETWORKING
     if (!HasRemaining(4))
         return false;
     
@@ -81,10 +104,14 @@ bool NetworkMessage::ReadFloat(float &value)
     _Offset += 4;
     
     return true;
+#else
+    return false;
+#endif
 }
 
 bool NetworkMessage::ReadString(const char*& value)
 {
+#ifndef PIXELBOOST_DISABLE_NETWORKING
     int32_t length;
     
     if (!ReadInt(length))
@@ -98,10 +125,14 @@ bool NetworkMessage::ReadString(const char*& value)
     _Offset = _Offset + length + 1;
     
     return true;
+#else
+    return false;
+#endif
 }
 
 bool NetworkMessage::WriteChar(char value)
 {
+#ifndef PIXELBOOST_DISABLE_NETWORKING
     if (!HasRemaining(1))
         return false;
     
@@ -110,10 +141,14 @@ bool NetworkMessage::WriteChar(char value)
     _Length += 1;
     
     return true;
+#else
+    return false;
+#endif
 }
 
 bool NetworkMessage::WriteByte(uint8_t value)
 {
+#ifndef PIXELBOOST_DISABLE_NETWORKING
     if (!HasRemaining(1))
         return false;
     
@@ -122,10 +157,14 @@ bool NetworkMessage::WriteByte(uint8_t value)
     _Length += 1;
     
     return true;
+#else
+    return false;
+#endif
 }
 
 bool NetworkMessage::WriteInt(int32_t value)
 {
+#ifndef PIXELBOOST_DISABLE_NETWORKING
     if (!HasRemaining(4))
         return false;
     
@@ -136,10 +175,14 @@ bool NetworkMessage::WriteInt(int32_t value)
     _Length += 4;
     
     return true;
+#else
+    return false;
+#endif
 }
 
 bool NetworkMessage::WriteFloat(float value)
 {
+#ifndef PIXELBOOST_DISABLE_NETWORKING
     if (!HasRemaining(4))
         return false;
     
@@ -150,10 +193,14 @@ bool NetworkMessage::WriteFloat(float value)
     _Length += 4;
     
     return true;
+#else
+    return false;
+#endif
 }
 
 bool NetworkMessage::WriteString(const char* value)
 {
+#ifndef PIXELBOOST_DISABLE_NETWORKING
     int length = static_cast<int>(strlen(value));
     
     if (!HasRemaining(length + 5))
@@ -165,10 +212,14 @@ bool NetworkMessage::WriteString(const char* value)
     _Length = _Length + length + 1;
     
     return true;
+#else
+    return false;
+#endif
 }
 
 bool NetworkMessage::SetData(int32_t length, char* data)
 {
+#ifndef PIXELBOOST_DISABLE_NETWORKING
     if (length < 4 || length > NETWORK_MAX_MESSAGE_LENGTH)
         return false;
     
@@ -187,6 +238,9 @@ bool NetworkMessage::SetData(int32_t length, char* data)
         memcpy(_Buffer, &data[4], length);
     
     return true;
+#else
+    return false;
+#endif
 }
 
 void NetworkMessage::SetProtocol(uint32_t protocol)
@@ -211,6 +265,7 @@ int NetworkMessage::GetMessageLength()
 
 int NetworkMessage::ConstructMessage(char* buffer, int maxLength)
 {
+#ifndef PIXELBOOST_DISABLE_NETWORKING
     if (GetMessageLength() > maxLength)
         return 0;
     
@@ -223,13 +278,18 @@ int NetworkMessage::ConstructMessage(char* buffer, int maxLength)
     memcpy(&buffer[8], _Buffer, _Length);
     
     return GetMessageLength();
+#else
+    return 0;
+#endif
 }
 
 bool NetworkMessage::HasRemaining(int length)
 {
+#ifndef PIXELBOOST_DISABLE_NETWORKING
     if ((_Offset + length) < NETWORK_MAX_MESSAGE_LENGTH)
         return true;
-    
+#endif
+
     return false;
 }
 

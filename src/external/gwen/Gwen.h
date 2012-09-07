@@ -29,7 +29,7 @@
 #define GWEN_GWEN_H
 
 #include <stdlib.h>
-#include <memory.h>
+#include <memory>
 #include <set>
 #include <list>
 #include <algorithm>

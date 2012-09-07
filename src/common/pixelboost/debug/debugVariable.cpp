@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cstring>
 
 #include "debugVariable.h"
 #include "debugVariableManager.h"

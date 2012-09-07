@@ -5,7 +5,7 @@
 #ifdef PIXELBOOST_GRAPHICS_OPENGL
 
 #ifdef PIXELBOOST_GRAPHICS_OPENGLES2
-    #ifdef PIXELBOOST_PLATFORM_ANDROID
+    #if defined(PIXELBOOST_PLATFORM_ANDROID) || defined(PIXELBOOST_PLATFORM_NACL)
         #include <GLES2/gl2.h>
         #include <GLES2/gl2ext.h>
     #else
