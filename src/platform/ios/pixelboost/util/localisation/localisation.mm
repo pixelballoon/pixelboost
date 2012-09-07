@@ -2,5 +2,11 @@
 
 std::string pb::GetCurrentLocale()
 {
-    return [[[NSLocale preferredLanguages] objectAtIndex:0] UTF8String];
+    std::string locale = [[[NSLocale preferredLanguages] objectAtIndex:0] UTF8String];
+    
+    int dash = locale.find('-');
+    if (dash >= 0)
+        return locale.substr(0, dash);
+    
+    return locale;
 }
