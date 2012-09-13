@@ -30,7 +30,7 @@ bool TextureGL::LoadFromBytes(const unsigned char* data, int width, int height, 
     
     glGenTextures(1, &_Texture);
     
-    Texture* previousTexture = _Device->BindTexture(this);
+    Texture* previousTexture = _Device->BindTexture(this, true);
     
     // TODO : Add create mips back in
     /*if (createMips)

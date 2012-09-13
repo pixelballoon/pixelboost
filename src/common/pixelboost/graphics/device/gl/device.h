@@ -45,12 +45,22 @@ struct DeviceState
     
     void Reset();
     
+    void UpdateAll(DeviceState& deviceState);
+    void UpdateIndexBuffer(DeviceState& state);
+    void UpdateVertexBuffer(DeviceState& state);
+    void UpdateTexture(DeviceState& state);
+    void UpdateStates(DeviceState& state);
+    
     GLuint boundIndexBuffer;
     GLuint boundTexture;
     GLuint boundVertexBuffer;
     GLuint boundProgram;
     
+    typedef std::map<GLuint, bool> StateMap;
+    StateMap states;
     bool shaderAttribute[kShaderAttributeCount];
+    
+    friend class GraphicsDeviceGL;
 };
     
 class GraphicsDeviceGL : public GraphicsDevice
@@ -83,7 +93,7 @@ public:
     virtual Texture* CreateTexture();
     virtual void DestroyTexture(Texture* texture);
     virtual Texture* GetBoundTexture();
-    virtual Texture* BindTexture(Texture* texture);
+    virtual Texture* BindTexture(Texture* texture, bool force=false);
     
     virtual ShaderProgram* CreateProgram();
     virtual void DestroyProgram(ShaderProgram* program);
@@ -104,6 +114,7 @@ public:
     
 private:
     DeviceState _CurrentState;
+    DeviceState _DesiredState;
     
     typedef std::vector<ShaderProgram*> ProgramList;
     typedef std::vector<Texture*> TextureList;
@@ -120,6 +131,8 @@ private:
     VertexMap _VertexBuffers;
     IndexReverseMap _IndexReverseBuffers;
     VertexReverseMap _VertexReverseBuffers;
+    
+    friend class DeviceState;
 };
 
 }

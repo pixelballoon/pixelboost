@@ -27,100 +27,52 @@ void DeviceState::Reset()
     {
         shaderAttribute[i] = false;
     }
+    
+    states.clear();
 }
 
-GraphicsDevice* GraphicsDevice::Create()
+void DeviceState::UpdateAll(DeviceState& state)
 {
-    return new GraphicsDeviceGL();
+    UpdateTexture(state);
+    UpdateIndexBuffer(state);
+    UpdateVertexBuffer(state);
+    
+    UpdateStates(state);
 }
-
-GraphicsDeviceGL::GraphicsDeviceGL()
+ 
+void DeviceState::UpdateIndexBuffer(DeviceState& state)
 {
+    GraphicsDeviceGL* device = static_cast<GraphicsDeviceGL*>(GraphicsDevice::Instance());
     
-}
-
-GraphicsDeviceGL::~GraphicsDeviceGL()
-{
-    
-}
-
-unsigned char* GraphicsDeviceGL::CaptureRenderBuffer()
-{    
-    int width, height;
-    
-    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &width);
-    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &height);
-
-    unsigned char* buffer = new unsigned char[width * height * 4];
-    glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-    
-    return buffer;
-}
-
-void GraphicsDeviceGL::ClearBuffers()
-{
-    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-}
-
-VertexBuffer* GraphicsDeviceGL::CreateVertexBuffer(BufferFormat bufferFormat, VertexFormat vertexFormat, int length)
-{
-    VertexBuffer* vertexBuffer = GraphicsDevice::CreateVertexBuffer(bufferFormat, vertexFormat, length);
-    
-    GLuint buffer = 0;
-    glGenBuffers(1, &buffer);
-    
-    _VertexBuffers[vertexBuffer] = buffer;
-    _VertexReverseBuffers[buffer] = vertexBuffer;
-    
-    return vertexBuffer;
-}
-
-void GraphicsDeviceGL::DestroyVertexBuffer(VertexBuffer* vertexBuffer)
-{
-    GLuint buffer = _VertexBuffers[vertexBuffer];
-    glDeleteBuffers(1, &buffer);
-    
-    _VertexBuffers.erase(vertexBuffer);
-    _VertexReverseBuffers.erase(buffer);
-    
-    GraphicsDevice::DestroyVertexBuffer(vertexBuffer);
-}
-
-VertexBuffer* GraphicsDeviceGL::GetBoundVertexBuffer()
-{
-    VertexReverseMap::iterator it = _VertexReverseBuffers.find(_CurrentState.boundVertexBuffer);
-    
-    if (it != _VertexReverseBuffers.end())
-        return it->second;
-    
-    return 0;
-}
-
-VertexBuffer* GraphicsDeviceGL::BindVertexBuffer(VertexBuffer* vertexBuffer)
-{
-    GLuint vertexBufferId = vertexBuffer ? _VertexBuffers[vertexBuffer] : 0;
-    
-    int previousBinding = _CurrentState.boundVertexBuffer;
-    
-    VertexBuffer* previousBuffer = 0;
-    
-    VertexReverseMap::iterator it = _VertexReverseBuffers.find(previousBinding);
-    
-    if (it != _VertexReverseBuffers.end())
-        previousBuffer = it->second;
-    
-    if (vertexBufferId != _CurrentState.boundVertexBuffer)
+    if (boundIndexBuffer != state.boundIndexBuffer)
     {
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
+        boundIndexBuffer = state.boundIndexBuffer;
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, boundIndexBuffer);
+    }
+}
+
+void DeviceState::UpdateVertexBuffer(DeviceState& state)
+{
+    GraphicsDeviceGL* device = static_cast<GraphicsDeviceGL*>(GraphicsDevice::Instance());
+
+    if (boundVertexBuffer != state.boundVertexBuffer)
+    {
+        boundVertexBuffer = state.boundVertexBuffer;
+        glBindBuffer(GL_ARRAY_BUFFER, boundVertexBuffer);
         
-        _CurrentState.boundVertexBuffer = vertexBufferId;
+        VertexBuffer* vertexBuffer = 0;
+        
+        GraphicsDeviceGL::VertexReverseMap::iterator vertexBufferIt = device->_VertexReverseBuffers.find(boundVertexBuffer);
+        
+        if (vertexBufferIt != device->_VertexReverseBuffers.end())
+            vertexBuffer = vertexBufferIt->second;
         
         if (vertexBuffer)
         {
             bool desiredShaderAttribute[kShaderAttributeCount];
             for (int i=0; i<kShaderAttributeCount; i++)
             {
-                desiredShaderAttribute[i] = false;;
+                desiredShaderAttribute[i] = false;
             }
             
             switch (vertexBuffer->GetVertexFormat())
@@ -185,18 +137,134 @@ VertexBuffer* GraphicsDeviceGL::BindVertexBuffer(VertexBuffer* vertexBuffer)
             
             for (int i=0; i<kShaderAttributeCount; i++)
             {
-                if (desiredShaderAttribute[i] != _CurrentState.shaderAttribute[i])
+                if (desiredShaderAttribute[i] != shaderAttribute[i])
                 {
                     if (desiredShaderAttribute[i])
                         glEnableVertexAttribArray(i);
                     else
                         glDisableVertexAttribArray(i);
                     
-                    _CurrentState.shaderAttribute[i] = desiredShaderAttribute[i];
+                    shaderAttribute[i] = desiredShaderAttribute[i];
                 }
             }
         }
     }
+}
+
+void DeviceState::UpdateTexture(DeviceState& state)
+{
+    GraphicsDeviceGL* device = static_cast<GraphicsDeviceGL*>(GraphicsDevice::Instance());
+    
+    if (boundTexture != state.boundTexture)
+    {
+        boundTexture = state.boundTexture;
+        glBindTexture(GL_TEXTURE_2D, boundTexture);
+    }
+}
+
+void DeviceState::UpdateStates(DeviceState& state)
+{
+    GraphicsDeviceGL* device = static_cast<GraphicsDeviceGL*>(GraphicsDevice::Instance());
+    
+    for (StateMap::iterator it = state.states.begin(); it != state.states.end(); ++it)
+    {
+        StateMap::iterator currentState = states.find(it->first);
+        
+        if (currentState == states.end() || currentState->second != it->second)
+        {
+            states[it->first] = it->second;
+            
+            if (it->second)
+            {
+                glEnable(it->first);
+            } else {
+                glDisable(it->first);
+            }
+        }
+    }
+}
+
+GraphicsDevice* GraphicsDevice::Create()
+{
+    return new GraphicsDeviceGL();
+}
+
+GraphicsDeviceGL::GraphicsDeviceGL()
+{
+    
+}
+
+GraphicsDeviceGL::~GraphicsDeviceGL()
+{
+    
+}
+
+unsigned char* GraphicsDeviceGL::CaptureRenderBuffer()
+{    
+    int width, height;
+    
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &width);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &height);
+
+    unsigned char* buffer = new unsigned char[width * height * 4];
+    glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+    
+    return buffer;
+}
+
+void GraphicsDeviceGL::ClearBuffers()
+{
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+}
+
+VertexBuffer* GraphicsDeviceGL::CreateVertexBuffer(BufferFormat bufferFormat, VertexFormat vertexFormat, int length)
+{
+    VertexBuffer* vertexBuffer = GraphicsDevice::CreateVertexBuffer(bufferFormat, vertexFormat, length);
+    
+    GLuint buffer = 0;
+    glGenBuffers(1, &buffer);
+    
+    _VertexBuffers[vertexBuffer] = buffer;
+    _VertexReverseBuffers[buffer] = vertexBuffer;
+    
+    return vertexBuffer;
+}
+
+void GraphicsDeviceGL::DestroyVertexBuffer(VertexBuffer* vertexBuffer)
+{
+    GLuint buffer = _VertexBuffers[vertexBuffer];
+    glDeleteBuffers(1, &buffer);
+    
+    _VertexBuffers.erase(vertexBuffer);
+    _VertexReverseBuffers.erase(buffer);
+    
+    GraphicsDevice::DestroyVertexBuffer(vertexBuffer);
+}
+
+VertexBuffer* GraphicsDeviceGL::GetBoundVertexBuffer()
+{
+    VertexReverseMap::iterator it = _VertexReverseBuffers.find(_DesiredState.boundVertexBuffer);
+    
+    if (it != _VertexReverseBuffers.end())
+        return it->second;
+    
+    return 0;
+}
+
+VertexBuffer* GraphicsDeviceGL::BindVertexBuffer(VertexBuffer* vertexBuffer)
+{
+    GLuint vertexBufferId = vertexBuffer ? _VertexBuffers[vertexBuffer] : 0;
+    
+    int previousBinding = _DesiredState.boundVertexBuffer;
+    
+    VertexBuffer* previousBuffer = 0;
+    
+    VertexReverseMap::iterator it = _VertexReverseBuffers.find(previousBinding);
+    
+    if (it != _VertexReverseBuffers.end())
+        previousBuffer = it->second;
+    
+    _DesiredState.boundVertexBuffer = vertexBufferId;
     
     return previousBuffer;
 }
@@ -217,6 +285,9 @@ void GraphicsDeviceGL::UnlockVertexBuffer(VertexBuffer* vertexBuffer, int numEle
     GLenum bufferType = vertexBuffer->GetBufferFormat() == kBufferFormatStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW;
     
     VertexBuffer* previousBuffer = BindVertexBuffer(vertexBuffer);
+    
+    _CurrentState.UpdateVertexBuffer(_DesiredState);
+    
     switch (vertexBuffer->GetVertexFormat())
     {
         case kVertexFormat_P_XY_RGBA:
@@ -279,7 +350,7 @@ void GraphicsDeviceGL::DestroyIndexBuffer(IndexBuffer* indexBuffer)
 
 IndexBuffer* GraphicsDeviceGL::GetBoundIndexBuffer()
 {
-    IndexReverseMap::iterator it = _IndexReverseBuffers.find(_CurrentState.boundIndexBuffer);
+    IndexReverseMap::iterator it = _IndexReverseBuffers.find(_DesiredState.boundIndexBuffer);
     
     if (it != _IndexReverseBuffers.end())
         return it->second;
@@ -293,11 +364,7 @@ IndexBuffer* GraphicsDeviceGL::BindIndexBuffer(IndexBuffer* indexBuffer)
     
     IndexBuffer* previousBuffer = GetBoundIndexBuffer();
     
-    if (indexBufferId != _CurrentState.boundIndexBuffer)
-    {
-        _CurrentState.boundIndexBuffer = indexBufferId;
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferId);
-    }
+    _DesiredState.boundIndexBuffer = indexBufferId;
     
     return previousBuffer;
 }
@@ -316,6 +383,9 @@ void GraphicsDeviceGL::UnlockIndexBuffer(IndexBuffer* indexBuffer, int numElemen
         numElements = indexBuffer->GetMaxSize();
     
     IndexBuffer* previousBuffer = BindIndexBuffer(indexBuffer);
+    
+    _CurrentState.UpdateIndexBuffer(_DesiredState);
+    
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * numElements, indexBuffer->GetData(), indexBuffer->GetBufferFormat() == kBufferFormatStatic ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
     BindIndexBuffer(previousBuffer);
 }
@@ -344,25 +414,24 @@ Texture* GraphicsDeviceGL::GetBoundTexture()
 {
     for (TextureList::iterator it = _Textures.begin(); it != _Textures.end(); ++it)
     {
-        if (static_cast<TextureGL*>(*it)->_Texture == _CurrentState.boundTexture)
+        if (static_cast<TextureGL*>(*it)->_Texture == _DesiredState.boundTexture)
             return *it;
     }
     
     return 0;
 }
     
-Texture* GraphicsDeviceGL::BindTexture(Texture* texture)
+Texture* GraphicsDeviceGL::BindTexture(Texture* texture, bool force)
 {
     GLuint textureId = texture ? static_cast<TextureGL*>(texture)->_Texture : 0;
     
     Texture* previousTexture = GetBoundTexture();
     
-    if (textureId != _CurrentState.boundTexture)
-    {
-        _CurrentState.boundTexture = textureId;
-        glBindTexture(GL_TEXTURE_2D, textureId);
-    }
+    _DesiredState.boundTexture = textureId;
     
+    if (force)
+        _CurrentState.UpdateTexture(_DesiredState);
+        
     return previousTexture;
 }
 
@@ -415,6 +484,7 @@ void GraphicsDeviceGL::OnContextLost()
 {
 #ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
     _CurrentState.Reset();
+    _DesiredState.Reset();
     
     _IndexReverseBuffers.clear();
     _VertexReverseBuffers.clear();
@@ -474,12 +544,7 @@ void GraphicsDeviceGL::SetState(State state, bool enable)
             break;
     }
     
-    if (enable)
-    {
-        glEnable(glState);
-    } else {
-        glDisable(glState);
-    }
+    _DesiredState.states[glState] = enable;
 }
 
 void GraphicsDeviceGL::SetBlendMode(Blend source, Blend destination)
@@ -528,6 +593,8 @@ void GraphicsDeviceGL::SetScissor(glm::vec4 scissor)
 
 void GraphicsDeviceGL::DrawElements(ElementType elementType, int num)
 {
+    _CurrentState.UpdateAll(_DesiredState);
+    
     GLuint type;
     
     switch (elementType)

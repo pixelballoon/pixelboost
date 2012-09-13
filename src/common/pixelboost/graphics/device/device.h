@@ -54,7 +54,7 @@ public:
     virtual Texture* CreateTexture() = 0;
     virtual void DestroyTexture(Texture* texture);
     virtual Texture* GetBoundTexture() = 0;
-    virtual Texture* BindTexture(Texture* texture) = 0;
+    virtual Texture* BindTexture(Texture* texture, bool force=false) = 0;
     
     virtual ShaderProgram* CreateProgram() = 0;
     virtual void DestroyProgram(ShaderProgram* program);
