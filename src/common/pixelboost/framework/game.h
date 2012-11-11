@@ -54,6 +54,7 @@ public:
     float GetTotalTime();
     
     virtual bool IsLandscape();
+    virtual bool AllowFrameskip();
     
     virtual void OnMemoryWarning();
 

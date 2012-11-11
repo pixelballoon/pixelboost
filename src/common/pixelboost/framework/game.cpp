@@ -163,6 +163,11 @@ bool Game::IsLandscape()
 {
     return false;
 }
+
+bool Game::AllowFrameskip()
+{
+    return true;
+}
     
 void Game::OnMemoryWarning()
 {
