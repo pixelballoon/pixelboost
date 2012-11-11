@@ -14,14 +14,13 @@ template<class T> const T* Entity::GetData() const
 
 template <class T>T* Entity::GetComponentByType()
 {
-    Entity::ComponentList components = GetComponentsByType<T>();
-    
-    if (components.size())
+    for (ComponentList::iterator componentIt = _Components.begin(); componentIt != _Components.end(); ++componentIt)
     {
-        return static_cast<T*>(components.at(0));
+        if ((*componentIt)->GetType() == T::GetStaticType())
+        {
+            return static_cast<T*>(*componentIt);
+        }
     }
-    
-    return 0;
 }
 
 template <class T> Entity::ComponentList Entity::GetComponentsByType()
