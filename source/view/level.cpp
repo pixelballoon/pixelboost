@@ -3,6 +3,7 @@
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 #include "pixelboost/logic/component/graphics/rectangle.h"
+#include "pixelboost/logic/component/transform/basic.h"
 #include "pixelboost/logic/scene.h"
 
 #include "command/manager.h"
@@ -24,6 +25,8 @@ Level::Level(pb::Scene* scene)
     View::Instance()->GetMouseManager()->AddHandler(this);
     
     Core::Instance()->GetProject()->recordRemoved.Connect(this, &Level::OnRecordRemoved);
+    
+    new pb::BasicTransformComponent(this);
     
     _LevelBounds = new pb::RectangleComponent(this);
     _LevelBounds->SetColor(glm::vec4(0.6, 0.6, 0.6, 1.0));

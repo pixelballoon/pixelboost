@@ -3,6 +3,7 @@
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 #include "pixelboost/logic/component/graphics/rectangle.h"
+#include "pixelboost/logic/component/transform/basic.h"
 
 #include "command/manager.h"
 #include "view/entity/entity.h"
@@ -18,7 +19,7 @@ SelectManipulator::SelectManipulator(pb::Scene* scene)
     , _Active(false)
     , _BoundsComponent(0)
 {
-    
+    new pb::BasicTransformComponent(this);
 }
 
 SelectManipulator::~SelectManipulator()
