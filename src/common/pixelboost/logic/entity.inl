@@ -21,6 +21,8 @@ template <class T>T* Entity::GetComponentByType()
             return static_cast<T*>(*componentIt);
         }
     }
+    
+    return 0;
 }
 
 template <class T> Entity::ComponentList Entity::GetComponentsByType()
