@@ -1,3 +1,0 @@
-[submodule "libs/pixelboost"]
-	path = libs/pixelboost
-	url = git@github.com:pixelballoon/pixelboost-engine.git
