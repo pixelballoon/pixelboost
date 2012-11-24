@@ -15,12 +15,16 @@ Scene::~Scene()
 {
     for (EntityMap::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
     {
-        delete it->second;
+        Entity* entity = it->second;
+        it->second = 0;
+        delete entity;
     }
     
     for (EntityMap::iterator it = _NewEntities.begin(); it != _NewEntities.end(); ++it)
     {
-        delete it->second;
+        Entity* entity = it->second;
+        it->second = 0;
+        delete entity;
     }
     
     for (DelayedMessageList::iterator it = _DelayedMessages.begin(); it != _DelayedMessages.end(); ++it)
@@ -99,7 +103,7 @@ bool Scene::AddSystem(SceneSystem* system)
     
     if (it != _Systems.end())
         return false;
-        
+    
     _Systems[system->GetType()] = system;
     
     return true;
