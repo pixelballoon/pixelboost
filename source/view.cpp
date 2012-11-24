@@ -180,7 +180,7 @@ void View::Initialise(glm::vec2 size, float density)
     _UiScene = new pb::Scene();
     _UiScene->AddSystem(new pb::BoundsRenderSystem());
     _UiViewport->SetScene(_UiScene);
-    _UiViewport->SetDensity(density);
+    _UiViewport->SetDensity(32.f);
     _UiViewport->SetPosition(glm::vec2(0,0));
         
     pb::Renderer::Instance()->AddViewport(_LevelViewport);
@@ -434,6 +434,10 @@ void View::OnProjectOpened(Project* project)
     _Records = new Gwen::Controls::CollapsibleCategory(_FilePage);
     _Records->SetText("Records");
     _FilePage->Add(_Records);
+    
+    int pixelUnit = project->GetConfig().pixelUnit;
+    pb::GraphicsDevice::Instance()->SetDisplayDensity(pixelUnit);
+    _LevelViewport->SetDensity(pixelUnit);
     
     SetupCreateMenu(project);
 }
