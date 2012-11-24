@@ -12,6 +12,7 @@ ParallaxTransformComponent::ParallaxTransformComponent(Entity* parent, Uid paral
     , _Dirty(true)
     , _ParallaxScale(1,1,1)
     , _Scale(1,1,1)
+    , _ParallaxEntityId(parallaxEntityId)
 {
     Entity* parallaxEntity = GetScene()->GetEntityById(parallaxEntityId);
     
@@ -23,7 +24,12 @@ ParallaxTransformComponent::ParallaxTransformComponent(Entity* parent, Uid paral
 
 ParallaxTransformComponent::~ParallaxTransformComponent()
 {
+    Entity* parallaxEntity = GetScene()->GetEntityById(_ParallaxEntityId);
     
+    if (parallaxEntity)
+    {
+        parallaxEntity->UnregisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &ParallaxTransformComponent::OnTransformChanged));
+    }
 }
 
 Uid ParallaxTransformComponent::GetType()
