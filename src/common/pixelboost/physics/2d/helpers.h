@@ -32,7 +32,7 @@ namespace pb
     class PhysicsHelpers2D
     {
     public:
-        static FixtureCollection2D* LoadDefinition(const std::string& filename);
+        static FixtureCollection2D* LoadDefinition(const std::string& filename, float density=32.f);
         static b2Body* CreateBodyFromDefinition(b2World* world, b2BodyDef bodyDef, const FixtureDefinition2D& definition, float density=1.f, glm::vec2 scale=glm::vec2(1,1));
     };
 }

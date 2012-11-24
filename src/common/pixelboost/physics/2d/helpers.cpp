@@ -8,7 +8,7 @@
 
 using namespace pb;
 
-FixtureCollection2D* PhysicsHelpers2D::LoadDefinition(const std::string& filename)
+FixtureCollection2D* PhysicsHelpers2D::LoadDefinition(const std::string& filename, float density)
 {
     std::string definitionString = pb::FileHelpers::FileToString(pb::kFileLocationBundle, "/data/physics/"+filename+".phy");
     
@@ -41,8 +41,8 @@ FixtureCollection2D* PhysicsHelpers2D::LoadDefinition(const std::string& filenam
                 for (json::Array::iterator pointIt = elements.Begin(); pointIt != elements.End(); ++pointIt)
                 {
                     json::Array& pt = *pointIt;
-                    vertices[i].x = static_cast<json::Number>(pt[0]).Value()/32.f;
-                    vertices[i].y = static_cast<json::Number>(pt[1]).Value()/32.f;
+                    vertices[i].x = static_cast<json::Number>(pt[0]).Value()/density;
+                    vertices[i].y = static_cast<json::Number>(pt[1]).Value()/density;
                     i++;
                 }
                 
