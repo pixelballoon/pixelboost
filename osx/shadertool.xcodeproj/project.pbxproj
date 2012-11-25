@@ -7,25 +7,32 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C27CD2A166292A900122607 /* libpixelboost_osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C27CD1B1662922A00122607 /* libpixelboost_osx.a */; };
 		1C89652F15DE94B300AB3196 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89652E15DE94B300AB3196 /* main.cpp */; };
-		1CAD29BE15E2149800510183 /* libpixelboost_osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C897E3715DEEA1800AB3196 /* libpixelboost_osx.a */; };
 		1CAD29D615E2B1D500510183 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CAD29D515E2B1D500510183 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		1C897E3415DEEA1800AB3196 /* PBXContainerItemProxy */ = {
+		1C27CD181662922A00122607 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 1C897E2C15DEEA1700AB3196 /* pixelboost.xcodeproj */;
+			containerPortal = 1C27CD121662922900122607 /* pixelboost.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 1C897C5F15DEA3D600AB3196;
 			remoteInfo = pixelboost_ios;
 		};
-		1C897E3615DEEA1800AB3196 /* PBXContainerItemProxy */ = {
+		1C27CD1A1662922A00122607 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 1C897E2C15DEEA1700AB3196 /* pixelboost.xcodeproj */;
+			containerPortal = 1C27CD121662922900122607 /* pixelboost.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 1C897D8615DEA3E500AB3196;
 			remoteInfo = pixelboost_osx;
+		};
+		1C27CD1C1662922A00122607 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1C27CD121662922900122607 /* pixelboost.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1C25E97015E55AEF00833738;
+			remoteInfo = pixelboost_osx_x86_64;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -42,9 +49,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1C27CD121662922900122607 /* pixelboost.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = pixelboost.xcodeproj; path = ../../../engine/osx_ios/pixelboost.xcodeproj; sourceTree = "<group>"; };
 		1C89652A15DE94B300AB3196 /* shadertool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = shadertool; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C89652E15DE94B300AB3196 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		1C897E2C15DEEA1700AB3196 /* pixelboost.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = pixelboost.xcodeproj; path = ../libs/pixelboost/osx_ios/pixelboost.xcodeproj; sourceTree = "<group>"; };
 		1CAD29D515E2B1D500510183 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -53,14 +60,24 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C27CD2A166292A900122607 /* libpixelboost_osx.a in Frameworks */,
 				1CAD29D615E2B1D500510183 /* Foundation.framework in Frameworks */,
-				1CAD29BE15E2149800510183 /* libpixelboost_osx.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1C27CD131662922900122607 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1C27CD191662922A00122607 /* libpixelboost_ios.a */,
+				1C27CD1B1662922A00122607 /* libpixelboost_osx.a */,
+				1C27CD1D1662922A00122607 /* libpixelboost_osx_x86_64.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		1C7F878A15E4D6F800D460DE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -98,18 +115,9 @@
 		1C89653715DE94BD00AB3196 /* libs */ = {
 			isa = PBXGroup;
 			children = (
-				1C897E2C15DEEA1700AB3196 /* pixelboost.xcodeproj */,
+				1C27CD121662922900122607 /* pixelboost.xcodeproj */,
 			);
 			name = libs;
-			sourceTree = "<group>";
-		};
-		1C897E2D15DEEA1700AB3196 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				1C897E3515DEEA1800AB3196 /* libpixelboost_ios.a */,
-				1C897E3715DEEA1800AB3196 /* libpixelboost_osx.a */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -153,8 +161,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 1C897E2D15DEEA1700AB3196 /* Products */;
-					ProjectRef = 1C897E2C15DEEA1700AB3196 /* pixelboost.xcodeproj */;
+					ProductGroup = 1C27CD131662922900122607 /* Products */;
+					ProjectRef = 1C27CD121662922900122607 /* pixelboost.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -165,18 +173,25 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		1C897E3515DEEA1800AB3196 /* libpixelboost_ios.a */ = {
+		1C27CD191662922A00122607 /* libpixelboost_ios.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libpixelboost_ios.a;
-			remoteRef = 1C897E3415DEEA1800AB3196 /* PBXContainerItemProxy */;
+			remoteRef = 1C27CD181662922A00122607 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		1C897E3715DEEA1800AB3196 /* libpixelboost_osx.a */ = {
+		1C27CD1B1662922A00122607 /* libpixelboost_osx.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libpixelboost_osx.a;
-			remoteRef = 1C897E3615DEEA1800AB3196 /* PBXContainerItemProxy */;
+			remoteRef = 1C27CD1A1662922A00122607 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1C27CD1D1662922A00122607 /* libpixelboost_osx_x86_64.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libpixelboost_osx_x86_64.a;
+			remoteRef = 1C27CD1C1662922A00122607 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */

@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1C897C6015DEA3E500AB3196"
-               BuildableName = "libpixelboost_osx.a"
-               BlueprintName = "pixelboost_osx"
-               ReferencedContainer = "container:../libs/pixelboost/osx_ios/pixelboost.xcodeproj">
+               BlueprintIdentifier = "1C89652915DE94B300AB3196"
+               BuildableName = "shadertool"
+               BlueprintName = "shadertool"
+               ReferencedContainer = "container:shadertool.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -28,10 +28,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1C89652915DE94B300AB3196"
-               BuildableName = "shadertool"
-               BlueprintName = "shadertool"
-               ReferencedContainer = "container:shadertool.xcodeproj">
+               BlueprintIdentifier = "1C897C6015DEA3E500AB3196"
+               BuildableName = "libpixelboost_osx.a"
+               BlueprintName = "pixelboost_osx"
+               ReferencedContainer = "container:../../../engine/osx_ios/pixelboost.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
