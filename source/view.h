@@ -6,7 +6,7 @@
 #include "Gwen/Events.h"
 #include "sigslot/signal.h"
 
-#include "pixelboost/framework/game.h"
+#include "pixelboost/framework/engine.h"
 
 #include "core/selection.h"
 
@@ -48,7 +48,7 @@ class ViewEntity;
 class ViewKeyboardHandler;
 class ViewMouseHandler;
 
-class View : public pb::Game, public Gwen::Event::Handler
+class View : public pb::Engine, public Gwen::Event::Handler
 {
 public:
     View();

@@ -123,7 +123,7 @@ public:
 };
 
 View::View()
-    : pb::Game(0)
+    : pb::Engine(0)
     , _Record(0)
 {
     _KeyboardHandler = new ViewKeyboardHandler();
