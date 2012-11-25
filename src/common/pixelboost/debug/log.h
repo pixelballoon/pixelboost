@@ -12,11 +12,11 @@
 #elif defined(PIXELBOOST_PLATFORM_NACL)
     #include "ppapi/cpp/instance.h"
     #include "ppapi/cpp/var.h"
-    #include "pixelboost/framework/game.h"
+    #include "pixelboost/framework/engine.h"
 
-	#define PbLogDebug(system, format, ...) { char status[1024]; snprintf(status, 1024, format, ## __VA_ARGS__); static_cast<pp::Instance*>(pb::Game::Instance()->GetViewController())->PostMessage(pp::Var(status)); }
-    #define PbLogError(system, format, ...) { char status[1024]; snprintf(status, 1024, format, ## __VA_ARGS__); static_cast<pp::Instance*>(pb::Game::Instance()->GetViewController())->PostMessage(pp::Var(status)); }
-    #define PbLogWarn(system, format, ...) { char status[1024]; snprintf(status, 1024, format, ## __VA_ARGS__); static_cast<pp::Instance*>(pb::Game::Instance()->GetViewController())->PostMessage(pp::Var(status)); }
+	#define PbLogDebug(system, format, ...) { char status[1024]; snprintf(status, 1024, format, ## __VA_ARGS__); static_cast<pp::Instance*>(pb::Engine::Instance()->GetViewController())->PostMessage(pp::Var(status)); }
+    #define PbLogError(system, format, ...) { char status[1024]; snprintf(status, 1024, format, ## __VA_ARGS__); static_cast<pp::Instance*>(pb::Engine::Instance()->GetViewController())->PostMessage(pp::Var(status)); }
+    #define PbLogWarn(system, format, ...) { char status[1024]; snprintf(status, 1024, format, ## __VA_ARGS__); static_cast<pp::Instance*>(pb::Engine::Instance()->GetViewController())->PostMessage(pp::Var(status)); }
 #else
     #define PbLogDebug(system, format, ...) printf(format, ## __VA_ARGS__)
 	#define PbLogError(system, format, ...) printf(format, ## __VA_ARGS__)

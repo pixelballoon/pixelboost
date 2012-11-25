@@ -2,7 +2,7 @@
 
 #include "pixelboost/data/json/reader.h"
 #include "pixelboost/file/fileHelpers.h"
-#include "pixelboost/framework/game.h"
+#include "pixelboost/framework/engine.h"
 #include "pixelboost/graphics/device/texture.h"
 #include "pixelboost/graphics/helper/screenHelpers.h"
 #include "pixelboost/graphics/renderer/sprite/sprite.h"
@@ -24,7 +24,7 @@ SpriteSheet::~SpriteSheet()
 {
     for (SpriteMap::iterator it = _Sprites.begin(); it != _Sprites.end(); ++it)
     {
-        Game::Instance()->GetSpriteRenderer()->_Sprites.erase(it->first);
+        Engine::Instance()->GetSpriteRenderer()->_Sprites.erase(it->first);
         delete it->second;
     }
     
@@ -51,7 +51,7 @@ bool SpriteSheet::LoadSingle(FileLocation location, const std::string& fileName,
     sprite->_Offset = glm::vec2(0,0);
     
     _Sprites[spriteName] = sprite;
-    Game::Instance()->GetSpriteRenderer()->_Sprites[spriteName] = sprite;
+    Engine::Instance()->GetSpriteRenderer()->_Sprites[spriteName] = sprite;
     
     return true;
 }
@@ -113,7 +113,7 @@ bool SpriteSheet::LoadSheet(FileLocation location, const std::string& name, bool
         
         std::string spriteName = name.substr(0, name.length()-4);
         _Sprites[spriteName] = sprite;
-        Game::Instance()->GetSpriteRenderer()->_Sprites[spriteName] = sprite;
+        Engine::Instance()->GetSpriteRenderer()->_Sprites[spriteName] = sprite;
     }
     
     LoadTexture(location, "/data/spritesheets/images/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".png", generateMips);

@@ -1,17 +1,11 @@
 #ifndef PIXELBOOST_DISABLE_GRAPHICS
 
-#include "pixelboost/framework/game.h"
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/helper/screenHelpers.h"
 
 #include <string>
 
 using namespace pb;
-    
-bool ScreenHelpers::IsLandscape()
-{
-    return Game::Instance()->IsLandscape();
-}
 
 bool ScreenHelpers::IsHighResolution()
 {

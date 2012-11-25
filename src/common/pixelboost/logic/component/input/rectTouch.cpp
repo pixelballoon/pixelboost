@@ -1,4 +1,4 @@
-#include "pixelboost/framework/game.h"
+#include "pixelboost/framework/engine.h"
 #include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/logic/component/input/rectTouch.h"
 #include "pixelboost/logic/component/transform.h"
@@ -16,7 +16,7 @@ RectTouchComponent::RectTouchComponent(Entity* parent, bool debugRender)
     , _DebugRender(debugRender)
     , _MultiTouch(false)
 {
-    Game::Instance()->GetTouchManager()->AddHandler(this);
+    Engine::Instance()->GetTouchManager()->AddHandler(this);
     
     if (_DebugRender)
     {
@@ -26,7 +26,7 @@ RectTouchComponent::RectTouchComponent(Entity* parent, bool debugRender)
 
 RectTouchComponent::~RectTouchComponent()
 {
-    Game::Instance()->GetTouchManager()->RemoveHandler(this);
+    Engine::Instance()->GetTouchManager()->RemoveHandler(this);
     
     if (_DebugRender)
     {

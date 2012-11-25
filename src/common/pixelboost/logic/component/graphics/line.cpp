@@ -1,4 +1,3 @@
-#include "pixelboost/framework/game.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 #include "pixelboost/logic/component/graphics/line.h"

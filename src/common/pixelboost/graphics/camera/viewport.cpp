@@ -1,4 +1,3 @@
-#include "pixelboost/framework/game.h"
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/device/device.h"

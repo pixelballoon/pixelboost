@@ -1,6 +1,5 @@
 #ifndef PIXELBOOST_DISABLE_BOX2D
 
-#include "pixelboost/framework/game.h"
 #include "pixelboost/graphics/renderer/box2d/box2dRenderer.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 #include "pixelboost/logic/system/debug/render.h"

@@ -8,7 +8,7 @@
 #include "pixelboost/debug/assert.h"
 #include "pixelboost/debug/log.h"
 #include "pixelboost/file/fileSystem.h"
-#include "pixelboost/framework/game.h"
+#include "pixelboost/framework/engine.h"
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/device/device.h"
@@ -48,7 +48,7 @@ Uid ModelRenderable::GetStaticType()
 
 void ModelRenderable::CalculateBounds()
 {
-    Model* model = Game::Instance()->GetModelRenderer()->GetModel(_Model);
+    Model* model = Engine::Instance()->GetModelRenderer()->GetModel(_Model);
     
     if (!model)
         return;

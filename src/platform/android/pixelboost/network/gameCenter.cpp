@@ -1,6 +1,6 @@
 #ifdef PIXELBOOST_PLATFORM_ANDROID
 
-#include "pixelboost/framework/game.h"
+#include "pixelboost/framework/engine.h"
 #include "pixelboost/network/gameCenter.h"
 #include "pixelboost/network/networkMessage.h"
 
@@ -310,7 +310,7 @@ void GameCenter::FindMatch(int group)
     
     mmvc.matchmakerDelegate = gcDelegate;
     
-    UIViewController* view = (UIViewController*)pb::Game::Instance()->GetViewController();
+    UIViewController* view = (UIViewController*)pb::Engine::Instance()->GetViewController();
     [view presentModalViewController:mmvc animated:YES];
     */
 }

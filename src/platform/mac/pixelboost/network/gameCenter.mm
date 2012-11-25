@@ -2,7 +2,6 @@
 
 #include "sys/sysctl.h"
 
-#include "pixelboost/framework/game.h"
 #include "pixelboost/network/gameCenter.h"
 #include "pixelboost/network/networkMessage.h"
 

@@ -2,7 +2,7 @@
 #include "pixelboost/debug/debugDatabaseHandler.h"
 #include "pixelboost/debug/debugVariableManager.h"
 #include "pixelboost/file/fileSystem.h"
-#include "pixelboost/framework/game.h"
+#include "pixelboost/framework/engine.h"
 #include "pixelboost/framework/screen.h"
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
@@ -22,9 +22,9 @@
 
 using namespace pb;
 
-Game* Game::_Instance = 0;
+Engine* Engine::_Instance = 0;
 
-Game::Game(void* viewController)
+Engine::Engine(void* viewController)
     : _GameTime(0)
     , _TotalTime(0)
     , _ViewController(viewController)
@@ -61,7 +61,7 @@ Game::Game(void* viewController)
 #endif
 }
 
-Game::~Game()
+Engine::~Engine()
 {
     _Instance = 0;
     
@@ -82,114 +82,114 @@ Game::~Game()
 #endif
 }
 
-Game* Game::Instance()
+Engine* Engine::Instance()
 {
     return _Instance;
 }
 
-void Game::Initialise()
+void Engine::Initialise()
 {
 #ifndef PIXELBOOST_DISABLE_DEBUG
     _DebugNetwork->StartServer(9090, 1);
 #endif
 }
 
-GameCenter* Game::GetGameCenter() const
+GameCenter* Engine::GetGameCenter() const
 {
     return _GameCenter;
 }
     
-BufferRenderer* Game::GetBufferRenderer() const
+BufferRenderer* Engine::GetBufferRenderer() const
 {
     return _BufferRenderer;
 }
     
-FontRenderer* Game::GetFontRenderer() const
+FontRenderer* Engine::GetFontRenderer() const
 {
     return _FontRenderer;
 }
 
-ModelRenderer* Game::GetModelRenderer() const
+ModelRenderer* Engine::GetModelRenderer() const
 {
     return _ModelRenderer;
 }
 
-ResourceManager* Game::GetResourceManager() const
+ResourceManager* Engine::GetResourceManager() const
 {
     return _ResourceManager;
 }
     
-ParticleRenderer* Game::GetParticleRenderer() const
+ParticleRenderer* Engine::GetParticleRenderer() const
 {
     return _ParticleRenderer;
 }
 
-PrimitiveRenderer* Game::GetPrimitiveRenderer() const
+PrimitiveRenderer* Engine::GetPrimitiveRenderer() const
 {
     return _PrimitiveRenderer;
 }
 
-SpriteRenderer* Game::GetSpriteRenderer() const
+SpriteRenderer* Engine::GetSpriteRenderer() const
 {
     return _SpriteRenderer;
 }
 
-KeyboardManager* Game::GetKeyboardManager() const
+KeyboardManager* Engine::GetKeyboardManager() const
 {
     return _KeyboardManager;
 }
 
-MouseManager* Game::GetMouseManager() const
+MouseManager* Engine::GetMouseManager() const
 {
     return _MouseManager;
 }
 
-TouchManager* Game::GetTouchManager() const
+TouchManager* Engine::GetTouchManager() const
 {
     return _TouchManager;
 }
     
-float Game::GetGameTime()
+float Engine::GetGameTime()
 {
     return _GameTime;
 }
 
-float Game::GetTotalTime()
+float Engine::GetTotalTime()
 {
     return _TotalTime;
 }
     
-bool Game::IsLandscape()
+bool Engine::IsLandscape()
 {
     return false;
 }
 
-bool Game::AllowFrameskip()
+bool Engine::AllowFrameskip()
 {
     return true;
 }
     
-void Game::OnMemoryWarning()
+void Engine::OnMemoryWarning()
 {
     
 }
 
-void Game::OnAppLoseFocus()
+void Engine::OnAppLoseFocus()
 {
 
 }
 
-void Game::OnAppGainFocus()
+void Engine::OnAppGainFocus()
 {
 
 }
 
-void Game::OnAppQuit()
+void Engine::OnAppQuit()
 {
 
 }
 
-void Game::Update(float time)
+void Engine::Update(float time)
 {
     _GameTime += time;
     _TotalTime += time;
@@ -203,14 +203,14 @@ void Game::Update(float time)
 #endif
 }
 
-void Game::Render()
+void Engine::Render()
 {
 #ifndef PIXELBOOST_DISABLE_GRAPHICS
     _Renderer->Render();
 #endif
 }
 
-void* Game::GetViewController()
+void* Engine::GetViewController()
 {
     return _ViewController;
 }

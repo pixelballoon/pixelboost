@@ -20,7 +20,7 @@
 		1C25E86F15E55AEF00833738 /* debugVariableManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89764415DE9B3A00AB3196 /* debugVariableManager.cpp */; };
 		1C25E87015E55AEF00833738 /* fileHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89764815DE9B3A00AB3196 /* fileHelpers.cpp */; };
 		1C25E87115E55AEF00833738 /* fileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89764A15DE9B3A00AB3196 /* fileSystem.cpp */; };
-		1C25E87215E55AEF00833738 /* game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89764D15DE9B3A00AB3196 /* game.cpp */; };
+		1C25E87215E55AEF00833738 /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89764D15DE9B3A00AB3196 /* engine.cpp */; };
 		1C25E87315E55AEF00833738 /* screen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89764F15DE9B3A00AB3196 /* screen.cpp */; };
 		1C25E87415E55AEF00833738 /* camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89765315DE9B3A00AB3196 /* camera.cpp */; };
 		1C25E87515E55AEF00833738 /* viewport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89765515DE9B3A00AB3196 /* viewport.cpp */; };
@@ -282,7 +282,7 @@
 		1C897B4515DEA3D600AB3196 /* debugVariableManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89764415DE9B3A00AB3196 /* debugVariableManager.cpp */; };
 		1C897B4615DEA3D600AB3196 /* fileHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89764815DE9B3A00AB3196 /* fileHelpers.cpp */; };
 		1C897B4715DEA3D600AB3196 /* fileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89764A15DE9B3A00AB3196 /* fileSystem.cpp */; };
-		1C897B4815DEA3D600AB3196 /* game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89764D15DE9B3A00AB3196 /* game.cpp */; };
+		1C897B4815DEA3D600AB3196 /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89764D15DE9B3A00AB3196 /* engine.cpp */; };
 		1C897B4915DEA3D600AB3196 /* screen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89764F15DE9B3A00AB3196 /* screen.cpp */; };
 		1C897B4A15DEA3D600AB3196 /* camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89765315DE9B3A00AB3196 /* camera.cpp */; };
 		1C897B4B15DEA3D600AB3196 /* viewport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89765515DE9B3A00AB3196 /* viewport.cpp */; };
@@ -567,7 +567,7 @@
 		1C897C6C15DEA3E500AB3196 /* debugVariableManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89764415DE9B3A00AB3196 /* debugVariableManager.cpp */; };
 		1C897C6D15DEA3E500AB3196 /* fileHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89764815DE9B3A00AB3196 /* fileHelpers.cpp */; };
 		1C897C6E15DEA3E500AB3196 /* fileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89764A15DE9B3A00AB3196 /* fileSystem.cpp */; };
-		1C897C6F15DEA3E500AB3196 /* game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89764D15DE9B3A00AB3196 /* game.cpp */; };
+		1C897C6F15DEA3E500AB3196 /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89764D15DE9B3A00AB3196 /* engine.cpp */; };
 		1C897C7015DEA3E500AB3196 /* screen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89764F15DE9B3A00AB3196 /* screen.cpp */; };
 		1C897C7115DEA3E500AB3196 /* camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89765315DE9B3A00AB3196 /* camera.cpp */; };
 		1C897C7215DEA3E500AB3196 /* viewport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89765515DE9B3A00AB3196 /* viewport.cpp */; };
@@ -891,8 +891,8 @@
 		1C89764915DE9B3A00AB3196 /* fileHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fileHelpers.h; sourceTree = "<group>"; };
 		1C89764A15DE9B3A00AB3196 /* fileSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fileSystem.cpp; sourceTree = "<group>"; };
 		1C89764B15DE9B3A00AB3196 /* fileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fileSystem.h; sourceTree = "<group>"; };
-		1C89764D15DE9B3A00AB3196 /* game.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = game.cpp; sourceTree = "<group>"; };
-		1C89764E15DE9B3A00AB3196 /* game.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = game.h; sourceTree = "<group>"; };
+		1C89764D15DE9B3A00AB3196 /* engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = engine.cpp; sourceTree = "<group>"; };
+		1C89764E15DE9B3A00AB3196 /* engine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = engine.h; sourceTree = "<group>"; };
 		1C89764F15DE9B3A00AB3196 /* screen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = screen.cpp; sourceTree = "<group>"; };
 		1C89765015DE9B3A00AB3196 /* screen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = screen.h; sourceTree = "<group>"; };
 		1C89765315DE9B3A00AB3196 /* camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = camera.cpp; sourceTree = "<group>"; };
@@ -1915,8 +1915,8 @@
 		1C89764C15DE9B3A00AB3196 /* framework */ = {
 			isa = PBXGroup;
 			children = (
-				1C89764D15DE9B3A00AB3196 /* game.cpp */,
-				1C89764E15DE9B3A00AB3196 /* game.h */,
+				1C89764D15DE9B3A00AB3196 /* engine.cpp */,
+				1C89764E15DE9B3A00AB3196 /* engine.h */,
 				1C89764F15DE9B3A00AB3196 /* screen.cpp */,
 				1C89765015DE9B3A00AB3196 /* screen.h */,
 			);
@@ -3730,7 +3730,7 @@
 				1C25E86F15E55AEF00833738 /* debugVariableManager.cpp in Sources */,
 				1C25E87015E55AEF00833738 /* fileHelpers.cpp in Sources */,
 				1C25E87115E55AEF00833738 /* fileSystem.cpp in Sources */,
-				1C25E87215E55AEF00833738 /* game.cpp in Sources */,
+				1C25E87215E55AEF00833738 /* engine.cpp in Sources */,
 				1C25E87315E55AEF00833738 /* screen.cpp in Sources */,
 				1C25E87415E55AEF00833738 /* camera.cpp in Sources */,
 				1C25E87515E55AEF00833738 /* viewport.cpp in Sources */,
@@ -3998,7 +3998,7 @@
 				1C897B4515DEA3D600AB3196 /* debugVariableManager.cpp in Sources */,
 				1C897B4615DEA3D600AB3196 /* fileHelpers.cpp in Sources */,
 				1C897B4715DEA3D600AB3196 /* fileSystem.cpp in Sources */,
-				1C897B4815DEA3D600AB3196 /* game.cpp in Sources */,
+				1C897B4815DEA3D600AB3196 /* engine.cpp in Sources */,
 				1C897B4915DEA3D600AB3196 /* screen.cpp in Sources */,
 				1C897B4A15DEA3D600AB3196 /* camera.cpp in Sources */,
 				1C897B4B15DEA3D600AB3196 /* viewport.cpp in Sources */,
@@ -4291,7 +4291,7 @@
 				1C897C6C15DEA3E500AB3196 /* debugVariableManager.cpp in Sources */,
 				1C897C6D15DEA3E500AB3196 /* fileHelpers.cpp in Sources */,
 				1C897C6E15DEA3E500AB3196 /* fileSystem.cpp in Sources */,
-				1C897C6F15DEA3E500AB3196 /* game.cpp in Sources */,
+				1C897C6F15DEA3E500AB3196 /* engine.cpp in Sources */,
 				1C897C7015DEA3E500AB3196 /* screen.cpp in Sources */,
 				1C897C7115DEA3E500AB3196 /* camera.cpp in Sources */,
 				1C897C7215DEA3E500AB3196 /* viewport.cpp in Sources */,

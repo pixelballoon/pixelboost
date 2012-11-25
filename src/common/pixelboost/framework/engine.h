@@ -26,13 +26,13 @@ class SoundManager;
 class SpriteRenderer;
 class TouchManager;
     
-class Game
+class Engine
 {
 public:
-	Game(void* viewController);
-	virtual ~Game();
+	Engine(void* viewController);
+	virtual ~Engine();
 	
-	static Game* Instance();
+	static Engine* Instance();
 	
 	virtual void Initialise();
     
@@ -68,7 +68,7 @@ public:
     void* GetViewController();
 	
 private:
-	static Game* _Instance;
+	static Engine* _Instance;
     
     FileSystem* _FileSystem;
     

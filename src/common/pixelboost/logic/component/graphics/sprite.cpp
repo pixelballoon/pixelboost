@@ -1,4 +1,4 @@
-#include "pixelboost/framework/game.h"
+#include "pixelboost/framework/engine.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/sprite/sprite.h"
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
@@ -15,7 +15,7 @@ SpriteComponent::SpriteComponent(Entity* parent, const std::string& sprite)
     : Component(parent)
 {
     _Renderable = new SpriteRenderable(parent->GetUid());
-    _Renderable->SetSprite(pb::Game::Instance()->GetSpriteRenderer()->GetSprite(sprite));
+    _Renderable->SetSprite(Engine::Instance()->GetSpriteRenderer()->GetSprite(sprite));
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
     
@@ -63,7 +63,7 @@ void SpriteComponent::SetLayer(int layer)
 
 void SpriteComponent::SetSprite(const std::string& sprite)
 {
-    _Renderable->SetSprite(pb::Game::Instance()->GetSpriteRenderer()->GetSprite(sprite));
+    _Renderable->SetSprite(Engine::Instance()->GetSpriteRenderer()->GetSprite(sprite));
 }
 
 void SpriteComponent::SetTint(const glm::vec4& tint)

@@ -4,7 +4,7 @@
 
 #include "gwen/Controls/Canvas.h"
 
-#include "pixelboost/framework/game.h"
+#include "pixelboost/framework/engine.h"
 #include "pixelboost/input/keyboardManager.h"
 #include "pixelboost/input/mouseManager.h"
 #include "pixelboost/misc/gwen/inputHandler.h"
@@ -139,14 +139,14 @@ GwenInputHandler::GwenInputHandler(Gwen::Controls::Canvas* canvas, Gwen::Control
     _KeyboardHandler = new GwenKeyboardHandler(canvas, root);
     _MouseHandler = new GwenMouseHandler(canvas, root);
     
-    pb::Game::Instance()->GetKeyboardManager()->AddHandler(_KeyboardHandler);
-    pb::Game::Instance()->GetMouseManager()->AddHandler(_MouseHandler);
+    Engine::Instance()->GetKeyboardManager()->AddHandler(_KeyboardHandler);
+    Engine::Instance()->GetMouseManager()->AddHandler(_MouseHandler);
 }
 
 GwenInputHandler::~GwenInputHandler()
 {
-    pb::Game::Instance()->GetKeyboardManager()->RemoveHandler(_KeyboardHandler);
-    pb::Game::Instance()->GetMouseManager()->RemoveHandler(_MouseHandler);
+    Engine::Instance()->GetKeyboardManager()->RemoveHandler(_KeyboardHandler);
+    Engine::Instance()->GetMouseManager()->RemoveHandler(_MouseHandler);
 }
 
 #endif

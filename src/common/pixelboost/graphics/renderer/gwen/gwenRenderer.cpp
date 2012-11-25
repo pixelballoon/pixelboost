@@ -5,7 +5,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 #include "pixelboost/file/fileHelpers.h"
-#include "pixelboost/framework/game.h"
+#include "pixelboost/framework/engine.h"
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/device/indexBuffer.h"
@@ -327,7 +327,7 @@ void GwenRenderer::RenderText(Gwen::Font* font, Gwen::Point pos, const Gwen::Uni
 
     Gwen::String fontName = Gwen::Utility::UnicodeToString(font->facename);
 
-    pb::Font* renderFont = pb::Game::Instance()->GetFontRenderer()->LoadFont(pb::kFileLocationBundle, fontName, "/data/fonts/"+fontName, false);
+    pb::Font* renderFont = Engine::Instance()->GetFontRenderer()->LoadFont(pb::kFileLocationBundle, fontName, "/data/fonts/"+fontName, false);
 
     float size = font->size * Scale();
     if (!text.length())
@@ -356,10 +356,10 @@ Gwen::Point GwenRenderer::MeasureText(Gwen::Font* font, const Gwen::UnicodeStrin
 {
     Gwen::String fontName = Gwen::Utility::UnicodeToString(font->facename);
     
-    pb::Game::Instance()->GetFontRenderer()->LoadFont(pb::kFileLocationBundle, fontName, "/data/fonts/"+fontName, false);
+    Engine::Instance()->GetFontRenderer()->LoadFont(pb::kFileLocationBundle, fontName, "/data/fonts/"+fontName, false);
     
     float size = font->size * Scale();
-    float length = pb::Game::Instance()->GetFontRenderer()->MeasureString(fontName, Gwen::Utility::UnicodeToString(text), size/32.f).x*32.f;
+    float length = Engine::Instance()->GetFontRenderer()->MeasureString(fontName, Gwen::Utility::UnicodeToString(text), size/32.f).x*32.f;
     
     return Gwen::Point(length, size);
 }

@@ -1,6 +1,5 @@
 #include "glm/gtc/matrix_transform.hpp"
 
-#include "pixelboost/framework/game.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/model/modelRenderer.h"
 #include "pixelboost/logic/component/graphics/model.h"

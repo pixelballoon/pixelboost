@@ -3,7 +3,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 #include "pixelboost/file/fileHelpers.h"
-#include "pixelboost/framework/game.h"
+#include "pixelboost/framework/engine.h"
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/device/device.h"
@@ -46,7 +46,7 @@ Uid FontRenderable::GetStaticType()
 void FontRenderable::CalculateBounds()
 {
     glm::vec4 position = GetWorldMatrix() * glm::vec4(0,0,0,1);
-    glm::vec2 size = Game::Instance()->GetFontRenderer()->MeasureString(Font, Text, Size);
+    glm::vec2 size = Engine::Instance()->GetFontRenderer()->MeasureString(Font, Text, Size);
     BoundingSphere bounds(glm::vec3(position.x, position.y, position.z), glm::max(size.x, size.y));
     SetBounds(bounds);
 }
@@ -136,7 +136,7 @@ FontAlign FontRenderable::GetAlignment()
 
 void FontRenderable::CalculateOffset()
 {
-    Offset = Game::Instance()->GetFontRenderer()->MeasureString(Font, Text, 1.f).x;
+    Offset = Engine::Instance()->GetFontRenderer()->MeasureString(Font, Text, 1.f).x;
     
     switch (Alignment) {
         case kFontAlignLeft:

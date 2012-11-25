@@ -8,7 +8,6 @@ namespace pb
 class ScreenHelpers
 {
 public:
-    static bool IsLandscape();
     static bool IsHighResolution();
     static float GetAspectRatio();
     static glm::vec2 GetScreenUnits();

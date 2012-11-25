@@ -1,12 +1,10 @@
 #include "glm/gtc/matrix_transform.hpp"
 
-#include "pixelboost/framework/game.h"
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/logic/component/graphics/camera.h"
 #include "pixelboost/logic/component/transform.h"
 #include "pixelboost/logic/message/transform.h"
 #include "pixelboost/logic/entity.h"
-//#include "pixelboost/logic/scene.h"
 
 using namespace pb;
 

@@ -1,6 +1,6 @@
 #ifdef PIXELBOOST_PLATFORM_NACL
 
-#include "pixelboost/framework/game.h"
+#include "pixelboost/framework/engine.h"
 #include "pixelboost/network/gameCenter.h"
 #include "pixelboost/network/networkMessage.h"
 
