@@ -159,7 +159,7 @@ View::~View()
 
 View* View::Instance()
 {
-    return static_cast<View*>(Game::Instance());
+    return static_cast<View*>(Engine::Instance());
 }
 
 void View::Initialise(glm::vec2 size, float density)
@@ -269,7 +269,7 @@ void View::Render()
     
     _ManipulatorManager->Render(2);
     
-    Game::Render();
+    Engine::Render();
 }
 
 ManipulatorManager* View::GetManipulatorManager()
