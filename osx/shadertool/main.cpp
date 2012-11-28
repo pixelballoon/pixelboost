@@ -2,8 +2,6 @@
 #include <sstream>
 #include <string>
 
-#include <Cg/cg.h>
-
 #include "pixelboost/data/xml/xml.h"
 #include "pixelboost/file/fileHelpers.h"
 
