@@ -21,10 +21,12 @@ PhysicsBody2DComponent::PhysicsBody2DComponent(Entity* parent, BodyType type, Bo
     
     pb::TransformComponent* transform = GetParent()->GetComponentByType<pb::TransformComponent>();
     glm::vec3 position = transform->GetPosition();
+    glm::vec3 rotation = transform->GetRotation();
     
     b2BodyDef bodyDefinition;
     bodyDefinition.fixedRotation = false;
     bodyDefinition.position = b2Vec2(position.x, position.y);
+    bodyDefinition.angle = rotation.z;
     switch (type)
     {
         case kBodyTypeDynamic:
