@@ -37,6 +37,8 @@ public:
     virtual Uid GetType();
     static Uid GetStaticType();
     
+    b2Body* GetBody();
+    
     void SetSensor(bool isSensor);
     
 private:

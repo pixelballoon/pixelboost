@@ -121,6 +121,11 @@ Uid PhysicsUserBody2DComponent::GetStaticType()
     return TypeHash("pb::PhysicsUserBody2DComponent");
 }
 
+b2Body* PhysicsUserBody2DComponent::GetBody()
+{
+    return _Body;
+}
+
 void PhysicsUserBody2DComponent::SetSensor(bool isSensor)
 {
     b2Fixture* fixture = _Body->GetFixtureList();
