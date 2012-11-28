@@ -231,12 +231,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"../libs/glsl-optimizer",
-					../libs/hlsl2glsl/include,
-					../libs/pixelboost/src/external,
-					../libs/pixelboost/src/common,
-					../libs/pixelboost/src/platform/ios,
-					../libs/pixelboost/src/platform/ios/external,
+					../../../engine/src/external,
+					../../../engine/src/common,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
@@ -261,12 +257,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"../libs/glsl-optimizer",
-					../libs/hlsl2glsl/include,
-					../libs/pixelboost/src/external,
-					../libs/pixelboost/src/common,
-					../libs/pixelboost/src/platform/ios,
-					../libs/pixelboost/src/platform/ios/external,
+					../../../engine/src/external,
+					../../../engine/src/common,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
