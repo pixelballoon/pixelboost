@@ -120,7 +120,7 @@ BufferRenderer::~BufferRenderer()
 void BufferRenderer::Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass)
 {
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, true);
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
     
 #ifndef PIXELBOOST_GRAPHICS_PREMULTIPLIED_ALPHA
