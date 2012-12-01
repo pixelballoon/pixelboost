@@ -296,7 +296,7 @@ bool ModelRenderer::UnloadModel(const std::string& modelName)
     return true;
 }
     
-bool ModelRenderer::LoadTexture(FileLocation location, const std::string& textureName, const std::string& fileName, bool createMips)
+bool ModelRenderer::LoadTexture(FileLocation location, const std::string& textureName, const std::string& fileName, bool createMips, bool hasPremultipliedAlpha)
 {
     TextureMap::iterator it = _Textures.find(textureName);
     
@@ -306,7 +306,7 @@ bool ModelRenderer::LoadTexture(FileLocation location, const std::string& textur
     }
     
     Texture* texture = GraphicsDevice::Instance()->CreateTexture();
-    texture->LoadFromPng(location, fileName, createMips);
+    texture->LoadFromPng(location, fileName, createMips, hasPremultipliedAlpha);
     
     _Textures[textureName] = texture;
     

@@ -7,14 +7,6 @@
 
 using namespace pb;
 
-bool ScreenHelpers::IsHighResolution()
-{
-    if (GraphicsDevice::Instance()->GetDisplayDensity() >= 32.f)
-        return true;
-        
-    return false;
-}
-    
 float ScreenHelpers::GetAspectRatio()
 {
     return GraphicsDevice::Instance()->GetDisplayResolution()[1]/GraphicsDevice::Instance()->GetDisplayResolution()[0];

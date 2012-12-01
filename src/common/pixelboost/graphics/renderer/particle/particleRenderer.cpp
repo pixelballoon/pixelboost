@@ -243,11 +243,6 @@ void ParticleEmitter::Render(Viewport* viewport, ShaderPass* shaderPass)
             float tween = it->life/it->emitterConfig->life;
             glm::vec4 color = it->emitterConfig->startColor + (it->emitterConfig->endColor-it->emitterConfig->startColor)*tween;
             
-#ifdef PIXELBOOST_GRAPHICS_PREMULTIPLIED_ALPHA
-            float alpha = color[3];
-            color *= alpha;
-            color[3] = alpha;
-#endif
             pb::Sprite* sprite = it->emitterConfig->spriteSheet->GetSprite(it->sprite);
             
             glm::vec2 scale = it->emitterConfig->startScale + (it->emitterConfig->endScale-it->emitterConfig->startScale)*tween;
@@ -335,11 +330,12 @@ void ParticleEmitter::Render(Viewport* viewport, ShaderPass* shaderPass)
         GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
         GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
 
-#ifndef PIXELBOOST_GRAPHICS_PREMULTIPLIED_ALPHA
-        GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
-#else
-        GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
-#endif
+        if (_Config->spriteSheet->_Texture->HasPremultipliedAlpha())
+        {
+            GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
+        } else {
+            GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
+        }
         
         shaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
         

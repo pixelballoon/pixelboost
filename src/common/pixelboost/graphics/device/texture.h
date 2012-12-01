@@ -22,10 +22,11 @@ public:
         kTextureFormatRGBA,
     };
     
-    virtual bool LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format);
-    virtual bool LoadFromPng(FileLocation location, const std::string& image, bool createMips);
+    virtual bool LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format, bool hasPremultipliedAlpha);
+    virtual bool LoadFromPng(FileLocation location, const std::string& image, bool createMips, bool hasPremultipliedAlpha);
     
-    const glm::vec2& GetSize();
+    const glm::vec2& GetSize() const;
+    bool HasPremultipliedAlpha() const;
 
     void OnContextLost();
     
@@ -36,6 +37,7 @@ protected:
     TextureFormat _DataFormat;
     unsigned char* _Data;
     bool _DataCreateMips;
+    bool _HasPremultipliedAlpha;
     
     glm::vec2 _Size;
     

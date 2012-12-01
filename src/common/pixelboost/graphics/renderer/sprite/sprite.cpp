@@ -34,9 +34,9 @@ SpriteSheet::~SpriteSheet()
     }
 }
 
-bool SpriteSheet::LoadSingle(FileLocation location, const std::string& fileName, bool generateMips)
+bool SpriteSheet::LoadSingle(FileLocation location, const std::string& fileName, bool generateMips, bool hasPremultipliedAlpha)
 {
-    if (!LoadTexture(location, fileName))
+    if (!LoadTexture(location, fileName, generateMips, hasPremultipliedAlpha))
         return false;
     
     std::string spriteName = fileName.substr(fileName.rfind("/")+1);
@@ -56,11 +56,23 @@ bool SpriteSheet::LoadSingle(FileLocation location, const std::string& fileName,
     return true;
 }
 
-bool SpriteSheet::LoadSheet(FileLocation location, const std::string& name, bool generateMips)
+bool SpriteSheet::LoadSheet(FileLocation location, const std::string& name, bool generateMips, bool hasPremultipliedAlpha)
 {
-    std::string jsonFilename = "/data/spritesheets/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".json";
+    std::string modifier;
+    float sheetDensity = 16.f;
     
-    float sheetDensity = ScreenHelpers::IsHighResolution() ? 32.f : 16.f;
+    if (GraphicsDevice::Instance()->GetDisplayDensity() >= 64.f)
+    {
+        modifier = "-hdr";
+        sheetDensity = 64.f;
+    }
+    else if (GraphicsDevice::Instance()->GetDisplayDensity() >= 32.f)
+    {
+        modifier = "-hd";
+        sheetDensity = 32.f;
+    }
+    
+    std::string jsonFilename = "/data/spritesheets/" + name + modifier + ".json";
     
     std::string rootData = FileHelpers::FileToString(pb::kFileLocationBundle, jsonFilename);
     
@@ -116,12 +128,12 @@ bool SpriteSheet::LoadSheet(FileLocation location, const std::string& name, bool
         Engine::Instance()->GetSpriteRenderer()->_Sprites[spriteName] = sprite;
     }
     
-    LoadTexture(location, "/data/spritesheets/images/" + name + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".png", generateMips);
+    LoadTexture(location, "/data/spritesheets/images/" + name + modifier + ".png", generateMips, hasPremultipliedAlpha);
     
     return true;
 }
 
-Texture* SpriteSheet::LoadTexture(FileLocation location, const std::string& fileName, bool generateMips)
+Texture* SpriteSheet::LoadTexture(FileLocation location, const std::string& fileName, bool generateMips, bool hasPremultipliedAlpha)
 {
     if (_Texture)
     {
@@ -129,7 +141,7 @@ Texture* SpriteSheet::LoadTexture(FileLocation location, const std::string& file
     }
     
     _Texture = GraphicsDevice::Instance()->CreateTexture();
-    _Texture->LoadFromPng(location, fileName, generateMips);
+    _Texture->LoadFromPng(location, fileName, generateMips, hasPremultipliedAlpha);
     
     return _Texture;
 }

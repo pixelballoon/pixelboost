@@ -137,12 +137,6 @@ void GwenRenderer::Render(int count, Renderable** renderables, Viewport* viewpor
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
     
-#ifndef PIXELBOOST_GRAPHICS_PREMULTIPLIED_ALPHA
-    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
-#else
-    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
-#endif
-    
     for (int i=0; i<count; i++)
     {
         GwenRenderable* renderable = static_cast<GwenRenderable*>(renderables[i]);
@@ -236,6 +230,13 @@ void GwenRenderer::DrawTexturedRect(Gwen::Texture* definition, Gwen::Rect rect, 
     if (GraphicsDevice::Instance()->GetBoundTexture() != texture)
         PurgeBuffer(true);
     
+    if (texture->HasPremultipliedAlpha())
+    {
+        GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
+    } else {
+        GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
+    }
+    
     GraphicsDevice::Instance()->BindTexture(texture);
     
     _VertexData[0].position[0] = (rect.x)/32.f;
@@ -268,9 +269,9 @@ void GwenRenderer::LoadTexture(Gwen::Texture* definition)
     if (fileName[0] != '/')
     {
         fileName = "/data/" + fileName;
-        texture->LoadFromPng(pb::kFileLocationBundle, fileName, false);
+        texture->LoadFromPng(pb::kFileLocationBundle, fileName, false, false);
     } else {
-        texture->LoadFromPng(pb::kFileLocationUser, fileName, false);
+        texture->LoadFromPng(pb::kFileLocationUser, fileName, false, false);
     }
     
     definition->width = texture->GetSize()[0];
@@ -340,6 +341,13 @@ void GwenRenderer::RenderText(Gwen::Font* font, Gwen::Point pos, const Gwen::Uni
     
     _ShaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", _Renderable->GetMVP() * modelMatrix);
     _ShaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", glm::vec4(0,0,0,1));
+    
+    if (renderFont->texture->HasPremultipliedAlpha())
+    {
+        GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
+    } else {
+        GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
+    }
     
     pb::Texture* prevTexture = GraphicsDevice::Instance()->BindTexture(renderFont->texture);
     GraphicsDevice::Instance()->BindIndexBuffer(_FontIndexBuffer);

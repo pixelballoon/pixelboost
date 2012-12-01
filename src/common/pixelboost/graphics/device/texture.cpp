@@ -20,7 +20,7 @@ Texture::~Texture()
         delete[] _Data;
 }
 
-bool Texture::LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format)
+bool Texture::LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format, bool hasPremultipliedAlpha)
 {
 #ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
     if (_Data != 0 && _Data != data)
@@ -45,10 +45,12 @@ bool Texture::LoadFromBytes(const unsigned char* data, int width, int height, bo
     }
 #endif
     
+    _HasPremultipliedAlpha = hasPremultipliedAlpha;
+    
     return true;
 }
 
-bool Texture::LoadFromPng(pb::FileLocation location, const std::string& path, bool createMips)
+bool Texture::LoadFromPng(pb::FileLocation location, const std::string& path, bool createMips, bool hasPremultipliedAlpha)
 {
     LodePNG::Decoder decoder;
     std::vector<unsigned char> data;
@@ -66,15 +68,20 @@ bool Texture::LoadFromPng(pb::FileLocation location, const std::string& path, bo
     
     delete file;
     
-	return LoadFromBytes(&decoded[0], decoder.getWidth(), decoder.getHeight(), createMips, kTextureFormatRGBA);
+	return LoadFromBytes(&decoded[0], decoder.getWidth(), decoder.getHeight(), createMips, kTextureFormatRGBA, hasPremultipliedAlpha);
 }
 
-const glm::vec2& Texture::GetSize()
+const glm::vec2& Texture::GetSize() const
 {
     return _Size;
 }
 
+bool Texture::HasPremultipliedAlpha() const
+{
+    return _HasPremultipliedAlpha;
+}
+
 void Texture::OnContextLost()
 {
-    LoadFromBytes(_Data, _Size.x, _Size.y, _DataCreateMips, _DataFormat);
+    LoadFromBytes(_Data, _Size.x, _Size.y, _DataCreateMips, _DataFormat, _HasPremultipliedAlpha);
 }

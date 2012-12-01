@@ -1,8 +1,9 @@
 #ifndef PIXELBOOST_DISABLE_GRAPHICS
 
 #include "pixelboost/graphics/device/device.h"
-#include "pixelboost/graphics/device/program.h"
 #include "pixelboost/graphics/device/indexBuffer.h"
+#include "pixelboost/graphics/device/program.h"
+#include "pixelboost/graphics/device/texture.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
 #include "pixelboost/graphics/renderer/buffer/bufferRenderer.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
@@ -123,12 +124,6 @@ void BufferRenderer::Render(int count, Renderable** renderables, Viewport* viewp
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
     
-#ifndef PIXELBOOST_GRAPHICS_PREMULTIPLIED_ALPHA
-    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
-#else
-    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
-#endif
-    
     Vertex_PXYZ_RGBA_UV* bufferData = 0;
     
     shaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
@@ -138,6 +133,13 @@ void BufferRenderer::Render(int count, Renderable** renderables, Viewport* viewp
         BufferRenderable& renderable = *static_cast<BufferRenderable*>(renderables[i]);
         
         shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", renderable.GetMVP());
+        
+        if (renderable._Texture->HasPremultipliedAlpha())
+        {
+            GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
+        } else {
+            GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
+        }
         
         GraphicsDevice::Instance()->BindTexture(renderable._Texture);
         GraphicsDevice::Instance()->BindIndexBuffer(renderable._IndexBuffer);

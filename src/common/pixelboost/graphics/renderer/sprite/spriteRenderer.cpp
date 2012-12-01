@@ -139,12 +139,6 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
     
-#ifndef PIXELBOOST_GRAPHICS_PREMULTIPLIED_ALPHA
-    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
-#else
-    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
-#endif
-    
     GraphicsDevice::Instance()->BindIndexBuffer(_IndexBuffer);
     
     Vertex_PXYZ_RGBA_UV* bufferData = 0;
@@ -172,6 +166,14 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
         {
             RenderBatch();
             texture = sprite->_Sheet->_Texture;
+            
+            if (texture->HasPremultipliedAlpha())
+            {
+                GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
+            } else {
+                GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
+            }
+            
             GraphicsDevice::Instance()->BindTexture(texture);
         }
         

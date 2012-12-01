@@ -271,7 +271,7 @@ FontRenderer::~FontRenderer()
     }
 }
 
-Font* FontRenderer::LoadFont(FileLocation location, const std::string& name, const std::string& filename, bool createMips)
+Font* FontRenderer::LoadFont(FileLocation location, const std::string& name, const std::string& filename, bool createMips, bool hasPremultipliedAlpha)
 {
     FontMap::iterator it = _Fonts.find(name);
     
@@ -282,7 +282,19 @@ Font* FontRenderer::LoadFont(FileLocation location, const std::string& name, con
     
     font->texture = 0;
     
-    std::string fntFilename = filename + (ScreenHelpers::IsHighResolution() ? "-hd" : "") + ".fnt";
+    std::string modifier;
+    
+    if (GraphicsDevice::Instance()->GetDisplayDensity() >= 64.f)
+    {
+        modifier = "-hdr";
+    }
+    else if (GraphicsDevice::Instance()->GetDisplayDensity() >= 32.f)
+    {
+        modifier = "-hd";
+    }
+
+    
+    std::string fntFilename = filename + modifier + ".fnt";
     
     std::string fontContents = FileHelpers::FileToString(pb::kFileLocationBundle, fntFilename);
     
@@ -326,7 +338,7 @@ Font* FontRenderer::LoadFont(FileLocation location, const std::string& name, con
         {
             std::string texFilename = "/data/fonts/" + data["file"].substr(1, data["file"].find('"', 1)-1);
             font->texture = GraphicsDevice::Instance()->CreateTexture();
-            font->texture->LoadFromPng(location, texFilename, createMips);
+            font->texture->LoadFromPng(location, texFilename, createMips, hasPremultipliedAlpha);
         } else if (elementType == "char")
         {
             Font::Character character;
@@ -382,12 +394,6 @@ void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewpor
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
     
-#ifndef PIXELBOOST_GRAPHICS_PREMULTIPLIED_ALPHA
-    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
-#else
-    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
-#endif
-    
     GraphicsDevice::Instance()->BindIndexBuffer(_IndexBuffer);
     
     for (int i=0; i<count; i++)
@@ -413,6 +419,13 @@ void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewpor
         font->FillVertexBuffer(_VertexBuffer, renderable.Text);
         
         GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffer);
+        
+        if (font->texture->HasPremultipliedAlpha())
+        {
+            GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
+        } else {
+            GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
+        }
         
         GraphicsDevice::Instance()->BindTexture(font->texture);
         
