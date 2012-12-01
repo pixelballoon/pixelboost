@@ -180,12 +180,14 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
             RenderBatch();
         }
         
+        glm::vec4 crop = renderable._Crop;
+        
         bufferData = static_cast<Vertex_PXYZ_RGBA_UV*>(_VertexBuffer->GetData()) + (_BatchSize * 4);
         
         if (!sprite->_Rotated)
         {
-            glm::vec2 min = sprite->_UvPosition + glm::vec2(sprite->_UvSize[0] * renderable._Crop[0], sprite->_UvSize[1] * renderable._Crop[1]);
-            glm::vec2 max = sprite->_UvPosition + glm::vec2(sprite->_UvSize[0] * renderable._Crop[2], sprite->_UvSize[1] * renderable._Crop[3]);
+            glm::vec2 min = sprite->_UvPosition + glm::vec2(sprite->_UvSize[0] * crop[0], sprite->_UvSize[1] * crop[1]);
+            glm::vec2 max = sprite->_UvPosition + glm::vec2(sprite->_UvSize[0] * crop[2], sprite->_UvSize[1] * crop[3]);
             
             bufferData[0].uv[0] = min[0];
             bufferData[0].uv[1] = max[1];
@@ -196,8 +198,8 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
             bufferData[3].uv[0] = max[0];
             bufferData[3].uv[1] = max[1];
         } else {
-            glm::vec2 min = sprite->_UvPosition + glm::vec2(sprite->_UvSize[1] * renderable._Crop[3], sprite->_UvSize[0] * renderable._Crop[2]);
-            glm::vec2 max = sprite->_UvPosition + glm::vec2(sprite->_UvSize[1] * renderable._Crop[1], sprite->_UvSize[0] * renderable._Crop[0]);
+            glm::vec2 min = sprite->_UvPosition + glm::vec2(sprite->_UvSize[1] * crop[3], sprite->_UvSize[0] * crop[2]);
+            glm::vec2 max = sprite->_UvPosition + glm::vec2(sprite->_UvSize[1] * crop[1], sprite->_UvSize[0] * crop[0]);
             
             bufferData[0].uv[0] = max[0];
             bufferData[0].uv[1] = max[1];
@@ -226,10 +228,10 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
         bufferData[3].color[2] = renderable._Tint.b;
         bufferData[3].color[3] = renderable._Tint.a;
         
-        glm::vec4 a = renderable.GetMVP() * glm::vec4(-0.5, -0.5, 0, 1);
-        glm::vec4 b = renderable.GetMVP() * glm::vec4(-0.5, 0.5, 0, 1);
-        glm::vec4 c = renderable.GetMVP() * glm::vec4(0.5, 0.5, 0, 1);
-        glm::vec4 d = renderable.GetMVP() * glm::vec4(0.5, -0.5, 0, 1);
+        glm::vec4 a = renderable.GetMVP() * glm::vec4(crop[0]-0.5, crop[1]-0.5, 0, 1);
+        glm::vec4 b = renderable.GetMVP() * glm::vec4(crop[0]-0.5, crop[3]-0.5, 0, 1);
+        glm::vec4 c = renderable.GetMVP() * glm::vec4(crop[2]-0.5, crop[3]-0.5, 0, 1);
+        glm::vec4 d = renderable.GetMVP() * glm::vec4(crop[2]-0.5, crop[1]-0.5, 0, 1);
         
         bufferData[0].position[0] = a.x;
         bufferData[0].position[1] = a.y;
