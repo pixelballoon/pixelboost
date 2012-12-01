@@ -26,7 +26,7 @@ PhysicsBody2DComponent::PhysicsBody2DComponent(Entity* parent, BodyType type, Bo
     b2BodyDef bodyDefinition;
     bodyDefinition.fixedRotation = false;
     bodyDefinition.position = b2Vec2(position.x, position.y);
-    bodyDefinition.angle = rotation.z;
+    bodyDefinition.angle = glm::radians(rotation.z);
     switch (type)
     {
         case kBodyTypeDynamic:
