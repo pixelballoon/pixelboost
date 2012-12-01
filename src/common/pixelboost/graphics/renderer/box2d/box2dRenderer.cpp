@@ -56,7 +56,7 @@ void Box2dRenderer::DrawCircle(const b2Vec2& center, float32 radius, const b2Col
     if (!_DebugRenderSystem)
         return;
     
-    _DebugRenderSystem->AddEllipse(pb::kRenderPassScene, _Layer, glm::vec3(center.x, center.y, 0), glm::vec3(0,0,0), glm::vec2(radius, radius), glm::vec4(color.r, color.g, color.b, 1.f));
+    _DebugRenderSystem->AddEllipse(pb::kRenderPassScene, _Layer, glm::vec3(center.x, center.y, 0), glm::vec3(0,0,0), glm::vec2(radius*2.f, radius*2.f), glm::vec4(color.r, color.g, color.b, 1.f));
 }
 
 void Box2dRenderer::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color)
