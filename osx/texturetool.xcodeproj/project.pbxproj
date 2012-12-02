@@ -1,0 +1,307 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1C27CD2A166292A900122607 /* libpixelboost_osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C27CD1B1662922A00122607 /* libpixelboost_osx.a */; };
+		1C380F27166BDA9F00DAD694 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C380F26166BDA9F00DAD694 /* main.cpp */; };
+		1CAD29D615E2B1D500510183 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CAD29D515E2B1D500510183 /* Foundation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1C27CD181662922A00122607 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1C27CD121662922900122607 /* pixelboost.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1C897C5F15DEA3D600AB3196;
+			remoteInfo = pixelboost_ios;
+		};
+		1C27CD1A1662922A00122607 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1C27CD121662922900122607 /* pixelboost.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1C897D8615DEA3E500AB3196;
+			remoteInfo = pixelboost_osx;
+		};
+		1C27CD1C1662922A00122607 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1C27CD121662922900122607 /* pixelboost.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1C25E97015E55AEF00833738;
+			remoteInfo = pixelboost_osx_x86_64;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1C89652815DE94B300AB3196 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		1C27CD121662922900122607 /* pixelboost.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = pixelboost.xcodeproj; path = ../../../engine/osx_ios/pixelboost.xcodeproj; sourceTree = "<group>"; };
+		1C380F26166BDA9F00DAD694 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		1C89652A15DE94B300AB3196 /* texturetool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = texturetool; sourceTree = BUILT_PRODUCTS_DIR; };
+		1CAD29D515E2B1D500510183 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1C89652715DE94B300AB3196 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1C27CD2A166292A900122607 /* libpixelboost_osx.a in Frameworks */,
+				1CAD29D615E2B1D500510183 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1C27CD131662922900122607 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1C27CD191662922A00122607 /* libpixelboost_ios.a */,
+				1C27CD1B1662922A00122607 /* libpixelboost_osx.a */,
+				1C27CD1D1662922A00122607 /* libpixelboost_osx_x86_64.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1C380F25166BDA9F00DAD694 /* texturetool */ = {
+			isa = PBXGroup;
+			children = (
+				1C380F26166BDA9F00DAD694 /* main.cpp */,
+			);
+			path = texturetool;
+			sourceTree = "<group>";
+		};
+		1C7F878A15E4D6F800D460DE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1CAD29D515E2B1D500510183 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1C89651F15DE94B300AB3196 = {
+			isa = PBXGroup;
+			children = (
+				1C7F878A15E4D6F800D460DE /* Frameworks */,
+				1C89653715DE94BD00AB3196 /* libs */,
+				1C380F25166BDA9F00DAD694 /* texturetool */,
+				1C89652B15DE94B300AB3196 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1C89652B15DE94B300AB3196 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1C89652A15DE94B300AB3196 /* texturetool */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1C89653715DE94BD00AB3196 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				1C27CD121662922900122607 /* pixelboost.xcodeproj */,
+			);
+			name = libs;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1C89652915DE94B300AB3196 /* texturetool */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1C89653415DE94B300AB3196 /* Build configuration list for PBXNativeTarget "texturetool" */;
+			buildPhases = (
+				1C89652615DE94B300AB3196 /* Sources */,
+				1C89652715DE94B300AB3196 /* Frameworks */,
+				1C89652815DE94B300AB3196 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = texturetool;
+			productName = shadertool;
+			productReference = 1C89652A15DE94B300AB3196 /* texturetool */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1C89652115DE94B300AB3196 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0440;
+				ORGANIZATIONNAME = "Pixel Balloon";
+			};
+			buildConfigurationList = 1C89652415DE94B300AB3196 /* Build configuration list for PBXProject "texturetool" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 1C89651F15DE94B300AB3196;
+			productRefGroup = 1C89652B15DE94B300AB3196 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 1C27CD131662922900122607 /* Products */;
+					ProjectRef = 1C27CD121662922900122607 /* pixelboost.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				1C89652915DE94B300AB3196 /* texturetool */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		1C27CD191662922A00122607 /* libpixelboost_ios.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libpixelboost_ios.a;
+			remoteRef = 1C27CD181662922A00122607 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1C27CD1B1662922A00122607 /* libpixelboost_osx.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libpixelboost_osx.a;
+			remoteRef = 1C27CD1A1662922A00122607 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1C27CD1D1662922A00122607 /* libpixelboost_osx_x86_64.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libpixelboost_osx_x86_64.a;
+			remoteRef = 1C27CD1C1662922A00122607 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1C89652615DE94B300AB3196 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1C380F27166BDA9F00DAD694 /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1C89653215DE94B300AB3196 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks/;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					../../../engine/src/external,
+					../../../engine/src/common,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+				VALID_ARCHS = i386;
+			};
+			name = Debug;
+		};
+		1C89653315DE94B300AB3196 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks/;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					../../../engine/src/external,
+					../../../engine/src/common,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+				VALID_ARCHS = i386;
+			};
+			name = Release;
+		};
+		1C89653515DE94B300AB3196 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = texturetool;
+			};
+			name = Debug;
+		};
+		1C89653615DE94B300AB3196 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = texturetool;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1C89652415DE94B300AB3196 /* Build configuration list for PBXProject "texturetool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1C89653215DE94B300AB3196 /* Debug */,
+				1C89653315DE94B300AB3196 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1C89653415DE94B300AB3196 /* Build configuration list for PBXNativeTarget "texturetool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1C89653515DE94B300AB3196 /* Debug */,
+				1C89653615DE94B300AB3196 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1C89652115DE94B300AB3196 /* Project object */;
+}
