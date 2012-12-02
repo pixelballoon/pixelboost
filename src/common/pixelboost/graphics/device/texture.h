@@ -19,11 +19,12 @@ protected:
 public:
     enum TextureFormat
     {
+        kTextureFormatRGB,
         kTextureFormatRGBA,
     };
     
     virtual bool LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format, bool hasPremultipliedAlpha);
-    virtual bool LoadFromPng(FileLocation location, const std::string& image, bool createMips, bool hasPremultipliedAlpha);
+    virtual bool LoadFromFile(FileLocation location, const std::string& image, bool createMips, bool hasPremultipliedAlpha);
     
     const glm::vec2& GetSize() const;
     bool HasPremultipliedAlpha() const;

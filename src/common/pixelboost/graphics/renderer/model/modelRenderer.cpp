@@ -306,7 +306,7 @@ bool ModelRenderer::LoadTexture(FileLocation location, const std::string& textur
     }
     
     Texture* texture = GraphicsDevice::Instance()->CreateTexture();
-    texture->LoadFromPng(location, fileName, createMips, hasPremultipliedAlpha);
+    texture->LoadFromFile(location, fileName, createMips, hasPremultipliedAlpha);
     
     _Textures[textureName] = texture;
     

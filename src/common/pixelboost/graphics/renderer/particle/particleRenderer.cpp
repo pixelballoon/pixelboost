@@ -373,13 +373,13 @@ void ParticleEmitter::ResetSpawnCount()
     _SpawnedParticles = 0;
 }
 
-void ParticleEmitter::LoadSpriteSheet(FileLocation location, const std::string& file, bool createMips)
+void ParticleEmitter::LoadSpriteSheet(FileLocation location, const std::string& file, const std::string& extension, bool createMips)
 {
     if (!_Config)
         return;
     
     _Config->spriteSheet = SpriteSheet::Create();
-    _Config->spriteSheet->LoadSheet(location, file, createMips);
+    _Config->spriteSheet->LoadSheet(location, file, extension, createMips);
 }
 
 void ParticleEmitter::SetSpriteSheet(std::shared_ptr<SpriteSheet> spriteSheet)

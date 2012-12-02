@@ -288,13 +288,13 @@ std::shared_ptr<SpriteSheet> SpriteRenderer::CreateSpriteSheet(const std::string
     return sheet;
 }
 
-bool SpriteRenderer::LoadSpriteSheet(FileLocation location, const std::string& name, bool createMips)
+bool SpriteRenderer::LoadSpriteSheet(FileLocation location, const std::string& name, const std::string& extension, bool createMips)
 {
     if (!CreateSpriteSheet(name))
         return false;
     
     std::shared_ptr<SpriteSheet> sheet = GetSpriteSheet(name);
-    sheet->LoadSheet(location, name, createMips);
+    sheet->LoadSheet(location, name, extension, createMips);
 
     return true;
 }

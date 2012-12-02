@@ -22,7 +22,7 @@ bool TextureGL::LoadFromBytes(const unsigned char* data, int width, int height, 
     if (!Texture::LoadFromBytes(data, width, height, createMips, format, hasPremultipliedAlpha))
         return false;
     
-    if (format != kTextureFormatRGBA)
+    if (format != kTextureFormatRGBA && format != kTextureFormatRGB)
     {
         printf("WARN: Only RGBA texture format is currently supported!");
         return false;
@@ -48,7 +48,15 @@ bool TextureGL::LoadFromBytes(const unsigned char* data, int width, int height, 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
+    switch (format)
+    {
+        case Texture::kTextureFormatRGB:
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, &data[0]);
+            break;
+        case Texture::kTextureFormatRGBA:
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
+            break;
+    }
 	
     _Device->BindTexture(previousTexture);
 

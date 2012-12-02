@@ -269,6 +269,15 @@
 		1C25E96815E55AEF00833738 /* manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C9B246415E2EAF500898C3D /* manager.cpp */; };
 		1C25E96915E55AEF00833738 /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C9B246615E2EAF500898C3D /* shader.cpp */; };
 		1C25E96B15E55AEF00833738 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C89760515DE99F900AB3196 /* Foundation.framework */; };
+		1C380EEF166BCE2C00DAD694 /* stb_image.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C380EED166BCE2C00DAD694 /* stb_image.c */; };
+		1C380EF0166BCE2C00DAD694 /* stb_image.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C380EED166BCE2C00DAD694 /* stb_image.c */; };
+		1C380EF1166BCE2C00DAD694 /* stb_image.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C380EED166BCE2C00DAD694 /* stb_image.c */; };
+		1C380EF8166BD43200DAD694 /* jpgd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C380EF4166BD43200DAD694 /* jpgd.cpp */; };
+		1C380EF9166BD43200DAD694 /* jpgd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C380EF4166BD43200DAD694 /* jpgd.cpp */; };
+		1C380EFA166BD43200DAD694 /* jpgd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C380EF4166BD43200DAD694 /* jpgd.cpp */; };
+		1C380EFB166BD43200DAD694 /* jpge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C380EF6166BD43200DAD694 /* jpge.cpp */; };
+		1C380EFC166BD43200DAD694 /* jpge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C380EF6166BD43200DAD694 /* jpge.cpp */; };
+		1C380EFD166BD43200DAD694 /* jpge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C380EF6166BD43200DAD694 /* jpge.cpp */; };
 		1C897B3B15DEA3D600AB3196 /* assetLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89762215DE9B3A00AB3196 /* assetLoader.cpp */; };
 		1C897B3C15DEA3D600AB3196 /* xml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89762D15DE9B3A00AB3196 /* xml.cpp */; };
 		1C897B3D15DEA3D600AB3196 /* database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C89763115DE9B3A00AB3196 /* database.cpp */; };
@@ -852,6 +861,12 @@
 
 /* Begin PBXFileReference section */
 		1C25E97015E55AEF00833738 /* libpixelboost_osx_x86_64.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpixelboost_osx_x86_64.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		1C380EED166BCE2C00DAD694 /* stb_image.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stb_image.c; sourceTree = "<group>"; };
+		1C380EEE166BCE2C00DAD694 /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
+		1C380EF4166BD43200DAD694 /* jpgd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jpgd.cpp; sourceTree = "<group>"; };
+		1C380EF5166BD43200DAD694 /* jpgd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jpgd.h; sourceTree = "<group>"; };
+		1C380EF6166BD43200DAD694 /* jpge.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jpge.cpp; sourceTree = "<group>"; };
+		1C380EF7166BD43200DAD694 /* jpge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jpge.h; sourceTree = "<group>"; };
 		1C89760515DE99F900AB3196 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1C89760915DE99FA00AB3196 /* pixelboost-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "pixelboost-Prefix.pch"; sourceTree = "<group>"; };
 		1C89762215DE9B3A00AB3196 /* assetLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = assetLoader.cpp; sourceTree = "<group>"; };
@@ -1740,6 +1755,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1C380EEC166BCE2C00DAD694 /* stbimage */ = {
+			isa = PBXGroup;
+			children = (
+				1C380EED166BCE2C00DAD694 /* stb_image.c */,
+				1C380EEE166BCE2C00DAD694 /* stb_image.h */,
+			);
+			path = stbimage;
+			sourceTree = "<group>";
+		};
+		1C380EF3166BD43200DAD694 /* jpegcompressor */ = {
+			isa = PBXGroup;
+			children = (
+				1C380EF4166BD43200DAD694 /* jpgd.cpp */,
+				1C380EF5166BD43200DAD694 /* jpgd.h */,
+				1C380EF6166BD43200DAD694 /* jpge.cpp */,
+				1C380EF7166BD43200DAD694 /* jpge.h */,
+			);
+			path = jpegcompressor;
+			sourceTree = "<group>";
+		};
 		1C8975F715DE99F900AB3196 = {
 			isa = PBXGroup;
 			children = (
@@ -2429,11 +2464,13 @@
 				1C89771E15DE9B3A00AB3196 /* Box2D */,
 				1C89778215DE9B3A00AB3196 /* glm */,
 				1C89786515DE9B3A00AB3196 /* gwen */,
+				1C380EF3166BD43200DAD694 /* jpegcompressor */,
 				1C89792215DE9B3A00AB3196 /* lodepng */,
 				1C89792515DE9B3A00AB3196 /* pixelboost */,
 				1C89796B15DE9B3A00AB3196 /* regex */,
 				1C89797015DE9B3A00AB3196 /* sigslot */,
 				1C89797315DE9B3A00AB3196 /* srutil */,
+				1C380EEC166BCE2C00DAD694 /* stbimage */,
 			);
 			path = external;
 			sourceTree = "<group>";
@@ -3978,6 +4015,9 @@
 				1C25E96715E55AEF00833738 /* localisation.mm in Sources */,
 				1C25E96815E55AEF00833738 /* manager.cpp in Sources */,
 				1C25E96915E55AEF00833738 /* shader.cpp in Sources */,
+				1C380EF1166BCE2C00DAD694 /* stb_image.c in Sources */,
+				1C380EFA166BD43200DAD694 /* jpgd.cpp in Sources */,
+				1C380EFD166BD43200DAD694 /* jpge.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4271,6 +4311,9 @@
 				1C897C5815DEA3D600AB3196 /* localisation.mm in Sources */,
 				1C9B246815E2EAF500898C3D /* manager.cpp in Sources */,
 				1C9B246A15E2EAF500898C3D /* shader.cpp in Sources */,
+				1C380EEF166BCE2C00DAD694 /* stb_image.c in Sources */,
+				1C380EF8166BD43200DAD694 /* jpgd.cpp in Sources */,
+				1C380EFB166BD43200DAD694 /* jpge.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4539,6 +4582,9 @@
 				1C897D7F15DEA3E500AB3196 /* localisation.mm in Sources */,
 				1C9B246915E2EAF500898C3D /* manager.cpp in Sources */,
 				1C9B246B15E2EAF500898C3D /* shader.cpp in Sources */,
+				1C380EF0166BCE2C00DAD694 /* stb_image.c in Sources */,
+				1C380EF9166BD43200DAD694 /* jpgd.cpp in Sources */,
+				1C380EFC166BD43200DAD694 /* jpge.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -338,7 +338,7 @@ Font* FontRenderer::LoadFont(FileLocation location, const std::string& name, con
         {
             std::string texFilename = "/data/fonts/" + data["file"].substr(1, data["file"].find('"', 1)-1);
             font->texture = GraphicsDevice::Instance()->CreateTexture();
-            font->texture->LoadFromPng(location, texFilename, createMips, hasPremultipliedAlpha);
+            font->texture->LoadFromFile(location, texFilename, createMips, hasPremultipliedAlpha);
         } else if (elementType == "char")
         {
             Font::Character character;

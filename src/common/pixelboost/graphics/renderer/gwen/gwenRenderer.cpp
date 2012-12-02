@@ -269,9 +269,9 @@ void GwenRenderer::LoadTexture(Gwen::Texture* definition)
     if (fileName[0] != '/')
     {
         fileName = "/data/" + fileName;
-        texture->LoadFromPng(pb::kFileLocationBundle, fileName, false, false);
+        texture->LoadFromFile(pb::kFileLocationBundle, fileName, false, false);
     } else {
-        texture->LoadFromPng(pb::kFileLocationUser, fileName, false, false);
+        texture->LoadFromFile(pb::kFileLocationUser, fileName, false, false);
     }
     
     definition->width = texture->GetSize()[0];

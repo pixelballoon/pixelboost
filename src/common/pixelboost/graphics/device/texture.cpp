@@ -1,7 +1,7 @@
 #include <string.h>
 
 #include "glm/gtx/bit.hpp"
-#include "lodepng/lodepng.h"
+#include "stbimage/stb_image.h"
 
 #include "pixelboost/file/fileSystem.h"
 #include "pixelboost/graphics/device/texture.h"
@@ -37,6 +37,9 @@ bool Texture::LoadFromBytes(const unsigned char* data, int width, int height, bo
     {
         switch (format)
         {
+            case kTextureFormatRGB:
+                _Data = new unsigned char[width*height*3];
+                memcpy(_Data, data, width*height*3);
             case kTextureFormatRGBA:
                 _Data = new unsigned char[width*height*4];
                 memcpy(_Data, data, width*height*4);
@@ -50,25 +53,30 @@ bool Texture::LoadFromBytes(const unsigned char* data, int width, int height, bo
     return true;
 }
 
-bool Texture::LoadFromPng(pb::FileLocation location, const std::string& path, bool createMips, bool hasPremultipliedAlpha)
+bool Texture::LoadFromFile(pb::FileLocation location, const std::string& path, bool createMips, bool hasPremultipliedAlpha)
 {
-    LodePNG::Decoder decoder;
     std::vector<unsigned char> data;
-    std::vector<unsigned char> decoded;
+    unsigned char* decoded;
 
     pb::File* file = pb::FileSystem::Instance()->OpenFile(location, path);
     if (!file)
         return false;
     
     file->ReadAll(data);
-    decoder.decode(decoded, &data[0], data.size());
+    
+    int width, height, components;
+    decoded = stbi_load_from_memory(&data[0], data.size(), &width, &height, &components, STBI_default);
 	
-    if (!glm::isPowerOfTwo(decoder.getHeight()) || !glm::isPowerOfTwo(decoder.getWidth()))
+    if (!glm::isPowerOfTwo(width) || !glm::isPowerOfTwo(height))
         createMips = false;
     
     delete file;
     
-	return LoadFromBytes(&decoded[0], decoder.getWidth(), decoder.getHeight(), createMips, kTextureFormatRGBA, hasPremultipliedAlpha);
+    bool status = LoadFromBytes(decoded, width, height, createMips, components == 3 ? kTextureFormatRGB : kTextureFormatRGBA, hasPremultipliedAlpha);
+    
+    stbi_image_free(decoded);
+    
+    return status;
 }
 
 const glm::vec2& Texture::GetSize() const

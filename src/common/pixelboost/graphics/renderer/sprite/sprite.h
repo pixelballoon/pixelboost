@@ -23,7 +23,7 @@ public:
     virtual ~SpriteSheet();
     
     bool LoadSingle(FileLocation location, const std::string& fileName, bool generateMips=false, bool hasPremultipliedAlpha=false);
-    bool LoadSheet(FileLocation location, const std::string& name, bool generateMips=false, bool hasPremultipliedAlpha=true);
+    bool LoadSheet(FileLocation location, const std::string& name, const std::string& extension, bool generateMips=false, bool hasPremultipliedAlpha=true);
     Texture* LoadTexture(FileLocation location, const std::string& fileName, bool generateMips, bool hasPremultipliedAlpha);
     
     Sprite* GetSprite(const std::string& name);

@@ -56,7 +56,7 @@ bool SpriteSheet::LoadSingle(FileLocation location, const std::string& fileName,
     return true;
 }
 
-bool SpriteSheet::LoadSheet(FileLocation location, const std::string& name, bool generateMips, bool hasPremultipliedAlpha)
+bool SpriteSheet::LoadSheet(FileLocation location, const std::string& name, const std::string& extension, bool generateMips, bool hasPremultipliedAlpha)
 {
     std::string modifier;
     float sheetDensity = 16.f;
@@ -128,7 +128,7 @@ bool SpriteSheet::LoadSheet(FileLocation location, const std::string& name, bool
         Engine::Instance()->GetSpriteRenderer()->_Sprites[spriteName] = sprite;
     }
     
-    LoadTexture(location, "/data/spritesheets/images/" + name + modifier + ".png", generateMips, hasPremultipliedAlpha);
+    LoadTexture(location, "/data/spritesheets/images/" + name + modifier + "." + extension, generateMips, hasPremultipliedAlpha);
     
     return true;
 }
@@ -141,7 +141,7 @@ Texture* SpriteSheet::LoadTexture(FileLocation location, const std::string& file
     }
     
     _Texture = GraphicsDevice::Instance()->CreateTexture();
-    _Texture->LoadFromPng(location, fileName, generateMips, hasPremultipliedAlpha);
+    _Texture->LoadFromFile(location, fileName, generateMips, hasPremultipliedAlpha);
     
     return _Texture;
 }
