@@ -827,6 +827,9 @@
 		1C9B246915E2EAF500898C3D /* manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C9B246415E2EAF500898C3D /* manager.cpp */; };
 		1C9B246A15E2EAF500898C3D /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C9B246615E2EAF500898C3D /* shader.cpp */; };
 		1C9B246B15E2EAF500898C3D /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C9B246615E2EAF500898C3D /* shader.cpp */; };
+		1CE16095166C268200954C25 /* stb_image_write.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CE16094166C268200954C25 /* stb_image_write.c */; };
+		1CE16096166C268200954C25 /* stb_image_write.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CE16094166C268200954C25 /* stb_image_write.c */; };
+		1CE16097166C268200954C25 /* stb_image_write.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CE16094166C268200954C25 /* stb_image_write.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -1725,6 +1728,8 @@
 		1C9B246515E2EAF500898C3D /* manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = manager.h; sourceTree = "<group>"; };
 		1C9B246615E2EAF500898C3D /* shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shader.cpp; sourceTree = "<group>"; };
 		1C9B246715E2EAF500898C3D /* shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shader.h; sourceTree = "<group>"; };
+		1CE16092166C25B000954C25 /* stb_image_write.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stb_image_write.h; sourceTree = "<group>"; };
+		1CE16094166C268200954C25 /* stb_image_write.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stb_image_write.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1760,6 +1765,8 @@
 			children = (
 				1C380EED166BCE2C00DAD694 /* stb_image.c */,
 				1C380EEE166BCE2C00DAD694 /* stb_image.h */,
+				1CE16094166C268200954C25 /* stb_image_write.c */,
+				1CE16092166C25B000954C25 /* stb_image_write.h */,
 			);
 			path = stbimage;
 			sourceTree = "<group>";
@@ -4018,6 +4025,7 @@
 				1C380EF1166BCE2C00DAD694 /* stb_image.c in Sources */,
 				1C380EFA166BD43200DAD694 /* jpgd.cpp in Sources */,
 				1C380EFD166BD43200DAD694 /* jpge.cpp in Sources */,
+				1CE16097166C268200954C25 /* stb_image_write.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4314,6 +4322,7 @@
 				1C380EEF166BCE2C00DAD694 /* stb_image.c in Sources */,
 				1C380EF8166BD43200DAD694 /* jpgd.cpp in Sources */,
 				1C380EFB166BD43200DAD694 /* jpge.cpp in Sources */,
+				1CE16095166C268200954C25 /* stb_image_write.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4585,6 +4594,7 @@
 				1C380EF0166BCE2C00DAD694 /* stb_image.c in Sources */,
 				1C380EF9166BD43200DAD694 /* jpgd.cpp in Sources */,
 				1C380EFC166BD43200DAD694 /* jpge.cpp in Sources */,
+				1CE16096166C268200954C25 /* stb_image_write.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
