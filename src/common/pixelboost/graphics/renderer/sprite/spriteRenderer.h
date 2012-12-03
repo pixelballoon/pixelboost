@@ -59,7 +59,7 @@ public:
     void Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass);
 	
     std::shared_ptr<SpriteSheet> CreateSpriteSheet(const std::string& name);
-    bool LoadSpriteSheet(FileLocation location, const std::string& name, const std::string& extension, bool createMips=false);
+    bool LoadSpriteSheet(FileLocation location, const std::string& name, const std::string& extension, bool createMips=false, bool hasPremultipliedAlpha = true);
     bool UnloadSpriteSheet(const std::string& name);
     
     std::shared_ptr<SpriteSheet> GetSpriteSheet(const std::string& sheetName) const;
