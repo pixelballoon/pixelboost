@@ -76,8 +76,8 @@ bool Texture::LoadFromFile(pb::FileLocation location, const std::string& path, b
         file->Read(encodedAlphaData, alphaLength);
         
         int width, height, components;
-        unsigned char* decodedRgb = stbi_load_from_memory(encodedRgbData, rgbLength, &width, &height, &components, STBI_default);
-        unsigned char* decodedAlpha = stbi_load_from_memory(encodedAlphaData, alphaLength, &width, &height, &components, STBI_default);
+        unsigned char* decodedRgb = stbi_load_from_memory(encodedRgbData, rgbLength, &width, &height, &components, STBI_rgb);
+        unsigned char* decodedAlpha = stbi_load_from_memory(encodedAlphaData, alphaLength, &width, &height, &components, STBI_grey);
         
         unsigned char* decoded = new unsigned char[width*height*4];
         
