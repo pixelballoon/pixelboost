@@ -5,6 +5,7 @@
 #include "jpegcompressor/jpge.h"
 #include "lodepng/lodepng.h"
 #include "stbimage/stb_image.h"
+#include "stbimage/stb_image_write.h"
 
 #include "pixelboost/file/fileHelpers.h"
 
@@ -23,7 +24,10 @@ int main(int argc, const char * argv[])
     
     pb::File* file = pb::FileSystem::Instance()->OpenFile(pb::kFileLocationUser, inputLocation);
     if (!file)
-        return false;
+    {
+        printf("Can't open input file\n");
+        return 1;
+    }
     
     file->ReadAll(data);
     
@@ -56,43 +60,39 @@ int main(int argc, const char * argv[])
             
             decodedTemp += 4;
             rgbTemp += 3;
-            alphaData++;
+            alphaTemp++;
         }
     }
     
     int rgbBufferSize = width*height*3;
-    unsigned char* buffer = new unsigned char[rgbBufferSize];
+    unsigned char* rgbBuffer = new unsigned char[rgbBufferSize];
     
     jpge::params params;
     params.m_quality = 85;
     params.m_two_pass_flag = true;
     
-    jpge::compress_image_to_jpeg_file_in_memory(buffer, rgbBufferSize, width, height, 3, rgbData, params);
+    jpge::compress_image_to_jpeg_file_in_memory(rgbBuffer, rgbBufferSize, width, height, 3, rgbData, params);
     
-    std::vector<unsigned char> jpegRGBFile;
-    jpegRGBFile.assign(buffer, buffer+rgbBufferSize);
-        
-    delete[] buffer;
-    
-    size_t alphaBufferSize;
-    LodePNG_encode(&buffer, &alphaBufferSize, alphaData, width, height, LCT_GREY, 8);
-    
-    std::vector<unsigned char> jpegAlphaFile;
-    jpegAlphaFile.assign(buffer, buffer+alphaBufferSize);
-    
-    delete[] buffer;
+    int alphaBufferSize;
+    unsigned char* alphaBuffer = stbi_write_png_to_mem(alphaData, 0, width, height, 1, &alphaBufferSize);
     
     file = pb::FileSystem::Instance()->OpenFile(pb::kFileLocationUser, outputLocation, pb::kFileModeWriteOnly);
     
     if (!file)
+    {
+        printf("ERROR: Can't open output file\n");
         return 1;
+    }
     
     file->Write((int)rgbBufferSize);
     file->Write((int)alphaBufferSize);
-    file->Write(jpegRGBFile);
-    file->Write(jpegAlphaFile);
+    file->Write(rgbBuffer, rgbBufferSize);
+    file->Write(alphaBuffer, alphaBufferSize);
 
     delete file;
+    
+    delete[] rgbBuffer;
+    free(alphaBuffer);
     
     printf("Success!\n");
     
