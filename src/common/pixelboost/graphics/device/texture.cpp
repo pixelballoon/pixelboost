@@ -57,7 +57,7 @@ bool Texture::LoadFromFile(pb::FileLocation location, const std::string& path, b
 {
     bool status = true;
     
-    if (path.substr(path.length()-4) == ".jpa")
+    if (path.length() >= 4 && path.substr(path.length()-4) == ".jpa")
     {
         pb::File* file = pb::FileSystem::Instance()->OpenFile(location, path);
         if (!file)
