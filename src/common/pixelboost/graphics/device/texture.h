@@ -29,15 +29,19 @@ public:
     const glm::vec2& GetSize() const;
     bool HasPremultipliedAlpha() const;
 
+#ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
     void OnContextLost();
+#endif
     
 protected:
     virtual void Bind(int unit = 0) = 0;
     
 protected:
+#ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
     TextureFormat _DataFormat;
     unsigned char* _Data;
     bool _DataCreateMips;
+#endif
     bool _HasPremultipliedAlpha;
     
     glm::vec2 _Size;

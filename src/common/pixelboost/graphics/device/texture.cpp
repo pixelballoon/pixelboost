@@ -9,15 +9,19 @@
 using namespace pb;
 
 Texture::Texture()
+#ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
     : _Data(0)
+#endif
 {
     
 }
 
 Texture::~Texture()
 {
+#ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
     if (_Data)
         delete[] _Data;
+#endif
 }
 
 bool Texture::LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format, bool hasPremultipliedAlpha)
@@ -142,7 +146,9 @@ bool Texture::HasPremultipliedAlpha() const
     return _HasPremultipliedAlpha;
 }
 
+#ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
 void Texture::OnContextLost()
 {
     LoadFromBytes(_Data, _Size.x, _Size.y, _DataCreateMips, _DataFormat, _HasPremultipliedAlpha);
 }
+#endif
