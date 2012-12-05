@@ -260,12 +260,10 @@ void View::Initialise(glm::vec2 size, float density)
 
 void View::Render()
 {
-    glClear(GL_DEPTH_BUFFER_BIT);
+    Engine::Update(0.033);
     
     _LevelScene->Update(0.033);
     _UiScene->Update(0.033);
-    
-    _Level->Render(0, 1);
     
     _ManipulatorManager->Render(2);
     

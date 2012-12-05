@@ -38,7 +38,6 @@ namespace pixeleditor
         static pb::Uid GetStaticType();
                 
         void Update(float time);
-        void Render(int backgroundLayer, int levelLayer);
         
         void Clear();
         

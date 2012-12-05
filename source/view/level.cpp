@@ -64,14 +64,6 @@ void Level::Update(float time)
     }    
 }
 
-void Level::Render(int backgroundLayer, int levelLayer)
-{
-    for (EntityMap::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
-    {
-        it->second->Render(levelLayer);
-    }
-}
-
 void Level::Clear()
 {
     if (_Record)
