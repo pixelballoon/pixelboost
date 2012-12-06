@@ -26,10 +26,10 @@ GraphicsDevice* GraphicsDevice::Instance()
     return instance;
 }
 
-
 void GraphicsDevice::SetDisplayResolution(glm::vec2 resolution)
 {
     _DisplayResolution = resolution;
+    onDisplayResolutionChanged(resolution);
 }
 
 glm::vec2 GraphicsDevice::GetDisplayResolution()
@@ -40,6 +40,7 @@ glm::vec2 GraphicsDevice::GetDisplayResolution()
 void GraphicsDevice::SetDisplayDensity(float density)
 {
     _DisplayDensity = density;
+    onDisplayDensityChanged(density);
 }
 
 float GraphicsDevice::GetDisplayDensity()

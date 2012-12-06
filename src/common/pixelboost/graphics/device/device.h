@@ -3,6 +3,7 @@
 #ifndef PIXELBOOST_DISABLE_GRAPHICS
 
 #include "glm/glm.hpp"
+#include "sigslot/signal.h"
 
 #include "pixelboost/graphics/device/bufferFormats.h"
 
@@ -25,6 +26,11 @@ public:
     static GraphicsDevice* Instance();
     virtual ~GraphicsDevice();
     
+public:
+    sigslot::Signal1<glm::vec2> onDisplayResolutionChanged;
+    sigslot::Signal1<float> onDisplayDensityChanged;
+      
+public:
     void SetDisplayResolution(glm::vec2 resolution);
     glm::vec2 GetDisplayResolution();
     
