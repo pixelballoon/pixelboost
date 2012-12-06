@@ -19,9 +19,9 @@ namespace pb
     
     enum MouseButton
     {
-        kMouseButtonLeft,
-        kMouseButtonMiddle,
-        kMouseButtonRight
+        kMouseButtonLeft = 0,
+        kMouseButtonMiddle = 1,
+        kMouseButtonRight = 2
     };
     
     class MouseHandler : public InputHandler
