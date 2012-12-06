@@ -114,6 +114,13 @@ void RocketRenderer::RenderGeometry(Rocket::Core::Vertex* vertices, int numVerti
 {
     Texture* texture = (Texture*)textureHandle;
     
+    if (texture->HasPremultipliedAlpha())
+    {
+        GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
+    } else {
+        GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
+    }
+    
     _VertexBuffer->Lock();
     Vertex_PXYZ_RGBA_UV* vertexData = static_cast<Vertex_PXYZ_RGBA_UV*>(_VertexBuffer->GetData());
     
@@ -142,7 +149,12 @@ void RocketRenderer::RenderGeometry(Rocket::Core::Vertex* vertices, int numVerti
     
     _IndexBuffer->Unlock(numIndices);
     
-    _ShaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", glm::translate(_Renderable->GetMVP(), glm::vec3(translation.x/32.f, -translation.y/32.f, 0)));
+    glm::mat4x4 matrix = _Renderable->GetMVP();
+    matrix = glm::scale(matrix, glm::vec3(1.f,1.f,1.f)/32.f);
+    matrix = glm::translate(matrix, glm::vec3(-pb::GraphicsDevice::Instance()->GetDisplayResolution().x/2.f, pb::GraphicsDevice::Instance()->GetDisplayResolution().y/2.f, 0.f));
+    matrix = glm::translate(matrix, glm::vec3(translation.x, -translation.y, 0));
+    _ShaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", matrix);
+    
     GraphicsDevice::Instance()->BindIndexBuffer(_IndexBuffer);
     GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffer);
     GraphicsDevice::Instance()->BindTexture(texture);
@@ -161,8 +173,8 @@ Rocket::Core::CompiledGeometryHandle RocketRenderer::CompileGeometry(Rocket::Cor
     
     for (int i=0; i<numVertices; i++)
     {
-        vertexData[i].position[0] = vertices[i].position.x/32.f;
-        vertexData[i].position[1] = -vertices[i].position.y/32.f;
+        vertexData[i].position[0] = vertices[i].position.x;
+        vertexData[i].position[1] = -vertices[i].position.y;
         vertexData[i].position[2] = 0.f;
         vertexData[i].color[0] = vertices[i].colour.red/255.f;
         vertexData[i].color[1] = vertices[i].colour.green/255.f;
@@ -198,7 +210,19 @@ void RocketRenderer::RenderCompiledGeometry(Rocket::Core::CompiledGeometryHandle
     IndexBuffer* indexBuffer = _BufferMap[vertexBuffer];
     Texture* texture = _TextureMap[vertexBuffer];
     
-    _ShaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", glm::translate(_Renderable->GetMVP(), glm::vec3(translation.x/32.f, -translation.y/32.f, 0)));
+    if (texture->HasPremultipliedAlpha())
+    {
+        GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
+    } else {
+        GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
+    }
+    
+    glm::mat4x4 matrix = _Renderable->GetMVP();
+    matrix = glm::scale(matrix, glm::vec3(1.f,1.f,1.f)/32.f);
+    matrix = glm::translate(matrix, glm::vec3(-pb::GraphicsDevice::Instance()->GetDisplayResolution().x/2.f, pb::GraphicsDevice::Instance()->GetDisplayResolution().y/2.f, 0.f));
+    matrix = glm::translate(matrix, glm::vec3(translation.x, -translation.y, 0));
+    _ShaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", matrix);
+    
     GraphicsDevice::Instance()->BindIndexBuffer(indexBuffer);
     GraphicsDevice::Instance()->BindVertexBuffer(vertexBuffer);
     GraphicsDevice::Instance()->BindTexture(texture);
