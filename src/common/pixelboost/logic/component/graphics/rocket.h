@@ -30,6 +30,9 @@ namespace pb
         virtual Uid GetType();
         static Uid GetStaticType();
         
+        void SetLayer(int layer);
+        int GetLayer();
+        
         Rocket::Core::Context* GetContext();
         
         void LoadRML(FileLocation location, const std::string& filename);

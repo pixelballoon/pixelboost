@@ -12,13 +12,16 @@
 
 using namespace pb;
 
-class pb::RocketKeyboardHandler : public KeyboardHandler
+namespace pb
+{
+
+class RocketKeyboardHandler : public KeyboardHandler
 {
 public:
     RocketKeyboardHandler(Rocket::Core::Context* context)
         : _Context(context)
     {
-        SetPriority(1001);
+        SetPriority(1000);
     }
     
     bool OnKeyDown(KeyboardKey key, char character)
@@ -54,19 +57,27 @@ private:
     Rocket::Core::Context* _Context;
 };
 
-class pb::RocketMouseHandler : public MouseHandler
+class RocketMouseHandler : public MouseHandler
 {
 public:
     RocketMouseHandler(Rocket::Core::Context* context)
         : _Context(context)
     {
-        SetPriority(1001);
+        SetPriority(1000);
+        
+        _WheelDelta = 0.f;
     }
     
     bool OnMouseDown(MouseButton button, ModifierKeys modifierKeys, glm::vec2 position)
     {
         OnMouseMove(position);
         _Context->ProcessMouseButtonDown(button, 0);
+        
+        Rocket::Core::Element* focus = _Context->GetFocusElement();
+        Rocket::Core::Element* hover = _Context->GetHoverElement();
+        
+        if (_Context->GetHoverElement() != _Context->GetRootElement())
+            return true;
         
         return false;
     }
@@ -86,7 +97,16 @@ public:
     
     bool OnMouseScroll(ModifierKeys modifierKeys, glm::vec2 scroll)
     {
-        return _Context->ProcessMouseWheel(scroll.y*120, 0);
+        float scrollValue = -scroll.y/10.f;
+        _WheelDelta += scrollValue;
+        
+        float wheelRemainder = glm::mod(glm::abs(_WheelDelta), 1.f) * (_WheelDelta > 0.f ? 1.f : -1.f);
+        
+        scrollValue = _WheelDelta - wheelRemainder;
+        
+        _WheelDelta = wheelRemainder;
+        
+        return _Context->ProcessMouseWheel(scrollValue, 0);
     }
     
     bool OnMouseZoom(glm::vec2 zoom)
@@ -100,10 +120,13 @@ public:
     }
     
 private:
+    float _WheelDelta;
     glm::vec2 _PrevMouse;
     
     Rocket::Core::Context* _Context;
 };
+    
+}
 
 RocketComponent::RocketComponent(Entity* entity, glm::vec2 size)
     : Component(entity)
@@ -111,7 +134,7 @@ RocketComponent::RocketComponent(Entity* entity, glm::vec2 size)
     _Context = Rocket::Core::CreateContext("default", Rocket::Core::Vector2i(size.x, size.y));
     
     _Renderable = new RocketRenderable(_Context);
-    _Renderable->SetLayer(3);
+    _Renderable->SetRenderPass(pb::kRenderPassUi);
     GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
 
     _KeyboardHandler = new RocketKeyboardHandler(_Context);
@@ -141,6 +164,21 @@ Uid RocketComponent::GetStaticType()
     return TypeHash("pb::RocketComponent");
 }
 
+void RocketComponent::SetLayer(int layer)
+{
+    _Renderable->SetLayer(layer);
+}
+
+int RocketComponent::GetLayer()
+{
+    return _Renderable->GetLayer();
+}
+
+Rocket::Core::Context* RocketComponent::GetContext()
+{
+    return _Context;
+}
+
 void RocketComponent::LoadRML(FileLocation location, const std::string& filename)
 {
     std::string file = pb::FileHelpers::GetRootPath()+filename;
@@ -150,12 +188,7 @@ void RocketComponent::LoadRML(FileLocation location, const std::string& filename
         document->Show();
         document->RemoveReference();
     }
-
-}
-
-Rocket::Core::Context* RocketComponent::GetContext()
-{
-    return _Context;
+    
 }
 
 void RocketComponent::OnUpdate(const pb::Message& message)
