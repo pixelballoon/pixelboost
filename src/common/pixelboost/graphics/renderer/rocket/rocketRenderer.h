@@ -13,6 +13,7 @@ namespace pb
 {
     class IndexBuffer;
     class RenderLayer;
+    class Texture;
     class VertexBuffer;
     
     class RocketRenderable : public pb::Renderable

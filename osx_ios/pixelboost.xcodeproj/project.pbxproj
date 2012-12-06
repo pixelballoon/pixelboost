@@ -833,6 +833,9 @@
 		1C9B246915E2EAF500898C3D /* manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C9B246415E2EAF500898C3D /* manager.cpp */; };
 		1C9B246A15E2EAF500898C3D /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C9B246615E2EAF500898C3D /* shader.cpp */; };
 		1C9B246B15E2EAF500898C3D /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C9B246615E2EAF500898C3D /* shader.cpp */; };
+		1CC6B571167017D30063D81C /* rocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC6B56F167017D30063D81C /* rocket.cpp */; };
+		1CC6B572167017D30063D81C /* rocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC6B56F167017D30063D81C /* rocket.cpp */; };
+		1CC6B573167017D30063D81C /* rocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC6B56F167017D30063D81C /* rocket.cpp */; };
 		1CE16095166C268200954C25 /* stb_image_write.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CE16094166C268200954C25 /* stb_image_write.c */; };
 		1CE16096166C268200954C25 /* stb_image_write.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CE16094166C268200954C25 /* stb_image_write.c */; };
 		1CE16097166C268200954C25 /* stb_image_write.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CE16094166C268200954C25 /* stb_image_write.c */; };
@@ -2307,6 +2310,8 @@
 		1C9B246515E2EAF500898C3D /* manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = manager.h; sourceTree = "<group>"; };
 		1C9B246615E2EAF500898C3D /* shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shader.cpp; sourceTree = "<group>"; };
 		1C9B246715E2EAF500898C3D /* shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shader.h; sourceTree = "<group>"; };
+		1CC6B56F167017D30063D81C /* rocket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rocket.cpp; sourceTree = "<group>"; };
+		1CC6B570167017D30063D81C /* rocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rocket.h; sourceTree = "<group>"; };
 		1CE16092166C25B000954C25 /* stb_image_write.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stb_image_write.h; sourceTree = "<group>"; };
 		1CE16094166C268200954C25 /* stb_image_write.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stb_image_write.c; sourceTree = "<group>"; };
 		1CE161AC166E7F6200954C25 /* ftconfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ftconfig.h; sourceTree = "<group>"; };
@@ -3707,6 +3712,8 @@
 				1C8976B715DE9B3A00AB3196 /* particleEmitter.h */,
 				1C8976B815DE9B3A00AB3196 /* rectangle.cpp */,
 				1C8976B915DE9B3A00AB3196 /* rectangle.h */,
+				1CC6B56F167017D30063D81C /* rocket.cpp */,
+				1CC6B570167017D30063D81C /* rocket.h */,
 				1C8976BA15DE9B3A00AB3196 /* sprite.cpp */,
 				1C8976BB15DE9B3A00AB3196 /* sprite.h */,
 			);
@@ -6932,6 +6939,7 @@
 				1CE16B43166E856600954C25 /* SystemInterface.cpp in Sources */,
 				1C1F9837166E8AAE007D7E72 /* rocketRenderer.cpp in Sources */,
 				1C1F983E166E9DD1007D7E72 /* rocket.cpp in Sources */,
+				1CC6B573167017D30063D81C /* rocket.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7420,6 +7428,7 @@
 				1CE16B41166E856600954C25 /* SystemInterface.cpp in Sources */,
 				1C1F9835166E8AAE007D7E72 /* rocketRenderer.cpp in Sources */,
 				1C1F983C166E9DD1007D7E72 /* rocket.cpp in Sources */,
+				1CC6B571167017D30063D81C /* rocket.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7884,6 +7893,7 @@
 				1CE16B42166E856600954C25 /* SystemInterface.cpp in Sources */,
 				1C1F9836166E8AAE007D7E72 /* rocketRenderer.cpp in Sources */,
 				1C1F983D166E9DD1007D7E72 /* rocket.cpp in Sources */,
+				1CC6B572167017D30063D81C /* rocket.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
