@@ -85,6 +85,9 @@ bool Variant::GetInto(T& value) const
 		case VOIDPTR:
 			return TypeConverter< void*, T >::Convert(data_block->data_ptr, value);
 		break;
+        
+		case NONE:
+				break;
 	}
 
 	return false;
