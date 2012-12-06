@@ -99,12 +99,10 @@ void RocketRenderer::Render(int count, Renderable** renderables, Viewport* viewp
     
     for (int i=0; i<count; i++)
     {
-        PbLogDebug("ui.rocket", "Render rocket - begin\n");
         RocketRenderable* renderable = static_cast<RocketRenderable*>(renderables[i]);
         _Renderable = renderable;
         renderable->_Context->Render();
         PurgeBuffer(true);
-        PbLogDebug("ui.rocket", "Render rocket - end\n");
     }
     
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
@@ -200,8 +198,6 @@ void RocketRenderer::RenderCompiledGeometry(Rocket::Core::CompiledGeometryHandle
     IndexBuffer* indexBuffer = _BufferMap[vertexBuffer];
     Texture* texture = _TextureMap[vertexBuffer];
     
-//    PbLogDebug("ui.rocket", "Render compiled geom (%d)\n", indexBuffer->GetCurrentSize());
-
     _ShaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", glm::translate(_Renderable->GetMVP(), glm::vec3(translation.x/32.f, -translation.y/32.f, 0)));
     GraphicsDevice::Instance()->BindIndexBuffer(indexBuffer);
     GraphicsDevice::Instance()->BindVertexBuffer(vertexBuffer);
