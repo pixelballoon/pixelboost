@@ -29,7 +29,7 @@ class TouchManager;
 class Engine
 {
 protected:
-	Engine(void* viewController);
+	Engine(void* platformContext);
     
 public:
     virtual ~Engine();
@@ -69,7 +69,7 @@ public:
 	virtual void Update(float time);
 	void Render();
     
-    void* GetViewController();
+    void* GetPlatformContext();
 	
 private:
 	static Engine* _Instance;
@@ -98,7 +98,7 @@ private:
 	float _GameTime;
     float _TotalTime;
 
-    void* _ViewController;
+    void* _PlatformContext;
 };
     
 }

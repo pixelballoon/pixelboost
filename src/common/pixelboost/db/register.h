@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pixelboost/external/lua/lua.hpp"
+#include "lua.hpp"
 
 #include "pixelboost/db/database.h"
 

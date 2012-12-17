@@ -24,10 +24,10 @@ using namespace pb;
 
 Engine* Engine::_Instance = 0;
 
-Engine::Engine(void* viewController)
+Engine::Engine(void* platformContext)
     : _GameTime(0)
+    , _PlatformContext(platformContext)
     , _TotalTime(0)
-    , _ViewController(viewController)
 {
     _Instance = this;
 
@@ -210,7 +210,7 @@ void Engine::Render()
 #endif
 }
 
-void* Engine::GetViewController()
+void* Engine::GetPlatformContext()
 {
-    return _ViewController;
+    return _PlatformContext;
 }

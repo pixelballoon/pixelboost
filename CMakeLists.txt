@@ -94,6 +94,10 @@ set (PIXELBOOST_HEADERS
 	"${PLATFORM_HEADERS}"
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/common"
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/external"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/box2d"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/freetype2/include"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/librocket/Include"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/lua/src"
 	CACHE INTERNAL "Complete list of pixelboost headers")
 
 include_directories("${PIXELBOOST_HEADERS}")
@@ -275,6 +279,7 @@ set (EXTERNAL_SOURCES
 	"src/external/jpegcompressor/jpgd.cpp"
 	"src/external/jpegcompressor/jpge.cpp"
 	"src/external/lodepng/lodepng.cpp"
+	"src/external/mongoose/mongoose.c"
 	"src/external/regex/trex.c"
 	"src/external/stbimage/stb_image.c"
 	"src/external/stbimage/stb_image_write.c"

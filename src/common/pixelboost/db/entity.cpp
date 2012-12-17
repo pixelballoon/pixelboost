@@ -1,7 +1,7 @@
 #include "pixelboost/db/database.h"
 #include "pixelboost/db/entity.h"
 
-#include "pixelboost/external/lua/lua.hpp"
+#include "lua.hpp"
 
 using namespace pb;
     

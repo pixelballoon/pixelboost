@@ -2,8 +2,9 @@
 #include <cstdio>
 #include <cstring>
 
+#include "mongoose/mongoose.h"
+
 #include "pixelboost/debug/log.h"
-#include "pixelboost/external/mongoose/mongoose.h"
 #include "pixelboost/network/http/httpServer.h"
 
 using namespace pb;
