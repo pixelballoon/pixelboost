@@ -1,14 +1,10 @@
 #include <fstream>
 #include <sys/stat.h>
 
-#include "project/entity.h"
-#include "project/record.h"
-#include "project/project.h"
-#include "project/schema.h"
+#include "lua.hpp"
 
 #include "pixelboost/data/json/reader.h"
 #include "pixelboost/data/json/writer.h"
-#include "pixelboost/external/lua/lua.hpp"
 
 extern "C" {
 #include "pixelboost/external/lua/lapi.h"
@@ -17,6 +13,11 @@ extern "C" {
 }
 
 #include "pixelboost/file/fileHelpers.h"
+
+#include "project/entity.h"
+#include "project/record.h"
+#include "project/project.h"
+#include "project/schema.h"
 
 using namespace pixeleditor;
 
