@@ -1,3 +1,5 @@
+#include <Foundation/Foundation.h>
+
 #include "pixelboost/util/localisation/localisation.h"
 
 std::string pb::GetCurrentLocale()

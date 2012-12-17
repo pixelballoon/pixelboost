@@ -5,7 +5,6 @@
 namespace pb
 {
 
-    class Game;
     class Viewport;
 
     class Screen

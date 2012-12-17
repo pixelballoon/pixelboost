@@ -1,5 +1,7 @@
 #include "pixelboost/util/localisation/localisation.h"
 
+#include <Foundation/Foundation.h>
+
 std::string pb::GetCurrentLocale()
 {
     std::string locale = [[[NSLocale preferredLanguages] objectAtIndex:0] UTF8String];

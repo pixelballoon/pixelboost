@@ -1,5 +1,7 @@
 #ifdef PIXELBOOST_PLATFORM_OSX
 
+#include <Foundation/Foundation.h>
+
 #include "pixelboost/file/fileHelpers.h"
 
 namespace pb

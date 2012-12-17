@@ -28,9 +28,13 @@ class TouchManager;
     
 class Engine
 {
-public:
+protected:
 	Engine(void* viewController);
-	virtual ~Engine();
+    
+public:
+    virtual ~Engine();
+    
+    static Engine* Create(void* platformContext);
 	
 	static Engine* Instance();
 	
