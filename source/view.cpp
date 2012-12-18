@@ -48,6 +48,14 @@
 
 using namespace pixeleditor;
 
+namespace pb
+{
+    Engine* Engine::Create(void* platformContext, std::vector<std::string> args)
+    {
+        return new View(platformContext, args);
+    }
+}
+
 class pixeleditor::ViewKeyboardHandler : public pb::KeyboardHandler
 {
 public:
@@ -122,19 +130,28 @@ public:
     }
 };
 
-View::View()
-    : pb::Engine(0)
+View::View(void* platformContext, std::vector<std::string> args)
+    : pb::Engine(platformContext)
+    , _LaunchArgs(args)
     , _Record(0)
 {
+    _Core = new Core();
+   
     _KeyboardHandler = new ViewKeyboardHandler();
     _MouseHandler = new ViewMouseHandler();
     
     View::Instance()->GetKeyboardManager()->AddHandler(_KeyboardHandler);
     View::Instance()->GetMouseManager()->AddHandler(_MouseHandler);
+    
+    pb::GraphicsDevice::Instance()->onDisplayDensityChanged.Connect(sigslot::MakeDelegate(this, &View::OnDisplayDensityChanged));
+    pb::GraphicsDevice::Instance()->onDisplayResolutionChanged.Connect(sigslot::MakeDelegate(this, &View::OnDisplayResolutionChanged));
 }
 
 View::~View()
 {
+    pb::GraphicsDevice::Instance()->onDisplayDensityChanged.Disconnect(sigslot::MakeDelegate(this, &View::OnDisplayDensityChanged));
+    pb::GraphicsDevice::Instance()->onDisplayResolutionChanged.Disconnect(sigslot::MakeDelegate(this, &View::OnDisplayResolutionChanged));
+    
     View::Instance()->GetKeyboardManager()->RemoveHandler(_KeyboardHandler);
     View::Instance()->GetMouseManager()->RemoveHandler(_MouseHandler);
     
@@ -162,11 +179,8 @@ View* View::Instance()
     return static_cast<View*>(Engine::Instance());
 }
 
-void View::Initialise(glm::vec2 size, float density)
+void View::Initialise()
 {
-    pb::GraphicsDevice::Instance()->SetDisplayResolution(size);
-    pb::GraphicsDevice::Instance()->SetDisplayDensity(density);
-    
     _LevelCamera = new pb::OrthographicCamera();
     _LevelViewport = new pb::Viewport(0, _LevelCamera);
     _LevelScene = new pb::Scene();
@@ -245,7 +259,9 @@ void View::Initialise(glm::vec2 size, float density)
     Gwen::Controls::MenuItem* rotateManipulator = manipulatorMenu->GetMenu()->AddItem("Rotate Manipulator");
     rotateManipulator->onPress.Add(this, &View::OnRotateManipulator);
     
-    SetCanvasSize(size);
+    SetCanvasSize(pb::GraphicsDevice::Instance()->GetDisplayResolution());
+    
+    pb::GraphicsDevice::Instance()->SetClearColor(glm::vec4(0.5,0.5,0.5,1));
     
     // Register events
     Core::Instance()->GetProject()->projectOpened.Connect(this, &View::OnProjectOpened);
@@ -256,18 +272,18 @@ void View::Initialise(glm::vec2 size, float density)
     Core::Instance()->GetProject()->recordRemoved.Connect(this, &View::OnRecordRemoved);
     _Level->entityAdded.Connect(this, &View::OnEntityAdded);
     _Level->entityRemoved.Connect(this, &View::OnEntityRemoved);
+
+    _Core->GetProject()->Open(_LaunchArgs[1]);
 }
 
-void View::Render()
+void View::Update(float time)
 {
-    Engine::Update(0.033);
+    Engine::Update(time);
     
-    _LevelScene->Update(0.033);
-    _UiScene->Update(0.033);
+    _LevelScene->Update(time);
+    _UiScene->Update(time);
     
     _ManipulatorManager->Render(2);
-    
-    Engine::Render();
 }
 
 ManipulatorManager* View::GetManipulatorManager()
@@ -322,7 +338,7 @@ void View::LoadSprite(const std::string& sprite)
         return;
     
     std::shared_ptr<pb::SpriteSheet> spriteSheet = GetSpriteRenderer()->CreateSpriteSheet(sprite);
-    spriteSheet->LoadSingle(pb::kFileLocationUser, GetSpriteFile(sprite));
+    spriteSheet->LoadSingle(pb::kFileLocationUser, GetSpriteFile(sprite), Core::Instance()->GetProject()->GetConfig().pixelUnit);
 }
 
 std::string View::GetModelFile(const std::string& model)
@@ -400,10 +416,18 @@ pb::OrthographicCamera* View::GetLevelCamera()
     return _LevelCamera;
 }
 
+void View::OnDisplayResolutionChanged(glm::vec2 resolution)
+{
+    SetCanvasSize(resolution);
+}
+
+void View::OnDisplayDensityChanged(float density)
+{
+    
+}
+
 void View::SetCanvasSize(glm::vec2 size)
 {
-    pb::GraphicsDevice::Instance()->SetDisplayResolution(size);
-
     _GwenCanvas->SetSize(size[0], size[1]);
     _LevelViewport->SetResolution(size);
     _UiViewport->SetResolution(size);

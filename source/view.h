@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include "glm/glm.hpp"
 #include "Gwen/Events.h"
@@ -39,6 +40,7 @@ namespace pixeleditor
 {
 
 class CommandManager;
+class Core;
 class HttpInterface;
 class Level;
 class ManipulatorManager;
@@ -51,13 +53,13 @@ class ViewMouseHandler;
 class View : public pb::Engine, public Gwen::Event::Handler
 {
 public:
-    View();
+    View(void* platformContext, std::vector<std::string> args);
     ~View();
     
 public:
     static View* Instance();
-    virtual void Initialise(glm::vec2 size, float density);
-    virtual void Render();
+    virtual void Initialise();
+    virtual void Update(float time);
     
     ManipulatorManager* GetManipulatorManager();
     
@@ -84,6 +86,10 @@ public:
     
 public:
     sigslot::Signal0<> onRedraw;
+    
+private:
+    void OnDisplayResolutionChanged(glm::vec2 resolution);
+    void OnDisplayDensityChanged(float density);
     
 private:
     ProjectRecord* _Record;
@@ -142,6 +148,9 @@ private:
     
     ViewKeyboardHandler* _KeyboardHandler;
     ViewMouseHandler* _MouseHandler;
+    
+    Core* _Core;
+    std::vector<std::string> _LaunchArgs;
 };
     
 }

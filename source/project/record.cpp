@@ -7,9 +7,9 @@
 #include "pixelboost/data/json/writer.h"
 
 extern "C" {
-#include "pixelboost/external/lua/lapi.h"
-#include "pixelboost/external/lua/lobject.h"
-#include "pixelboost/external/lua/lundump.h"
+#include "lapi.h"
+#include "lobject.h"
+#include "lundump.h"
 }
 
 #include "pixelboost/file/fileHelpers.h"
