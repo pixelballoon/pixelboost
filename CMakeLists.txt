@@ -79,10 +79,6 @@ set (GWEN_SOURCES
 	"../../engine/src/external/gwen/src/Utility.cpp"
 	)
 
-	#"osx/editor/AppDelegate.mm"
-	#"osx/editor/main.m"
-	#"osx/editor/MainView.mm"
-
 set (GAME_SOURCES
 	"source/command/standard/checkDepth.cpp"
 	"source/command/standard/close.cpp"
