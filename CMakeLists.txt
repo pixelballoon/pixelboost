@@ -8,7 +8,7 @@ pixelboost_setup_pre(../../ modeltool "com.pixelballoon.modeltool" "Modeltool")
 include_directories("source")
 
 set (GAME_SOURCES
-	"osx/modelconvertor/modelconvertor/main.cpp"
+	"source/main.cpp"
 	"source/modelexporter.cpp"
 	"source/modelLoader.cpp"
 	)
