@@ -122,7 +122,7 @@ public:
     int GetNumParticles();
     void ResetSpawnCount();
     
-    void LoadSpriteSheet(FileLocation location, const std::string& file, const std::string& extension, bool createMips);
+    void LoadSpriteSheet(FileLocation location, const std::string& file, const std::string& extension, bool createMips, bool hasPremultipliedAlpha);
     void SetSpriteSheet(std::shared_ptr<SpriteSheet> spriteSheet);
     
     glm::vec3 GetPosition();

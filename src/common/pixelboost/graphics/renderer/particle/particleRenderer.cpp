@@ -272,22 +272,22 @@ void ParticleEmitter::Render(Viewport* viewport, ShaderPass* shaderPass)
             vertexBuffer[3].position[1] = d.y;
             vertexBuffer[3].position[2] = d.z;
             
-            vertexBuffer[0].color[0] = color[0];
-            vertexBuffer[0].color[1] = color[1];
-            vertexBuffer[0].color[2] = color[2];
-            vertexBuffer[0].color[3] = color[3];
-            vertexBuffer[1].color[0] = color[0];
-            vertexBuffer[1].color[1] = color[1];
-            vertexBuffer[1].color[2] = color[2];
-            vertexBuffer[1].color[3] = color[3];
-            vertexBuffer[2].color[0] = color[0];
-            vertexBuffer[2].color[1] = color[1];
-            vertexBuffer[2].color[2] = color[2];
-            vertexBuffer[2].color[3] = color[3];
-            vertexBuffer[3].color[0] = color[0];
-            vertexBuffer[3].color[1] = color[1];
-            vertexBuffer[3].color[2] = color[2];
-            vertexBuffer[3].color[3] = color[3];
+            vertexBuffer[0].color[0] = color.r;
+            vertexBuffer[0].color[1] = color.g;
+            vertexBuffer[0].color[2] = color.b;
+            vertexBuffer[0].color[3] = color.a;
+            vertexBuffer[1].color[0] = color.r;
+            vertexBuffer[1].color[1] = color.g;
+            vertexBuffer[1].color[2] = color.b;
+            vertexBuffer[1].color[3] = color.a;
+            vertexBuffer[2].color[0] = color.r;
+            vertexBuffer[2].color[1] = color.g;
+            vertexBuffer[2].color[2] = color.b;
+            vertexBuffer[2].color[3] = color.a;
+            vertexBuffer[3].color[0] = color.r;
+            vertexBuffer[3].color[1] = color.g;
+            vertexBuffer[3].color[2] = color.b;
+            vertexBuffer[3].color[3] = color.a;
             
             if (!sprite->_Rotated)
             {
@@ -373,13 +373,13 @@ void ParticleEmitter::ResetSpawnCount()
     _SpawnedParticles = 0;
 }
 
-void ParticleEmitter::LoadSpriteSheet(FileLocation location, const std::string& file, const std::string& extension, bool createMips)
+void ParticleEmitter::LoadSpriteSheet(FileLocation location, const std::string& file, const std::string& extension, bool createMips, bool hasPremultipliedAlpha)
 {
     if (!_Config)
         return;
     
     _Config->spriteSheet = SpriteSheet::Create();
-    _Config->spriteSheet->LoadSheet(location, file, extension, createMips);
+    _Config->spriteSheet->LoadSheet(location, file, extension, createMips, hasPremultipliedAlpha);
 }
 
 void ParticleEmitter::SetSpriteSheet(std::shared_ptr<SpriteSheet> spriteSheet)
