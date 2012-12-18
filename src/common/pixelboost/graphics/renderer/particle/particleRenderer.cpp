@@ -252,7 +252,7 @@ void ParticleEmitter::Render(Viewport* viewport, ShaderPass* shaderPass)
             transform = glm::scale(transform, glm::vec3(size, 1));
             transform = glm::rotate(transform, it->rotation.x, glm::vec3(1,0,0));
             transform = glm::rotate(transform, it->rotation.y, glm::vec3(0,1,0));
-            transform = glm::rotate(transform, it->rotation.y, glm::vec3(0,0,1));
+            transform = glm::rotate(transform, it->rotation.z, glm::vec3(0,0,1));
             
             glm::vec4 a = transform * glm::vec4(-0.5, -0.5, 0, 1);
             glm::vec4 b = transform * glm::vec4(-0.5, 0.5, 0, 1);
