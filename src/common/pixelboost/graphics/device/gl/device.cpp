@@ -212,6 +212,11 @@ unsigned char* GraphicsDeviceGL::CaptureRenderBuffer()
     return buffer;
 }
 
+void GraphicsDeviceGL::SetClearColor(glm::vec4 color)
+{
+    glClearColor(color.r, color.g, color.b, color.a);
+}
+
 void GraphicsDeviceGL::ClearBuffers()
 {
     _CurrentState.UpdateAll(_DesiredState);

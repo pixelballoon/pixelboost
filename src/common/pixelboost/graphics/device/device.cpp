@@ -53,6 +53,11 @@ unsigned char* GraphicsDevice::CaptureRenderBuffer()
     return 0;
 }
 
+void GraphicsDevice::SetClearColor(glm::vec4 color)
+{
+    
+}
+
 void GraphicsDevice::ClearBuffers()
 {
     

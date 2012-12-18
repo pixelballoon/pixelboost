@@ -39,6 +39,7 @@ public:
     
     virtual unsigned char* CaptureRenderBuffer();
 
+    virtual void SetClearColor(glm::vec4 color);
     virtual void ClearBuffers();
     
     virtual VertexBuffer* CreateVertexBuffer(BufferFormat bufferFormat, VertexFormat vertexFormat, int length);
