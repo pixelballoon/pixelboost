@@ -34,7 +34,7 @@ SpriteSheet::~SpriteSheet()
     }
 }
 
-bool SpriteSheet::LoadSingle(FileLocation location, const std::string& fileName, bool generateMips, bool hasPremultipliedAlpha)
+bool SpriteSheet::LoadSingle(FileLocation location, const std::string& fileName, float density, bool generateMips, bool hasPremultipliedAlpha)
 {
     if (!LoadTexture(location, fileName, generateMips, hasPremultipliedAlpha))
         return false;
@@ -45,7 +45,7 @@ bool SpriteSheet::LoadSingle(FileLocation location, const std::string& fileName,
     Sprite* sprite = new Sprite();
     sprite->_Sheet = this;
     sprite->_Rotated = false;
-    sprite->_Size = _Texture->GetSize() / GraphicsDevice::Instance()->GetDisplayDensity();
+    sprite->_Size = _Texture->GetSize() / density;
     sprite->_UvPosition = glm::vec2(0,0);
     sprite->_UvSize = glm::vec2(1,1);
     sprite->_Offset = glm::vec2(0,0);
