@@ -11,20 +11,20 @@ namespace :tools do
     binDir = File.join rakeLocation, 'bin/'
     directory binDir
     task :svgparser => binDir do
-      parserDir = File.join rakeLocation, 'svgparser/osx/svgparser'
-      Dir.chdir parserDir do
-        system 'xcodebuild ONLY_ACTIVE_ARCH=NO CONFIGURATION_BUILD_DIR="build/Release" -scheme svgparser -arch x86_64 -configuration Release 1> /dev/null'
-      end
-      releaseDir = File.join parserDir, 'build/Release/svgparser'      
-      cp releaseDir, binDir
+      #parserDir = File.join rakeLocation, 'svgparser/osx/svgparser'
+      #Dir.chdir parserDir do
+      #  system 'xcodebuild ONLY_ACTIVE_ARCH=NO CONFIGURATION_BUILD_DIR="build/Release" -scheme svgparser -arch x86_64 -configuration Release 1> /dev/null'
+      #end
+      #releaseDir = File.join parserDir, 'build/Release/svgparser'      
+      #cp releaseDir, binDir
     end
     
     task :hullgenerator => binDir do
-      parserDir = File.join rakeLocation, 'hullgenerator/osx/hullgenerator'
-      Dir.chdir parserDir do
-        system 'xcodebuild ONLY_ACTIVE_ARCH=NO CONFIGURATION_BUILD_DIR="build/Release" -scheme hullgenerator -arch x86_64 -configuration Release 1> /dev/null'
-      end
-      releaseDir = File.join parserDir, 'build/Release/hullgenerator'      
-      cp releaseDir, binDir
+      #parserDir = File.join rakeLocation, 'hullgenerator/osx/hullgenerator'
+      #Dir.chdir parserDir do
+      #  system 'xcodebuild ONLY_ACTIVE_ARCH=NO CONFIGURATION_BUILD_DIR="build/Release" -scheme hullgenerator -arch x86_64 -configuration Release 1> /dev/null'
+      #end
+      #releaseDir = File.join parserDir, 'build/Release/hullgenerator'      
+      #cp releaseDir, binDir
     end
 end
