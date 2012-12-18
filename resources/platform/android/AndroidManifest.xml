@@ -19,7 +19,7 @@
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.pixelballoon.pixelboost"
+    package="@PIXELBOOST_BUILD_IDENTIFIER@"
     android:versionCode="1"
     android:versionName="1.0"
     android:installLocation="auto">

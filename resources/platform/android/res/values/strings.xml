@@ -23,6 +23,6 @@
 
 <resources>
     <!-- Simple strings. -->
-    <string name="PROJECT_NAME">PixelBoost</string>
+    <string name="PROJECT_NAME">@PIXELBOOST_BUILD_TITLE@</string>
 </resources>
 
