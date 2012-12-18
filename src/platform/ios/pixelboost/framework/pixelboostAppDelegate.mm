@@ -16,20 +16,26 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
-    if ([self.window respondsToSelector:@selector(setRootViewController)])
-        self.window.rootViewController = self.viewController;
+    NSString *reqSysVer = @"6.0";
+    NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
+    
+    if ([currSysVer compare:reqSysVer options:NSNumericSearch] !=NSOrderedAscending)
+    {
+        [self.window setRootViewController:self.viewController];
+    }
     else
+    {
         [self.window addSubview:self.viewController.view];
+    }
     
 #ifndef PIXELBOOST_DISABLE_TESTFLIGHT
-    #ifndef PIXELBOOST_DISABLE_DEBUG
+#ifndef PIXELBOOST_DISABLE_DEBUG
     [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
-    #endif
+#endif
     
     [TestFlight takeOff:@""];
 #endif
-            
+    
     return YES;
 }
 
