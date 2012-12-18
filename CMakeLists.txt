@@ -27,14 +27,19 @@ if (PIXELBOOST_BUILD_PLATFORM_OSX)
 		"src/platform/mac/pixelboost/audio/soundManager.h"
 		"src/platform/mac/pixelboost/audio/soundManager.mm"
 		"src/platform/mac/pixelboost/file/fileHelpers.mm"
-		"src/platform/mac/pixelboost/framework/AppDelegate.mm"
-		"src/platform/mac/pixelboost/framework/main.m"
-		"src/platform/mac/pixelboost/framework/MainView.mm"
 		"src/platform/mac/pixelboost/network/gameCenter.h"
 		"src/platform/mac/pixelboost/network/gameCenter.mm"
 		"src/platform/mac/pixelboost/network/networkHelpers.mm"
 		"src/platform/mac/pixelboost/util/localisation/localisation.mm"
 		)
+
+	if (NOT PIXELBOOST_BUILD_CLI)
+		set (PLATFORM_SOURCES ${PLATFORM_SOURCES}
+			"src/platform/mac/pixelboost/framework/AppDelegate.mm"
+			"src/platform/mac/pixelboost/framework/main.m"
+			"src/platform/mac/pixelboost/framework/MainView.mm"
+			)
+	endif (NOT PIXELBOOST_BUILD_CLI)
 endif (PIXELBOOST_BUILD_PLATFORM_OSX)
 
 if (PIXELBOOST_BUILD_PLATFORM_IOS)

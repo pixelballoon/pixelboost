@@ -309,7 +309,7 @@ void GameCenter::FindMatch(int group)
     
     mmvc.matchmakerDelegate = gcDelegate;
     
-    UIViewController* view = (UIViewController*)pb::Engine::Instance()->GetViewController();
+    UIViewController* view = (UIViewController*)pb::Engine::Instance()->GetPlatformContext();
     [view presentModalViewController:mmvc animated:YES];
 }
     

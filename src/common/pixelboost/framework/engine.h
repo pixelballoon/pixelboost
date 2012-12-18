@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <vector>
 
 #include "glm/glm.hpp"
@@ -34,7 +35,7 @@ protected:
 public:
     virtual ~Engine();
     
-    static Engine* Create(void* platformContext);
+    static Engine* Create(void* platformContext, std::vector<std::string> args);
 	
 	static Engine* Instance();
 	
