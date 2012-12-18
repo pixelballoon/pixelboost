@@ -1,5 +1,8 @@
 #import <QuartzCore/QuartzCore.h>
 
+#include <string>
+#include <vector>
+
 #include "pixelboost/framework/engine.h"
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/input/touchManager.h"
@@ -67,7 +70,7 @@
     
     pb::GraphicsDevice::Instance()->SetDisplayDensity(displayDensity);
     
-    app = pb::Engine::Create(self);
+    app = pb::Engine::Create(self, std::vector<std::string>());
     app->Initialise();
 }
 
@@ -140,6 +143,16 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
     return UIInterfaceOrientationIsLandscape(toInterfaceOrientation);
+}
+
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskLandscape;
+}
+
+- (BOOL)shouldAutorotate
+{
+    return YES;
 }
 
 - (void)startAnimation

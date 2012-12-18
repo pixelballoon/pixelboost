@@ -28,6 +28,8 @@ namespace pb
 @property (readonly) pb::Engine* app;
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation;
+- (NSUInteger)supportedInterfaceOrientations;
+- (BOOL)shouldAutorotate;
 
 - (void)startAnimation;
 - (void)stopAnimation;
