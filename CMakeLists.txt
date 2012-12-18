@@ -8,7 +8,7 @@ pixelboost_setup_pre(../../ shadertool "com.pixelballoon.shadertool" "Shadertool
 include_directories("source")
 
 set (GAME_SOURCES
-	"osx/shadertool/main.cpp"
+	"source/main.cpp"
 	)
 
 pixelboost_setup_post()
