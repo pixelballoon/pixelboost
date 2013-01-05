@@ -19,6 +19,7 @@ namespace pb
         void Set(glm::vec3 position, float size);
         
         void Expand(glm::vec3 point);
+        void Expand(const BoundingSphere& sphere);
         
         bool Contains(glm::vec3 point) const;
         bool Intersects(const BoundingSphere& sphere) const;
