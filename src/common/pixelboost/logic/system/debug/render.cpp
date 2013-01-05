@@ -1,4 +1,7 @@
+#include "glm/gtc/matrix_transform.hpp"
+
 #include "pixelboost/graphics/renderer/common/renderer.h"
+#include "pixelboost/graphics/renderer/font/fontRenderer.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 #include "pixelboost/logic/message/debug/render.h"
 #include "pixelboost/logic/system/debug/render.h"
@@ -95,6 +98,26 @@ PrimitiveRenderableLine* DebugRenderSystem::AddLine(RenderPass renderPass, int l
     AddItem(line, time);
     
     return line;
+}
+
+FontRenderable* DebugRenderSystem::AddText(RenderPass renderPass, int layer, FontAlign alignment, const std::string font, const std::string text, glm::vec3 position, glm::vec3 rotation, float size, float time)
+{
+    FontRenderable* renderable = new pb::FontRenderable(0);
+    renderable->SetRenderPass(renderPass);
+    renderable->SetLayer(layer);
+    renderable->SetSize(size);
+    glm::mat4x4 transform;
+    transform = glm::translate(transform, position);
+    transform = glm::rotate(transform, rotation.x, glm::vec3(1,0,0));
+    transform = glm::rotate(transform, rotation.y, glm::vec3(0,1,0));
+    transform = glm::rotate(transform, rotation.z, glm::vec3(0,0,1));
+    renderable->SetTransform(transform);
+    renderable->SetText(text);
+    renderable->SetFont(font);
+    renderable->SetAlignment(alignment);
+    AddItem(renderable, time);
+    
+    return renderable;
 }
 
 void DebugRenderSystem::AddItem(Renderable* renderable, float time)
