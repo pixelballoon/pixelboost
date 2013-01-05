@@ -228,7 +228,7 @@ PrimitiveRenderer::PrimitiveRenderer()
 {
     {
         _BoxIndexBuffer = GraphicsDevice::Instance()->CreateIndexBuffer(kBufferFormatStatic, 6);
-        _BoxVertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatStatic, kVertexFormat_P_XYZ, 4);
+        _BoxVertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatStatic, kVertexFormat_P3, 4);
         
         _BoxIndexBuffer->Lock();
         unsigned short* indicies = _BoxIndexBuffer->GetData();
@@ -241,7 +241,7 @@ PrimitiveRenderer::PrimitiveRenderer()
         _BoxIndexBuffer->Unlock();
         
         _BoxVertexBuffer->Lock();
-        Vertex_PXYZ* vertices = static_cast<Vertex_PXYZ*>(_BoxVertexBuffer->GetData());
+        Vertex_P3* vertices = static_cast<Vertex_P3*>(_BoxVertexBuffer->GetData());
         vertices[0].position[0] = -0.5;
         vertices[0].position[1] = -0.5;
         vertices[0].position[2] = 0;
@@ -259,12 +259,12 @@ PrimitiveRenderer::PrimitiveRenderer()
      
     {
         _EllipseIndexBuffer = GraphicsDevice::Instance()->CreateIndexBuffer(kBufferFormatStatic, 32);
-        _EllipseVertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatStatic, kVertexFormat_P_XYZ, 32);
+        _EllipseVertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatStatic, kVertexFormat_P3, 32);
         
         _EllipseIndexBuffer->Lock();
         _EllipseVertexBuffer->Lock();
         unsigned short* indices = _EllipseIndexBuffer->GetData();
-        Vertex_PXYZ* vertices = static_cast<Vertex_PXYZ*>(_EllipseVertexBuffer->GetData());
+        Vertex_P3* vertices = static_cast<Vertex_P3*>(_EllipseVertexBuffer->GetData());
         
         float angle = 0.f;
         float step = M_PI * 2.f / 32.f;
@@ -283,7 +283,7 @@ PrimitiveRenderer::PrimitiveRenderer()
     
     {
         _LineIndexBuffer = GraphicsDevice::Instance()->CreateIndexBuffer(kBufferFormatStatic, 2);
-        _LineVertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatStatic, kVertexFormat_P_XYZ, 2);
+        _LineVertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatStatic, kVertexFormat_P3, 2);
         
         _LineIndexBuffer->Lock();
         unsigned short* indexBuffer = _LineIndexBuffer->GetData();
@@ -359,7 +359,7 @@ void PrimitiveRenderer::Render(int count, Renderable** renderables, Viewport* vi
                 
                 _LineVertexBuffer->Lock();
                 
-                Vertex_PXYZ* vertices = static_cast<Vertex_PXYZ*>(_LineVertexBuffer->GetData());
+                Vertex_P3* vertices = static_cast<Vertex_P3*>(_LineVertexBuffer->GetData());
                 
                 vertices[0].position[0] = line._Start[0];
                 vertices[0].position[1] = line._Start[1];

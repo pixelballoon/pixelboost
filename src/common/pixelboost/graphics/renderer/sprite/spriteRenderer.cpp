@@ -104,7 +104,7 @@ SpriteRenderer::SpriteRenderer()
 {
     _MaxBatchSize = 100;
     _IndexBuffer = pb::GraphicsDevice::Instance()->CreateIndexBuffer(pb::kBufferFormatStatic, _MaxBatchSize * 6);
-    _VertexBuffer = pb::GraphicsDevice::Instance()->CreateVertexBuffer(pb::kBufferFormatDynamic, pb::kVertexFormat_P_XYZ_RGBA_UV, _MaxBatchSize * 4);
+    _VertexBuffer = pb::GraphicsDevice::Instance()->CreateVertexBuffer(pb::kBufferFormatDynamic, pb::kVertexFormat_P3_C4_UV, _MaxBatchSize * 4);
     
     _IndexBuffer->Lock();
     unsigned short* indicies = _IndexBuffer->GetData();
@@ -141,7 +141,7 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
     
     GraphicsDevice::Instance()->BindIndexBuffer(_IndexBuffer);
     
-    Vertex_PXYZ_RGBA_UV* bufferData = 0;
+    Vertex_P3_C4_UV* bufferData = 0;
     
     Texture* texture = 0;
     
@@ -184,7 +184,7 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
         
         glm::vec4 crop = renderable._Crop;
         
-        bufferData = static_cast<Vertex_PXYZ_RGBA_UV*>(_VertexBuffer->GetData()) + (_BatchSize * 4);
+        bufferData = static_cast<Vertex_P3_C4_UV*>(_VertexBuffer->GetData()) + (_BatchSize * 4);
         
         if (!sprite->_Rotated)
         {

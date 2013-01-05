@@ -18,6 +18,7 @@ namespace pb
     
     class IndexBuffer;
     class ModelDefinition;
+    class ModelObject;
     
     class ModelRenderable : public Renderable
     {
@@ -54,15 +55,13 @@ namespace pb
         friend class ModelRenderer;
     };
     
-    class Model
+    class ModelMesh
     {
-    private:
-        Model();
-        virtual ~Model();
+    public:
+        ModelMesh(const std::string& filename, ModelObject* object);
+        virtual ~ModelMesh();
         
     public:
-        bool Load(FileLocation location, const std::string& modelName);
-        
         unsigned short GetNumVertices();
         
         const BoundingSphere& GetBounds();
@@ -77,11 +76,39 @@ namespace pb
         IndexBuffer* _IndexBuffer;
         VertexBuffer* _VertexBuffer;
         
+        ModelObject* _ModelObject;
+        
+        friend class ModelRenderer;
+    };
+    
+    class Model
+    {
+    private:
+        Model();
+        virtual ~Model();
+        
+        bool Load(FileLocation location, const std::string& modelName);
+        
+    public:
+        const BoundingSphere& GetBounds();
+        
+        ModelDefinition* GetDefinition();
+        
+        const std::vector<ModelMesh*>& GetMeshes();
+        
+    public:
+        unsigned long _RefCount;
+        
+    private:
+        BoundingSphere _Bounds;
+        
+        std::vector<ModelMesh*> _Meshes;
+        
         ModelDefinition* _ModelDefinition;
         
         friend class ModelRenderer;
     };
-
+    
     class ModelRenderer : public IRenderer
     {
     public:

@@ -17,7 +17,7 @@ namespace pb
     class IndexBuffer;
     class RenderLayer;
     class VertexBuffer;
-    struct Vertex_PXYZ_UV;
+    struct Vertex_P3_UV;
     
     class GwenRenderable : public pb::Renderable
     {
@@ -74,7 +74,7 @@ namespace pb
         VertexBuffer* _VertexBuffer;
         IndexBuffer* _FontIndexBuffer;
         VertexBuffer* _FontVertexBuffer;
-        Vertex_PXYZ_UV* _VertexData;
+        Vertex_P3_UV* _VertexData;
         int _VertexCount;
         
         int _MaxQuads;

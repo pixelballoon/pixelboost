@@ -17,49 +17,56 @@ VertexBuffer::VertexBuffer(GraphicsDevice* device, BufferFormat bufferFormat, Ve
     
     switch (_VertexFormat)
     {
-        case kVertexFormat_P_XY_RGBA:
-            _Data = new Vertex_PXY_RGBA[length];
+        case kVertexFormat_P2_C4:
+            _Data = new Vertex_P2_C4[length];
             break;
-        case kVertexFormat_P_XYZ:
-            _Data = new Vertex_PXYZ[length];
+        case kVertexFormat_P3:
+            _Data = new Vertex_P3[length];
             break;
-        case kVertexFormat_P_XYZ_UV:
-            _Data = new Vertex_PXYZ_UV[length];
+        case kVertexFormat_P3_UV:
+            _Data = new Vertex_P3_UV[length];
             break;
-        case kVertexFormat_P_XYZ_RGBA:
-            _Data = new Vertex_PXYZ_RGBA[length];
+        case kVertexFormat_P3_C4:
+            _Data = new Vertex_P3_C4[length];
             break;
-        case kVertexFormat_P_XYZ_RGBA_UV:
-            _Data = new Vertex_PXYZ_RGBA_UV[length];
+        case kVertexFormat_P3_C4_UV:
+            _Data = new Vertex_P3_C4_UV[length];
             break;
-        case kVertexFormat_NP_XYZ_UV:
-            _Data = new Vertex_NPXYZ_UV[length];
+        case kVertexFormat_P3_N3_UV:
+            _Data = new Vertex_P3_N3_UV[length];
+            break;
+        case kVertexFormat_P3_N3_UV_BW:
+            _Data = new Vertex_P3_N3_UV_BW[length];
             break;
     }
 }
-    
+
 VertexBuffer::~VertexBuffer()
 {
     switch (_VertexFormat)
     {
-        case kVertexFormat_P_XY_RGBA:
-            delete[] static_cast<Vertex_PXY_RGBA*>(_Data);
+        case kVertexFormat_P2_C4:
+            delete[] static_cast<Vertex_P2_C4*>(_Data);
             break;
-        case kVertexFormat_P_XYZ:
-            delete[] static_cast<Vertex_PXYZ*>(_Data);
+        case kVertexFormat_P3:
+            delete[] static_cast<Vertex_P3*>(_Data);
             break;
-        case kVertexFormat_P_XYZ_UV:
-            delete[] static_cast<Vertex_PXYZ_UV*>(_Data);
+        case kVertexFormat_P3_UV:
+            delete[] static_cast<Vertex_P3_UV*>(_Data);
             break;
-        case kVertexFormat_P_XYZ_RGBA:
-            delete[] static_cast<Vertex_PXYZ_RGBA*>(_Data);
+        case kVertexFormat_P3_C4:
+            delete[] static_cast<Vertex_P3_C4*>(_Data);
             break;
-        case kVertexFormat_P_XYZ_RGBA_UV:
-            delete[] static_cast<Vertex_PXYZ_RGBA_UV*>(_Data);
+        case kVertexFormat_P3_C4_UV:
+            delete[] static_cast<Vertex_P3_C4_UV*>(_Data);
             break;
-        case kVertexFormat_NP_XYZ_UV:
-            delete[] static_cast<Vertex_NPXYZ_UV*>(_Data);
+        case kVertexFormat_P3_N3_UV:
+            delete[] static_cast<Vertex_P3_N3_UV*>(_Data);
             break;
+        case kVertexFormat_P3_N3_UV_BW:
+            delete[] static_cast<Vertex_P3_N3_UV_BW*>(_Data);
+            break;
+
     }
 }
 

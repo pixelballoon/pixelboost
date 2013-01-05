@@ -77,60 +77,72 @@ void DeviceState::UpdateVertexBuffer(DeviceState& state)
             
             switch (vertexBuffer->GetVertexFormat())
             {
-                case kVertexFormat_P_XY_RGBA:
+                case kVertexFormat_P2_C4:
                 {
-                    GLsizei stride = sizeof(Vertex_PXY_RGBA);
+                    GLsizei stride = sizeof(Vertex_P2_C4);
                     desiredShaderAttribute[kShaderAttributeVertexPosition] = true;
                     desiredShaderAttribute[kShaderAttributeVertexColor0] = true;
-                    glVertexAttribPointer(kShaderAttributeVertexPosition, 2, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXY_RGBA, position));
-                    glVertexAttribPointer(kShaderAttributeVertexColor0, 4, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXY_RGBA, color));
+                    glVertexAttribPointer(kShaderAttributeVertexPosition, 2, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_P2_C4, position));
+                    glVertexAttribPointer(kShaderAttributeVertexColor0, 4, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_P2_C4, color));
                     break;
                 }
-                case kVertexFormat_P_XYZ:
+                case kVertexFormat_P3:
                 {
-                    GLsizei stride = sizeof(Vertex_PXYZ);
+                    GLsizei stride = sizeof(Vertex_P3);
                     desiredShaderAttribute[kShaderAttributeVertexPosition] = true;
-                    glVertexAttribPointer(kShaderAttributeVertexPosition, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXYZ, position));
+                    glVertexAttribPointer(kShaderAttributeVertexPosition, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_P3, position));
                     break;
                 }
-                case kVertexFormat_P_XYZ_UV:
+                case kVertexFormat_P3_UV:
                 {
-                    GLsizei stride = sizeof(Vertex_PXYZ_UV);
+                    GLsizei stride = sizeof(Vertex_P3_UV);
                     desiredShaderAttribute[kShaderAttributeVertexPosition] = true;
                     desiredShaderAttribute[kShaderAttributeVertexTexture0] = true;
-                    glVertexAttribPointer(kShaderAttributeVertexPosition, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXYZ_UV, position));
-                    glVertexAttribPointer(kShaderAttributeVertexTexture0, 2, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXYZ_UV, uv));
+                    glVertexAttribPointer(kShaderAttributeVertexPosition, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_P3_UV, position));
+                    glVertexAttribPointer(kShaderAttributeVertexTexture0, 2, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_P3_UV, uv));
                     break;
                 }
-                case kVertexFormat_P_XYZ_RGBA:
+                case kVertexFormat_P3_C4:
                 {
-                    GLsizei stride = sizeof(Vertex_PXYZ_RGBA);
+                    GLsizei stride = sizeof(Vertex_P3_C4);
                     desiredShaderAttribute[kShaderAttributeVertexPosition] = true;
                     desiredShaderAttribute[kShaderAttributeVertexColor0] = true;
-                    glVertexAttribPointer(kShaderAttributeVertexPosition, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXYZ_RGBA, position));
-                    glVertexAttribPointer(kShaderAttributeVertexColor0, 4, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXYZ_RGBA, color));
+                    glVertexAttribPointer(kShaderAttributeVertexPosition, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_P3_C4, position));
+                    glVertexAttribPointer(kShaderAttributeVertexColor0, 4, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_P3_C4, color));
                     break;
                 }
-                case kVertexFormat_P_XYZ_RGBA_UV:
+                case kVertexFormat_P3_C4_UV:
                 {
-                    GLsizei stride = sizeof(Vertex_PXYZ_RGBA_UV);
+                    GLsizei stride = sizeof(Vertex_P3_C4_UV);
                     desiredShaderAttribute[kShaderAttributeVertexPosition] = true;
                     desiredShaderAttribute[kShaderAttributeVertexColor0] = true;
                     desiredShaderAttribute[kShaderAttributeVertexTexture0] = true;
-                    glVertexAttribPointer(kShaderAttributeVertexPosition, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXYZ_RGBA_UV, position));
-                    glVertexAttribPointer(kShaderAttributeVertexColor0, 4, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXYZ_RGBA_UV, color));
-                    glVertexAttribPointer(kShaderAttributeVertexTexture0, 2, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_PXYZ_RGBA_UV, uv));
+                    glVertexAttribPointer(kShaderAttributeVertexPosition, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_P3_C4_UV, position));
+                    glVertexAttribPointer(kShaderAttributeVertexColor0, 4, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_P3_C4_UV, color));
+                    glVertexAttribPointer(kShaderAttributeVertexTexture0, 2, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_P3_C4_UV, uv));
                     break;
                 }
-                case kVertexFormat_NP_XYZ_UV:
+                case kVertexFormat_P3_N3_UV:
                 {
-                    GLsizei stride = sizeof(Vertex_NPXYZ_UV);
+                    GLsizei stride = sizeof(Vertex_P3_N3_UV);
                     desiredShaderAttribute[kShaderAttributeVertexPosition] = true;
                     desiredShaderAttribute[kShaderAttributeVertexNormal] = true;
                     desiredShaderAttribute[kShaderAttributeVertexTexture0] = true;
-                    glVertexAttribPointer(kShaderAttributeVertexPosition, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_NPXYZ_UV, position));
-                    glVertexAttribPointer(kShaderAttributeVertexNormal, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_NPXYZ_UV, normal));
-                    glVertexAttribPointer(kShaderAttributeVertexTexture0, 2, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_NPXYZ_UV, uv));
+                    glVertexAttribPointer(kShaderAttributeVertexPosition, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_P3_N3_UV, position));
+                    glVertexAttribPointer(kShaderAttributeVertexNormal, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_P3_N3_UV, normal));
+                    glVertexAttribPointer(kShaderAttributeVertexTexture0, 2, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_P3_N3_UV, uv));
+                    break;
+                }
+                case kVertexFormat_P3_N3_UV_BW:
+                {
+                    GLsizei stride = sizeof(Vertex_P3_N3_UV_BW);
+                    desiredShaderAttribute[kShaderAttributeVertexPosition] = true;
+                    desiredShaderAttribute[kShaderAttributeVertexNormal] = true;
+                    desiredShaderAttribute[kShaderAttributeVertexTexture0] = true;
+                    desiredShaderAttribute[kShaderAttributeVertexWeight] = true;
+                    glVertexAttribPointer(kShaderAttributeVertexPosition, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_P3_N3_UV_BW, position));
+                    glVertexAttribPointer(kShaderAttributeVertexNormal, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_P3_N3_UV_BW, normal));
+                    glVertexAttribPointer(kShaderAttributeVertexTexture0, 2, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_P3_N3_UV_BW, uv));
                     break;
                 }
             }
@@ -296,34 +308,34 @@ void GraphicsDeviceGL::UnlockVertexBuffer(VertexBuffer* vertexBuffer, int numEle
     
     switch (vertexBuffer->GetVertexFormat())
     {
-        case kVertexFormat_P_XY_RGBA:
+        case kVertexFormat_P2_C4:
         {
-            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_PXY_RGBA) * numElements, vertexBuffer->GetData(), bufferType);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_P2_C4) * numElements, vertexBuffer->GetData(), bufferType);
             break;
         }
-        case kVertexFormat_P_XYZ:
+        case kVertexFormat_P3:
         {
-            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_PXYZ) * numElements, vertexBuffer->GetData(), bufferType);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_P3) * numElements, vertexBuffer->GetData(), bufferType);
             break;
         }
-        case kVertexFormat_P_XYZ_UV:
+        case kVertexFormat_P3_UV:
         {
-            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_PXYZ_UV) * numElements, vertexBuffer->GetData(), bufferType);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_P3_UV) * numElements, vertexBuffer->GetData(), bufferType);
             break;
         }
-        case kVertexFormat_P_XYZ_RGBA:
+        case kVertexFormat_P3_C4:
         {
-            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_PXYZ_RGBA) * numElements, vertexBuffer->GetData(), bufferType);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_P3_C4) * numElements, vertexBuffer->GetData(), bufferType);
             break;
         }
-        case kVertexFormat_P_XYZ_RGBA_UV:
+        case kVertexFormat_P3_C4_UV:
         {
-            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_PXYZ_RGBA_UV) * numElements, vertexBuffer->GetData(), bufferType);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_P3_C4_UV) * numElements, vertexBuffer->GetData(), bufferType);
             break;
         }
-        case kVertexFormat_NP_XYZ_UV:
+        case kVertexFormat_P3_N3_UV:
         {
-            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_NPXYZ_UV) * numElements, vertexBuffer->GetData(), bufferType);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_P3_N3_UV) * numElements, vertexBuffer->GetData(), bufferType);
             break;
         }
     }

@@ -16,7 +16,7 @@ namespace pb
     class IndexBuffer;
     class Texture;
     class VertexBuffer;
-    struct Vertex_PXYZ_UV;
+    struct Vertex_P3_UV;
     
     enum FontAlign
     {
@@ -97,7 +97,7 @@ namespace pb
         glm::vec2 FillVertexBuffer(VertexBuffer* vertexBuffer, const std::string& string);
         
     private:
-        void AddCharacter(Vertex_PXYZ_UV* buffer, const Font::Character& character, glm::vec2 offset, float baseline);
+        void AddCharacter(Vertex_P3_UV* buffer, const Font::Character& character, glm::vec2 offset, float baseline);
     };
     
     class FontRenderer : public IRenderer

@@ -137,7 +137,7 @@ ParticleEmitter::ParticleEmitter(int maxParticles)
     , _SpawnedParticles(0)
 {
     _IndexBuffer = pb::GraphicsDevice::Instance()->CreateIndexBuffer(pb::kBufferFormatStatic, _MaxParticles*6);
-    _VertexBuffer = pb::GraphicsDevice::Instance()->CreateVertexBuffer(pb::kBufferFormatDynamic, pb::kVertexFormat_P_XYZ_RGBA_UV, _MaxParticles*4);
+    _VertexBuffer = pb::GraphicsDevice::Instance()->CreateVertexBuffer(pb::kBufferFormatDynamic, pb::kVertexFormat_P3_C4_UV, _MaxParticles*4);
     
     _IndexBuffer->Lock();
     unsigned short* indexBuffer = _IndexBuffer->GetData();
@@ -234,7 +234,7 @@ void ParticleEmitter::Render(Viewport* viewport, ShaderPass* shaderPass)
     
     _VertexBuffer->Lock();
     
-    pb::Vertex_PXYZ_RGBA_UV* vertexBuffer = static_cast<pb::Vertex_PXYZ_RGBA_UV*>(_VertexBuffer->GetData());
+    pb::Vertex_P3_C4_UV* vertexBuffer = static_cast<pb::Vertex_P3_C4_UV*>(_VertexBuffer->GetData());
     
     if (vertexBuffer)
     {

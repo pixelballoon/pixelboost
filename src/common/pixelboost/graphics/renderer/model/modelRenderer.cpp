@@ -117,55 +117,24 @@ const glm::mat4x4& ModelRenderable::GetTransform()
     return _Transform;
 }
 
-Model::Model()
+ModelMesh::ModelMesh(const std::string& fileName, ModelObject* object)
     : _IndexBuffer(0)
-    , _ModelDefinition(0)
-    , _RefCount(1)
+    , _ModelObject(object)
     , _VertexBuffer(0)
 {
-    
-}
-
-Model::~Model()
-{
-    GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
-    GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
-    delete _ModelDefinition;
-}
-    
-bool Model::Load(FileLocation location, const std::string& fileName)
-{
-    std::string objFilename = fileName;
-    
-    _ModelDefinition = new ModelDefinition();
-    if (!_ModelDefinition->Open(location, fileName))
-        return false;
-    
-    if (_ModelDefinition->Objects.size() > 1)
-    {
-        PbLogError("pb.assets", "Only one object per model definition is currently supported (%s)", fileName.c_str());
-        return false;
-    }
-    
-    if (_ModelDefinition->Objects.size() == 0)
-    {
-        PbLogWarn("pb.assets", "Model (%s) is empty", fileName.c_str());
-        return true;
-    }
-    
-    if (_ModelDefinition->Objects[0].Indexed == true)
+    if (object->Indexed == true)
     {
         PbLogError("pb.assets", "Only non index models are currently supported (%s)", fileName.c_str());
-        return false;
+        return;
     }
     
-    _Bounds = _ModelDefinition->Objects[0].Bounds;
-    _NumVertices = _ModelDefinition->Objects[0].Vertices.size();
+    _Bounds = object->Bounds;
+    _NumVertices = object->Vertices.size();
     
-    _VertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatStatic, kVertexFormat_NP_XYZ_UV, _NumVertices);
+    _VertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatStatic, kVertexFormat_P3_N3_UV, _NumVertices);
     _VertexBuffer->Lock();
-    Vertex_NPXYZ_UV* vertexBuffer = static_cast<Vertex_NPXYZ_UV*>(_VertexBuffer->GetData());
-    for (std::vector<ModelVertex>::iterator it = _ModelDefinition->Objects[0].Vertices.begin(); it != _ModelDefinition->Objects[0].Vertices.end(); ++it)
+    Vertex_P3_N3_UV* vertexBuffer = static_cast<Vertex_P3_N3_UV*>(_VertexBuffer->GetData());
+    for (std::vector<ModelVertex>::iterator it = object->Vertices.begin(); it != object->Vertices.end(); ++it)
     {
         vertexBuffer->position[0] = it->Position.x;
         vertexBuffer->position[1] = it->Position.y;
@@ -188,18 +157,84 @@ bool Model::Load(FileLocation location, const std::string& fileName)
         indexBuffer++;
     }
     _IndexBuffer->Unlock();
-    
-    return true;
 }
 
-unsigned short Model::GetNumVertices()
+ModelMesh::~ModelMesh()
+{
+    GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
+    GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
+}
+
+unsigned short ModelMesh::GetNumVertices()
 {
     return _NumVertices;
 }
 
-const BoundingSphere& Model::GetBounds()
+const BoundingSphere& ModelMesh::GetBounds()
 {
     return _Bounds;
+}
+
+Model::Model()
+    : _ModelDefinition(0)
+    , _RefCount(1)
+{
+    
+}
+
+Model::~Model()
+{
+    for (std::vector<ModelMesh*>::iterator it = _Meshes.begin(); it != _Meshes.end(); ++it)
+    {
+        delete *it;
+    }
+    
+    delete _ModelDefinition;
+}
+    
+bool Model::Load(FileLocation location, const std::string& fileName)
+{
+    std::string objFilename = fileName;
+    
+    _ModelDefinition = new ModelDefinition();
+    if (!_ModelDefinition->Open(location, fileName))
+        return false;
+       
+    if (_ModelDefinition->Objects.size() == 0)
+    {
+        PbLogWarn("pb.assets", "Model (%s) is empty", fileName.c_str());
+        return true;
+    }
+    
+    for (std::vector<ModelObject>::iterator it = _ModelDefinition->Objects.begin(); it != _ModelDefinition->Objects.end(); ++it)
+    {
+        _Meshes.push_back(new ModelMesh(fileName, &(*it)));
+    }
+    
+    return true;
+}
+
+const BoundingSphere& Model::GetBounds()
+{
+    if (!_Bounds.IsValid())
+    {
+        for (std::vector<ModelMesh*>::iterator it = _Meshes.begin(); it != _Meshes.end(); ++it)
+        {
+            _Bounds.Expand((*it)->GetBounds());
+        }
+    }
+    
+    return _Bounds;
+}
+
+ModelDefinition* Model::GetDefinition()
+{
+    return _ModelDefinition;
+}
+
+const std::vector<ModelMesh*>& Model::GetMeshes()
+{
+    return _Meshes;
 }
 
 ModelRenderer::ModelRenderer()
@@ -237,18 +272,21 @@ void ModelRenderer::Render(int count, Renderable** renderables, Viewport* viewpo
         Model* model = GetModel(renderable._Model);
         Texture* texture = GetTexture(renderable._Texture);
         
-        if (!model || !texture || !model->_IndexBuffer || !model->_VertexBuffer)
+        if (!model || !texture || !model->GetMeshes().size())
             continue;
         
         shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", renderable.GetMVP());
         shaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", renderable._Tint);
         shaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
         
-        GraphicsDevice::Instance()->BindIndexBuffer(model->_IndexBuffer);
-        GraphicsDevice::Instance()->BindVertexBuffer(model->_VertexBuffer);
-        GraphicsDevice::Instance()->BindTexture(texture);
-        
-        GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, model->GetNumVertices());
+        for (std::vector<ModelMesh*>::const_iterator it = model->GetMeshes().begin(); it != model->GetMeshes().end(); ++it)
+        {
+            GraphicsDevice::Instance()->BindIndexBuffer((*it)->_IndexBuffer);
+            GraphicsDevice::Instance()->BindVertexBuffer((*it)->_VertexBuffer);
+            GraphicsDevice::Instance()->BindTexture(texture);
+            
+            GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, (*it)->GetNumVertices());
+        }
     }
     
     GraphicsDevice::Instance()->BindIndexBuffer(0);

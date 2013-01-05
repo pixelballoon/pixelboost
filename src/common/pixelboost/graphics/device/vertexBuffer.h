@@ -7,32 +7,32 @@ namespace pb
     
 class GraphicsDevice;
 
-struct Vertex_PXY_RGBA
+struct Vertex_P2_C4
 {
     float position[2];
     float color[4];
 };
 
-struct Vertex_PXYZ
+struct Vertex_P3
 {
     float position[3];
     float __padding;
 };
     
-struct Vertex_PXYZ_UV
+struct Vertex_P3_UV
 {
     float position[3];
     float uv[2];
     float __padding[3]; // for 32-byte alignment
 };
 
-struct Vertex_PXYZ_RGBA
+struct Vertex_P3_C4
 {
     float position[3];
     float color[4];
 };
     
-struct Vertex_PXYZ_RGBA_UV
+struct Vertex_P3_C4_UV
 {
     float position[3];
     float uv[2];
@@ -40,11 +40,20 @@ struct Vertex_PXYZ_RGBA_UV
     float __padding[2]; // for 48-byte alignment
 };
 
-struct Vertex_NPXYZ_UV
+struct Vertex_P3_N3_UV
 {
     float position[3];
     float normal[3];
     float uv[2];
+};
+    
+struct Vertex_P3_N3_UV_BW
+{
+    float position[3];
+    float normal[3];
+    float uv[2];
+    char bones[4];
+    float boneWeights[4];
 };
 
 class VertexBuffer

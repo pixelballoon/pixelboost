@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "glm/gtc/quaternion.hpp"
 #include "glm/glm.hpp"
 
 #include "pixelboost/file/fileSystem.h"
@@ -20,6 +21,9 @@ namespace pb
         bool Write(pb::VertexFormat vertexFormat, pb::File* file) const;
         
     public:
+        char Bone[4];
+        glm::vec4 BoneWeights;
+        
         glm::vec3 Position;
         glm::vec3 Normal;
         glm::vec4 Color;
@@ -37,12 +41,50 @@ namespace pb
         void CalculateBounds();
         
     public:
+        bool Skinned;
         bool Indexed;
         pb::BoundingSphere Bounds;
         pb::VertexFormat VertexFormat;
         
         std::vector<short> Indices;
         std::vector<ModelVertex> Vertices;
+    };
+    
+    class ModelBone
+    {
+    public:
+        ModelBone();
+        
+        bool Read(pb::File* file);
+        bool Write(pb::File* file) const;
+    
+    public:
+        std::string _Name;
+        
+        int _Id;
+        int _ParentId;
+        glm::vec3 _Position;
+        glm::quat _Rotation;
+    
+        glm::mat4x4 _BindMatrix;
+    };
+
+    class ModelAnimation
+    {
+    public:
+        ModelAnimation();
+        
+        bool Read(pb::File* file);
+        bool Write(pb::File* file) const;
+
+    public:
+        typedef std::vector<glm::mat4x4> AnimationFrame;
+        
+        std::string _Name;
+        int _FPS;
+        float _Length;
+        
+        std::vector<AnimationFrame> _Frames;
     };
 
     class ModelDefinition
@@ -57,6 +99,8 @@ namespace pb
         
     public:
         std::vector<ModelObject> Objects;
+        std::vector<ModelBone> Bones;
+        std::vector<ModelAnimation> Animations;
         
     private:
         short _Version;

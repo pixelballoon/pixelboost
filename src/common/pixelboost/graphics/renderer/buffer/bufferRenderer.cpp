@@ -124,8 +124,6 @@ void BufferRenderer::Render(int count, Renderable** renderables, Viewport* viewp
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
     
-    Vertex_PXYZ_RGBA_UV* bufferData = 0;
-    
     shaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
     
     for (int i=0; i<count; i++)

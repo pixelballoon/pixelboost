@@ -74,9 +74,9 @@ GwenRenderer::GwenRenderer()
     _MaxQuads = 100;
     
     _IndexBuffer = pb::GraphicsDevice::Instance()->CreateIndexBuffer(pb::kBufferFormatStatic, 6*_MaxQuads);
-    _VertexBuffer = pb::GraphicsDevice::Instance()->CreateVertexBuffer(pb::kBufferFormatDynamic, pb::kVertexFormat_P_XYZ_UV, 4*_MaxQuads);
+    _VertexBuffer = pb::GraphicsDevice::Instance()->CreateVertexBuffer(pb::kBufferFormatDynamic, pb::kVertexFormat_P3_UV, 4*_MaxQuads);
     _VertexBuffer->Lock();
-    Vertex_PXYZ_UV* vertices = static_cast<Vertex_PXYZ_UV*>(_VertexBuffer->GetData());
+    Vertex_P3_UV* vertices = static_cast<Vertex_P3_UV*>(_VertexBuffer->GetData());
     for (int i=0; i<4*_MaxQuads; i++)
     {
         vertices[i].position[2] = 0;
@@ -99,7 +99,7 @@ GwenRenderer::GwenRenderer()
     _IndexBuffer->Unlock();
     
     _FontIndexBuffer = pb::GraphicsDevice::Instance()->CreateIndexBuffer(pb::kBufferFormatStatic, 6*_MaxQuads);
-    _FontVertexBuffer = pb::GraphicsDevice::Instance()->CreateVertexBuffer(pb::kBufferFormatDynamic, pb::kVertexFormat_P_XYZ_UV, 4*_MaxQuads);
+    _FontVertexBuffer = pb::GraphicsDevice::Instance()->CreateVertexBuffer(pb::kBufferFormatDynamic, pb::kVertexFormat_P3_UV, 4*_MaxQuads);
     
     _FontIndexBuffer->Lock();
     indicies = _FontIndexBuffer->GetData();
@@ -158,7 +158,7 @@ void GwenRenderer::Begin()
 {
     _VertexCount = 0;
     _VertexBuffer->Lock();
-    _VertexData = static_cast<Vertex_PXYZ_UV*>(_VertexBuffer->GetData());
+    _VertexData = static_cast<Vertex_P3_UV*>(_VertexBuffer->GetData());
 }
 
 void GwenRenderer::End()
@@ -391,7 +391,7 @@ void GwenRenderer::PurgeBuffer(bool force)
     GraphicsDevice::Instance()->BindVertexBuffer(0);
     
     _VertexBuffer->Lock();
-    _VertexData = static_cast<Vertex_PXYZ_UV*>(_VertexBuffer->GetData());
+    _VertexData = static_cast<Vertex_P3_UV*>(_VertexBuffer->GetData());
 }
 
 #endif

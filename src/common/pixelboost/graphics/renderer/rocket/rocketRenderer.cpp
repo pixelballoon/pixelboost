@@ -69,9 +69,9 @@ RocketRenderer::RocketRenderer()
     _MaxQuads = 1000;
     
     _IndexBuffer = GraphicsDevice::Instance()->CreateIndexBuffer(kBufferFormatDynamic, 6*_MaxQuads);
-    _VertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatDynamic, kVertexFormat_P_XYZ_RGBA_UV, 4*_MaxQuads);
+    _VertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatDynamic, kVertexFormat_P3_C4_UV, 4*_MaxQuads);
     _VertexBuffer->Lock();
-    Vertex_PXYZ_RGBA_UV* vertices = static_cast<Vertex_PXYZ_RGBA_UV*>(_VertexBuffer->GetData());
+    Vertex_P3_C4_UV* vertices = static_cast<Vertex_P3_C4_UV*>(_VertexBuffer->GetData());
     for (int i=0; i<4*_MaxQuads; i++)
     {
         vertices[i].position[2] = 0;
@@ -122,7 +122,7 @@ void RocketRenderer::RenderGeometry(Rocket::Core::Vertex* vertices, int numVerti
     }
     
     _VertexBuffer->Lock();
-    Vertex_PXYZ_RGBA_UV* vertexData = static_cast<Vertex_PXYZ_RGBA_UV*>(_VertexBuffer->GetData());
+    Vertex_P3_C4_UV* vertexData = static_cast<Vertex_P3_C4_UV*>(_VertexBuffer->GetData());
     
     for (int i=0; i<numVertices; i++)
     {
@@ -166,10 +166,10 @@ void RocketRenderer::RenderGeometry(Rocket::Core::Vertex* vertices, int numVerti
 
 Rocket::Core::CompiledGeometryHandle RocketRenderer::CompileGeometry(Rocket::Core::Vertex* vertices, int numVertices, int* indices, int numIndices, Rocket::Core::TextureHandle texture)
 {
-    VertexBuffer* vertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatStatic, kVertexFormat_P_XYZ_RGBA_UV, numIndices);
+    VertexBuffer* vertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatStatic, kVertexFormat_P3_C4_UV, numIndices);
     
     vertexBuffer->Lock();
-    Vertex_PXYZ_RGBA_UV* vertexData = static_cast<Vertex_PXYZ_RGBA_UV*>(vertexBuffer->GetData());
+    Vertex_P3_C4_UV* vertexData = static_cast<Vertex_P3_C4_UV*>(vertexBuffer->GetData());
     
     for (int i=0; i<numVertices; i++)
     {
