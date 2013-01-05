@@ -50,6 +50,7 @@ public:
     virtual bool ReadAll(std::string& data);
     
     virtual bool Read(unsigned char* data, int length);
+    virtual bool Read(char& data);
     virtual bool Read(float& data);
     virtual bool Read(short& data);
     virtual bool Read(int& data);
@@ -58,6 +59,7 @@ public:
     virtual bool Write(const std::vector<unsigned char>& data);
     virtual bool Write(const unsigned char* data, int length);
     virtual bool Write(const std::string& data);
+    virtual bool Write(const char& data);
     virtual bool Write(const float& data);
     virtual bool Write(const short& data);
     virtual bool Write(const int& data);
@@ -130,6 +132,12 @@ bool StdFile::Read(unsigned char* data, int length)
     return true;
 }
 
+bool StdFile::Read(char& data)
+{
+    fread(&data, sizeof(char), 1, _File);
+    return true;
+}
+
 bool StdFile::Read(float& data)
 {
     fread(&data, sizeof(float), 1, _File);
@@ -180,6 +188,16 @@ bool StdFile::Write(const std::string& data)
         return false;
     
     fwrite(data.c_str(), 1, data.length(), _File);
+    
+    return true;
+}
+
+bool StdFile::Write(const char& data)
+{
+    if (!_File)
+        return false;
+    
+    fwrite(&data, sizeof(char), 1, _File);
     
     return true;
 }

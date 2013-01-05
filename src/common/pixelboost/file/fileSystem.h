@@ -21,6 +21,7 @@ namespace pb
         virtual bool ReadAll(std::string& data) = 0;
         
         virtual bool Read(unsigned char* data, int length) = 0;
+        virtual bool Read(char& data) = 0;
         virtual bool Read(float& data) = 0;
         virtual bool Read(short& data) = 0;
         virtual bool Read(int& data) = 0;
@@ -29,6 +30,7 @@ namespace pb
         virtual bool Write(const std::vector<unsigned char>& data) = 0;
         virtual bool Write(const unsigned char* data, int length) = 0;
         virtual bool Write(const std::string& data) = 0;
+        virtual bool Write(const char& data) = 0;
         virtual bool Write(const float& data) = 0;
         virtual bool Write(const short& data) = 0;
         virtual bool Write(const int& data) = 0;
