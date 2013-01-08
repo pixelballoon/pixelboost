@@ -129,10 +129,10 @@ bool ObjLoader::Process()
      
     _Model = new pb::ModelDefinition();
     
-    pb::ModelObject object;
+    pb::ModelMeshDefinition mesh;
     
-    object.Indexed = false;
-    object.VertexFormat = pb::kVertexFormat_P3_N3_UV;
+    mesh.Indexed = false;
+    mesh.VertexFormat = pb::kVertexFormat_P3_N3_UV;
     
     for (int i=0; i<verts.size(); i++)
     {
@@ -140,10 +140,10 @@ bool ObjLoader::Process()
         vertex.Position = glm::vec3(verts[i].position[0], verts[i].position[1], verts[i].position[2]);
         vertex.Normal = glm::vec3(verts[i].normal[0], verts[i].normal[1], verts[i].normal[2]);
         vertex.UV = glm::vec2(verts[i].uv[0], verts[i].uv[1]);
-        object.Vertices.push_back(vertex);
+        mesh.Vertices.push_back(vertex);
     }
     
-    _Model->Objects.push_back(object);
+    _Model->Meshes.push_back(mesh);
     
     return true;
 }
@@ -229,10 +229,10 @@ void FbxLoader::ProcessMesh(FbxNode* node, FbxMesh* mesh, glm::mat4x4 globalTran
         return;
     }
     
-    pb::ModelObject object;
+    pb::ModelMeshDefinition meshDefinition;
     
-    object.Indexed = false;
-    object.VertexFormat = pb::kVertexFormat_P3_N3_UV;
+    meshDefinition.Indexed = false;
+    meshDefinition.VertexFormat = pb::kVertexFormat_P3_N3_UV;
     
     FbxStringList uvNames;
     mesh->GetUVSetNames(uvNames);
@@ -270,7 +270,7 @@ void FbxLoader::ProcessMesh(FbxNode* node, FbxMesh* mesh, glm::mat4x4 globalTran
                     for (int x=0; x<4; x++)
                         for (int y=0; y<4; y++)
                             bindMatrix[x][y] = matrix[x][y];
-                    _Model->Bones[_BoneMap[cluster->GetLink()->GetName()]]._BindMatrix = bindMatrix;
+                    _Model->Bones[_BoneMap[cluster->GetLink()->GetName()]]._BindMatrix = glm::inverse(bindMatrix);
                     
                     int vertexIndexCount = cluster->GetControlPointIndicesCount();
                     
@@ -314,8 +314,8 @@ void FbxLoader::ProcessMesh(FbxNode* node, FbxMesh* mesh, glm::mat4x4 globalTran
     
     if (hasSkin)
     {
-        object.VertexFormat = pb::kVertexFormat_P3_N3_UV_BW;
-        object.Skinned = true;
+        meshDefinition.VertexFormat = pb::kVertexFormat_P3_N3_UV_BW;
+        meshDefinition.Skinned = true;
     }
     
     for (int polyIdx=0; polyIdx<mesh->GetPolygonCount(); polyIdx++)
@@ -353,18 +353,33 @@ void FbxLoader::ProcessMesh(FbxNode* node, FbxMesh* mesh, glm::mat4x4 globalTran
             
             if (hasSkin)
             {
+                float totalWeight = 0.f;
                 for (int i=0; i<4; i++)
                 {
                     vertex.Bone[i] = vertexBindings[vertexId].size() > i ? _BoneMap[vertexBindings[vertexId][i]] : 0;
                     vertex.BoneWeights[i] = vertexWeights[vertexId].size() > i ? vertexWeights[vertexId][i] : 0.f;
+                    totalWeight += vertex.BoneWeights[i];
+                }
+                
+                for (int i=0; i<4; i++)
+                {
+                    if (totalWeight > 0)
+                    {
+                        vertex.BoneWeights[i] /= totalWeight;
+                    }
+                }
+                
+                for (int i=0; i<4; i++)
+                {
+                    
                 }
             }
             
-            object.Vertices.push_back(vertex);
+            meshDefinition.Vertices.push_back(vertex);
         }
     }
     
-    _Model->Objects.push_back(object);
+    _Model->Meshes.push_back(meshDefinition);
 }
 
 void FbxLoader::ProcessSkeleton(FbxNode* node, FbxSkeleton* skeleton, glm::mat4x4 globalTransform, glm::vec3 position, glm::quat rotation)
@@ -374,7 +389,7 @@ void FbxLoader::ProcessSkeleton(FbxNode* node, FbxSkeleton* skeleton, glm::mat4x
         int numBones = _BoneMap.size();
         _BoneMap[node->GetName()] = numBones;
         
-        pb::ModelBone bone;
+        pb::ModelBoneDefinition bone;
         
         bone._Name = node->GetName();
         
@@ -384,8 +399,6 @@ void FbxLoader::ProcessSkeleton(FbxNode* node, FbxSkeleton* skeleton, glm::mat4x
             bone._ParentId = -1;
         else
             bone._ParentId = _BoneMap[node->GetParent()->GetName()];
-        
-        printf("%d : Add bone %s -> %d\n", numBones, node->GetName(), bone._ParentId);
         
         bone._Position = position;
         bone._Rotation = rotation;
@@ -398,9 +411,8 @@ void FbxLoader::ProcessSkeleton(FbxNode* node, FbxSkeleton* skeleton, glm::mat4x
         {
             FbxAnimStack* animation = FbxCast<FbxAnimStack>(_Scene->GetSrcObject(FBX_TYPE(FbxAnimStack), 0));
             
-            printf("Add animation %s\n", animation->GetName());
-            
-            pb::ModelAnimation modelAnimation;
+            pb::ModelAnimationDefinition modelAnimation;
+            modelAnimation._Name = animation->GetName();
             modelAnimation._FPS = 30;
             modelAnimation._Length = animation->GetLocalTimeSpan().GetDuration().GetSecondDouble();
             
@@ -409,7 +421,7 @@ void FbxLoader::ProcessSkeleton(FbxNode* node, FbxSkeleton* skeleton, glm::mat4x
             float end = timeSpan.GetStop().GetSecondDouble();
             for (float t=start; t<end; t+=1.0/30.0)
             {
-                pb::ModelAnimation::AnimationFrame frame;
+                pb::ModelAnimationDefinition::AnimationFrame frame;
                 modelAnimation._Frames.push_back(frame);
             }
             _Model->Animations.push_back(modelAnimation);
