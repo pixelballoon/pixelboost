@@ -15,7 +15,7 @@ using namespace pixeleditor;
 ModelViewProperty::ModelViewProperty(ViewEntity* parent, const std::string& path, const SchemaItem* schemaItem)
     : ViewProperty(parent, path, schemaItem)
 {
-    _ModelComponent = new pb::ModelComponent(parent, "", "");
+    _ModelComponent = new pb::ModelComponent(parent, 0, 0);
     _ModelComponent->SetLayer(1);
     
     Refresh();
@@ -45,8 +45,7 @@ void ModelViewProperty::Refresh()
     if (model != _Model)
     {
         _Model = model;
-        View::Instance()->LoadModel(_Model);
-        _ModelComponent->SetModel(_Model);
+        _ModelComponent->SetModel(View::Instance()->LoadModel(_Model));
         DirtyBounds();
     }
     
@@ -55,8 +54,7 @@ void ModelViewProperty::Refresh()
     if (texture != _Texture)
     {
         _Texture = texture;
-        View::Instance()->LoadTexture(_Texture);
-        _ModelComponent->SetTexture(_Texture);
+        _ModelComponent->SetTexture(View::Instance()->LoadTexture(_Texture));
     }
     
     if (visualisation->HasParamValue("rotation"))

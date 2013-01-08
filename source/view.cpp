@@ -364,9 +364,9 @@ std::string View::GetModelFile(const std::string& model)
     return "";
 }
 
-void View::LoadModel(const std::string& model)
+pb::Model* View::LoadModel(const std::string& model)
 {
-    GetModelRenderer()->LoadModel(pb::kFileLocationUser, model, GetModelFile(model));
+    return GetModelRenderer()->LoadModel(pb::kFileLocationUser, model, GetModelFile(model));
 }
 
 
@@ -393,12 +393,16 @@ std::string View::GetTextureFile(const std::string& texture)
     return "";
 }
 
-void View::LoadTexture(const std::string& texture)
+pb::Texture* View::LoadTexture(const std::string& texture)
 {
     std::string textureFile = GetTextureFile(texture);
     
     if (textureFile.length())
-        GetModelRenderer()->LoadTexture(pb::kFileLocationUser, texture, textureFile);
+    {
+        return GetModelRenderer()->LoadTexture(pb::kFileLocationUser, texture, textureFile);
+    }
+    
+    return 0;
 }
 
 pb::Scene* View::GetLevelScene()
