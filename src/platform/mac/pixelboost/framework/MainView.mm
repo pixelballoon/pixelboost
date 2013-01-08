@@ -347,6 +347,10 @@ enum {
             pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyAlt);
             break;
             
+        case kVK_Space:
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeySpace);
+            break;
+            
         default:
             pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyCharacter, (int)[event.characters UTF8String][0]);
             break;
@@ -414,6 +418,10 @@ enum {
             
         case kVK_Option:
             pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyAlt);
+            break;
+            
+        case kVK_Space:
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeySpace);
             break;
             
         default:
