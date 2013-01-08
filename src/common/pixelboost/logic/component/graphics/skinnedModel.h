@@ -11,14 +11,18 @@
 namespace pb
 {
     
+    class Effect;
     class Message;
+    class ModelAnimationDefinition;
+    class ModelBoneDefinition;
     class ModelRenderable;
+    class SkinnedAnimationState;
     
-    class ModelComponent : public Component
+    class SkinnedModelComponent : public Component
     {
     public:
-        ModelComponent(Entity* parent, Model* model, Texture* texture);
-        virtual ~ModelComponent();
+        SkinnedModelComponent(Entity* parent, Model* model, Texture* texture);
+        virtual ~SkinnedModelComponent();
         
         Uid GetType();
         static Uid GetStaticType();
@@ -35,13 +39,23 @@ namespace pb
         void SetTint(const glm::vec4& tint);
         
         void SetLocalTransform(const glm::mat4x4& transform);
+
+        void SetAnimation(const std::string& animation);
+        
+        void SetSkeletonDebug(bool debug);
         
     private:
+        void OnDebugRender(const Message& message);
         void OnTransformChanged(const Message& message);
+        void OnUpdate(const Message& message);
         void UpdateTransform();
         
         glm::mat4x4 _LocalTransform;
         ModelRenderable* _Renderable;
+        
+        SkinnedAnimationState* _AnimationState;
+        
+        bool _SkeletonDebug;
     };
     
 }

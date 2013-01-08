@@ -203,6 +203,7 @@ set (LOGIC_COMPONENT_GRAPHICS_SOURCES
 	"src/common/pixelboost/logic/component/graphics/particleEmitter.cpp"
 	"src/common/pixelboost/logic/component/graphics/rectangle.cpp"
 	"src/common/pixelboost/logic/component/graphics/rocket.cpp"
+    "src/common/pixelboost/logic/component/graphics/skinnedModel.cpp"
 	"src/common/pixelboost/logic/component/graphics/sprite.cpp"
 	)
 

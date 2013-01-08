@@ -102,14 +102,14 @@ bool ModelVertex::Write(pb::VertexFormat vertexFormat, pb::File* file) const
     return true;
 }
     
-ModelObject::ModelObject()
+ModelMeshDefinition::ModelMeshDefinition()
     : Indexed(false)
     , Skinned(false)
 {
     
 }
     
-bool ModelObject::Read(pb::File* file)
+bool ModelMeshDefinition::Read(pb::File* file)
 {
     file->Read(Indexed);
     file->Read(Skinned);
@@ -151,7 +151,7 @@ bool ModelObject::Read(pb::File* file)
     return true;
 }
 
-bool ModelObject::Write(pb::File* file) const
+bool ModelMeshDefinition::Write(pb::File* file) const
 {
     file->Write(Indexed);
     file->Write(Skinned);
@@ -179,7 +179,7 @@ bool ModelObject::Write(pb::File* file) const
     return true;
 }
 
-void ModelObject::CalculateBounds()
+void ModelMeshDefinition::CalculateBounds()
 {
     float maxBounds = 0;
     for (std::vector<ModelVertex>::const_iterator it = Vertices.begin(); it != Vertices.end(); ++it)
@@ -189,12 +189,12 @@ void ModelObject::CalculateBounds()
     Bounds.Set(glm::vec3(0,0,0), maxBounds);
 }
 
-ModelBone::ModelBone()
+ModelBoneDefinition::ModelBoneDefinition()
 {
     
 }
 
-bool ModelBone::Read(pb::File* file)
+bool ModelBoneDefinition::Read(pb::File* file)
 {
     int nameLength;
     file->Read(nameLength);
@@ -222,7 +222,7 @@ bool ModelBone::Read(pb::File* file)
     return true;
 }
 
-bool ModelBone::Write(pb::File* file) const
+bool ModelBoneDefinition::Write(pb::File* file) const
 {
     file->Write(static_cast<int>(_Name.length()));
     file->Write((unsigned char*)_Name.c_str(), _Name.length()+1);
@@ -246,12 +246,12 @@ bool ModelBone::Write(pb::File* file) const
     return true;
 }
 
-ModelAnimation::ModelAnimation()
+ModelAnimationDefinition::ModelAnimationDefinition()
 {
     
 }
 
-bool ModelAnimation::Read(pb::File* file)
+bool ModelAnimationDefinition::Read(pb::File* file)
 {
     int nameLength;
     file->Read(nameLength);
@@ -290,7 +290,7 @@ bool ModelAnimation::Read(pb::File* file)
     return true;
 }
 
-bool ModelAnimation::Write(pb::File* file) const
+bool ModelAnimationDefinition::Write(pb::File* file) const
 {
     file->Write(static_cast<int>(_Name.length()));
     file->Write((unsigned char*)_Name.c_str(), _Name.length()+1);
@@ -338,22 +338,22 @@ bool ModelDefinition::Open(pb::FileLocation fileLocation, const std::string& fil
         return false;
     }
     
-    short numObjects;
-    if (!file->Read(numObjects))
+    short numMeshes;
+    if (!file->Read(numMeshes))
     {
         delete file;
         return false;
     }
     
-    for (int i=0; i<numObjects; i++)
+    for (int i=0; i<numMeshes; i++)
     {
-        ModelObject o;
+        ModelMeshDefinition o;
         if (!o.Read(file))
         {
             delete file;
             return false;
         }
-        Objects.push_back(o);
+        Meshes.push_back(o);
     }
     
     short numBones;
@@ -365,7 +365,7 @@ bool ModelDefinition::Open(pb::FileLocation fileLocation, const std::string& fil
     
     for (int i=0; i<numBones; i++)
     {
-        ModelBone b;
+        ModelBoneDefinition b;
         if (!b.Read(file))
         {
             delete file;
@@ -383,7 +383,7 @@ bool ModelDefinition::Open(pb::FileLocation fileLocation, const std::string& fil
     
     for (int i=0; i<numAnimations; i++)
     {
-        ModelAnimation a;
+        ModelAnimationDefinition a;
         if (!a.Read(file))
         {
             delete file;
@@ -406,9 +406,9 @@ bool ModelDefinition::Save(pb::FileLocation fileLocation, const std::string& fil
     
     file->Write(_Version);
     
-    file->Write(static_cast<short>(Objects.size()));
+    file->Write(static_cast<short>(Meshes.size()));
     
-    for (std::vector<ModelObject>::const_iterator it = Objects.begin(); it != Objects.end(); ++it)
+    for (std::vector<ModelMeshDefinition>::const_iterator it = Meshes.begin(); it != Meshes.end(); ++it)
     {
         if (!it->Write(file))
         {
@@ -419,7 +419,7 @@ bool ModelDefinition::Save(pb::FileLocation fileLocation, const std::string& fil
     
     file->Write(static_cast<short>(Bones.size()));
     
-    for (std::vector<ModelBone>::const_iterator it = Bones.begin(); it != Bones.end(); ++it)
+    for (std::vector<ModelBoneDefinition>::const_iterator it = Bones.begin(); it != Bones.end(); ++it)
     {
         if (!it->Write(file))
         {
@@ -430,7 +430,7 @@ bool ModelDefinition::Save(pb::FileLocation fileLocation, const std::string& fil
     
     file->Write(static_cast<short>(Animations.size()));
     
-    for (std::vector<ModelAnimation>::const_iterator it = Animations.begin(); it != Animations.end(); ++it)
+    for (std::vector<ModelAnimationDefinition>::const_iterator it = Animations.begin(); it != Animations.end(); ++it)
     {
         if (!it->Write(file))
         {
@@ -446,7 +446,7 @@ bool ModelDefinition::Save(pb::FileLocation fileLocation, const std::string& fil
 
 void ModelDefinition::CalculateBounds()
 {
-    for (std::vector<ModelObject>::iterator it = Objects.begin(); it != Objects.end(); ++it)
+    for (std::vector<ModelMeshDefinition>::iterator it = Meshes.begin(); it != Meshes.end(); ++it)
     {
         it->CalculateBounds();
     }

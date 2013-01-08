@@ -30,10 +30,10 @@ namespace pb
         glm::vec2 UV;
     };
 
-    class ModelObject
+    class ModelMeshDefinition
     {
     public:
-        ModelObject();
+        ModelMeshDefinition();
         
         bool Read(pb::File* file);
         bool Write(pb::File* file) const;
@@ -50,10 +50,10 @@ namespace pb
         std::vector<ModelVertex> Vertices;
     };
     
-    class ModelBone
+    class ModelBoneDefinition
     {
     public:
-        ModelBone();
+        ModelBoneDefinition();
         
         bool Read(pb::File* file);
         bool Write(pb::File* file) const;
@@ -69,10 +69,10 @@ namespace pb
         glm::mat4x4 _BindMatrix;
     };
 
-    class ModelAnimation
+    class ModelAnimationDefinition
     {
     public:
-        ModelAnimation();
+        ModelAnimationDefinition();
         
         bool Read(pb::File* file);
         bool Write(pb::File* file) const;
@@ -98,9 +98,9 @@ namespace pb
         void CalculateBounds();
         
     public:
-        std::vector<ModelObject> Objects;
-        std::vector<ModelBone> Bones;
-        std::vector<ModelAnimation> Animations;
+        std::vector<ModelMeshDefinition> Meshes;
+        std::vector<ModelBoneDefinition> Bones;
+        std::vector<ModelAnimationDefinition> Animations;
         
     private:
         short _Version;
