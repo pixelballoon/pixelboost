@@ -1,6 +1,8 @@
 #include <OpenGL/gl.h>
+#include "DDHidLib.h"
 
 #include "pixelboost/framework/engine.h"
+#include "pixelboost/input/joystickManager.h"
 #include "pixelboost/input/keyboardManager.h"
 #include "pixelboost/input/mouseManager.h"
 #include "pixelboost/input/touchManager.h"
@@ -64,6 +66,8 @@ enum {
 
 @implementation MainView
 
+@synthesize joysticks = _joysticks;
+
 - (id)initWithFrame:(NSRect)frame
 {
     self = [super initWithFrame:frame];
@@ -85,6 +89,12 @@ enum {
         NSTimer* timer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:(1.0f/desiredFps) target:self selector:@selector(onRedrawTimer) userInfo:nil repeats:YES];
         [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
     }
+    
+    _joysticks = [[DDHidJoystick allJoysticks] retain];
+    
+    [[_joysticks objectAtIndex:0] setDelegate:self];
+    [[_joysticks objectAtIndex:0] startListening];
+    
     
     return self;
 }
@@ -428,6 +438,48 @@ enum {
             pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyCharacter, (int)[event.characters UTF8String][0]);
             break;
     }
+}
+
+- (void) ddhidJoystick: (DDHidJoystick *)  joystick
+                 stick: (unsigned) stick
+              xChanged: (int) value;
+{
+    pb::Engine::Instance()->GetJoystickManager()->OnAxisChanged([_joysticks indexOfObject:joystick], stick, 0, value / 65535.f);
+}
+
+- (void) ddhidJoystick: (DDHidJoystick *)  joystick
+                 stick: (unsigned) stick
+              yChanged: (int) value;
+{
+    pb::Engine::Instance()->GetJoystickManager()->OnAxisChanged([_joysticks indexOfObject:joystick], stick, 1, value / 65535.f);
+}
+
+- (void) ddhidJoystick: (DDHidJoystick *) joystick
+                 stick: (unsigned) stick
+             otherAxis: (unsigned) otherAxis
+          valueChanged: (int) value;
+{
+    pb::Engine::Instance()->GetJoystickManager()->OnAxisChanged([_joysticks indexOfObject:joystick], stick, otherAxis, value / 65535.f);
+}
+
+- (void) ddhidJoystick: (DDHidJoystick *) joystick
+                 stick: (unsigned) stick
+             povNumber: (unsigned) povNumber
+          valueChanged: (int) value;
+{
+
+}
+
+- (void) ddhidJoystick: (DDHidJoystick *) joystick
+            buttonDown: (unsigned) buttonNumber;
+{
+    pb::Engine::Instance()->GetJoystickManager()->OnButtonDown([_joysticks indexOfObject:joystick], buttonNumber);
+}
+
+- (void) ddhidJoystick: (DDHidJoystick *) joystick
+              buttonUp: (unsigned) buttonNumber;
+{
+    pb::Engine::Instance()->GetJoystickManager()->OnButtonUp([_joysticks indexOfObject:joystick], buttonNumber);
 }
 
 @end

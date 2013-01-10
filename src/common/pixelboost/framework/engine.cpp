@@ -12,6 +12,7 @@
 #include "pixelboost/graphics/renderer/particle/particleRenderer.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
+#include "pixelboost/input/joystickManager.h"
 #include "pixelboost/input/keyboardManager.h"
 #include "pixelboost/input/mouseManager.h"
 #include "pixelboost/input/touchManager.h"
@@ -49,6 +50,7 @@ Engine::Engine(void* platformContext)
 #endif
 
 #ifndef PIXELBOOST_DISABLE_INPUT
+    _JoystickManager = new JoystickManager();
     _KeyboardManager = new KeyboardManager();
     _MouseManager = new MouseManager();
     _TouchManager = new TouchManager();
@@ -79,6 +81,13 @@ Engine::~Engine()
     delete _PrimitiveRenderer;
 	delete _SpriteRenderer;
     delete _Renderer;
+#endif
+
+#ifndef PIXELBOOST_DISABLE_INPUT
+    delete _JoystickManager;
+    delete _KeyboardManager;
+    delete _MouseManager;
+    delete _TouchManager;
 #endif
 }
 
@@ -132,6 +141,11 @@ PrimitiveRenderer* Engine::GetPrimitiveRenderer() const
 SpriteRenderer* Engine::GetSpriteRenderer() const
 {
     return _SpriteRenderer;
+}
+
+JoystickManager* Engine::GetJoystickManager() const
+{
+    return _JoystickManager;
 }
 
 KeyboardManager* Engine::GetKeyboardManager() const

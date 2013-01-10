@@ -14,6 +14,7 @@ class FileSystem;
 class FontRenderer;
 class GameCenter;
 class GraphicsDevice;
+class JoystickManager;
 class KeyboardManager;
 class ModelRenderer;
 class MouseManager;
@@ -51,6 +52,7 @@ public:
     PrimitiveRenderer* GetPrimitiveRenderer() const;
 	SpriteRenderer* GetSpriteRenderer() const;
     
+    JoystickManager* GetJoystickManager() const;
     KeyboardManager* GetKeyboardManager() const;
     MouseManager* GetMouseManager() const;
 	TouchManager* GetTouchManager() const;
@@ -89,6 +91,7 @@ private:
     Renderer* _Renderer;
 	SpriteRenderer* _SpriteRenderer;
     
+    JoystickManager* _JoystickManager;
     KeyboardManager* _KeyboardManager;
     MouseManager* _MouseManager;
 	TouchManager* _TouchManager;

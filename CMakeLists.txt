@@ -21,6 +21,7 @@ endif (PIXELBOOST_BUILD_PLATFORM_ANDROID)
 if (PIXELBOOST_BUILD_PLATFORM_OSX)
 	set (PLATFORM_HEADERS
 		"${CMAKE_CURRENT_SOURCE_DIR}/src/platform/mac"
+		"${CMAKE_CURRENT_SOURCE_DIR}/../libs/ddhidlib/lib"
 		)
 
 	set (PLATFORM_SOURCES
@@ -188,6 +189,7 @@ set (GRAPHICS_UI_SOURCES
 set (INPUT_SOURCES
 	"src/common/pixelboost/input/acceleratometerManager.cpp"
 	"src/common/pixelboost/input/inputManager.cpp"
+	"src/common/pixelboost/input/joystickManager.cpp"
 	"src/common/pixelboost/input/keyboardManager.cpp"
 	"src/common/pixelboost/input/mouseManager.cpp"
 	"src/common/pixelboost/input/touchManager.cpp"
@@ -327,11 +329,13 @@ target_link_libraries (pixelboost_engine Box2D freetype2 librocket lua)
 
 if (PIXELBOOST_BUILD_PLATFORM_OSX)
 	target_link_libraries (pixelboost_engine
+		ddhidlib
 		"-framework CoreGraphics"
 		"-framework Cocoa"
 		"-framework Foundation"
 		"-framework OpenGL"
-		"-framework AppKit")
+		"-framework AppKit"
+		"-framework IOKit")
 endif (PIXELBOOST_BUILD_PLATFORM_OSX)
 
 if (PIXELBOOST_BUILD_PLATFORM_IOS)
