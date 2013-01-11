@@ -13,7 +13,7 @@
 using namespace pb;
 
 PhysicsUserBody2DComponent::PhysicsUserBody2DComponent(Entity* parent, BodyType type, BodyShape shape, glm::vec2 size)
-    : PhysicsComponent(parent)
+    : PhysicsComponent2D(parent)
 {
     pb::PhysicsSystem2D* physicsSystem = GetScene()->GetSystemByType<pb::PhysicsSystem2D>();
     
@@ -68,7 +68,7 @@ PhysicsUserBody2DComponent::PhysicsUserBody2DComponent(Entity* parent, BodyType 
 }
 
 PhysicsUserBody2DComponent::PhysicsUserBody2DComponent(Entity* parent, BodyType type, FixtureDefinition2D& fixtureDefinition)
-    : PhysicsComponent(parent)
+    : PhysicsComponent2D(parent)
 {
     pb::PhysicsSystem2D* physicsSystem = GetScene()->GetSystemByType<pb::PhysicsSystem2D>();
     
@@ -119,22 +119,6 @@ Uid PhysicsUserBody2DComponent::GetType()
 Uid PhysicsUserBody2DComponent::GetStaticType()
 {
     return TypeHash("pb::PhysicsUserBody2DComponent");
-}
-
-b2Body* PhysicsUserBody2DComponent::GetBody()
-{
-    return _Body;
-}
-
-void PhysicsUserBody2DComponent::SetSensor(bool isSensor)
-{
-    b2Fixture* fixture = _Body->GetFixtureList();
-    
-    while (fixture)
-    {
-        fixture->SetSensor(isSensor);
-        fixture = fixture->GetNext();
-    }
 }
 
 void PhysicsUserBody2DComponent::OnTransformChanged(const Message& message)

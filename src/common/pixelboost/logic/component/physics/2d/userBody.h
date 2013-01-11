@@ -2,7 +2,7 @@
 
 #include "glm/glm.hpp"
 
-#include "pixelboost/logic/component/physics/physics.h"
+#include "pixelboost/logic/component/physics/2d/physics.h"
 
 class b2Body;
 class b2World;
@@ -13,16 +13,9 @@ namespace pb
 struct FixtureDefinition2D;
 class Message;
     
-class PhysicsUserBody2DComponent : public PhysicsComponent
+class PhysicsUserBody2DComponent : public PhysicsComponent2D
 {
 public:
-    enum BodyType
-    {
-        kBodyTypeStatic,
-        kBodyTypeDynamic,
-        kBodyTypeKinematic,
-    };
-    
     enum BodyShape
     {
         kBodyShapeCircle,
@@ -37,15 +30,9 @@ public:
     virtual Uid GetType();
     static Uid GetStaticType();
     
-    b2Body* GetBody();
-    
-    void SetSensor(bool isSensor);
-    
 private:
     void OnTransformChanged(const Message& message);
     void UpdateTransform();
-    
-    b2Body* _Body;
 };
     
 }

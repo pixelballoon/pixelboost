@@ -215,6 +215,7 @@ set (LOGIC_COMPONENT_INPUT_SOURCES
 
 set (LOGIC_COMPONENT_PHYSICS_2D_SOURCES
 	"src/common/pixelboost/logic/component/physics/2d/physicsBody.cpp"
+	"src/common/pixelboost/logic/component/physics/2d/physics.cpp"
 	"src/common/pixelboost/logic/component/physics/2d/userBody.cpp"
 	)
 
