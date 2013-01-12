@@ -81,7 +81,7 @@ void PhysicsSystem2D::BeginContact(b2Contact* contact)
     pb::Scene* scene = actorA->GetScene();
     
     scene->SendMessage(actorA->GetParentUid(), PhysicsCollisionMessage(actorB, position, normal));
-    scene->SendMessage(actorB->GetParentUid(), PhysicsCollisionMessage(actorA, position, normal));
+    scene->SendMessage(actorB->GetParentUid(), PhysicsCollisionMessage(actorA, position, -normal));
 }
 
 void PhysicsSystem2D::EndContact(b2Contact* contact)
