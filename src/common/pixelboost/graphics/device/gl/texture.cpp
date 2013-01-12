@@ -32,14 +32,12 @@ bool TextureGL::LoadFromBytes(const unsigned char* data, int width, int height, 
     
     Texture* previousTexture = _Device->BindTexture(this, true);
     
-    // TODO : Add create mips back in
-    /*if (createMips)
+    if (createMips)
     {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameterf(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
     }
-    else*/
+    else
     {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -56,6 +54,11 @@ bool TextureGL::LoadFromBytes(const unsigned char* data, int width, int height, 
         case Texture::kTextureFormatRGBA:
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
             break;
+    }
+    
+    if (createMips)
+    {
+        glGenerateMipmap(GL_TEXTURE_2D);
     }
 	
     _Device->BindTexture(previousTexture);
