@@ -10,8 +10,8 @@
 
 #import "MainView.h"
 
-float desiredFps = 60.f;
-float speedupFactor = 3.f;
+float desiredFps = 30.f;
+float speedupFactor = 1.f;
 
 /* keycodes for keys that are independent of keyboard layout*/
 enum {
