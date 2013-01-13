@@ -2,6 +2,7 @@
 
 #ifdef PIXELBOOST_GRAPHICS_OPENGL
 
+#include "pixelboost/debug/log.h"
 #include "pixelboost/graphics/device/gl/texture.h"
 
 using namespace pb;
@@ -21,10 +22,10 @@ bool TextureGL::LoadFromBytes(const unsigned char* data, int width, int height, 
 {
     if (!Texture::LoadFromBytes(data, width, height, createMips, format, hasPremultipliedAlpha))
         return false;
-    
+
     if (format != kTextureFormatRGBA && format != kTextureFormatRGB)
     {
-        printf("WARN: Only RGBA texture format is currently supported!");
+        PbLogWarn("graphics.texture", "Only RGB and RGBA texture formats are currently supported!");
         return false;
     }
     
@@ -45,7 +46,7 @@ bool TextureGL::LoadFromBytes(const unsigned char* data, int width, int height, 
     
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    
+
     switch (format)
     {
         case Texture::kTextureFormatRGB:
@@ -55,7 +56,7 @@ bool TextureGL::LoadFromBytes(const unsigned char* data, int width, int height, 
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
             break;
     }
-    
+
     if (createMips)
     {
         glGenerateMipmap(GL_TEXTURE_2D);

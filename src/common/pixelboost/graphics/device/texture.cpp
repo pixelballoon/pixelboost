@@ -3,6 +3,7 @@
 #include "glm/gtx/bit.hpp"
 #include "stbimage/stb_image.h"
 
+#include "pixelboost/debug/log.h"
 #include "pixelboost/file/fileSystem.h"
 #include "pixelboost/graphics/device/texture.h"
 
@@ -32,11 +33,11 @@ bool Texture::LoadFromBytes(const unsigned char* data, int width, int height, bo
         delete[] _Data;
         _Data = 0;
     }
-    
+
     _DataFormat = format;
     _DataCreateMips = createMips;
     _Size = glm::vec2(width, height);
-    
+
     if (_Data == 0)
     {
         switch (format)
@@ -44,6 +45,7 @@ bool Texture::LoadFromBytes(const unsigned char* data, int width, int height, bo
             case kTextureFormatRGB:
                 _Data = new unsigned char[width*height*3];
                 memcpy(_Data, data, width*height*3);
+                break;
             case kTextureFormatRGBA:
                 _Data = new unsigned char[width*height*4];
                 memcpy(_Data, data, width*height*4);
@@ -60,6 +62,8 @@ bool Texture::LoadFromBytes(const unsigned char* data, int width, int height, bo
 bool Texture::LoadFromFile(pb::FileLocation location, const std::string& path, bool createMips, bool hasPremultipliedAlpha)
 {
     bool status = true;
+
+    PbLogDebug("graphics.texture", "Loading texture from file (%s)\n", path.c_str());
     
     if (path.length() >= 4 && path.substr(path.length()-4) == ".jpa")
     {
@@ -119,18 +123,27 @@ bool Texture::LoadFromFile(pb::FileLocation location, const std::string& path, b
             return false;
         
         file->ReadAll(data);
-        
+
         int width, height, components;
         decoded = stbi_load_from_memory(&data[0], data.size(), &width, &height, &components, STBI_default);
-        
+
         if (!glm::isPowerOfTwo(width) || !glm::isPowerOfTwo(height))
             createMips = false;
         
         delete file;
         
-        status = LoadFromBytes(decoded, width, height, createMips, components == 3 ? kTextureFormatRGB : kTextureFormatRGBA, hasPremultipliedAlpha);
+        status = LoadFromBytes(decoded, width, height, createMips, components == 3 ? kTextureFormatRGB : kTextureFormatRGBA, components > 3 ? hasPremultipliedAlpha : false);
         
         stbi_image_free(decoded);
+    }
+
+    if (status)
+    {
+        PbLogDebug("graphics.texture", "Loaded texture from file (%s)\n", path.c_str());
+    }
+    else
+    {
+        PbLogError("graphics.texture", "Failed to load texture from file (%s)\n", path.c_str());
     }
     
     return status;
