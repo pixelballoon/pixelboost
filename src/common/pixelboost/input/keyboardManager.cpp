@@ -14,16 +14,6 @@ KeyboardHandler::~KeyboardHandler()
     
 }
 
-bool KeyboardHandler::OnKeyDown(KeyboardKey key, char character)
-{
-    return false;
-}
-
-bool KeyboardHandler::OnKeyUp(KeyboardKey key, char character)
-{
-    return false;
-}
-
 KeyboardManager::KeyboardManager()
 {
     
@@ -34,24 +24,24 @@ KeyboardManager::~KeyboardManager()
     
 }
 
-void KeyboardManager::OnKeyDown(KeyboardKey key, char character)
+void KeyboardManager::OnKeyDown(KeyboardKey key, ModifierKeys modifier, char character)
 {
     UpdateHandlers();
     
     for (HandlerList::iterator it = _Handlers.begin(); it != _Handlers.end(); ++it)
     {
-        if (static_cast<KeyboardHandler*>(*it)->OnKeyDown(key, character))
+        if (static_cast<KeyboardHandler*>(*it)->OnKeyDown(key, modifier, character))
             return;
     }
 }
 
-void KeyboardManager::OnKeyUp(KeyboardKey key, char character)
+void KeyboardManager::OnKeyUp(KeyboardKey key, ModifierKeys modifier, char character)
 {
     UpdateHandlers();
     
     for (HandlerList::iterator it = _Handlers.begin(); it != _Handlers.end(); ++it)
     {
-        if (static_cast<KeyboardHandler*>(*it)->OnKeyUp(key, character))
+        if (static_cast<KeyboardHandler*>(*it)->OnKeyUp(key, modifier, character))
             return;
     }
 }

@@ -21,7 +21,7 @@ public:
         SetPriority(1000);
     }
     
-    bool OnKeyDown(KeyboardKey key, char character)
+    bool OnKeyDown(KeyboardKey key, ModifierKeys modifier, char character)
     {
         if (key == kKeyboardKeyCharacter)
             _Canvas->InputCharacter(character);
@@ -35,7 +35,7 @@ public:
         return true;
     }
     
-    bool OnKeyUp(KeyboardKey key, char character)
+    bool OnKeyUp(KeyboardKey key, ModifierKeys modifier, char character)
     {
         if (key != kKeyboardKeyCharacter)
             _Canvas->InputKey(key, false);

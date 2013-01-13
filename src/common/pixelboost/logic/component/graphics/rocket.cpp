@@ -24,7 +24,7 @@ public:
         SetPriority(1000);
     }
     
-    bool OnKeyDown(KeyboardKey key, char character)
+    bool OnKeyDown(KeyboardKey key, ModifierKeys modifier, char character)
     {
         switch (key)
         {
@@ -34,12 +34,14 @@ public:
             case pb::kKeyboardKeyCharacter:
                 return _Context->ProcessTextInput(character);
                 break;
+            default:
+                break;
         }
         
         return false;
     }
     
-    bool OnKeyUp(KeyboardKey key, char character)
+    bool OnKeyUp(KeyboardKey key, ModifierKeys modifier, char character)
     {
         switch (key)
         {
@@ -47,6 +49,8 @@ public:
                 return _Context->ProcessKeyUp(Rocket::Core::Input::KI_BACK, 0);
                 break;
             case pb::kKeyboardKeyCharacter:
+                break;
+            default:
                 break;
         }
         

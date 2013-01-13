@@ -5,11 +5,10 @@
 #include "glm/glm.hpp"
 
 #include "pixelboost/input/inputManager.h"
+#include "pixelboost/input/keyboardManager.h"
 
 namespace pb
 {
-    typedef int ModifierKeys;
-    
     enum MouseModifier
     {
         kModifierShift = 1,

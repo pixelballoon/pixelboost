@@ -299,71 +299,87 @@ enum {
     if (!pb::Engine::Instance())
         return;
     
+    int modifier = pb::kModifierKeyNone;
+    if (event.modifierFlags & NSControlKeyMask || event.modifierFlags & NSCommandKeyMask)
+    {
+        modifier |= pb::kModifierKeyControl;
+    }
+    if (event.modifierFlags & NSAlternateKeyMask)
+    {
+        modifier |= pb::kModifierKeyAlt;
+    }
+    if (event.modifierFlags & NSShiftKeyMask)
+    {
+        modifier |= pb::kModifierKeyShift;
+    }
+    
     switch (event.keyCode)
     {
         case kVK_Return:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyReturn);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyReturn, modifier);
             break;
             
         case kVK_Delete:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyBackspace);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyBackspace, modifier);
             break;
             
         case kVK_ForwardDelete:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyDelete);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyDelete, modifier);
             break;
             
         case kVK_LeftArrow:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyLeft);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyLeft, modifier);
             break;
             
         case kVK_RightArrow:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyRight);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyRight, modifier);
             break;
             
         case kVK_Shift:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyShift);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyShift, modifier);
             break;
             
         case kVK_Tab:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyTab);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyTab, modifier);
             break;
             
         case kVK_Home:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyHome);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyHome, modifier);
             break;
             
         case kVK_End:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyEnd);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyEnd, modifier);
             break;
             
         case kVK_Control:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyControl);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyControl, modifier);
             break;
             
         case kVK_UpArrow:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyUp);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyUp, modifier);
             break;
             
         case kVK_DownArrow:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyDown);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyDown, modifier);
             break;
             
         case kVK_Escape:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyEscape);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyEscape, modifier);
             break;
             
         case kVK_Option:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyAlt);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyAlt, modifier);
             break;
             
         case kVK_Space:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeySpace);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeySpace, modifier);
             break;
             
         default:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyCharacter, (int)[event.characters UTF8String][0]);
+        {
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyDown(pb::kKeyboardKeyCharacter, modifier, (int)[event.characters UTF8String][0]);
             break;
+        }
     }
 }
 
@@ -372,70 +388,84 @@ enum {
     if (!pb::Engine::Instance())
         return;
     
+    int modifier = pb::kModifierKeyNone;
+    if (event.modifierFlags & NSControlKeyMask || event.modifierFlags & NSCommandKeyMask)
+    {
+        modifier |= pb::kModifierKeyControl;
+    }
+    if (event.modifierFlags & NSAlternateKeyMask)
+    {
+        modifier |= pb::kModifierKeyAlt;
+    }
+    if (event.modifierFlags & NSShiftKeyMask)
+    {
+        modifier |= pb::kModifierKeyShift;
+    }
+    
     switch (event.keyCode)
     {
         case kVK_Return:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyReturn);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyReturn, modifier);
             break;
             
         case kVK_Delete:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyBackspace);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyBackspace, modifier);
             break;
             
         case kVK_ForwardDelete:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyDelete);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyDelete, modifier);
             break;
             
         case kVK_LeftArrow:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyLeft);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyLeft, modifier);
             break;
             
         case kVK_RightArrow:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyRight);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyRight, modifier);
             break;
             
         case kVK_Shift:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyShift);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyShift, modifier);
             break;
             
         case kVK_Tab:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyTab);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyTab, modifier);
             break;
             
         case kVK_Home:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyHome);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyHome, modifier);
             break;
             
         case kVK_End:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyEnd);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyEnd, modifier);
             break;
             
         case kVK_Control:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyControl);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyControl, modifier);
             break;
             
         case kVK_UpArrow:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyUp);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyUp, modifier);
             break;
             
         case kVK_DownArrow:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyDown);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyDown, modifier);
             break;
             
         case kVK_Escape:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyEscape);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyEscape, modifier);
             break;
             
         case kVK_Option:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyAlt);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyAlt, modifier);
             break;
             
         case kVK_Space:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeySpace);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeySpace, modifier);
             break;
             
         default:
-            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyCharacter, (int)[event.characters UTF8String][0]);
+            pb::Engine::Instance()->GetKeyboardManager()->OnKeyUp(pb::kKeyboardKeyCharacter, modifier, (int)[event.characters UTF8String][0]);
             break;
     }
 }
