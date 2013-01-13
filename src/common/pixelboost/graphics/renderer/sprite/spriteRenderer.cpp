@@ -235,6 +235,11 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
         glm::vec4 c = renderable.GetMVP() * glm::vec4(crop[2]-0.5, crop[3]-0.5, 0, 1);
         glm::vec4 d = renderable.GetMVP() * glm::vec4(crop[2]-0.5, crop[1]-0.5, 0, 1);
         
+        a /= a.w;
+        b /= b.w;
+        c /= c.w;
+        d /= d.w;
+        
         bufferData[0].position[0] = a.x;
         bufferData[0].position[1] = a.y;
         bufferData[0].position[2] = a.z;
