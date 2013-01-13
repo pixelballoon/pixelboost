@@ -103,12 +103,12 @@ bool RotateManipulator::OnMouseMove(glm::vec2 position)
     return false;
 }
 
-bool RotateManipulator::OnKeyDown(pb::KeyboardKey key, char character)
+bool RotateManipulator::OnKeyDown(pb::KeyboardKey key, pb::ModifierKeys modifier, char character)
 {
     return false;
 }
 
-bool RotateManipulator::OnKeyUp(pb::KeyboardKey key, char character)
+bool RotateManipulator::OnKeyUp(pb::KeyboardKey key, pb::ModifierKeys modifier, char character)
 {
     return false;
 }

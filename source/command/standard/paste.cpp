@@ -56,10 +56,6 @@ bool PasteCommand::Do(std::string& returnString)
     if (!clipboard)
         return false;
     
-    std::stringstream test;
-    json::Writer::Write(clipboard, test);
-    printf("%s\n", test.str().c_str());
-    
     _Selection = Core::Instance()->GetSelection();
     
     Selection newSelection;

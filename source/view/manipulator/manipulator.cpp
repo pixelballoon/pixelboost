@@ -18,14 +18,14 @@ public:
         
     }
     
-    virtual bool OnKeyDown(pb::KeyboardKey key, char character)
+    virtual bool OnKeyDown(pb::KeyboardKey key, pb::ModifierKeys modifier, char character)
     {
-        return View::Instance()->GetManipulatorManager()->OnKeyDown(key, character);
+        return View::Instance()->GetManipulatorManager()->OnKeyDown(key, modifier, character);
     }
     
-    virtual bool OnKeyUp(pb::KeyboardKey key, char character)
+    virtual bool OnKeyUp(pb::KeyboardKey key, pb::ModifierKeys modifier, char character)
     {
-        return View::Instance()->GetManipulatorManager()->OnKeyUp(key, character);
+        return View::Instance()->GetManipulatorManager()->OnKeyUp(key, modifier, character);
     }
 };
 
@@ -77,31 +77,6 @@ char Manipulator::GetKey()
 void Manipulator::Render(int layer)
 {
     
-}
-
-bool Manipulator::OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position)
-{
-    return false;
-}
-
-bool Manipulator::OnMouseUp(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position)
-{
-    return false;
-}
-
-bool Manipulator::OnMouseMove(glm::vec2 position)
-{
-    return false;
-}
-
-bool Manipulator::OnKeyDown(pb::KeyboardKey key, char character)
-{
-    return false;
-}
-
-bool Manipulator::OnKeyUp(pb::KeyboardKey key, char character)
-{
-    return false;
 }
 
 void Manipulator::OnSetActive()
@@ -190,12 +165,12 @@ bool ManipulatorManager::OnMouseMove(glm::vec2 position)
     return _ActiveManipulator->OnMouseMove(position);
 }
 
-bool ManipulatorManager::OnKeyDown(pb::KeyboardKey key, char character)
+bool ManipulatorManager::OnKeyDown(pb::KeyboardKey key, pb::ModifierKeys modifier, char character)
 {
-    if (_ActiveManipulator->OnKeyDown(key, character))
+    if (_ActiveManipulator->OnKeyDown(key, modifier, character))
         return true;
     
-    if (key == pb::kKeyboardKeyCharacter)
+    if (modifier == pb::kModifierKeyNone && key == pb::kKeyboardKeyCharacter)
     {
         for (ManipulatorMap::iterator it = _Manipulators.begin(); it != _Manipulators.end(); ++it)
         {
@@ -210,7 +185,7 @@ bool ManipulatorManager::OnKeyDown(pb::KeyboardKey key, char character)
     return false;
 }
 
-bool ManipulatorManager::OnKeyUp(pb::KeyboardKey key, char character)
+bool ManipulatorManager::OnKeyUp(pb::KeyboardKey key, pb::ModifierKeys modifier, char character)
 {
-    return _ActiveManipulator->OnKeyUp(key, character);
+    return _ActiveManipulator->OnKeyUp(key, modifier, character);
 }

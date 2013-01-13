@@ -20,8 +20,8 @@ namespace pixeleditor
         virtual bool OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position);
         virtual bool OnMouseUp(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position);
         virtual bool OnMouseMove(glm::vec2 position);
-        virtual bool OnKeyDown(pb::KeyboardKey key, char character);
-        virtual bool OnKeyUp(pb::KeyboardKey key, char character);
+        virtual bool OnKeyDown(pb::KeyboardKey key, pb::ModifierKeys modifier, char character);
+        virtual bool OnKeyUp(pb::KeyboardKey key, pb::ModifierKeys modifier, char character);
         
         virtual void OnSetActive();
         virtual void OnSetInactive();

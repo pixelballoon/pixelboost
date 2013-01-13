@@ -69,7 +69,7 @@ public:
         
     }
     
-    virtual bool OnKeyDown(pb::KeyboardKey key, char character)
+    virtual bool OnKeyDown(pb::KeyboardKey key, pb::ModifierKeys modifier, char character)
     {
         if (key == pb::kKeyboardKeyBackspace || key == pb::kKeyboardKeyDelete)
         {
@@ -77,10 +77,38 @@ public:
             return true;
         }
         
+        if (key == pb::kKeyboardKeyCharacter && modifier == pb::kModifierKeyControl)
+        {
+            switch (character)
+            {
+            case 's':
+                Core::Instance()->GetCommandManager()->Exec("save");
+                break;
+            case 'c':
+                Core::Instance()->GetCommandManager()->Exec("copy");
+                break;
+            case 'v':
+            {
+                char arguments[32];
+                snprintf(arguments, 32, "-r %d", View::Instance()->GetRecord()->GetUid());
+                Core::Instance()->GetCommandManager()->Exec("paste", arguments);
+                break;
+            }
+            case '[':
+                Core::Instance()->GetCommandManager()->Exec("modifyDepth", "-f");
+                break;
+            case ']':
+                Core::Instance()->GetCommandManager()->Exec("modifyDepth", "-b");
+                break;
+            }
+
+            return true;
+        }
+        
         return false;
     }
     
-    virtual bool OnKeyUp(pb::KeyboardKey key, char character)
+    virtual bool OnKeyUp(pb::KeyboardKey key, pb::ModifierKeys modifier, char character)
     {
         return false;
     }

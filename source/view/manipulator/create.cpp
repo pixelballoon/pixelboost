@@ -107,12 +107,12 @@ bool CreateManipulator::OnMouseMove(glm::vec2 position)
     return false;
 }
 
-bool CreateManipulator::OnKeyDown(pb::KeyboardKey key, char character)
+bool CreateManipulator::OnKeyDown(pb::KeyboardKey key, pb::ModifierKeys modifier, char character)
 {
     return false;
 }
 
-bool CreateManipulator::OnKeyUp(pb::KeyboardKey key, char character)
+bool CreateManipulator::OnKeyUp(pb::KeyboardKey key, pb::ModifierKeys modifier, char character)
 {
     return false;
 }

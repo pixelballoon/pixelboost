@@ -145,12 +145,12 @@ bool SelectManipulator::OnMouseMove(glm::vec2 position)
     return false;
 }
 
-bool SelectManipulator::OnKeyDown(pb::KeyboardKey key, char character)
+bool SelectManipulator::OnKeyDown(pb::KeyboardKey key, pb::ModifierKeys modifier, char character)
 {
     return false;
 }
 
-bool SelectManipulator::OnKeyUp(pb::KeyboardKey key, char character)
+bool SelectManipulator::OnKeyUp(pb::KeyboardKey key, pb::ModifierKeys modifier, char character)
 {
     return false;
 }

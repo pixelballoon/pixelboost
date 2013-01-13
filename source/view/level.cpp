@@ -216,12 +216,12 @@ void Level::UpdateSize()
     _LevelBounds->SetLocalTransform(glm::translate(glm::mat4x4(), offset));
 }
 
-bool Level::OnMouseDown(pb::MouseButton button, glm::vec2 position)
+bool Level::OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifier, glm::vec2 position)
 {
     return false;
 }
 
-bool Level::OnMouseUp(pb::MouseButton button, glm::vec2 position)
+bool Level::OnMouseUp(pb::MouseButton button, pb::ModifierKeys modifier, glm::vec2 position)
 {
     return false;
 }

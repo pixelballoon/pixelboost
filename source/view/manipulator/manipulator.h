@@ -29,11 +29,11 @@ namespace pixeleditor
         
         virtual void Render(int layer);
         
-        virtual bool OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position);
-        virtual bool OnMouseUp(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position);
-        virtual bool OnMouseMove(glm::vec2 position);
-        virtual bool OnKeyDown(pb::KeyboardKey key, char character);
-        virtual bool OnKeyUp(pb::KeyboardKey key, char character);
+        virtual bool OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position) = 0;
+        virtual bool OnMouseUp(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position) = 0;
+        virtual bool OnMouseMove(glm::vec2 position) = 0;
+        virtual bool OnKeyDown(pb::KeyboardKey key, pb::ModifierKeys modifier, char character) = 0;
+        virtual bool OnKeyUp(pb::KeyboardKey key, pb::ModifierKeys modifier, char character) = 0;
         
         virtual void OnSetActive();
         virtual void OnSetInactive();
@@ -59,8 +59,8 @@ namespace pixeleditor
         bool OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position);
         bool OnMouseUp(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position);
         bool OnMouseMove(glm::vec2 position);
-        bool OnKeyDown(pb::KeyboardKey key, char character);
-        bool OnKeyUp(pb::KeyboardKey key, char character);
+        bool OnKeyDown(pb::KeyboardKey key, pb::ModifierKeys modifier, char character);
+        bool OnKeyUp(pb::KeyboardKey key, pb::ModifierKeys modifier, char character);
         
     private:
         typedef std::map<std::string, Manipulator*> ManipulatorMap;

@@ -97,12 +97,12 @@ bool ScaleManipulator::OnMouseMove(glm::vec2 position)
     return false;
 }
 
-bool ScaleManipulator::OnKeyDown(pb::KeyboardKey key, char character)
+bool ScaleManipulator::OnKeyDown(pb::KeyboardKey key, pb::ModifierKeys modifier, char character)
 {
     return false;
 }
 
-bool ScaleManipulator::OnKeyUp(pb::KeyboardKey key, char character)
+bool ScaleManipulator::OnKeyUp(pb::KeyboardKey key, pb::ModifierKeys modifier, char character)
 {
     return false;
 }

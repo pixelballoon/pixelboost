@@ -64,8 +64,8 @@ namespace pixeleditor
         void UpdateSize();
         
     private:
-        virtual bool OnMouseDown(pb::MouseButton button, glm::vec2 position);
-        virtual bool OnMouseUp(pb::MouseButton button, glm::vec2 position);
+        virtual bool OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifier, glm::vec2 position);
+        virtual bool OnMouseUp(pb::MouseButton button, pb::ModifierKeys modifier, glm::vec2 position);
         virtual bool OnMouseMove(glm::vec2 position);
         
         virtual void OnRecordRemoved(Project* project, ProjectRecord* record);
