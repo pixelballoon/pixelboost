@@ -40,6 +40,11 @@ Uid EllipseComponent::GetStaticType()
     return TypeHash("pb::EllipseComponent");
 }
 
+void EllipseComponent::SetLayer(int layer)
+{
+    _Renderable->SetLayer(layer);
+}
+
 void EllipseComponent::SetColor(glm::vec4 color)
 {
     _Renderable->SetColor(color);

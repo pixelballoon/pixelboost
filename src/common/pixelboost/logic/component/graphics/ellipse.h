@@ -21,6 +21,8 @@ public:
     virtual Uid GetType();
     static Uid GetStaticType();
     
+    void SetLayer(int layer);
+    
     void SetColor(glm::vec4 color);
     glm::vec4 GetColor();
     
