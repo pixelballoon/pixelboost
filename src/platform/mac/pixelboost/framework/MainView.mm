@@ -92,9 +92,11 @@ enum {
     
     _joysticks = [[DDHidJoystick allJoysticks] retain];
     
-    [[_joysticks objectAtIndex:0] setDelegate:self];
-    [[_joysticks objectAtIndex:0] startListening];
-    
+    for (DDHidJoystick* joystick in _joysticks)
+    {
+        [joystick setDelegate:self];
+        [joystick startListening];
+    }
     
     return self;
 }
