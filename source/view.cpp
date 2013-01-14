@@ -81,6 +81,9 @@ public:
         {
             switch (character)
             {
+            case 'e':
+                Core::Instance()->GetCommandManager()->Exec("export");
+                break;
             case 's':
                 Core::Instance()->GetCommandManager()->Exec("save");
                 break;
