@@ -45,10 +45,10 @@ namespace pb
         Texture* GetTexture();
         
         void SetTint(const glm::vec4& tint);
-        const glm::vec4& GetTint();
+        const glm::vec4& GetTint() const;
         
         void SetTransform(const glm::mat4x4& transform);
-        const glm::mat4x4& GetTransform();
+        const glm::mat4x4& GetTransform() const;
         
     private:
         Model* _Model;

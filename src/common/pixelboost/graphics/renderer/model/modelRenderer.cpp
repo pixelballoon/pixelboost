@@ -98,7 +98,7 @@ void ModelRenderable::SetTint(const glm::vec4& tint)
     _Tint = tint;
 }
 
-const glm::vec4& ModelRenderable::GetTint()
+const glm::vec4& ModelRenderable::GetTint() const
 {
     return _Tint;
 }
@@ -110,7 +110,7 @@ void ModelRenderable::SetTransform(const glm::mat4x4& transform)
     DirtyBounds();
 }
 
-const glm::mat4x4& ModelRenderable::GetTransform()
+const glm::mat4x4& ModelRenderable::GetTransform() const
 {
     return _Transform;
 }
@@ -375,7 +375,7 @@ void ModelRenderer::Render(int count, Renderable** renderables, Viewport* viewpo
         if (!model || !texture || !model->GetMeshes().size())
             continue;
         
-        shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", renderable.GetMVP());
+        shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewMatrix", renderable.GetModelViewMatrix());
         shaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", renderable._Tint);
         shaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
         

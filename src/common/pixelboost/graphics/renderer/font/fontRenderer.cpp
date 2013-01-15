@@ -429,7 +429,7 @@ void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewpor
         
         GraphicsDevice::Instance()->BindTexture(font->texture);
         
-        shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", renderable.GetMVP());
+        shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewMatrix", renderable.GetModelViewMatrix());
         shaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", renderable.Tint);
         shaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
         

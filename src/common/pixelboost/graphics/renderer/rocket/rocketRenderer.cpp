@@ -149,11 +149,11 @@ void RocketRenderer::RenderGeometry(Rocket::Core::Vertex* vertices, int numVerti
     
     _IndexBuffer->Unlock(numIndices);
     
-    glm::mat4x4 matrix = _Renderable->GetMVP();
+    glm::mat4x4 matrix = _Renderable->GetModelViewMatrix();
     matrix = glm::scale(matrix, glm::vec3(1.f,1.f,1.f)/32.f);
     matrix = glm::translate(matrix, glm::vec3(-pb::GraphicsDevice::Instance()->GetDisplayResolution().x/2.f, pb::GraphicsDevice::Instance()->GetDisplayResolution().y/2.f, 0.f));
     matrix = glm::translate(matrix, glm::vec3(translation.x, -translation.y, 0));
-    _ShaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", matrix);
+    _ShaderPass->GetShaderProgram()->SetUniform("PB_ModelViewMatrix", matrix);
     
     GraphicsDevice::Instance()->BindIndexBuffer(_IndexBuffer);
     GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffer);
@@ -217,11 +217,11 @@ void RocketRenderer::RenderCompiledGeometry(Rocket::Core::CompiledGeometryHandle
         GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
     }
     
-    glm::mat4x4 matrix = _Renderable->GetMVP();
+    glm::mat4x4 matrix = _Renderable->GetModelViewMatrix();
     matrix = glm::scale(matrix, glm::vec3(1.f,1.f,1.f)/32.f);
     matrix = glm::translate(matrix, glm::vec3(-pb::GraphicsDevice::Instance()->GetDisplayResolution().x/2.f, pb::GraphicsDevice::Instance()->GetDisplayResolution().y/2.f, 0.f));
     matrix = glm::translate(matrix, glm::vec3(translation.x, -translation.y, 0));
-    _ShaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", matrix);
+    _ShaderPass->GetShaderProgram()->SetUniform("PB_ModelViewMatrix", matrix);
     
     GraphicsDevice::Instance()->BindIndexBuffer(indexBuffer);
     GraphicsDevice::Instance()->BindVertexBuffer(vertexBuffer);

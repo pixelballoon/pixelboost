@@ -147,7 +147,7 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
     
     _BatchSize = 0;
     
-    shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", glm::mat4x4());
+    shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewMatrix", glm::mat4x4());
     shaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
     
     GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffer);
@@ -230,16 +230,11 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
         bufferData[3].color[2] = renderable._Tint.b;
         bufferData[3].color[3] = renderable._Tint.a;
         
-        glm::vec4 a = renderable.GetMVP() * glm::vec4(crop[0]-0.5, crop[1]-0.5, 0, 1);
-        glm::vec4 b = renderable.GetMVP() * glm::vec4(crop[0]-0.5, crop[3]-0.5, 0, 1);
-        glm::vec4 c = renderable.GetMVP() * glm::vec4(crop[2]-0.5, crop[3]-0.5, 0, 1);
-        glm::vec4 d = renderable.GetMVP() * glm::vec4(crop[2]-0.5, crop[1]-0.5, 0, 1);
-        
-        a /= a.w;
-        b /= b.w;
-        c /= c.w;
-        d /= d.w;
-        
+        glm::vec4 a = renderable.GetModelViewMatrix() * glm::vec4(crop[0]-0.5, crop[1]-0.5, 0, 1);
+        glm::vec4 b = renderable.GetModelViewMatrix() * glm::vec4(crop[0]-0.5, crop[3]-0.5, 0, 1);
+        glm::vec4 c = renderable.GetModelViewMatrix() * glm::vec4(crop[2]-0.5, crop[3]-0.5, 0, 1);
+        glm::vec4 d = renderable.GetModelViewMatrix() * glm::vec4(crop[2]-0.5, crop[1]-0.5, 0, 1);
+                
         bufferData[0].position[0] = a.x;
         bufferData[0].position[1] = a.y;
         bufferData[0].position[2] = a.z;

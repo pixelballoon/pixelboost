@@ -28,7 +28,6 @@ public:
     
 public:
     BoundingFrustum Frustum;
-    glm::mat4x4 ViewProjectionMatrix;
     glm::mat4x4 ProjectionMatrix;
     glm::mat4x4 ViewMatrix;
     

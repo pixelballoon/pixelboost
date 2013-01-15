@@ -482,7 +482,7 @@ void ParticleRenderer::Render(int count, Renderable** renderables, Viewport* vie
     {
         ParticleRenderable& renderable = *static_cast<ParticleRenderable*>(renderables[i]);
         
-        shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", renderable.GetMVP());
+        shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewMatrix", renderable.GetModelViewMatrix());
         
         renderable._Emitter->Render(viewport, shaderPass);
         

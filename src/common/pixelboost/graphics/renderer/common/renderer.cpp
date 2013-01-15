@@ -6,6 +6,7 @@
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/device/device.h"
+#include "pixelboost/graphics/device/program.h"
 #include "pixelboost/graphics/renderer/common/irenderer.h"
 #include "pixelboost/graphics/renderer/common/renderable.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
@@ -91,7 +92,7 @@ void Renderer::SetHandler(int renderableType, IRenderer* renderer)
 
 static bool RenderableBackToFrontSorter(const Renderable* a, const Renderable* b)
 {
-    return a->GetMVP()[3][2] > b->GetMVP()[3][2];
+    return a->GetModelViewMatrix()[3][2] > b->GetModelViewMatrix()[3][2];
 }
 
 void Renderer::FlushBuffer(Viewport* viewport, Camera* camera)
@@ -105,7 +106,7 @@ void Renderer::FlushBuffer(Viewport* viewport, Camera* camera)
         
         for (RenderableList::iterator it = renderables.begin(); it != renderables.end(); ++it)
         {
-            (*it)->CalculateMVP(viewport, camera);
+            (*it)->CalculateModelViewMatrix(viewport, camera);
         }
         
         std::stable_sort(renderables.begin(), renderables.end(), &RenderableBackToFrontSorter);
@@ -124,7 +125,7 @@ void Renderer::FlushBuffer(Viewport* viewport, Camera* camera)
             {
                 count++;
             } else {
-                RenderBatch(viewport, count, &renderables[start], shader);
+                RenderBatch(viewport, count, &renderables[start], shader, camera);
                 start = i;
                 count = 1;
                 type = newType;
@@ -134,14 +135,14 @@ void Renderer::FlushBuffer(Viewport* viewport, Camera* camera)
         
         if (count > 0)
         {
-            RenderBatch(viewport, count, &renderables[start], shader);
+            RenderBatch(viewport, count, &renderables[start], shader, camera);
         }
     }
     
     _Renderables.clear();
 }
 
-void Renderer::RenderBatch(Viewport* viewport, int count, Renderable** renderable, Shader* shader)
+void Renderer::RenderBatch(Viewport* viewport, int count, Renderable** renderable, Shader* shader, Camera* camera)
 {
     if (!shader)
         return;
@@ -164,6 +165,7 @@ void Renderer::RenderBatch(Viewport* viewport, int count, Renderable** renderabl
                     {
                         ShaderPass* pass = technique->GetPass(j);
                         pass->Bind();
+                        pass->GetShaderProgram()->SetUniform("PB_ProjectionMatrix", camera->ProjectionMatrix);
                         it->second->Render(1, &renderable[i], viewport, pass);
                     }
                 }
@@ -174,6 +176,7 @@ void Renderer::RenderBatch(Viewport* viewport, int count, Renderable** renderabl
             {
                 ShaderPass* pass = technique->GetPass(i);
                 pass->Bind();
+                pass->GetShaderProgram()->SetUniform("PB_ProjectionMatrix", camera->ProjectionMatrix);
                 it->second->Render(count, renderable, viewport, pass);
             }
         }

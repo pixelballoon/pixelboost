@@ -23,7 +23,7 @@ Camera::~Camera()
 
 void Camera::CalculateTransform(Viewport* viewport)
 {
-    Frustum.Set(ViewProjectionMatrix);
+    Frustum.Set(ProjectionMatrix * ViewMatrix);
 }
 
 OrthographicCamera::OrthographicCamera(glm::vec3 position, glm::vec3 rotation, glm::vec2 scale)
@@ -47,7 +47,6 @@ void OrthographicCamera::CalculateTransform(Viewport* viewport)
     ViewMatrix = glm::rotate(ViewMatrix, Rotation.y, glm::vec3(0,1,0));
     ViewMatrix = glm::rotate(ViewMatrix, Rotation.z, glm::vec3(0,0,1));
     ViewMatrix = glm::translate(ViewMatrix, -Position);
-    ViewProjectionMatrix = ProjectionMatrix * ViewMatrix;
     
     Camera::CalculateTransform(viewport);
 }
@@ -89,7 +88,6 @@ void PerspectiveCamera::CalculateTransform(Viewport* viewport)
     ViewMatrix = glm::rotate(ViewMatrix, Rotation.y, glm::vec3(0,1,0));
     ViewMatrix = glm::rotate(ViewMatrix, Rotation.z, glm::vec3(0,0,1));
     ViewMatrix = glm::translate(ViewMatrix, -Position);
-    ViewProjectionMatrix = ProjectionMatrix * ViewMatrix;
     
     Camera::CalculateTransform(viewport);
 }

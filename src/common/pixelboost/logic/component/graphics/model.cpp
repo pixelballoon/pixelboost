@@ -105,3 +105,7 @@ void ModelComponent::UpdateTransform()
     }
 }
 
+const ModelRenderable* ModelComponent::GetRenderable() const
+{
+    return _Renderable;
+}

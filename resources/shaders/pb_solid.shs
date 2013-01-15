@@ -11,11 +11,12 @@
         #ifdef VERTEX
           attribute vec4 PB_Attr_Position;
    
-          uniform mat4 PB_ModelViewProj;
+          uniform mat4 PB_ModelViewMatrix;
+          uniform mat4 PB_ProjectionMatrix;
            
           void main()
           {
-              gl_Position = PB_ModelViewProj * PB_Attr_Position;
+              gl_Position = PB_ProjectionMatrix * PB_ModelViewMatrix * PB_Attr_Position;
           }
         #endif
         #ifdef FRAGMENT
@@ -26,22 +27,6 @@
               gl_FragColor = _DiffuseColor;
           }
         #endif
-      </program>
-      <program language="hlsl">
-        void frag(
-          out float4 oColor  : COLOR,
-          uniform float4 _DiffuseColor)
-        {
-            oColor.xyzw = _DiffuseColor;
-        }
-        
-        void vert(
-          float4 position         : POSITION,
-          out float4 oPosition    : POSITION,
-          uniform float4x4 PB_ModelViewProj)
-        {
-            oPosition = mul(PB_ModelViewProj, position);
-        }
       </program>
     </pass>
   </subshader>

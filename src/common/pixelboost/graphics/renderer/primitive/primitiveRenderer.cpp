@@ -315,7 +315,7 @@ void PrimitiveRenderer::Render(int count, Renderable** renderables, Viewport* vi
         PrimitiveRenderable& primitive = *static_cast<PrimitiveRenderable*>(renderables[i]);
         
         shaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", primitive._Color);
-        shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", primitive.GetMVP());
+        shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewMatrix", primitive.GetModelViewMatrix());
          
         switch (primitive.GetPrimitiveType())
         {

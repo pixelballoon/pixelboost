@@ -106,17 +106,17 @@ const glm::mat4x4& Renderable::GetWorldMatrix()
     return _WorldMatrix;
 }
 
-void Renderable::CalculateMVP(Viewport* viewport, Camera* camera)
+void Renderable::CalculateModelViewMatrix(Viewport* viewport, Camera* camera)
 {
     if (_WorldMatrixDirty)
         CalculateWorldMatrix();
     
-    _MVPMatrix = camera->ViewProjectionMatrix * _WorldMatrix;
+    _ModelViewMatrix = camera->ViewMatrix * _WorldMatrix;
 }
 
-const glm::mat4x4& Renderable::GetMVP() const
+const glm::mat4x4& Renderable::GetModelViewMatrix() const
 {
-    return _MVPMatrix;
+    return _ModelViewMatrix;
 }
 
 Shader* Renderable::GetShader()

@@ -36,6 +36,8 @@ namespace pb
         
         void SetLocalTransform(const glm::mat4x4& transform);
         
+        const ModelRenderable* GetRenderable() const;
+        
     private:
         void OnTransformChanged(const Message& message);
         void UpdateTransform();

@@ -130,7 +130,7 @@ void BufferRenderer::Render(int count, Renderable** renderables, Viewport* viewp
     {
         BufferRenderable& renderable = *static_cast<BufferRenderable*>(renderables[i]);
         
-        shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", renderable.GetMVP());
+        shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewMatrix", renderable.GetModelViewMatrix());
         
         if (renderable._Texture->HasPremultipliedAlpha())
         {

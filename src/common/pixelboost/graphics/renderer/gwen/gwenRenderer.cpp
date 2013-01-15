@@ -339,7 +339,7 @@ void GwenRenderer::RenderText(Gwen::Font* font, Gwen::Point pos, const Gwen::Uni
     glm::mat4x4 modelMatrix = glm::translate(glm::mat4x4(), glm::vec3(pos.x, -pos.y - size, 0)/32.f);
     modelMatrix = glm::scale(modelMatrix, glm::vec3(size, size, 1)/32.f);
     
-    _ShaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", _Renderable->GetMVP() * modelMatrix);
+    _ShaderPass->GetShaderProgram()->SetUniform("PB_ModelViewMatrix", _Renderable->GetModelViewMatrix() * modelMatrix);
     _ShaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", glm::vec4(0,0,0,1));
     
     if (renderFont->texture->HasPremultipliedAlpha())
@@ -380,7 +380,7 @@ void GwenRenderer::PurgeBuffer(bool force)
     _VertexBuffer->Unlock(_VertexCount);
     if (_VertexCount)
     {
-        _ShaderPass->GetShaderProgram()->SetUniform("PB_ModelViewProj", _Renderable->GetMVP());
+        _ShaderPass->GetShaderProgram()->SetUniform("PB_ModelViewMatrix", _Renderable->GetModelViewMatrix());
         
         GraphicsDevice::Instance()->BindIndexBuffer(_IndexBuffer);
         GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffer);

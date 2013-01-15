@@ -47,8 +47,8 @@ public:
     void SetWorldMatrix(const glm::mat4x4& matrix);
     const glm::mat4x4& GetWorldMatrix();
     
-    void CalculateMVP(Viewport* viewport, Camera* camera);
-    const glm::mat4x4& GetMVP() const;
+    void CalculateModelViewMatrix(Viewport* viewport, Camera* camera);
+    const glm::mat4x4& GetModelViewMatrix() const;
     
     virtual Shader* GetShader();
     void SetShader(Shader* shader);
@@ -62,7 +62,7 @@ private:
     bool _BoundsDirty;
     BoundingSphere _Bounds;
     
-    glm::mat4x4 _MVPMatrix;
+    glm::mat4x4 _ModelViewMatrix;
     
 private:
     RenderSystem* _System;

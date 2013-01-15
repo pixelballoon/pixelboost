@@ -48,7 +48,7 @@ private:
     void AttachRenderable(Renderable* renderable);
     
     void FlushBuffer(Viewport* viewport, Camera* camera);
-    void RenderBatch(Viewport* viewport, int count, Renderable** renderable, Shader* shader);
+    void RenderBatch(Viewport* viewport, int count, Renderable** renderable, Shader* shader, Camera* camera);
     
 private:
     typedef std::map<int, IRenderer*> RenderableHandlerMap;
