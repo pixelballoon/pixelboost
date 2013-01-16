@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <set>
 #include <vector>
 
 #include "pixelboost/db/definitions.h"
@@ -48,15 +49,19 @@ public:
     
 private:
     void AddEntity(Entity* entity);
+    void AddEntityPurge(Entity* entity);
     
     typedef std::pair<Uid, const Message*> DelayedMessage;
     typedef std::vector<std::pair<float, DelayedMessage> > DelayedMessageList;
+    typedef std::set<Entity*> EntitySet;
     typedef std::map<Uid, SceneSystem*> SystemMap;
     
     DelayedMessageList _DelayedMessages;
     EntityMap _NewEntities;
     EntityMap _Entities;
     SystemMap _Systems;
+    
+    EntitySet _PurgeSet;
     
     pb::Uid _NextFreeUid;
     

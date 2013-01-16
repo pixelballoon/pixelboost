@@ -50,7 +50,6 @@ public:
         
 public:
     void DestroyComponent(Component* component);
-    void DestroyAllComponents();
     
     Component* GetComponentById(Uid componentId);
     
@@ -67,6 +66,7 @@ public:
     
 private:
     void AddComponent(Component* component);
+    void PurgeComponents();
     
     void HandleCreationEntityDestroyed();
     void HandleCreationEntityReloaded();
@@ -88,6 +88,7 @@ private:
     EntityState _State;
     
     friend class Component;
+    friend class Scene;
 };
     
 }

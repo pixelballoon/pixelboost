@@ -35,7 +35,10 @@ Entity::~Entity()
         _CreationEntity->structReloaded.Disconnect(this, &Entity::OnCreationEntityReloaded);
     }
     
-    DestroyAllComponents();
+    for (ComponentList::iterator componentIt = _Components.begin(); componentIt != _Components.end(); ++componentIt)
+    {
+        delete *componentIt;
+    }
 }
 
 Scene* Entity::GetScene()
@@ -80,25 +83,26 @@ void Entity::AddComponent(Component* component)
 
 void Entity::DestroyComponent(Component* component)
 {
-    for (ComponentList::iterator componentIt = _Components.begin(); componentIt != _Components.end(); ++componentIt)
+    if (component)
     {
-        if (*componentIt == component)
-        {
-            _Components.erase(componentIt);
-            delete component;
-            return;
-        }
+        component->_State = Component::kComponentDestroyed;
+        _Scene->AddEntityPurge(this);
     }
 }
 
-void Entity::DestroyAllComponents()
+void Entity::PurgeComponents()
 {
-    for (ComponentList::iterator componentIt = _Components.begin(); componentIt != _Components.end(); ++componentIt)
+    for (ComponentList::iterator componentIt = _Components.begin(); componentIt != _Components.end();)
     {
-        delete *componentIt;
+        Component* component = *componentIt;
+        if (component->_State == Component::kComponentDestroyed)
+        {
+            delete component;
+            componentIt = _Components.erase(componentIt);
+        } else {
+            ++componentIt;
+        }
     }
-    
-    _Components.clear();
 }
 
 Component* Entity::GetComponentById(Uid componentId)

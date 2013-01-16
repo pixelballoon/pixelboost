@@ -5,6 +5,7 @@ using namespace pb;
 
 Component::Component(Entity* parent)
     : _Parent(parent)
+    , _State(kComponentCreated)
 {
     _Uid = parent->GenerateComponentId();
     parent->AddComponent(this);

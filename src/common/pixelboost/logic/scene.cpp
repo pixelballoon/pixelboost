@@ -40,6 +40,12 @@ Scene::~Scene()
 
 void Scene::Update(float time)
 {
+    for (EntitySet::iterator it = _PurgeSet.begin(); it != _PurgeSet.end(); ++it)
+    {
+        (*it)->PurgeComponents();
+    }
+    _PurgeSet.clear();
+    
     for (EntityMap::iterator it = _Entities.begin(); it != _Entities.end();)
     {
         if (it->second->GetState() == Entity::kEntityDestroyed)
@@ -130,6 +136,11 @@ void Scene::AddEntity(Entity* entity)
     PbAssert(_NewEntities.find(entity->GetUid()) == _NewEntities.end());
 #endif
     _NewEntities[entity->GetUid()] = entity;
+}
+
+void Scene::AddEntityPurge(Entity* entity)
+{
+    _PurgeSet.insert(entity);
 }
 
 void Scene::DestroyEntity(Entity* entity)
