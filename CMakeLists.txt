@@ -6,13 +6,14 @@ if (PIXELBOOST_BUILD_PLATFORM_ANDROID)
 		)
 
 	set (PLATFORM_SOURCES
-		"src/platform/android/pixelboost/audio/soundManager.h"
 		"src/platform/android/pixelboost/audio/soundManager.cpp"
+		"src/platform/android/pixelboost/audio/soundManager.h"
 		"src/platform/android/pixelboost/file/fileHelpers.cpp"
 		"src/platform/android/pixelboost/file/fileSystem.cpp"
 		"src/platform/android/pixelboost/misc/jni.cpp"
-		"src/platform/android/pixelboost/network/gameCenter.h"
+		"src/platform/android/pixelboost/misc/jni.h"
 		"src/platform/android/pixelboost/network/gameCenter.cpp"
+		"src/platform/android/pixelboost/network/gameCenter.h"
 		"src/platform/android/pixelboost/network/networkHelpers.cpp"
 		"src/platform/android/pixelboost/util/localisation/localisation.cpp"
 		)
@@ -110,177 +111,280 @@ include_directories("${PIXELBOOST_HEADERS}")
 
 set (DATA_SOURCES
 	"src/common/pixelboost/data/asset/assetLoader.cpp"
+	"src/common/pixelboost/data/asset/assetLoader.h"
 	"src/common/pixelboost/data/xml/xml.cpp"
+	"src/common/pixelboost/data/xml/xml.h"
 	)
 
 set (DB_SOURCES
 	"src/common/pixelboost/db/database.cpp"
+	"src/common/pixelboost/db/database.h"
 	"src/common/pixelboost/db/definitions.cpp"
+	"src/common/pixelboost/db/definitions.h"
 	"src/common/pixelboost/db/entity.cpp"
+	"src/common/pixelboost/db/entity.h"
 	"src/common/pixelboost/db/record.cpp"
+	"src/common/pixelboost/db/record.h"
 	"src/common/pixelboost/db/struct.cpp"
+	"src/common/pixelboost/db/struct.h"
 	)
 
 set (DEBUG_SOURCES
 	"src/common/pixelboost/debug/assert.cpp"
+	"src/common/pixelboost/debug/assert.h"
 	"src/common/pixelboost/debug/debugDatabaseHandler.cpp"
+	"src/common/pixelboost/debug/debugDatabaseHandler.h"
 	"src/common/pixelboost/debug/debugVariable.cpp"
+	"src/common/pixelboost/debug/debugVariable.h"
 	"src/common/pixelboost/debug/debugVariableManager.cpp"
+	"src/common/pixelboost/debug/debugVariableManager.h"
 	)
 
 set (FILE_SOURCES
 	"src/common/pixelboost/file/fileHelpers.cpp"
+	"src/common/pixelboost/file/fileHelpers.h"
 	"src/common/pixelboost/file/fileSystem.cpp"
+	"src/common/pixelboost/file/fileSystem.h"
 	)
 
 set (FRAMEWORK_SOURCES
 	"src/common/pixelboost/framework/engine.cpp"
+	"src/common/pixelboost/framework/engine.h"
 	"src/common/pixelboost/framework/screen.cpp"
+	"src/common/pixelboost/framework/screen.h"
 	)
 
 set (GRAPHICS_CAMERA_SOURCES
 	"src/common/pixelboost/graphics/camera/camera.cpp"
+	"src/common/pixelboost/graphics/camera/camera.h"
 	"src/common/pixelboost/graphics/camera/viewport.cpp"
+	"src/common/pixelboost/graphics/camera/viewport.h"
 	)
 
 set (GRAPHICS_DEVICE_SOURCES
 	"src/common/pixelboost/graphics/device/gl/device.cpp"
+	"src/common/pixelboost/graphics/device/gl/device.h"
 	"src/common/pixelboost/graphics/device/gl/program.cpp"
+	"src/common/pixelboost/graphics/device/gl/program.h"
 	"src/common/pixelboost/graphics/device/gl/texture.cpp"
+	"src/common/pixelboost/graphics/device/gl/texture.h"
 	"src/common/pixelboost/graphics/device/gles1/device.cpp"
+	"src/common/pixelboost/graphics/device/gles1/device.h"
 	"src/common/pixelboost/graphics/device/gles1/texture.cpp"
+	"src/common/pixelboost/graphics/device/gles1/texture.h"
 	"src/common/pixelboost/graphics/device/device.cpp"
+	"src/common/pixelboost/graphics/device/device.h"
 	"src/common/pixelboost/graphics/device/indexBuffer.cpp"
+	"src/common/pixelboost/graphics/device/indexBuffer.h"
 	"src/common/pixelboost/graphics/device/program.cpp"
+	"src/common/pixelboost/graphics/device/program.h"
 	"src/common/pixelboost/graphics/device/texture.cpp"
+	"src/common/pixelboost/graphics/device/texture.h"
 	"src/common/pixelboost/graphics/device/vertexBuffer.cpp"
+	"src/common/pixelboost/graphics/device/vertexBuffer.h"
 	)
 
 set (GRAPHICS_HELPER_SOURCES
 	"src/common/pixelboost/graphics/helper/screenHelpers.cpp"
+	"src/common/pixelboost/graphics/helper/screenHelpers.h"
+	)
+
+set (GRAPHICS_PARTICLE_SOURCES
+	"src/common/pixelboost/graphics/particle/particleSystem.cpp"
+	"src/common/pixelboost/graphics/particle/particleSystem.h"
 	)
 
 set (GRAPHICS_RENDERER_SOURCES
 	"src/common/pixelboost/graphics/renderer/box2d/box2dRenderer.cpp"
+	"src/common/pixelboost/graphics/renderer/box2d/box2dRenderer.h"
 	"src/common/pixelboost/graphics/renderer/buffer/bufferRenderer.cpp"
+	"src/common/pixelboost/graphics/renderer/buffer/bufferRenderer.h"
 	"src/common/pixelboost/graphics/renderer/common/irenderer.cpp"
+	"src/common/pixelboost/graphics/renderer/common/irenderer.h"
 	"src/common/pixelboost/graphics/renderer/common/renderable.cpp"
+	"src/common/pixelboost/graphics/renderer/common/renderable.h"
 	"src/common/pixelboost/graphics/renderer/common/renderer.cpp"
+	"src/common/pixelboost/graphics/renderer/common/renderer.h"
 	"src/common/pixelboost/graphics/renderer/font/fontRenderer.cpp"
+	"src/common/pixelboost/graphics/renderer/font/fontRenderer.h"	
 	"src/common/pixelboost/graphics/renderer/gwen/gwenRenderer.cpp"
+	"src/common/pixelboost/graphics/renderer/gwen/gwenRenderer.h"
 	"src/common/pixelboost/graphics/renderer/model/model.cpp"
+	"src/common/pixelboost/graphics/renderer/model/model.h"
 	"src/common/pixelboost/graphics/renderer/model/modelRenderer.cpp"
+	"src/common/pixelboost/graphics/renderer/model/modelRenderer.h"
 	"src/common/pixelboost/graphics/renderer/particle/particleRenderer.cpp"
+	"src/common/pixelboost/graphics/renderer/particle/particleRenderer.h"
 	"src/common/pixelboost/graphics/renderer/primitive/primitiveRenderer.cpp"
+	"src/common/pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 	"src/common/pixelboost/graphics/renderer/rocket/rocketRenderer.cpp"
+	"src/common/pixelboost/graphics/renderer/rocket/rocketRenderer.h"
 	"src/common/pixelboost/graphics/renderer/sprite/sprite.cpp"
+	"src/common/pixelboost/graphics/renderer/sprite/sprite.h"
 	"src/common/pixelboost/graphics/renderer/sprite/spriteRenderer.cpp"
+	"src/common/pixelboost/graphics/renderer/sprite/spriteRenderer.h"
 	)
 
 set (GRAPHICS_SHADER_SOURCES
 	"src/common/pixelboost/graphics/shader/manager.cpp"
+	"src/common/pixelboost/graphics/shader/manager.h"
 	"src/common/pixelboost/graphics/shader/shader.cpp"
+	"src/common/pixelboost/graphics/shader/shader.h"
 	)
 
 set (GRAPHICS_UI_SOURCES
 	"src/common/pixelboost/graphics/ui/rocket.cpp"
+	"src/common/pixelboost/graphics/ui/rocket.h"
 	)
 
 set (INPUT_SOURCES
 	"src/common/pixelboost/input/acceleratometerManager.cpp"
+	"src/common/pixelboost/input/acceleratometerManager.h"
 	"src/common/pixelboost/input/inputManager.cpp"
+	"src/common/pixelboost/input/inputManager.h"
 	"src/common/pixelboost/input/joystickManager.cpp"
+	"src/common/pixelboost/input/joystickManager.h"
 	"src/common/pixelboost/input/keyboardManager.cpp"
+	"src/common/pixelboost/input/keyboardManager.h"
 	"src/common/pixelboost/input/mouseManager.cpp"
+	"src/common/pixelboost/input/mouseManager.h"
 	"src/common/pixelboost/input/touchManager.cpp"
+	"src/common/pixelboost/input/touchManager.h"
 	)
 
 set (LOGIC_COMPONENT_GRAPHICS_SOURCES
 	"src/common/pixelboost/logic/component/graphics/buffer.cpp"
+	"src/common/pixelboost/logic/component/graphics/buffer.h"
 	"src/common/pixelboost/logic/component/graphics/camera.cpp"
+	"src/common/pixelboost/logic/component/graphics/camera.h"
 	"src/common/pixelboost/logic/component/graphics/ellipse.cpp"
+	"src/common/pixelboost/logic/component/graphics/ellipse.h"
 	"src/common/pixelboost/logic/component/graphics/font.cpp"
+	"src/common/pixelboost/logic/component/graphics/font.h"
 	"src/common/pixelboost/logic/component/graphics/line.cpp"
+	"src/common/pixelboost/logic/component/graphics/line.h"
 	"src/common/pixelboost/logic/component/graphics/model.cpp"
-	"src/common/pixelboost/logic/component/graphics/particleEmitter.cpp"
+	"src/common/pixelboost/logic/component/graphics/model.h"
 	"src/common/pixelboost/logic/component/graphics/rectangle.cpp"
+	"src/common/pixelboost/logic/component/graphics/rectangle.h"
 	"src/common/pixelboost/logic/component/graphics/rocket.cpp"
+	"src/common/pixelboost/logic/component/graphics/rocket.h"
     "src/common/pixelboost/logic/component/graphics/skinnedModel.cpp"
+    "src/common/pixelboost/logic/component/graphics/skinnedModel.h"
 	"src/common/pixelboost/logic/component/graphics/sprite.cpp"
+	"src/common/pixelboost/logic/component/graphics/sprite.h"
 	)
 
 set (LOGIC_COMPONENT_INPUT_SOURCES
 	"src/common/pixelboost/logic/component/input/rectTouch.cpp"
+	"src/common/pixelboost/logic/component/input/rectTouch.h"
 	)
 
 set (LOGIC_COMPONENT_PHYSICS_2D_SOURCES
 	"src/common/pixelboost/logic/component/physics/2d/physicsBody.cpp"
+	"src/common/pixelboost/logic/component/physics/2d/physicsBody.h"
 	"src/common/pixelboost/logic/component/physics/2d/physics.cpp"
+	"src/common/pixelboost/logic/component/physics/2d/physics.h"
 	"src/common/pixelboost/logic/component/physics/2d/userBody.cpp"
+	"src/common/pixelboost/logic/component/physics/2d/userBody.h"
 	)
 
 set (LOGIC_COMPONENT_PHYSICS_SOURCES
 	"src/common/pixelboost/logic/component/physics/physics.cpp"
+	"src/common/pixelboost/logic/component/physics/physics.h"
 	)
 
 set (LOGIC_COMPONENT_TRANSFORM_SOURCES
 	"src/common/pixelboost/logic/component/transform/basic.cpp"
+	"src/common/pixelboost/logic/component/transform/basic.h"
 	"src/common/pixelboost/logic/component/transform/parallax.cpp"
+	"src/common/pixelboost/logic/component/transform/parallax.h"
 	)
 
 set (LOGIC_COMPONENT_SOURCES
 	"src/common/pixelboost/logic/component/transform.cpp"
+	"src/common/pixelboost/logic/component/transform.h"
 	)
 
 set (LOGIC_MESSAGE_SOURCES
 	"src/common/pixelboost/logic/message/debug/render.cpp"
+	"src/common/pixelboost/logic/message/debug/render.h"
 	"src/common/pixelboost/logic/message/input/touch.cpp"
+	"src/common/pixelboost/logic/message/input/touch.h"
 	"src/common/pixelboost/logic/message/particle/finished.cpp"
+	"src/common/pixelboost/logic/message/particle/finished.h"
 	"src/common/pixelboost/logic/message/physics/collision.cpp"
+	"src/common/pixelboost/logic/message/physics/collision.h"
 	"src/common/pixelboost/logic/message/destroy.cpp"
+	"src/common/pixelboost/logic/message/destroy.h"
 	"src/common/pixelboost/logic/message/transform.cpp"
+	"src/common/pixelboost/logic/message/transform.h"
 	"src/common/pixelboost/logic/message/update.cpp"
+	"src/common/pixelboost/logic/message/update.h"
 	)
 
 set (LOGIC_SYSTEM_SOURCES
 	"src/common/pixelboost/logic/system/debug/render.cpp"
+	"src/common/pixelboost/logic/system/debug/render.h"
 	"src/common/pixelboost/logic/system/graphics/render/basic.cpp"
+	"src/common/pixelboost/logic/system/graphics/render/basic.h"
 	"src/common/pixelboost/logic/system/graphics/render/bounds.cpp"
+	"src/common/pixelboost/logic/system/graphics/render/bounds.h"
 	"src/common/pixelboost/logic/system/graphics/render/render.cpp"
+	"src/common/pixelboost/logic/system/graphics/render/render.h"
 	"src/common/pixelboost/logic/system/physics/2d/physics.cpp"
+	"src/common/pixelboost/logic/system/physics/2d/physics.h"
 	)
 
 set (LOGIC_SOURCES
 	"src/common/pixelboost/logic/component.cpp"
+	"src/common/pixelboost/logic/component.h"
 	"src/common/pixelboost/logic/entity.cpp"
+	"src/common/pixelboost/logic/entity.h"
 	"src/common/pixelboost/logic/message.cpp"
+	"src/common/pixelboost/logic/message.h"
 	"src/common/pixelboost/logic/scene.cpp"
+	"src/common/pixelboost/logic/scene.h"
 	"src/common/pixelboost/logic/system.cpp"
+	"src/common/pixelboost/logic/system.h"
 	)
 
 set (MATHS_SOURCES
 	"src/common/pixelboost/maths/boundingBox.cpp"
+	"src/common/pixelboost/maths/boundingBox.h"
 	"src/common/pixelboost/maths/boundingFrustum.cpp"
+	"src/common/pixelboost/maths/boundingFrustum.h"
 	"src/common/pixelboost/maths/boundingSphere.cpp"
+	"src/common/pixelboost/maths/boundingSphere.h"
+	"src/common/pixelboost/maths/hermiteCurve.cpp"
+	"src/common/pixelboost/maths/hermiteCurve.h"
+	"src/common/pixelboost/maths/matrixHelpers.h"
 	)
 
 set (MISC_SOURCES
 	"src/common/pixelboost/misc/gwen/inputHandler.cpp"
+	"src/common/pixelboost/misc/gwen/inputHandler.h"
 	)
 
 set (NETWORK_SOURCES
 	"src/common/pixelboost/network/http/httpServer.cpp"
+	"src/common/pixelboost/network/http/httpServer.h"
 	"src/common/pixelboost/network/networkMessage.cpp"
+	"src/common/pixelboost/network/networkMessage.h"
 	"src/common/pixelboost/network/networkServer.cpp"
+	"src/common/pixelboost/network/networkServer.h"
 	)
 
 set (PHYSICS_2D_SOURCES
 	"src/common/pixelboost/physics/2d/helpers.cpp"
+	"src/common/pixelboost/physics/2d/helpers.h"
 	)
 
 set (UTIL_LOCALISATION_SOURCES
 	"src/common/pixelboost/util/localisation/localisation.cpp"
+	"src/common/pixelboost/util/localisation/localisation.h"
 	"src/common/pixelboost/util/localisation/string.cpp"
+	"src/common/pixelboost/util/localisation/string.h"
 	)
 
 set (EXTERNAL_SOURCES
@@ -303,6 +407,7 @@ set (PIXELBOOST_SOURCES
 	${GRAPHICS_CAMERA_SOURCES}
 	${GRAPHICS_DEVICE_SOURCES}
 	${GRAPHICS_HELPER_SOURCES}
+	${GRAPHICS_PARTICLE_SOURCES}
 	${GRAPHICS_RENDERER_SOURCES}
 	${GRAPHICS_SHADER_SOURCES}
 	${GRAPHICS_UI_SOURCES}
@@ -364,6 +469,7 @@ source_group (framework FILES ${FRAMEWORK_SOURCES})
 source_group (graphics\\camera FILES ${GRAPHICS_CAMERA_SOURCES})
 source_group (graphics\\device FILES ${GRAPHICS_DEVICE_SOURCES})
 source_group (graphics\\helper FILES ${GRAPHICS_HELPER_SOURCES})
+source_group (graphics\\particle FILES ${GRAPHICS_PARTICLE_SOURCES})
 source_group (graphics\\renderer FILES ${GRAPHICS_RENDERER_SOURCES})
 source_group (graphics\\shader FILES ${GRAPHICS_SHADER_SOURCES})
 source_group (graphics\\ui FILES ${GRAPHICS_UI_SOURCES})

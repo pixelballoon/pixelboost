@@ -15,15 +15,14 @@ namespace pb
 {
     
 class IndexBuffer;
-class ParticleEmitter;
-class ParticleModifier;
+class ParticleSystem;
 class SpriteSheet;
 class VertexBuffer;
     
 class ParticleRenderable : public Renderable
 {
 public:
-    ParticleRenderable(Uid entityId, int maxParticles);
+    ParticleRenderable(Uid entityId, ParticleSystem* system);
     ~ParticleRenderable();
     
     virtual Uid GetType();
@@ -34,10 +33,10 @@ public:
     
     virtual Shader* GetShader();
     
-    ParticleEmitter* GetEmitter();
+    ParticleSystem* GetSystem();
     
 private:
-    ParticleEmitter* _Emitter;
+    ParticleSystem* _System;
     
     friend class ParticleRenderer;
 };
@@ -76,112 +75,7 @@ private:
     friend class ParticleEmitter;
     friend class ParticleRenderer;
 };
-    
-class ParticleEmitter
-{
-public:
-    ParticleEmitter(int maxParticles=50);
-    ~ParticleEmitter();
-    
-    void Update(float time);
-    void Render(Viewport* viewport, ShaderPass* shaderPass);
-    
-public:
-    struct Particle
-    {
-        Particle(EmitterConfig* config);
-        Particle(const Particle& particle);
-        ~Particle();
-        
-        Particle& operator=(const Particle& rhs);
-        
-        std::string sprite;
-        
-        EmitterConfig* emitterConfig;
-        
-        float life;
-        float totalLife;
-        
-        glm::vec3 rotation;
-        glm::vec3 position;
-        
-        glm::vec3 rotationVelocity;
-        glm::vec3 positionVelocity;
-        
-    private:
-        void Assign(const Particle& rhs);
-    };
 
-public:
-    typedef std::vector<ParticleModifier*> ModifierList;
-    typedef std::vector<Particle> ParticleList;
-    
-    void AddModifier(ParticleModifier* modifier);
-    
-    bool IsFinished();
-    int GetNumParticles();
-    void ResetSpawnCount();
-    
-    void LoadSpriteSheet(FileLocation location, const std::string& file, const std::string& extension, bool createMips, bool hasPremultipliedAlpha);
-    void SetSpriteSheet(std::shared_ptr<SpriteSheet> spriteSheet);
-    
-    glm::vec3 GetPosition();
-    void SetPosition(const glm::vec3& position);
-    
-    void SetConfig(EmitterConfig* config);
-    EmitterConfig* GetConfig();
-    ParticleList& GetParticles();
-    
-private:
-    static bool ParticleSortPredicate(const Particle& a, const Particle& b);
-    ParticleList _Particles;
-    
-    ModifierList _Modifiers;
-    
-    std::shared_ptr<SpriteSheet> _SpriteSheet;
-    EmitterConfig* _Config;
-    glm::vec3 _Position;
-    float _EmitCount;
-    int _SpawnedParticles;
-    
-    IndexBuffer* _IndexBuffer;
-    VertexBuffer* _VertexBuffer;
-    
-    bool _BufferDirty;
-    int _MaxParticles;
-    
-    friend class ParticleModifier;
-    friend class ParticleRenderer;
-};
-    
-class ParticleModifier
-{
-public:
-    ParticleModifier(ParticleEmitter* emitter);
-    virtual ~ParticleModifier();
-                     
-    void Update(float time);
-                     
-protected:
-    virtual void UpdateParticles(float time, ParticleEmitter::ParticleList& particles) = 0;
-    
-private:
-    ParticleEmitter* _Emitter;
-};
-                                          
-class ParticleAttractor : public ParticleModifier
-{
-public:
-    ParticleAttractor(ParticleEmitter* emitter, const glm::vec3& position, float strength);
-    virtual ~ParticleAttractor();
-    
-    virtual void UpdateParticles(float time, ParticleEmitter::ParticleList& particles);
-    
-private:
-    glm::vec3 _Position;
-    float _Strength;
-};
-    
 class ParticleRenderer : public IRenderer
 {
 public:
@@ -189,6 +83,14 @@ public:
     ~ParticleRenderer();
     
     virtual void Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass);
+    
+private:
+    void Render(ParticleSystem* system, ShaderPass* shaderPass);
+    
+    IndexBuffer* _IndexBuffer;
+    VertexBuffer* _VertexBuffer;
+    
+    int _MaxParticles;
 };
 
 }

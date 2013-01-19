@@ -8,6 +8,7 @@
 #include "pixelboost/graphics/device/indexBuffer.h"
 #include "pixelboost/graphics/device/program.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
+#include "pixelboost/graphics/particle/particleSystem.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/particle/particleRenderer.h"
 #include "pixelboost/graphics/renderer/sprite/sprite.h"
@@ -17,15 +18,16 @@
 using namespace pb;
 
 
-ParticleRenderable::ParticleRenderable(Uid entityId, int maxParticles)
+ParticleRenderable::ParticleRenderable(Uid entityId, ParticleSystem* system)
     : Renderable(entityId)
+    , _System(system)
 {
-    _Emitter = new ParticleEmitter(maxParticles);
+    
 }
 
 ParticleRenderable::~ParticleRenderable()
 {
-    delete _Emitter;
+    
 }
 
 Uid ParticleRenderable::GetType()
@@ -57,85 +59,15 @@ Shader* ParticleRenderable::GetShader()
     return Renderer::Instance()->GetShaderManager()->GetShader("/data/shaders/pb_texturedColor.shc");
 }
 
-ParticleEmitter* ParticleRenderable::GetEmitter()
+ParticleSystem* ParticleRenderable::GetSystem()
 {
-    return _Emitter;
+    return _System;
 }
-
-ParticleEmitter::Particle::Particle(EmitterConfig* config)
-    : emitterConfig(config)
+ 
+ParticleRenderer::ParticleRenderer()
 {
+    _MaxParticles = 10000;
     
-}
-
-ParticleEmitter::Particle::Particle(const Particle& rhs)
-    : emitterConfig(rhs.emitterConfig)
-{
-    Assign(rhs);
-}
-
-ParticleEmitter::Particle::~Particle()
-{
-    
-}
-
-ParticleEmitter::Particle& ParticleEmitter::Particle::operator=(const Particle& rhs)
-{
-    Assign(rhs);
-    
-    return *this;
-}
-
-void ParticleEmitter::Particle::Assign(const Particle& rhs)
-{
-    emitterConfig = rhs.emitterConfig;
-
-    sprite = rhs.sprite;
-    
-    life = rhs.life;
-    totalLife = rhs.totalLife;
-    
-    rotation = rhs.rotation;
-    position = rhs.position;
-    
-    rotationVelocity = rhs.rotationVelocity;
-    positionVelocity = rhs.positionVelocity;
-}
-
-EmitterConfig::EmitterConfig()
-{
-    emitCount = -1;
-    particlesPerUpdate = 1.f;
-    
-    initialScale = 1.f;
-    life = 1.f;
-    
-    startScale = glm::vec2(1.f, 1.f);
-    endScale = glm::vec2(1.f, 1.f);
-    startColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
-    endColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
-    minPosOffset = glm::vec3(0.f, 0.f, 0.f);
-    maxPosOffset = glm::vec3(0.f, 0.f, 0.f);
-    minRotOffset = glm::vec3(0.f, 0.f, 0.f);
-    maxRotOffset = glm::vec3(0.f, 0.f, 0.f);
-    minRotVelocity = glm::vec3(0.f, 0.f, 0.f);
-    maxRotVelocity = glm::vec3(0.f, 0.f, 0.f);
-    minPosVelocity = glm::vec3(0.f, 0.f, 0.f);
-    maxPosVelocity = glm::vec3(0.f, 0.f, 0.f);
-    gravity = glm::vec3(0.f, 0.f, 0.f);
-}
-
-EmitterConfig::~EmitterConfig()
-{
-
-}
-
-ParticleEmitter::ParticleEmitter(int maxParticles)
-    : _Config(0)
-    , _EmitCount(0)
-    , _MaxParticles(maxParticles)
-    , _SpawnedParticles(0)
-{
     _IndexBuffer = pb::GraphicsDevice::Instance()->CreateIndexBuffer(pb::kBufferFormatStatic, _MaxParticles*6);
     _VertexBuffer = pb::GraphicsDevice::Instance()->CreateVertexBuffer(pb::kBufferFormatDynamic, pb::kVertexFormat_P3_C4_UV, _MaxParticles*4);
     
@@ -153,106 +85,58 @@ ParticleEmitter::ParticleEmitter(int maxParticles)
         indexBuffer += 6;
     }
     _IndexBuffer->Unlock();
+    
+    Renderer::Instance()->SetHandler(ParticleRenderable::GetStaticType(), this);
+    
+    Renderer::Instance()->GetShaderManager()->LoadShader("/data/shaders/pb_texturedColor.shc");
 }
 
-ParticleEmitter::~ParticleEmitter()
+ParticleRenderer::~ParticleRenderer()
 {
-    if (_Config)
-    {
-        delete _Config;
-    }
-    
-    for (ModifierList::iterator it = _Modifiers.begin(); it != _Modifiers.end(); ++it)
-    {
-        delete *it;
-    }
-    
     pb::GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
-    pb::GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);    
+    pb::GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
+
+    Renderer::Instance()->GetShaderManager()->UnloadShader("/data/shaders/pb_texturedColor.shc");
 }
 
-void ParticleEmitter::Update(float time)
+void ParticleRenderer::Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass)
 {
-    if (!_Config || !_Config->sprites.size())
-        return;
-    
-    for (ModifierList::iterator it = _Modifiers.begin(); it != _Modifiers.end(); ++it)
+    for (int i=0; i<count; i++)
     {
-        (*it)->Update(time);
-    }
-    
-    if (_Config->emitCount == -1 || _SpawnedParticles < _Config->emitCount)
-        _EmitCount += _Config->particlesPerUpdate;
-    
-    while (_EmitCount >= 1.f)
-    {
-        if (_Particles.size() < _MaxParticles)
-        {
-            _SpawnedParticles++;
-            
-            Particle particle(_Config);
-            particle.position.x = _Position.x + _Config->minPosOffset.x + (_Config->maxPosOffset.x-_Config->minPosOffset.x) * (float)rand()/(float)RAND_MAX;
-            particle.position.y = _Position.y + _Config->minPosOffset.y + (_Config->maxPosOffset.y-_Config->minPosOffset.y) * (float)rand()/(float)RAND_MAX;
-            particle.position.z = _Position.z + _Config->minPosOffset.z + (_Config->maxPosOffset.z-_Config->minPosOffset.z) * (float)rand()/(float)RAND_MAX;
-            particle.rotation = _Config->minRotOffset + (_Config->maxRotOffset-_Config->minRotOffset) * (float)rand()/(float)RAND_MAX;
-            particle.rotationVelocity = _Config->minRotVelocity + (_Config->maxRotVelocity-_Config->minRotVelocity) * (float)rand()/(float)RAND_MAX;
-            particle.positionVelocity.x = _Config->minPosVelocity.x + (_Config->maxPosVelocity.x-_Config->minPosVelocity.x) * (float)rand()/(float)RAND_MAX;
-            particle.positionVelocity.y = _Config->minPosVelocity.y + (_Config->maxPosVelocity.y-_Config->minPosVelocity.y) * (float)rand()/(float)RAND_MAX;
-            particle.positionVelocity.z = _Config->minPosVelocity.z + (_Config->maxPosVelocity.z-_Config->minPosVelocity.z) * (float)rand()/(float)RAND_MAX;
-            particle.life = 0;
-            particle.sprite = _Config->sprites[glm::min((int)((float)rand()/(float)RAND_MAX * _Config->sprites.size()), (int)_Config->sprites.size()-1)];
-            particle.totalLife = _Config->life;
-            
-            _Particles.push_back(particle);
-        }
+        ParticleRenderable& renderable = *static_cast<ParticleRenderable*>(renderables[i]);
         
-        _EmitCount -= 1.f;
-    }
-    
-    for (ParticleList::iterator it = _Particles.begin(); it != _Particles.end(); )
-    {
-        it->life += time;
+        shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewMatrix", renderable.GetModelViewMatrix());
         
-        it->positionVelocity += it->emitterConfig->gravity;
-        
-        it->rotation += it->rotationVelocity;
-        it->position += it->positionVelocity;
-        
-        if (it->life > it->totalLife)
-        {
-            it = _Particles.erase(it);
-        } else {
-            it++;
-        }
+        Render(renderable.GetSystem(), shaderPass);
     }
 }
 
-void ParticleEmitter::Render(Viewport* viewport, ShaderPass* shaderPass)
+void ParticleRenderer::Render(ParticleSystem* system, ShaderPass* shaderPass)
 {
-    if (!_Config || !_Particles.size())
-        return;
-    
     _VertexBuffer->Lock();
     
     pb::Vertex_P3_C4_UV* vertexBuffer = static_cast<pb::Vertex_P3_C4_UV*>(_VertexBuffer->GetData());
     
     if (vertexBuffer)
     {
-        for (ParticleList::iterator it = _Particles.begin(); it != _Particles.end(); ++it)
+        int particleCount = 0;
+        
+        pb::Sprite* sprite = system->Definition->RenderSprite->Sprite;
+        
+        for (std::vector<Particle>::iterator it = system->Particles.begin(); it != system->Particles.end(); ++it, ++particleCount)
         {
-            float tween = it->life/it->emitterConfig->life;
-            glm::vec4 color = it->emitterConfig->startColor + (it->emitterConfig->endColor-it->emitterConfig->startColor)*tween;
+            if (particleCount == _MaxParticles)
+                break;
             
-            pb::Sprite* sprite = it->emitterConfig->spriteSheet->GetSprite(it->sprite);
+            glm::vec4 color = it->Color;
+            float scale = it->Scale;
+            glm::vec2 size = sprite->_Size * glm::vec2(scale, scale);
             
-            glm::vec2 scale = it->emitterConfig->startScale + (it->emitterConfig->endScale-it->emitterConfig->startScale)*tween;
-            glm::vec2 size = sprite->_Size * scale;
-            
-            glm::mat4x4 transform = glm::translate(glm::mat4x4(), it->position);
+            glm::mat4x4 transform = glm::translate(glm::mat4x4(), it->Position);
             transform = glm::scale(transform, glm::vec3(size, 1));
-            transform = glm::rotate(transform, it->rotation.x, glm::vec3(1,0,0));
-            transform = glm::rotate(transform, it->rotation.y, glm::vec3(0,1,0));
-            transform = glm::rotate(transform, it->rotation.z, glm::vec3(0,0,1));
+            transform = glm::rotate(transform, it->Rotation.x, glm::vec3(1,0,0));
+            transform = glm::rotate(transform, it->Rotation.y, glm::vec3(0,1,0));
+            transform = glm::rotate(transform, it->Rotation.z, glm::vec3(0,0,1));
             
             glm::vec4 a = transform * glm::vec4(-0.5, -0.5, 0, 1);
             glm::vec4 b = transform * glm::vec4(-0.5, 0.5, 0, 1);
@@ -272,22 +156,22 @@ void ParticleEmitter::Render(Viewport* viewport, ShaderPass* shaderPass)
             vertexBuffer[3].position[1] = d.y;
             vertexBuffer[3].position[2] = d.z;
             
-            vertexBuffer[0].color[0] = color.r;
-            vertexBuffer[0].color[1] = color.g;
-            vertexBuffer[0].color[2] = color.b;
-            vertexBuffer[0].color[3] = color.a;
-            vertexBuffer[1].color[0] = color.r;
-            vertexBuffer[1].color[1] = color.g;
-            vertexBuffer[1].color[2] = color.b;
-            vertexBuffer[1].color[3] = color.a;
-            vertexBuffer[2].color[0] = color.r;
-            vertexBuffer[2].color[1] = color.g;
-            vertexBuffer[2].color[2] = color.b;
-            vertexBuffer[2].color[3] = color.a;
-            vertexBuffer[3].color[0] = color.r;
-            vertexBuffer[3].color[1] = color.g;
-            vertexBuffer[3].color[2] = color.b;
-            vertexBuffer[3].color[3] = color.a;
+            vertexBuffer[0].color[0] = color.r * color.a;
+            vertexBuffer[0].color[1] = color.g * color.a;
+            vertexBuffer[0].color[2] = color.b * color.a;
+            vertexBuffer[0].color[3] = system->Definition->BlendMode == ParticleSystemDefinition::kBlendModeAdditive ? 0 : color.a;
+            vertexBuffer[1].color[0] = color.r * color.a;
+            vertexBuffer[1].color[1] = color.g * color.a;
+            vertexBuffer[1].color[2] = color.b * color.a;
+            vertexBuffer[1].color[3] = system->Definition->BlendMode == ParticleSystemDefinition::kBlendModeAdditive ? 0 : color.a;
+            vertexBuffer[2].color[0] = color.r * color.a;
+            vertexBuffer[2].color[1] = color.g * color.a;
+            vertexBuffer[2].color[2] = color.b * color.a;
+            vertexBuffer[2].color[3] = system->Definition->BlendMode == ParticleSystemDefinition::kBlendModeAdditive ? 0 : color.a;
+            vertexBuffer[3].color[0] = color.r * color.a;
+            vertexBuffer[3].color[1] = color.g * color.a;
+            vertexBuffer[3].color[2] = color.b * color.a;
+            vertexBuffer[3].color[3] = system->Definition->BlendMode == ParticleSystemDefinition::kBlendModeAdditive ? 0 : color.a;
             
             if (!sprite->_Rotated)
             {
@@ -319,27 +203,22 @@ void ParticleEmitter::Render(Viewport* viewport, ShaderPass* shaderPass)
             vertexBuffer += 4;
         }
         
-        GraphicsDevice::Instance()->BindTexture(_Config->spriteSheet->_Texture);
-
-        _VertexBuffer->Unlock(_Particles.size()*4);
-    
+        GraphicsDevice::Instance()->BindTexture(system->Definition->RenderSprite->Sprite->_Sheet->_Texture);
+        
+        _VertexBuffer->Unlock(particleCount*4);
+        
         GraphicsDevice::Instance()->BindIndexBuffer(_IndexBuffer);
         GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffer);
         
         GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
         GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
         GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
-
-        if (_Config->spriteSheet->_Texture->HasPremultipliedAlpha())
-        {
-            GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
-        } else {
-            GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
-        }
+        
+        GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
         
         shaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
         
-        GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, _Particles.size()*6);
+        GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, particleCount*6);
         
         GraphicsDevice::Instance()->BindIndexBuffer(0);
         GraphicsDevice::Instance()->BindVertexBuffer(0);
@@ -348,144 +227,10 @@ void ParticleEmitter::Render(Viewport* viewport, ShaderPass* shaderPass)
         GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
         GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
     }
-}
-
-void ParticleEmitter::AddModifier(ParticleModifier* modifier)
-{
-    _Modifiers.push_back(modifier);
-}
-
-bool ParticleEmitter::IsFinished()
-{
-    if (!_Config || _Config->emitCount == -1)
-        return false;
     
-    return (_SpawnedParticles >= _Config->emitCount && _Particles.size() == 0);
-}
-
-int ParticleEmitter::GetNumParticles()
-{
-    return _Particles.size();
-}
-
-void ParticleEmitter::ResetSpawnCount()
-{
-    _SpawnedParticles = 0;
-}
-
-void ParticleEmitter::LoadSpriteSheet(FileLocation location, const std::string& file, const std::string& extension, bool createMips, bool hasPremultipliedAlpha)
-{
-    if (!_Config)
-        return;
-    
-    _Config->spriteSheet = SpriteSheet::Create();
-    _Config->spriteSheet->LoadSheet(location, file, extension, createMips, hasPremultipliedAlpha);
-}
-
-void ParticleEmitter::SetSpriteSheet(std::shared_ptr<SpriteSheet> spriteSheet)
-{
-    _SpriteSheet = spriteSheet;
-    
-    if (!_Config)
-        return;
-    
-    _Config->spriteSheet = spriteSheet;
-}
-
-glm::vec3 ParticleEmitter::GetPosition()
-{
-    return _Position;
-}
-
-void ParticleEmitter::SetPosition(const glm::vec3& position)
-{
-    _Position = position;
-}
-
-void ParticleEmitter::SetConfig(EmitterConfig* config)
-{
-    if (_Config)
+    for (std::vector<ParticleSystem*>::iterator it = system->SubSystem.begin(); it != system->SubSystem.end(); ++it)
     {
-        delete _Config;
-        _Config = 0;
-    }
-    
-    _Config = config;
-    _Config->spriteSheet = _SpriteSheet;
-}
-
-EmitterConfig* ParticleEmitter::GetConfig()
-{
-    return _Config;
-}
-
-ParticleEmitter::ParticleList& ParticleEmitter::GetParticles()
-{
-    _BufferDirty = true;
-    return _Particles;
-}
-
-ParticleModifier::ParticleModifier(ParticleEmitter* emitter)
-    : _Emitter(emitter)
-{
-    
-}
-
-ParticleModifier::~ParticleModifier()
-{
-    
-}
-
-void ParticleModifier::Update(float time)
-{
-    UpdateParticles(time, _Emitter->_Particles);
-}
-
-ParticleAttractor::ParticleAttractor(ParticleEmitter* emitter, const glm::vec3& position, float strength)
-    : ParticleModifier(emitter)
-    , _Position(position)
-    , _Strength(strength)
-{
-    
-}
-
-ParticleAttractor::~ParticleAttractor()
-{
-    
-}
-
-void ParticleAttractor::UpdateParticles(float time, ParticleEmitter::ParticleList& particles)
-{
-    for (ParticleEmitter::ParticleList::iterator it = particles.begin(); it != particles.end(); ++it)
-    {
-        glm::vec3 diff = _Position - it->position;
-        float r = glm::length(diff);
-        it->position = it->position + (diff * (_Strength / (r*r)));
-    }
-}
-
-ParticleRenderer::ParticleRenderer()
-{
-    Renderer::Instance()->SetHandler(ParticleRenderable::GetStaticType(), this);
-    
-    Renderer::Instance()->GetShaderManager()->LoadShader("/data/shaders/pb_texturedColor.shc");
-}
-
-ParticleRenderer::~ParticleRenderer()
-{
-    Renderer::Instance()->GetShaderManager()->UnloadShader("/data/shaders/pb_texturedColor.shc");
-}
-
-void ParticleRenderer::Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass)
-{
-    for (int i=0; i<count; i++)
-    {
-        ParticleRenderable& renderable = *static_cast<ParticleRenderable*>(renderables[i]);
-        
-        shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewMatrix", renderable.GetModelViewMatrix());
-        
-        renderable._Emitter->Render(viewport, shaderPass);
-        
+        Render(*it, shaderPass);
     }
 }
 
