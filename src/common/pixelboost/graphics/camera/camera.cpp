@@ -4,6 +4,7 @@
 #include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/helper/screenHelpers.h"
+#include "pixelboost/maths/matrixHelpers.h"
 
 using namespace pb;
 
@@ -43,9 +44,7 @@ void OrthographicCamera::CalculateTransform(Viewport* viewport)
     glm::vec2 viewportSize = viewport->GetSize() / 2.f;
     
     ProjectionMatrix = glm::ortho(-viewportSize.x/Scale.x, viewportSize.x/Scale.x, -viewportSize.y/Scale.y, viewportSize.y/Scale.y, ZNear, ZFar);
-    ViewMatrix = glm::rotate(glm::mat4x4(), Rotation.x, glm::vec3(1,0,0));
-    ViewMatrix = glm::rotate(ViewMatrix, Rotation.y, glm::vec3(0,1,0));
-    ViewMatrix = glm::rotate(ViewMatrix, Rotation.z, glm::vec3(0,0,1));
+    ViewMatrix = CreateRotationMatrix(kRotationOrder_XYZ, Rotation);
     ViewMatrix = glm::translate(ViewMatrix, -Position);
     
     Camera::CalculateTransform(viewport);
