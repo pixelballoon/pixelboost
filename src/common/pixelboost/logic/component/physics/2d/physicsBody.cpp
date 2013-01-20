@@ -136,7 +136,7 @@ void PhysicsBody2DComponent::UpdateTransform()
     if (transform)
     {
         transform->SetPosition(glm::vec3(_Body->GetPosition().x, _Body->GetPosition().y, 0));
-        transform->SetRotation(glm::vec3(0, 0, glm::degrees(_Body->GetTransform().q.GetAngle())));
+        transform->SetRotation(glm::vec3(0, 0, glm::degrees(_Body->GetAngle())));
     }
 }
 
