@@ -2,6 +2,7 @@
 
 #include "pixelboost/data/xml/xml.h"
 #include "pixelboost/debug/assert.h"
+#include "pixelboost/debug/log.h"
 #include "pixelboost/file/fileHelpers.h"
 #include "pixelboost/graphics/device/gl/program.h"
 
@@ -62,7 +63,7 @@ bool ShaderProgramGL::Link()
     {
         GLchar* log = new GLchar[logLength];
         glGetProgramInfoLog(_Program, logLength, &logLength, log);
-        printf("%s\n", log);
+        PbLogError("graphics.shader", "Error linking shader (%s)", log);
         delete log;
     }
 #endif
@@ -164,7 +165,7 @@ bool ShaderProgramGL::CompileShader(GLenum type, GLuint* shader, const std::stri
     {
         GLchar* log = new GLchar[logLength];
         glGetShaderInfoLog(*shader, logLength, &logLength, log);
-        printf("%s\n", log);
+        PbLogError("graphics.shader", "Error compiling shader (%s)", log);
         delete log;
     }
 #endif
