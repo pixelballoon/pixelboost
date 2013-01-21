@@ -154,7 +154,7 @@ glm::vec3 ParticleValueTwoCurve3D::Evaluate(float x, float variant)
 
 ParticleSpriteDefinition::ParticleSpriteDefinition(const std::string& sprite)
 {
-    Sprite = Engine::Instance()->GetSpriteRenderer()->GetSprite(sprite);
+    SpriteDefinition = Engine::Instance()->GetSpriteRenderer()->GetSprite(sprite);
 }
 
 ParticleSystemDefinition::ParticleSystemDefinition()

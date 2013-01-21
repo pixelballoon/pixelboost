@@ -169,7 +169,7 @@ class ParticleSpriteDefinition
 public:
     ParticleSpriteDefinition(const std::string& sprite);
     
-    Sprite* Sprite;
+    Sprite* SpriteDefinition;
 };
 
 class ParticleSystemDefinition

@@ -121,7 +121,7 @@ void ParticleRenderer::Render(ParticleSystem* system, ShaderPass* shaderPass)
     {
         int particleCount = 0;
         
-        pb::Sprite* sprite = system->Definition->RenderSprite->Sprite;
+        pb::Sprite* sprite = system->Definition->RenderSprite->SpriteDefinition;
         
         for (std::vector<Particle>::iterator it = system->Particles.begin(); it != system->Particles.end(); ++it, ++particleCount)
         {
@@ -203,7 +203,7 @@ void ParticleRenderer::Render(ParticleSystem* system, ShaderPass* shaderPass)
             vertexBuffer += 4;
         }
         
-        GraphicsDevice::Instance()->BindTexture(system->Definition->RenderSprite->Sprite->_Sheet->_Texture);
+        GraphicsDevice::Instance()->BindTexture(system->Definition->RenderSprite->SpriteDefinition->_Sheet->_Texture);
         
         _VertexBuffer->Unlock(particleCount*4);
         
