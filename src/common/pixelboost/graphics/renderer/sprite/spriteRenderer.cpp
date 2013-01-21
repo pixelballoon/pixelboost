@@ -213,22 +213,24 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
             bufferData[3].uv[1] = min[1];
         }
         
-        bufferData[0].color[0] = renderable._Tint.r;
-        bufferData[0].color[1] = renderable._Tint.g;
-        bufferData[0].color[2] = renderable._Tint.b;
-        bufferData[0].color[3] = renderable._Tint.a;
-        bufferData[1].color[0] = renderable._Tint.r;
-        bufferData[1].color[1] = renderable._Tint.g;
-        bufferData[1].color[2] = renderable._Tint.b;
-        bufferData[1].color[3] = renderable._Tint.a;
-        bufferData[2].color[0] = renderable._Tint.r;
-        bufferData[2].color[1] = renderable._Tint.g;
-        bufferData[2].color[2] = renderable._Tint.b;
-        bufferData[2].color[3] = renderable._Tint.a;
-        bufferData[3].color[0] = renderable._Tint.r;
-        bufferData[3].color[1] = renderable._Tint.g;
-        bufferData[3].color[2] = renderable._Tint.b;
-        bufferData[3].color[3] = renderable._Tint.a;
+        glm::vec4 color = renderable._Tint * renderable._Tint.a;
+        
+        bufferData[0].color[0] = color.r;
+        bufferData[0].color[1] = color.g;
+        bufferData[0].color[2] = color.b;
+        bufferData[0].color[3] = 1;
+        bufferData[1].color[0] = color.r;
+        bufferData[1].color[1] = color.g;
+        bufferData[1].color[2] = color.b;
+        bufferData[1].color[3] = 1;
+        bufferData[2].color[0] = color.r;
+        bufferData[2].color[1] = color.g;
+        bufferData[2].color[2] = color.b;
+        bufferData[2].color[3] = 1;
+        bufferData[3].color[0] = color.r;
+        bufferData[3].color[1] = color.g;
+        bufferData[3].color[2] = color.b;
+        bufferData[3].color[3] = 1;
         
         glm::vec4 a = renderable.GetModelViewMatrix() * glm::vec4(crop[0]-0.5, crop[1]-0.5, 0, 1);
         glm::vec4 b = renderable.GetModelViewMatrix() * glm::vec4(crop[0]-0.5, crop[3]-0.5, 0, 1);
