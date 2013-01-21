@@ -19,6 +19,8 @@ namespace pb
         virtual Uid GetType();
         static Uid GetStaticType();
         
+        void SetLayer(int layer);
+        
         void SetIndexBuffer(IndexBuffer* indexBuffer);
         IndexBuffer* GetIndexBuffer();
         

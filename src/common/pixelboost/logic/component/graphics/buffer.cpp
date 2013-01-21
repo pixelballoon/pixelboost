@@ -30,6 +30,11 @@ Uid BufferComponent::GetStaticType()
     return TypeHash("pb::BufferComponent");
 }
 
+void BufferComponent::SetLayer(int layer)
+{
+    _Renderable->SetLayer(layer);
+}
+
 void BufferComponent::SetIndexBuffer(IndexBuffer* indexBuffer)
 {
     _Renderable->SetIndexBuffer(indexBuffer);
