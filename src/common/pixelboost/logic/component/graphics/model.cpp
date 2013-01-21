@@ -83,6 +83,11 @@ void ModelComponent::SetTint(const glm::vec4& tint)
     _Renderable->SetTint(tint);
 }
 
+void ModelComponent::SetAlphaBlend(bool alphaBlend)
+{
+    _Renderable->SetAlphaBlend(alphaBlend);
+}
+
 void ModelComponent::SetLocalTransform(const glm::mat4x4& transform)
 {
     _LocalTransform = transform;

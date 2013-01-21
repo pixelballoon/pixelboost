@@ -47,10 +47,14 @@ namespace pb
         void SetTint(const glm::vec4& tint);
         const glm::vec4& GetTint() const;
         
+        void SetAlphaBlend(bool alphaBlend);
+        bool GetAlphaBlend();
+        
         void SetTransform(const glm::mat4x4& transform);
         const glm::mat4x4& GetTransform() const;
         
     private:
+        bool _AlphaBlend;
         Model* _Model;
         Texture* _Texture;
         glm::mat4x4 _Transform;

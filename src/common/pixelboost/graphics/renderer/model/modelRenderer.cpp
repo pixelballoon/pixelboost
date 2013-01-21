@@ -27,6 +27,7 @@ using namespace pb;
 ModelRenderable::ModelRenderable(Uid entityId)
     : Renderable(entityId)
 {
+    _AlphaBlend = false;
     _Model = 0;
     _Texture = 0;
     _Tint = glm::vec4(1,1,1,1);
@@ -101,6 +102,16 @@ void ModelRenderable::SetTint(const glm::vec4& tint)
 const glm::vec4& ModelRenderable::GetTint() const
 {
     return _Tint;
+}
+
+void ModelRenderable::SetAlphaBlend(bool alphaBlend)
+{
+    _AlphaBlend = alphaBlend;
+}
+
+bool ModelRenderable::GetAlphaBlend()
+{
+    return _AlphaBlend;
 }
 
 void ModelRenderable::SetTransform(const glm::mat4x4& transform)
@@ -374,6 +385,20 @@ void ModelRenderer::Render(int count, Renderable** renderables, Viewport* viewpo
         
         if (!model || !texture || !model->GetMeshes().size())
             continue;
+        
+        GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, renderable._AlphaBlend);
+        
+        if (renderable._AlphaBlend)
+        {
+            if (texture->HasPremultipliedAlpha())
+            {
+                GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
+            } else {
+                GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
+            }
+        } else {
+            GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
+        }
         
         shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewMatrix", renderable.GetModelViewMatrix());
         shaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", renderable._Tint);

@@ -34,6 +34,8 @@ namespace pb
         
         void SetTint(const glm::vec4& tint);
         
+        void SetAlphaBlend(bool alphaBlend);
+        
         void SetLocalTransform(const glm::mat4x4& transform);
         
         const ModelRenderable* GetRenderable() const;
