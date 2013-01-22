@@ -24,10 +24,14 @@ import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.WindowManager;
 
 import java.io.File;
 import java.io.IOException;
+
+import tv.ouya.console.api.OuyaController;
 
 public class PixelboostActivity extends Activity {
 
@@ -68,5 +72,77 @@ public class PixelboostActivity extends Activity {
         mView.onResume();
 
         PixelboostLib.onResume();
+    }
+
+    @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
+        int player = OuyaController.getPlayerNumByDeviceId(event.getDeviceId());       
+        boolean handled = false;
+
+        switch(keyCode){
+            case OuyaController.BUTTON_O:
+                handled = true;
+                PixelboostLib.onJoystickButtonDown(player, 0);
+                break;
+            case OuyaController.BUTTON_U:
+                handled = true;
+                PixelboostLib.onJoystickButtonDown(player, 1);
+                break;
+            case OuyaController.BUTTON_Y:
+                handled = true;
+                PixelboostLib.onJoystickButtonDown(player, 2);
+                break;
+            case OuyaController.BUTTON_A:
+                handled = true;
+                PixelboostLib.onJoystickButtonDown(player, 3);
+                break;
+        }
+
+        return handled || super.onKeyDown(keyCode, event);
+    }
+
+    @Override public boolean onKeyUp(int keyCode, KeyEvent event) {
+        int player = OuyaController.getPlayerNumByDeviceId(event.getDeviceId());       
+        boolean handled = false;
+
+        switch(keyCode){
+            case OuyaController.BUTTON_O:
+                handled = true;
+                PixelboostLib.onJoystickButtonUp(player, 0);
+                break;
+            case OuyaController.BUTTON_U:
+                handled = true;
+                PixelboostLib.onJoystickButtonUp(player, 1);
+                break;
+            case OuyaController.BUTTON_Y:
+                handled = true;
+                PixelboostLib.onJoystickButtonUp(player, 2);
+                break;
+            case OuyaController.BUTTON_A:
+                handled = true;
+                PixelboostLib.onJoystickButtonUp(player, 3);
+                break;
+        }
+
+        return handled || super.onKeyDown(keyCode, event);
+    }
+
+    @Override public boolean onGenericMotionEvent(MotionEvent event) {
+        int player = OuyaController.getPlayerNumByDeviceId(event.getDeviceId());    
+
+        float LS_X = event.getAxisValue(OuyaController.AXIS_LS_X);
+        float LS_Y = event.getAxisValue(OuyaController.AXIS_LS_Y);
+        float RS_X = event.getAxisValue(OuyaController.AXIS_RS_X);
+        float RS_Y = event.getAxisValue(OuyaController.AXIS_RS_Y);
+        float L2 = event.getAxisValue(OuyaController.AXIS_L2);
+        float R2 = event.getAxisValue(OuyaController.AXIS_R2);
+
+        PixelboostLib.onJoystickAxis(player, 0, 0, LS_X);
+        PixelboostLib.onJoystickAxis(player, 0, 1, LS_Y);
+        PixelboostLib.onJoystickAxis(player, 1, 0, RS_X);
+        PixelboostLib.onJoystickAxis(player, 1, 1, RS_Y);
+        PixelboostLib.onJoystickAxis(player, 2, 0, L2);
+        PixelboostLib.onJoystickAxis(player, 2, 1, R2);
+
+        return true;
     }
 }

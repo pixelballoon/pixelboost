@@ -7,6 +7,7 @@
 #include "pixelboost/file/fileSystem.h"
 #include "pixelboost/framework/engine.h"
 #include "pixelboost/graphics/device/device.h"
+#include "pixelboost/input/joystickManager.h"
 #include "pixelboost/input/touchManager.h"
 
 extern JavaVM* g_JavaVM;
@@ -20,10 +21,29 @@ struct TouchInfo
     int y;
 };
 
-typedef std::vector<TouchInfo> TouchList;
+struct JoystickButtonInfo
+{
+    int joystick;
+    int button;
+    bool isDown;
+};
 
-pthread_mutex_t g_TouchMutex = PTHREAD_MUTEX_INITIALIZER;
+struct JoystickAxisInfo
+{
+    int joystick;
+    int stick;
+    int axis;
+    float value;
+};
+
+typedef std::vector<TouchInfo> TouchList;
+typedef std::vector<JoystickAxisInfo> JoystickAxisList;
+typedef std::vector<JoystickButtonInfo> JoystickButtonList;
+
+pthread_mutex_t g_InputMutex = PTHREAD_MUTEX_INITIALIZER;
 TouchList g_Touches;
+JoystickAxisList g_JoystickAxis;
+JoystickButtonList g_JoystickButton;
 
 extern "C" {
     JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_init(JNIEnv * env, jobject obj,  jint width, jint height);
@@ -32,10 +52,13 @@ extern "C" {
     JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_render(JNIEnv * env, jobject obj);
     JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onSurfaceCreated(JNIEnv * env, jobject obj);
     JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onPause(JNIEnv * env, jobject obj, jboolean quit);
-    JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onResume(JNIEnv * env, jclass obj);
-    JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onPointerDown(JNIEnv * env, jobject obj,  jint touchIndex, jint x, jint y);
-    JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onPointerMove(JNIEnv * env, jobject obj,  jint touchIndex, jint x, jint y);
-    JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onPointerUp(JNIEnv * env, jobject obj,  jint touchIndex, jint x, jint y);
+    JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onResume(JNIEnv * env, jobject obj);
+    JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onPointerDown(JNIEnv * env, jobject obj, jint touchIndex, jint x, jint y);
+    JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onPointerMove(JNIEnv * env, jobject obj, jint touchIndex, jint x, jint y);
+    JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onPointerUp(JNIEnv * env, jobject obj, jint touchIndex, jint x, jint y);
+    JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onJoystickButtonDown(JNIEnv * env, jobject obj, jint joystick, jint button);
+    JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onJoystickButtonUp(JNIEnv * env, jobject obj, jint joystick, jint button);
+    JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onJoystickAxis(JNIEnv * env, jobject obj, jint joystick, jint stick, jint axis, jfloat value);
 };
 
 JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_init(JNIEnv * env, jobject obj,  jint width, jint height)
@@ -69,7 +92,7 @@ JNIEXPORT jboolean JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_allowF
 
 JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_update(JNIEnv * env, jobject obj, jfloat delta)
 {
-    pthread_mutex_lock(&g_TouchMutex);
+    pthread_mutex_lock(&g_InputMutex);
 
     for (TouchList::iterator it = g_Touches.begin(); it != g_Touches.end(); ++it)
     {
@@ -85,9 +108,24 @@ JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_update(JNI
         }
     }
 
-    g_Touches.clear();
+    for (JoystickAxisList::iterator it = g_JoystickAxis.begin(); it != g_JoystickAxis.end(); ++it)
+    {
+        g_Game->GetJoystickManager()->OnAxisChanged(it->joystick, it->stick, it->axis, it->value);
+    }
 
-    pthread_mutex_unlock(&g_TouchMutex);
+    for (JoystickButtonList::iterator it = g_JoystickButton.begin(); it != g_JoystickButton.end(); ++it)
+    {
+        if (it->isDown)
+            g_Game->GetJoystickManager()->OnButtonDown(it->joystick, it->button);
+        else
+            g_Game->GetJoystickManager()->OnButtonUp(it->joystick, it->button);
+    }
+
+    g_Touches.clear();
+    g_JoystickAxis.clear();
+    g_JoystickButton.clear();
+
+    pthread_mutex_unlock(&g_InputMutex);
 
     g_Game->Update(delta);
 }
@@ -118,7 +156,7 @@ JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onPause(JN
     }
 }
 
-JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onResume(JNIEnv * env, jclass obj)
+JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onResume(JNIEnv * env, jobject obj)
 {
     if (g_Game)
     {
@@ -135,7 +173,7 @@ JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onResume(J
 
 JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onPointerDown(JNIEnv * env, jobject obj,  jint touchIndex, jint x, jint y)
 {
-    pthread_mutex_lock(&g_TouchMutex);
+    pthread_mutex_lock(&g_InputMutex);
 
     TouchInfo t;
     t.type = 0;
@@ -145,12 +183,12 @@ JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onPointerD
 
     g_Touches.push_back(t);
 
-    pthread_mutex_unlock(&g_TouchMutex);
+    pthread_mutex_unlock(&g_InputMutex);
 }
 
 JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onPointerMove(JNIEnv * env, jobject obj,  jint touchIndex, jint x, jint y)
 {
-    pthread_mutex_lock(&g_TouchMutex);
+    pthread_mutex_lock(&g_InputMutex);
 
     TouchInfo t;
     t.type = 1;
@@ -160,12 +198,12 @@ JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onPointerM
 
     g_Touches.push_back(t);
     
-    pthread_mutex_unlock(&g_TouchMutex);
+    pthread_mutex_unlock(&g_InputMutex);
 }
 
 JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onPointerUp(JNIEnv * env, jobject obj,  jint touchIndex, jint x, jint y)
 {
-    pthread_mutex_lock(&g_TouchMutex);
+    pthread_mutex_lock(&g_InputMutex);
 
     TouchInfo t;
     t.type = 2;
@@ -175,5 +213,48 @@ JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onPointerU
 
     g_Touches.push_back(t);
 
-    pthread_mutex_unlock(&g_TouchMutex);
+    pthread_mutex_unlock(&g_InputMutex);
+}
+
+JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onJoystickButtonDown(JNIEnv * env, jobject obj, jint joystick, jint button)
+{
+    pthread_mutex_lock(&g_InputMutex);
+
+    JoystickButtonInfo j;
+    j.isDown = true;
+    j.joystick = joystick;
+    j.button = button;
+
+    g_JoystickButton.push_back(j);
+
+    pthread_mutex_unlock(&g_InputMutex);
+}
+
+JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onJoystickButtonUp(JNIEnv * env, jobject obj, jint joystick, jint button)
+{
+    pthread_mutex_lock(&g_InputMutex);
+
+    JoystickButtonInfo j;
+    j.isDown = false;
+    j.joystick = joystick;
+    j.button = button;
+
+    g_JoystickButton.push_back(j);
+
+    pthread_mutex_unlock(&g_InputMutex);
+}
+
+JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onJoystickAxis(JNIEnv * env, jobject obj, jint joystick, jint stick, jint axis, jfloat value)
+{
+    pthread_mutex_lock(&g_InputMutex);
+
+    JoystickAxisInfo j;
+    j.joystick = joystick;
+    j.stick = stick;
+    j.axis = axis;
+    j.value = value;
+
+    g_JoystickAxis.push_back(j);
+
+    pthread_mutex_unlock(&g_InputMutex);
 }

@@ -41,4 +41,8 @@ public class PixelboostLib {
     public static native void onPointerDown(int index, int width, int height);
     public static native void onPointerMove(int index, int width, int height);
     public static native void onPointerUp(int index, int width, int height);
+
+    public static native void onJoystickButtonDown(int joystick, int button);
+    public static native void onJoystickButtonUp(int joystick, int button);
+    public static native void onJoystickAxis(int joystick, int stick, int axis, float value);
 }
