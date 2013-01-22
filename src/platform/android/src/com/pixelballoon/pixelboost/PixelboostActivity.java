@@ -85,7 +85,7 @@ public class PixelboostActivity extends Activity {
                 break;
             case OuyaController.BUTTON_U:
                 handled = true;
-                PixelboostLib.onJoystickButtonDown(player, 1);
+                PixelboostLib.onJoystickButtonDown(player, 3);
                 break;
             case OuyaController.BUTTON_Y:
                 handled = true;
@@ -93,7 +93,31 @@ public class PixelboostActivity extends Activity {
                 break;
             case OuyaController.BUTTON_A:
                 handled = true;
-                PixelboostLib.onJoystickButtonDown(player, 3);
+                PixelboostLib.onJoystickButtonDown(player, 1);
+                break;
+            case OuyaController.BUTTON_DPAD_DOWN:
+                handled = true;
+                PixelboostLib.onJoystickButtonDown(player, 12);
+                break;
+            case OuyaController.BUTTON_DPAD_LEFT:
+                handled = true;
+                PixelboostLib.onJoystickButtonDown(player, 13);
+                break;
+            case OuyaController.BUTTON_DPAD_UP:
+                handled = true;
+                PixelboostLib.onJoystickButtonDown(player, 11);
+                break;
+            case OuyaController.BUTTON_DPAD_RIGHT:
+                handled = true;
+                PixelboostLib.onJoystickButtonDown(player, 14);
+                break;
+            case OuyaController.BUTTON_R1:
+                handled = true;
+                PixelboostLib.onJoystickButtonDown(player, 5);
+                break;
+            case OuyaController.BUTTON_L1:
+                handled = true;
+                PixelboostLib.onJoystickButtonDown(player, 4);
                 break;
         }
 
@@ -111,7 +135,7 @@ public class PixelboostActivity extends Activity {
                 break;
             case OuyaController.BUTTON_U:
                 handled = true;
-                PixelboostLib.onJoystickButtonUp(player, 1);
+                PixelboostLib.onJoystickButtonUp(player, 3);
                 break;
             case OuyaController.BUTTON_Y:
                 handled = true;
@@ -119,7 +143,31 @@ public class PixelboostActivity extends Activity {
                 break;
             case OuyaController.BUTTON_A:
                 handled = true;
-                PixelboostLib.onJoystickButtonUp(player, 3);
+                PixelboostLib.onJoystickButtonUp(player, 1);
+                break;
+            case OuyaController.BUTTON_DPAD_DOWN:
+                handled = true;
+                PixelboostLib.onJoystickButtonUp(player, 12);
+                break;
+            case OuyaController.BUTTON_DPAD_LEFT:
+                handled = true;
+                PixelboostLib.onJoystickButtonUp(player, 13);
+                break;
+            case OuyaController.BUTTON_DPAD_UP:
+                handled = true;
+                PixelboostLib.onJoystickButtonUp(player, 11);
+                break;
+            case OuyaController.BUTTON_DPAD_RIGHT:
+                handled = true;
+                PixelboostLib.onJoystickButtonUp(player, 14);
+                break;
+            case OuyaController.BUTTON_R1:
+                handled = true;
+                PixelboostLib.onJoystickButtonUp(player, 5);
+                break;
+            case OuyaController.BUTTON_L1:
+                handled = true;
+                PixelboostLib.onJoystickButtonUp(player, 4);
                 break;
         }
 
