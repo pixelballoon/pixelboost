@@ -29,8 +29,17 @@ void ParticleDefinitionEmitter::Update(ParticleSystem* system, float time)
 {
     Time += time;
     
+    if (EmitSpeed < 0.f)
+        return;
+    
     while (EmitCount != 0 && Time > 1.f/EmitSpeed)
     {
+        if (system->Particles.size() == system->Definition->MaxParticles)
+        {
+            Time = 0.f;
+            break;
+        }
+        
         if (EmitCount > 0)
             EmitCount--;
         
