@@ -203,6 +203,7 @@ ParticleSystemDefinition::~ParticleSystemDefinition()
 ParticleSystem::ParticleSystem()
 {
     Definition = new ParticleSystemDefinition();
+    Particles.reserve(Definition->MaxParticles);
 }
 
 ParticleSystem::~ParticleSystem()
