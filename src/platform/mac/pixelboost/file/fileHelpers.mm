@@ -23,7 +23,7 @@ std::string GetUserPath()
     return "";
 }
     
-bool pb::FileHelpers::CreateDirectory(const std::string& directory)
+bool CreateDirectory(const std::string& directory)
 {
     NSString* dirToCreate = [NSString stringWithUTF8String:directory.c_str()];
     NSError* error = nil;
@@ -40,7 +40,7 @@ bool pb::FileHelpers::CreateDirectory(const std::string& directory)
     return true;
 }
 
-int pb::FileHelpers::GetTimestamp(const std::string& filename)
+int GetTimestamp(const std::string& filename)
 {
     NSDictionary* attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:[NSString stringWithUTF8String:filename.c_str()] error:nil];
     
