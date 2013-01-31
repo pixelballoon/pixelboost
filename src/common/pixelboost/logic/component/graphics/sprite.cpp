@@ -71,11 +71,6 @@ void SpriteComponent::SetTint(const glm::vec4& tint)
     _Renderable->SetTint(tint);
 }
 
-void SpriteComponent::SetCrop(const glm::vec4& crop)
-{
-    _Renderable->SetCrop(crop);
-}
-
 void SpriteComponent::SetLocalTransform(const glm::mat4x4& transform)
 {
     _LocalTransform = transform;

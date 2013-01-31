@@ -20,7 +20,6 @@ SpriteRenderable::SpriteRenderable(Uid entityId)
     : Renderable(entityId)
 {
     _Sprite = 0;
-    _Crop = glm::vec4(0,0,1,1);
     _Tint = glm::vec4(1,1,1,1);
 }
     
@@ -92,12 +91,6 @@ void SpriteRenderable::SetTransform(const glm::mat4x4& transform)
 void SpriteRenderable::SetTint(glm::vec4 tint)
 {
     _Tint = tint;
-}
-
-void SpriteRenderable::SetCrop(glm::vec4 crop)
-{
-    _Crop = crop;
-    DirtyWorldMatrix();
 }
 
 SpriteRenderer::SpriteRenderer()
@@ -182,14 +175,12 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
             RenderBatch();
         }
         
-        glm::vec4 crop = renderable._Crop;
-        
         bufferData = static_cast<Vertex_P3_C4_UV*>(_VertexBuffer->GetData()) + (_BatchSize * 4);
         
         if (!sprite->_Rotated)
         {
-            glm::vec2 min = sprite->_UvPosition + glm::vec2(sprite->_UvSize[0] * crop[0], sprite->_UvSize[1] * crop[1]);
-            glm::vec2 max = sprite->_UvPosition + glm::vec2(sprite->_UvSize[0] * crop[2], sprite->_UvSize[1] * crop[3]);
+            glm::vec2 min = sprite->_UvPosition;
+            glm::vec2 max = sprite->_UvPosition + glm::vec2(sprite->_UvSize[0], sprite->_UvSize[1]);
             
             bufferData[0].uv[0] = min[0];
             bufferData[0].uv[1] = max[1];
@@ -200,8 +191,8 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
             bufferData[3].uv[0] = max[0];
             bufferData[3].uv[1] = max[1];
         } else {
-            glm::vec2 min = sprite->_UvPosition + glm::vec2(sprite->_UvSize[1] * crop[3], sprite->_UvSize[0] * crop[2]);
-            glm::vec2 max = sprite->_UvPosition + glm::vec2(sprite->_UvSize[1] * crop[1], sprite->_UvSize[0] * crop[0]);
+            glm::vec2 min = sprite->_UvPosition + glm::vec2(sprite->_UvSize[1], sprite->_UvSize[0]);
+            glm::vec2 max = sprite->_UvPosition;
             
             bufferData[0].uv[0] = max[0];
             bufferData[0].uv[1] = max[1];
@@ -232,10 +223,10 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
         bufferData[3].color[2] = color.b;
         bufferData[3].color[3] = 1;
         
-        glm::vec4 a = renderable.GetModelViewMatrix() * glm::vec4(crop[0]-0.5, crop[1]-0.5, 0, 1);
-        glm::vec4 b = renderable.GetModelViewMatrix() * glm::vec4(crop[0]-0.5, crop[3]-0.5, 0, 1);
-        glm::vec4 c = renderable.GetModelViewMatrix() * glm::vec4(crop[2]-0.5, crop[3]-0.5, 0, 1);
-        glm::vec4 d = renderable.GetModelViewMatrix() * glm::vec4(crop[2]-0.5, crop[1]-0.5, 0, 1);
+        glm::vec4 a = renderable.GetModelViewMatrix() * glm::vec4(-0.5, -0.5, 0, 1);
+        glm::vec4 b = renderable.GetModelViewMatrix() * glm::vec4(-0.5, 0.5, 0, 1);
+        glm::vec4 c = renderable.GetModelViewMatrix() * glm::vec4(0.5, 0.5, 0, 1);
+        glm::vec4 d = renderable.GetModelViewMatrix() * glm::vec4(0.5, -0.5, 0, 1);
                 
         bufferData[0].position[0] = a.x;
         bufferData[0].position[1] = a.y;

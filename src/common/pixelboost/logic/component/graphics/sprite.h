@@ -12,7 +12,7 @@ namespace pb
 
 class Message;
 class SpriteRenderable;
-    
+
 class SpriteComponent : public Component
 {
 public:
@@ -28,7 +28,6 @@ public:
     void SetLayer(int layer);
     void SetSprite(const std::string& sprite);
     void SetTint(const glm::vec4& tint);
-    void SetCrop(const glm::vec4& crop);
     
     void SetLocalTransform(const glm::mat4x4& transform);
     

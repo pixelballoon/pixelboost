@@ -39,13 +39,11 @@ public:
     
     void SetTransform(const glm::mat4x4& transform);
     void SetTint(glm::vec4 tint);
-    void SetCrop(glm::vec4 crop);
     
 private:
     pb::Sprite* _Sprite;
     glm::mat4x4 _Transform;
     glm::vec4 _Tint;
-    glm::vec4 _Crop;
     
     friend class SpriteRenderer;
 };
