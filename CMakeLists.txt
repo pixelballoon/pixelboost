@@ -237,6 +237,10 @@ set (GRAPHICS_UI_SOURCES
 	"src/common/pixelboost/graphics/ui/rocket.h"
 	)
 
+set (GRAPHICS_SOURCES
+	"src/common/pixelboost/graphics/definitions.h"
+	)
+
 set (INPUT_SOURCES
 	"src/common/pixelboost/input/acceleratometerManager.cpp"
 	"src/common/pixelboost/input/acceleratometerManager.h"
@@ -411,6 +415,7 @@ set (PIXELBOOST_SOURCES
 	${GRAPHICS_RENDERER_SOURCES}
 	${GRAPHICS_SHADER_SOURCES}
 	${GRAPHICS_UI_SOURCES}
+	${GRAPHICS_SOURCES}
 	${INPUT_SOURCES}
 	${LOGIC_COMPONENT_GRAPHICS_SOURCES}
 	${LOGIC_COMPONENT_INPUT_SOURCES}
@@ -473,6 +478,7 @@ source_group (graphics\\particle FILES ${GRAPHICS_PARTICLE_SOURCES})
 source_group (graphics\\renderer FILES ${GRAPHICS_RENDERER_SOURCES})
 source_group (graphics\\shader FILES ${GRAPHICS_SHADER_SOURCES})
 source_group (graphics\\ui FILES ${GRAPHICS_UI_SOURCES})
+source_group (graphics FILES ${GRAPHICS_SOURCES})
 source_group (input FILES ${INPUT_SOURCES})
 source_group (logic\\component\\graphics FILES ${LOGIC_COMPONENT_GRAPHICS_SOURCES})
 source_group (logic\\component\\input FILES ${LOGIC_COMPONENT_INPUT_SOURCES})

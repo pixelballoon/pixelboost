@@ -5,7 +5,8 @@
 #include <vector>
 
 #include "pixelboost/db/definitions.h"
-#include "pixelboost/graphics/renderer/common/renderable.h"
+#include "pixelboost/graphics/definitions.h"
+#include "pixelboost/logic/definitions.h"
 
 namespace pb
 {

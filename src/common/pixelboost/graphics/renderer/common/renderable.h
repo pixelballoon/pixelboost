@@ -2,6 +2,7 @@
 
 #include "glm/glm.hpp"
 #include "pixelboost/db/definitions.h"
+#include "pixelboost/graphics/definitions.h"
 #include "pixelboost/maths/boundingSphere.h"
 
 namespace pb
@@ -11,12 +12,6 @@ class Camera;
 class RenderSystem;
 class Shader;
 class Viewport;
-    
-enum RenderPass
-{
-    kRenderPassScene,
-    kRenderPassUi,
-};
     
 class Renderable
 {
