@@ -3,9 +3,8 @@
 #include <map>
 #include <vector>
 
-#include "sigslot/signal.h"
-
 #include "pixelboost/db/definitions.h"
+#include "pixelboost/logic/definitions.h"
 
 namespace pb
 {
@@ -43,7 +42,6 @@ public:
 
 public:
     typedef std::vector<Component*> ComponentList;
-    typedef sigslot::Delegate1<const Message&> MessageHandler;
     
 public:
     Uid GenerateComponentId();

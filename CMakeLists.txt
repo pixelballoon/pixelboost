@@ -343,6 +343,7 @@ set (LOGIC_SYSTEM_SOURCES
 set (LOGIC_SOURCES
 	"src/common/pixelboost/logic/component.cpp"
 	"src/common/pixelboost/logic/component.h"
+	"src/common/pixelboost/logic/definitions.h"
 	"src/common/pixelboost/logic/entity.cpp"
 	"src/common/pixelboost/logic/entity.h"
 	"src/common/pixelboost/logic/message.cpp"

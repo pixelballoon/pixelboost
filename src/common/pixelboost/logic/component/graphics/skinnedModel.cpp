@@ -28,8 +28,8 @@ SkinnedModelComponent::SkinnedModelComponent(Entity* parent, Model* model, Textu
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
     
-    GetParent()->RegisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &SkinnedModelComponent::OnTransformChanged));
-    GetParent()->RegisterMessageHandler<UpdateMessage>(Entity::MessageHandler(this, &SkinnedModelComponent::OnUpdate));
+    GetParent()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &SkinnedModelComponent::OnTransformChanged));
+    GetParent()->RegisterMessageHandler<UpdateMessage>(MessageHandler(this, &SkinnedModelComponent::OnUpdate));
     
     UpdateTransform();
 }
@@ -38,11 +38,11 @@ SkinnedModelComponent::~SkinnedModelComponent()
 {
     if (_SkeletonDebug)
     {
-        GetParent()->UnregisterMessageHandler<DebugRenderMessage>(Entity::MessageHandler(this, &SkinnedModelComponent::OnDebugRender));
+        GetParent()->UnregisterMessageHandler<DebugRenderMessage>(MessageHandler(this, &SkinnedModelComponent::OnDebugRender));
     }
     
-    GetParent()->UnregisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &SkinnedModelComponent::OnTransformChanged));
-    GetParent()->UnregisterMessageHandler<UpdateMessage>(Entity::MessageHandler(this, &SkinnedModelComponent::OnUpdate));
+    GetParent()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &SkinnedModelComponent::OnTransformChanged));
+    GetParent()->UnregisterMessageHandler<UpdateMessage>(MessageHandler(this, &SkinnedModelComponent::OnUpdate));
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
     
@@ -116,9 +116,9 @@ void SkinnedModelComponent::SetSkeletonDebug(bool debug)
     
     if (debug)
     {
-        GetParent()->RegisterMessageHandler<pb::DebugRenderMessage>(Entity::MessageHandler(this, &SkinnedModelComponent::OnDebugRender));
+        GetParent()->RegisterMessageHandler<pb::DebugRenderMessage>(MessageHandler(this, &SkinnedModelComponent::OnDebugRender));
     } else {
-        GetParent()->UnregisterMessageHandler<pb::DebugRenderMessage>(Entity::MessageHandler(this, &SkinnedModelComponent::OnDebugRender));
+        GetParent()->UnregisterMessageHandler<pb::DebugRenderMessage>(MessageHandler(this, &SkinnedModelComponent::OnDebugRender));
     }
 }
 

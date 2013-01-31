@@ -18,7 +18,7 @@ ParallaxTransformComponent::ParallaxTransformComponent(Entity* parent, Uid paral
     
     if (parallaxEntity)
     {
-        parallaxEntity->RegisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &ParallaxTransformComponent::OnTransformChanged));
+        parallaxEntity->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &ParallaxTransformComponent::OnTransformChanged));
     }
 }
 
@@ -28,7 +28,7 @@ ParallaxTransformComponent::~ParallaxTransformComponent()
     
     if (parallaxEntity)
     {
-        parallaxEntity->UnregisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &ParallaxTransformComponent::OnTransformChanged));
+        parallaxEntity->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &ParallaxTransformComponent::OnTransformChanged));
     }
 }
 

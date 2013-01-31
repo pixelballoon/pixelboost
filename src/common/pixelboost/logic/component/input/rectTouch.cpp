@@ -20,7 +20,7 @@ RectTouchComponent::RectTouchComponent(Entity* parent, bool debugRender)
     
     if (_DebugRender)
     {
-        GetParent()->RegisterMessageHandler<DebugRenderMessage>(Entity::MessageHandler(this, &RectTouchComponent::OnDebugRender));
+        GetParent()->RegisterMessageHandler<DebugRenderMessage>(MessageHandler(this, &RectTouchComponent::OnDebugRender));
     }
 }
 
@@ -30,7 +30,7 @@ RectTouchComponent::~RectTouchComponent()
     
     if (_DebugRender)
     {
-        GetParent()->UnregisterMessageHandler<DebugRenderMessage>(Entity::MessageHandler(this, &RectTouchComponent::OnDebugRender));
+        GetParent()->UnregisterMessageHandler<DebugRenderMessage>(MessageHandler(this, &RectTouchComponent::OnDebugRender));
     }
 }
 

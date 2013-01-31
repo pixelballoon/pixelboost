@@ -16,14 +16,14 @@ RectangleComponent::RectangleComponent(Entity* parent)
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
     
-    GetParent()->RegisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &RectangleComponent::OnTransformChanged));
+    GetParent()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &RectangleComponent::OnTransformChanged));
     
     UpdateTransform();
 }
 
 RectangleComponent::~RectangleComponent()
 {
-    GetParent()->UnregisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &RectangleComponent::OnTransformChanged));
+    GetParent()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &RectangleComponent::OnTransformChanged));
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
     

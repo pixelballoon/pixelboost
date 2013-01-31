@@ -64,7 +64,7 @@ PhysicsUserBody2DComponent::PhysicsUserBody2DComponent(Entity* parent, BodyType 
     _Body->CreateFixture(&fixtureDef);
     _Body->SetTransform(b2Vec2(position.x, position.y), glm::radians(transform->GetRotation().z));
     
-    GetParent()->RegisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &PhysicsUserBody2DComponent::OnTransformChanged));
+    GetParent()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &PhysicsUserBody2DComponent::OnTransformChanged));
 }
 
 PhysicsUserBody2DComponent::PhysicsUserBody2DComponent(Entity* parent, BodyType type, FixtureDefinition2D& fixtureDefinition)
@@ -97,12 +97,12 @@ PhysicsUserBody2DComponent::PhysicsUserBody2DComponent(Entity* parent, BodyType 
     _Body = PhysicsHelpers2D::CreateBodyFromDefinition(world, bodyDefinition, fixtureDefinition, 1.f, glm::vec2(scale.x, scale.y));
     _Body->SetTransform(b2Vec2(position.x, position.y), glm::radians(transform->GetRotation().z));
     
-    GetParent()->RegisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &PhysicsUserBody2DComponent::OnTransformChanged));
+    GetParent()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &PhysicsUserBody2DComponent::OnTransformChanged));
 }
 
 PhysicsUserBody2DComponent::~PhysicsUserBody2DComponent()
 {
-    GetParent()->UnregisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &PhysicsUserBody2DComponent::OnTransformChanged));
+    GetParent()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &PhysicsUserBody2DComponent::OnTransformChanged));
     
     pb::PhysicsSystem2D* physicsSystem = GetScene()->GetSystemByType<pb::PhysicsSystem2D>();
     

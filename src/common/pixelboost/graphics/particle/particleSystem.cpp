@@ -254,8 +254,8 @@ ParticleComponent::ParticleComponent(Entity* entity)
 {
     _System = new ParticleSystem();
     
-    GetParent()->RegisterMessageHandler<TransformComponent>(Entity::MessageHandler(this, &ParticleComponent::OnTransformChanged));
-    GetParent()->RegisterMessageHandler<UpdateMessage>(Entity::MessageHandler(this, &ParticleComponent::OnUpdate));
+    GetParent()->RegisterMessageHandler<TransformComponent>(MessageHandler(this, &ParticleComponent::OnTransformChanged));
+    GetParent()->RegisterMessageHandler<UpdateMessage>(MessageHandler(this, &ParticleComponent::OnUpdate));
     
     _Renderable = new ParticleRenderable(GetParentUid(), _System);
     GetScene()->GetSystemByType<RenderSystem>()->AddItem(_Renderable);
@@ -263,8 +263,8 @@ ParticleComponent::ParticleComponent(Entity* entity)
 
 ParticleComponent::~ParticleComponent()
 {
-    GetParent()->UnregisterMessageHandler<TransformComponent>(Entity::MessageHandler(this, &ParticleComponent::OnTransformChanged));
-    GetParent()->UnregisterMessageHandler<UpdateMessage>(Entity::MessageHandler(this, &ParticleComponent::OnUpdate));
+    GetParent()->UnregisterMessageHandler<TransformComponent>(MessageHandler(this, &ParticleComponent::OnTransformChanged));
+    GetParent()->UnregisterMessageHandler<UpdateMessage>(MessageHandler(this, &ParticleComponent::OnUpdate));
 
     GetScene()->GetSystemByType<RenderSystem>()->RemoveItem(_Renderable);
     

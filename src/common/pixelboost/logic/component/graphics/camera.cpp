@@ -13,14 +13,14 @@ CameraComponent::CameraComponent(Entity* parent, Camera* camera)
 {
     _Camera = camera;
     
-    GetParent()->RegisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &CameraComponent::OnTransformChanged));
+    GetParent()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &CameraComponent::OnTransformChanged));
     
     UpdateTransform();
 }
 
 CameraComponent::~CameraComponent()
 {
-    GetParent()->UnregisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &CameraComponent::OnTransformChanged));
+    GetParent()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &CameraComponent::OnTransformChanged));
     
     delete _Camera;
 }

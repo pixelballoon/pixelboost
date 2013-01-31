@@ -24,14 +24,14 @@ ModelComponent::ModelComponent(Entity* parent, Model* model, Texture* texture)
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
     
-    GetParent()->RegisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &ModelComponent::OnTransformChanged));
+    GetParent()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &ModelComponent::OnTransformChanged));
     
     UpdateTransform();
 }
 
 ModelComponent::~ModelComponent()
 {
-    GetParent()->UnregisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &ModelComponent::OnTransformChanged));
+    GetParent()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &ModelComponent::OnTransformChanged));
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
     

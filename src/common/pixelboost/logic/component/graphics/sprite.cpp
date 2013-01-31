@@ -19,14 +19,14 @@ SpriteComponent::SpriteComponent(Entity* parent, const std::string& sprite)
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
     
-    GetParent()->RegisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &SpriteComponent::OnTransformChanged));
+    GetParent()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &SpriteComponent::OnTransformChanged));
     
     UpdateTransform();
 }
 
 SpriteComponent::~SpriteComponent()
 {
-    GetParent()->UnregisterMessageHandler<TransformChangedMessage>(Entity::MessageHandler(this, &SpriteComponent::OnTransformChanged));
+    GetParent()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &SpriteComponent::OnTransformChanged));
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
     

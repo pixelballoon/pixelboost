@@ -147,7 +147,7 @@ RocketComponent::RocketComponent(Entity* entity, glm::vec2 size)
     Engine::Instance()->GetKeyboardManager()->AddHandler(_KeyboardHandler);
     Engine::Instance()->GetMouseManager()->AddHandler(_MouseHandler);
     
-    GetParent()->RegisterMessageHandler<UpdateMessage>(Entity::MessageHandler(this, &RocketComponent::OnUpdate));
+    GetParent()->RegisterMessageHandler<UpdateMessage>(MessageHandler(this, &RocketComponent::OnUpdate));
 }
 
 RocketComponent::~RocketComponent()
@@ -155,7 +155,7 @@ RocketComponent::~RocketComponent()
     Engine::Instance()->GetKeyboardManager()->RemoveHandler(_KeyboardHandler);
     Engine::Instance()->GetMouseManager()->RemoveHandler(_MouseHandler);
     
-    GetParent()->UnregisterMessageHandler<UpdateMessage>(Entity::MessageHandler(this, &RocketComponent::OnUpdate));
+    GetParent()->UnregisterMessageHandler<UpdateMessage>(MessageHandler(this, &RocketComponent::OnUpdate));
 }
 
 Uid RocketComponent::GetType()
