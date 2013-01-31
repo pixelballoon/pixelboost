@@ -133,7 +133,7 @@ private:
     IndexReverseMap _IndexReverseBuffers;
     VertexReverseMap _VertexReverseBuffers;
     
-    friend class DeviceState;
+    friend struct DeviceState;
 };
 
 }

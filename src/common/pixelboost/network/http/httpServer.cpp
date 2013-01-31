@@ -28,6 +28,8 @@ static void* MongooseCallback(enum mg_event event, struct mg_connection *conn, c
                 requestType = HttpServer::kRequestTypePost;
             else if (strcmp(requestInfo->request_method, "DELETE") == 0)
                 requestType = HttpServer::kRequestTypeDelete;
+            else
+                return 0;
       
             char dataString[8192];
             int read = mg_read(conn, dataString, 8192);

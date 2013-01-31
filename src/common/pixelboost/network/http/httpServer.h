@@ -3,8 +3,8 @@
 #include <string>
 #include <vector>
 
-class mg_connection;
-class mg_context;
+struct mg_connection;
+struct mg_context;
 
 namespace pb
 {

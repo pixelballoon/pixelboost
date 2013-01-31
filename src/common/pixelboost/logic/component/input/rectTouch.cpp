@@ -117,7 +117,6 @@ bool RectTouchComponent::OnTouchMove(Touch touch)
     
     glm::vec3 position = GetPosition();
     glm::vec2 screenPos = touch.GetViewportPosition();
-    glm::vec2 size = _Size/2.f;
     
     _Touches[touch.GetId()] = screenPos;
     
@@ -136,7 +135,6 @@ bool RectTouchComponent::OnTouchUp(Touch touch)
     
     glm::vec3 position = GetPosition();
     glm::vec2 screenPos = touch.GetViewportPosition();
-    glm::vec2 size = _Size/2.f;
     
     TouchUpMessage message(GetParent(), this, touch.GetId(), screenPos-glm::vec2(position.x, position.y));
     GetScene()->SendMessage(GetParentUid(), message);

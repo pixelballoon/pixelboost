@@ -1,5 +1,7 @@
 cmake_minimum_required (VERSION 2.6)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-reorder")
+
 if (PIXELBOOST_BUILD_PLATFORM_ANDROID)
 	set (PLATFORM_HEADERS
 		"${CMAKE_CURRENT_SOURCE_DIR}/src/platform/android"

@@ -82,7 +82,7 @@ PrimitiveRenderableEllipse* DebugRenderSystem::AddEllipse(RenderPass renderPass,
     ellipse->SetSize(size);
     ellipse->SetColor(color);
     ellipse->SetLayer(layer);
-    AddItem(ellipse, time);
+    AddTimedItem(ellipse, time);
     
     return ellipse;
 }
@@ -95,7 +95,7 @@ PrimitiveRenderableLine* DebugRenderSystem::AddLine(RenderPass renderPass, int l
     line->SetEnd(end);
     line->SetColor(color);
     line->SetLayer(layer);
-    AddItem(line, time);
+    AddTimedItem(line, time);
     
     return line;
 }
@@ -115,12 +115,12 @@ FontRenderable* DebugRenderSystem::AddText(RenderPass renderPass, int layer, Fon
     renderable->SetText(text);
     renderable->SetFont(font);
     renderable->SetAlignment(alignment);
-    AddItem(renderable, time);
+    AddTimedItem(renderable, time);
     
     return renderable;
 }
 
-void DebugRenderSystem::AddItem(Renderable* renderable, float time)
+void DebugRenderSystem::AddTimedItem(Renderable* renderable, float time)
 {
     switch (renderable->GetRenderPass())
     {

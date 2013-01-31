@@ -18,7 +18,7 @@ TextureGL::~TextureGL()
     glDeleteTextures(1, &_Texture);
 }
 
-bool TextureGL::LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format, bool hasPremultipliedAlpha)
+bool TextureGL::LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format)
 {
     if (!Texture::LoadFromBytes(data, width, height, createMips, format))
         return false;

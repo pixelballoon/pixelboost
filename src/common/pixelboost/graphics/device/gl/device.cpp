@@ -42,8 +42,6 @@ void DeviceState::UpdateAll(DeviceState& state)
  
 void DeviceState::UpdateIndexBuffer(DeviceState& state)
 {
-    GraphicsDeviceGL* device = static_cast<GraphicsDeviceGL*>(GraphicsDevice::Instance());
-    
     if (boundIndexBuffer != state.boundIndexBuffer)
     {
         boundIndexBuffer = state.boundIndexBuffer;
@@ -165,8 +163,6 @@ void DeviceState::UpdateVertexBuffer(DeviceState& state)
 
 void DeviceState::UpdateTexture(DeviceState& state)
 {
-    GraphicsDeviceGL* device = static_cast<GraphicsDeviceGL*>(GraphicsDevice::Instance());
-    
     if (boundTexture != state.boundTexture)
     {
         boundTexture = state.boundTexture;
@@ -176,8 +172,6 @@ void DeviceState::UpdateTexture(DeviceState& state)
 
 void DeviceState::UpdateStates(DeviceState& state)
 {
-    GraphicsDeviceGL* device = static_cast<GraphicsDeviceGL*>(GraphicsDevice::Instance());
-    
     for (StateMap::iterator it = state.states.begin(); it != state.states.end(); ++it)
     {
         StateMap::iterator currentState = states.find(it->first);
@@ -336,6 +330,11 @@ void GraphicsDeviceGL::UnlockVertexBuffer(VertexBuffer* vertexBuffer, int numEle
         case kVertexFormat_P3_N3_UV:
         {
             glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_P3_N3_UV) * numElements, vertexBuffer->GetData(), bufferType);
+            break;
+        }
+        case kVertexFormat_P3_N3_UV_BW:
+        {
+            glBufferData(GL_ARRAY_BUFFER, sizeof(kVertexFormat_P3_N3_UV_BW) * numElements, vertexBuffer->GetData(), bufferType);
             break;
         }
     }

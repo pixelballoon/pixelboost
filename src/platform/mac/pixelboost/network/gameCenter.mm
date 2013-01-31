@@ -49,8 +49,7 @@ void GameCenterDelegate::AchievementData(std::string achievement, std::string ti
 }
 
 GameCenter::GameCenter()
-    : _Delegate(0)
-    , _IsConnected(false)
+    : _IsConnected(false)
 {
 }
     

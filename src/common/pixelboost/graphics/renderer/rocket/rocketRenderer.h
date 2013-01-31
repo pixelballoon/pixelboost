@@ -71,7 +71,6 @@ namespace pb
         
         IndexBuffer* _IndexBuffer;
         VertexBuffer* _VertexBuffer;
-        int _VertexCount;
         
         int _MaxQuads;
         Renderable* _Renderable;

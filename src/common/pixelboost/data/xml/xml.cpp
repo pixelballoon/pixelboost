@@ -902,11 +902,6 @@ namespace
 	{
 		for (size_t i = 0; i < length; ++i) result[i] = endian_swap(data[i]);
 	}
-
-	inline void convert_wchar_endian_swap(wchar_t* result, const wchar_t* data, size_t length)
-	{
-		for (size_t i = 0; i < length; ++i) result[i] = static_cast<wchar_t>(endian_swap(static_cast<wchar_selector<sizeof(wchar_t)>::type>(data[i])));
-	}
 }
 
 namespace
@@ -5632,7 +5627,7 @@ namespace
 			return PUGIXML_TEXT("NaN");
 
 		case FP_INFINITE:
-			return PUGIXML_TEXT("-Infinity") + (value > 0);
+            return (value >= 0) ? PUGIXML_TEXT("Infinity") : PUGIXML_TEXT("-Infinity");
 
 		case FP_ZERO:
 			return PUGIXML_TEXT("0");

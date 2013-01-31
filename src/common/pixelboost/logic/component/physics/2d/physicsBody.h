@@ -10,7 +10,7 @@ class b2World;
 namespace pb
 {
     
-    struct FixtureDefinition2D;
+    class FixtureDefinition2D;
     class Message;
     
     class PhysicsBody2DComponent : public PhysicsComponent2D

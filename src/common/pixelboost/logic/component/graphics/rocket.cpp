@@ -77,9 +77,6 @@ public:
         OnMouseMove(position);
         _Context->ProcessMouseButtonDown(button, 0);
         
-        Rocket::Core::Element* focus = _Context->GetFocusElement();
-        Rocket::Core::Element* hover = _Context->GetHoverElement();
-        
         if (_Context->GetHoverElement() != _Context->GetRootElement())
             return true;
         

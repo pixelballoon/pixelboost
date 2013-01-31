@@ -28,7 +28,7 @@ namespace pb
         FontRenderable* AddText(RenderPass renderPass, int layer, FontAlign align, const std::string font, const std::string text, glm::vec3 position, glm::vec3 rotation, float size, float time = 0.f);
         
     private:
-        virtual void AddItem(Renderable* renderable, float time);
+        void AddTimedItem(Renderable* renderable, float time);
         virtual void RemoveItem(Renderable* renderable);
 
         void Clear();

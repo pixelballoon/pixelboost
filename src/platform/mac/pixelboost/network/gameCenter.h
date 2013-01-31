@@ -51,10 +51,7 @@ private:
     void SubmitScore(void* score);
     void SubmitAchievement(void* achievement);
     
-    GameCenterDelegate* _Delegate;
-    
     bool _IsConnected;
-    void* _MatchDelegate;
 };
     
 }
