@@ -23,11 +23,10 @@ public:
         kTextureFormatRGBA,
     };
     
-    virtual bool LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format, bool hasPremultipliedAlpha);
-    virtual bool LoadFromFile(FileLocation location, const std::string& image, bool createMips, bool hasPremultipliedAlpha);
+    virtual bool LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format);
+    virtual bool LoadFromFile(FileLocation location, const std::string& image, bool createMips);
     
     const glm::vec2& GetSize() const;
-    bool HasPremultipliedAlpha() const;
 
 #ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
     void OnContextLost();
@@ -42,7 +41,6 @@ protected:
     unsigned char* _Data;
     bool _DataCreateMips;
 #endif
-    bool _HasPremultipliedAlpha;
     
     glm::vec2 _Size;
     

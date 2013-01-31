@@ -121,8 +121,10 @@ BufferRenderer::~BufferRenderer()
 void BufferRenderer::Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass)
 {
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, true);
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
+    
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
+    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
     
     shaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
     
@@ -131,13 +133,6 @@ void BufferRenderer::Render(int count, Renderable** renderables, Viewport* viewp
         BufferRenderable& renderable = *static_cast<BufferRenderable*>(renderables[i]);
         
         shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewMatrix", renderable.GetModelViewMatrix());
-        
-        if (renderable._Texture->HasPremultipliedAlpha())
-        {
-            GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
-        } else {
-            GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
-        }
         
         GraphicsDevice::Instance()->BindTexture(renderable._Texture);
         GraphicsDevice::Instance()->BindIndexBuffer(renderable._IndexBuffer);

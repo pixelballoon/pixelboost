@@ -338,7 +338,7 @@ Font* FontRenderer::LoadFont(FileLocation location, const std::string& name, con
         {
             std::string texFilename = "/data/fonts/" + data["file"].substr(1, data["file"].find('"', 1)-1);
             font->texture = GraphicsDevice::Instance()->CreateTexture();
-            font->texture->LoadFromFile(location, texFilename, createMips, hasPremultipliedAlpha);
+            font->texture->LoadFromFile(location, texFilename, createMips);
         } else if (elementType == "char")
         {
             Font::Character character;
@@ -391,8 +391,10 @@ Font* FontRenderer::GetFont(const std::string& name)
 void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass)
 {
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
+    
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
+    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
     
     GraphicsDevice::Instance()->BindIndexBuffer(_IndexBuffer);
     
@@ -419,13 +421,6 @@ void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewpor
         font->FillVertexBuffer(_VertexBuffer, renderable.Text);
         
         GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffer);
-        
-        if (font->texture->HasPremultipliedAlpha())
-        {
-            GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
-        } else {
-            GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
-        }
         
         GraphicsDevice::Instance()->BindTexture(font->texture);
         

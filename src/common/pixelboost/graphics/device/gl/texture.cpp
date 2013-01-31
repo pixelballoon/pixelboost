@@ -20,7 +20,7 @@ TextureGL::~TextureGL()
 
 bool TextureGL::LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format, bool hasPremultipliedAlpha)
 {
-    if (!Texture::LoadFromBytes(data, width, height, createMips, format, hasPremultipliedAlpha))
+    if (!Texture::LoadFromBytes(data, width, height, createMips, format))
         return false;
 
     if (format != kTextureFormatRGBA && format != kTextureFormatRGB)

@@ -34,9 +34,9 @@ SpriteSheet::~SpriteSheet()
     }
 }
 
-bool SpriteSheet::LoadSingle(FileLocation location, const std::string& fileName, float density, bool generateMips, bool hasPremultipliedAlpha)
+bool SpriteSheet::LoadSingle(FileLocation location, const std::string& fileName, float density, bool generateMips)
 {
-    if (!LoadTexture(location, fileName, generateMips, hasPremultipliedAlpha))
+    if (!LoadTexture(location, fileName, generateMips))
         return false;
     
     std::string spriteName = fileName.substr(fileName.rfind("/")+1);
@@ -56,7 +56,7 @@ bool SpriteSheet::LoadSingle(FileLocation location, const std::string& fileName,
     return true;
 }
 
-bool SpriteSheet::LoadSheet(FileLocation location, const std::string& name, const std::string& extension, bool generateMips, bool hasPremultipliedAlpha)
+bool SpriteSheet::LoadSheet(FileLocation location, const std::string& name, const std::string& extension, bool generateMips)
 {
     std::string modifier;
     float sheetDensity = 16.f;
@@ -128,12 +128,12 @@ bool SpriteSheet::LoadSheet(FileLocation location, const std::string& name, cons
         Engine::Instance()->GetSpriteRenderer()->_Sprites[spriteName] = sprite;
     }
     
-    LoadTexture(location, "/data/spritesheets/images/" + name + modifier + "." + extension, generateMips, hasPremultipliedAlpha);
+    LoadTexture(location, "/data/spritesheets/images/" + name + modifier + "." + extension, generateMips);
     
     return true;
 }
 
-Texture* SpriteSheet::LoadTexture(FileLocation location, const std::string& fileName, bool generateMips, bool hasPremultipliedAlpha)
+Texture* SpriteSheet::LoadTexture(FileLocation location, const std::string& fileName, bool generateMips)
 {
     if (_Texture)
     {
@@ -141,7 +141,7 @@ Texture* SpriteSheet::LoadTexture(FileLocation location, const std::string& file
     }
     
     _Texture = GraphicsDevice::Instance()->CreateTexture();
-    _Texture->LoadFromFile(location, fileName, generateMips, hasPremultipliedAlpha);
+    _Texture->LoadFromFile(location, fileName, generateMips);
     
     return _Texture;
 }

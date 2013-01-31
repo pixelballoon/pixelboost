@@ -25,7 +25,7 @@ Texture::~Texture()
 #endif
 }
 
-bool Texture::LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format, bool hasPremultipliedAlpha)
+bool Texture::LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format)
 {
 #ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
     if (_Data != 0 && _Data != data)
@@ -53,13 +53,11 @@ bool Texture::LoadFromBytes(const unsigned char* data, int width, int height, bo
         }
     }
 #endif
-    
-    _HasPremultipliedAlpha = hasPremultipliedAlpha;
-    
+
     return true;
 }
 
-bool Texture::LoadFromFile(pb::FileLocation location, const std::string& path, bool createMips, bool hasPremultipliedAlpha)
+bool Texture::LoadFromFile(pb::FileLocation location, const std::string& path, bool createMips)
 {
     bool status = true;
 
@@ -111,7 +109,7 @@ bool Texture::LoadFromFile(pb::FileLocation location, const std::string& path, b
         stbi_image_free(decodedRgb);
         stbi_image_free(decodedAlpha);
         
-        status = LoadFromBytes(decoded, width, height, createMips, kTextureFormatRGBA, hasPremultipliedAlpha);
+        status = LoadFromBytes(decoded, width, height, createMips, kTextureFormatRGBA);
         
         delete[] decoded;
     } else {
@@ -132,7 +130,7 @@ bool Texture::LoadFromFile(pb::FileLocation location, const std::string& path, b
         
         delete file;
         
-        status = LoadFromBytes(decoded, width, height, createMips, components == 3 ? kTextureFormatRGB : kTextureFormatRGBA, components > 3 ? hasPremultipliedAlpha : false);
+        status = LoadFromBytes(decoded, width, height, createMips, components == 3 ? kTextureFormatRGB : kTextureFormatRGBA);
         
         stbi_image_free(decoded);
     }
@@ -152,11 +150,6 @@ bool Texture::LoadFromFile(pb::FileLocation location, const std::string& path, b
 const glm::vec2& Texture::GetSize() const
 {
     return _Size;
-}
-
-bool Texture::HasPremultipliedAlpha() const
-{
-    return _HasPremultipliedAlpha;
 }
 
 #ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST

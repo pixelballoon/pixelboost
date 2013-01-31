@@ -387,18 +387,7 @@ void ModelRenderer::Render(int count, Renderable** renderables, Viewport* viewpo
             continue;
         
         GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, renderable._AlphaBlend);
-        
-        if (renderable._AlphaBlend)
-        {
-            if (texture->HasPremultipliedAlpha())
-            {
-                GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
-            } else {
-                GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
-            }
-        } else {
-            GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
-        }
+        GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
         
         shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewMatrix", renderable.GetModelViewMatrix());
         shaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", renderable._Tint);
@@ -463,7 +452,7 @@ bool ModelRenderer::UnloadModel(const std::string& modelName)
     return true;
 }
     
-Texture* ModelRenderer::LoadTexture(FileLocation location, const std::string& textureName, const std::string& fileName, bool createMips, bool hasPremultipliedAlpha)
+Texture* ModelRenderer::LoadTexture(FileLocation location, const std::string& textureName, const std::string& fileName, bool createMips)
 {
     TextureMap::iterator it = _Textures.find(textureName);
     
@@ -473,7 +462,7 @@ Texture* ModelRenderer::LoadTexture(FileLocation location, const std::string& te
     }
     
     Texture* texture = GraphicsDevice::Instance()->CreateTexture();
-    if (!texture->LoadFromFile(location, fileName, createMips, hasPremultipliedAlpha))
+    if (!texture->LoadFromFile(location, fileName, createMips))
     {
         GraphicsDevice::Instance()->DestroyTexture(texture);
         return 0;

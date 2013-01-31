@@ -230,12 +230,7 @@ void GwenRenderer::DrawTexturedRect(Gwen::Texture* definition, Gwen::Rect rect, 
     if (GraphicsDevice::Instance()->GetBoundTexture() != texture)
         PurgeBuffer(true);
     
-    if (texture->HasPremultipliedAlpha())
-    {
-        GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
-    } else {
-        GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
-    }
+    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
     
     GraphicsDevice::Instance()->BindTexture(texture);
     
@@ -269,9 +264,9 @@ void GwenRenderer::LoadTexture(Gwen::Texture* definition)
     if (fileName[0] != '/')
     {
         fileName = "/data/" + fileName;
-        texture->LoadFromFile(pb::kFileLocationBundle, fileName, false, false);
+        texture->LoadFromFile(pb::kFileLocationBundle, fileName, false);
     } else {
-        texture->LoadFromFile(pb::kFileLocationUser, fileName, false, false);
+        texture->LoadFromFile(pb::kFileLocationUser, fileName, false);
     }
     
     definition->width = texture->GetSize()[0];
@@ -342,12 +337,7 @@ void GwenRenderer::RenderText(Gwen::Font* font, Gwen::Point pos, const Gwen::Uni
     _ShaderPass->GetShaderProgram()->SetUniform("PB_ModelViewMatrix", _Renderable->GetModelViewMatrix() * modelMatrix);
     _ShaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", glm::vec4(0,0,0,1));
     
-    if (renderFont->texture->HasPremultipliedAlpha())
-    {
-        GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
-    } else {
-        GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
-    }
+    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
     
     pb::Texture* prevTexture = GraphicsDevice::Instance()->BindTexture(renderFont->texture);
     GraphicsDevice::Instance()->BindIndexBuffer(_FontIndexBuffer);

@@ -114,12 +114,7 @@ void RocketRenderer::RenderGeometry(Rocket::Core::Vertex* vertices, int numVerti
 {
     Texture* texture = (Texture*)textureHandle;
     
-    if (texture->HasPremultipliedAlpha())
-    {
-        GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
-    } else {
-        GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
-    }
+    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
     
     _VertexBuffer->Lock();
     Vertex_P3_C4_UV* vertexData = static_cast<Vertex_P3_C4_UV*>(_VertexBuffer->GetData());
@@ -210,12 +205,7 @@ void RocketRenderer::RenderCompiledGeometry(Rocket::Core::CompiledGeometryHandle
     IndexBuffer* indexBuffer = _BufferMap[vertexBuffer];
     Texture* texture = _TextureMap[vertexBuffer];
     
-    if (texture->HasPremultipliedAlpha())
-    {
-        GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
-    } else {
-        GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
-    }
+    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
     
     glm::mat4x4 matrix = _Renderable->GetModelViewMatrix();
     matrix = glm::scale(matrix, glm::vec3(1.f,1.f,1.f)/32.f);
@@ -259,7 +249,7 @@ bool RocketRenderer::LoadTexture(Rocket::Core::TextureHandle& textureHandle, Roc
     
     Texture* texture = GraphicsDevice::Instance()->CreateTexture();
     
-    if (!texture->LoadFromFile(pb::kFileLocationUser, fileName, false, false))
+    if (!texture->LoadFromFile(pb::kFileLocationUser, fileName, false))
     {
         GraphicsDevice::Instance()->DestroyTexture(texture);
         return false;
@@ -277,7 +267,7 @@ bool RocketRenderer::GenerateTexture(Rocket::Core::TextureHandle& textureHandle,
 {
     Texture* texture = GraphicsDevice::Instance()->CreateTexture();
     
-    if (!texture->LoadFromBytes(source, sourceDimensions.x, sourceDimensions.y, false, Texture::kTextureFormatRGBA, false))
+    if (!texture->LoadFromBytes(source, sourceDimensions.x, sourceDimensions.y, false, Texture::kTextureFormatRGBA))
     {
         GraphicsDevice::Instance()->DestroyTexture(texture);
         return false;

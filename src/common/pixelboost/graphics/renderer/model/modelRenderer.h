@@ -158,7 +158,7 @@ namespace pb
         Model* LoadModel(FileLocation location, const std::string& modelName, const std::string& fileName);
         bool UnloadModel(const std::string& modelName);
         
-        Texture* LoadTexture(FileLocation location, const std::string& textureName, const std::string& fileName, bool createMips=true, bool hasPremultipliedAlpha=false);
+        Texture* LoadTexture(FileLocation location, const std::string& textureName, const std::string& fileName, bool createMips=true);
         bool UnloadTexture(const std::string& textureName);
         
         void Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass);

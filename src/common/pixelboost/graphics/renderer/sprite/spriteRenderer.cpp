@@ -129,8 +129,10 @@ SpriteRenderer::~SpriteRenderer()
 void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass)
 {
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
+    
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
+    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
     
     GraphicsDevice::Instance()->BindIndexBuffer(_IndexBuffer);
     
@@ -159,13 +161,6 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
         {
             RenderBatch();
             texture = sprite->_Sheet->_Texture;
-            
-            if (texture->HasPremultipliedAlpha())
-            {
-                GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
-            } else {
-                GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
-            }
             
             GraphicsDevice::Instance()->BindTexture(texture);
         }
@@ -287,7 +282,7 @@ bool SpriteRenderer::LoadSpriteSheet(FileLocation location, const std::string& n
         return false;
     
     std::shared_ptr<SpriteSheet> sheet = GetSpriteSheet(name);
-    sheet->LoadSheet(location, name, extension, createMips, hasPremultipliedAlpha);
+    sheet->LoadSheet(location, name, extension, createMips);
 
     return true;
 }
