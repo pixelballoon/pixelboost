@@ -12,7 +12,7 @@ SceneSystem::~SceneSystem()
     
 }
 
-void SceneSystem::Update(Scene* scene, float time)
+void SceneSystem::Update(Scene* scene, float timeDelta, float gameDelta)
 {
     
 }

@@ -173,7 +173,7 @@ void SkinnedModelComponent::OnUpdate(const Message& message)
 {
     const UpdateMessage& updateMessage = static_cast<const UpdateMessage&>(message);
     
-    _AnimationState->AdvanceAnimation(updateMessage.GetDelta());
+    _AnimationState->AdvanceAnimation(updateMessage.GetGameDelta());
     _AnimationState->SoftwareSkin(_Renderable->GetModel());
 }
 

@@ -19,7 +19,7 @@ Screen::~Screen()
     }
 }
 
-void Screen::Update(float time)
+void Screen::Update(float timeDelta, float gameDelta)
 {
     
 }

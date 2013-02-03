@@ -69,7 +69,7 @@ public:
     virtual void OnAppGainFocus();
     virtual void OnAppQuit();
 	
-	virtual void Update(float time);
+	virtual void Update(float timeDelta, float gameDelta);
 	void Render();
     
     void* GetPlatformContext();

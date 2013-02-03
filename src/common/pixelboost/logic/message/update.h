@@ -8,16 +8,18 @@ namespace pb
 class UpdateMessage : public Message
 {
 public:
-    UpdateMessage(float delta);
+    UpdateMessage(float timeDelta, float gameDelta);
     virtual ~UpdateMessage();
     
     Uid GetType() const;
     static Uid GetStaticType();
     
-    float GetDelta() const;
+    float GetGameDelta() const;
+    float GetTimeDelta() const;
     
 private:
-    float _Delta;
+    float _GameDelta;
+    float _TimeDelta;
 };
     
 }

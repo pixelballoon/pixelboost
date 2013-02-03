@@ -20,7 +20,7 @@ namespace pb
         virtual pb::Uid GetType() const;
         static pb::Uid GetStaticType();
         
-        virtual void Update(Scene* scene, float time);
+        virtual void Update(Scene* scene, float totalTime, float gameTime);
         virtual void Render(Scene* scene, Viewport* viewport, RenderPass renderPass);
         
     public:

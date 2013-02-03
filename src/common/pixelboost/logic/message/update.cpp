@@ -2,9 +2,10 @@
 
 using namespace pb;
 
-UpdateMessage::UpdateMessage(float delta)
+UpdateMessage::UpdateMessage(float timeDelta, float gameDelta)
     : Message(0, 0)
-    , _Delta(delta)
+    , _GameDelta(gameDelta)
+    , _TimeDelta(timeDelta)
 {
     
 }
@@ -24,7 +25,12 @@ Uid UpdateMessage::GetStaticType()
     return TypeHash("pb::UpdateMessage");
 }
 
-float UpdateMessage::GetDelta() const
+float UpdateMessage::GetGameDelta() const
 {
-    return _Delta;
+    return _GameDelta;
+}
+
+float UpdateMessage::GetTimeDelta() const
+{
+    return _TimeDelta;
 }

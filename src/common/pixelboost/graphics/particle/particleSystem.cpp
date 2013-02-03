@@ -311,5 +311,5 @@ void ParticleComponent::OnUpdate(const Message& message)
     const pb::UpdateMessage& updateMessage = static_cast<const UpdateMessage&>(message);
     
     _System->Transform = GetParent()->GetComponentByType<TransformComponent>()->GetMatrix() * _LocalTransform;
-    _System->Update(updateMessage.GetDelta());
+    _System->Update(updateMessage.GetGameDelta());
 }

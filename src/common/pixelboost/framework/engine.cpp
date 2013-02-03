@@ -203,10 +203,10 @@ void Engine::OnAppQuit()
 
 }
 
-void Engine::Update(float time)
+void Engine::Update(float timeDelta, float gameDelta)
 {
-    _GameTime += time;
-    _TotalTime += time;
+    _GameTime += gameDelta;
+    _TotalTime += timeDelta;
     
 #ifndef PIXELBOOST_DISABLE_SOUND
     SoundManager::Instance()->Update(time);

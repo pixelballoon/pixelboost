@@ -23,7 +23,7 @@ public:
     Scene();
     ~Scene();
     
-    void Update(float time);
+    void Update(float timeDelta, float gameDelta);
     void Render(Viewport* viewport, RenderPass renderPass);
     
     template <class T>T* GetSystemByType();

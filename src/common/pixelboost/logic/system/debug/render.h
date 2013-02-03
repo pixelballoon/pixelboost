@@ -20,7 +20,7 @@ namespace pb
         virtual Uid GetType() const;
         static Uid GetStaticType();
         
-        virtual void Update(Scene* scene, float time);
+        virtual void Update(Scene* scene, float totalTime, float gameTime);
         virtual void Render(Scene* scene, Viewport* viewport, RenderPass renderPass);
         
         PrimitiveRenderableEllipse* AddEllipse(RenderPass renderPass, int layer, glm::vec3 position, glm::vec3 rotation, glm::vec2 size, glm::vec4 color = glm::vec4(1,1,1,1), float time = 0.f);

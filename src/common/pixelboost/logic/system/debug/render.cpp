@@ -38,10 +38,10 @@ Uid DebugRenderSystem::GetStaticType()
     return pb::TypeHash("pb::DebugRenderSystem");
 }
 
-void DebugRenderSystem::Update(Scene* scene, float time)
+void DebugRenderSystem::Update(Scene* scene, float totalTime, float gameTime)
 {
     Clear();
-    _UpdateTime = time;
+    _UpdateTime = gameTime;
     
     DebugRenderMessage debugRenderMessage(this);
     scene->BroadcastMessage(debugRenderMessage);
@@ -147,7 +147,7 @@ void DebugRenderSystem::Clear()
 {
     for (RenderableMap::iterator it = _SceneRenderables.begin(); it != _SceneRenderables.end();)
     {
-        if (it->second < 0.f)
+        if (it->second <= 0.f)
         {
             delete it->first;
             _SceneRenderables.erase(it++);
@@ -158,7 +158,7 @@ void DebugRenderSystem::Clear()
     
     for (RenderableMap::iterator it = _UiRenderables.begin(); it != _UiRenderables.end();)
     {
-        if (it->second < 0.f)
+        if (it->second <= 0.f)
         {
             delete it->first;
             _UiRenderables.erase(it++);

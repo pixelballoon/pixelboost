@@ -38,9 +38,9 @@ pb::Uid PhysicsSystem2D::GetStaticType()
     return pb::TypeHash("pb::PhysicsSystem2D");
 }
 
-void PhysicsSystem2D::Update(Scene* scene, float time)
+void PhysicsSystem2D::Update(Scene* scene, float totalTime, float gameTime)
 {
-    _World->Step(time, _VelocityIterations, _PositionIterations);
+    _World->Step(gameTime, _VelocityIterations, _PositionIterations);
 }
 
 void PhysicsSystem2D::Render(Scene* scene, Viewport* viewport, RenderPass renderPass)

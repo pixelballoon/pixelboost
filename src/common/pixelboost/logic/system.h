@@ -18,7 +18,7 @@ public:
     
     virtual pb::Uid GetType() const = 0;
     
-    virtual void Update(Scene* scene, float time);
+    virtual void Update(Scene* scene, float timeDelta, float gameDelta);
     virtual void Render(Scene* scene, Viewport* viewport, RenderPass renderPass);
     
     virtual void HandleMessage(Scene* scene, const Message& message);

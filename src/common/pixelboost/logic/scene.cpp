@@ -38,7 +38,7 @@ Scene::~Scene()
     }
 }
 
-void Scene::Update(float time)
+void Scene::Update(float timeDelta, float gameDelta)
 {
     for (EntitySet::iterator it = _PurgeSet.begin(); it != _PurgeSet.end(); ++it)
     {
@@ -68,12 +68,12 @@ void Scene::Update(float time)
     
     for (SystemMap::iterator it = _Systems.begin(); it != _Systems.end(); ++it)
     {
-        it->second->Update(this, time);
+        it->second->Update(this, timeDelta, gameDelta);
     }
     
     for (DelayedMessageList::iterator it = _DelayedMessages.begin(); it != _DelayedMessages.end();)
     {
-        it->first -= time;
+        it->first -= gameDelta;
         
         if (it->first < 0)
         {
@@ -90,7 +90,7 @@ void Scene::Update(float time)
         }
     }
     
-    UpdateMessage message(time);
+    UpdateMessage message(timeDelta, gameDelta);
     
     BroadcastMessage(message);
 }
