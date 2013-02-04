@@ -8,8 +8,8 @@ if (PIXELBOOST_BUILD_PLATFORM_ANDROID)
 		)
 
 	set (PLATFORM_SOURCES
-		"src/platform/android/pixelboost/audio/soundManager.cpp"
-		"src/platform/android/pixelboost/audio/soundManager.h"
+		"src/platform/android/pixelboost/audio/android/audioManagerSimple.cpp"
+		"src/platform/android/pixelboost/audio/android/audioManagerSimple.h"
 		"src/platform/android/pixelboost/file/fileHelpers.cpp"
 		"src/platform/android/pixelboost/file/fileSystem.cpp"
 		"src/platform/android/pixelboost/misc/jni.cpp"
@@ -28,8 +28,8 @@ if (PIXELBOOST_BUILD_PLATFORM_OSX)
 		)
 
 	set (PLATFORM_SOURCES
-		"src/platform/mac/pixelboost/audio/soundManager.h"
-		"src/platform/mac/pixelboost/audio/soundManager.mm"
+		"src/platform/mac/pixelboost/audio/osx/audioManagerSimple.h"
+		"src/platform/mac/pixelboost/audio/osx/audioManagerSimple.mm"
 		"src/platform/mac/pixelboost/file/fileHelpers.mm"
 		"src/platform/mac/pixelboost/network/gameCenter.h"
 		"src/platform/mac/pixelboost/network/gameCenter.mm"
@@ -84,8 +84,8 @@ if (PIXELBOOST_BUILD_PLATFORM_IOS)
 		"src/platform/ios/external/objectAL/Support/OALAudioFile.m"
 		"src/platform/ios/external/objectAL/Support/OALTools.m"
 		"src/platform/ios/external/objectAL/OALSimpleAudio.m"
-		"src/platform/ios/pixelboost/audio/soundManager.h"
-		"src/platform/ios/pixelboost/audio/soundManager.mm"
+		"src/platform/ios/pixelboost/audio/ios/audioManagerSimple.h"
+		"src/platform/ios/pixelboost/audio/ios/audioManagerSimple.mm"
 		"src/platform/ios/pixelboost/file/fileHelpers.mm"
 		"src/platform/ios/pixelboost/framework/EAGLView.m"
 		"src/platform/ios/pixelboost/framework/main.m"
@@ -110,6 +110,11 @@ set (PIXELBOOST_HEADERS
 	CACHE INTERNAL "Complete list of pixelboost headers")
 
 include_directories("${PIXELBOOST_HEADERS}")
+
+set (AUDIO_SOURCES
+	"src/common/pixelboost/audio/audioManagerSimple.cpp"
+	"src/common/pixelboost/audio/audioManagerSimple.h"
+	)
 
 set (DATA_SOURCES
 	"src/common/pixelboost/data/asset/assetLoader.cpp"
@@ -406,6 +411,7 @@ set (EXTERNAL_SOURCES
 	)
 
 set (PIXELBOOST_SOURCES
+	${AUDIO_SOURCES}
 	${DATA_SOURCES}
 	${DB_SOURCES}
 	${DEBUG_SOURCES}
@@ -469,6 +475,7 @@ if (PIXELBOOST_BUILD_PLATFORM_ANDROID)
 	target_link_libraries (pixelboost_engine GLESv2 log)
 endif (PIXELBOOST_BUILD_PLATFORM_ANDROID)
 
+source_group (audio FILES ${AUDIO_SOURCES})
 source_group (data FILES ${DATA_SOURCES})
 source_group (db FILES ${DB_SOURCES})
 source_group (debug FILES ${DEBUG_SOURCES})

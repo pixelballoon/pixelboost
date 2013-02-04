@@ -7,82 +7,18 @@
 #import "ObjectAL.h"
 #import "ALSoundSource.h"
 
-#include "pixelboost/audio/soundManager.h"
+#include "pixelboost/audio/ios/audioManagerSimple.h"
 #include "pixelboost/file/fileHelpers.h"
 
 using namespace pb;
 
-Sound::Sound(const std::string& name, float volume, float pitch, bool looping)
-    : _Looping(false)
-    , _Name(name)
-    , _IsPlaying(false)
-    , _Pitch(pitch)
-    , _Volume(volume)
+AudioManagerSimple* AudioManagerSimple::Instance()
 {
-    _Id = SoundManager::Instance()->SfxGetId();
+    static AudioManagerSimpleIOS* instance = new AudioManagerSimpleIOS();
+    return instance;
 }
 
-int Sound::GetId() const
-{
-    return _Id;
-}
-
-void Sound::Play()
-{
-    _IsPlaying = true;
-    SoundManager::Instance()->SfxPlay(*this);
-}
-
-void Sound::Stop()
-{
-    _IsPlaying = false;
-    SoundManager::Instance()->SfxStop(*this);
-}
-
-bool Sound::IsPlaying() const
-{
-    return _IsPlaying;
-}
-
-const std::string& Sound::GetName() const
-{
-    return _Name;
-}
-
-bool Sound::IsLooping() const
-{
-    return _Looping;
-}
-
-void Sound::SetLooping(bool looping)
-{
-    _Looping = looping;
-    SoundManager::Instance()->SfxUpdateLooping(*this);
-}
-
-float Sound::GetPitch() const
-{
-    return _Pitch;
-}
-
-void Sound::SetPitch(float pitch)
-{
-    _Pitch = pitch;
-    SoundManager::Instance()->SfxUpdatePitch(*this);
-}
-
-float Sound::GetVolume() const
-{
-    return _Volume;
-}
-
-void Sound::SetVolume(float volume)
-{
-    _Volume = volume;
-    SoundManager::Instance()->SfxUpdateVolume(*this);
-}
-
-SoundManager::SoundManager()
+AudioManagerSimpleIOS::AudioManagerSimpleIOS()
 {
     _CurrentBgmName = "";
     _MuteBgm = false;
@@ -92,18 +28,12 @@ SoundManager::SoundManager()
     [OALSimpleAudio sharedInstance].honorSilentSwitch = YES;
 }
 
-SoundManager::~SoundManager()
+AudioManagerSimpleIOS::~AudioManagerSimpleIOS()
 {
     
 }
 
-SoundManager* SoundManager::Instance()
-{
-    static SoundManager* instance = new SoundManager();
-    return instance;
-}
-
-void SoundManager::Update(float time)
+void AudioManagerSimpleIOS::Update(float time)
 {
     std::vector<int> inactiveSounds;
     
@@ -121,12 +51,12 @@ void SoundManager::Update(float time)
     }
 }
 
-bool SoundManager::IsBgmMuted()
+bool AudioManagerSimpleIOS::IsBgmMuted()
 {
     return _MuteBgm;
 }
     
-void SoundManager::MuteBgm(bool mute)
+void AudioManagerSimpleIOS::MuteBgm(bool mute)
 {
     _MuteBgm = mute;
     
@@ -140,29 +70,29 @@ void SoundManager::MuteBgm(bool mute)
     }
 }
 
-bool SoundManager::IsSfxMuted()
+bool AudioManagerSimpleIOS::IsSfxMuted()
 {
     return _MuteSfx;
 }
 
-void SoundManager::MuteSfx(bool mute)
+void AudioManagerSimpleIOS::MuteSfx(bool mute)
 {
     _MuteSfx = mute;
 }
 
-void SoundManager::LoadBgm(const std::string& name)
+void AudioManagerSimpleIOS::LoadBgm(const std::string& name)
 {
 
 }
 
-void SoundManager::LoadSfx(const std::string& name)
+void AudioManagerSimpleIOS::LoadSfx(const std::string& name)
 {
     std::string fileName = FileHelpers::GetRootPath() + "/data/audio/sfx/" + name;
     
     [[OALSimpleAudio sharedInstance] preloadEffect:[NSString stringWithUTF8String:fileName.c_str()]];
 }
 
-void SoundManager::PlayBgm(const std::string& name, bool loop, float volume)
+void AudioManagerSimpleIOS::PlayBgm(const std::string& name, bool loop, float volume)
 {
     _CurrentBgmName = name;
     _CurrentBgmLoop = loop;
@@ -176,31 +106,31 @@ void SoundManager::PlayBgm(const std::string& name, bool loop, float volume)
     [[OALSimpleAudio sharedInstance] playBg:[NSString stringWithUTF8String:fileName.c_str()] volume:volume pan:0.f loop:loop];
 }
     
-void SoundManager::StopBgm()
+void AudioManagerSimpleIOS::StopBgm()
 {
     _CurrentBgmName = "";
     
     [[OALSimpleAudio sharedInstance] stopBg];
 }
 
-Sound SoundManager::PlaySfx(const std::string& name, float volume, float pitch)
+AudioManagerSimple::Sound AudioManagerSimpleIOS::PlaySfx(const std::string& name, float volume, float pitch)
 {
     if (_MuteSfx)
-        return Sound();
+        return Sound(0);
     
-    Sound sound(name, volume, pitch);
+    Sound sound(SfxGetId(), name, volume, pitch);
     
     sound.Play();
     
     return sound;
 }
 
-int SoundManager::SfxGetId()
+int AudioManagerSimpleIOS::SfxGetId()
 {
     return _SoundId++;
 }
 
-void SoundManager::SfxPlay(const Sound& sound)
+void AudioManagerSimpleIOS::SfxPlay(Sound& sound)
 {
     if (_MuteSfx)
         return;
@@ -212,7 +142,7 @@ void SoundManager::SfxPlay(const Sound& sound)
     _Sounds[sound.GetId()] = instance;
 }
 
-void SoundManager::SfxStop(const Sound& sound)
+void AudioManagerSimpleIOS::SfxStop(Sound& sound)
 {
     std::map<int, void*>::iterator it = _Sounds.find(sound.GetId());
     
@@ -224,7 +154,7 @@ void SoundManager::SfxStop(const Sound& sound)
     [src stop];
 }
 
-bool SoundManager::SfxIsPlaying(const Sound& sound)
+bool AudioManagerSimpleIOS::SfxIsPlaying(const Sound& sound)
 {
     std::map<int, void*>::iterator it = _Sounds.find(sound.GetId());
     
@@ -236,7 +166,7 @@ bool SoundManager::SfxIsPlaying(const Sound& sound)
     return src.playing;
 }
 
-void SoundManager::SfxUpdateLooping(const Sound& sound)
+void AudioManagerSimpleIOS::SfxUpdateLooping(Sound& sound)
 {
     std::map<int, void*>::iterator it = _Sounds.find(sound.GetId());
     
@@ -248,7 +178,7 @@ void SoundManager::SfxUpdateLooping(const Sound& sound)
     src.looping = sound.IsLooping();
 }
 
-void SoundManager::SfxUpdatePitch(const Sound& sound)
+void AudioManagerSimpleIOS::SfxUpdatePitch(Sound& sound)
 {
     std::map<int, void*>::iterator it = _Sounds.find(sound.GetId());
     
@@ -260,7 +190,7 @@ void SoundManager::SfxUpdatePitch(const Sound& sound)
     src.pitch = sound.GetPitch();
 }
 
-void SoundManager::SfxUpdateVolume(const Sound& sound)
+void AudioManagerSimpleIOS::SfxUpdateVolume(Sound& sound)
 {
     std::map<int, void*>::iterator it = _Sounds.find(sound.GetId());
     

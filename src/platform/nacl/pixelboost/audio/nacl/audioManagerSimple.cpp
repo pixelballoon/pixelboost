@@ -1,4 +1,4 @@
-#ifdef PIXELBOOST_PLATFORM_WINDOWS
+#ifdef PIXELBOOST_PLATFORM_NACL
 
 #include "pixelboost/audio/soundManager.h"
 #include "pixelboost/file/fileHelpers.h"
@@ -6,30 +6,30 @@
 namespace pb
 {
 
-SoundManager::SoundManager()
+AudioManagerSimple::AudioManagerSimple()
 {
     _CurrentBgmName = "";
     _MuteBgm = false;
     _MuteSfx = false;
 }
 
-SoundManager::~SoundManager()
+AudioManagerSimple::~AudioManagerSimple()
 {
     
 }
     
-SoundManager* SoundManager::Instance()
+AudioManagerSimple* AudioManagerSimple::Instance()
 {
-    static SoundManager* instance = new SoundManager();
+    static AudioManagerSimple* instance = new AudioManagerSimple();
     return instance;
 }
     
-void SoundManager::Update(float time)
+void AudioManagerSimple::Update(float time)
 {
     
 }
     
-void SoundManager::MuteBgm(bool mute)
+void AudioManagerSimple::MuteBgm(bool mute)
 {
     _MuteBgm = mute;
     
@@ -43,20 +43,20 @@ void SoundManager::MuteBgm(bool mute)
     }
 }
 
-void SoundManager::MuteSfx(bool mute)
+void AudioManagerSimple::MuteSfx(bool mute)
 {
     _MuteSfx = mute;
 }
 
-void SoundManager::LoadBgm(const std::string& name)
+void AudioManagerSimple::LoadBgm(const std::string& name)
 {
 }
 
-void SoundManager::LoadSfx(const std::string& name, bool compressed)
+void AudioManagerSimple::LoadSfx(const std::string& name, bool compressed)
 {
 }
 
-void SoundManager::PlayBgm(const std::string& name, bool loop, float volume)
+void AudioManagerSimple::PlayBgm(const std::string& name, bool loop, float volume)
 {
     _CurrentBgmName = name;
     _CurrentBgmLoop = loop;
@@ -68,12 +68,12 @@ void SoundManager::PlayBgm(const std::string& name, bool loop, float volume)
      std::string fileName = "/data/audio/bgm/" + name + ".mp3";     
 }
     
-void SoundManager::StopBgm()
+void AudioManagerSimple::StopBgm()
 {
     _CurrentBgmName = "";
 }
 
-void SoundManager::PlaySfx(const std::string& name, bool compressed, float volume, float pitch)
+void AudioManagerSimple::PlaySfx(const std::string& name, bool compressed, float volume, float pitch)
 {
     if (_MuteSfx)
         return;

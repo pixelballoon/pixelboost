@@ -1,20 +1,20 @@
 #pragma once
 
-#ifdef PIXELBOOST_PLATFORM_WINDOWS
+#ifdef PIXELBOOST_PLATFORM_NACL
 
 #include <string>
 
 namespace pb
 {
 
-class SoundManager
+class AudioManagerSimple
 {
 private:
-    SoundManager();
-    ~SoundManager();
+    AudioManagerSimple();
+    ~AudioManagerSimple();
     
 public:
-    static SoundManager* Instance();
+    static AudioManagerSimple* Instance();
     
     void Update(float time);
     

@@ -2,7 +2,7 @@
 #include <jni.h>
 #include <pthread.h>
 
-#include "pixelboost/audio/soundManager.h"
+#include "pixelboost/audio/audioManagerSimple.h"
 #include "pixelboost/debug/log.h"
 #include "pixelboost/file/fileSystem.h"
 #include "pixelboost/framework/engine.h"
@@ -127,7 +127,7 @@ JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_update(JNI
 
     pthread_mutex_unlock(&g_InputMutex);
 
-    g_Game->Update(delta);
+    g_Game->Update(delta, delta);
 }
 
 JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_render(JNIEnv * env, jobject obj)
@@ -160,11 +160,11 @@ JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onResume(J
 {
     if (g_Game)
     {
-        pb::SoundManager::Instance()->ReloadSfx();
-        if (!pb::SoundManager::Instance()->IsBgmMuted())
+        pb::AudioManagerSimple::Instance()->ReloadSfx();
+        if (!pb::AudioManagerSimple::Instance()->IsBgmMuted())
         {
-            pb::SoundManager::Instance()->MuteBgm(true);
-            pb::SoundManager::Instance()->MuteBgm(false);
+            pb::AudioManagerSimple::Instance()->MuteBgm(true);
+            pb::AudioManagerSimple::Instance()->MuteBgm(false);
         }
 
         g_Game->OnAppGainFocus();

@@ -4,102 +4,31 @@
 
 #include <vector>
 
-#include "pixelboost/audio/soundManager.h"
+#include "pixelboost/audio/android/audioManagerSimple.h"
 #include "pixelboost/file/fileHelpers.h"
 #include "pixelboost/misc/jni.h"
 
 using namespace pb;
 
-Sound::Sound(int id, const std::string& name, float volume, float pitch, bool looping)
-    : _Id(id)
-    , _Looping(false)
-    , _Name(name)
-    , _IsPlaying(false)
-    , _Pitch(pitch)
-    , _Volume(volume)
+AudioManagerSimple* AudioManagerSimple::Instance()
 {
-    
+    static AudioManagerSimpleAndroid* instance = new AudioManagerSimpleAndroid();
+    return instance;
 }
 
-int Sound::GetId() const
-{
-    return _Id;
-}
-
-void Sound::Play()
-{
-    _IsPlaying = true;
-    SoundManager::Instance()->SfxPlay(*this);
-}
-
-void Sound::Stop()
-{
-    _IsPlaying = false;
-    SoundManager::Instance()->SfxStop(*this);
-}
-
-bool Sound::IsPlaying() const
-{
-    return _IsPlaying;
-}
-
-const std::string& Sound::GetName() const
-{
-    return _Name;
-}
-
-bool Sound::IsLooping() const
-{
-    return _Looping;
-}
-
-void Sound::SetLooping(bool looping)
-{
-    _Looping = looping;
-    SoundManager::Instance()->SfxUpdateLooping(*this);
-}
-
-float Sound::GetPitch() const
-{
-    return _Pitch;
-}
-
-void Sound::SetPitch(float pitch)
-{
-    _Pitch = pitch;
-    SoundManager::Instance()->SfxUpdatePitch(*this);
-}
-
-float Sound::GetVolume() const
-{
-    return _Volume;
-}
-
-void Sound::SetVolume(float volume)
-{
-    _Volume = volume;
-    SoundManager::Instance()->SfxUpdateVolume(*this);
-}
-
-SoundManager::SoundManager()
+AudioManagerSimpleAndroid::AudioManagerSimpleAndroid()
 {
     _CurrentBgmName = "";
     _MuteBgm = false;
     _MuteSfx = false;
 }
 
-SoundManager::~SoundManager()
+AudioManagerSimpleAndroid::~AudioManagerSimpleAndroid()
 {
     
 }
 
-SoundManager* SoundManager::Instance()
-{
-    static SoundManager* instance = new SoundManager();
-    return instance;
-}
-
-void SoundManager::Update(float time)
+void AudioManagerSimpleAndroid::Update(float time)
 {
     /*
     std::vector<int> inactiveSounds;
@@ -119,12 +48,12 @@ void SoundManager::Update(float time)
     */
 }
 
-bool SoundManager::IsBgmMuted()
+bool AudioManagerSimpleAndroid::IsBgmMuted()
 {
     return _MuteBgm;
 }
     
-void SoundManager::MuteBgm(bool mute)
+void AudioManagerSimpleAndroid::MuteBgm(bool mute)
 {
     _MuteBgm = mute;
     
@@ -138,22 +67,22 @@ void SoundManager::MuteBgm(bool mute)
     }
 }
 
-bool SoundManager::IsSfxMuted()
+bool AudioManagerSimpleAndroid::IsSfxMuted()
 {
     return _MuteSfx;
 }
 
-void SoundManager::MuteSfx(bool mute)
+void AudioManagerSimpleAndroid::MuteSfx(bool mute)
 {
     _MuteSfx = mute;
 }
 
-void SoundManager::LoadBgm(const std::string& name)
+void AudioManagerSimpleAndroid::LoadBgm(const std::string& name)
 {
     return;
 }
 
-void SoundManager::LoadSfx(const std::string& name)
+void AudioManagerSimpleAndroid::LoadSfx(const std::string& name)
 {
     std::string fileName = "data/audio/sfx/" + name;
 
@@ -173,7 +102,7 @@ void SoundManager::LoadSfx(const std::string& name)
     _Sfx[name] = result;
 }
 
-void SoundManager::ReloadSfx()
+void AudioManagerSimpleAndroid::ReloadSfx()
 {
     for (std::map<std::string, int>::iterator it = _Sfx.begin(); it != _Sfx.end(); ++it)
     {
@@ -181,7 +110,7 @@ void SoundManager::ReloadSfx()
     }
 }
 
-void SoundManager::PlayBgm(const std::string& name, bool loop, float volume)
+void AudioManagerSimpleAndroid::PlayBgm(const std::string& name, bool loop, float volume)
 {
     _CurrentBgmName = name;
     _CurrentBgmLoop = loop;
@@ -202,7 +131,7 @@ void SoundManager::PlayBgm(const std::string& name, bool loop, float volume)
     env->DeleteLocalRef(jstr);
 }
     
-void SoundManager::StopBgm()
+void AudioManagerSimpleAndroid::StopBgm()
 {
     _CurrentBgmName = "";
 
@@ -214,7 +143,7 @@ void SoundManager::StopBgm()
     env->CallStaticVoidMethod(classId, methodId);
 }
 
-Sound SoundManager::PlaySfx(const std::string& name, float volume, float pitch)
+AudioManagerSimple::Sound AudioManagerSimpleAndroid::PlaySfx(const std::string& name, float volume, float pitch)
 {
     if (_MuteSfx)
         return Sound(0);
@@ -236,12 +165,12 @@ Sound SoundManager::PlaySfx(const std::string& name, float volume, float pitch)
     return Sound(result, name, volume, pitch);
 }
 
-void SoundManager::SfxPlay(Sound& sound)
+void AudioManagerSimpleAndroid::SfxPlay(Sound& sound)
 {
     sound = PlaySfx(sound.GetName(), sound.GetVolume(), sound.GetPitch());
 }
 
-void SoundManager::SfxStop(Sound& sound)
+void AudioManagerSimpleAndroid::SfxStop(Sound& sound)
 {
     /*
     std::map<int, void*>::iterator it = _Sounds.find(sound.GetId());
@@ -255,7 +184,7 @@ void SoundManager::SfxStop(Sound& sound)
     */
 }
 
-bool SoundManager::SfxIsPlaying(const Sound& sound)
+bool AudioManagerSimpleAndroid::SfxIsPlaying(const Sound& sound)
 {
     /*
     std::map<int, void*>::iterator it = _Sounds.find(sound.GetId());
@@ -269,7 +198,7 @@ bool SoundManager::SfxIsPlaying(const Sound& sound)
     */
 }
 
-void SoundManager::SfxUpdateLooping(Sound& sound)
+void AudioManagerSimpleAndroid::SfxUpdateLooping(Sound& sound)
 {
     /*
     std::map<int, void*>::iterator it = _Sounds.find(sound.GetId());
@@ -283,7 +212,7 @@ void SoundManager::SfxUpdateLooping(Sound& sound)
     */
 }
 
-void SoundManager::SfxUpdatePitch(Sound& sound)
+void AudioManagerSimpleAndroid::SfxUpdatePitch(Sound& sound)
 {
     /*
     std::map<int, void*>::iterator it = _Sounds.find(sound.GetId());
@@ -297,7 +226,7 @@ void SoundManager::SfxUpdatePitch(Sound& sound)
     */
 }
 
-void SoundManager::SfxUpdateVolume(Sound& sound)
+void AudioManagerSimpleAndroid::SfxUpdateVolume(Sound& sound)
 {
     /*
     std::map<int, void*>::iterator it = _Sounds.find(sound.GetId());

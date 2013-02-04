@@ -155,6 +155,6 @@ const glm::vec2& Texture::GetSize() const
 #ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
 void Texture::OnContextLost()
 {
-    LoadFromBytes(_Data, _Size.x, _Size.y, _DataCreateMips, _DataFormat, _HasPremultipliedAlpha);
+    LoadFromBytes(_Data, _Size.x, _Size.y, _DataCreateMips, _DataFormat);
 }
 #endif

@@ -1,4 +1,4 @@
-#include "pixelboost/audio/soundManager.h"
+#include "pixelboost/audio/audioManagerSimple.h"
 #include "pixelboost/debug/debugDatabaseHandler.h"
 #include "pixelboost/debug/debugVariableManager.h"
 #include "pixelboost/file/fileSystem.h"
@@ -209,7 +209,7 @@ void Engine::Update(float timeDelta, float gameDelta)
     _TotalTime += timeDelta;
     
 #ifndef PIXELBOOST_DISABLE_SOUND
-    SoundManager::Instance()->Update(time);
+    AudioManagerSimple::Instance()->Update(timeDelta);
 #endif
     
 #ifndef PIXELBOOST_DISABLE_DEBUG

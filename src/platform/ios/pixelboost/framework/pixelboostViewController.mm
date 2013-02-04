@@ -182,7 +182,7 @@
 
 - (void)drawFrame
 {
-    pb::Engine::Instance()->Update(1/30.f);
+    pb::Engine::Instance()->Update(1/30.f, 1/30.f);
 	
     [(EAGLView *)self.view setFramebuffer];
 	

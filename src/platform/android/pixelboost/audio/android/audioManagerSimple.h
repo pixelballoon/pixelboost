@@ -5,51 +5,17 @@
 #include <map>
 #include <string>
 
+#include "pixelboost/audio/audioManagerSimple.h"
+
 namespace pb
 {
     
-class Sound
+class AudioManagerSimpleAndroid : public AudioManagerSimple
 {
 public:
-    Sound(int id=0, const std::string& name="", float volume=1.f, float pitch=1.f, bool looping=false);
-    
-    int GetId() const;
-    
-    void Play();
-    void Stop();
-    bool IsPlaying() const;
-    
-    const std::string& GetName() const;
-    
-    bool IsLooping() const;
-    void SetLooping(bool looping);
-    
-    float GetPitch() const;
-    void SetPitch(float pitch);
-    
-    float GetVolume() const;
-    void SetVolume(float volume);
-    
-private:
-    int _Id;
-    bool _IsPlaying;
-    bool _Looping;
-    std::string _Name;
-    float _Pitch;
-    float _Volume;
-    
-    friend class SoundManager;
-};
+    AudioManagerSimpleAndroid();
+    ~AudioManagerSimpleAndroid();
 
-class SoundManager
-{
-private:
-    SoundManager();
-    ~SoundManager();
-    
-public:
-    static SoundManager* Instance();
-    
     void Update(float time);
     
     bool IsBgmMuted();
@@ -67,7 +33,7 @@ public:
     
     Sound PlaySfx(const std::string& name, float volume=1.f, float pitch=1.f);
     
-private:
+protected:
     void SfxPlay(Sound& sound);
     void SfxStop(Sound& sound);
     bool SfxIsPlaying(const Sound& sound);
@@ -88,8 +54,6 @@ private:
     
     bool _MuteBgm;
     bool _MuteSfx;
-    
-    friend class Sound;
 };
     
 }
