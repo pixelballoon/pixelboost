@@ -34,7 +34,6 @@ namespace pixeleditor
         void OnItemSelected(Gwen::Controls::Base* item);
         
     private:
-        Gwen::Controls::Layout::Tile* _Layout;
         Gwen::Controls::TabControl* _Tabs;
     };    
 }

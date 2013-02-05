@@ -304,15 +304,16 @@ void View::Initialise()
     _Level->entityAdded.Connect(this, &View::OnEntityAdded);
     _Level->entityRemoved.Connect(this, &View::OnEntityRemoved);
 
-    _Core->GetProject()->Open(_LaunchArgs[1]);
+    if (_LaunchArgs.size() > 1)
+        _Core->GetProject()->Open(_LaunchArgs[1]);
 }
 
-void View::Update(float time)
+void View::Update(float timeDelta, float gameDelta)
 {
-    Engine::Update(time);
+    Engine::Update(timeDelta, gameDelta);
     
-    _LevelScene->Update(time);
-    _UiScene->Update(time);
+    _LevelScene->Update(timeDelta, gameDelta);
+    _UiScene->Update(timeDelta, gameDelta);
     
     _ManipulatorManager->Render(2);
 }

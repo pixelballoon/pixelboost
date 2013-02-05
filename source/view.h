@@ -61,7 +61,7 @@ public:
 public:
     static View* Instance();
     virtual void Initialise();
-    virtual void Update(float time);
+    virtual void Update(float timeDelta, float gameDelta);
     
     ManipulatorManager* GetManipulatorManager();
     

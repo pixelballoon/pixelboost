@@ -5,79 +5,9 @@ include (../../build.cmake)
 
 pixelboost_setup_pre(../../ editor "com.pixelballoon.editor" "Editor")
 
-include_directories("source")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-reorder")
 
-set (GWEN_SOURCES
-	"../../engine/src/external/gwen/src/Controls/Dialog/FileOpen.cpp"
-	"../../engine/src/external/gwen/src/Controls/Dialog/FileSave.cpp"
-	"../../engine/src/external/gwen/src/Controls/Dialog/FolderOpen.cpp"
-	"../../engine/src/external/gwen/src/Controls/Dialog/Query.cpp"
-	"../../engine/src/external/gwen/src/Controls/Base.cpp"
-	"../../engine/src/external/gwen/src/Controls/Button.cpp"
-	"../../engine/src/external/gwen/src/Controls/Canvas.cpp"
-	"../../engine/src/external/gwen/src/Controls/CheckBox.cpp"
-	"../../engine/src/external/gwen/src/Controls/CollapsibleCategory.cpp"
-	"../../engine/src/external/gwen/src/Controls/ColorControls.cpp"
-	"../../engine/src/external/gwen/src/Controls/ColorPicker.cpp"
-	"../../engine/src/external/gwen/src/Controls/ComboBox.cpp"
-	"../../engine/src/external/gwen/src/Controls/CrossSplitter.cpp"
-	"../../engine/src/external/gwen/src/Controls/DockBase.cpp"
-	"../../engine/src/external/gwen/src/Controls/DockedTabControl.cpp"
-	"../../engine/src/external/gwen/src/Controls/Dragger.cpp"
-	"../../engine/src/external/gwen/src/Controls/GroupBox.cpp"
-	"../../engine/src/external/gwen/src/Controls/HorizontalScrollBar.cpp"
-	"../../engine/src/external/gwen/src/Controls/HorizontalSlider.cpp"
-	"../../engine/src/external/gwen/src/Controls/HSVColorPicker.cpp"
-	"../../engine/src/external/gwen/src/Controls/ImagePanel.cpp"
-	"../../engine/src/external/gwen/src/Controls/Label.cpp"
-	"../../engine/src/external/gwen/src/Controls/LabelClickable.cpp"
-	"../../engine/src/external/gwen/src/Controls/ListBox.cpp"
-	"../../engine/src/external/gwen/src/Controls/Menu.cpp"
-	"../../engine/src/external/gwen/src/Controls/MenuItem.cpp"
-	"../../engine/src/external/gwen/src/Controls/MenuStrip.cpp"
-	"../../engine/src/external/gwen/src/Controls/NumericUpDown.cpp"
-	"../../engine/src/external/gwen/src/Controls/PageControl.cpp"
-	"../../engine/src/external/gwen/src/Controls/ProgressBar.cpp"
-	"../../engine/src/external/gwen/src/Controls/Properties.cpp"
-	"../../engine/src/external/gwen/src/Controls/PropertyTree.cpp"
-	"../../engine/src/external/gwen/src/Controls/RadioButton.cpp"
-	"../../engine/src/external/gwen/src/Controls/RadioButtonController.cpp"
-	"../../engine/src/external/gwen/src/Controls/Rectangle.cpp"
-	"../../engine/src/external/gwen/src/Controls/ResizableControl.cpp"
-	"../../engine/src/external/gwen/src/Controls/Resizer.cpp"
-	"../../engine/src/external/gwen/src/Controls/RichLabel.cpp"
-	"../../engine/src/external/gwen/src/Controls/ScrollBar.cpp"
-	"../../engine/src/external/gwen/src/Controls/ScrollBarBar.cpp"
-	"../../engine/src/external/gwen/src/Controls/ScrollBarButton.cpp"
-	"../../engine/src/external/gwen/src/Controls/ScrollControl.cpp"
-	"../../engine/src/external/gwen/src/Controls/Slider.cpp"
-	"../../engine/src/external/gwen/src/Controls/SplitterBar.cpp"
-	"../../engine/src/external/gwen/src/Controls/TabButton.cpp"
-	"../../engine/src/external/gwen/src/Controls/TabControl.cpp"
-	"../../engine/src/external/gwen/src/Controls/TabStrip.cpp"
-	"../../engine/src/external/gwen/src/Controls/Text.cpp"
-	"../../engine/src/external/gwen/src/Controls/TextBox.cpp"
-	"../../engine/src/external/gwen/src/Controls/TextBoxNumeric.cpp"
-	"../../engine/src/external/gwen/src/Controls/TreeControl.cpp"
-	"../../engine/src/external/gwen/src/Controls/TreeNode.cpp"
-	"../../engine/src/external/gwen/src/Controls/VerticalScrollBar.cpp"
-	"../../engine/src/external/gwen/src/Controls/VerticalSlider.cpp"
-	"../../engine/src/external/gwen/src/Controls/WindowCanvas.cpp"
-	"../../engine/src/external/gwen/src/Controls/WindowControl.cpp"
-	"../../engine/src/external/gwen/src/Platforms/Null.cpp"
-	"../../engine/src/external/gwen/src/Platforms/Windows.cpp"
-	"../../engine/src/external/gwen/src/Anim.cpp"
-	"../../engine/src/external/gwen/src/BaseRender.cpp"
-	"../../engine/src/external/gwen/src/ControlList.cpp"
-	"../../engine/src/external/gwen/src/DragAndDrop.cpp"
-	"../../engine/src/external/gwen/src/events.cpp"
-	"../../engine/src/external/gwen/src/Gwen.cpp"
-	"../../engine/src/external/gwen/src/Hook.cpp"
-	"../../engine/src/external/gwen/src/inputhandler.cpp"
-	"../../engine/src/external/gwen/src/Skin.cpp"
-	"../../engine/src/external/gwen/src/ToolTip.cpp"
-	"../../engine/src/external/gwen/src/Utility.cpp"
-	)
+include_directories("source")
 
 set (COMMAND_SOURCES
 	"source/command/standard/checkDepth.cpp"
@@ -183,7 +113,6 @@ set (VIEW_SOURCES
 set (GAME_SOURCES
 	${COMMAND_SOURCES}
 	${CORE_SOURCES}
-	${GWEN_SOURCES}
 	${HTTP_SOURCES}
 	${PROJECT_SOURCES}
 	${VIEW_SOURCES}
@@ -195,7 +124,6 @@ set (GAME_SOURCES
 
 source_group (command FILES ${COMMAND_SOURCES})
 source_group (core FILES ${CORE_SOURCES})
-source_group (gwen FILES ${GWEN_SOURCES})
 source_group (http FILES ${HTTP_SOURCES})
 source_group (project FILES ${PROJECT_SOURCES})
 source_group (view FILES ${VIEW_SOURCES})
