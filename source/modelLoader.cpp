@@ -32,7 +32,7 @@ bool ObjLoader::Process()
     if (_Model)
         return true;
     
-    pb::File* file = pb::FileSystem::Instance()->OpenFile(pb::kFileLocationUser, _Filename);
+    pb::File* file = pb::FileSystem::Instance()->OpenFile(_Filename);
     
     if (!file)
         return false;

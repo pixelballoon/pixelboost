@@ -21,7 +21,7 @@ bool ModelExporter::Save(const std::string& filename) const
     
     const pb::ModelDefinition* model = _ModelLoader->GetModel();
     
-    model->Save(pb::kFileLocationUser, filename);
+    model->Save(filename);
     
     return false;
 }

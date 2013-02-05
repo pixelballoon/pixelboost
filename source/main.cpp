@@ -13,9 +13,16 @@
 
 int main (int argc, const char * argv[])
 {
-    std::string inputLocation = argc > 1 ? argv[1] : "";
+    if (argc < 3)
+        return 1;
     
-    std::string outputLocation = argc > 2 ? argv[2] : "";
+    new pb::FileSystem(argv[0]);
+    
+    pb::FileSystem::Instance()->MountReadLocation(argv[1], "/", true);
+    pb::FileSystem::Instance()->OverrideWriteDirectory(argv[1]);
+    
+    std::string inputLocation = argv[2];
+    std::string outputLocation = argv[3];
     
     std::string extension = inputLocation.substr(inputLocation.find_last_of(".")+1);
 
