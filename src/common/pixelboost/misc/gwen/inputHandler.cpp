@@ -23,28 +23,32 @@ public:
     
     bool OnKeyDown(KeyboardKey key, ModifierKeys modifier, char character)
     {
-        if (key == kKeyboardKeyCharacter)
-            _Canvas->InputCharacter(character);
-        else
-            _Canvas->InputKey(key, true);
-        
-        Gwen::Controls::Base* keyboardFocus = Gwen::KeyboardFocus;
-        if (!keyboardFocus || keyboardFocus == _Root)
+        if (modifier == kModifierKeyControl)
             return false;
         
-        return true;
+        if (Gwen::KeyboardFocus == _Root)
+            return false;
+        
+        if (key == kKeyboardKeyCharacter)
+            return _Canvas->InputCharacter(character);
+        else
+            return _Canvas->InputKey(key, true);
+        
+        return false;
     }
     
     bool OnKeyUp(KeyboardKey key, ModifierKeys modifier, char character)
     {
-        if (key != kKeyboardKeyCharacter)
-            _Canvas->InputKey(key, false);
-        
-        Gwen::Controls::Base* keyboardFocus = Gwen::KeyboardFocus;
-        if (!keyboardFocus || keyboardFocus == _Root)
+        if (modifier == kModifierKeyControl)
             return false;
         
-        return true;
+        if (Gwen::KeyboardFocus == _Root)
+            return false;
+        
+        if (key != kKeyboardKeyCharacter)
+            return _Canvas->InputKey(key, false);
+        
+        return false;
     }
     
 private:
