@@ -8,6 +8,7 @@
 #include "project/schema.h"
 #include "view/entity/property/model.h"
 #include "view/entity/property/property.h"
+#include "view/entity/property/rectangle.h"
 #include "view/entity/property/sprite.h"
 #include "view/entity/entity.h"
 #include "core.h"
@@ -294,6 +295,9 @@ void ViewEntity::ParseItem(const std::string& path, const SchemaItem* item)
         } else if (type == "model")
         {
             new ModelViewProperty(this, path, item);
+        } else if (type == "rectangle")
+        {
+            new RectangleViewProperty(this, path, item);
         }
     }
 }

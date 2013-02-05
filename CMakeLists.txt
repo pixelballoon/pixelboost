@@ -81,6 +81,8 @@ set (VIEW_ENTITY_PROPERTY_SOURCES
 	"source/view/entity/property/model.h"
 	"source/view/entity/property/property.cpp"
 	"source/view/entity/property/property.h"
+	"source/view/entity/property/rectangle.cpp"
+	"source/view/entity/property/rectangle.h"
 	"source/view/entity/property/sprite.cpp"
 	"source/view/entity/property/sprite.h"
 	)
