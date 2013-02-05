@@ -9,7 +9,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-reorder")
 
 include_directories("source")
 
-set (COMMAND_SOURCES
+set (COMMAND_STANDARD_SOURCES
 	"source/command/standard/checkDepth.cpp"
 	"source/command/standard/checkDepth.h"
 	"source/command/standard/close.cpp"
@@ -31,6 +31,9 @@ set (COMMAND_SOURCES
 	"source/command/standard/selectCommand.h"	
 	"source/command/standard/transformCommand.cpp"
 	"source/command/standard/transformCommand.h"
+	)
+
+set (COMMAND_SOURCES
 	"source/command/base.cpp"
 	"source/command/base.h"
 	"source/command/manager.cpp"
@@ -73,15 +76,21 @@ set (PROJECT_SOURCES
 	"source/project/struct.h"
 	)
 
-set (VIEW_SOURCES
+set (VIEW_ENTITY_PROPERTY_SOURCES
 	"source/view/entity/property/model.cpp"
 	"source/view/entity/property/model.h"
 	"source/view/entity/property/property.cpp"
 	"source/view/entity/property/property.h"
 	"source/view/entity/property/sprite.cpp"
 	"source/view/entity/property/sprite.h"
+	)
+
+set (VIEW_ENTITY_SOURCES
 	"source/view/entity/entity.cpp"
 	"source/view/entity/entity.h"
+	)
+
+set (VIEW_MANIPULATOR_SOURCES
 	"source/view/manipulator/create.cpp"
 	"source/view/manipulator/create.h"
 	"source/view/manipulator/manipulator.cpp"
@@ -94,27 +103,46 @@ set (VIEW_SOURCES
 	"source/view/manipulator/scale.h"
 	"source/view/manipulator/select.cpp"
 	"source/view/manipulator/select.h"
+	)
+
+set (VIEW_UI_CREATE_SOURCES
 	"source/view/ui/create/createPanel.cpp"
 	"source/view/ui/create/createPanel.h"
 	"source/view/ui/create/createRecord.cpp"
 	"source/view/ui/create/createRecord.h"
+	)
+
+set (VIEW_UI_PROPERTY_SOURCES
 	"source/view/ui/property/propertyPanel.cpp"
 	"source/view/ui/property/propertyPanel.h"
+	)
+
+set (VIEW_UI_SETTINGS_SOURCES
 	"source/view/ui/settings/moveManipulator.cpp"
 	"source/view/ui/settings/moveManipulator.h"
 	"source/view/ui/settings/networkWindow.cpp"
 	"source/view/ui/settings/networkWindow.h"
 	"source/view/ui/settings/rotateManipulator.cpp"
 	"source/view/ui/settings/rotateManipulator.h"
+	)
+
+set (VIEW_SOURCES
 	"source/view/level.cpp"
 	"source/view/level.h"
 	)
 
 set (GAME_SOURCES
+	${COMMAND_STANDARD_SOURCES}
 	${COMMAND_SOURCES}
 	${CORE_SOURCES}
 	${HTTP_SOURCES}
 	${PROJECT_SOURCES}
+	${VIEW_ENTITY_PROPERTY_SOURCES}
+	${VIEW_ENTITY_SOURCES}
+	${VIEW_MANIPULATOR_SOURCES}
+	${VIEW_UI_CREATE_SOURCES}
+	${VIEW_UI_PROPERTY_SOURCES}
+	${VIEW_UI_SETTINGS_SOURCES}
 	${VIEW_SOURCES}
 	"source/core.cpp"
 	"source/core.h"
@@ -122,10 +150,17 @@ set (GAME_SOURCES
 	"source/view.h"
 	)
 
+source_group (command\\standard FILES ${COMMAND_STANDARD_SOURCES})
 source_group (command FILES ${COMMAND_SOURCES})
 source_group (core FILES ${CORE_SOURCES})
 source_group (http FILES ${HTTP_SOURCES})
 source_group (project FILES ${PROJECT_SOURCES})
+source_group (view\\entity\\property FILES ${VIEW_ENTITY_PROPERTY_SOURCES})
+source_group (view\\entity FILES ${VIEW_ENTITY_SOURCES})
+source_group (view\\manipulator FILES ${VIEW_MANIPULATOR_SOURCES})
+source_group (view\\ui\\create FILES ${VIEW_UI_CREATE_SOURCES})
+source_group (view\\ui\\property FILES ${VIEW_UI_PROPERTY_SOURCES})
+source_group (view\\ui\\settings FILES ${VIEW_UI_SETTINGS_SOURCES})
 source_group (view FILES ${VIEW_SOURCES})
 
 pixelboost_setup_post()

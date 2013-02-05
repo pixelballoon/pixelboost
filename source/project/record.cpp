@@ -43,11 +43,18 @@ ProjectRecord::~ProjectRecord()
     
 bool ProjectRecord::Open(const std::string& filename)
 {
-    std::string file = pb::FileHelpers::FileToString(pb::kFileLocationUser, filename.c_str());
+    pb::File* file = pb::FileSystem::Instance()->OpenFile(filename);
+    std::string contents;
+    
+    if (file)
+    {
+        file->ReadAll(contents);
+        delete file;
+    }
     
     json::Object record;
     
-    json::Reader::Read(record, file);
+    json::Reader::Read(record, contents);
     
     bool status = ProjectStruct::Open(record);
     

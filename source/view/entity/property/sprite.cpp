@@ -4,7 +4,9 @@
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
 #include "pixelboost/logic/component/graphics/sprite.h"
 
+#include "core.h"
 #include "project/entity.h"
+#include "project/project.h"
 #include "project/schema.h"
 #include "view/entity/property/sprite.h"
 #include "view/entity/entity.h"
@@ -45,7 +47,13 @@ void SpriteViewProperty::Refresh()
     if (sprite != _Sprite)
     {
         _Sprite = sprite;
-        View::Instance()->LoadSprite(_Sprite);
+        
+        if (!View::Instance()->GetSpriteRenderer()->GetSpriteSheet(_Sprite))
+        {
+            std::shared_ptr<pb::SpriteSheet> spriteSheet = View::Instance()->GetSpriteRenderer()->CreateSpriteSheet(sprite);
+            spriteSheet->LoadSingle("editor_sprites/" + _Sprite, Core::Instance()->GetProject()->GetConfig().pixelUnit);
+        }
+        
         _SpriteComponent->SetSprite(_Sprite);
         DirtyBounds();
     }

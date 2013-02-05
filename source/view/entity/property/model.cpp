@@ -45,7 +45,7 @@ void ModelViewProperty::Refresh()
     if (model != _Model)
     {
         _Model = model;
-        _ModelComponent->SetModel(View::Instance()->LoadModel(_Model));
+        _ModelComponent->SetModel(View::Instance()->GetModelRenderer()->LoadModel(_Model, "editor_models/"+_Model));
         DirtyBounds();
     }
     
@@ -54,7 +54,7 @@ void ModelViewProperty::Refresh()
     if (texture != _Texture)
     {
         _Texture = texture;
-        _ModelComponent->SetTexture(View::Instance()->LoadTexture(_Texture));
+        _ModelComponent->SetTexture(View::Instance()->GetModelRenderer()->LoadTexture(_Texture, "editor_images/"+_Texture));
     }
     
     if (visualisation->HasParamValue("rotation"))

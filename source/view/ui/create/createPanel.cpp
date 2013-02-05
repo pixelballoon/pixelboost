@@ -27,7 +27,7 @@ public:
     
     void SetSprite(const std::string& sprite)
     {
-        SetImage(View::Instance()->GetSpriteFile(sprite), true);
+        SetImage("editor_images/"+sprite, true);
         if (m_Image)
         {
             Gwen::Point newSize = Gwen::Point(_Size.x-10, _Size.y-10);

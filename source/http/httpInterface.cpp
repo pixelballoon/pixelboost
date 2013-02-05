@@ -37,7 +37,7 @@ void HttpInterface::Initialise()
     _SchemaCommands = new SchemaCommands();
     _RecordCommands = new RecordCommands();
     
-    Start(9090, pb::FileHelpers::GetRootPath()+"/data/html/");
+    Start(9090, pb::FileHelpers::GetBundlePath()+"/data/html/");
 }
 
 void HttpInterface::RegisterCommand(const std::string& command, HttpServer::RequestType requestType, CommandDelegate delegate)

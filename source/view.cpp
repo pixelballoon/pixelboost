@@ -162,7 +162,7 @@ public:
 };
 
 View::View(void* platformContext, std::vector<std::string> args)
-    : pb::Engine(platformContext)
+    : pb::Engine(platformContext, args)
     , _LaunchArgs(args)
     , _Record(0)
 {
@@ -339,102 +339,6 @@ void View::Zoom(float delta)
     float maxZoom = 2.f;
     glm::vec2 scale = _LevelCamera->Scale;
     _LevelCamera->Scale = glm::vec2(glm::max(glm::min(maxZoom, scale[0]+delta), minZoom), glm::max(glm::min(maxZoom, scale[1]+delta), minZoom));
-}
-
-std::string View::GetSpriteFile(const std::string& sprite)
-{
-    Project* project = Core::Instance()->GetProject();
-    
-    const Project::ProjectConfig& config = project->GetConfig();
-    
-    std::fstream file;
-    
-    for (std::vector<std::string>::const_iterator it = config.imageRoots.begin(); it != config.imageRoots.end(); ++it)
-    {
-        std::string fileName = *it + sprite + ".png";
-        file.open(fileName.c_str());
-        
-        if (file.is_open())
-        {
-            file.close();
-            return fileName;
-        }
-    }
-    
-    return "";
-}
-
-void View::LoadSprite(const std::string& sprite)
-{
-    if (GetSpriteRenderer()->GetSpriteSheet(sprite))
-        return;
-    
-    std::shared_ptr<pb::SpriteSheet> spriteSheet = GetSpriteRenderer()->CreateSpriteSheet(sprite);
-    spriteSheet->LoadSingle(pb::kFileLocationUser, GetSpriteFile(sprite), Core::Instance()->GetProject()->GetConfig().pixelUnit);
-}
-
-std::string View::GetModelFile(const std::string& model)
-{
-    Project* project = Core::Instance()->GetProject();
-    
-    const Project::ProjectConfig& config = project->GetConfig();
-    
-    std::fstream file;
-    
-    for (std::vector<std::string>::const_iterator it = config.modelRoots.begin(); it != config.modelRoots.end(); ++it)
-    {
-        std::string fileName = *it + model + ".mdl";
-        file.open(fileName.c_str());
-        
-        if (file.is_open())
-        {
-            file.close();
-            return fileName;
-        }
-    }
-    
-    return "";
-}
-
-pb::Model* View::LoadModel(const std::string& model)
-{
-    return GetModelRenderer()->LoadModel(pb::kFileLocationUser, model, GetModelFile(model));
-}
-
-
-std::string View::GetTextureFile(const std::string& texture)
-{
-    Project* project = Core::Instance()->GetProject();
-    
-    const Project::ProjectConfig& config = project->GetConfig();
-    
-    std::fstream file;
-    
-    for (std::vector<std::string>::const_iterator it = config.modelRoots.begin(); it != config.modelRoots.end(); ++it)
-    {
-        std::string fileName = *it + texture + ".png";
-        file.open(fileName.c_str());
-        
-        if (file.is_open())
-        {
-            file.close();
-            return fileName;
-        }
-    }
-    
-    return "";
-}
-
-pb::Texture* View::LoadTexture(const std::string& texture)
-{
-    std::string textureFile = GetTextureFile(texture);
-    
-    if (textureFile.length())
-    {
-        return GetModelRenderer()->LoadTexture(pb::kFileLocationUser, texture, textureFile);
-    }
-    
-    return 0;
 }
 
 pb::Scene* View::GetLevelScene()

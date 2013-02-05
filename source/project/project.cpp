@@ -90,11 +90,19 @@ bool Project::Open(const std::string& directory)
     
 bool Project::OpenConfig(const std::string& filename)
 {
-    std::string file = pb::FileHelpers::FileToString(pb::kFileLocationUser, filename.c_str());
+    pb::File* file = pb::FileSystem::Instance()->OpenFile(filename);
+    
+    std::string contents;
+    
+    if (file)
+    {
+        file->ReadAll(contents);
+        delete file;
+    }
     
     json::Object config;
     
-    json::Reader::Read(config, file);
+    json::Reader::Read(config, contents);
     
     // Image roots
     json::Array& imageRoots = config["image_roots"];
@@ -122,6 +130,16 @@ bool Project::OpenConfig(const std::string& filename)
     
     json::Object& assets = config["assets"];
     _Config.assets = assets;
+    
+    for (auto it = _Config.imageRoots.begin(); it != _Config.imageRoots.end(); ++it)
+    {
+        pb::FileSystem::Instance()->MountReadLocation(*it, "editor_images", true);
+    }
+    for (auto it = _Config.modelRoots.begin(); it != _Config.modelRoots.end(); ++it)
+    {
+        pb::FileSystem::Instance()->MountReadLocation(*it, "editor_models", true);
+    }
+    pb::FileSystem::Instance()->OverrideWriteDirectory(_Location);
     
     return true;
 }
@@ -203,10 +221,19 @@ bool Project::Export(bool networkExport)
         if (!Core::Instance()->GetNetworkManager()->GetClientConnection().IsOpen())
             return false;
         
+        pb::File* file;
+        
         pb::NetworkMessage message;
         message.SetProtocol('DBDG');
         message.WriteString("main.lua");
-        std::string main = pb::FileHelpers::FileToString(pb::kFileLocationUser, outputDir+"main.lua");
+        file = pb::FileSystem::Instance()->OpenFile(outputDir+"main.lua");
+        std::string main;
+        if (file)
+        {
+            file->ReadAll(main);
+            delete file;
+            file = 0;
+        }
         message.WriteString(main.c_str());
         Core::Instance()->GetNetworkManager()->GetClientConnection().Send(message);
         
@@ -218,7 +245,14 @@ bool Project::Export(bool networkExport)
             pb::NetworkMessage message;
             message.SetProtocol('DBDG');
             message.WriteString(recordName);
-            std::string main = pb::FileHelpers::FileToString(pb::kFileLocationUser, outputDir+recordName);
+            file = pb::FileSystem::Instance()->OpenFile(outputDir+recordName);
+            std::string main;
+            if (file)
+            {
+                file->ReadAll(main);
+                delete file;
+                file = 0;
+            }
             message.WriteString(main.c_str());
             Core::Instance()->GetNetworkManager()->GetClientConnection().Send(message);
         }
