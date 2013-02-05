@@ -1,6 +1,6 @@
 #pragma once
 
-#ifndef PIXELBOOST_DISABLE_GWEN
+#ifdef PIXELBOOST_LIBRARY_USE_GWEN
 
 namespace Gwen
 {

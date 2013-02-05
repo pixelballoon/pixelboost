@@ -1,4 +1,4 @@
-#ifndef PIXELBOOST_DISABLE_GWEN
+#ifdef PIXELBOOST_LIBRARY_USE_GWEN
 
 #include "glm/glm.hpp"
 

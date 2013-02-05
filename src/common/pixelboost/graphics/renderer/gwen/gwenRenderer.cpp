@@ -1,6 +1,4 @@
-#ifndef PIXELBOOST_DISABLE_GRAPHICS
-
-#ifndef PIXELBOOST_DISABLE_GWEN
+#ifdef PIXELBOOST_LIBRARY_USE_GWEN
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -383,7 +381,5 @@ void GwenRenderer::PurgeBuffer(bool force)
     _VertexBuffer->Lock();
     _VertexData = static_cast<Vertex_P3_UV*>(_VertexBuffer->GetData());
 }
-
-#endif
 
 #endif

@@ -1,11 +1,9 @@
 #pragma once
 
-#ifndef PIXELBOOST_DISABLE_GRAPHICS
-
-#ifndef PIXELBOOST_DISABLE_GWEN
+#ifdef PIXELBOOST_LIBRARY_USE_GWEN
 
 #include "Gwen/Gwen.h"
-#include "gwen/BaseRender.h"
+#include "Gwen/BaseRender.h"
 
 #include "glm/glm.hpp"
 
@@ -85,7 +83,5 @@ namespace pb
         glm::vec4 _Color;
     };
 }
-
-#endif
 
 #endif

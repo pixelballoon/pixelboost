@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 2.8.10)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-reorder")
 
@@ -99,6 +99,7 @@ if (PIXELBOOST_BUILD_PLATFORM_IOS)
 endif (PIXELBOOST_BUILD_PLATFORM_IOS)
 
 set (PIXELBOOST_HEADERS
+	"${PIXELBOOST_LIBRARY_HEADERS}"
 	"${PIXELBOOST_HEADERS}"
 	"${PLATFORM_HEADERS}"
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/common"
@@ -445,7 +446,7 @@ set (PIXELBOOST_SOURCES
 	)
 
 add_library (pixelboost_engine STATIC ${PIXELBOOST_SOURCES})
-target_link_libraries (pixelboost_engine Box2D freetype2 librocket lua)
+target_link_libraries (pixelboost_engine Box2D freetype2 lua)
 
 if (PIXELBOOST_BUILD_PLATFORM_OSX)
 	target_link_libraries (pixelboost_engine
