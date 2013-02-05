@@ -20,43 +20,19 @@ public class PixelboostHelpers
 		return Locale.getDefault().getLanguage();
 	}
 
-	public static String getUserFilePath()
+	public static String getBundleFilePath()
+	{
+		Context context = mainActivity.getApplication();
+		return context.getApplicationInfo().sourceDir;
+	}
+
+	public static String getSaveFilePath()
 	{
 		Context context = mainActivity.getApplication();
 		String filesDir = context.getFilesDir().getAbsolutePath();
 		File directory = new File(filesDir + "/");
 		directory.mkdirs();
 		return filesDir;
-	}
-
-    public static FileInfo openFileDescriptor(String filename)
-    {
-    	Context context = mainActivity.getApplication();
-    	AssetManager assetManager = context.getAssets();
-
-    	try
-    	{
-    		AssetFileDescriptor fileDescriptor = assetManager.openFd(filename);
- 
-			if (fileDescriptor != null)
-			{
-				FileInfo info = new FileInfo();
-				info.descriptor = fileDescriptor.getFileDescriptor();
-				info.offset = fileDescriptor.getStartOffset();
-				info.length = fileDescriptor.getLength();
-
-				System.out.println(filename + " " + info.offset + " " + info.length);
-
-				return info;
-		    }
-		} catch (IOException e) {}
-    	
-	    return null;
-	}
-
-	public static void closeFileDescriptor(FileDescriptor descriptor)
-	{
-
 	}
 
 	public static void playMusic(String filename, float volume)

@@ -10,7 +10,7 @@ namespace pb
 namespace FileHelpers
 {
         
-std::string GetRootPath()
+std::string GetBundlePath()
 {
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     std::string rootPath = [[[NSBundle mainBundle] resourcePath] UTF8String];
@@ -18,40 +18,12 @@ std::string GetRootPath()
     return rootPath;
 }
     
-std::string GetUserPath()
+std::string GetSavePath()
 {
-    return "";
-}
+    NSArray* dirPaths;
+    dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     
-bool CreateDirectory(const std::string& directory)
-{
-    NSString* dirToCreate = [NSString stringWithUTF8String:directory.c_str()];
-    NSError* error = nil;
-    BOOL isDir=YES;
-    
-    if([[NSFileManager defaultManager] fileExistsAtPath:dirToCreate isDirectory:&isDir] || !isDir)
-        return false;
-    
-    if(![[NSFileManager defaultManager] createDirectoryAtPath:dirToCreate withIntermediateDirectories:YES attributes:nil error:&error])
-    {
-        return false;
-    }
-    
-    return true;
-}
-
-int GetTimestamp(const std::string& filename)
-{
-    NSDictionary* attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:[NSString stringWithUTF8String:filename.c_str()] error:nil];
-    
-    if (attrs != nil)
-    {
-        NSDate *date = (NSDate*)[attrs objectForKey: NSFileModificationDate];
-        return (int)[date timeIntervalSince1970];
-    } 
-    else {
-        return 0;
-    }
+    return std::string([[dirPaths objectAtIndex:0] UTF8String]);
 }
         
 }

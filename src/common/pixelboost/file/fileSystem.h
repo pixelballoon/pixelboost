@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+struct PHYSFS_File;
+
 namespace pb
 {
     class File
@@ -15,28 +17,32 @@ namespace pb
             kFileSeekEnd,
         };
 
-        virtual ~File();
+        File(PHYSFS_File* file);
+        ~File();
         
-        virtual bool ReadAll(std::vector<unsigned char>& data) = 0;
-        virtual bool ReadAll(std::string& data) = 0;
+        bool ReadAll(std::vector<unsigned char>& data);
+        bool ReadAll(std::string& data);
         
-        virtual bool Read(unsigned char* data, int length) = 0;
-        virtual bool Read(char& data) = 0;
-        virtual bool Read(float& data) = 0;
-        virtual bool Read(short& data) = 0;
-        virtual bool Read(int& data) = 0;
-        virtual bool Read(bool& data) = 0;
+        bool Read(unsigned char* data, int length);
+        bool Read(char& data);
+        bool Read(float& data);
+        bool Read(short& data);
+        bool Read(int& data);
+        bool Read(bool& data);
 
-        virtual bool Write(const std::vector<unsigned char>& data) = 0;
-        virtual bool Write(const unsigned char* data, int length) = 0;
-        virtual bool Write(const std::string& data) = 0;
-        virtual bool Write(const char& data) = 0;
-        virtual bool Write(const float& data) = 0;
-        virtual bool Write(const short& data) = 0;
-        virtual bool Write(const int& data) = 0;
-        virtual bool Write(const bool& data) = 0;
+        bool Write(const std::vector<unsigned char>& data);
+        bool Write(const unsigned char* data, int length);
+        bool Write(const std::string& data);
+        bool Write(const char& data);
+        bool Write(const float& data);
+        bool Write(const short& data);
+        bool Write(const int& data);
+        bool Write(const bool& data);
 
-        virtual bool Seek(SeekMode mode, int offset) = 0;
+        bool Seek(SeekMode mode, int offset);
+
+    private:
+        PHYSFS_File* _File;
     };
     
     class FileInfo
@@ -46,32 +52,31 @@ namespace pb
         int TimeStamp;
     };
     
-    enum FileLocation
-    {
-        kFileLocationBundle,
-        kFileLocationUser
-    };
-
     enum FileMode
     {
-        kFileModeReadOnly,
-        kFileModeWriteOnly,
-        kFileModeReadWrite,
+        kFileModeRead,
+        kFileModeWrite,
+        kFileModeAppend,
     };
     
     class FileSystem
     {
     public:
-        FileSystem();
+        FileSystem(const char* appPath);
         ~FileSystem();
         
         static FileSystem* Instance();
         
-        File* OpenFile(FileLocation location, const std::string& path, FileMode mode = kFileModeReadOnly);
-        bool QueryFile(FileInfo& info, FileLocation location, const std::string& path);
+    public:
+        void OverrideWriteDirectory(const std::string& path);
+        void MountReadLocation(const std::string& path, const std::string& mountPoint, bool prepend);
         
-        bool CreateDirectory(FileLocation location, const std::string& path);
-                
+    public:
+        File* OpenFile(const std::string& path, FileMode mode = kFileModeRead);
+        bool QueryFile(FileInfo& info, const std::string& path);
+        
+        bool CreateDirectory(const std::string& path);
+        
         static FileSystem* _Instance;
     };
     

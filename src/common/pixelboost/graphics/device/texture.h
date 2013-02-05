@@ -24,7 +24,7 @@ public:
     };
     
     virtual bool LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format);
-    virtual bool LoadFromFile(FileLocation location, const std::string& image, bool createMips);
+    virtual bool LoadFromFile(const std::string& image, bool createMips);
     
     const glm::vec2& GetSize() const;
 

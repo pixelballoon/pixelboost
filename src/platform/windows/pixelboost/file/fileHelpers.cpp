@@ -8,26 +8,16 @@ namespace pb
 namespace FileHelpers
 {
         
-std::string GetRootPath()
+std::string GetBundlePath()
 {
     return "./";
 }
     
-std::string GetUserPath()
+std::string GetSavePath()
 {
     return "./";
-}
-    
-bool pb::FileHelpers::CreateDirectory(const std::string& directory)
-{
-    return false;
 }
 
-int pb::FileHelpers::GetTimestamp(const std::string& filename)
-{
-    return 0;
-}
-        
 }
     
 }

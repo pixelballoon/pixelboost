@@ -11,7 +11,6 @@ if (PIXELBOOST_BUILD_PLATFORM_ANDROID)
 		"src/platform/android/pixelboost/audio/android/audioManagerSimple.cpp"
 		"src/platform/android/pixelboost/audio/android/audioManagerSimple.h"
 		"src/platform/android/pixelboost/file/fileHelpers.cpp"
-		"src/platform/android/pixelboost/file/fileSystem.cpp"
 		"src/platform/android/pixelboost/misc/jni.cpp"
 		"src/platform/android/pixelboost/misc/jni.h"
 		"src/platform/android/pixelboost/network/gameCenter.cpp"
@@ -106,8 +105,8 @@ set (PIXELBOOST_HEADERS
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/external"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/box2d"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/freetype2/include"
-	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/librocket/Include"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/lua/src"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/physfs"
 	CACHE INTERNAL "Complete list of pixelboost headers")
 
 include_directories("${PIXELBOOST_HEADERS}")
@@ -225,8 +224,6 @@ set (GRAPHICS_RENDERER_SOURCES
 	"src/common/pixelboost/graphics/renderer/particle/particleRenderer.h"
 	"src/common/pixelboost/graphics/renderer/primitive/primitiveRenderer.cpp"
 	"src/common/pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
-	"src/common/pixelboost/graphics/renderer/rocket/rocketRenderer.cpp"
-	"src/common/pixelboost/graphics/renderer/rocket/rocketRenderer.h"
 	"src/common/pixelboost/graphics/renderer/sprite/sprite.cpp"
 	"src/common/pixelboost/graphics/renderer/sprite/sprite.h"
 	"src/common/pixelboost/graphics/renderer/sprite/spriteRenderer.cpp"
@@ -238,11 +235,6 @@ set (GRAPHICS_SHADER_SOURCES
 	"src/common/pixelboost/graphics/shader/manager.h"
 	"src/common/pixelboost/graphics/shader/shader.cpp"
 	"src/common/pixelboost/graphics/shader/shader.h"
-	)
-
-set (GRAPHICS_UI_SOURCES
-	"src/common/pixelboost/graphics/ui/rocket.cpp"
-	"src/common/pixelboost/graphics/ui/rocket.h"
 	)
 
 set (GRAPHICS_SOURCES
@@ -279,9 +271,7 @@ set (LOGIC_COMPONENT_GRAPHICS_SOURCES
 	"src/common/pixelboost/logic/component/graphics/model.h"
 	"src/common/pixelboost/logic/component/graphics/rectangle.cpp"
 	"src/common/pixelboost/logic/component/graphics/rectangle.h"
-	"src/common/pixelboost/logic/component/graphics/rocket.cpp"
-	"src/common/pixelboost/logic/component/graphics/rocket.h"
-    "src/common/pixelboost/logic/component/graphics/skinnedModel.cpp"
+	"src/common/pixelboost/logic/component/graphics/skinnedModel.cpp"
     "src/common/pixelboost/logic/component/graphics/skinnedModel.h"
 	"src/common/pixelboost/logic/component/graphics/sprite.cpp"
 	"src/common/pixelboost/logic/component/graphics/sprite.h"
@@ -446,7 +436,7 @@ set (PIXELBOOST_SOURCES
 	)
 
 add_library (pixelboost_engine STATIC ${PIXELBOOST_SOURCES})
-target_link_libraries (pixelboost_engine Box2D freetype2 lua)
+target_link_libraries (pixelboost_engine Box2D freetype2 lua physfs-static)
 
 if (PIXELBOOST_BUILD_PLATFORM_OSX)
 	target_link_libraries (pixelboost_engine
@@ -488,7 +478,6 @@ source_group (graphics\\helper FILES ${GRAPHICS_HELPER_SOURCES})
 source_group (graphics\\particle FILES ${GRAPHICS_PARTICLE_SOURCES})
 source_group (graphics\\renderer FILES ${GRAPHICS_RENDERER_SOURCES})
 source_group (graphics\\shader FILES ${GRAPHICS_SHADER_SOURCES})
-source_group (graphics\\ui FILES ${GRAPHICS_UI_SOURCES})
 source_group (graphics FILES ${GRAPHICS_SOURCES})
 source_group (input FILES ${INPUT_SOURCES})
 source_group (logic\\component\\graphics FILES ${LOGIC_COMPONENT_GRAPHICS_SOURCES})

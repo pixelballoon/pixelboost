@@ -17,7 +17,7 @@ namespace pb
         
         static Localisation* Instance();
         
-        bool Load(pb::FileLocation location, const std::string& directory);
+        bool Load(const std::string& directory);
         
         std::string GetString(pb::Uid key, const std::string& str);
         

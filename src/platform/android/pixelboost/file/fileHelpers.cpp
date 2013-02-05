@@ -1,66 +1,40 @@
 #ifdef PIXELBOOST_PLATFORM_ANDROID
 
 #include "pixelboost/file/fileHelpers.h"
+#include "pixelboost/misc/jni.h"
 
 using namespace pb;
 
-std::string pb::FileHelpers::GetRootPath()
+std::string pb::FileHelpers::GetBundlePath()
 {
-    /*
-    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-    std::string rootPath = [[[NSBundle mainBundle] bundlePath] UTF8String];
-    [pool release];
-    return rootPath;
-    */
-    return "";
+    JNIEnv* env = Jni::GetJniEnv();
+
+    jclass classId = env->FindClass("com/pixelballoon/pixelboost/PixelboostHelpers");
+
+    jmethodID methodId = env->GetStaticMethodID(classId, "getBundleFilePath", "()Ljava/lang/String;");
+    jstring result = static_cast<jstring>(env->CallStaticObjectMethod(classId, methodId));
+
+    const char *nativeString = env->GetStringUTFChars(result, 0);
+    std::string savePath = nativeString;
+    env->ReleaseStringUTFChars(result, nativeString);
+
+    return savePath;
 }
     
-std::string pb::FileHelpers::GetUserPath()
+std::string pb::FileHelpers::GetSavePath()
 {
-    /*
-    NSArray* dirPaths;
-    dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    
-    return std::string([[dirPaths objectAtIndex:0] UTF8String]);
-    */
-    return "";
-}
+    JNIEnv* env = Jni::GetJniEnv();
 
-bool pb::FileHelpers::CreateDirectory(const std::string& directory)
-{
-    /*
-    NSString* dirToCreate = [NSString stringWithUTF8String:directory.c_str()];
-    NSError* error = nil;
-    BOOL isDir=YES;
+    jclass classId = env->FindClass("com/pixelballoon/pixelboost/PixelboostHelpers");
     
-    if([[NSFileManager defaultManager] fileExistsAtPath:dirToCreate isDirectory:&isDir] || !isDir)
-        return false;
-    
-    if(![[NSFileManager defaultManager] createDirectoryAtPath:dirToCreate withIntermediateDirectories:YES attributes:nil error:&error])
-    {
-        return false;
-    }
+    jmethodID methodId = env->GetStaticMethodID(classId, "getSaveFilePath", "()Ljava/lang/String;");
+    jstring result = static_cast<jstring>(env->CallStaticObjectMethod(classId, methodId));
 
-    return true;
-    */
-    return false;
-}
+    const char *nativeString = env->GetStringUTFChars(result, 0);
+    std::string savePath = nativeString;
+    env->ReleaseStringUTFChars(result, nativeString);
 
-int pb::FileHelpers::GetTimestamp(const std::string& filename)
-{
-    /*
-    NSDictionary* attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:[NSString stringWithUTF8String:filename.c_str()] error:nil];
-    
-    if (attrs != nil)
-    {
-        NSDate *date = (NSDate*)[attrs objectForKey: NSFileModificationDate];
-        return (int)[date timeIntervalSince1970];
-    } 
-    else {
-        return 0;
-    }
-    */
-    return 0;
+    return savePath;
 }
 
 #endif

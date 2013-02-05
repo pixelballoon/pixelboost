@@ -18,7 +18,7 @@ DebugVariableManager* DebugVariableManager::_Instance = 0;
 DebugVariableManager::DebugVariableManager(const std::string& htmlLocation)
     : HttpServer()
 {
-    Start(9091, FileHelpers::GetRootPath()+"/"+htmlLocation);
+    Start(9091, FileHelpers::GetBundlePath()+"/"+htmlLocation);
 }
 
 DebugVariableManager::~DebugVariableManager()

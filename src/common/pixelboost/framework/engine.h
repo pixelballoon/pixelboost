@@ -31,7 +31,7 @@ class TouchManager;
 class Engine
 {
 protected:
-	Engine(void* platformContext);
+	Engine(void* platformContext, std::vector<std::string> args);
     
 public:
     virtual ~Engine();

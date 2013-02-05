@@ -56,8 +56,6 @@ public:
     const DbRecord* GetRecord(Uid uid) const;
     
 private:
-    FileLocation GetLocation();
-    
     typedef std::map<Uid, CreateStruct> StructCreateMap;
     typedef std::map<Uid, DeserialiseStruct> StructDeserialiseMap;
     

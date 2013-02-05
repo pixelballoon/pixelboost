@@ -51,7 +51,11 @@ void Database::OpenDatabase()
 {
     std::string filename = _DatabaseRoot + "main.lua";
     
-    std::string contents = pb::FileHelpers::FileToString(GetLocation(), filename);
+    std::string contents;
+    
+    pb::File* file = pb::FileSystem::Instance()->OpenFile(filename);
+    file->ReadAll(contents);
+    delete file;
     
     if (luaL_loadstring(_State, contents.c_str()) || lua_pcall(_State, 0, 0, 0))
     {
@@ -106,7 +110,15 @@ DbRecord* Database::OpenRecord(Uid recordId)
     char filename[1024];
     sprintf(filename, "%srecords/%X.lua", _DatabaseRoot.c_str(), recordId);
     
-    std::string contents = pb::FileHelpers::FileToString(GetLocation(), filename);
+    pb::File* file = pb::FileSystem::Instance()->OpenFile(filename);
+    
+    std::string contents;
+    
+    if (file)
+    {
+        file->ReadAll(contents);
+        delete file;
+    }
     
     if (luaL_loadstring(_State, contents.c_str()) || lua_pcall(_State, 0, 0, 0))
     {
@@ -324,19 +336,4 @@ const DbRecord* Database::GetRecord(Uid uid) const
         return 0;
     
     return it->second;
-}
-
-FileLocation Database::GetLocation()
-{
-#ifndef PIXELBOOST_DISABLE_DEBUG
-    int bundleDatabase = FileHelpers::GetTimestamp(FileHelpers::GetRootPath() + _DatabaseRoot + "main.lua");
-    int userDatabase = FileHelpers::GetTimestamp(FileHelpers::GetUserPath() + _DatabaseRoot + "main.lua");
-    
-    if (bundleDatabase >= userDatabase)
-        return kFileLocationBundle;
-    else
-        return kFileLocationUser;
-#else
-    return kFileLocationBundle;
-#endif
 }

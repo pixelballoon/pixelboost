@@ -26,11 +26,19 @@ Localisation* Localisation::Instance()
     return instance;
 }
 
-bool Localisation::Load(pb::FileLocation location, const std::string& directory)
+bool Localisation::Load(const std::string& directory)
 {
     std::string filename = directory + GetCurrentLocale() + ".po";
     
-    std::string contents = pb::FileHelpers::FileToString(location, filename);
+    pb::File* file = pb::FileSystem::Instance()->OpenFile(filename);
+    
+    std::string contents;
+    
+    if (file)
+    {
+        file->ReadAll(contents);
+        delete file;
+    }
     
     if (!contents.length())
     {

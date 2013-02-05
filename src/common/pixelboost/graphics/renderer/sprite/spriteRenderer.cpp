@@ -276,13 +276,13 @@ std::shared_ptr<SpriteSheet> SpriteRenderer::CreateSpriteSheet(const std::string
     return sheet;
 }
 
-bool SpriteRenderer::LoadSpriteSheet(FileLocation location, const std::string& name, const std::string& extension, bool createMips, bool hasPremultipliedAlpha)
+bool SpriteRenderer::LoadSpriteSheet(const std::string& name, const std::string& extension, bool createMips, bool hasPremultipliedAlpha)
 {
     if (!CreateSpriteSheet(name))
         return false;
     
     std::shared_ptr<SpriteSheet> sheet = GetSpriteSheet(name);
-    sheet->LoadSheet(location, name, extension, createMips);
+    sheet->LoadSheet(name, extension, createMips);
 
     return true;
 }

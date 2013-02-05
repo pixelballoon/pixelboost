@@ -34,9 +34,9 @@ SpriteSheet::~SpriteSheet()
     }
 }
 
-bool SpriteSheet::LoadSingle(FileLocation location, const std::string& fileName, float density, bool generateMips)
+bool SpriteSheet::LoadSingle(const std::string& fileName, float density, bool generateMips)
 {
-    if (!LoadTexture(location, fileName, generateMips))
+    if (!LoadTexture(fileName, generateMips))
         return false;
     
     std::string spriteName = fileName.substr(fileName.rfind("/")+1);
@@ -56,7 +56,7 @@ bool SpriteSheet::LoadSingle(FileLocation location, const std::string& fileName,
     return true;
 }
 
-bool SpriteSheet::LoadSheet(FileLocation location, const std::string& name, const std::string& extension, bool generateMips)
+bool SpriteSheet::LoadSheet(const std::string& name, const std::string& extension, bool generateMips)
 {
     std::string modifier;
     float sheetDensity = 16.f;
@@ -74,7 +74,15 @@ bool SpriteSheet::LoadSheet(FileLocation location, const std::string& name, cons
     
     std::string jsonFilename = "/data/spritesheets/" + name + modifier + ".json";
     
-    std::string rootData = FileHelpers::FileToString(pb::kFileLocationBundle, jsonFilename);
+    pb::File* file = pb::FileSystem::Instance()->OpenFile(jsonFilename);
+    
+    std::string rootData;
+    
+    if (file)
+    {
+        file->ReadAll(rootData);
+        delete file;
+    }
     
     json::Object root;
     
@@ -128,12 +136,12 @@ bool SpriteSheet::LoadSheet(FileLocation location, const std::string& name, cons
         Engine::Instance()->GetSpriteRenderer()->_Sprites[spriteName] = sprite;
     }
     
-    LoadTexture(location, "/data/spritesheets/images/" + name + modifier + "." + extension, generateMips);
+    LoadTexture("/data/spritesheets/images/" + name + modifier + "." + extension, generateMips);
     
     return true;
 }
 
-Texture* SpriteSheet::LoadTexture(FileLocation location, const std::string& fileName, bool generateMips)
+Texture* SpriteSheet::LoadTexture(const std::string& fileName, bool generateMips)
 {
     if (_Texture)
     {
@@ -141,7 +149,7 @@ Texture* SpriteSheet::LoadTexture(FileLocation location, const std::string& file
     }
     
     _Texture = GraphicsDevice::Instance()->CreateTexture();
-    _Texture->LoadFromFile(location, fileName, generateMips);
+    _Texture->LoadFromFile(fileName, generateMips);
     
     return _Texture;
 }

@@ -92,8 +92,8 @@ namespace pb
     public:
         ModelDefinition();
         
-        bool Open(pb::FileLocation fileLocation, const std::string& filename);
-        bool Save(pb::FileLocation fileLocation, const std::string& filename) const;
+        bool Open(const std::string& filename);
+        bool Save(const std::string& filename) const;
         
         void CalculateBounds();
         

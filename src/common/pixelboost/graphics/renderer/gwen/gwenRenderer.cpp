@@ -262,9 +262,9 @@ void GwenRenderer::LoadTexture(Gwen::Texture* definition)
     if (fileName[0] != '/')
     {
         fileName = "/data/" + fileName;
-        texture->LoadFromFile(pb::kFileLocationBundle, fileName, false);
+        texture->LoadFromFile(fileName, false);
     } else {
-        texture->LoadFromFile(pb::kFileLocationUser, fileName, false);
+        texture->LoadFromFile(fileName, false);
     }
     
     definition->width = texture->GetSize()[0];
@@ -321,7 +321,7 @@ void GwenRenderer::RenderText(Gwen::Font* font, Gwen::Point pos, const Gwen::Uni
 
     Gwen::String fontName = Gwen::Utility::UnicodeToString(font->facename);
 
-    pb::Font* renderFont = Engine::Instance()->GetFontRenderer()->LoadFont(pb::kFileLocationBundle, fontName, "/data/fonts/"+fontName, false);
+    pb::Font* renderFont = Engine::Instance()->GetFontRenderer()->LoadFont(fontName, "/data/fonts/"+fontName, false);
 
     float size = font->size * Scale();
     if (!text.length())
@@ -352,7 +352,7 @@ Gwen::Point GwenRenderer::MeasureText(Gwen::Font* font, const Gwen::UnicodeStrin
 {
     Gwen::String fontName = Gwen::Utility::UnicodeToString(font->facename);
     
-    Engine::Instance()->GetFontRenderer()->LoadFont(pb::kFileLocationBundle, fontName, "/data/fonts/"+fontName, false);
+    Engine::Instance()->GetFontRenderer()->LoadFont(fontName, "/data/fonts/"+fontName, false);
     
     float size = font->size * Scale();
     float length = Engine::Instance()->GetFontRenderer()->MeasureString(fontName, Gwen::Utility::UnicodeToString(text), size/32.f).x*32.f;

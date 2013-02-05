@@ -113,7 +113,15 @@ Shader::~Shader()
 
 bool Shader::Load(const std::string& filename)
 {
-    std::string effect = FileHelpers::FileToString(pb::kFileLocationBundle, filename);
+    pb::File* file = pb::FileSystem::Instance()->OpenFile(filename);
+    
+    std::string effect;
+    
+    if (file)
+    {
+        file->ReadAll(effect);
+        delete file;
+    }
     
     pugi::xml_document document;
     if (!document.load(effect.c_str()))

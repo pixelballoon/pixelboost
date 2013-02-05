@@ -303,12 +303,12 @@ Model::~Model()
     delete _ModelDefinition;
 }
     
-bool Model::Load(FileLocation location, const std::string& fileName)
+bool Model::Load(const std::string& fileName)
 {
     std::string objFilename = fileName;
     
     _ModelDefinition = new ModelDefinition();
-    if (!_ModelDefinition->Open(location, fileName))
+    if (!_ModelDefinition->Open(fileName))
         return false;
        
     if (_ModelDefinition->Meshes.size() == 0)
@@ -412,7 +412,7 @@ void ModelRenderer::Render(int count, Renderable** renderables, Viewport* viewpo
 
 }
     
-Model* ModelRenderer::LoadModel(FileLocation location, const std::string& modelName, const std::string& fileName)
+Model* ModelRenderer::LoadModel(const std::string& modelName, const std::string& fileName)
 {
     ModelMap::iterator it = _Models.find(modelName);
     
@@ -423,7 +423,7 @@ Model* ModelRenderer::LoadModel(FileLocation location, const std::string& modelN
     }
     
     Model* model = new Model();
-    if (!model->Load(location, fileName))
+    if (!model->Load(fileName))
     {
         delete model;
         return 0;
@@ -452,7 +452,7 @@ bool ModelRenderer::UnloadModel(const std::string& modelName)
     return true;
 }
     
-Texture* ModelRenderer::LoadTexture(FileLocation location, const std::string& textureName, const std::string& fileName, bool createMips)
+Texture* ModelRenderer::LoadTexture(const std::string& textureName, const std::string& fileName, bool createMips)
 {
     TextureMap::iterator it = _Textures.find(textureName);
     
@@ -462,7 +462,7 @@ Texture* ModelRenderer::LoadTexture(FileLocation location, const std::string& te
     }
     
     Texture* texture = GraphicsDevice::Instance()->CreateTexture();
-    if (!texture->LoadFromFile(location, fileName, createMips))
+    if (!texture->LoadFromFile(fileName, createMips))
     {
         GraphicsDevice::Instance()->DestroyTexture(texture);
         return 0;

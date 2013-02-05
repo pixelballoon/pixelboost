@@ -319,9 +319,9 @@ ModelDefinition::ModelDefinition()
     
 }
     
-bool ModelDefinition::Open(pb::FileLocation fileLocation, const std::string& filename)
+bool ModelDefinition::Open(const std::string& filename)
 {
-    pb::File* file = pb::FileSystem::Instance()->OpenFile(fileLocation, filename, pb::kFileModeReadOnly);
+    pb::File* file = pb::FileSystem::Instance()->OpenFile(filename);
     
     if (!file)
     {
@@ -397,9 +397,9 @@ bool ModelDefinition::Open(pb::FileLocation fileLocation, const std::string& fil
     return true;
 }
 
-bool ModelDefinition::Save(pb::FileLocation fileLocation, const std::string& filename) const
+bool ModelDefinition::Save(const std::string& filename) const
 {
-    pb::File* file = pb::FileSystem::Instance()->OpenFile(fileLocation, filename, pb::kFileModeWriteOnly);
+    pb::File* file = pb::FileSystem::Instance()->OpenFile(filename, pb::kFileModeWrite);
     
     if (!file)
         return false;

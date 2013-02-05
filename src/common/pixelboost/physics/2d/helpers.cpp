@@ -10,7 +10,15 @@ using namespace pb;
 
 FixtureCollection2D* PhysicsHelpers2D::LoadDefinition(const std::string& filename, float density)
 {
-    std::string definitionString = pb::FileHelpers::FileToString(pb::kFileLocationBundle, "/data/physics/"+filename+".phy");
+    pb::File* file = pb::FileSystem::Instance()->OpenFile("/data/physics/"+filename+".phy");
+    
+    std::string definitionString;
+    
+    if (file)
+    {
+        file->ReadAll(definitionString);
+        delete file;
+    }
     
     json::Array fixtures;
     

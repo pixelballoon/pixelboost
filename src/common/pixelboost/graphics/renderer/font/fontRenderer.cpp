@@ -271,7 +271,7 @@ FontRenderer::~FontRenderer()
     }
 }
 
-Font* FontRenderer::LoadFont(FileLocation location, const std::string& name, const std::string& filename, bool createMips, bool hasPremultipliedAlpha)
+Font* FontRenderer::LoadFont(const std::string& name, const std::string& filename, bool createMips, bool hasPremultipliedAlpha)
 {
     FontMap::iterator it = _Fonts.find(name);
     
@@ -293,10 +293,16 @@ Font* FontRenderer::LoadFont(FileLocation location, const std::string& name, con
         modifier = "-hd";
     }
 
-    
     std::string fntFilename = filename + modifier + ".fnt";
+    pb::File* file = pb::FileSystem::Instance()->OpenFile(fntFilename);
     
-    std::string fontContents = FileHelpers::FileToString(pb::kFileLocationBundle, fntFilename);
+    std::string fontContents;
+    
+    if (file)
+    {
+        file->ReadAll(fontContents);
+        delete file;
+    }
     
     std::vector<std::string> lines;
     SplitString(fontContents, '\n', lines);
@@ -338,7 +344,7 @@ Font* FontRenderer::LoadFont(FileLocation location, const std::string& name, con
         {
             std::string texFilename = "/data/fonts/" + data["file"].substr(1, data["file"].find('"', 1)-1);
             font->texture = GraphicsDevice::Instance()->CreateTexture();
-            font->texture->LoadFromFile(location, texFilename, createMips);
+            font->texture->LoadFromFile(texFilename, createMips);
         } else if (elementType == "char")
         {
             Font::Character character;

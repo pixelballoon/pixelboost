@@ -125,7 +125,7 @@ namespace pb
         Model();
         virtual ~Model();
         
-        bool Load(FileLocation location, const std::string& modelName);
+        bool Load(const std::string& modelName);
         
     public:
         const BoundingSphere& GetBounds();
@@ -155,10 +155,10 @@ namespace pb
         
         void Render(RenderLayer* layer);
         
-        Model* LoadModel(FileLocation location, const std::string& modelName, const std::string& fileName);
+        Model* LoadModel(const std::string& modelName, const std::string& fileName);
         bool UnloadModel(const std::string& modelName);
         
-        Texture* LoadTexture(FileLocation location, const std::string& textureName, const std::string& fileName, bool createMips=true);
+        Texture* LoadTexture(const std::string& textureName, const std::string& fileName, bool createMips=true);
         bool UnloadTexture(const std::string& textureName);
         
         void Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass);
