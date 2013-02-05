@@ -8,21 +8,27 @@
 #include "stbimage/stb_image_write.h"
 
 #include "pixelboost/file/fileHelpers.h"
+#include "pixelboost/file/fileSystem.h"
 
 int main(int argc, const char * argv[])
 {
-    if (argc < 2)
+    if (argc < 3)
         return 1;
     
-    std::string inputLocation = argv[1];
-    std::string outputLocation = argv[2];
+    new pb::FileSystem(argv[0]);
+    
+    pb::FileSystem::Instance()->MountReadLocation(argv[1], "/", true);
+    pb::FileSystem::Instance()->OverrideWriteDirectory(argv[1]);
+    
+    std::string inputLocation = argv[2];
+    std::string outputLocation = argv[3];
     
     std::vector<unsigned char> data;
     unsigned char* decoded;
     
     printf("Converting %s to %s\n", argv[1], argv[2]);
     
-    pb::File* file = pb::FileSystem::Instance()->OpenFile(pb::kFileLocationUser, inputLocation);
+    pb::File* file = pb::FileSystem::Instance()->OpenFile(inputLocation);
     if (!file)
     {
         printf("Can't open input file\n");
@@ -76,7 +82,7 @@ int main(int argc, const char * argv[])
     int alphaBufferSize;
     unsigned char* alphaBuffer = stbi_write_png_to_mem(alphaData, 0, width, height, 1, &alphaBufferSize);
     
-    file = pb::FileSystem::Instance()->OpenFile(pb::kFileLocationUser, outputLocation, pb::kFileModeWriteOnly);
+    file = pb::FileSystem::Instance()->OpenFile(outputLocation, pb::kFileModeWrite);
     
     if (!file)
     {
