@@ -55,13 +55,28 @@ int main(int argc, const char * argv[])
 {
     bool status = true;
     
+    if (argc < 3)
+        return 1;
+    
+    new pb::FileSystem(argv[0]);
+    
+    pb::FileSystem::Instance()->MountReadLocation(argv[1], "/", true);
+    pb::FileSystem::Instance()->OverrideWriteDirectory(argv[1]);
+    
     std::string vertex, fragment;
     
-    const char* inputLocation = argc > 1 ? argv[1] : "";
-    
-    const char* outputLocation = argc > 2 ? argv[2] : "";
+    const char* inputLocation = argv[2];
+    const char* outputLocation = argv[3];
 
-    std::string input = pb::FileHelpers::FileToString(pb::kFileLocationUser, inputLocation);
+    pb::File* file = pb::FileSystem::Instance()->OpenFile(inputLocation);
+    
+    std::string input;
+    
+    if (file)
+    {
+        file->ReadAll(input);
+        delete file;
+    }
     
     pugi::xml_document inputDocument;
     pugi::xml_document outputDocument;
@@ -109,7 +124,15 @@ int main(int argc, const char * argv[])
     std::ostringstream output;
     outputDocument.save(output);
     
-    pb::FileHelpers::StringToFile(pb::kFileLocationUser, outputLocation, output.str());
+    file = pb::FileSystem::Instance()->OpenFile(outputLocation, pb::kFileModeWrite);
+    
+    if (file)
+    {
+        file->Write(output);
+        delete file;
+    } else {
+        status = false;
+    }
     
     if (!status)
         return 1;

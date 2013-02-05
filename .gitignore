@@ -5,3 +5,4 @@ xcuserdata
 /libs/hlsl2glsl/build/
 /libs/glsl-optimizer/src/glsl/xcode/test/
 /libs/glsl-optimizer/src/glsl/xcode/build/
+build
