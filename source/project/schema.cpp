@@ -1,7 +1,7 @@
-#include <fstream>
-#include <iostream>
 #include <sstream>
 #include <vector>
+
+#include "pixelboost/file/fileSystem.h"
 
 #include "project/schema.h"
 #include "project/schemaParser.h"
@@ -296,16 +296,15 @@ bool Schema::Open(const std::string& directory)
     
     std::string schemaFile = directory + "main.txt";
     
-    std::fstream file;
+    pb::File* file = pb::FileSystem::Instance()->OpenFile(schemaFile);
     
-    file.open(schemaFile.c_str(), std::ios_base::in);
-    
-    if (!file.is_open())
+    if (!file)
         return false;
     
-    std::string schema((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    std::string schema;
     
-    file.close();
+    file->ReadAll(schema);
+    delete file;
     
     bool result = SchemaParser::Parse(this, schema);
     

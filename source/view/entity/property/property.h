@@ -4,11 +4,6 @@
 
 #include "pixelboost/maths/boundingBox.h"
 
-namespace pb
-{
-    class RenderLayer;
-}
-
 namespace pixeleditor
 {
     class SchemaItem;

@@ -5,7 +5,6 @@
 namespace pb
 {
     class ModelComponent;
-    class RenderLayer;
 }
 
 namespace pixeleditor

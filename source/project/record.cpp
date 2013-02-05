@@ -1,4 +1,5 @@
 #include <fstream>
+#include <sstream>
 #include <sys/stat.h>
 
 #include "lua.hpp"
@@ -100,14 +101,10 @@ bool ProjectRecord::Close()
 
 bool ProjectRecord::Save()
 {
-    // TODO: Make OS independant
-    char cmd[2048];
-    std::string outputDir = GetProject()->GetLocation() + "records/";
-    sprintf(cmd, "mkdir -p %s", outputDir.c_str());
-    system(cmd);
+    pb::FileSystem::Instance()->CreateDirectory("records");
     
     char location[1024];
-    sprintf(location, "%s%X.txt", outputDir.c_str(), GetUid());
+    sprintf(location, "records/%X.txt", GetUid());
 
     json::Object record;
     
@@ -126,10 +123,12 @@ bool ProjectRecord::Save()
     
     record["Entities"] = entities;
     
-    std::fstream file(location, std::fstream::out | std::fstream::trunc);
-    json::Writer::Write(record, file);
+    std::stringstream contents;
+    json::Writer::Write(record, contents);
     
-    file.close();
+    pb::File* file = pb::FileSystem::Instance()->OpenFile(location, pb::kFileModeWrite);
+    file->Write(contents.str());
+    delete file;
     
     return status;
 }

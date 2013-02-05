@@ -31,7 +31,6 @@ public:
     
     bool IsOpen();
     
-    const std::string& GetLocation() const;
     const std::string& GetName() const;
     
     ProjectEntity* GetEntity(Uid uid) const;

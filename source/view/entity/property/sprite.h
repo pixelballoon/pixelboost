@@ -4,7 +4,6 @@
 
 namespace pb
 {
-    class RenderLayer;
     class SpriteComponent;
 }
 

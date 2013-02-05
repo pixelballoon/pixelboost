@@ -54,6 +54,9 @@ bool Project::Open(const std::string& directory)
     if (_IsOpen)
         Close();
     
+    pb::FileSystem::Instance()->OverrideWriteDirectory(directory);
+    pb::FileSystem::Instance()->MountReadLocation(directory, "/", true);
+    
     _Location = directory;
     
     if (_Location.length() == 0)
@@ -62,9 +65,9 @@ bool Project::Open(const std::string& directory)
     if (_Location[_Location.length()-1] != '/')
         _Location += "/";
     
-    OpenConfig(_Location + "project.prj");
+    OpenConfig("project.prj");
     
-    if (!_Schema->Open(_Location + "schema/"))
+    if (!_Schema->Open("schema/"))
         return false;
       
     _IsOpen = true;
@@ -82,7 +85,7 @@ bool Project::Open(const std::string& directory)
         if (it->length() < 4 || it->substr(it->length()-4, 4) != ".txt")
             continue;
         
-        LoadRecord(_Location + "records/" + *it);
+        LoadRecord("records/" + *it);
     }
     
     return true;
@@ -266,11 +269,6 @@ bool Project::IsOpen()
     return _IsOpen;
 }
     
-const std::string& Project::GetLocation() const
-{
-    return _Location;
-}
-
 const std::string& Project::GetName() const
 {
     return _Name;

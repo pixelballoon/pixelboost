@@ -167,7 +167,7 @@ View::View(void* platformContext, std::vector<std::string> args)
     , _Record(0)
 {
     _Core = new Core();
-   
+    
     _KeyboardHandler = new ViewKeyboardHandler();
     _MouseHandler = new ViewMouseHandler();
     

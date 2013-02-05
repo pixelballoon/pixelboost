@@ -1,3 +1,4 @@
+#include "pixelboost/file/fileSystem.h"
 #include "pixelboost/network/networkServer.h"
 
 #include "core.h"
