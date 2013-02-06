@@ -21,6 +21,8 @@ namespace pb
         Uid GetType();
         static Uid GetStaticType();
         
+        void SetActive(bool active);
+        
         void SetSourceFile(const std::string& file);
         void SetSourceString(const std::string& source);
         
@@ -34,6 +36,7 @@ namespace pb
 
         LuaScript* _Script;
         
+        bool _Active;
         Uid _WaitMessage;
         float _WaitTime;
     };

@@ -12,6 +12,7 @@ using namespace pb;
 ScriptComponent::ScriptComponent(pb::Entity* parent)
     : Component(parent)
 {
+    _Active = true;
     _Script = LuaManager::Instance()->CreateScript(this);
     _WaitMessage = 0;
     _WaitTime = 0.f;
@@ -49,6 +50,11 @@ Uid ScriptComponent::GetStaticType()
     return TypeHash("pb::ScriptComponent");
 }
 
+void ScriptComponent::SetActive(bool active)
+{
+    _Active = active;
+}
+
 void ScriptComponent::SetSourceFile(const std::string& filename)
 {
     File* file = FileSystem::Instance()->OpenFile(filename);
@@ -81,7 +87,7 @@ void ScriptComponent::OnMessage(const Message& message)
 
 void ScriptComponent::OnUpdate(const Message& message)
 {
-    if (_WaitMessage)
+    if (_WaitMessage || !_Active)
         return;
     
     const UpdateMessage& updateMessage = static_cast<const UpdateMessage&>(message);
