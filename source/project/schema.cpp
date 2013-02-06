@@ -153,6 +153,33 @@ std::string SchemaAttribute::EvaluateParamString(ProjectStruct* structure, const
     return paramValue;
 }
 
+glm::vec2 SchemaAttribute::EvaluateParamVector2(ProjectStruct* structure, const std::string& param, const std::string& prefix, glm::vec2 defaultValue) const
+{
+    glm::vec2 returnValue;
+    
+    ParamValueMap::const_iterator it = _ParamValue.find(param);
+    
+    if (it == _ParamValue.end())
+        return defaultValue;
+    
+    std::string paramValue = it->second;
+    
+    std::vector<std::string> elements;
+    pb::StringHelpers::SplitString(paramValue, ',', elements);
+    
+    for (int i=0; i<elements.size() && i<2; i++)
+    {
+        if (elements[i][0] == '/')
+        {
+            returnValue[i] = structure->GetPropertyFloat(prefix.length() == 0 ? elements[i] : (prefix.substr(0, prefix.length()-1)+elements[i]), defaultValue[i]);
+        } else {
+            returnValue[i] = atof(elements[i].c_str());
+        }
+    }
+    
+    return returnValue;
+}
+
 glm::vec3 SchemaAttribute::EvaluateParamVector3(ProjectStruct* structure, const std::string& param, const std::string& prefix, glm::vec3 defaultValue) const
 {
     glm::vec3 returnValue;

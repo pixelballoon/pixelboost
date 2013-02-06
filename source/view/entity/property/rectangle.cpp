@@ -41,14 +41,13 @@ void RectangleViewProperty::Refresh()
 {
     const SchemaAttribute* visualisation = _SchemaItem->GetAttribute("Visualisation");
     
-    float height = visualisation->EvaluateParamFloat(GetProjectEntity(), "height", GetPath(), 1.f);
-    float width = visualisation->EvaluateParamFloat(GetProjectEntity(), "width", GetPath(), 1.f);
-    
-    _RectangleComponent->SetSize(glm::vec2(width, height));
-    
+    glm::vec2 size = visualisation->EvaluateParamVector2(GetProjectEntity(), "size", GetPath(), glm::vec2(1,1));
     bool solid = visualisation->EvaluateParamBool(GetProjectEntity(), "solid", GetPath(), true);
+    glm::vec4 color = visualisation->EvaluateParamColor(GetProjectEntity(), "color", GetPath());
     
+    _RectangleComponent->SetSize(size);
     _RectangleComponent->SetSolid(solid);
+    _RectangleComponent->SetColor(color);
 }
 
 pb::BoundingBox RectangleViewProperty::CalculateBounds()

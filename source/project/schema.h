@@ -35,10 +35,11 @@ public:
     const ParamValueMap& GetParamValues() const;
     
     bool EvaluateParamBool(ProjectStruct* structure, const std::string& param, const std::string& prefix, bool defaultValue = true) const;
-    glm::vec4 EvaluateParamColor(ProjectStruct* structure, const std::string& param, const std::string& prefix, glm::vec4 defaultValue = glm::vec4(0,0,0,0)) const;
+    glm::vec4 EvaluateParamColor(ProjectStruct* structure, const std::string& param, const std::string& prefix, glm::vec4 defaultValue = glm::vec4(1,1,1,1)) const;
     float EvaluateParamFloat(ProjectStruct* structure, const std::string& param, const std::string& prefix, float defaultValue = 0.f) const;
     int EvaluateParamInt(ProjectStruct* structure, const std::string& param, const std::string& prefix, int defaultValue = 0.f) const;
     std::string EvaluateParamString(ProjectStruct* structure, const std::string& param, const std::string& prefix, const std::string& defaultValue = "") const;
+    glm::vec2 EvaluateParamVector2(ProjectStruct* structure, const std::string& param, const std::string& prefix, glm::vec2 defaultValue = glm::vec2(0,0)) const;
     glm::vec3 EvaluateParamVector3(ProjectStruct* structure, const std::string& param, const std::string& prefix, glm::vec3 defaultValue = glm::vec3(0,0,0)) const;
     glm::vec4 EvaluateParamVector4(ProjectStruct* structure, const std::string& param, const std::string& prefix, glm::vec4 defaultValue = glm::vec4(0,0,0,0)) const;
     
