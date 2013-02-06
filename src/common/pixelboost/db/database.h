@@ -39,7 +39,7 @@ public:
     void RegisterDeserialise(Uid type, DeserialiseStruct deserialiseStruct);
     
     void SetLocation(const std::string& location);
-    void OpenDatabase();
+    bool OpenDatabase();
     
     DbRecord* OpenRecord(Uid recordId);
     bool CloseRecord(Uid recordId);

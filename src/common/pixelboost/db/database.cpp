@@ -47,20 +47,24 @@ void Database::SetLocation(const std::string& location)
     _DatabaseRoot = location;
 }
 
-void Database::OpenDatabase()
+bool Database::OpenDatabase()
 {
     std::string filename = _DatabaseRoot + "main.lua";
     
     std::string contents;
     
     pb::File* file = pb::FileSystem::Instance()->OpenFile(filename);
+    
+    if (!file)
+        return false;
+    
     file->ReadAll(contents);
     delete file;
     
     if (luaL_loadstring(_State, contents.c_str()) || lua_pcall(_State, 0, 0, 0))
     {
         printf("Can't open file: %s", lua_tostring(_State, -1));
-        return;
+        return false;
     }
     
     lua_getglobal(_State, "records");
@@ -68,7 +72,7 @@ void Database::OpenDatabase()
     {
         lua_len(_State, -1);
         if (!lua_isnumber(_State, -1))
-            return;
+            return false;
         
         int n = lua_tonumber(_State, -1);
         lua_pop(_State, 1);
@@ -96,6 +100,8 @@ void Database::OpenDatabase()
             lua_pop(_State, 1);
         }
     }
+    
+    return true;
 }
 
 DbRecord* Database::OpenRecord(Uid recordId)
