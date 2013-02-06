@@ -183,11 +183,11 @@ void Level::UpdateSize()
     if (!hasLevel)
         return;
     
-    std::string width = hasLevel->EvaluateParamValue(_Record, "width");
-    std::string height = hasLevel->EvaluateParamValue(_Record, "height");
-    std::string origin = hasLevel->EvaluateParamValue(_Record, "origin");
+    float width = hasLevel->EvaluateParamFloat(_Record, "width", "/", 0.f);
+    float height = hasLevel->EvaluateParamFloat(_Record, "height", "/", 0.f);
+    std::string origin = hasLevel->EvaluateParamString(_Record, "origin", "/");
     
-    glm::vec2 size = glm::vec2(atof(width.c_str()), atof(height.c_str()));
+    glm::vec2 size = glm::vec2(width, height);
     glm::vec3 offset;
     
     if (origin.length() == 2)

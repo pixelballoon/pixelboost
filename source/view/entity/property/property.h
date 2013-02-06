@@ -20,6 +20,8 @@ namespace pixeleditor
         
         virtual void Refresh();
         
+        ProjectEntity* GetProjectEntity();
+        
         const std::string& GetPath();
         Uid GetUid();
         Uid GetPropertyId();
@@ -29,8 +31,6 @@ namespace pixeleditor
         
     protected:
         virtual pb::BoundingBox CalculateBounds();
-        
-        std::string EvaluateProperty(const std::string& path, const std::string& defaultValue = "");
         
         Uid _PropertyId;
         ViewEntity* _Parent;

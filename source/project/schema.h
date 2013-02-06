@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "glm/glm.hpp"
 #include "sigslot/signal.h"
 
 #include "project/definitions.h"
@@ -29,11 +30,17 @@ public:
     typedef std::map<std::string, std::string> ParamValueMap;
     
     void AddParam(const std::string& param, const std::string& value);
-    std::string EvaluateParamValue(ProjectStruct* structure, const std::string& param, const std::string& prefix = "", const std::string& defaultValue = "") const;
     bool HasParamValue(const std::string& param) const;
     std::string GetParamValue(const std::string& param, const std::string& defaultValue = "") const;
-    
     const ParamValueMap& GetParamValues() const;
+    
+    bool EvaluateParamBool(ProjectStruct* structure, const std::string& param, const std::string& prefix, bool defaultValue = true) const;
+    glm::vec4 EvaluateParamColor(ProjectStruct* structure, const std::string& param, const std::string& prefix, glm::vec4 defaultValue = glm::vec4(0,0,0,0)) const;
+    float EvaluateParamFloat(ProjectStruct* structure, const std::string& param, const std::string& prefix, float defaultValue = 0.f) const;
+    int EvaluateParamInt(ProjectStruct* structure, const std::string& param, const std::string& prefix, int defaultValue = 0.f) const;
+    std::string EvaluateParamString(ProjectStruct* structure, const std::string& param, const std::string& prefix, const std::string& defaultValue = "") const;
+    glm::vec3 EvaluateParamVector3(ProjectStruct* structure, const std::string& param, const std::string& prefix, glm::vec3 defaultValue = glm::vec3(0,0,0)) const;
+    glm::vec4 EvaluateParamVector4(ProjectStruct* structure, const std::string& param, const std::string& prefix, glm::vec4 defaultValue = glm::vec4(0,0,0,0)) const;
     
 private:
     ParamValueMap _ParamValue;

@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "pixelboost/file/fileSystem.h"
+#include "pixelboost/misc/stringHelpers.h"
 
 #include "project/schema.h"
 #include "project/schemaParser.h"
@@ -41,7 +42,12 @@ void SchemaAttribute::AddParam(const std::string& param, const std::string& valu
     _ParamValue[param] = value;
 }
 
-std::string SchemaAttribute::EvaluateParamValue(ProjectStruct* structure, const std::string& param, const std::string& prefix, const std::string& defaultValue) const
+bool SchemaAttribute::HasParamValue(const std::string& param) const
+{
+    return (_ParamValue.find(param) != _ParamValue.end());
+}
+
+bool SchemaAttribute::EvaluateParamBool(ProjectStruct* structure, const std::string& param, const std::string& prefix, bool defaultValue) const
 {
     ParamValueMap::const_iterator it = _ParamValue.find(param);
     
@@ -51,14 +57,154 @@ std::string SchemaAttribute::EvaluateParamValue(ProjectStruct* structure, const 
     std::string paramValue = it->second;
     
     if (paramValue[0] == '/')
-        return structure->EvaluateProperty(prefix+paramValue);
+    {
+        paramValue = structure->GetPropertyString(prefix.length() == 0 ? paramValue : (prefix.substr(0, prefix.length()-1)+paramValue), defaultValue ? "t" : "f");
+    }
+    
+    if (tolower(paramValue[0]) == 't' || tolower(paramValue[0]) == 'y')
+        return true;
+    else
+        return false;
+}
+
+glm::vec4 SchemaAttribute::EvaluateParamColor(ProjectStruct* structure, const std::string& param, const std::string& prefix, glm::vec4 defaultValue) const
+{
+    glm::vec4 returnValue;
+    
+    ParamValueMap::const_iterator it = _ParamValue.find(param);
+    
+    if (it == _ParamValue.end())
+        return defaultValue;
+    
+    std::string paramValue = it->second;
+    
+    std::vector<std::string> elements;
+    pb::StringHelpers::SplitString(paramValue, ',', elements);
+    
+    if (elements.size() == 1)
+    {
+        if (elements[0] == "red")
+        {
+            return glm::vec4(1,0,0,1);
+        } else if (elements[0] == "green")
+        {
+            return glm::vec4(0,1,0,1);
+        } else if (elements[0] == "blue")
+        {
+            return glm::vec4(0,0,1,1);
+        }
+    } else {
+        for (int i=0; i<elements.size() && i<4; i++)
+        {
+            if (elements[i][0] == '/')
+            {
+                returnValue[i] = structure->GetPropertyFloat(prefix.length() == 0 ? elements[i] : (prefix.substr(0, prefix.length()-1)+elements[i]), defaultValue[i]);
+            } else {
+                returnValue[i] = atof(elements[i].c_str());
+            }
+        }
+    }
+    
+    return returnValue;
+}
+
+float SchemaAttribute::EvaluateParamFloat(ProjectStruct* structure, const std::string& param, const std::string& prefix, float defaultValue) const
+{
+    ParamValueMap::const_iterator it = _ParamValue.find(param);
+    
+    if (it == _ParamValue.end())
+        return defaultValue;
+    
+    std::string paramValue = it->second;
+    
+    if (paramValue[0] == '/')
+        return structure->GetPropertyFloat(prefix.length() == 0 ? paramValue : (prefix.substr(0, prefix.length()-1)+paramValue), defaultValue);
+    
+    return atof(paramValue.c_str());
+}
+
+int SchemaAttribute::EvaluateParamInt(ProjectStruct* structure, const std::string& param, const std::string& prefix, int defaultValue) const
+{
+    ParamValueMap::const_iterator it = _ParamValue.find(param);
+    
+    if (it == _ParamValue.end())
+        return defaultValue;
+    
+    std::string paramValue = it->second;
+    
+    if (paramValue[0] == '/')
+        return structure->GetPropertyFloat(prefix.length() == 0 ? paramValue : (prefix.substr(0, prefix.length()-1)+paramValue), defaultValue);
+    
+    return atoi(paramValue.c_str());
+}
+
+std::string SchemaAttribute::EvaluateParamString(ProjectStruct* structure, const std::string& param, const std::string& prefix, const std::string& defaultValue) const
+{
+    ParamValueMap::const_iterator it = _ParamValue.find(param);
+    
+    if (it == _ParamValue.end())
+        return defaultValue;
+    
+    std::string paramValue = it->second;
+    
+    if (paramValue[0] == '/')
+        return structure->GetPropertyString(prefix.length() == 0 ? paramValue : (prefix.substr(0, prefix.length()-1)+paramValue), defaultValue);
     
     return paramValue;
 }
 
-bool SchemaAttribute::HasParamValue(const std::string& param) const
+glm::vec3 SchemaAttribute::EvaluateParamVector3(ProjectStruct* structure, const std::string& param, const std::string& prefix, glm::vec3 defaultValue) const
 {
-    return (_ParamValue.find(param) != _ParamValue.end());
+    glm::vec3 returnValue;
+    
+    ParamValueMap::const_iterator it = _ParamValue.find(param);
+    
+    if (it == _ParamValue.end())
+        return defaultValue;
+    
+    std::string paramValue = it->second;
+    
+    std::vector<std::string> elements;
+    pb::StringHelpers::SplitString(paramValue, ',', elements);
+    
+    for (int i=0; i<elements.size() && i<3; i++)
+    {
+        if (elements[i][0] == '/')
+        {
+            returnValue[i] = structure->GetPropertyFloat(prefix.length() == 0 ? elements[i] : (prefix.substr(0, prefix.length()-1)+elements[i]), defaultValue[i]);
+        } else {
+            returnValue[i] = atof(elements[i].c_str());
+        }
+    }
+    
+    return returnValue;
+}
+
+glm::vec4 SchemaAttribute::EvaluateParamVector4(ProjectStruct* structure, const std::string& param, const std::string& prefix, glm::vec4 defaultValue) const
+{
+    glm::vec4 returnValue;
+    
+    ParamValueMap::const_iterator it = _ParamValue.find(param);
+    
+    if (it == _ParamValue.end())
+        return defaultValue;
+    
+    std::string paramValue = it->second;
+    
+    std::vector<std::string> elements;
+    pb::StringHelpers::SplitString(paramValue, ',', elements);
+    
+    for (int i=0; i<elements.size() && i<4; i++)
+    {
+        if (elements[i][0] == '/')
+        {
+            returnValue[i] = structure->GetPropertyFloat(prefix.length() == 0 ? elements[i] : (prefix.substr(0, prefix.length()-1)+elements[i]), defaultValue[i]);
+        } else {
+            returnValue[i] = atof(elements[i].c_str());
+        }
+    }
+    
+    return returnValue;
 }
 
 std::string SchemaAttribute::GetParamValue(const std::string& param, const std::string& defaultValue) const

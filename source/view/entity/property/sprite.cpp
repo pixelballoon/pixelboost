@@ -42,7 +42,7 @@ void SpriteViewProperty::Refresh()
 {
     const SchemaAttribute* visualisation = _SchemaItem->GetAttribute("Visualisation");
     
-    std::string sprite = EvaluateProperty(visualisation->GetParamValue("sprite"));
+    std::string sprite = visualisation->EvaluateParamString(GetProjectEntity(), "sprite", GetPath());
     
     if (sprite != _Sprite)
     {

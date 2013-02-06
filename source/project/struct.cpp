@@ -502,7 +502,27 @@ void ProjectStruct::SetName(const std::string& name)
     _Name = name;
 }
 
-std::string ProjectStruct::EvaluateProperty(const std::string& path, const std::string& defaultValue)
+float ProjectStruct::GetPropertyFloat(const std::string& path, float defaultValue)
+{
+    const Property* property = GetProperty(path);
+    
+    if (!property || !property->AsAtom())
+        return defaultValue;
+    
+    return property->AsAtom()->GetFloatValue();
+}
+
+int ProjectStruct::GetPropertyInt(const std::string& path, int defaultValue)
+{
+    const Property* property = GetProperty(path);
+    
+    if (!property || !property->AsAtom())
+        return defaultValue;
+    
+    return property->AsAtom()->GetIntValue();
+}
+
+std::string ProjectStruct::GetPropertyString(const std::string& path, const std::string& defaultValue)
 {
     const Property* property = GetProperty(path);
     

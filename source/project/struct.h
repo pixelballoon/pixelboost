@@ -54,7 +54,9 @@ public:
     void SetName(const std::string& name);
     
 public:
-    std::string EvaluateProperty(const std::string& path, const std::string& defaultValue = "");
+    float GetPropertyFloat(const std::string& path, float defaultValue = 0.f);
+    int GetPropertyInt(const std::string& path, int defaultValue = 0);
+    std::string GetPropertyString(const std::string& path, const std::string& defaultValue = "");
     
     const Property* GetProperty(const std::string& path) const;
     PropertyAtom* AcquireAtom(const std::string& path);

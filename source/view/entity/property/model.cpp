@@ -40,7 +40,7 @@ void ModelViewProperty::Refresh()
 {
     const SchemaAttribute* visualisation = _SchemaItem->GetAttribute("Visualisation");
     
-    std::string model = EvaluateProperty(visualisation->GetParamValue("model"));
+    std::string model = visualisation->EvaluateParamString(GetProjectEntity(), "model", GetPath());
     
     if (model != _Model)
     {
@@ -49,7 +49,7 @@ void ModelViewProperty::Refresh()
         DirtyBounds();
     }
     
-    std::string texture = EvaluateProperty(visualisation->GetParamValue("texture"));
+    std::string texture = visualisation->EvaluateParamString(GetProjectEntity(), "texture", GetPath());
     
     if (texture != _Texture)
     {
@@ -59,18 +59,13 @@ void ModelViewProperty::Refresh()
     
     if (visualisation->HasParamValue("rotation"))
     {
-        std::vector<std::string> elements;
-        std::string rotation = EvaluateProperty(visualisation->GetParamValue("rotation"));
-        pb::StringHelpers::SplitString(rotation, ',', elements);
+        glm::vec3 rotation = visualisation->EvaluateParamVector3(GetProjectEntity(), "rotation", GetPath(), glm::vec3(0,0,0));
         
-        if (elements.size() == 3)
-        {
-            glm::mat4x4 transform;
-            transform = glm::rotate(transform, (float)atof(elements[0].c_str()), glm::vec3(1,0,0));
-            transform = glm::rotate(transform, (float)atof(elements[1].c_str()), glm::vec3(0,1,0));
-            transform = glm::rotate(transform, (float)atof(elements[2].c_str()), glm::vec3(0,0,1));
-            _ModelComponent->SetLocalTransform(transform);
-        }
+        glm::mat4x4 transform;
+        transform = glm::rotate(transform, rotation.x, glm::vec3(1,0,0));
+        transform = glm::rotate(transform, rotation.y, glm::vec3(0,1,0));
+        transform = glm::rotate(transform, rotation.z, glm::vec3(0,0,1));
+        _ModelComponent->SetLocalTransform(transform);
     }
 }
 

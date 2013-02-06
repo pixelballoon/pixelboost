@@ -34,10 +34,16 @@ void ViewProperty::Refresh()
     
 }
 
+ProjectEntity* ViewProperty::GetProjectEntity()
+{
+    return _Parent->GetEntity();
+}
+
 Uid ViewProperty::GetUid()
 {
     return GenerateSelectionUid(_Parent->GetUid(), _PropertyId);
 }
+
 
 Uid ViewProperty::GetPropertyId()
 {
@@ -72,15 +78,4 @@ pb::BoundingBox ViewProperty::GetBoundingBox()
 pb::BoundingBox ViewProperty::CalculateBounds()
 {
     return pb::BoundingBox();
-}
-
-std::string ViewProperty::EvaluateProperty(const std::string& path, const std::string& defaultValue)
-{
-    if (path.length() == 0)
-        return defaultValue;
-    
-    if (path[0] != '/')
-        return path;
-    
-    return _Parent->GetEntity()->EvaluateProperty(_Path.substr(0, _Path.length()-1) + path, defaultValue);
 }
