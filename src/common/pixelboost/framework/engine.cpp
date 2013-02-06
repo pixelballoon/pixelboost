@@ -18,6 +18,7 @@
 #include "pixelboost/input/touchManager.h"
 #include "pixelboost/network/gameCenter.h"
 #include "pixelboost/network/networkServer.h"
+#include "pixelboost/scripting/lua.h"
 
 #include "pixelboost/debug/log.h"
 
@@ -89,6 +90,15 @@ Engine::~Engine()
     delete _MouseManager;
     delete _TouchManager;
 #endif
+}
+
+void Engine::RegisterLuaClass(lua_State* state)
+{
+    luabridge::getGlobalNamespace(state)
+    .beginNamespace("pb")
+        .beginClass<Engine>("Engine")
+        .endClass()
+    .endNamespace();
 }
 
 Engine* Engine::Instance()

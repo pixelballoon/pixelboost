@@ -1,5 +1,6 @@
 #include "pixelboost/logic/component.h"
 #include "pixelboost/logic/entity.h"
+#include "pixelboost/scripting/lua.h"
 
 using namespace pb;
 
@@ -14,6 +15,17 @@ Component::Component(Entity* parent)
 Component::~Component()
 {
 
+}
+
+void Component::RegisterLuaClass(lua_State* state)
+{
+    luabridge::getGlobalNamespace(state)
+    .beginNamespace("pb")
+        .beginClass<Component>("Component")
+            .addFunction("GetParent", &Component::GetParent)
+            .addFunction("GetParentUid", &Component::GetParentUid)
+        .endClass()
+    .endNamespace();
 }
 
 Uid Component::GetUid()

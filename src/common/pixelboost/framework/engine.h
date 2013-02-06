@@ -5,6 +5,8 @@
 
 #include "glm/glm.hpp"
 
+struct lua_State;
+
 namespace pb
 {
 
@@ -24,7 +26,6 @@ class PrimitiveRenderer;
 class Renderer;
 class ResourceManager;
 class Screen;
-class SoundManager;
 class SpriteRenderer;
 class TouchManager;
     
@@ -35,6 +36,8 @@ protected:
     
 public:
     virtual ~Engine();
+    
+    static void RegisterLuaClass(lua_State* state);
     
     static Engine* Create(void* platformContext, std::vector<std::string> args);
 	
@@ -81,7 +84,6 @@ private:
     
     GameCenter* _GameCenter;
     ResourceManager* _ResourceManager;
-	SoundManager* _SoundManager;
 
     BufferRenderer* _BufferRenderer;
     FontRenderer* _FontRenderer;

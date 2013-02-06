@@ -105,6 +105,7 @@ set (PIXELBOOST_HEADERS
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/external"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/box2d"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/freetype2/include"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/luabridge/Source"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/lua/src"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/physfs"
 	CACHE INTERNAL "Complete list of pixelboost headers")
@@ -304,6 +305,8 @@ set (LOGIC_COMPONENT_TRANSFORM_SOURCES
 	)
 
 set (LOGIC_COMPONENT_SOURCES
+	"src/common/pixelboost/logic/component/script.cpp"
+	"src/common/pixelboost/logic/component/script.h"
 	"src/common/pixelboost/logic/component/transform.cpp"
 	"src/common/pixelboost/logic/component/transform.h"
 	)
@@ -383,6 +386,12 @@ set (PHYSICS_2D_SOURCES
 	"src/common/pixelboost/physics/2d/helpers.h"
 	)
 
+set (SCRIPTING_SOURCES
+	"src/common/pixelboost/scripting/lua.cpp"
+	"src/common/pixelboost/scripting/lua.h"
+	"src/common/pixelboost/scripting/register.cpp"
+	)
+
 set (UTIL_LOCALISATION_SOURCES
 	"src/common/pixelboost/util/localisation/localisation.cpp"
 	"src/common/pixelboost/util/localisation/localisation.h"
@@ -431,6 +440,7 @@ set (PIXELBOOST_SOURCES
 	${NETWORK_SOURCES}
 	${PHYSICS_2D_SOURCES}
 	${PLATFORM_SOURCES}
+	${SCRIPTING_SOURCES}
 	${UTIL_LOCALISATION_SOURCES}
 	${EXTERNAL_SOURCES}
 	)
@@ -494,4 +504,5 @@ source_group (misc FILES ${MISC_SOURCES})
 source_group (network FILES ${NETWORK_SOURCES})
 source_group (physics\\2d FILES ${PHYSICS_2D_SOURCES})
 source_group (platform FILES ${PLATFORM_SOURCES})
+source_group (scripting FILES ${SCRIPTING_SOURCES})
 source_group (util\\localisation FILES ${UTIL_LOCALISATION_SOURCES})

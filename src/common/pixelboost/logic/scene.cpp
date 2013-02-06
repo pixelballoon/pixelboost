@@ -3,6 +3,7 @@
 #include "pixelboost/logic/message/update.h"
 #include "pixelboost/logic/scene.h"
 #include "pixelboost/logic/system.h"
+#include "pixelboost/scripting/lua.h"
 
 using namespace pb;
 
@@ -36,6 +37,15 @@ Scene::~Scene()
     {
         delete it->second;
     }
+}
+
+void Scene::RegisterLuaClass(lua_State* state)
+{
+    luabridge::getGlobalNamespace(state)
+    .beginNamespace("pb")
+        .beginClass<Scene>("Scene")
+        .endClass()
+    .endNamespace();
 }
 
 void Scene::Update(float timeDelta, float gameDelta)

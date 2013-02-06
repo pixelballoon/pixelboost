@@ -4,6 +4,7 @@
 #include "pixelboost/logic/entity.h"
 #include "pixelboost/logic/message.h"
 #include "pixelboost/logic/scene.h"
+#include "pixelboost/scripting/lua.h"
 
 using namespace pb;
 
@@ -40,6 +41,16 @@ Entity::~Entity()
     {
         delete *componentIt;
     }
+}
+
+void Entity::RegisterLuaClass(lua_State* state)
+{
+    luabridge::getGlobalNamespace(state)
+    .beginNamespace("pb")
+        .beginClass<Entity>("Entity")
+            .addFunction("GetUid", &Entity::GetUid)
+        .endClass()
+    .endNamespace();
 }
 
 Scene* Entity::GetScene()

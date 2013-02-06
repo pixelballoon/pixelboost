@@ -2,6 +2,8 @@
 
 #include "pixelboost/db/definitions.h"
 
+struct lua_State;
+
 namespace pb
 {
     
@@ -12,6 +14,8 @@ class Component
 {
 public:
     Component(Entity* parent);
+    
+    static void RegisterLuaClass(lua_State* state);
     
 protected:
     virtual ~Component();

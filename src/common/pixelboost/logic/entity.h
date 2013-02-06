@@ -6,6 +6,8 @@
 #include "pixelboost/db/definitions.h"
 #include "pixelboost/logic/definitions.h"
 
+struct lua_State;
+
 namespace pb
 {
     
@@ -19,6 +21,8 @@ class Entity
 public:
     Entity(Scene* scene, DbEntity* creationEntity);
     virtual ~Entity();
+    
+    static void RegisterLuaClass(lua_State* state);
     
 public:
     enum EntityState

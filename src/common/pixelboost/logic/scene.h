@@ -8,6 +8,8 @@
 #include "pixelboost/graphics/definitions.h"
 #include "pixelboost/logic/definitions.h"
 
+struct lua_State;
+
 namespace pb
 {
     
@@ -22,6 +24,8 @@ class Scene
 public:
     Scene();
     ~Scene();
+    
+    static void RegisterLuaClass(lua_State* state);
     
     void Update(float timeDelta, float gameDelta);
     void Render(Viewport* viewport, RenderPass renderPass);
