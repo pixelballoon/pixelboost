@@ -133,7 +133,7 @@ set (VIEW_SOURCES
 	"source/view/level.h"
 	)
 
-set (GAME_SOURCES
+set (EDITOR_SOURCES
 	${COMMAND_STANDARD_SOURCES}
 	${COMMAND_SOURCES}
 	${CORE_SOURCES}
@@ -165,4 +165,4 @@ source_group (view\\ui\\property FILES ${VIEW_UI_PROPERTY_SOURCES})
 source_group (view\\ui\\settings FILES ${VIEW_UI_SETTINGS_SOURCES})
 source_group (view FILES ${VIEW_SOURCES})
 
-pixelboost_setup_post()
+pixelboost_setup_post("${EDITOR_SOURCES}")
