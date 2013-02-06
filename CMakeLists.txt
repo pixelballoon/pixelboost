@@ -7,8 +7,8 @@ pixelboost_setup_pre(../../ texturetool "com.pixelballoon.texturetool" "Texturet
 
 include_directories("source")
 
-set (GAME_SOURCES
+set (TEXTURETOOL_SOURCES
 	"source/main.cpp"
 	)
 
-pixelboost_setup_post()
+pixelboost_setup_post("${TEXTURETOOL_SOURCES}")
