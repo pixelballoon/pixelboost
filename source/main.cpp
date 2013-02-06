@@ -128,7 +128,7 @@ int main(int argc, const char * argv[])
     
     if (file)
     {
-        file->Write(output);
+        file->Write(output.str());
         delete file;
     } else {
         status = false;
