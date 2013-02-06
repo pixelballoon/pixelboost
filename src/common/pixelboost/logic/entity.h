@@ -53,7 +53,9 @@ public:
     
     template <class T>T* GetComponentByType();
     template <class T> ComponentList GetComponentsByType();
-    
+
+    void RegisterMessageHandler(MessageHandler handler);
+    void UnregisterMessageHandler(MessageHandler handler);
     template <class T> void RegisterMessageHandler(MessageHandler handler);
     template <class T> void UnregisterMessageHandler(MessageHandler handler);
     
@@ -63,16 +65,24 @@ public:
     virtual void OnCreationEntityReloaded();
     
 private:
+    void CleanupMessageHandlers();
+    
     void AddComponent(Component* component);
     void PurgeComponents();
     
     void HandleCreationEntityDestroyed();
     void HandleCreationEntityReloaded();
     
-    typedef std::map<Uid, sigslot::Signal1<const Message&> > MessageHandlers;
+    typedef sigslot::Signal1<const Message&> MessageSignal;
+    
+    typedef std::map<Uid, MessageSignal> MessageHandlers;
     
     ComponentList _Components;
     MessageHandlers _MessageHandlers;
+    MessageSignal _GenericMessageHandlers;
+    
+    bool _HandlingMessage;
+    std::map<Uid, std::vector<MessageHandler> > _MessageHandlersCleanup;
     
     Scene* _Scene;
     

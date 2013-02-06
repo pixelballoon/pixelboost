@@ -47,7 +47,12 @@ template <class T> void Entity::RegisterMessageHandler(MessageHandler handler)
 
 template <class T> void Entity::UnregisterMessageHandler(MessageHandler handler)
 {
-    _MessageHandlers[T::GetStaticType()].Disconnect(handler);
+    if (_HandlingMessage)
+    {
+        _MessageHandlersCleanup[T::GetStaticType()].push_back(handler);
+    } else {
+        _MessageHandlers[T::GetStaticType()].Disconnect(handler);
+    }
 }
     
 }
