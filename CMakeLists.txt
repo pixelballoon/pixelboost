@@ -9,13 +9,13 @@ pixelboost_setup_pre(../../ modeltool "com.pixelballoon.modeltool" "Modeltool")
 include_directories(${FBX_INCLUDE_DIR})
 include_directories("source")
 
-set (GAME_SOURCES
+set (MODELTOOL_SOURCES
 	"source/main.cpp"
 	"source/modelexporter.cpp"
 	"source/modelLoader.cpp"
 	)
 
-pixelboost_setup_post()
+pixelboost_setup_post("${MODELTOOL_SOURCES}"})
 
 if (FBX_FOUND)
 	target_link_libraries (modeltool ${FBX_LIBRARY})
