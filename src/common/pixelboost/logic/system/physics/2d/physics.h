@@ -31,6 +31,7 @@ namespace pb
     private:
         void BeginContact(b2Contact* contact);
         void EndContact(b2Contact* contact);
+        void PreSolve(b2Contact *contact, const b2Manifold *oldManifold);
         
         bool _DebugRender;
         pb::Box2dRenderer* _DebugRenderer;

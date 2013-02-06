@@ -80,13 +80,33 @@ void PhysicsSystem2D::BeginContact(b2Contact* contact)
     
     pb::Scene* scene = actorA->GetScene();
     
-    scene->SendMessage(actorA->GetParentUid(), PhysicsCollisionMessage(actorB, position, normal));
-    scene->SendMessage(actorB->GetParentUid(), PhysicsCollisionMessage(actorA, position, -normal));
+    scene->SendMessage(actorA->GetParentUid(), PhysicsCollisionStartMessage(actorB, position, normal));
+    scene->SendMessage(actorB->GetParentUid(), PhysicsCollisionStartMessage(actorA, position, -normal));
 }
 
 void PhysicsSystem2D::EndContact(b2Contact* contact)
 {
+    b2Body* a = contact->GetFixtureA()->GetBody();
+    b2Body* b = contact->GetFixtureB()->GetBody();
     
+    pb::PhysicsComponent* actorA = static_cast<pb::PhysicsComponent*>(a->GetUserData());
+    pb::PhysicsComponent* actorB = static_cast<pb::PhysicsComponent*>(b->GetUserData());
+    
+    b2WorldManifold worldManifold;
+    contact->GetWorldManifold(&worldManifold);
+    
+    glm::vec2 position(worldManifold.points[0].x, worldManifold.points[0].y);
+    glm::vec2 normal(worldManifold.normal.x, worldManifold.normal.y);
+    
+    pb::Scene* scene = actorA->GetScene();
+    
+    scene->SendMessage(actorA->GetParentUid(), PhysicsCollisionEndMessage(actorB, position, normal));
+    scene->SendMessage(actorB->GetParentUid(), PhysicsCollisionEndMessage(actorA, position, -normal));
+}
+
+void PhysicsSystem2D::PreSolve(b2Contact *contact, const b2Manifold *oldManifold)
+{
+    contact->ResetFriction();
 }
 
 #endif

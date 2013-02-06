@@ -16,16 +16,6 @@ PhysicsCollisionMessage::~PhysicsCollisionMessage()
     
 }
 
-Uid PhysicsCollisionMessage::GetType() const
-{
-    return PhysicsCollisionMessage::GetStaticType();
-}
-
-Uid PhysicsCollisionMessage::GetStaticType()
-{
-    return TypeHash("pb::PhysicsCollisionMessage");
-}
-
 PhysicsComponent* PhysicsCollisionMessage::GetOtherComponent() const
 {
     return _Other;
@@ -39,4 +29,46 @@ glm::vec2 PhysicsCollisionMessage::GetPosition() const
 glm::vec2 PhysicsCollisionMessage::GetNormal() const
 {
     return _Normal;
+}
+
+PhysicsCollisionStartMessage::PhysicsCollisionStartMessage(PhysicsComponent* other, glm::vec2 position, glm::vec2 normal)
+    : PhysicsCollisionMessage(other, position, normal)
+{
+    
+}
+
+PhysicsCollisionStartMessage::~PhysicsCollisionStartMessage()
+{
+    
+}
+
+Uid PhysicsCollisionStartMessage::GetType() const
+{
+    return PhysicsCollisionStartMessage::GetStaticType();
+}
+
+Uid PhysicsCollisionStartMessage::GetStaticType()
+{
+    return TypeHash("pb::PhysicsCollisionStartMessage");
+}
+
+PhysicsCollisionEndMessage::PhysicsCollisionEndMessage(PhysicsComponent* other, glm::vec2 position, glm::vec2 normal)
+    : PhysicsCollisionMessage(other, position, normal)
+{
+    
+}
+
+PhysicsCollisionEndMessage::~PhysicsCollisionEndMessage()
+{
+    
+}
+
+Uid PhysicsCollisionEndMessage::GetType() const
+{
+    return PhysicsCollisionEndMessage::GetStaticType();
+}
+
+Uid PhysicsCollisionEndMessage::GetStaticType()
+{
+    return TypeHash("pb::PhysicsCollisionEndMessage");
 }
