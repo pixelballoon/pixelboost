@@ -34,6 +34,7 @@ void ScriptComponent::RegisterLuaClass(lua_State* state)
     .beginNamespace("pb")
         .deriveClass<ScriptComponent, Component>("ScriptComponent")
             .addFunction("SendMessage", &ScriptComponent::LuaSendMessage)
+            .addFunction("SendMessageTarget", &ScriptComponent::LuaSendMessageTarget)
             .addFunction("WaitMessage", &ScriptComponent::LuaWaitMessage)
             .addFunction("WaitSeconds", &ScriptComponent::LuaWaitSeconds)
         .endClass()
@@ -100,7 +101,12 @@ void ScriptComponent::OnUpdate(const Message& message)
     }
 }
 
-void ScriptComponent::LuaSendMessage(Uid target, const Message* message)
+void ScriptComponent::LuaSendMessage(const Message* message)
+{
+    GetScene()->SendMessage(GetParentUid(), *message);
+}
+
+void ScriptComponent::LuaSendMessageTarget(Uid target, const Message* message)
 {
     GetScene()->SendMessage(target, *message);
 }

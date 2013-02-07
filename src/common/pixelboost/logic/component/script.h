@@ -30,7 +30,8 @@ namespace pb
         void OnMessage(const pb::Message& message);
         void OnUpdate(const pb::Message& message);
         
-        void LuaSendMessage(Uid target, const Message* message);
+        void LuaSendMessage(const Message* message);
+        void LuaSendMessageTarget(Uid target, const Message* message);
         void LuaWaitMessage(const std::string& message, lua_State* state);
         void LuaWaitSeconds(float seconds, lua_State* state);
 
