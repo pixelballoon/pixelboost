@@ -13,7 +13,7 @@ Entity::Entity(Scene* scene, DbEntity* entity)
     , _Scene(scene)
     , _Uid(0)
     , _State(kEntityCreated)
-    , _HandlingMessage(false)
+    , _HandlingMessage(0)
 {
     _CreationUid = 0;
     _CreationEntity = entity;
@@ -128,9 +128,25 @@ Component* Entity::GetComponentById(Uid componentId)
     return 0;
 }
 
-void Entity::CleanupMessageHandlers()
+void Entity::SyncMessageHandlers()
 {
-    for (std::map<Uid, std::vector<MessageHandler> >::iterator typeIt = _MessageHandlersCleanup.begin(); typeIt != _MessageHandlersCleanup.end(); ++typeIt)
+    for (std::map<Uid, std::vector<MessageHandler> >::iterator typeIt = _MessageHandlerDelayedAdd.begin(); typeIt != _MessageHandlerDelayedAdd.end(); ++typeIt)
+    {
+        MessageSignal* signal = 0;
+        if (typeIt->first == 0)
+        {
+            signal = &_GenericMessageHandlers;
+        } else {
+            signal = &_MessageHandlers[typeIt->first];
+        }
+        
+        for (std::vector<MessageHandler>::iterator handlerIt = typeIt->second.begin(); handlerIt != typeIt->second.end(); ++handlerIt)
+        {
+            signal->Connect(*handlerIt);
+        }
+    }
+
+    for (std::map<Uid, std::vector<MessageHandler> >::iterator typeIt = _MessageHandlerDelayedRemove.begin(); typeIt != _MessageHandlerDelayedRemove.end(); ++typeIt)
     {
         MessageSignal* signal = 0;
         if (typeIt->first == 0)
@@ -146,19 +162,25 @@ void Entity::CleanupMessageHandlers()
         }
     }
     
-    _MessageHandlersCleanup.clear();
+    _MessageHandlerDelayedAdd.clear();
+    _MessageHandlerDelayedRemove.clear();
 }
 
 void Entity::RegisterMessageHandler(MessageHandler handler)
 {
-    _GenericMessageHandlers.Connect(handler);
+    if (_HandlingMessage)
+    {
+        _MessageHandlerDelayedAdd[0].push_back(handler);
+    } else {
+        _GenericMessageHandlers.Connect(handler);
+    }
 }
 
 void Entity::UnregisterMessageHandler(MessageHandler handler)
 {
     if (_HandlingMessage)
     {
-        _MessageHandlersCleanup[0].push_back(handler);
+        _MessageHandlerDelayedRemove[0].push_back(handler);
     } else {
         _GenericMessageHandlers.Disconnect(handler);
     }
@@ -166,7 +188,7 @@ void Entity::UnregisterMessageHandler(MessageHandler handler)
 
 void Entity::HandleMessage(const Message& message)
 {
-    _HandlingMessage = true;
+    _HandlingMessage++;
     
     MessageHandlers::iterator handlerList = _MessageHandlers.find(message.GetType());
     
@@ -180,9 +202,9 @@ void Entity::HandleMessage(const Message& message)
     if (message.GetType() == DestroyMessage::GetStaticType())
         Destroy();
     
-    _HandlingMessage = false;
+    _HandlingMessage--;
     
-    CleanupMessageHandlers();
+    SyncMessageHandlers();
 }
 
 void Entity::OnCreationEntityDestroyed()

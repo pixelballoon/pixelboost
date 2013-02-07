@@ -69,7 +69,7 @@ public:
     virtual void OnCreationEntityReloaded();
     
 private:
-    void CleanupMessageHandlers();
+    void SyncMessageHandlers();
     
     void AddComponent(Component* component);
     void PurgeComponents();
@@ -85,8 +85,9 @@ private:
     MessageHandlers _MessageHandlers;
     MessageSignal _GenericMessageHandlers;
     
-    bool _HandlingMessage;
-    std::map<Uid, std::vector<MessageHandler> > _MessageHandlersCleanup;
+    int _HandlingMessage;
+    std::map<Uid, std::vector<MessageHandler> > _MessageHandlerDelayedAdd;
+    std::map<Uid, std::vector<MessageHandler> > _MessageHandlerDelayedRemove;
     
     Scene* _Scene;
     

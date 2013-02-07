@@ -42,14 +42,19 @@ template <class T> Entity::ComponentList Entity::GetComponentsByType()
 
 template <class T> void Entity::RegisterMessageHandler(MessageHandler handler)
 {
-    _MessageHandlers[T::GetStaticType()].Connect(handler);
+    if (_HandlingMessage)
+    {
+        _MessageHandlerDelayedAdd[T::GetStaticType()].push_back(handler);
+    } else {
+        _MessageHandlers[T::GetStaticType()].Connect(handler);
+    }
 }
 
 template <class T> void Entity::UnregisterMessageHandler(MessageHandler handler)
 {
     if (_HandlingMessage)
     {
-        _MessageHandlersCleanup[T::GetStaticType()].push_back(handler);
+        _MessageHandlerDelayedRemove[T::GetStaticType()].push_back(handler);
     } else {
         _MessageHandlers[T::GetStaticType()].Disconnect(handler);
     }
