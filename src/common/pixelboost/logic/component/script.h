@@ -1,5 +1,8 @@
 #pragma once
 
+#include <map>
+#include <set>
+
 #include "pixelboost/logic/component.h"
 
 struct lua_State;
@@ -30,16 +33,23 @@ namespace pb
         void OnMessage(const pb::Message& message);
         void OnUpdate(const pb::Message& message);
         
+        bool UpdateState(int threadIndex, float gameDelta);
+        
         void LuaSendMessage(const Message* message);
         void LuaSendMessageTarget(Uid target, const Message* message);
         void LuaWaitMessage(const std::string& message, lua_State* state);
         void LuaWaitSeconds(float seconds, lua_State* state);
+        
+        int AddThread(lua_State* state);
 
         LuaScript* _Script;
         
         bool _Active;
-        Uid _WaitMessage;
-        float _WaitTime;
+        std::map<int, Uid> _WaitMessage;
+        std::map<int, float> _WaitTime;
+        std::map<lua_State*, int> _Threads;
+        
+        bool _ScriptYield;
     };
 
 }
