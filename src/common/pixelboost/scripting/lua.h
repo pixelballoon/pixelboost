@@ -33,6 +33,7 @@ public:
     
 private:
     lua_State* _State;
+    ScriptComponent* _Component;
     
     friend class LuaManager;
 };
@@ -55,6 +56,8 @@ public:
     
 private:
     std::vector<ClassRegistration> _Registration;
+    
+    lua_State* _State;
 };
 
 }

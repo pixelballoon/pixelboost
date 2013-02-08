@@ -8,13 +8,8 @@ PB_LUA_DECLARE(pixelboost)
 
 LuaScript::LuaScript(ScriptComponent* component, lua_State* state)
 {
+    _Component = component;
     _State = state;
-    
-    luabridge::push(_State, component);
-    lua_setglobal(_State, "script");
-    
-    luabridge::push(_State, Engine::Instance());
-    lua_setglobal(_State, "engine");
 }
 
 LuaScript::~LuaScript()
@@ -30,6 +25,22 @@ lua_State* LuaScript::GetState()
 void LuaScript::Load(const std::string& lua)
 {
     luaL_loadstring(_State, lua.c_str());
+    
+    luabridge::push(_State, Engine::Instance());
+    lua_setglobal(_State, "engine");
+    
+    // Override _ENV with custom environment, containing references to the script
+    lua_newtable(_State);
+    
+    lua_newtable(_State);
+    lua_getglobal(_State, "_G");
+    lua_setfield(_State, -2, "__index");
+    lua_setmetatable(_State, -2);
+    
+    luabridge::push(_State, _Component);
+    lua_setfield(_State, -2, "script");
+
+    lua_setupvalue(_State, -2, 1);
 }
 
 void LuaScript::Step()
@@ -39,6 +50,9 @@ void LuaScript::Step()
 
 LuaManager::LuaManager()
 {
+    _State = luaL_newstate();
+    luaL_openlibs(_State);
+    
     PB_LUA_REGISTER(this, glm);
     PB_LUA_REGISTER(this, pixelboost);
 }
@@ -53,21 +67,17 @@ LuaManager* LuaManager::Instance()
     static LuaManager* _Instance = new LuaManager();
     return _Instance;
 }
-    
+
 void LuaManager::RegisterClass(ClassRegistration function)
 {
     _Registration.push_back(function);
+    
+    function(_State);
 }
 
 LuaScript* LuaManager::CreateScript(ScriptComponent* scene)
 {
-    lua_State* state = luaL_newstate();
-    luaL_openlibs(state);
-
-    for (std::vector<ClassRegistration>::iterator it = _Registration.begin(); it != _Registration.end(); ++it)
-    {
-        (*it)(state);
-    }
+    lua_State* state = lua_newthread(_State);
     
     LuaScript* script = new LuaScript(scene, state);
     
