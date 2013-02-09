@@ -1,0 +1,20 @@
+struct Vector2
+{
+	float X;
+	float Y;
+}
+
+struct Vector3
+{
+	float X;
+	float Y;
+	float Z;
+}
+
+struct Color
+{
+	float R;
+	float G;
+	float B;
+	float A;
+}
