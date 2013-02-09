@@ -282,6 +282,10 @@ void ViewEntity::ParseStruct(const std::string& path, const SchemaStruct* schema
             {
                 break;
             }
+            case SchemaProperty::kSchemaPropertyReference:
+            {
+                break;
+            }
         }
     }
 }
