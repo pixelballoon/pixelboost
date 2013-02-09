@@ -47,7 +47,7 @@ void SchemaCommands::InsertSchemaItem(json::Array& array, SchemaStruct* schemaIt
     ExportAttributes(item, schemaItem);
     
     json::Array properties;
-    for (SchemaStruct::PropertyMap::const_iterator it = schemaItem->GetProperties().begin(); it != schemaItem->GetProperties().end(); ++it)
+    for (SchemaStruct::PropertyList::const_iterator it = schemaItem->GetProperties().begin(); it != schemaItem->GetProperties().end(); ++it)
     {
         json::Object property;
         ExportProperty(property, it->first, it->second);

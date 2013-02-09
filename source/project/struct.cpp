@@ -153,7 +153,7 @@ bool ProjectStruct::ExportJson(json::Object& entity)
     
     if (_Type)
     {
-        for (SchemaStruct::PropertyMap::const_iterator it = _Type->GetProperties().begin(); it != _Type->GetProperties().end(); ++it)
+        for (SchemaStruct::PropertyList::const_iterator it = _Type->GetProperties().begin(); it != _Type->GetProperties().end(); ++it)
         {
             JsonExporter::ExportProperty(this, "/", it->second, properties);
         }
@@ -187,7 +187,7 @@ bool ProjectStruct::ExportLua(std::iostream& output, bool appendNewLine)
     if (_Type)
     {
         bool appendComma = false;
-        for (SchemaStruct::PropertyMap::const_iterator it = _Type->GetProperties().begin(); it != _Type->GetProperties().end(); ++it)
+        for (SchemaStruct::PropertyList::const_iterator it = _Type->GetProperties().begin(); it != _Type->GetProperties().end(); ++it)
         {
             std::stringstream property;
             bool status = LuaExporter::ExportProperty(property, this, "/", it->second);
@@ -241,7 +241,7 @@ json::Object JsonExporter::ExportStruct(ProjectStruct* s, const std::string& pat
 {
     json::Object container;
     
-    for (SchemaStruct::PropertyMap::const_iterator it = schemaStruct->GetProperties().begin(); it != schemaStruct->GetProperties().end(); ++it)
+    for (SchemaStruct::PropertyList::const_iterator it = schemaStruct->GetProperties().begin(); it != schemaStruct->GetProperties().end(); ++it)
     {
         ExportProperty(s, path, it->second, container);
     }
@@ -355,7 +355,7 @@ bool LuaExporter::ExportStruct(std::iostream& output, ProjectStruct* s, const st
     output << "{";
     
     bool appendComma = false;
-    for (SchemaStruct::PropertyMap::const_iterator it = schemaStruct->GetProperties().begin(); it != schemaStruct->GetProperties().end(); ++it)
+    for (SchemaStruct::PropertyList::const_iterator it = schemaStruct->GetProperties().begin(); it != schemaStruct->GetProperties().end(); ++it)
     {   
         std::stringstream property;
         bool status = ExportProperty(property, s, path, it->second);

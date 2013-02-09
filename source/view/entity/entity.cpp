@@ -253,7 +253,7 @@ void ViewEntity::ParseProperties()
 
 void ViewEntity::ParseStruct(const std::string& path, const SchemaStruct* schemaStruct)
 {
-    for (SchemaStruct::PropertyMap::const_iterator it = schemaStruct->GetProperties().begin(); it != schemaStruct->GetProperties().end(); ++it)
+    for (SchemaStruct::PropertyList::const_iterator it = schemaStruct->GetProperties().begin(); it != schemaStruct->GetProperties().end(); ++it)
     {
         std::string propertyPath = path + it->second->GetName() + "/";
         

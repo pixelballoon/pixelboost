@@ -148,15 +148,17 @@ public:
     void AddProperty(SchemaProperty* property);
     
 public:
+    typedef std::vector<std::pair<std::string, SchemaProperty*> > PropertyList;
     typedef std::map<std::string, SchemaProperty*> PropertyMap;
     
 public:
-    const PropertyMap& GetProperties() const;
+    const PropertyList& GetProperties() const;
     const SchemaProperty* GetPropertyByName(const std::string& name) const;
     const SchemaProperty* FindPropertyByPath(const std::string& path) const;
     
 private:
-    PropertyMap _Properties;
+    PropertyList _PropertyList;
+    PropertyMap _PropertyMap;
     
     std::string _Base;
     mutable const SchemaStruct* _BaseCache;

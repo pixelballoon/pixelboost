@@ -326,7 +326,7 @@ SchemaStruct::SchemaStruct(Schema* schema, const std::string& name)
     
 SchemaStruct::~SchemaStruct()
 {
-    for (PropertyMap::iterator it = _Properties.begin(); it != _Properties.end(); ++it)
+    for (PropertyList::iterator it = _PropertyList.begin(); it != _PropertyList.end(); ++it)
     {
         delete it->second;
     }
@@ -355,19 +355,20 @@ void SchemaStruct::AddProperty(SchemaProperty* property)
 {
     // TODO: Check if a property of the same name already exists
     
-    _Properties[property->GetName()] = property;
+    _PropertyList.push_back(std::pair<std::string, SchemaProperty*>(property->GetName(), property));
+    _PropertyMap[property->GetName()] = property;
 }
 
-const SchemaStruct::PropertyMap& SchemaStruct::GetProperties() const
+const SchemaStruct::PropertyList& SchemaStruct::GetProperties() const
 {
-    return _Properties;
+    return _PropertyList;
 }
 
 const SchemaProperty* SchemaStruct::GetPropertyByName(const std::string& name) const
 {
-    PropertyMap::const_iterator it = _Properties.find(name);
+    PropertyMap::const_iterator it = _PropertyMap.find(name);
     
-    if (it != _Properties.end())
+    if (it != _PropertyMap.end())
         return it->second;
     
     return 0;
@@ -387,9 +388,9 @@ const SchemaProperty* SchemaStruct::FindPropertyByPath(const std::string& path) 
         if (!schemaStruct)
             return 0;
         
-        PropertyMap::const_iterator propertyIt = schemaStruct->_Properties.find(*it);
+        PropertyMap::const_iterator propertyIt = schemaStruct->_PropertyMap.find(*it);
         
-        if (propertyIt != schemaStruct->_Properties.end())
+        if (propertyIt != schemaStruct->_PropertyMap.end())
         {
             const SchemaProperty* property = propertyIt->second;
             
