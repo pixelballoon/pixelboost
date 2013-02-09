@@ -100,6 +100,12 @@ glm::vec2 PropertyPanel::AddStruct(glm::vec2 offset, const SchemaStruct* schemaS
                 break;
             }
         }
+        
+        if (surround)
+        {
+            surround->SetSize(STRUCT_WIDTH, offset.y-previousOffset.y + STRUCT_PADDING_INNER);
+            offset.y += STRUCT_PADDING_OUTER;
+        }
     }
     
     return offset;
