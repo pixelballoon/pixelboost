@@ -68,7 +68,8 @@ bool CreateEntityCommand::Do(std::string& returnString)
     else
         _EntityUid = entity->GetUid();
     
-    entity->SetName(type->GetName());
+    std::string name = record->GetUniqueEntityName(type->GetName());
+    entity->SetName(name);
     entity->SetPosition(glm::vec3(x, y, z));
     
     record->AddEntity(entity);

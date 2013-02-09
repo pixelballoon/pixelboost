@@ -252,6 +252,21 @@ const ProjectRecord* ProjectRecord::GetRecord() const
     return this;
 }
 
+std::string ProjectRecord::GetUniqueEntityName(const std::string& prefix)
+{
+    int index = 0;
+    
+    char name[1024];
+    do
+    {
+        snprintf(name, 1024, "%s_%03d", prefix.c_str(), index++);
+        ProjectEntity* entity = GetEntityByName(name);
+        
+        if (!entity)
+            return name;
+    } while (true);
+}
+
 bool ProjectRecord::AddEntity(ProjectEntity* entity)
 {
     Uid uid = entity->GetUid();
@@ -295,6 +310,17 @@ ProjectEntity* ProjectRecord::GetEntity(Uid uid) const
     
     if (it != _Entities.end())
         return it->second;
+    
+    return 0;
+}
+
+ProjectEntity* ProjectRecord::GetEntityByName(const std::string& name)
+{
+    for (EntityMap::const_iterator it = _Entities.begin(); it != _Entities.end(); ++it)
+    {
+        if (it->second->GetName() == name)
+            return it->second;
+    }
     
     return 0;
 }

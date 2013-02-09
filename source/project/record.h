@@ -39,10 +39,13 @@ public:
 public:
     typedef std::map<Uid, ProjectEntity*> EntityMap;
     
+    std::string GetUniqueEntityName(const std::string& prefix);
+    
     bool AddEntity(ProjectEntity* entity);
     bool RemoveEntity(ProjectEntity* entity, bool erase=true);
     
     ProjectEntity* GetEntity(Uid uid) const;
+    ProjectEntity* GetEntityByName(const std::string& name);
     const EntityMap& GetEntities() const;
     
 public:
