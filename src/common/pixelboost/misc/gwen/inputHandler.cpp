@@ -104,7 +104,7 @@ public:
     
     bool OnMouseScroll(ModifierKeys modifierKeys, glm::vec2 scroll)
     {
-        _Canvas->InputMouseWheel(scroll.y*120);
+        _Canvas->InputMouseWheel(scroll.y*10);
         
         Gwen::Controls::Base* hoveredControl = Gwen::HoveredControl;
         if (!hoveredControl || hoveredControl == _Root)
