@@ -1,4 +1,5 @@
 #include "Gwen/Controls/Button.h"
+#include "Gwen/Controls/GroupBox.h"
 #include "Gwen/Controls/TextBox.h"
 
 #include "core/selection.h"
@@ -19,6 +20,9 @@ static const int ATOM_PADDING = 5;
 static const int ATOM_WIDTH = 200;
 static const int ATOM_HEIGHT = 25;
 static const int STRUCT_INDENT = 20;
+static const int STRUCT_PADDING_INNER = 10;
+static const int STRUCT_PADDING_OUTER = 20;
+static const int STRUCT_WIDTH = 250;
 
 PropertyPanel::PropertyPanel(Gwen::Controls::Base* parent)
     : Gwen::Controls::ScrollControl(parent)
@@ -53,10 +57,20 @@ glm::vec2 PropertyPanel::AddStruct(glm::vec2 offset, const SchemaStruct* schemaS
     {
         std::string propertyPath = path + it->first + "/";
         
-        Gwen::Controls::Label* label = new Gwen::Controls::Label(this);
-        label->SetText(it->second->GetName());
-        label->SetPos(offset.x, offset.y);
-        label->SetSize(label->GetSize().x, 20);
+        Gwen::Controls::GroupBox* surround = 0;
+        glm::vec2 previousOffset = offset;
+        
+        if (it->second->GetPropertyType() == SchemaProperty::kSchemaPropertyStruct)
+        {
+            surround = new Gwen::Controls::GroupBox(this);
+            surround->SetPos(previousOffset.x, previousOffset.y);
+            surround->SetText(it->second->GetName());
+        } else {
+            Gwen::Controls::Label* label = new Gwen::Controls::Label(this);
+            label->SetText(it->second->GetName());
+            label->SetPos(previousOffset.x, previousOffset.y);
+            label->SetSize(label->GetSize().x, 20);
+        }
         
         offset += glm::vec2(0,20);
         
