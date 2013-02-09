@@ -11,6 +11,7 @@ namespace pixeleditor
 class PropertyAtom;
 class PropertyArray;
 class PropertyPointer;
+class PropertyReference;
 class SchemaProperty;
 class Struct;
     
@@ -28,6 +29,7 @@ public:
         kPropertyArray,
         kPropertyAtom,
         kPropertyPointer,
+        kPropertyReference,
     };
     
     virtual PropertyType GetType() const = 0;
@@ -39,6 +41,8 @@ public:
     virtual const PropertyArray* AsArray() const;
     virtual PropertyPointer* AsPointer();
     virtual const PropertyPointer* AsPointer() const;
+    virtual PropertyReference* AsReference();
+    virtual const PropertyReference* AsReference() const;
     
 protected:
     const SchemaProperty* _SchemaProperty;
@@ -91,6 +95,27 @@ protected:
     Uid _Value;
 };
 
+class PropertyReference : public Property
+{
+public:
+    PropertyReference(ProjectStruct* s, const SchemaProperty* schemaProperty);
+    virtual ~PropertyReference();
+    
+    virtual PropertyType GetType() const;
+    
+    virtual PropertyReference* AsReference();
+    virtual const PropertyReference* AsReference() const;
+    
+    Uid GetReferenceValue() const;
+    void SetReferenceValue(Uid uid);
+    
+    ProjectRecord* ResolveReference() const;
+    
+protected:
+    bool _HasValue;
+    Uid _Value;
+};
+    
 class PropertyArray : public Property
 {
 public:

@@ -24,6 +24,7 @@ class Property;
 class PropertyAtom;
 class PropertyArray;
 class PropertyPointer;
+class PropertyReference;
 class SchemaProperty;
 class SchemaStruct;
 
@@ -61,6 +62,7 @@ public:
     const Property* GetProperty(const std::string& path) const;
     PropertyAtom* AcquireAtom(const std::string& path);
     PropertyPointer* AcquirePointer(const std::string& path);
+    PropertyReference* AcquireReference(const std::string& path);
     PropertyArray* AcquireArray(const std::string& path);
     
     bool RemoveProperty(const std::string& path);

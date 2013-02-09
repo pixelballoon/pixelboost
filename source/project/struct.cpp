@@ -102,6 +102,10 @@ bool ProjectStruct::Save(json::Object& entity)
                 container["_pointer"] = json::Number(static_cast<PropertyPointer*>(it->second)->GetPointerValue());
                 break;
                 
+            case Property::kPropertyReference:
+                container["_reference"] = json::Number(static_cast<PropertyReference*>(it->second)->GetReferenceValue());
+                break;
+                
             case Property::kPropertyArray:
                 PropertyArray* propArray = static_cast<PropertyArray*>(it->second);
                 
@@ -130,6 +134,7 @@ public:
 private:
     static json::UnknownElement ExportAtom(const PropertyAtom* atom, const SchemaPropertyAtom* schemaAtom);
     static json::UnknownElement ExportPointer(const PropertyPointer* pointer, const SchemaPropertyPointer* schemaPointer);
+    static json::UnknownElement ExportReference(const PropertyReference* reference, const SchemaPropertyReference* schemaReference);
     static json::Object ExportStruct(ProjectStruct* s, const std::string& path, const SchemaStruct* schemaStruct);    
 };
 
@@ -141,6 +146,7 @@ public:
 private:
     static bool ExportAtom(std::iostream& output, const PropertyAtom* atom, const SchemaPropertyAtom* schemaAtom);
     static bool ExportPointer(std::iostream& output, const PropertyPointer* pointer, const SchemaPropertyPointer* schemaPointer);
+    static bool ExportReference(std::iostream& output, const PropertyReference* reference, const SchemaPropertyReference* schemaReference);
     static bool ExportStruct(std::iostream& output, ProjectStruct* s, const std::string& path, const SchemaStruct* schemaStruct);    
 };
 
@@ -236,6 +242,11 @@ json::UnknownElement JsonExporter::ExportPointer(const PropertyPointer* pointer,
 {
     return json::Number(pointer->GetPointerValue());
 }
+
+json::UnknownElement JsonExporter::ExportReference(const PropertyReference* reference, const SchemaPropertyReference* schemaReference)
+{
+    return json::Number(reference->GetReferenceValue());
+}
     
 json::Object JsonExporter::ExportStruct(ProjectStruct* s, const std::string& path, const SchemaStruct* schemaStruct)
 {
@@ -319,6 +330,19 @@ bool JsonExporter::ExportProperty(ProjectStruct* s, const std::string& path, con
             
             break;
         }
+            
+        case SchemaProperty::kSchemaPropertyReference:
+        {
+            if (!prop || prop->GetType() != Property::kPropertyReference)
+                return true;
+            
+            const SchemaPropertyReference* schemaReference = static_cast<const SchemaPropertyReference*>(schemaItem);
+            const PropertyReference* reference = static_cast<const PropertyReference*>(prop);
+            
+            container[schemaItem->GetName()] = ExportReference(reference, schemaReference);
+            
+            break;
+        }
     }
     
     return true;
@@ -347,6 +371,12 @@ bool LuaExporter::ExportAtom(std::iostream& output, const PropertyAtom* atom, co
 bool LuaExporter::ExportPointer(std::iostream& output, const PropertyPointer* pointer, const SchemaPropertyPointer* schemaPointer)
 {
     output << pointer->GetPointerValue();
+    return true;
+}
+
+bool LuaExporter::ExportReference(std::iostream& output, const PropertyReference* reference, const SchemaPropertyReference* schemaReference)
+{
+    output << reference->GetReferenceValue();
     return true;
 }
 
@@ -457,6 +487,21 @@ bool LuaExporter::ExportProperty(std::iostream& output, ProjectStruct* s, const 
             output << schemaItem->GetName() << " = ";
             
             status = ExportPointer(output, pointer, schemaPointer);
+            
+            break;
+        }
+            
+        case SchemaProperty::kSchemaPropertyReference:
+        {
+            if (!prop || prop->GetType() != Property::kPropertyReference)
+                return true;
+            
+            const SchemaPropertyReference* schemaReference = static_cast<const SchemaPropertyReference*>(schemaItem);
+            const PropertyReference* reference = static_cast<const PropertyReference*>(prop);
+            
+            output << schemaItem->GetName() << " = ";
+            
+            status = ExportReference(output, reference, schemaReference);
             
             break;
         }
@@ -582,6 +627,26 @@ PropertyPointer* ProjectStruct::AcquirePointer(const std::string& path)
     return property;
 }
 
+PropertyReference* ProjectStruct::AcquireReference(const std::string& path)
+{
+    PropertyMap::const_iterator it = _Properties.find(path);
+    
+    if (it != _Properties.end())
+    {
+        if (it->second->GetType() == Property::kPropertyReference)
+            return static_cast<PropertyReference*>(it->second);
+        else
+            delete it->second;
+    }
+    
+    const SchemaProperty* schemaProperty = _Type->FindPropertyByPath(path);
+    PropertyReference* property = new PropertyReference(this, schemaProperty);
+    
+    _Properties[path] = property;
+    
+    return property;
+}
+
 PropertyArray* ProjectStruct::AcquireArray(const std::string& path)
 {
     PropertyMap::const_iterator it = _Properties.find(path);
@@ -628,6 +693,13 @@ bool ProjectStruct::ParseProperties(json::Object& container, std::string path)
                 json::Number& value = it->element;
                 pointer->SetPointerValue(value.Value());
                 property = pointer;
+            }
+            else if (name == "_reference")
+            {
+                PropertyReference* reference = new PropertyReference(this, _Type ? _Type->FindPropertyByPath(path) : 0);
+                json::Number& value = it->element;
+                reference->SetReferenceValue(value.Value());
+                property = reference;
             }
             else if (name == "_array")
             {

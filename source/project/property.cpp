@@ -53,6 +53,16 @@ const PropertyPointer* Property::AsPointer() const
     return 0;
 }
 
+PropertyReference* Property::AsReference()
+{
+    return 0;
+}
+
+const PropertyReference* Property::AsReference() const
+{
+    return 0;
+}
+
 PropertyAtom::PropertyAtom(ProjectStruct* s, const SchemaProperty* schemaProperty)
     : Property(s, schemaProperty)
 {
@@ -159,6 +169,50 @@ ProjectEntity* PropertyPointer::ResolvePointer() const
     Project* project = _Struct->GetProject();
     
     return project->GetEntity(_Value);
+}
+
+PropertyReference::PropertyReference(ProjectStruct* s, const SchemaProperty* schemaProperty)
+    : Property(s, schemaProperty)
+{
+    
+}
+
+PropertyReference::~PropertyReference()
+{
+    
+}
+
+Property::PropertyType PropertyReference::GetType() const
+{
+    return kPropertyReference;
+}
+
+PropertyReference* PropertyReference::AsReference()
+{
+    return this;
+}
+
+const PropertyReference* PropertyReference::AsReference() const
+{
+    return this;
+}
+
+Uid PropertyReference::GetReferenceValue() const
+{
+    return _Value;
+}
+
+void PropertyReference::SetReferenceValue(Uid uid)
+{
+    _Value = uid;
+    _Struct->propertyChanged(_Struct);
+}
+
+ProjectRecord* PropertyReference::ResolveReference() const
+{
+    Project* project = _Struct->GetProject();
+    
+    return project->GetRecord(_Value);
 }
 
 PropertyArray::PropertyArray(ProjectStruct* s, const SchemaProperty* schemaProperty)

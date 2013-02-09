@@ -199,6 +199,7 @@ public:
         kSchemaPropertyArray,
         kSchemaPropertyStruct,
         kSchemaPropertyPointer,
+        kSchemaPropertyReference,
     };
     
     virtual SchemaPropertyType GetPropertyType() const = 0;
@@ -264,6 +265,20 @@ public:
     virtual SchemaPropertyType GetPropertyType() const;
     
     const SchemaEntity* GetSchemaEntity() const;
+    
+private:
+    std::string _Type;
+};
+    
+class SchemaPropertyReference : public SchemaProperty
+{
+public:
+    SchemaPropertyReference(SchemaItem* parent, const std::string& type, const std::string& name);
+    virtual ~SchemaPropertyReference();
+    
+    virtual SchemaPropertyType GetPropertyType() const;
+    
+    const SchemaRecord* GetSchemaRecord() const;
     
 private:
     std::string _Type;

@@ -151,5 +151,15 @@ void SchemaCommands::ExportProperty(json::Object& property, const std::string& n
             }
             break;
         }
+        case SchemaProperty::kSchemaPropertyReference:
+        {
+            property["type"] = json::String("pointer");
+            const SchemaEntity* propertyRecord = static_cast<const SchemaPropertyPointer*>(schemaProp)->GetSchemaEntity();
+            if (propertyRecord)
+            {
+                property["pointerType"] = json::String(propertyRecord->GetName());
+            }
+            break;
+        }
     }
 }

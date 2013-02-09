@@ -754,3 +754,26 @@ const SchemaEntity* SchemaPropertyPointer::GetSchemaEntity() const
     const Schema* schema = GetSchema();
     return schema->GetEntityByName(_Type);
 }
+
+SchemaPropertyReference::SchemaPropertyReference(SchemaItem* parent, const std::string& type, const std::string& name)
+    : SchemaProperty(parent, name)
+    , _Type(type)
+{
+    
+}
+
+SchemaPropertyReference::~SchemaPropertyReference()
+{
+    
+}
+
+SchemaProperty::SchemaPropertyType SchemaPropertyReference::GetPropertyType() const
+{
+    return kSchemaPropertyReference;
+}
+
+const SchemaRecord* SchemaPropertyReference::GetSchemaRecord() const
+{
+    const Schema* schema = GetSchema();
+    return schema->GetRecordByName(_Type);
+}

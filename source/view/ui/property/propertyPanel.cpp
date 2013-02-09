@@ -23,6 +23,9 @@ static const int ATOM_WIDTH = 200;
 static const int POINTER_HEIGHT = 25;
 static const int POINTER_PADDING = 5;
 static const int POINTER_WIDTH = 200;
+static const int REFERENCE_HEIGHT = 25;
+static const int REFERENCE_PADDING = 5;
+static const int REFERENCE_WIDTH = 200;
 static const int STRUCT_INDENT = 20;
 static const int STRUCT_PADDING_INNER = 10;
 static const int STRUCT_PADDING_OUTER = 20;
@@ -89,6 +92,12 @@ glm::vec2 PropertyPanel::AddStruct(glm::vec2 offset, const SchemaStruct* schemaS
             case SchemaProperty::kSchemaPropertyPointer:
             {
                 offset = AddPointer(offset, static_cast<SchemaPropertyPointer*>(it->second), item, propertyPath);
+                break;
+            }
+                
+            case SchemaProperty::kSchemaPropertyReference:
+            {
+                offset = AddReference(offset, static_cast<SchemaPropertyReference*>(it->second), item, propertyPath);
                 break;
             }
                 
@@ -170,6 +179,44 @@ glm::vec2 PropertyPanel::AddPointer(glm::vec2 offset, SchemaPropertyPointer* poi
     return offset + glm::vec2(0, POINTER_HEIGHT + POINTER_PADDING);
 }
 
+glm::vec2 PropertyPanel::AddReference(glm::vec2 offset, SchemaPropertyReference* reference, ProjectStruct* item, const std::string& path)
+{
+    const Property* property = item->GetProperty(path);
+    const PropertyReference* propertyReference = property ? property->AsReference() : 0;
+    
+    Gwen::Controls::ComboBox* comboBox = new Gwen::Controls::ComboBox(this);
+    comboBox->SetPos(offset.x, offset.y);
+    comboBox->SetSize(REFERENCE_WIDTH, REFERENCE_HEIGHT);
+    comboBox->UserData.Set("struct", item);
+    comboBox->UserData.Set("path", path);
+    comboBox->AddItem(Gwen::Utility::StringToUnicode("<No Record>"))->UserData.Set<pb::Uid>("uid", 0);
+    comboBox->onSelection.Add(this, &PropertyPanel::OnReferenceChanged);
+    
+    Project* project = item->GetProject();
+    const SchemaRecord* referenceType = reference->GetSchemaRecord();
+    
+    if (referenceType && project)
+    {
+        const Project::RecordMap& records = project->GetRecords();
+        
+        for (Project::RecordMap::const_iterator it = records.begin(); it != records.end(); ++it)
+        {
+            if (it->second->GetType() == referenceType)
+            {
+                Gwen::Controls::MenuItem* menuItem = comboBox->AddItem(Gwen::Utility::StringToUnicode(it->second->GetName()));
+                menuItem->UserData.Set("uid", it->second->GetUid());
+                
+                if (propertyReference && it->second->GetUid() == propertyReference->GetReferenceValue())
+                {
+                    comboBox->SelectItem(menuItem);
+                }
+            }
+        }
+    }
+    
+    return offset + glm::vec2(0, REFERENCE_HEIGHT + REFERENCE_PADDING);
+}
+
 void PropertyPanel::OnSelectionChanged(const pixeleditor::Selection* selection)
 {
     if (!_Pinned)
@@ -213,5 +260,23 @@ void PropertyPanel::OnPointerChanged(Gwen::Controls::Base* input)
     {
         pb::Uid uid = selectedItem->UserData.Get<pb::Uid>("uid");
         pointer->SetPointerValue(uid);
+    }
+}
+
+void PropertyPanel::OnReferenceChanged(Gwen::Controls::Base* input)
+{
+    ProjectStruct* structItem = input->UserData.Get<ProjectStruct*>("struct");
+    std::string path = input->UserData.Get<std::string>("path");
+    
+    Gwen::Controls::ComboBox* comboBox = static_cast<Gwen::Controls::ComboBox*>(input);
+    
+    Gwen::Controls::Label* selectedItem = comboBox->GetSelectedItem();
+    
+    PropertyReference* reference = structItem->AcquireReference(path);
+    
+    if (selectedItem)
+    {
+        pb::Uid uid = selectedItem->UserData.Get<pb::Uid>("uid");
+        reference->SetReferenceValue(uid);
     }
 }

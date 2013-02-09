@@ -366,6 +366,12 @@ SchemaProperty* ParseProperty(SchemaItem* parent, std::vector<Token>& tokens, si
             propertyType = SchemaProperty::kSchemaPropertyPointer;
             counter++;
         }
+        
+        if (tokens[counter].type == Token::kTokenAmpersand)
+        {
+            propertyType = SchemaProperty::kSchemaPropertyReference;
+            counter++;
+        }
     }
     
     Token nameToken = tokens[counter];
@@ -399,6 +405,10 @@ SchemaProperty* ParseProperty(SchemaItem* parent, std::vector<Token>& tokens, si
             
         case SchemaProperty::kSchemaPropertyPointer:
             schemaProperty = new SchemaPropertyPointer(parent, typeToken.data, nameToken.data);
+            break;
+            
+        case SchemaProperty::kSchemaPropertyReference:
+            schemaProperty = new SchemaPropertyReference(parent, typeToken.data, nameToken.data);
             break;
         
         case SchemaProperty::kSchemaPropertyArray: // handled later
