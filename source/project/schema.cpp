@@ -463,14 +463,22 @@ SchemaItem::SchemaType Schema::GetSchemaType() const
     return SchemaItem::kSchema;
 }
 
-bool Schema::Open(const std::string& directory)
+bool Schema::Open(const std::string& engineFilename, const std::string& projectFilename)
 {
     if (_IsOpen)
         Close();
     
-    std::string schemaFile = directory + "main.txt";
+    bool result = true;
     
-    pb::File* file = pb::FileSystem::Instance()->OpenFile(schemaFile);
+    result &= OpenFile(engineFilename);
+    result &= OpenFile(projectFilename);
+    
+    return result;
+}
+
+bool Schema::OpenFile(const std::string& filename)
+{
+    pb::File* file = pb::FileSystem::Instance()->OpenFile(filename);
     
     if (!file)
         return false;
@@ -485,7 +493,7 @@ bool Schema::Open(const std::string& directory)
     if (result)
     {
         _IsOpen = true;
-        schemaOpened(this);        
+        schemaOpened(this);
     }
     
     return result;

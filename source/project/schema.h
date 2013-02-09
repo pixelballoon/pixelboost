@@ -97,7 +97,7 @@ public:
     
     virtual SchemaType GetSchemaType() const;
     
-    bool Open(const std::string& directory);
+    bool Open(const std::string& engineFilename, const std::string& projectFilename);
     bool Close();
     
     Uid FindFreeUid(SchemaItem* item);
@@ -126,6 +126,8 @@ public:
     sigslot::Signal1<Schema*> schemaClosed;
     
 private:
+    bool OpenFile(const std::string& filename);
+    
     bool _IsOpen;
     UidMap _UidMap;
     

@@ -44,6 +44,8 @@ public:
 public:
     struct ProjectConfig
     {
+        std::string projectRoot;
+        std::string commonSchema;
         std::vector<std::string> imageRoots;
         std::vector<std::string> modelRoots;
         std::string exportDir;

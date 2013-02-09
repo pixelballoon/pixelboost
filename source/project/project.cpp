@@ -55,7 +55,7 @@ bool Project::Open(const std::string& directory)
         Close();
     
     pb::FileSystem::Instance()->OverrideWriteDirectory(directory);
-    pb::FileSystem::Instance()->MountReadLocation(directory, "/", true);
+    pb::FileSystem::Instance()->MountReadLocation(directory, "editor_project", true);
     
     _Location = directory;
     
@@ -65,9 +65,9 @@ bool Project::Open(const std::string& directory)
     if (_Location[_Location.length()-1] != '/')
         _Location += "/";
     
-    OpenConfig("project.prj");
+    OpenConfig("editor_project/project.prj");
     
-    if (!_Schema->Open("schema/"))
+    if (!_Schema->Open(_Config.commonSchema, "editor_project/schema/main.txt"))
         return false;
       
     _IsOpen = true;
@@ -85,7 +85,7 @@ bool Project::Open(const std::string& directory)
         if (it->length() < 4 || it->substr(it->length()-4, 4) != ".txt")
             continue;
         
-        LoadRecord("records/" + *it);
+        LoadRecord("editor_project/records/" + *it);
     }
     
     return true;
@@ -106,6 +106,12 @@ bool Project::OpenConfig(const std::string& filename)
     json::Object config;
     
     json::Reader::Read(config, contents);
+    
+    json::String& projectRoot = config["project_root"];
+    _Config.projectRoot = projectRoot;
+    
+    json::String& commonSchema = config["common_schema"];
+    _Config.commonSchema = commonSchema;
     
     // Image roots
     json::Array& imageRoots = config["image_roots"];
@@ -136,13 +142,14 @@ bool Project::OpenConfig(const std::string& filename)
     
     for (auto it = _Config.imageRoots.begin(); it != _Config.imageRoots.end(); ++it)
     {
-        pb::FileSystem::Instance()->MountReadLocation(*it, "editor_images", true);
+        pb::FileSystem::Instance()->MountReadLocation(_Location + *it, "editor_images", true);
     }
     for (auto it = _Config.modelRoots.begin(); it != _Config.modelRoots.end(); ++it)
     {
-        pb::FileSystem::Instance()->MountReadLocation(*it, "editor_models", true);
+        pb::FileSystem::Instance()->MountReadLocation(_Location + *it, "editor_models", true);
     }
-    pb::FileSystem::Instance()->OverrideWriteDirectory(_Location);
+    
+    pb::FileSystem::Instance()->MountReadLocation(_Location + _Config.projectRoot, "/", true);
     
     return true;
 }
