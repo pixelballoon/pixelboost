@@ -49,7 +49,7 @@ void PropertyPanel::SetStruct(ProjectStruct* item, const std::string& focusPath)
 {
     Clear();
     
-    if (item)
+    if (item && item->GetType())
     {
         AddStruct(glm::vec2(0,0), item->GetType(), item, "/");
     }

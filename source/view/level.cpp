@@ -176,7 +176,7 @@ void Level::UpdateSize()
 {
     _LevelBounds->SetSize(glm::vec2(0,0));
     
-    if (!_Record)
+    if (!_Record || !_Record->GetType())
         return;
 
     const SchemaAttribute* hasLevel = _Record->GetType()->GetAttribute("HasLevel");
