@@ -1,4 +1,5 @@
 #include "Gwen/Controls/Button.h"
+#include "Gwen/Controls/ComboBox.h"
 #include "Gwen/Controls/GroupBox.h"
 #include "Gwen/Controls/TextBox.h"
 
@@ -16,9 +17,12 @@
 
 using namespace pixeleditor;
 
+static const int ATOM_HEIGHT = 25;
 static const int ATOM_PADDING = 5;
 static const int ATOM_WIDTH = 200;
-static const int ATOM_HEIGHT = 25;
+static const int POINTER_HEIGHT = 25;
+static const int POINTER_PADDING = 5;
+static const int POINTER_WIDTH = 200;
 static const int STRUCT_INDENT = 20;
 static const int STRUCT_PADDING_INNER = 10;
 static const int STRUCT_PADDING_OUTER = 20;
@@ -84,6 +88,7 @@ glm::vec2 PropertyPanel::AddStruct(glm::vec2 offset, const SchemaStruct* schemaS
                 
             case SchemaProperty::kSchemaPropertyPointer:
             {
+                offset = AddPointer(offset, static_cast<SchemaPropertyPointer*>(it->second), item, propertyPath);
                 break;
             }
                 
@@ -127,6 +132,44 @@ glm::vec2 PropertyPanel::AddAtom(glm::vec2 offset, SchemaPropertyAtom* atom, Pro
     return offset + glm::vec2(0, ATOM_HEIGHT + ATOM_PADDING);
 }
 
+glm::vec2 PropertyPanel::AddPointer(glm::vec2 offset, SchemaPropertyPointer* pointer, ProjectStruct* item, const std::string& path)
+{
+    const Property* property = item->GetProperty(path);
+    const PropertyPointer* propertyPointer = property ? property->AsPointer() : 0;
+    
+    Gwen::Controls::ComboBox* comboBox = new Gwen::Controls::ComboBox(this);
+    comboBox->SetPos(offset.x, offset.y);
+    comboBox->SetSize(POINTER_WIDTH, POINTER_HEIGHT);
+    comboBox->UserData.Set("struct", item);
+    comboBox->UserData.Set("path", path);
+    comboBox->AddItem(Gwen::Utility::StringToUnicode("<No Entity>"))->UserData.Set<pb::Uid>("uid", 0);
+    comboBox->onSelection.Add(this, &PropertyPanel::OnPointerChanged);
+    
+    ProjectRecord* projectRecord = item->GetRecord();
+    const SchemaEntity* pointerType = pointer->GetSchemaEntity();
+
+    if (pointerType && projectRecord)
+    {
+        const ProjectRecord::EntityMap& entities = projectRecord->GetEntities();
+        
+        for (ProjectRecord::EntityMap::const_iterator it = entities.begin(); it != entities.end(); ++it)
+        {
+            if (it->second->GetType() == pointerType)
+            {
+                Gwen::Controls::MenuItem* menuItem = comboBox->AddItem(Gwen::Utility::StringToUnicode(it->second->GetName()));
+                menuItem->UserData.Set("uid", it->second->GetUid());
+                
+                if (propertyPointer && it->second->GetUid() == propertyPointer->GetPointerValue())
+                {
+                    comboBox->SelectItem(menuItem);
+                }
+            }
+        }
+    }
+    
+    return offset + glm::vec2(0, POINTER_HEIGHT + POINTER_PADDING);
+}
+
 void PropertyPanel::OnSelectionChanged(const pixeleditor::Selection* selection)
 {
     if (!_Pinned)
@@ -153,4 +196,22 @@ void PropertyPanel::OnAtomChanged(Gwen::Controls::Base* input)
 
     PropertyAtom* atom = structItem->AcquireAtom(path);
     atom->SetStringValue(input->GetValue());
+}
+
+void PropertyPanel::OnPointerChanged(Gwen::Controls::Base* input)
+{
+    ProjectStruct* structItem = input->UserData.Get<ProjectStruct*>("struct");
+    std::string path = input->UserData.Get<std::string>("path");
+    
+    Gwen::Controls::ComboBox* comboBox = static_cast<Gwen::Controls::ComboBox*>(input);
+    
+    Gwen::Controls::Label* selectedItem = comboBox->GetSelectedItem();
+    
+    PropertyPointer* pointer = structItem->AcquirePointer(path);
+    
+    if (selectedItem)
+    {
+        pb::Uid uid = selectedItem->UserData.Get<pb::Uid>("uid");
+        pointer->SetPointerValue(uid);
+    }
 }
