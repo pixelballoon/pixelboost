@@ -133,6 +133,7 @@ set (DB_SOURCES
 	"src/common/pixelboost/db/entity.h"
 	"src/common/pixelboost/db/record.cpp"
 	"src/common/pixelboost/db/record.h"
+	"src/common/pixelboost/db/register.h"
 	"src/common/pixelboost/db/struct.cpp"
 	"src/common/pixelboost/db/struct.h"
 	)
