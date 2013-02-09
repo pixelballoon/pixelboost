@@ -20,7 +20,6 @@ namespace pixeleditor
 {
 
 class CommandManager;
-class HttpInterface;
 class Project;
 
 class Core
@@ -35,7 +34,6 @@ public:
     void Update();
     
     CommandManager* GetCommandManager();
-    HttpInterface* GetHttpInterface();
     pb::NetworkServer* GetNetworkManager();
 
     Project* GetProject();
@@ -51,8 +49,6 @@ private:
     
 private:
     static Core* _Instance;
-    
-    HttpInterface* _HttpInterface;
     
     CommandManager* _CommandManager;
     pb::NetworkServer* _NetworkManager;

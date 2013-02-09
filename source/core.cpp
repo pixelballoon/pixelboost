@@ -3,7 +3,6 @@
 
 #include "core.h"
 #include "command/manager.h"
-#include "http/httpInterface.h"
 #include "project/project.h"
 
 using namespace pixeleditor;
@@ -14,9 +13,6 @@ Core::Core()
     : _Clipboard(0)
 {
     _Instance = this;
-    
-    _HttpInterface = new HttpInterface();
-    _HttpInterface->Initialise();
     
     _CommandManager = new CommandManager();
     _Project = new Project();
@@ -47,11 +43,6 @@ void Core::Update()
 CommandManager* Core::GetCommandManager()
 {
     return _CommandManager;
-}
-
-HttpInterface* Core::GetHttpInterface()
-{
-    return _HttpInterface;
 }
 
 pb::NetworkServer* Core::GetNetworkManager()

@@ -48,17 +48,6 @@ set (CORE_SOURCES
 	"source/core/uidHelpers.h"	
 	)
 
-set (HTTP_SOURCES
-	"source/http/commands/file.cpp"
-	"source/http/commands/file.h"
-	"source/http/commands/record.cpp"
-	"source/http/commands/record.h"
-	"source/http/commands/schema.cpp"
-	"source/http/commands/schema.h"
-	"source/http/httpInterface.cpp"
-	"source/http/httpInterface.h"
-	)
-
 set (PROJECT_SOURCES
 	"source/project/entity.cpp"
 	"source/project/entity.h"
@@ -155,7 +144,6 @@ set (EDITOR_SOURCES
 source_group (command\\standard FILES ${COMMAND_STANDARD_SOURCES})
 source_group (command FILES ${COMMAND_SOURCES})
 source_group (core FILES ${CORE_SOURCES})
-source_group (http FILES ${HTTP_SOURCES})
 source_group (project FILES ${PROJECT_SOURCES})
 source_group (view\\entity\\property FILES ${VIEW_ENTITY_PROPERTY_SOURCES})
 source_group (view\\entity FILES ${VIEW_ENTITY_SOURCES})
