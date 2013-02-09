@@ -60,6 +60,11 @@ void PropertyPanel::SetStruct(ProjectStruct* item, const std::string& focusPath)
 
 glm::vec2 PropertyPanel::AddStruct(glm::vec2 offset, const SchemaStruct* schemaStruct, ProjectStruct* item, const std::string& path)
 {
+	if (!schemaStruct)
+	{
+		return offset;
+	}
+	
     for (SchemaStruct::PropertyList::const_iterator it = schemaStruct->GetProperties().begin(); it != schemaStruct->GetProperties().end(); ++it)
     {
         std::string propertyPath = path + it->first + "/";
@@ -121,6 +126,8 @@ glm::vec2 PropertyPanel::AddStruct(glm::vec2 offset, const SchemaStruct* schemaS
             offset.y += STRUCT_PADDING_OUTER;
         }
     }
+	
+	offset = AddStruct(offset, schemaStruct->GetBaseType(), item, path);
     
     return offset;
 }

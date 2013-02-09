@@ -247,29 +247,30 @@ void ViewEntity::ParseProperties()
 {
     const SchemaStruct* schemaStruct = _Entity->GetType();
     
-    if (schemaStruct)
-    {
-        ParseItem("/", schemaStruct);
-        ParseStruct("/", schemaStruct);
-    }
+	ParseStruct("/", schemaStruct);
 }
 
 void ViewEntity::ParseStruct(const std::string& path, const SchemaStruct* schemaStruct)
 {
+	if (!schemaStruct)
+		return;
+	
+	ParseItem(path, schemaStruct);
+	
     for (SchemaStruct::PropertyList::const_iterator it = schemaStruct->GetProperties().begin(); it != schemaStruct->GetProperties().end(); ++it)
     {
         std::string propertyPath = path + it->second->GetName() + "/";
-        
-        ParseItem(propertyPath, it->second);
         
         switch (it->second->GetPropertyType())
         {
             case SchemaProperty::kSchemaPropertyAtom:
             {
+				ParseItem(propertyPath, it->second);
                 break;
             }
             case SchemaProperty::kSchemaPropertyArray:
             {
+				ParseItem(propertyPath, it->second);
                 break;
             }
             case SchemaProperty::kSchemaPropertyStruct:
@@ -280,14 +281,18 @@ void ViewEntity::ParseStruct(const std::string& path, const SchemaStruct* schema
             }
             case SchemaProperty::kSchemaPropertyPointer:
             {
+				ParseItem(propertyPath, it->second);
                 break;
             }
             case SchemaProperty::kSchemaPropertyReference:
             {
+				ParseItem(propertyPath, it->second);
                 break;
             }
         }
     }
+	
+	ParseStruct(path, schemaStruct->GetBaseType());
 }
 
 void ViewEntity::ParseItem(const std::string& path, const SchemaItem* item)

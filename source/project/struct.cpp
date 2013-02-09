@@ -157,17 +157,24 @@ bool ProjectStruct::ExportJson(json::Object& entity)
     
     json::Object properties;
     
-    if (_Type)
-    {
-        for (SchemaStruct::PropertyList::const_iterator it = _Type->GetProperties().begin(); it != _Type->GetProperties().end(); ++it)
-        {
-            JsonExporter::ExportProperty(this, "/", it->second, properties);
-        }
-    }
+	ExportJsonProperties(properties, _Type);
                
     entity["Properties"] = properties;
     
     return true;
+}
+
+void ProjectStruct::ExportJsonProperties(json::Object& properties, const SchemaStruct* type)
+{
+	if (!type)
+		return;
+	
+	for (SchemaStruct::PropertyList::const_iterator it = type->GetProperties().begin(); it != type->GetProperties().end(); ++it)
+	{
+		JsonExporter::ExportProperty(this, "/", it->second, properties);
+	}
+
+	ExportJsonProperties(properties, type->GetBaseType());
 }
 
 Uid ProjectStruct::GetTypeHash() const
@@ -190,26 +197,7 @@ bool ProjectStruct::ExportLua(std::iostream& output, bool appendNewLine)
     
     output << "properties = {" << std::endl;
     
-    if (_Type)
-    {
-        bool appendComma = false;
-        for (SchemaStruct::PropertyList::const_iterator it = _Type->GetProperties().begin(); it != _Type->GetProperties().end(); ++it)
-        {
-            std::stringstream property;
-            bool status = LuaExporter::ExportProperty(property, this, "/", it->second);
-            
-            if (status)
-            {
-                if (appendComma)
-                {
-                    output << ",";
-                }
-
-                output << property.str();
-                appendComma = true;
-            }
-        }
-    }
+	ExportLuaProperties(output, _Type, false);
 
     output << "}";
     
@@ -217,6 +205,31 @@ bool ProjectStruct::ExportLua(std::iostream& output, bool appendNewLine)
         output << std::endl;
     
     return false;
+}
+
+void ProjectStruct::ExportLuaProperties(std::iostream& output, const SchemaStruct* type, bool appendComma)
+{
+	if (!type)
+		return;
+	
+	for (SchemaStruct::PropertyList::const_iterator it = type->GetProperties().begin(); it != type->GetProperties().end(); ++it)
+	{
+		std::stringstream property;
+		bool status = LuaExporter::ExportProperty(property, this, "/", it->second);
+		
+		if (status)
+		{
+			if (appendComma)
+			{
+				output << ",";
+			}
+			
+			output << property.str();
+			appendComma = true;
+		}
+	}
+	
+	ExportLuaProperties(output, type->GetBaseType(), true);
 }
 
 json::UnknownElement JsonExporter::ExportAtom(const PropertyAtom* atom, const SchemaPropertyAtom* schemaAtom)

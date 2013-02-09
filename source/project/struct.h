@@ -71,6 +71,9 @@ public:
     sigslot::Signal1<ProjectStruct*> destroyed;
     
 private:
+	void ExportJsonProperties(json::Object& object, const SchemaStruct* type);
+	void ExportLuaProperties(std::iostream& output, const SchemaStruct* type, bool appendComma);
+	
     bool ParseProperties(json::Object& container, std::string path);
     json::Object& GetPropertyContainer(std::string path, json::Object& parent);
     
