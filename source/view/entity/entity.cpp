@@ -247,8 +247,11 @@ void ViewEntity::ParseProperties()
 {
     const SchemaStruct* schemaStruct = _Entity->GetType();
     
-    ParseItem("/", schemaStruct);
-    ParseStruct("/", schemaStruct);
+    if (schemaStruct)
+    {
+        ParseItem("/", schemaStruct);
+        ParseStruct("/", schemaStruct);
+    }
 }
 
 void ViewEntity::ParseStruct(const std::string& path, const SchemaStruct* schemaStruct)
