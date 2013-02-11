@@ -125,6 +125,8 @@ set (DATA_SOURCES
 	)
 
 set (DB_TYPES_SOURCES
+	"src/common/pixelboost/db/types/common.cpp"
+	"src/common/pixelboost/db/types/common.h"
 	"src/common/pixelboost/db/types/components.cpp"
 	"src/common/pixelboost/db/types/components.h"
 	"src/common/pixelboost/db/types/register.cpp"
