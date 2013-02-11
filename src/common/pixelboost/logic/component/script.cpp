@@ -10,13 +10,22 @@
 
 using namespace pb;
 
-ScriptComponent::ScriptComponent(pb::Entity* parent)
+ScriptComponent::ScriptComponent(Entity* parent, const ScriptComponentDefinition* definition)
     : Component(parent)
 {
     _Active = true;
     _Script = LuaManager::Instance()->CreateScript(this);
     
-    AddThread(_Script->GetState());
+    if (definition)
+	{
+        if (definition->InlineScript.length())
+        {
+            SetSourceString(definition->InlineScript);
+        } else {
+            if (definition->Script)
+                SetSourceFile(definition->Script->Filename);
+        }
+    }
     
     GetParent()->RegisterMessageHandler<UpdateMessage>(MessageHandler(this, &ScriptComponent::OnUpdate));
 }
@@ -79,6 +88,8 @@ void ScriptComponent::SetSourceFile(const std::string& filename)
 void ScriptComponent::SetSourceString(const std::string& source)
 {
     _Script->Load(source);
+    
+    AddThread(_Script->GetState());
 }
 
 void ScriptComponent::OnMessage(const Message& message)

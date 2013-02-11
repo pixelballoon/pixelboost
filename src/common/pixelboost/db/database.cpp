@@ -3,17 +3,23 @@
 #include "pixelboost/db/database.h"
 #include "pixelboost/db/entity.h"
 #include "pixelboost/db/record.h"
+#include "pixelboost/db/register.h"
 #include "pixelboost/file/fileHelpers.h"
 
 using namespace pb;
+
+PB_DB_DECLARE_NAMESPACE(pixelboost)
 
 Database* Database::_Instance = 0;
 
 Database::Database()
 {
+    _ResolvingReferences = false;
     _DatabaseRoot = "";
     _State = luaL_newstate();
     luaL_openlibs(_State);
+    
+    PB_DB_REGISTER_NAMESPACE(this, pixelboost)
 }
 
 Database::~Database()
@@ -35,6 +41,11 @@ lua_State* Database::GetLuaState()
 void Database::RegisterCreate(Uid type, CreateStruct createStruct)
 {
     _StructCreate[type] = createStruct;
+}
+
+void Database::RegisterDestroy(Uid type, DestroyStruct destroyStruct)
+{
+    _StructDestroy[type] = destroyStruct;
 }
 
 void Database::RegisterDeserialise(Uid type, DeserialiseStruct deserialiseStruct)
@@ -167,13 +178,13 @@ DbRecord* Database::OpenRecord(Uid recordId)
     {
         record = recordIt->second;
         recordData = record->GetData();
-        Deserialise(recordType, recordData);
+        Deserialise(recordType, record, recordData);
     }
     else
     {
         recordData = Create(recordType);
-        Deserialise(recordType, recordData);
-        record = new DbRecord(recordId, recordType, recordData);
+		record = new DbRecord(recordId, recordType, recordData);
+        Deserialise(recordType, record, recordData);
         _Records[recordId] = record;
     }
     
@@ -242,7 +253,7 @@ DbRecord* Database::OpenRecord(Uid recordId)
                 }
                 
                 entityData = entity->GetData();
-                Deserialise(type, entityData);
+                Deserialise(type, record, entityData);
                 
                 lua_pop(_State, 1);
                 
@@ -259,7 +270,7 @@ DbRecord* Database::OpenRecord(Uid recordId)
                 }
                 
                 entityData = Create(type);
-                Deserialise(type, entityData);
+                Deserialise(type, record, entityData);
                 
                 lua_pop(_State, 1);
                 
@@ -284,6 +295,9 @@ DbRecord* Database::OpenRecord(Uid recordId)
     }
     
     lua_pop(_State, 1);
+	
+	record->ResolvePointers();
+	ResolveReferences();
     
     return record;
 }
@@ -314,14 +328,62 @@ void* Database::Create(Uid type)
     return it->second();
 }
 
-void Database::Deserialise(Uid type, void* data)
+void Database::Destroy(Uid type, void* structure)
+{
+    StructDestroyMap::iterator it = _StructDestroy.find(type);
+    
+    if (it != _StructDestroy.end())
+        it->second(structure);
+}
+
+void Database::Deserialise(Uid type, DbRecord* record, void* data)
 {
     StructDeserialiseMap::iterator it = _StructDeserialise.find(type);
     
     if (it == _StructDeserialise.end())
         return;
     
-    it->second(data);
+    it->second(this, record, data);
+}
+
+void Database::AddReference(Uid uid, void** reference)
+{
+	RecordReference ref;
+	ref.uid = uid;
+	ref.reference = reference;
+	
+	_References.push_back(ref);
+}
+
+void Database::ResolveReferences()
+{
+    if (_ResolvingReferences)
+        return;
+    
+    _ResolvingReferences = true;
+    
+	for (ReferenceList::iterator it = _References.begin(); it != _References.end();)
+	{
+		RecordMap::iterator record = _Records.find(it->uid);
+		
+		if (record != _Records.end())
+		{
+			(*it->reference) = record->second->GetData();
+			it = _References.erase(it);
+		} else {
+			DbRecord* record = OpenRecord(it->uid);
+			if (record)
+			{
+				it = _References.begin();
+			} else {
+				it = _References.erase(it);
+			}
+		}
+	}
+	
+	_References.clear();
+    
+    _ResolvingReferences = false;
 }
 
 const Database::RecordDescriptionList& Database::GetRecordDescriptions() const

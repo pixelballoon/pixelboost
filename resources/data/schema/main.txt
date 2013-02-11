@@ -18,3 +18,19 @@ struct Color
 	float B;
 	float A;
 }
+
+record Script
+{
+	string Filename;
+}
+
+struct Component
+{
+	
+}
+
+struct ScriptComponent : Component
+{
+	Script& Script;
+	string InlineScript;
+}

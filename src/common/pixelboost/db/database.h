@@ -33,9 +33,11 @@ public:
     
 public:
     typedef void*(*CreateStruct)();
-    typedef void(*DeserialiseStruct)(void* data);
+    typedef void(*DestroyStruct)(void* structure);
+    typedef void(*DeserialiseStruct)(Database* database, DbRecord* record, void* data);
     
     void RegisterCreate(Uid type, CreateStruct createStruct);
+    void RegisterDestroy(Uid type, DestroyStruct destroyStruct);
     void RegisterDeserialise(Uid type, DeserialiseStruct deserialiseStruct);
     
     void SetLocation(const std::string& location);
@@ -45,7 +47,11 @@ public:
     bool CloseRecord(Uid recordId);
     
     void* Create(Uid type);
-    void Deserialise(Uid type, void* data);
+    void Destroy(Uid type, void* structure);
+    void Deserialise(Uid type, DbRecord* record, void* data);
+	
+	void AddReference(Uid uid, void** reference);
+	void ResolveReferences();
     
 public:
     typedef std::vector<DbRecordDescription> RecordDescriptionList;
@@ -56,7 +62,19 @@ public:
     const DbRecord* GetRecord(Uid uid) const;
     
 private:
+	struct RecordReference
+    {
+        Uid uid;
+        void** reference;
+    };
+	
+	typedef std::vector<RecordReference> ReferenceList;
+    
+    ReferenceList _References;
+    bool _ResolvingReferences;
+	
     typedef std::map<Uid, CreateStruct> StructCreateMap;
+    typedef std::map<Uid, DestroyStruct> StructDestroyMap;
     typedef std::map<Uid, DeserialiseStruct> StructDeserialiseMap;
     
     std::string _DatabaseRoot;
@@ -65,6 +83,7 @@ private:
     RecordMap _Records;
     
     StructCreateMap _StructCreate;
+    StructDestroyMap _StructDestroy;
     StructDeserialiseMap _StructDeserialise;
     
     static Database* _Instance;

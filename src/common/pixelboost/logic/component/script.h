@@ -2,7 +2,9 @@
 
 #include <map>
 #include <set>
+#include <string>
 
+#include "pixelboost/db/types/components.h"
 #include "pixelboost/logic/component.h"
 
 struct lua_State;
@@ -12,11 +14,11 @@ namespace pb
     
     class LuaScript;
     class Message;
-
+    
     class ScriptComponent : public Component
     {
     public:
-        ScriptComponent(pb::Entity* parent);
+        ScriptComponent(Entity* parent, const ScriptComponentDefinition* definition = 0);
         virtual ~ScriptComponent();
         
         static void RegisterLuaClass(lua_State* state);

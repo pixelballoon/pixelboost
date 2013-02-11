@@ -72,7 +72,7 @@ void DbRecord::ResolvePointers()
         EntityMap::iterator entity = _Entities.find(it->uid);
         
         if (entity != _Entities.end())
-            (*it->pointer) = entity->second;
+            (*it->pointer) = entity->second->GetData();
     }
     
     _Pointers.clear();

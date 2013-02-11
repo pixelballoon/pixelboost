@@ -124,6 +124,12 @@ set (DATA_SOURCES
 	"src/common/pixelboost/data/xml/xml.h"
 	)
 
+set (DB_TYPES_SOURCES
+	"src/common/pixelboost/db/types/components.cpp"
+	"src/common/pixelboost/db/types/components.h"
+	"src/common/pixelboost/db/types/register.cpp"
+	)
+
 set (DB_SOURCES
 	"src/common/pixelboost/db/database.cpp"
 	"src/common/pixelboost/db/database.h"
@@ -414,6 +420,7 @@ set (EXTERNAL_SOURCES
 set (PIXELBOOST_SOURCES
 	${AUDIO_SOURCES}
 	${DATA_SOURCES}
+	${DB_TYPES_SOURCES}
 	${DB_SOURCES}
 	${DEBUG_SOURCES}
 	${FILE_SOURCES}
@@ -479,6 +486,7 @@ endif (PIXELBOOST_BUILD_PLATFORM_ANDROID)
 
 source_group (audio FILES ${AUDIO_SOURCES})
 source_group (data FILES ${DATA_SOURCES})
+source_group (db\\types FILES ${DB_TYPES_SOURCES})
 source_group (db FILES ${DB_SOURCES})
 source_group (debug FILES ${DEBUG_SOURCES})
 source_group (file FILES ${FILE_SOURCES})

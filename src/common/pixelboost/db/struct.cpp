@@ -1,3 +1,4 @@
+#include "pixelboost/db/database.h"
 #include "pixelboost/db/struct.h"
 
 using namespace pb;
@@ -13,6 +14,7 @@ DbStruct::DbStruct(Uid uid, Uid type, void* data)
 DbStruct::~DbStruct()
 {
     structDestroyed();
+    Database::Instance()->Destroy(_Type, _Data);
 }
 
 Uid DbStruct::GetType() const
