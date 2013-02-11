@@ -266,34 +266,34 @@ public:
 
 #ifndef PIXELBOOST_BUILD_RELEASE
 
-#define DEFINE_DEBUG_STRING(name, location, value) pb::DebugString name(location, value)
-#define DEFINE_DEBUG_BOOL(name, location, value) pb::DebugBool name(location, value)
-#define DEFINE_DEBUG_INTEGER(name, location, value, min, max) pb::DebugInteger name(location, value, min, max)
-#define DEFINE_DEBUG_FLOAT(name, location, value, min, max) pb::DebugFloat name(location, value, min, max)
-#define DEFINE_DEBUG_COLOR(name, location, r, g, b, a) pb::DebugColor name(location, r, g, b, a)
-#define DEFINE_DEBUG_FUNCTION(name, location, callback) pb::DebugFunction name(location, callback)
+#define PB_DEBUG_STRING(name, location, value) pb::DebugString name(location, value)
+#define PB_DEBUG_BOOL(name, location, value) pb::DebugBool name(location, value)
+#define PB_DEBUG_INTEGER(name, location, value, min, max) pb::DebugInteger name(location, value, min, max)
+#define PB_DEBUG_FLOAT(name, location, value, min, max) pb::DebugFloat name(location, value, min, max)
+#define PB_DEBUG_COLOR(name, location, r, g, b, a) pb::DebugColor name(location, r, g, b, a)
+#define PB_DEBUG_FUNCTION(name, location, callback) pb::DebugFunction name(location, callback)
 
-#define EXTERN_DEBUG_STRING(name) extern pb::DebugString name
-#define EXTERN_DEBUG_BOOL(name) extern pb::DebugBool name
-#define EXTERN_DEBUG_INTEGER(name) extern pb::DebugInteger name
-#define EXTERN_DEBUG_FLOAT(name) extern pb::DebugFloat name
-#define EXTERN_DEBUG_COLOR(name) extern pb::DebugColor name
-#define EXTERN_DEBUG_FUNCTION(name) extern pb::DebugFunction name
+#define PB_EXTERN_DEBUG_STRING(name) extern pb::DebugString name
+#define PB_EXTERN_DEBUG_BOOL(name) extern pb::DebugBool name
+#define PB_EXTERN_DEBUG_INTEGER(name) extern pb::DebugInteger name
+#define PB_EXTERN_DEBUG_FLOAT(name) extern pb::DebugFloat name
+#define PB_EXTERN_DEBUG_COLOR(name) extern pb::DebugColor name
+#define PB_EXTERN_DEBUG_FUNCTION(name) extern pb::DebugFunction name
 
 #else
 
-#define DEFINE_DEBUG_STRING(name, location, value) const char* name=value
-#define DEFINE_DEBUG_BOOL(name, location, value) bool name=value;
-#define DEFINE_DEBUG_INTEGER(name, location, value, min, max) int name=value
-#define DEFINE_DEBUG_FLOAT(name, location, value, min, max) float name=value
-#define DEFINE_DEBUG_COLOR(name, location, r, g, b, a) pb::DebugColor name(location, r, g, b, a)
-#define DEFINE_DEBUG_FUNCTION(name, location, callback) pb::DebugFunction name()
+#define PB_DEBUG_STRING(name, location, value) const char* name=value
+#define PB_DEBUG_BOOL(name, location, value) bool name=value;
+#define PB_DEBUG_INTEGER(name, location, value, min, max) int name=value
+#define PB_DEBUG_FLOAT(name, location, value, min, max) float name=value
+#define PB_DEBUG_COLOR(name, location, r, g, b, a) pb::DebugColor name(location, r, g, b, a)
+#define PB_DEBUG_FUNCTION(name, location, callback) pb::DebugFunction name()
 
-#define EXTERN_DEBUG_STRING(name) extern const char* name
-#define EXTERN_DEBUG_BOOL(name) extern bool name
-#define EXTERN_DEBUG_INTEGER(name) extern int name
-#define EXTERN_DEBUG_FLOAT(name) extern float name
-#define EXTERN_DEBUG_COLOR(name) extern pb::DebugColor name
-#define EXTERN_DEBUG_FUNCTION(name) extern pb::DebugFunction name
+#define PB_EXTERN_DEBUG_STRING(name) extern const char* name
+#define PB_EXTERN_DEBUG_BOOL(name) extern bool name
+#define PB_EXTERN_DEBUG_INTEGER(name) extern int name
+#define PB_EXTERN_DEBUG_FLOAT(name) extern float name
+#define PB_EXTERN_DEBUG_COLOR(name) extern pb::DebugColor name
+#define PB_EXTERN_DEBUG_FUNCTION(name) extern pb::DebugFunction name
 
 #endif
