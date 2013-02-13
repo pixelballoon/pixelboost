@@ -53,6 +53,7 @@ public:
         
 public:
     void DestroyComponent(Component* component);
+    void DestroyAllComponents();
     
     Component* GetComponentById(Uid componentId);
     

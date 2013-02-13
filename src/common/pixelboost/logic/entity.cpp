@@ -107,6 +107,19 @@ void Entity::DestroyComponent(Component* component)
     }
 }
 
+void Entity::DestroyAllComponents()
+{
+    if (_Components.size())
+    {
+        for (ComponentList::iterator componentIt = _Components.begin(); componentIt != _Components.end(); componentIt++)
+        {
+            (*componentIt)->_State = Component::kComponentDestroyed;
+        }
+        
+        _Scene->AddEntityPurge(this);
+    }
+}
+
 void Entity::PurgeComponents()
 {
     for (ComponentList::iterator componentIt = _Components.begin(); componentIt != _Components.end();)
