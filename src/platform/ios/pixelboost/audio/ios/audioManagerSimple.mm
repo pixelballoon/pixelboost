@@ -87,7 +87,7 @@ void AudioManagerSimpleIOS::LoadBgm(const std::string& name)
 
 void AudioManagerSimpleIOS::LoadSfx(const std::string& name)
 {
-    std::string fileName = FileHelpers::GetRootPath() + "/data/audio/sfx/" + name;
+    std::string fileName = FileHelpers::GetBundlePath() + "/data/audio/sfx/" + name;
     
     [[OALSimpleAudio sharedInstance] preloadEffect:[NSString stringWithUTF8String:fileName.c_str()]];
 }
@@ -101,7 +101,7 @@ void AudioManagerSimpleIOS::PlayBgm(const std::string& name, bool loop, float vo
     if (_MuteBgm || _CurrentBgmName == "")
         return;
     
-     std::string fileName = FileHelpers::GetRootPath() + "/data/audio/bgm/" + name;
+     std::string fileName = FileHelpers::GetBundlePath() + "/data/audio/bgm/" + name;
      
     [[OALSimpleAudio sharedInstance] playBg:[NSString stringWithUTF8String:fileName.c_str()] volume:volume pan:0.f loop:loop];
 }
@@ -135,7 +135,7 @@ void AudioManagerSimpleIOS::SfxPlay(Sound& sound)
     if (_MuteSfx)
         return;
     
-    std::string filename = FileHelpers::GetRootPath() + "/data/audio/sfx/" + sound.GetName();
+    std::string filename = FileHelpers::GetBundlePath() + "/data/audio/sfx/" + sound.GetName();
     
     id<ALSoundSource> instance = [[OALSimpleAudio sharedInstance] playEffect:[NSString stringWithUTF8String:filename.c_str()] volume:sound.GetVolume() pitch:sound.GetPitch() pan:0.f loop:sound.IsLooping()];
     [instance retain];

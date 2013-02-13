@@ -4,9 +4,13 @@
 
 #include "pixelboost/file/fileHelpers.h"
 
-using namespace pb;
+namespace pb
+{
+    
+namespace FileHelpers
+{
 
-std::string pb::FileHelpers::GetRootPath()
+std::string GetBundlePath()
 {
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     std::string rootPath = [[[NSBundle mainBundle] bundlePath] UTF8String];
@@ -14,12 +18,16 @@ std::string pb::FileHelpers::GetRootPath()
     return rootPath;
 }
     
-std::string pb::FileHelpers::GetUserPath()
+std::string GetSavePath()
 {
     NSArray* dirPaths;
     dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     
     return std::string([[dirPaths objectAtIndex:0] UTF8String]);
+}
+
+}
+
 }
 
 #endif
