@@ -158,7 +158,6 @@ set (DEBUG_SOURCES
 	)
 
 set (FILE_SOURCES
-	"src/common/pixelboost/file/fileHelpers.cpp"
 	"src/common/pixelboost/file/fileHelpers.h"
 	"src/common/pixelboost/file/fileSystem.cpp"
 	"src/common/pixelboost/file/fileSystem.h"
