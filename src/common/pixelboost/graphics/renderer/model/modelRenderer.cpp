@@ -150,7 +150,7 @@ void SkinnedAnimationState::SetAnimation(const std::string& animation)
     
     if (_Animation == 0)
     {
-        PbLogError("pb.animation", "Can't find animation %s on model\n", animation.c_str());
+        PbLogError("pb.graphics.model", "Can't find animation %s on model\n", animation.c_str());
     }
     
     _Matrices.clear();
@@ -235,7 +235,7 @@ ModelMesh::ModelMesh(const std::string& fileName, ModelMeshDefinition* mesh)
 {
     if (mesh->Indexed == true)
     {
-        PbLogError("pb.assets", "Only non index models are currently supported (%s)", fileName.c_str());
+        PbLogError("pb.graphics.mesh", "Only non index models are currently supported (%s)", fileName.c_str());
         return;
     }
     

@@ -137,11 +137,11 @@ bool Texture::LoadFromFile(const std::string& path, bool createMips)
 
     if (status)
     {
-        PbLogDebug("graphics.texture", "Loaded texture from file (%s)\n", path.c_str());
+        PbLogDebug("pb.graphics.texture", "Loaded texture from file (%s)", path.c_str());
     }
     else
     {
-        PbLogError("graphics.texture", "Failed to load texture from file (%s)\n", path.c_str());
+        PbLogError("pb.graphics.texture", "Failed to load texture from file (%s)", path.c_str());
     }
     
     return status;

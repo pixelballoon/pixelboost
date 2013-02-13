@@ -196,22 +196,22 @@ bool ScriptComponent::UpdateState(int threadIndex, float gameDelta)
         case LUA_ERRRUN:
             if (lua_isstring(_Script->GetState(), -1))
             {
-                PbLogError("lua.script", "Lua runtime error (%s)\n", lua_tostring(_Script->GetState(), -1));
+                PbLogError("pb.script.lua", "Lua runtime error (%s)", lua_tostring(_Script->GetState(), -1));
             } else {
-                PbLogError("lua.script", "Lua runtime error (Unknown)\n");
+                PbLogError("pb.script.lua", "Lua runtime error (Unknown)");
             }
             break;
         case LUA_ERRSYNTAX:
-            PbLogError("lua.script", "Lua syntax error\n");
+            PbLogError("pb.script.lua", "Lua syntax error");
             break;
         case LUA_ERRMEM:
-            PbLogError("lua.script", "Lua malloc error\n");
+            PbLogError("pb.script.lua", "Lua malloc error");
             break;
         case LUA_ERRGCMM:
-            PbLogError("lua.script", "Lua GC error\n");
+            PbLogError("pb.script.lua", "Lua GC error");
             break;
         case LUA_ERRERR:
-            PbLogError("lua.script", "Lua error handler error\n");
+            PbLogError("pb.script.lua", "Lua error handler error");
             break;
     }
     

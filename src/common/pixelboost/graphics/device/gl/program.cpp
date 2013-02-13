@@ -63,7 +63,7 @@ bool ShaderProgramGL::Link()
     {
         GLchar* log = new GLchar[logLength];
         glGetProgramInfoLog(_Program, logLength, &logLength, log);
-        PbLogError("graphics.shader", "Error linking shader (%s)", log);
+        PbLogError("pb.graphics.shader", "Error linking shader (%s)", log);
         delete log;
     }
 #endif
@@ -165,7 +165,7 @@ bool ShaderProgramGL::CompileShader(GLenum type, GLuint* shader, const std::stri
     {
         GLchar* log = new GLchar[logLength];
         glGetShaderInfoLog(*shader, logLength, &logLength, log);
-        PbLogError("graphics.shader", "Error compiling shader (%s)", log);
+        PbLogError("pb.graphics.shader", "Error compiling shader (%s)", log);
         delete log;
     }
 #endif

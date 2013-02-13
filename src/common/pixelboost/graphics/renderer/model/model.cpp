@@ -325,7 +325,7 @@ bool ModelDefinition::Open(const std::string& filename)
     
     if (!file)
     {
-        PbLogError("pb.assets", "Unable to load model %s", filename.c_str());
+        PbLogError("pb.graphics.model", "Unable to load model %s", filename.c_str());
         return false;
     }
     
@@ -334,7 +334,7 @@ bool ModelDefinition::Open(const std::string& filename)
     if (_Version != kCurrentModelVersion)
     {
         delete file;
-        PbLogError("pb.assets", "Model (%s) version mismatch - expected %d, got %d", filename.c_str(), kCurrentModelVersion, _Version);
+        PbLogError("pb.graphics.model", "Model (%s) version mismatch - expected %d, got %d", filename.c_str(), kCurrentModelVersion, _Version);
         return false;
     }
     
