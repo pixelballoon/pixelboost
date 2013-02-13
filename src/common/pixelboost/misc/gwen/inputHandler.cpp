@@ -31,6 +31,8 @@ public:
         
         if (key == kKeyboardKeyCharacter)
             return _Canvas->InputCharacter(character);
+        else if (key == kKeyboardKeySpace)
+            return _Canvas->InputCharacter(' ');
         else
             return _Canvas->InputKey(key, true);
         
@@ -45,7 +47,7 @@ public:
         if (Gwen::KeyboardFocus == _Root)
             return false;
         
-        if (key != kKeyboardKeyCharacter)
+        if (key != kKeyboardKeyCharacter && key != kKeyboardKeySpace)
             return _Canvas->InputKey(key, false);
         
         return false;
