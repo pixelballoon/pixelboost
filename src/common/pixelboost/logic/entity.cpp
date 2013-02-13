@@ -73,6 +73,11 @@ Uid Entity::GetUid()
     return _Uid;
 }
 
+const DbEntity* Entity::GetCreationEntity() const
+{
+    return _CreationEntity;
+}
+
 void Entity::Destroy()
 {
     _State = kEntityDestroyed;

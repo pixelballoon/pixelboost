@@ -39,6 +39,7 @@ public:
     Uid GetUid();
     virtual Uid GetType() const = 0;
     
+    const DbEntity* GetCreationEntity() const;
     template<class T> const T* GetData() const;
 
     void Destroy();
