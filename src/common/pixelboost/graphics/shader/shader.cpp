@@ -1,4 +1,5 @@
 #include "pixelboost/data/xml/xml.h"
+#include "pixelboost/debug/log.h"
 #include "pixelboost/file/fileHelpers.h"
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/program.h"
@@ -117,20 +118,29 @@ bool Shader::Load(const std::string& filename)
     
     std::string effect;
     
-    if (file)
+    if (!file)
     {
-        file->ReadAll(effect);
-        delete file;
+        PbLogError("pb.graphics.shader", "Failed to load shader %s, unable to open file", filename.c_str());
+        return false;
     }
+    
+    file->ReadAll(effect);
+    delete file;
     
     pugi::xml_document document;
     if (!document.load(effect.c_str()))
+    {
+        PbLogError("pb.graphics.shader", "Failed to parse shader %s, xml parse error", filename.c_str());
         return false;
+    }
 
     pugi::xml_node root = document.child("shader");
     
     if (root.empty())
+    {
+        PbLogError("pb.graphics.shader", "Failed to load shader %s, root node is empty", filename.c_str());
         return false;
+    }
     
     pugi::xml_node attributes = root.child("attributes");
     
@@ -139,10 +149,20 @@ bool Shader::Load(const std::string& filename)
     while (!subShader.empty())
     {
         ShaderTechnique* technique = new ShaderTechnique();
-        technique->Load(attributes, subShader);
-        AddTechnique(technique);
+        if (technique->Load(attributes, subShader))
+        {
+            AddTechnique(technique);
+        } else {
+            delete technique;
+        }
         
         subShader = subShader.next_sibling("subshader");
+    }
+    
+    if (_Techniques.size() == 0)
+    {
+        PbLogError("pb.graphics.shader", "Failed to load shader %s, no techniques were loaded (are they compatible with this card?)", filename.c_str());
+        return false;
     }
         
     return true;
