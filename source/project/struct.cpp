@@ -401,7 +401,7 @@ bool LuaExporter::ExportStruct(std::iostream& output, ProjectStruct* s, const st
     for (SchemaStruct::PropertyList::const_iterator it = schemaStruct->GetProperties().begin(); it != schemaStruct->GetProperties().end(); ++it)
     {   
         std::stringstream property;
-        bool status = ExportProperty(property, s, path, it->second);
+        bool status = ExportProperty(property, s, path, it->second, true);
         
         if (status)
         {
@@ -438,10 +438,12 @@ bool LuaExporter::ExportProperty(std::iostream& output, ProjectStruct* s, const 
             if (!prop || prop->GetType() != Property::kPropertyAtom)
                 return false;
             
+            if (appendPath)
+                output << schemaItem->GetName() << " = ";
+            
             const SchemaPropertyAtom* schemaAtom = static_cast<const SchemaPropertyAtom*>(schemaItem);
             const PropertyAtom* atom = static_cast<const PropertyAtom*>(prop);
             
-            output << schemaItem->GetName() << " = ";
             status = ExportAtom(output, atom, schemaAtom);
             
             break;
@@ -452,6 +454,9 @@ bool LuaExporter::ExportProperty(std::iostream& output, ProjectStruct* s, const 
             if (!prop || prop->GetType() != Property::kPropertyArray)
                 return false;
             
+            if (appendPath)
+                output << schemaItem->GetName() << " = ";
+            
             const SchemaPropertyArray* schemaArray = static_cast<const SchemaPropertyArray*>(schemaItem);
             const PropertyArray* array = static_cast<const PropertyArray*>(prop);
             
@@ -459,31 +464,34 @@ bool LuaExporter::ExportProperty(std::iostream& output, ProjectStruct* s, const 
             
             status = true;
             
+            output << "{";
+            
             char buffer[255];
             for (int i=0; i < array->GetElementCount();)
             {
-                output << schemaItem->GetName() << " = {";
-                
                 sprintf(buffer, "#%X", array->GetElementIdByIndex(i));
                 
                 if (!ExportProperty(output, s, propertyPath + buffer + "/", schemaProperty, false))
                     status = false;
-                
-                output << "}";
                 
                 ++i;
                 
                 if (i < array->GetElementCount())
                     output << ",";
             }
+            
+            output << "}";
+            
             break;
         }
             
         case SchemaProperty::kSchemaPropertyStruct:
         {
+            if (appendPath)
+                output << schemaItem->GetName() << " = ";
+
             const SchemaPropertyStruct* schemaStruct = static_cast<const SchemaPropertyStruct*>(schemaItem);
             
-            output << schemaItem->GetName() << " = ";
             status = ExportStruct(output, s, propertyPath, schemaStruct->GetSchemaStruct());
             
             break;
@@ -492,12 +500,13 @@ bool LuaExporter::ExportProperty(std::iostream& output, ProjectStruct* s, const 
         case SchemaProperty::kSchemaPropertyPointer:
         {
             if (!prop || prop->GetType() != Property::kPropertyPointer)
-                return true;
+                return false;
+            
+            if (appendPath)
+                output << schemaItem->GetName() << " = ";
             
             const SchemaPropertyPointer* schemaPointer = static_cast<const SchemaPropertyPointer*>(schemaItem);
             const PropertyPointer* pointer = static_cast<const PropertyPointer*>(prop);
-            
-            output << schemaItem->GetName() << " = ";
             
             status = ExportPointer(output, pointer, schemaPointer);
             
@@ -507,12 +516,13 @@ bool LuaExporter::ExportProperty(std::iostream& output, ProjectStruct* s, const 
         case SchemaProperty::kSchemaPropertyReference:
         {
             if (!prop || prop->GetType() != Property::kPropertyReference)
-                return true;
+                return false;
+            
+            if (appendPath)
+                output << schemaItem->GetName() << " = ";
             
             const SchemaPropertyReference* schemaReference = static_cast<const SchemaPropertyReference*>(schemaItem);
             const PropertyReference* reference = static_cast<const PropertyReference*>(prop);
-            
-            output << schemaItem->GetName() << " = ";
             
             status = ExportReference(output, reference, schemaReference);
             

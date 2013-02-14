@@ -321,7 +321,7 @@ void ViewEntity::OnDestroyed(ProjectStruct* structure)
     _Entity = 0;
 }
 
-void ViewEntity::OnPropertyChanged(ProjectStruct* structure)
+void ViewEntity::OnPropertyChanged(ProjectStruct* structure, Property* property)
 {
     for (PropertyMap::iterator it = _Properties.begin(); it != _Properties.end(); ++it)
     {

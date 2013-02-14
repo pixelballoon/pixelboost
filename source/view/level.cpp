@@ -249,7 +249,7 @@ void Level::OnEntityRemoved(ProjectRecord* record, ProjectEntity* entity)
     DestroyEntity(entity);
 }
 
-void Level::OnPropertyChanged(ProjectStruct* structure)
+void Level::OnPropertyChanged(ProjectStruct* structure, Property* property)
 {
     UpdateSize();
 }

@@ -94,7 +94,7 @@ void PropertyAtom::SetFloatValue(float value)
     char tmp[64];
     snprintf(tmp, 64, "%f", value);
     _Value = tmp;
-    _Struct->propertyChanged(_Struct);
+    _Struct->propertyChanged(_Struct, this);
 }
 
 void PropertyAtom::SetIntValue(int value)
@@ -102,13 +102,13 @@ void PropertyAtom::SetIntValue(int value)
     char tmp[64];
     snprintf(tmp, 64, "%d", value);
     _Value = tmp;
-    _Struct->propertyChanged(_Struct);
+    _Struct->propertyChanged(_Struct, this);
 }
 
 void PropertyAtom::SetStringValue(const std::string& value)
 {
     _Value = value;
-    _Struct->propertyChanged(_Struct);
+    _Struct->propertyChanged(_Struct, this);
 }
 
 float PropertyAtom::GetFloatValue() const
@@ -161,7 +161,7 @@ Uid PropertyPointer::GetPointerValue() const
 void PropertyPointer::SetPointerValue(Uid uid)
 {
     _Value = uid;
-    _Struct->propertyChanged(_Struct);
+    _Struct->propertyChanged(_Struct, this);
 }
 
 ProjectEntity* PropertyPointer::ResolvePointer() const
@@ -205,7 +205,7 @@ Uid PropertyReference::GetReferenceValue() const
 void PropertyReference::SetReferenceValue(Uid uid)
 {
     _Value = uid;
-    _Struct->propertyChanged(_Struct);
+    _Struct->propertyChanged(_Struct, this);
 }
 
 ProjectRecord* PropertyReference::ResolveReference() const
@@ -276,7 +276,24 @@ unsigned int PropertyArray::AddElement(unsigned int elementId)
     
     _ArrayElements.push_back(elementId);
     
-    _Struct->propertyChanged(_Struct);
+    _Struct->propertyChanged(_Struct, this);
+    
+    return elementId;
+}
+
+unsigned int PropertyArray::AddElementBeforeIndex(unsigned int index, unsigned int elementId)
+{
+    if (elementId == 0)
+    {
+        elementId = rand();
+        while (DoesContainElement(elementId))
+            elementId = rand();
+    }
+    
+    std::vector<unsigned int>::iterator it = _ArrayElements.begin() + index;
+    _ArrayElements.insert(it, elementId);
+    
+    _Struct->propertyChanged(_Struct, this);
     
     return elementId;
 }
@@ -288,7 +305,7 @@ void PropertyArray::RemoveElementById(unsigned int elementId)
         if (*it == elementId)
         {
             _ArrayElements.erase(it);
-            _Struct->propertyChanged(_Struct);
+            _Struct->propertyChanged(_Struct, this);
             return;
         }
     }
@@ -306,5 +323,5 @@ void PropertyArray::RemoveElementByIndex(unsigned int index)
     
     _ArrayElements.erase(it);
     
-    _Struct->propertyChanged(_Struct);
+    _Struct->propertyChanged(_Struct, this);
 }

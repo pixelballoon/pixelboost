@@ -355,12 +355,6 @@ SchemaProperty* ParseProperty(SchemaItem* parent, std::vector<Token>& tokens, si
     
     if (tokens[counter].type != Token::kTokenVariable)
     {
-        if (tokens[counter].type == Token::kTokenLeftSquare && tokens[counter+1].type == Token::kTokenRightSquare)
-        {
-            isArray = true;
-            counter += 2;
-        }
-        
         if (tokens[counter].type == Token::kTokenStar)
         {
             propertyType = SchemaProperty::kSchemaPropertyPointer;
@@ -371,6 +365,12 @@ SchemaProperty* ParseProperty(SchemaItem* parent, std::vector<Token>& tokens, si
         {
             propertyType = SchemaProperty::kSchemaPropertyReference;
             counter++;
+        }
+        
+        if (tokens[counter].type == Token::kTokenLeftSquare && tokens[counter+1].type == Token::kTokenRightSquare)
+        {
+            isArray = true;
+            counter += 2;
         }
     }
     

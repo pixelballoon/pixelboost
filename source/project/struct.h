@@ -67,7 +67,7 @@ public:
     
     bool RemoveProperty(const std::string& path);
     
-    sigslot::Signal1<ProjectStruct*> propertyChanged;
+    sigslot::Signal2<ProjectStruct*, Property*> propertyChanged;
     sigslot::Signal1<ProjectStruct*> destroyed;
     
 private:

@@ -228,16 +228,25 @@ bool ProjectRecord::ExportLua(std::iostream& output)
     bool status = ProjectStruct::ExportLua(output);
     output << "}" << std::endl << std::endl;
     
-    output << record << ".entities = {}" << std::endl << std::endl;
+    output << record << ".entities = {" << std::endl;
     
-    int i=0;
+    bool appendComma = false;
     for (EntityMap::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
     {
-        output << record << ".entities[" << (++i) << "] = {" << std::endl;
+        if (appendComma)
+        {
+            output << "," << std::endl;
+        }
+        
+        appendComma = true;
+        
+        output << "{" << std::endl;
         if (!it->second->ExportLua(output))
             status = false;
-        output << std::endl << "}" << std::endl << std::endl;
+        output << std::endl << "}";
     }
+    
+    output << "}";
         
     return status;
 }

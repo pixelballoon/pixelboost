@@ -26,6 +26,7 @@ namespace pixeleditor
     class ProjectEntity;
     class ProjectRecord;
     class ProjectStruct;
+    class Property;
     class ViewEntity;
     
     class Level : public pb::MouseHandler, public pb::Entity
@@ -72,7 +73,7 @@ namespace pixeleditor
         virtual void OnEntityAdded(ProjectRecord* record, ProjectEntity* entity);
         virtual void OnEntityRemoved(ProjectRecord* record, ProjectEntity* entity);
         
-        virtual void OnPropertyChanged(ProjectStruct* structure);
+        virtual void OnPropertyChanged(ProjectStruct* structure, Property* property);
         
     private:
         ProjectRecord* _Record;

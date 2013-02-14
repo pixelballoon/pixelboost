@@ -133,6 +133,7 @@ public:
     bool DoesContainElement(unsigned int elementId) const;
     
     unsigned int AddElement(unsigned int elementId=0);
+    unsigned int AddElementBeforeIndex(unsigned int index, unsigned int elementId=0);
     void RemoveElementById(unsigned int elementId);
     void RemoveElementByIndex(unsigned int index);
     
