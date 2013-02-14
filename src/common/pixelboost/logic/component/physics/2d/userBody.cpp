@@ -47,7 +47,7 @@ PhysicsUserBody2DComponent::PhysicsUserBody2DComponent(Entity* parent, BodyType 
     {
         case kBodyShapeCircle:
         {
-            circle.m_radius = size.x;
+            circle.m_radius = size.x/2.f;
             fixtureDef.shape = &circle;
             break;
         }

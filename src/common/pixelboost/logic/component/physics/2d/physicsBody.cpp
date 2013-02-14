@@ -51,14 +51,14 @@ PhysicsBody2DComponent::PhysicsBody2DComponent(Entity* parent, BodyType type, Bo
     {
         case kBodyShapeCircle:
         {
-            circle.m_radius = size.x;
+            circle.m_radius = size.x/2.f;
             fixtureDef.shape = &circle;
             break;
         }
             
         case kBodyShapeRect:
         {
-            rect.SetAsBox(size.x, size.y);
+            rect.SetAsBox(size.x/2.f, size.y/2.f);
             fixtureDef.shape = &rect;
             break;
         }
