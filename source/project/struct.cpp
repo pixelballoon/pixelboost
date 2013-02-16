@@ -221,7 +221,7 @@ void ProjectStruct::ExportLuaProperties(std::iostream& output, const SchemaStruc
 		{
 			if (appendComma)
 			{
-				output << ",";
+                output << ",";
 			}
 			
 			output << property.str();
@@ -229,7 +229,7 @@ void ProjectStruct::ExportLuaProperties(std::iostream& output, const SchemaStruc
 		}
 	}
 	
-	ExportLuaProperties(output, type->GetBaseType(), true);
+	ExportLuaProperties(output, type->GetBaseType(), appendComma);
 }
 
 json::UnknownElement JsonExporter::ExportAtom(const PropertyAtom* atom, const SchemaPropertyAtom* schemaAtom)
