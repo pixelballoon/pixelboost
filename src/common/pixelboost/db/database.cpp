@@ -346,7 +346,7 @@ void Database::Deserialise(Uid type, DbRecord* record, void* data)
     it->second(this, record, data);
 }
 
-void Database::AddReference(Uid uid, void** reference)
+void Database::AddReference(Uid uid, DbReferenceBase* reference)
 {
 	RecordReference ref;
 	ref.uid = uid;
@@ -368,7 +368,7 @@ void Database::ResolveReferences()
 		
 		if (record != _Records.end())
 		{
-			(*it->reference) = record->second->GetData();
+			it->reference->_Record = record->second;
 			it = _References.erase(it);
 		} else {
 			DbRecord* record = OpenRecord(it->uid);

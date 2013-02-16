@@ -12,6 +12,7 @@ namespace pb
 {
     
 class DbRecord;
+struct DbReferenceBase;
 
 struct DbRecordDescription
 {
@@ -50,7 +51,7 @@ public:
     void Destroy(Uid type, void* structure);
     void Deserialise(Uid type, DbRecord* record, void* data);
 	
-	void AddReference(Uid uid, void** reference);
+	void AddReference(Uid uid, DbReferenceBase* reference);
 	void ResolveReferences();
     
 public:
@@ -65,7 +66,7 @@ private:
 	struct RecordReference
     {
         Uid uid;
-        void** reference;
+        DbReferenceBase* reference;
     };
 	
 	typedef std::vector<RecordReference> ReferenceList;

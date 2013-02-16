@@ -1,5 +1,6 @@
 #include "pixelboost/db/entity.h"
 #include "pixelboost/db/record.h"
+#include "pixelboost/db/register.h"
 
 using namespace pb;
     
@@ -56,7 +57,7 @@ DbEntity* DbRecord::RemoveEntity(Uid entityId)
     return entity;
 }
     
-void DbRecord::AddPointer(Uid uid, void** pointer)
+void DbRecord::AddPointer(Uid uid, DbPointerBase* pointer)
 {
     EntityPointer ptr;
     ptr.uid = uid;
@@ -72,7 +73,7 @@ void DbRecord::ResolvePointers()
         EntityMap::iterator entity = _Entities.find(it->uid);
         
         if (entity != _Entities.end())
-            (*it->pointer) = entity->second->GetData();
+            it->pointer->_Entity = entity->second;
     }
     
     _Pointers.clear();

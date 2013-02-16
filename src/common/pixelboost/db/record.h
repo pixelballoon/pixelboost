@@ -9,6 +9,7 @@ namespace pb
 {
     
 class DbEntity;
+struct DbPointerBase;
 class DbRecord;
     
 class DbRecordHandle
@@ -30,7 +31,7 @@ public:
     
     void AddEntity(DbEntity* entity);
     DbEntity* RemoveEntity(Uid entityId);
-    void AddPointer(Uid uid, void** pointer);
+    void AddPointer(Uid uid, DbPointerBase* pointer);
     
 public:
     typedef std::map<Uid, DbEntity*> EntityMap;
@@ -48,7 +49,7 @@ private:
     struct EntityPointer
     {
         Uid uid;
-        void** pointer;
+        DbPointerBase* pointer;
     };
     
     typedef std::vector<EntityPointer> PointerList;
