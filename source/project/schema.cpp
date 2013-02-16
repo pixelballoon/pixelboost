@@ -69,7 +69,7 @@ bool SchemaAttribute::EvaluateParamBool(ProjectStruct* structure, const std::str
 
 glm::vec4 SchemaAttribute::EvaluateParamColor(ProjectStruct* structure, const std::string& param, const std::string& prefix, glm::vec4 defaultValue) const
 {
-    glm::vec4 returnValue;
+    glm::vec4 returnValue(0,0,0,1);
     
     ParamValueMap::const_iterator it = _ParamValue.find(param);
     
@@ -83,7 +83,24 @@ glm::vec4 SchemaAttribute::EvaluateParamColor(ProjectStruct* structure, const st
     
     if (elements.size() == 1)
     {
-        if (elements[0] == "red")
+        if (elements[0].length() >= 7 && elements[0].at(0) == '#')
+        {
+            std::string rs = elements[0].substr(1,2);
+            std::string gs = elements[0].substr(3,2);
+            std::string bs = elements[0].substr(5,2);
+            float r = strtol(rs.c_str(), 0, 16)/255.f;
+            float g = strtol(gs.c_str(), 0, 16)/255.f;
+            float b = strtol(bs.c_str(), 0, 16)/255.f;
+            float a = 1;
+            
+            if (elements[0].length() == 9)
+            {
+                std::string as = elements[0].substr(7,2);
+                a = strtol(as.c_str(), 0, 16)/255.f;
+            }
+            return glm::vec4(r,g,b,a);
+        }
+        else if (elements[0] == "red")
         {
             return glm::vec4(1,0,0,1);
         } else if (elements[0] == "green")
@@ -92,6 +109,15 @@ glm::vec4 SchemaAttribute::EvaluateParamColor(ProjectStruct* structure, const st
         } else if (elements[0] == "blue")
         {
             return glm::vec4(0,0,1,1);
+        } else if (elements[0] == "orange")
+        {
+            return glm::vec4(1,0.5,0,1);
+        } else if (elements[0] == "yellow")
+        {
+            return glm::vec4(1,1,0,1);
+        } else if (elements[0] == "magenta")
+        {
+            return glm::vec4(1,0,1,1);
         }
     } else {
         for (int i=0; i<elements.size() && i<4; i++)
