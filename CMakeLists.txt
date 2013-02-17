@@ -413,6 +413,7 @@ set (EXTERNAL_SOURCES
 	"src/external/jpegcompressor/jpge.cpp"
 	"src/external/lodepng/lodepng.cpp"
 	"src/external/mongoose/mongoose.c"
+	"src/external/optionparser/optionparser.h"
 	"src/external/regex/trex.c"
 	"src/external/stbimage/stb_image.c"
 	"src/external/stbimage/stb_image_write.c"

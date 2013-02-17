@@ -1,3 +1,5 @@
+#include "optionparser/optionparser.h"
+
 #include "pixelboost/audio/audioManagerSimple.h"
 #include "pixelboost/debug/debugDatabaseHandler.h"
 #include "pixelboost/debug/debugVariableManager.h"
@@ -34,6 +36,25 @@ Engine::Engine(void* platformContext, int argc, const char** argv)
     _Instance = this;
 
     _FileSystem = new FileSystem(argc > 0 ? argv[0] : "");
+    
+    if (argc)
+    {
+        enum  optionIndex { kOptionUnknown, kOptionProject, kOptionCount };
+        
+        const option::Descriptor usage[] =
+        {
+            {kOptionUnknown,      0, "", "",         option::Arg::None,     ""},
+            {kOptionProject,      0, "", "project",  option::Arg::Required, "  --project [location]" },
+            {0,0,0,0,0,0}
+        };
+        option::Option options[kOptionCount], buffer[kOptionCount];
+        option::Parser parse(usage, argc-1, &argv[1], options, buffer);
+        
+        if (options[kOptionProject])
+        {
+            _FileSystem->MountReadLocation(options[kOptionProject].arg, "/", true);
+        }
+    }
 
 #ifndef PIXELBOOST_DISABLE_GRAPHICS
     _Renderer = new Renderer();
