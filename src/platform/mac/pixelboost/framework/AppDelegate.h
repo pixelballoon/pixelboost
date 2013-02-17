@@ -8,7 +8,7 @@ namespace pb
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 {
-    pb::Engine* _App;
+    pb::Engine* _Engine;
 }
 
 @property (assign) IBOutlet NSWindow *window;

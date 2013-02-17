@@ -12,14 +12,21 @@
 
 - (void)applicationWillFinishLaunching:(NSNotification *)notification
 {
-    std::vector<std::string> arguments;
     NSArray *args = [[NSProcessInfo processInfo] arguments];
-    for (NSString* arg in args)
+    int argc = [args count];
+    const char** argv;
+    if (argc)
     {
-        arguments.push_back([arg UTF8String]);
+        argv = new const char*[argc];
+        for (int i=0; i<argc; i++)
+        {
+            NSString* arg = [args objectAtIndex:i];
+            argv[i] = [arg UTF8String];
+        }
     }
-    _App = pb::Engine::Create(0, arguments);
-    _App->Initialise();
+    
+    _Engine = pb::Engine::Create(0, argc, argv);
+    _Engine->Initialise();
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification

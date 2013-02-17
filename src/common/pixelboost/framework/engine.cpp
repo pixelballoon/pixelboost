@@ -26,14 +26,14 @@ using namespace pb;
 
 Engine* Engine::_Instance = 0;
 
-Engine::Engine(void* platformContext, std::vector<std::string> args)
+Engine::Engine(void* platformContext, int argc, const char** argv)
     : _GameTime(0)
     , _PlatformContext(platformContext)
     , _TotalTime(0)
 {
     _Instance = this;
 
-    _FileSystem = new FileSystem(args.size() > 0 ? args[0].c_str() : "");
+    _FileSystem = new FileSystem(argc > 0 ? argv[0] : "");
 
 #ifndef PIXELBOOST_DISABLE_GRAPHICS
     _Renderer = new Renderer();

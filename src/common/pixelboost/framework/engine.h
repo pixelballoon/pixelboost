@@ -32,14 +32,14 @@ class TouchManager;
 class Engine
 {
 protected:
-	Engine(void* platformContext, std::vector<std::string> args);
+	Engine(void* platformContext, int argc, const char** argv);
     
 public:
     virtual ~Engine();
     
     static void RegisterLuaClass(lua_State* state);
     
-    static Engine* Create(void* platformContext, std::vector<std::string> args);
+    static Engine* Create(void* platformContext, int argc, const char** argv);
 	
 	static Engine* Instance();
 	
