@@ -55,7 +55,7 @@ class ViewMouseHandler;
 class View : public pb::Engine, public Gwen::Event::Handler
 {
 public:
-    View(void* platformContext, std::vector<std::string> args);
+    View(void* platformContext, int argc, const char** argv);
     ~View();
     
 public:
@@ -145,7 +145,8 @@ private:
     ViewMouseHandler* _MouseHandler;
     
     Core* _Core;
-    std::vector<std::string> _LaunchArgs;
+    int _LaunchArgc;
+    const char** _LaunchArgv;
 };
     
 }

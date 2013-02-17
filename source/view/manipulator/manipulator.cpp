@@ -10,12 +10,15 @@ class pixeleditor::ManipulatorKeyboardHandler : public pb::KeyboardHandler
 public:
     ManipulatorKeyboardHandler()
     {
-        SetPriority(1);
     }
     
     ~ManipulatorKeyboardHandler()
     {
-        
+    }
+    
+    virtual int GetInputHandlerPriority()
+    {
+        return 1;
     }
     
     virtual bool OnKeyDown(pb::KeyboardKey key, pb::ModifierKeys modifier, char character)
@@ -34,12 +37,15 @@ class pixeleditor::ManipulatorMouseHandler : public pb::MouseHandler
 public:
     ManipulatorMouseHandler()
     {
-        SetPriority(1);
     }
     
     ~ManipulatorMouseHandler()
     {
-        
+    }
+    
+    virtual int GetInputHandlerPriority()
+    {
+        return 1;
     }
     
     virtual bool OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position)

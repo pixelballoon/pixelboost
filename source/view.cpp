@@ -50,9 +50,9 @@ using namespace pixeleditor;
 
 namespace pb
 {
-    Engine* Engine::Create(void* platformContext, std::vector<std::string> args)
+    Engine* Engine::Create(void* platformContext, int argc, const char** argv)
     {
-        return new View(platformContext, args);
+        return new View(platformContext, argc, argv);
     }
 }
 
@@ -61,12 +61,15 @@ class pixeleditor::ViewKeyboardHandler : public pb::KeyboardHandler
 public:
     ViewKeyboardHandler()
     {
-        SetPriority(0);
     }
     
     ~ViewKeyboardHandler()
     {
-        
+    }
+    
+    virtual int GetInputHandlerPriority()
+    {
+        return 0;
     }
     
     virtual bool OnKeyDown(pb::KeyboardKey key, pb::ModifierKeys modifier, char character)
@@ -122,12 +125,15 @@ class pixeleditor::ViewMouseHandler : public pb::MouseHandler
 public:
     ViewMouseHandler()
     {
-        SetPriority(0);
     }
     
     ~ViewMouseHandler()
     {
-        
+    }
+    
+    virtual int GetInputHandlerPriority()
+    {
+        return 0;
     }
     
     virtual bool OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position)
@@ -161,9 +167,10 @@ public:
     }
 };
 
-View::View(void* platformContext, std::vector<std::string> args)
-    : pb::Engine(platformContext, args)
-    , _LaunchArgs(args)
+View::View(void* platformContext, int argc, const char** argv)
+    : pb::Engine(platformContext, argc, argv)
+    , _LaunchArgc(argc)
+    , _LaunchArgv(argv)
     , _Record(0)
 {
     _Core = new Core();
@@ -304,8 +311,8 @@ void View::Initialise()
     _Level->entityAdded.Connect(this, &View::OnEntityAdded);
     _Level->entityRemoved.Connect(this, &View::OnEntityRemoved);
 
-    if (_LaunchArgs.size() > 1)
-        _Core->GetProject()->Open(_LaunchArgs[1]);
+    if (_LaunchArgc > 1)
+        _Core->GetProject()->Open(_LaunchArgv[1]);
 }
 
 void View::Update(float timeDelta, float gameDelta)

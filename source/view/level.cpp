@@ -33,8 +33,6 @@ Level::Level(pb::Scene* scene)
     _LevelBounds->SetSolid(true);
     _LevelBounds->SetLayer(0);
     _LevelBounds->SetSize(glm::vec2(0,0));
-    
-    SetPriority(0);
 }
 
 Level::~Level()
@@ -214,6 +212,11 @@ void Level::UpdateSize()
     
     _LevelBounds->SetSize(size);
     _LevelBounds->SetLocalTransform(glm::translate(glm::mat4x4(), offset));
+}
+
+int Level::GetInputHandlerPriority()
+{
+    return 1;
 }
 
 bool Level::OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifier, glm::vec2 position)

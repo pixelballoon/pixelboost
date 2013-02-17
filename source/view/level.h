@@ -65,6 +65,8 @@ namespace pixeleditor
         void UpdateSize();
         
     private:
+        virtual int GetInputHandlerPriority();
+        
         virtual bool OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifier, glm::vec2 position);
         virtual bool OnMouseUp(pb::MouseButton button, pb::ModifierKeys modifier, glm::vec2 position);
         virtual bool OnMouseMove(glm::vec2 position);
