@@ -14,7 +14,7 @@
 {
     NSArray *args = [[NSProcessInfo processInfo] arguments];
     int argc = [args count];
-    const char** argv;
+    const char** argv = 0;
     if (argc)
     {
         argv = new const char*[argc];
