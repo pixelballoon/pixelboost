@@ -1,12 +1,12 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <string>
 
 #include "glm/glm.hpp"
 
 #include "pixelboost/graphics/device/texture.h"
-#include "pixelboost/misc/pointer.h"
 
 namespace pb
 {

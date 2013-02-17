@@ -77,6 +77,7 @@ namespace pb
         
         bool CreateDirectory(const std::string& path);
         
+    private:
         static FileSystem* _Instance;
     };
     

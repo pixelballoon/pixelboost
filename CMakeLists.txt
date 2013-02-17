@@ -2,7 +2,11 @@ cmake_minimum_required (VERSION 2.8.10)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-reorder")
 
+add_definitions(-DPUGIXML_NO_STL)
+
 if (PIXELBOOST_BUILD_PLATFORM_ANDROID)
+	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
 	set (PLATFORM_HEADERS
 		"${CMAKE_CURRENT_SOURCE_DIR}/src/platform/android"
 		)

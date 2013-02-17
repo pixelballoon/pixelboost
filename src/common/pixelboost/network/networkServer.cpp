@@ -12,6 +12,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
+#include <unistd.h>
 
 #include "pixelboost/network/networkMessage.h"
 #include "pixelboost/network/networkServer.h"

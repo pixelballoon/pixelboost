@@ -79,7 +79,7 @@ JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_init(JNIEn
     
     if (!g_Game)
     {
-        g_Game = pb::Engine::Create(0, std::vector<std::string>());
+        g_Game = pb::Engine::Create(0, 0, 0);
         g_Game->Initialise();
     }
 }

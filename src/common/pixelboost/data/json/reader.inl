@@ -6,6 +6,7 @@ Author: Terry Caton
 
 ***********************************************/
 
+#include <cstdlib>
 #include <set>
 
 /*  

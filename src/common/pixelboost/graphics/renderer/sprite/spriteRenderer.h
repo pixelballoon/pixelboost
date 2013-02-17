@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -10,7 +11,6 @@
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/renderer/common/irenderer.h"
 #include "pixelboost/graphics/renderer/common/renderable.h"
-#include "pixelboost/misc/pointer.h"
 
 namespace pb
 {
