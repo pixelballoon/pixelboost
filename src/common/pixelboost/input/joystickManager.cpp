@@ -45,7 +45,7 @@ void JoystickManager::OnAxisChanged(int joystick, int stick, int axis, float val
     
     for (HandlerList::iterator it = _Handlers.begin(); it != _Handlers.end(); ++it)
     {
-        if (static_cast<JoystickHandler*>(*it)->OnAxisChanged(joystick, stick, axis, value))
+        if (dynamic_cast<JoystickHandler*>(*it)->OnAxisChanged(joystick, stick, axis, value))
             return;
     }
 }
@@ -56,7 +56,7 @@ void JoystickManager::OnButtonDown(int joystick, int button)
     
     for (HandlerList::iterator it = _Handlers.begin(); it != _Handlers.end(); ++it)
     {
-        if (static_cast<JoystickHandler*>(*it)->OnButtonDown(joystick, button))
+        if (dynamic_cast<JoystickHandler*>(*it)->OnButtonDown(joystick, button))
             return;
     }
 }
@@ -67,7 +67,7 @@ void JoystickManager::OnButtonUp(int joystick, int button)
     
     for (HandlerList::iterator it = _Handlers.begin(); it != _Handlers.end(); ++it)
     {
-        if (static_cast<JoystickHandler*>(*it)->OnButtonUp(joystick, button))
+        if (dynamic_cast<JoystickHandler*>(*it)->OnButtonUp(joystick, button))
             return;
     }
 }

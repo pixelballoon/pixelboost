@@ -42,7 +42,7 @@ void AccelerometerManager::OnAccelerometer(glm::vec3 attitude, glm::vec3 rotatio
         const Renderer::ViewportList& viewports = Renderer::Instance()->GetViewports();
         for (Renderer::ViewportList::const_iterator viewportIt = viewports.begin(); viewportIt != viewports.end(); ++viewportIt)
         {
-            if (static_cast<AccelerometerHandler*>(*handlerIt)->OnAccelerometer(attitude, rotationRate, gravity, userAcceleration))
+            if (dynamic_cast<AccelerometerHandler*>(*handlerIt)->OnAccelerometer(attitude, rotationRate, gravity, userAcceleration))
                 return;
         }
     }

@@ -8,7 +8,7 @@
 
 namespace pb
 {
-    class AccelerometerHandler : public InputHandler
+    class AccelerometerHandler : public virtual InputHandler
     {
     public:
         AccelerometerHandler();

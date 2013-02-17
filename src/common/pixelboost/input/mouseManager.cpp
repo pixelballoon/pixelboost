@@ -60,7 +60,7 @@ void MouseManager::OnMouseDown(MouseButton button, ModifierKeys modifierKeys, gl
     
     for (HandlerList::iterator it = _Handlers.begin(); it != _Handlers.end(); ++it)
     {
-        if (static_cast<MouseHandler*>(*it)->OnMouseDown(button, modifierKeys, position))
+        if (dynamic_cast<MouseHandler*>(*it)->OnMouseDown(button, modifierKeys, position))
             return;
     }
 }
@@ -71,7 +71,7 @@ void MouseManager::OnMouseUp(MouseButton button, ModifierKeys modifierKeys, glm:
     
     for (HandlerList::iterator it = _Handlers.begin(); it != _Handlers.end(); ++it)
     {
-        if (static_cast<MouseHandler*>(*it)->OnMouseUp(button, modifierKeys, position))
+        if (dynamic_cast<MouseHandler*>(*it)->OnMouseUp(button, modifierKeys, position))
             return;
     }
 }
@@ -82,7 +82,7 @@ void MouseManager::OnMouseMove(glm::vec2 position)
     
     for (HandlerList::iterator it = _Handlers.begin(); it != _Handlers.end(); ++it)
     {
-        if (static_cast<MouseHandler*>(*it)->OnMouseMove(position))
+        if (dynamic_cast<MouseHandler*>(*it)->OnMouseMove(position))
             return;
     }
 }
@@ -93,7 +93,7 @@ void MouseManager::OnMouseScroll(ModifierKeys modifierKeys, glm::vec2 delta)
     
     for (HandlerList::iterator it = _Handlers.begin(); it != _Handlers.end(); ++it)
     {
-        if (static_cast<MouseHandler*>(*it)->OnMouseScroll(modifierKeys, delta))
+        if (dynamic_cast<MouseHandler*>(*it)->OnMouseScroll(modifierKeys, delta))
             return;
     }
 }
@@ -104,7 +104,7 @@ void MouseManager::OnMouseZoom(glm::vec2 zoom)
     
     for (HandlerList::iterator it = _Handlers.begin(); it != _Handlers.end(); ++it)
     {
-        if (static_cast<MouseHandler*>(*it)->OnMouseZoom(zoom))
+        if (dynamic_cast<MouseHandler*>(*it)->OnMouseZoom(zoom))
             return;
     }
 }
@@ -115,7 +115,7 @@ void MouseManager::OnMouseRotate(float rotate)
     
     for (HandlerList::iterator it = _Handlers.begin(); it != _Handlers.end(); ++it)
     {
-        if (static_cast<MouseHandler*>(*it)->OnMouseRotate(rotate))
+        if (dynamic_cast<MouseHandler*>(*it)->OnMouseRotate(rotate))
             return;
     }
 }

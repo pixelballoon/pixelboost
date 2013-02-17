@@ -36,7 +36,7 @@ namespace pb
         kModifierKeyAlt = 4,
     };
     
-    class KeyboardHandler : public InputHandler
+    class KeyboardHandler : public virtual InputHandler
     {
     public:
         KeyboardHandler();

@@ -13,15 +13,11 @@ namespace pb
     class InputHandler
     {
     public:
-        InputHandler();
         virtual ~InputHandler();
         
-        void SetPriority(int priority);
-        int GetPriority();
+        virtual int GetInputHandlerPriority() = 0;
         
     private:
-        int _Priority;
-        
         friend class InputManager;
     };
     

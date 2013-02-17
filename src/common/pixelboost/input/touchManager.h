@@ -32,7 +32,7 @@ namespace pb
         glm::vec2 _Position;
     };
     
-    class TouchHandler : public InputHandler
+    class TouchHandler : public virtual InputHandler
     {
     public:
         TouchHandler();

@@ -6,7 +6,7 @@
 
 namespace pb
 {
-    class JoystickHandler : public InputHandler
+    class JoystickHandler : public virtual InputHandler
     {
     public:
         JoystickHandler();

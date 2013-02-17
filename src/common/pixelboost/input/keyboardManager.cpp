@@ -30,7 +30,7 @@ void KeyboardManager::OnKeyDown(KeyboardKey key, ModifierKeys modifier, char cha
     
     for (HandlerList::iterator it = _Handlers.begin(); it != _Handlers.end(); ++it)
     {
-        if (static_cast<KeyboardHandler*>(*it)->OnKeyDown(key, modifier, character))
+        if (dynamic_cast<KeyboardHandler*>(*it)->OnKeyDown(key, modifier, character))
             return;
     }
 }
@@ -41,7 +41,7 @@ void KeyboardManager::OnKeyUp(KeyboardKey key, ModifierKeys modifier, char chara
     
     for (HandlerList::iterator it = _Handlers.begin(); it != _Handlers.end(); ++it)
     {
-        if (static_cast<KeyboardHandler*>(*it)->OnKeyUp(key, modifier, character))
+        if (dynamic_cast<KeyboardHandler*>(*it)->OnKeyUp(key, modifier, character))
             return;
     }
 }

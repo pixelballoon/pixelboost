@@ -23,7 +23,7 @@ namespace pb
         kMouseButtonRight = 2
     };
     
-    class MouseHandler : public InputHandler
+    class MouseHandler : public virtual InputHandler
     {
     public:
         MouseHandler();

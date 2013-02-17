@@ -8,28 +8,12 @@ using namespace pb;
 
 static bool HandlerSort (InputHandler* a, InputHandler* b)
 {
-    return a->GetPriority() > b->GetPriority();
-}
-
-InputHandler::InputHandler()
-    : _Priority(-1)
-{
-    
+    return a->GetInputHandlerPriority() > b->GetInputHandlerPriority();
 }
 
 InputHandler::~InputHandler()
 {
     
-}
-
-void InputHandler::SetPriority(int priority)
-{
-    _Priority = priority;
-}
-
-int InputHandler::GetPriority()
-{
-    return _Priority;
 }
 
 InputManager::InputManager()
