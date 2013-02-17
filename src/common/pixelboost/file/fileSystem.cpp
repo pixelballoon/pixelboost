@@ -1,6 +1,7 @@
 #include "physfs.h"
 
 #include "pixelboost/debug/assert.h"
+#include "pixelboost/debug/log.h"
 #include "pixelboost/file/fileHelpers.h"
 #include "pixelboost/file/fileSystem.h"
 
@@ -168,7 +169,15 @@ FileSystem::FileSystem(const char* appPath)
     
     PHYSFS_init(appPath);
     
+#ifdef PIXELBOOST_PLATFORM_ANDROID
+    PbLogDebug("pb.file.system", "Mounting file system root (%s)", pb::FileHelpers::GetBundlePath().c_str());
+    PHYSFS_mount(pb::FileHelpers::GetBundlePath().c_str(), "/", 0);
+#else
+    PbLogDebug("pb.file.system", "Mounting file system root (%s)", (pb::FileHelpers::GetBundlePath() + "/data/").c_str());
     PHYSFS_mount((pb::FileHelpers::GetBundlePath() + "/data/").c_str(), "/", 0);
+#endif
+    
+    PbLogDebug("pb.file.system", "Setting write directory (%s)", pb::FileHelpers::GetSavePath().c_str());
     PHYSFS_setWriteDir(pb::FileHelpers::GetSavePath().c_str());
 }
 
@@ -207,7 +216,7 @@ File* FileSystem::OpenFile(const std::string& path, FileMode mode)
             // bundle, but it will do until PHYSFS is modified to allow a subdirectory within a zip to be mounted
             #ifdef PIXELBOOST_PLATFORM_ANDROID
             if (!handle)
-                handle = PHYSFS_openRead(("assets/"+path).c_str());
+                handle = PHYSFS_openRead(("assets/data/"+path).c_str());
             #endif
             break;
         }
