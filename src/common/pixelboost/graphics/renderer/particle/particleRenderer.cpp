@@ -56,7 +56,7 @@ Shader* ParticleRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return Renderer::Instance()->GetShaderManager()->GetShader("/data/shaders/pb_texturedColor.shc");
+    return Renderer::Instance()->GetShaderManager()->GetShader("/shaders/pb_texturedColor.shc");
 }
 
 ParticleSystem* ParticleRenderable::GetSystem()
@@ -88,7 +88,7 @@ ParticleRenderer::ParticleRenderer()
     
     Renderer::Instance()->SetHandler(ParticleRenderable::GetStaticType(), this);
     
-    Renderer::Instance()->GetShaderManager()->LoadShader("/data/shaders/pb_texturedColor.shc");
+    Renderer::Instance()->GetShaderManager()->LoadShader("/shaders/pb_texturedColor.shc");
 }
 
 ParticleRenderer::~ParticleRenderer()
@@ -96,7 +96,7 @@ ParticleRenderer::~ParticleRenderer()
     pb::GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
     pb::GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
 
-    Renderer::Instance()->GetShaderManager()->UnloadShader("/data/shaders/pb_texturedColor.shc");
+    Renderer::Instance()->GetShaderManager()->UnloadShader("/shaders/pb_texturedColor.shc");
 }
 
 void ParticleRenderer::Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass)

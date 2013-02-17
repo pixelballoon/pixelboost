@@ -37,7 +37,7 @@ Shader* PrimitiveRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return Renderer::Instance()->GetShaderManager()->GetShader("/data/shaders/pb_solid.shc");
+    return Renderer::Instance()->GetShaderManager()->GetShader("/shaders/pb_solid.shc");
 }
 
 void PrimitiveRenderable::SetTransform(const glm::mat4x4& transform)
@@ -294,12 +294,12 @@ PrimitiveRenderer::PrimitiveRenderer()
     
     Renderer::Instance()->SetHandler(PrimitiveRenderable::GetStaticType(), this);
     
-    Renderer::Instance()->GetShaderManager()->LoadShader("/data/shaders/pb_solid.shc");
+    Renderer::Instance()->GetShaderManager()->LoadShader("/shaders/pb_solid.shc");
 }
     
 PrimitiveRenderer::~PrimitiveRenderer()
 {
-    Renderer::Instance()->GetShaderManager()->UnloadShader("/data/shaders/pb_solid.shc");
+    Renderer::Instance()->GetShaderManager()->UnloadShader("/shaders/pb_solid.shc");
 }
 
 void PrimitiveRenderer::Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass)

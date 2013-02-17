@@ -10,7 +10,7 @@ using namespace pb;
 
 FixtureCollection2D* PhysicsHelpers2D::LoadDefinition(const std::string& filename, float density)
 {
-    pb::File* file = pb::FileSystem::Instance()->OpenFile("/data/physics/"+filename+".phy");
+    pb::File* file = pb::FileSystem::Instance()->OpenFile("/physics/"+filename+".phy");
     
     std::string definitionString;
     

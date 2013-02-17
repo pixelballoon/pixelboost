@@ -75,7 +75,7 @@ void AudioManagerSimpleOSX::PlayBgm(const std::string& name, bool loop, float vo
     if (_MuteBgm || _CurrentBgmName == "")
         return;
     
-     std::string fileName = "/data/audio/bgm/" + name + ".mp3";     
+     std::string fileName = "/audio/bgm/" + name + ".mp3";     
 }
     
 void AudioManagerSimpleOSX::StopBgm()
@@ -88,7 +88,7 @@ AudioManagerSimple::Sound AudioManagerSimpleOSX::PlaySfx(const std::string& name
     if (_MuteSfx)
         return Sound();
     
-    std::string fileName = "/data/audio/sfx/" + name;
+    std::string fileName = "/audio/sfx/" + name;
     
     return Sound();
 }

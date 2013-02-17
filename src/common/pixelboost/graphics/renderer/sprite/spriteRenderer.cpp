@@ -67,7 +67,7 @@ Shader* SpriteRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return Renderer::Instance()->GetShaderManager()->GetShader("/data/shaders/pb_texturedColor.shc");
+    return Renderer::Instance()->GetShaderManager()->GetShader("/shaders/pb_texturedColor.shc");
 }
 
 Sprite* SpriteRenderable::GetSprite()
@@ -115,12 +115,12 @@ SpriteRenderer::SpriteRenderer()
     
     Renderer::Instance()->SetHandler(SpriteRenderable::GetStaticType(), this);
     
-    Renderer::Instance()->GetShaderManager()->LoadShader("/data/shaders/pb_texturedColor.shc");
+    Renderer::Instance()->GetShaderManager()->LoadShader("/shaders/pb_texturedColor.shc");
 }
 
 SpriteRenderer::~SpriteRenderer()
 {
-    Renderer::Instance()->GetShaderManager()->UnloadShader("/data/shaders/pb_texturedColor.shc");
+    Renderer::Instance()->GetShaderManager()->UnloadShader("/shaders/pb_texturedColor.shc");
     
     pb::GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
     pb::GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);

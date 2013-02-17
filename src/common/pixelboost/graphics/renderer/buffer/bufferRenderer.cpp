@@ -53,7 +53,7 @@ Shader* BufferRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return Renderer::Instance()->GetShaderManager()->GetShader("/data/shaders/pb_textured.shc");
+    return Renderer::Instance()->GetShaderManager()->GetShader("/shaders/pb_textured.shc");
 }
 
 void BufferRenderable::SetBounds(BoundingSphere bounds)
@@ -110,7 +110,7 @@ BufferRenderer::BufferRenderer()
 {
     Renderer::Instance()->SetHandler(BufferRenderable::GetStaticType(), this);
     
-    Renderer::Instance()->GetShaderManager()->LoadShader("/data/shaders/pb_textured.shc");
+    Renderer::Instance()->GetShaderManager()->LoadShader("/shaders/pb_textured.shc");
 }
     
 BufferRenderer::~BufferRenderer()

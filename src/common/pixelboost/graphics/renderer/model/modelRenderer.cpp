@@ -71,7 +71,7 @@ Shader* ModelRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return Renderer::Instance()->GetShaderManager()->GetShader("/data/shaders/pb_textured.shc");
+    return Renderer::Instance()->GetShaderManager()->GetShader("/shaders/pb_textured.shc");
 }
 
 void ModelRenderable::SetModel(Model* model)
@@ -352,12 +352,12 @@ ModelRenderer::ModelRenderer()
 {
     Renderer::Instance()->SetHandler(ModelRenderable::GetStaticType(), this);
     
-    Renderer::Instance()->GetShaderManager()->LoadShader("/data/shaders/pb_textured.shc");
+    Renderer::Instance()->GetShaderManager()->LoadShader("/shaders/pb_textured.shc");
 }
 
 ModelRenderer::~ModelRenderer()
 {
-    Renderer::Instance()->GetShaderManager()->UnloadShader("/data/shaders/pb_textured.shc");
+    Renderer::Instance()->GetShaderManager()->UnloadShader("/shaders/pb_textured.shc");
     
     for (ModelMap::iterator it = _Models.begin(); it != _Models.end(); ++it)
     {

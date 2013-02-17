@@ -65,7 +65,7 @@ Shader* FontRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return Renderer::Instance()->GetShaderManager()->GetShader("/data/shaders/pb_textured.shc");
+    return Renderer::Instance()->GetShaderManager()->GetShader("/shaders/pb_textured.shc");
 }
 
 void FontRenderable::SetFont(const std::string& font)
@@ -255,12 +255,12 @@ FontRenderer::FontRenderer(int maxCharacters)
     
     Renderer::Instance()->SetHandler(FontRenderable::GetStaticType(), this);
     
-    Renderer::Instance()->GetShaderManager()->LoadShader("/data/shaders/pb_textured.shc");
+    Renderer::Instance()->GetShaderManager()->LoadShader("/shaders/pb_textured.shc");
 }
 
 FontRenderer::~FontRenderer()
 {
-    Renderer::Instance()->GetShaderManager()->UnloadShader("/data/shaders/pb_textured.shc");
+    Renderer::Instance()->GetShaderManager()->UnloadShader("/shaders/pb_textured.shc");
     
     GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
     GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
@@ -342,7 +342,7 @@ Font* FontRenderer::LoadFont(const std::string& name, const std::string& filenam
             texSize = glm::vec2(scaleW, scaleH);
         } else if (elementType == "page")
         {
-            std::string texFilename = "/data/fonts/" + data["file"].substr(1, data["file"].find('"', 1)-1);
+            std::string texFilename = "/fonts/" + data["file"].substr(1, data["file"].find('"', 1)-1);
             font->texture = GraphicsDevice::Instance()->CreateTexture();
             font->texture->LoadFromFile(texFilename, createMips);
         } else if (elementType == "char")

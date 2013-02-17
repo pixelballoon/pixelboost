@@ -168,7 +168,7 @@ FileSystem::FileSystem(const char* appPath)
     
     PHYSFS_init(appPath);
     
-    PHYSFS_mount(pb::FileHelpers::GetBundlePath().c_str(), "/", 0);
+    PHYSFS_mount((pb::FileHelpers::GetBundlePath() + "/data/").c_str(), "/", 0);
     PHYSFS_setWriteDir(pb::FileHelpers::GetSavePath().c_str());
 }
 

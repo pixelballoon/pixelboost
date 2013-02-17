@@ -72,7 +72,7 @@ bool SpriteSheet::LoadSheet(const std::string& name, const std::string& extensio
         sheetDensity = 32.f;
     }
     
-    std::string jsonFilename = "/data/spritesheets/" + name + modifier + ".json";
+    std::string jsonFilename = "/spritesheets/" + name + modifier + ".json";
     
     pb::File* file = pb::FileSystem::Instance()->OpenFile(jsonFilename);
     
@@ -136,7 +136,7 @@ bool SpriteSheet::LoadSheet(const std::string& name, const std::string& extensio
         Engine::Instance()->GetSpriteRenderer()->_Sprites[spriteName] = sprite;
     }
     
-    LoadTexture("/data/spritesheets/images/" + name + modifier + "." + extension, generateMips);
+    LoadTexture("/spritesheets/images/" + name + modifier + "." + extension, generateMips);
     
     return true;
 }

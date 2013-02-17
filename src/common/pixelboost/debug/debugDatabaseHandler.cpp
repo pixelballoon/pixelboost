@@ -10,7 +10,7 @@ using namespace pb;
 DebugDatabaseHandler::DebugDatabaseHandler()
     : NetworkHandler('DBDG')
 {
-    pb::FileSystem::Instance()->CreateDirectory("/data/gamedata/records/");
+    pb::FileSystem::Instance()->CreateDirectory("/gamedata/records/");
 }
 
 DebugDatabaseHandler::~DebugDatabaseHandler()

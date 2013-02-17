@@ -52,7 +52,7 @@ Engine::Engine(void* platformContext, int argc, const char** argv)
         
         if (options[kOptionProject])
         {
-            _FileSystem->MountReadLocation(options[kOptionProject].arg, "/", true);
+            _FileSystem->MountReadLocation(std::string(options[kOptionProject].arg) + "data/", "/", true);
         }
     }
 
