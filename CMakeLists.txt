@@ -488,6 +488,7 @@ if (PIXELBOOST_BUILD_PLATFORM_OSX)
 		"-framework OpenGL"
 		"-framework AppKit"
 		"-framework IOKit")
+	pixelboost_setup_library(ddhidlib)
 endif (PIXELBOOST_BUILD_PLATFORM_OSX)
 
 if (PIXELBOOST_BUILD_PLATFORM_IOS)
@@ -506,6 +507,12 @@ endif (PIXELBOOST_BUILD_PLATFORM_IOS)
 if (PIXELBOOST_BUILD_PLATFORM_ANDROID)
 	target_link_libraries (pixelboost_engine GLESv2 log)
 endif (PIXELBOOST_BUILD_PLATFORM_ANDROID)
+
+pixelboost_setup_library(pixelboost_engine)
+pixelboost_setup_library(Box2D)
+pixelboost_setup_library(freetype2)
+pixelboost_setup_library(lua)
+pixelboost_setup_library(physfs-static)
 
 source_group (audio FILES ${AUDIO_SOURCES})
 source_group (data FILES ${DATA_SOURCES})
