@@ -2,7 +2,7 @@
 #include <sstream>
 #include <string>
 
-#include "pixelboost/data/xml/xml.h"
+#include "pixelboost/data/xml/pugixml.hpp"
 #include "pixelboost/file/fileHelpers.h"
 
 enum ShaderLanguage
