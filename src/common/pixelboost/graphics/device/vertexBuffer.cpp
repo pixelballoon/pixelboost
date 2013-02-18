@@ -17,9 +17,6 @@ VertexBuffer::VertexBuffer(GraphicsDevice* device, BufferFormat bufferFormat, Ve
     
     switch (_VertexFormat)
     {
-        case kVertexFormat_P2_C4:
-            _Data = new Vertex_P2_C4[length];
-            break;
         case kVertexFormat_P3:
             _Data = new Vertex_P3[length];
             break;
@@ -45,9 +42,6 @@ VertexBuffer::~VertexBuffer()
 {
     switch (_VertexFormat)
     {
-        case kVertexFormat_P2_C4:
-            delete[] static_cast<Vertex_P2_C4*>(_Data);
-            break;
         case kVertexFormat_P3:
             delete[] static_cast<Vertex_P3*>(_Data);
             break;

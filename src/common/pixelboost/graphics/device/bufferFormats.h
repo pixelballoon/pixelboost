@@ -10,7 +10,6 @@ namespace pb
     
     enum VertexFormat
     {
-        kVertexFormat_P2_C4,
         kVertexFormat_P3,
         kVertexFormat_P3_UV,
         kVertexFormat_P3_C4,

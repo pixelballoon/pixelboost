@@ -7,12 +7,6 @@ namespace pb
     
 class GraphicsDevice;
 
-struct Vertex_P2_C4
-{
-    float position[2];
-    float color[4];
-};
-
 struct Vertex_P3
 {
     float position[3];

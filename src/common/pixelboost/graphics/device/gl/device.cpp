@@ -75,15 +75,6 @@ void DeviceState::UpdateVertexBuffer(DeviceState& state)
             
             switch (vertexBuffer->GetVertexFormat())
             {
-                case kVertexFormat_P2_C4:
-                {
-                    GLsizei stride = sizeof(Vertex_P2_C4);
-                    desiredShaderAttribute[kShaderAttributeVertexPosition] = true;
-                    desiredShaderAttribute[kShaderAttributeVertexColor0] = true;
-                    glVertexAttribPointer(kShaderAttributeVertexPosition, 2, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_P2_C4, position));
-                    glVertexAttribPointer(kShaderAttributeVertexColor0, 4, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(Vertex_P2_C4, color));
-                    break;
-                }
                 case kVertexFormat_P3:
                 {
                     GLsizei stride = sizeof(Vertex_P3);
@@ -302,11 +293,6 @@ void GraphicsDeviceGL::UnlockVertexBuffer(VertexBuffer* vertexBuffer, int numEle
     
     switch (vertexBuffer->GetVertexFormat())
     {
-        case kVertexFormat_P2_C4:
-        {
-            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_P2_C4) * numElements, vertexBuffer->GetData(), bufferType);
-            break;
-        }
         case kVertexFormat_P3:
         {
             glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_P3) * numElements, vertexBuffer->GetData(), bufferType);
