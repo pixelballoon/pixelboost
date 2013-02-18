@@ -3,8 +3,8 @@
 #include <map>
 #include <string>
 
-#include "pixelboost/db/definitions.h"
 #include "pixelboost/file/fileSystem.h"
+#include "pixelboost/framework/definitions.h"
 
 namespace pb
 {

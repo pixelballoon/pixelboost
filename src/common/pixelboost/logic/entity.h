@@ -3,7 +3,7 @@
 #include <map>
 #include <vector>
 
-#include "pixelboost/db/definitions.h"
+#include "pixelboost/framework/definitions.h"
 #include "pixelboost/logic/definitions.h"
 
 struct lua_State;

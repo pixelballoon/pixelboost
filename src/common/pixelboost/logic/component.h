@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pixelboost/db/definitions.h"
+#include "pixelboost/framework/definitions.h"
 
 struct lua_State;
 

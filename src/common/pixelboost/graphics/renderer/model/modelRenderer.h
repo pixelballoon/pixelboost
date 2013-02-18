@@ -6,7 +6,7 @@
 
 #include "glm/glm.hpp"
 
-#include "pixelboost/db/definitions.h"
+#include "pixelboost/framework/definitions.h"
 #include "pixelboost/graphics/device/texture.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
 #include "pixelboost/graphics/renderer/common/irenderer.h"

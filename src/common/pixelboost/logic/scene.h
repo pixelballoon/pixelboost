@@ -4,7 +4,7 @@
 #include <set>
 #include <vector>
 
-#include "pixelboost/db/definitions.h"
+#include "pixelboost/framework/definitions.h"
 #include "pixelboost/graphics/definitions.h"
 #include "pixelboost/logic/definitions.h"
 

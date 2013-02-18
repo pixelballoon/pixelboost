@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "pixelboost/db/definitions.h"
+#include "pixelboost/framework/definitions.h"
 
 namespace pugi
 {

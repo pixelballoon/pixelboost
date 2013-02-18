@@ -238,7 +238,7 @@ void ScriptComponent::LuaWaitMessage(const std::string& message, lua_State* stat
     GetParent()->RegisterMessageHandler(MessageHandler(this, &ScriptComponent::OnMessage));
     
     int threadIndex = AddThread(state);
-    _WaitMessage[threadIndex] = pb::RuntimeTypeHash(message);
+    _WaitMessage[threadIndex] = pb::TypeHash(message.c_str());
     
     _ScriptYield = true;
     

@@ -6,7 +6,7 @@
 #include "glm/glm.hpp"
 #include "sigslot/delegate.h"
 
-#include "pixelboost/db/definitions.h"
+#include "pixelboost/framework/definitions.h"
 #include "pixelboost/graphics/renderer/common/renderable.h"
 
 namespace pb

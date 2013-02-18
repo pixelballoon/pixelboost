@@ -30,7 +30,7 @@ Uid ShaderTechnique::GetId()
 
 bool ShaderTechnique::Load(const pugi::xml_node& attributes, const pugi::xml_node& technique)
 {
-    _Uid = RuntimeTypeHash(technique.attribute("class").value());
+    _Uid = TypeHash(technique.attribute("class").value());
     
     pugi::xml_node pass = technique.child("pass");
     while (!pass.empty())

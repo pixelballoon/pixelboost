@@ -70,7 +70,7 @@ bool Localisation::Load(const std::string& directory)
                     ParseString(key);
                     ParseString(value);
                     if (value.length())
-                        _Strings[pb::RuntimeTypeHash(key)] = value;
+                        _Strings[pb::TypeHash(key.c_str())] = value;
                 }
 
                 parsingKey = true;
@@ -98,7 +98,7 @@ bool Localisation::Load(const std::string& directory)
         ParseString(key);
         ParseString(value);
         if (value.length())
-            _Strings[pb::RuntimeTypeHash(key)] = value;
+            _Strings[pb::TypeHash(key.c_str())] = value;
     }
     
     return true;

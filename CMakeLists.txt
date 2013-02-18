@@ -145,8 +145,6 @@ set (DB_TYPES_SOURCES
 set (DB_SOURCES
 	"src/common/pixelboost/db/database.cpp"
 	"src/common/pixelboost/db/database.h"
-	"src/common/pixelboost/db/definitions.cpp"
-	"src/common/pixelboost/db/definitions.h"
 	"src/common/pixelboost/db/entity.cpp"
 	"src/common/pixelboost/db/entity.h"
 	"src/common/pixelboost/db/record.cpp"
@@ -174,6 +172,7 @@ set (FILE_SOURCES
 	)
 
 set (FRAMEWORK_SOURCES
+	"src/common/pixelboost/framework/definitions.h"
 	"src/common/pixelboost/framework/engine.cpp"
 	"src/common/pixelboost/framework/engine.h"
 	"src/common/pixelboost/framework/screen.cpp"

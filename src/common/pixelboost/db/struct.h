@@ -4,7 +4,7 @@
 
 #include "sigslot/signal.h"
 
-#include "pixelboost/db/definitions.h"
+#include "pixelboost/framework/definitions.h"
 
 namespace pb
 {

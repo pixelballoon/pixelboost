@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "pixelboost/db/definitions.h"
+#include "pixelboost/framework/definitions.h"
 #include "pixelboost/resource/definitions.h"
 
 namespace pb
