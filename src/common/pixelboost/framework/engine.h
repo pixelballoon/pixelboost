@@ -24,7 +24,6 @@ class NetworkServer;
 class ParticleRenderer;
 class PrimitiveRenderer;
 class Renderer;
-class ResourceManager;
 class Screen;
 class SpriteRenderer;
 class TouchManager;
@@ -50,7 +49,6 @@ public:
     BufferRenderer* GetBufferRenderer() const;
     FontRenderer* GetFontRenderer() const;
     ModelRenderer* GetModelRenderer() const;
-	ResourceManager* GetResourceManager() const;
     ParticleRenderer* GetParticleRenderer() const;
     PrimitiveRenderer* GetPrimitiveRenderer() const;
 	SpriteRenderer* GetSpriteRenderer() const;
@@ -83,7 +81,6 @@ private:
     FileSystem* _FileSystem;
     
     GameCenter* _GameCenter;
-    ResourceManager* _ResourceManager;
 
     BufferRenderer* _BufferRenderer;
     FontRenderer* _FontRenderer;

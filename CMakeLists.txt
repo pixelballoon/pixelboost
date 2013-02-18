@@ -122,10 +122,18 @@ set (AUDIO_SOURCES
 	)
 
 set (DATA_SOURCES
-	"src/common/pixelboost/data/asset/assetLoader.cpp"
-	"src/common/pixelboost/data/asset/assetLoader.h"
+	"src/common/pixelboost/data/json/elements.h"
+	"src/common/pixelboost/data/json/elements.inl"
+	"src/common/pixelboost/data/json/reader.h"
+	"src/common/pixelboost/data/json/reader.inl"
+	"src/common/pixelboost/data/json/visitor.h"
+	"src/common/pixelboost/data/json/writer.h"
+	"src/common/pixelboost/data/json/writer.inl"
+	"src/common/pixelboost/data/xml/resource.cpp"
+	"src/common/pixelboost/data/xml/resource.h"
 	"src/common/pixelboost/data/xml/xml.cpp"
 	"src/common/pixelboost/data/xml/xml.h"
+	"src/common/pixelboost/data/xml/xmlconfig.h"
 	)
 
 set (DB_TYPES_SOURCES
@@ -398,6 +406,17 @@ set (PHYSICS_2D_SOURCES
 	"src/common/pixelboost/physics/2d/helpers.h"
 	)
 
+set (RESOURCE_SOURCES
+	"src/common/pixelboost/resource/definitions.h"
+	"src/common/pixelboost/resource/register.cpp"
+	"src/common/pixelboost/resource/register.h"
+	"src/common/pixelboost/resource/resourceManager.cpp"
+	"src/common/pixelboost/resource/resourceManager.h"
+	"src/common/pixelboost/resource/resourceManager.inl"
+	"src/common/pixelboost/resource/resource.cpp"
+	"src/common/pixelboost/resource/resource.h"
+	)
+
 set (SCRIPTING_SOURCES
 	"src/common/pixelboost/scripting/lua.cpp"
 	"src/common/pixelboost/scripting/lua.h"
@@ -454,6 +473,7 @@ set (PIXELBOOST_SOURCES
 	${NETWORK_SOURCES}
 	${PHYSICS_2D_SOURCES}
 	${PLATFORM_SOURCES}
+	${RESOURCE_SOURCES}
 	${SCRIPTING_SOURCES}
 	${UTIL_LOCALISATION_SOURCES}
 	${EXTERNAL_SOURCES}
@@ -519,5 +539,6 @@ source_group (misc FILES ${MISC_SOURCES})
 source_group (network FILES ${NETWORK_SOURCES})
 source_group (physics\\2d FILES ${PHYSICS_2D_SOURCES})
 source_group (platform FILES ${PLATFORM_SOURCES})
+source_group (resource FILES ${RESOURCE_SOURCES})
 source_group (scripting FILES ${SCRIPTING_SOURCES})
 source_group (util\\localisation FILES ${UTIL_LOCALISATION_SOURCES})

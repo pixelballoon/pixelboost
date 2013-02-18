@@ -20,11 +20,17 @@
 #include "pixelboost/input/touchManager.h"
 #include "pixelboost/network/gameCenter.h"
 #include "pixelboost/network/networkServer.h"
+#include "pixelboost/resource/resourceManager.h"
 #include "pixelboost/scripting/lua.h"
 
 #include "pixelboost/debug/log.h"
 
 using namespace pb;
+
+namespace pb
+{
+    void RegisterResources();
+}
 
 Engine* Engine::_Instance = 0;
 
@@ -132,6 +138,8 @@ void Engine::Initialise()
 #ifndef PIXELBOOST_DISABLE_DEBUG
     _DebugNetwork->StartServer(9090, 1);
 #endif
+    
+    RegisterResources();
 }
 
 GameCenter* Engine::GetGameCenter() const
@@ -154,11 +162,6 @@ ModelRenderer* Engine::GetModelRenderer() const
     return _ModelRenderer;
 }
 
-ResourceManager* Engine::GetResourceManager() const
-{
-    return _ResourceManager;
-}
-    
 ParticleRenderer* Engine::GetParticleRenderer() const
 {
     return _ParticleRenderer;
@@ -242,6 +245,8 @@ void Engine::Update(float timeDelta, float gameDelta)
 #ifndef PIXELBOOST_DISABLE_SOUND
     AudioManagerSimple::Instance()->Update(timeDelta);
 #endif
+    
+    ResourceManager::Instance()->Update(timeDelta);
     
 #ifndef PIXELBOOST_DISABLE_DEBUG
     _DebugNetwork->Update();
