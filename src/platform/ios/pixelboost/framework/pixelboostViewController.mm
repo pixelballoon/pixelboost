@@ -70,7 +70,7 @@
     
     pb::GraphicsDevice::Instance()->SetDisplayDensity(displayDensity);
     
-    app = pb::Engine::Create(self, std::vector<std::string>());
+    app = pb::Engine::Create(self, 0, 0);
     app->Initialise();
 }
 
