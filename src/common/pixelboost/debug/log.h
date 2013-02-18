@@ -18,7 +18,7 @@
     #define PbLogError(system, format, ...) { char status[1024]; snprintf(status, 1024, format, ## __VA_ARGS__); static_cast<pp::Instance*>(pb::Engine::Instance()->GetViewController())->PostMessage(pp::Var(status)); }
     #define PbLogWarn(system, format, ...) { char status[1024]; snprintf(status, 1024, format, ## __VA_ARGS__); static_cast<pp::Instance*>(pb::Engine::Instance()->GetViewController())->PostMessage(pp::Var(status)); }
 #else
-    #define PbLogDebug(system, format, ...) printf(format, ## __VA_ARGS__)
-	#define PbLogError(system, format, ...) printf(format, ## __VA_ARGS__)
-    #define PbLogWarn(system, format, ...) printf(format, ## __VA_ARGS__)
+    #define PbLogDebug(system, format, ...) printf("[DEBG] %s: ", system); printf(format, ## __VA_ARGS__); printf("\n")
+	#define PbLogError(system, format, ...) printf("[ERRO] %s: ", system); printf(format, ## __VA_ARGS__); printf("\n")
+    #define PbLogWarn(system, format, ...) printf("[WARN] %s: ", system); printf(format, ## __VA_ARGS__); printf("\n")
 #endif
