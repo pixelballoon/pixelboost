@@ -205,6 +205,9 @@ File* FileSystem::OpenFile(const std::string& path, FileMode mode)
 {
     PHYSFS_file* handle = 0;
     
+    if (path == "")
+        return 0;
+    
     switch (mode)
     {
         case kFileModeRead:
