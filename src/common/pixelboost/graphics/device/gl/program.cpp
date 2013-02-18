@@ -1,6 +1,6 @@
 #include "glm/gtc/type_ptr.hpp"
 
-#include "pixelboost/data/xml/xml.h"
+#include "pixelboost/data/xml/pugixml.hpp"
 #include "pixelboost/debug/assert.h"
 #include "pixelboost/debug/log.h"
 #include "pixelboost/file/fileHelpers.h"

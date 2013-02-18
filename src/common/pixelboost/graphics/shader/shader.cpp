@@ -1,4 +1,4 @@
-#include "pixelboost/data/xml/xml.h"
+#include "pixelboost/data/xml/pugixml.hpp"
 #include "pixelboost/debug/log.h"
 #include "pixelboost/file/fileHelpers.h"
 #include "pixelboost/graphics/device/device.h"

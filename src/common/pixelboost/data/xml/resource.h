@@ -2,8 +2,8 @@
 
 #include <string>
 
-#include "pixelboost/data/xml/xml.h"
 #include "pixelboost/db/definitions.h"
+#include "pixelboost/data/xml/pugixml.hpp"
 #include "pixelboost/resource/definitions.h"
 #include "pixelboost/resource/resource.h"
 

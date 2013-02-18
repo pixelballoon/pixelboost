@@ -2,8 +2,6 @@ cmake_minimum_required (VERSION 2.8.10)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-reorder")
 
-add_definitions(-DPUGIXML_NO_STL)
-
 if (PIXELBOOST_BUILD_PLATFORM_ANDROID)
 	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
@@ -131,9 +129,9 @@ set (DATA_SOURCES
 	"src/common/pixelboost/data/json/writer.inl"
 	"src/common/pixelboost/data/xml/resource.cpp"
 	"src/common/pixelboost/data/xml/resource.h"
-	"src/common/pixelboost/data/xml/xml.cpp"
-	"src/common/pixelboost/data/xml/xml.h"
-	"src/common/pixelboost/data/xml/xmlconfig.h"
+	"src/common/pixelboost/data/xml/pugiconfig.hpp"
+	"src/common/pixelboost/data/xml/pugixml.cpp"
+	"src/common/pixelboost/data/xml/pugixml.hpp"
 	)
 
 set (DB_TYPES_SOURCES
