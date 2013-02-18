@@ -9,6 +9,7 @@
 #include "project/struct.h"
 
 #include "pixelboost/data/json/writer.h"
+#include "pixelboost/framework/definitions.h"
 
 using namespace pixeleditor;
 
@@ -179,15 +180,7 @@ void ProjectStruct::ExportJsonProperties(json::Object& properties, const SchemaS
 
 Uid ProjectStruct::GetTypeHash() const
 {
-    const size_t length = _TypeName.length()+1;
-    Uid hash = 2166136261u;
-    for (size_t i=0; i<length; ++i)
-    {
-        hash ^= _TypeName[i];
-        hash *= 16777619u;
-    }
-    
-    return hash;
+    return pb::TypeHash(_TypeName.c_str());
 }
 
 bool ProjectStruct::ExportLua(std::iostream& output, bool appendNewLine)

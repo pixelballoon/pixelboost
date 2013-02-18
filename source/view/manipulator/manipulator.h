@@ -3,7 +3,7 @@
 #include <map>
 #include <string>
 
-#include "pixelboost/db/definitions.h"
+#include "pixelboost/framework/definitions.h"
 #include "pixelboost/input/keyboardManager.h"
 #include "pixelboost/input/mouseManager.h"
 #include "pixelboost/logic/entity.h"
