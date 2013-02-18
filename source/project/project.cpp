@@ -207,8 +207,8 @@ bool Project::Export(bool networkExport)
     {
         it->second->ExportLua();
         
-        char recordString[32];
-        sprintf(recordString, "{ name = \"%s\", type = %u, uid = %u }", it->second->GetName().c_str(), it->second->GetTypeHash(), it->second->GetUid());
+        char recordString[1024];
+        snprintf(recordString, 1024, "{ name = \"%s\", type = %u, uid = %u }", it->second->GetName().c_str(), it->second->GetTypeHash(), it->second->GetUid());
         
         file << recordString;
         
