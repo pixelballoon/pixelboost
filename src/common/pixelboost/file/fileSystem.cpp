@@ -193,11 +193,13 @@ FileSystem* FileSystem::Instance()
 
 void FileSystem::OverrideWriteDirectory(const std::string& path)
 {
+    PbLogDebug("pb.file.system", "Overwriting write location (%s)", path.c_str());
     PHYSFS_setWriteDir(path.c_str());
 }
 
 void FileSystem::MountReadLocation(const std::string& path, const std::string& mountPoint, bool prepend)
 {
+    PbLogDebug("pb.file.system", "Mounting read location (%s) to (%s)", path.c_str(), mountPoint.c_str());
     PHYSFS_mount(path.c_str(), mountPoint.c_str(), prepend ? 0 : 1);
 }
 
