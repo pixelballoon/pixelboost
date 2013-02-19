@@ -1,8 +1,8 @@
 #include "glm/gtc/matrix_transform.hpp"
 
+#include "pixelboost/asset/model.h"
 #include "pixelboost/framework/engine.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
-#include "pixelboost/graphics/renderer/model/model.h"
 #include "pixelboost/graphics/renderer/model/modelRenderer.h"
 #include "pixelboost/logic/component/graphics/skinnedModel.h"
 #include "pixelboost/logic/component/transform.h"

@@ -114,6 +114,11 @@ set (PIXELBOOST_HEADERS
 
 include_directories("${PIXELBOOST_HEADERS}")
 
+set (ASSET_SOURCES
+	"src/common/pixelboost/asset/model.cpp"
+	"src/common/pixelboost/asset/model.h"
+	)
+
 set (AUDIO_SOURCES
 	"src/common/pixelboost/audio/audioManagerSimple.cpp"
 	"src/common/pixelboost/audio/audioManagerSimple.h"
@@ -234,8 +239,6 @@ set (GRAPHICS_RENDERER_SOURCES
 	"src/common/pixelboost/graphics/renderer/font/fontRenderer.h"	
 	"src/common/pixelboost/graphics/renderer/gwen/gwenRenderer.cpp"
 	"src/common/pixelboost/graphics/renderer/gwen/gwenRenderer.h"
-	"src/common/pixelboost/graphics/renderer/model/model.cpp"
-	"src/common/pixelboost/graphics/renderer/model/model.h"
 	"src/common/pixelboost/graphics/renderer/model/modelRenderer.cpp"
 	"src/common/pixelboost/graphics/renderer/model/modelRenderer.h"
 	"src/common/pixelboost/graphics/renderer/particle/particleRenderer.cpp"
@@ -440,41 +443,48 @@ set (EXTERNAL_SOURCES
 	)
 
 set (PIXELBOOST_SOURCES
-	${AUDIO_SOURCES}
+	${ASSET_SOURCES}
 	${DATA_SOURCES}
-	${DB_TYPES_SOURCES}
-	${DB_SOURCES}
 	${DEBUG_SOURCES}
-	${FILE_SOURCES}
-	${FRAMEWORK_SOURCES}
-	${GRAPHICS_CAMERA_SOURCES}
-	${GRAPHICS_DEVICE_SOURCES}
-	${GRAPHICS_HELPER_SOURCES}
-	${GRAPHICS_PARTICLE_SOURCES}
-	${GRAPHICS_RENDERER_SOURCES}
-	${GRAPHICS_SHADER_SOURCES}
-	${GRAPHICS_UI_SOURCES}
-	${GRAPHICS_SOURCES}
-	${INPUT_SOURCES}
-	${LOGIC_COMPONENT_GRAPHICS_SOURCES}
-	${LOGIC_COMPONENT_INPUT_SOURCES}
-	${LOGIC_COMPONENT_PHYSICS_2D_SOURCES}
-	${LOGIC_COMPONENT_PHYSICS_SOURCES}
-	${LOGIC_COMPONENT_TRANSFORM_SOURCES}
-	${LOGIC_COMPONENT_SOURCES}
-	${LOGIC_MESSAGE_SOURCES}
-	${LOGIC_SYSTEM_SOURCES}
-	${LOGIC_SOURCES}
-	${MATHS_SOURCES}
-	${MISC_SOURCES}
-	${NETWORK_SOURCES}
-	${PHYSICS_2D_SOURCES}
-	${PLATFORM_SOURCES}
-	${RESOURCE_SOURCES}
-	${SCRIPTING_SOURCES}
-	${UTIL_LOCALISATION_SOURCES}
 	${EXTERNAL_SOURCES}
+	${FILE_SOURCES}
+	${MATHS_SOURCES}
+	${PLATFORM_SOURCES}
 	)
+
+if (NOT PIXELBOOST_BUILD_CLI)
+	set (PIXELBOOST_SOURCES
+		${PIXELBOOST_SOURCES}
+		${AUDIO_SOURCES}
+		${DB_TYPES_SOURCES}
+		${DB_SOURCES}
+		${FRAMEWORK_SOURCES}
+		${GRAPHICS_CAMERA_SOURCES}
+		${GRAPHICS_DEVICE_SOURCES}
+		${GRAPHICS_HELPER_SOURCES}
+		${GRAPHICS_PARTICLE_SOURCES}
+		${GRAPHICS_RENDERER_SOURCES}
+		${GRAPHICS_SHADER_SOURCES}
+		${GRAPHICS_UI_SOURCES}
+		${GRAPHICS_SOURCES}
+		${INPUT_SOURCES}
+		${LOGIC_COMPONENT_GRAPHICS_SOURCES}
+		${LOGIC_COMPONENT_INPUT_SOURCES}
+		${LOGIC_COMPONENT_PHYSICS_2D_SOURCES}
+		${LOGIC_COMPONENT_PHYSICS_SOURCES}
+		${LOGIC_COMPONENT_TRANSFORM_SOURCES}
+		${LOGIC_COMPONENT_SOURCES}
+		${LOGIC_MESSAGE_SOURCES}
+		${LOGIC_SYSTEM_SOURCES}
+		${LOGIC_SOURCES}
+		${MISC_SOURCES}
+		${NETWORK_SOURCES}
+		${PHYSICS_2D_SOURCES}
+		${RESOURCE_SOURCES}
+		${SCRIPTING_SOURCES}
+		${UTIL_LOCALISATION_SOURCES}
+		)
+endif (NOT PIXELBOOST_BUILD_CLI)
 
 add_library (pixelboost_engine STATIC ${PIXELBOOST_SOURCES})
 target_link_libraries (pixelboost_engine Box2D freetype2 lua physfs-static)
@@ -514,6 +524,7 @@ pixelboost_setup_library(freetype2)
 pixelboost_setup_library(lua)
 pixelboost_setup_library(physfs-static)
 
+source_group (asset FILES ${ASSET_SOURCES})
 source_group (audio FILES ${AUDIO_SOURCES})
 source_group (data FILES ${DATA_SOURCES})
 source_group (db\\types FILES ${DB_TYPES_SOURCES})

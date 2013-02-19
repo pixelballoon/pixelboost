@@ -6,19 +6,24 @@
 #include "glm/glm.hpp"
 
 #include "pixelboost/file/fileSystem.h"
-#include "pixelboost/graphics/device/bufferFormats.h"
 #include "pixelboost/maths/boundingSphere.h"
 
 namespace pb
 {
+
+    enum ModelVertexFormat
+    {
+        kModelVertexFormat_1P_1N_1UV,
+        kModelVertexFormat_1P_1N_1UV_4BW,
+    };
 
     class ModelVertex
     {
     public:
         ModelVertex();
         
-        bool Read(pb::VertexFormat vertexFormat, pb::File* file);
-        bool Write(pb::VertexFormat vertexFormat, pb::File* file) const;
+        bool Read(ModelVertexFormat vertexFormat, File* file);
+        bool Write(ModelVertexFormat vertexFormat, File* file) const;
         
     public:
         char Bone[4];
@@ -35,8 +40,8 @@ namespace pb
     public:
         ModelMeshDefinition();
         
-        bool Read(pb::File* file);
-        bool Write(pb::File* file) const;
+        bool Read(File* file);
+        bool Write(File* file) const;
         
         void CalculateBounds();
         
@@ -44,7 +49,7 @@ namespace pb
         bool Skinned;
         bool Indexed;
         pb::BoundingSphere Bounds;
-        pb::VertexFormat VertexFormat;
+        ModelVertexFormat VertexFormat;
         
         std::vector<short> Indices;
         std::vector<ModelVertex> Vertices;
@@ -55,8 +60,8 @@ namespace pb
     public:
         ModelBoneDefinition();
         
-        bool Read(pb::File* file);
-        bool Write(pb::File* file) const;
+        bool Read(File* file);
+        bool Write(File* file) const;
     
     public:
         std::string _Name;
@@ -74,8 +79,8 @@ namespace pb
     public:
         ModelAnimationDefinition();
         
-        bool Read(pb::File* file);
-        bool Write(pb::File* file) const;
+        bool Read(File* file);
+        bool Write(File* file) const;
 
     public:
         typedef std::vector<glm::mat4x4> AnimationFrame;

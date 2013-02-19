@@ -10,6 +10,7 @@ namespace pb
 {
     typedef unsigned int Uid;
     
+#ifndef PIXELBOOST_BUILD_CLI
     namespace
     {
         constexpr Uid TypeHash(char c, const char* input, Uid value)
@@ -22,4 +23,16 @@ namespace pb
     {
         return TypeHash(*input, input+1, 2166136261u);
     };
+#else
+    Uid TypeHash(const char* input)
+    {
+        Uid hash = 2166136261u;
+        while (input != 0)
+        {
+            hash = (hash ^ *input) * 16777619u;
+        }
+        return hash;
+    }
+#endif
+    
 }

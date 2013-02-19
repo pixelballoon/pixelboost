@@ -1,22 +1,22 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 #include "pixelboost/debug/log.h"
-#include "pixelboost/graphics/renderer/model/model.h"
+#include "pixelboost/asset/model.h"
 
 using namespace pb;
 
-const short ModelDefinition::kCurrentModelVersion = 2;
+const short ModelDefinition::kCurrentModelVersion = 3;
 
 ModelVertex::ModelVertex()
 {
     
 }
     
-bool ModelVertex::Read(pb::VertexFormat vertexFormat, pb::File* file)
+bool ModelVertex::Read(ModelVertexFormat vertexFormat, File* file)
 {
     switch (vertexFormat)
     {
-        case pb::kVertexFormat_P3_N3_UV:
+        case kModelVertexFormat_1P_1N_1UV:
         {
             file->Read(Position.x);
             file->Read(Position.y);
@@ -28,7 +28,7 @@ bool ModelVertex::Read(pb::VertexFormat vertexFormat, pb::File* file)
             file->Read(UV.y);
             break;
         }
-        case pb::kVertexFormat_P3_N3_UV_BW:
+        case kModelVertexFormat_1P_1N_1UV_4BW:
         {
             file->Read(Position.x);
             file->Read(Position.y);
@@ -57,11 +57,11 @@ bool ModelVertex::Read(pb::VertexFormat vertexFormat, pb::File* file)
     return true;
 }
 
-bool ModelVertex::Write(pb::VertexFormat vertexFormat, pb::File* file) const
+bool ModelVertex::Write(ModelVertexFormat vertexFormat, File* file) const
 {
     switch (vertexFormat)
     {
-        case pb::kVertexFormat_P3_N3_UV:
+        case kModelVertexFormat_1P_1N_1UV:
         {
             file->Write(Position.x);
             file->Write(Position.y);
@@ -73,7 +73,7 @@ bool ModelVertex::Write(pb::VertexFormat vertexFormat, pb::File* file) const
             file->Write(UV.y);
             break;
         }
-        case pb::kVertexFormat_P3_N3_UV_BW:
+        case kModelVertexFormat_1P_1N_1UV_4BW:
         {
             file->Write(Position.x);
             file->Write(Position.y);
@@ -116,7 +116,7 @@ bool ModelMeshDefinition::Read(pb::File* file)
     
     short vertexFormat;
     file->Read(vertexFormat);
-    VertexFormat = (pb::VertexFormat)vertexFormat;
+    VertexFormat = (ModelVertexFormat)vertexFormat;
     
     short numVertices;
     file->Read(numVertices);
