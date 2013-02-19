@@ -5,8 +5,8 @@
 
 #include "glm/gtc/matrix_transform.hpp"
 
+#include "pixelboost/asset/model.h"
 #include "pixelboost/file/fileSystem.h"
-#include "pixelboost/graphics/renderer/model/model.h"
 
 #include "modelLoader.h"
 
@@ -132,7 +132,7 @@ bool ObjLoader::Process()
     pb::ModelMeshDefinition mesh;
     
     mesh.Indexed = false;
-    mesh.VertexFormat = pb::kVertexFormat_P3_N3_UV;
+    mesh.VertexFormat = pb::kModelVertexFormat_1P_1N_1UV;
     
     for (int i=0; i<verts.size(); i++)
     {
@@ -232,7 +232,7 @@ void FbxLoader::ProcessMesh(FbxNode* node, FbxMesh* mesh, glm::mat4x4 globalTran
     pb::ModelMeshDefinition meshDefinition;
     
     meshDefinition.Indexed = false;
-    meshDefinition.VertexFormat = pb::kVertexFormat_P3_N3_UV;
+    meshDefinition.VertexFormat = pb::kModelVertexFormat_1P_1N_1UV;
     
     FbxStringList uvNames;
     mesh->GetUVSetNames(uvNames);
@@ -314,7 +314,7 @@ void FbxLoader::ProcessMesh(FbxNode* node, FbxMesh* mesh, glm::mat4x4 globalTran
     
     if (hasSkin)
     {
-        meshDefinition.VertexFormat = pb::kVertexFormat_P3_N3_UV_BW;
+        meshDefinition.VertexFormat = pb::kModelVertexFormat_1P_1N_1UV_4BW;
         meshDefinition.Skinned = true;
     }
     

@@ -7,8 +7,8 @@
 #include "glm/gtc/quaternion.hpp"
 #include "glm/glm.hpp"
 
+#include "pixelboost/asset/model.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
-#include "pixelboost/graphics/renderer/model/model.h"
 
 namespace pb
 {

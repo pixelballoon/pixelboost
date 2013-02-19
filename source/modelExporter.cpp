@@ -1,4 +1,4 @@
-#include "pixelboost/graphics/renderer/model/model.h"
+#include "pixelboost/asset/model.h"
 
 #include "modelExporter.h"
 #include "modelLoader.h"
