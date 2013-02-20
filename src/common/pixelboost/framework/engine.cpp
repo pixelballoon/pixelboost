@@ -3,6 +3,7 @@
 #include "pixelboost/audio/audioManagerSimple.h"
 #include "pixelboost/debug/debugDatabaseHandler.h"
 #include "pixelboost/debug/debugVariableManager.h"
+#include "pixelboost/debug/log.h"
 #include "pixelboost/file/fileSystem.h"
 #include "pixelboost/framework/engine.h"
 #include "pixelboost/framework/screen.h"
@@ -40,8 +41,12 @@ Engine::Engine(void* platformContext, int argc, const char** argv)
     , _TotalTime(0)
 {
     _Instance = this;
-
+    
+    LogSystem::Instance()->AddSubscriber(new LogSubscriberConsole());
+    
     _FileSystem = new FileSystem(argc > 0 ? argv[0] : "");
+    
+    LogSystem::Instance()->AddSubscriber(new LogSubscriberFile("/pb.log"));
     
     if (argc)
     {
@@ -61,7 +66,7 @@ Engine::Engine(void* platformContext, int argc, const char** argv)
             _FileSystem->MountReadLocation(std::string(options[kOptionProject].arg) + "data/", "/", true);
         }
     }
-
+    
 #ifndef PIXELBOOST_DISABLE_GRAPHICS
     _Renderer = new Renderer();
     _BufferRenderer = new BufferRenderer();

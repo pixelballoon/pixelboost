@@ -157,6 +157,7 @@ set (DB_SOURCES
 	"src/common/pixelboost/db/register.h"
 	"src/common/pixelboost/db/struct.cpp"
 	"src/common/pixelboost/db/struct.h"
+	"src/common/pixelboost/db/struct.inl"
 	)
 
 set (DEBUG_SOURCES
@@ -168,6 +169,8 @@ set (DEBUG_SOURCES
 	"src/common/pixelboost/debug/debugVariable.h"
 	"src/common/pixelboost/debug/debugVariableManager.cpp"
 	"src/common/pixelboost/debug/debugVariableManager.h"
+	"src/common/pixelboost/debug/log.cpp"
+	"src/common/pixelboost/debug/log.h"
 	)
 
 set (FILE_SOURCES
@@ -367,10 +370,12 @@ set (LOGIC_SOURCES
 	"src/common/pixelboost/logic/definitions.h"
 	"src/common/pixelboost/logic/entity.cpp"
 	"src/common/pixelboost/logic/entity.h"
+	"src/common/pixelboost/logic/entity.inl"
 	"src/common/pixelboost/logic/message.cpp"
 	"src/common/pixelboost/logic/message.h"
 	"src/common/pixelboost/logic/scene.cpp"
 	"src/common/pixelboost/logic/scene.h"
+	"src/common/pixelboost/logic/scene.inl"
 	"src/common/pixelboost/logic/system.cpp"
 	"src/common/pixelboost/logic/system.h"
 	)
