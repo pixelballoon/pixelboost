@@ -2,7 +2,8 @@
 #include <dirent.h>
 #include <errno.h>
 
-#include "pixelboost/data/json/reader.h"
+#include "json/reader.h"
+
 #include "pixelboost/file/fileHelpers.h"
 #include "pixelboost/network/networkMessage.h"
 #include "pixelboost/network/networkServer.h"

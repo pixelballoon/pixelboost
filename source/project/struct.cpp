@@ -8,7 +8,7 @@
 #include "project/schema.h"
 #include "project/struct.h"
 
-#include "pixelboost/data/json/writer.h"
+#include "json/writer.h"
 #include "pixelboost/framework/definitions.h"
 
 using namespace pixeleditor;

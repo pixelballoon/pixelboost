@@ -6,7 +6,7 @@
 #include "project/record.h"
 #include "project/schema.h"
 
-#include "pixelboost/data/json/writer.h"
+#include "json/writer.h"
 
 using namespace pixeleditor;
 

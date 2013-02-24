@@ -4,8 +4,8 @@
 
 #include "lua.hpp"
 
-#include "pixelboost/data/json/reader.h"
-#include "pixelboost/data/json/writer.h"
+#include "json/reader.h"
+#include "json/writer.h"
 
 extern "C" {
 #include "lapi.h"
