@@ -8,7 +8,6 @@
 #include "glm/glm.hpp"
 
 #include "pixelboost/asset/model.h"
-#include "pixelboost/graphics/device/vertexBuffer.h"
 
 namespace pb
 {
@@ -36,7 +35,7 @@ public:
     virtual pb::ModelDefinition* GetModel();
     
 private:
-    void ParseVert(std::vector<pb::Vertex_P3_N3_UV>& verts, const std::string& vert, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec2>& uvs, const std::vector<glm::vec3>& normals);
+    void ParseVert(std::vector<pb::ModelVertex>& verts, const std::string& vert, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec2>& uvs, const std::vector<glm::vec3>& normals);
     std::vector<std::string>& SplitString(const std::string &string, char delim, std::vector<std::string> &items);
     
     std::string _Filename;

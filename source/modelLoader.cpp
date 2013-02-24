@@ -5,8 +5,10 @@
 
 #include "glm/gtc/matrix_transform.hpp"
 
+#include "pipeline/debug/log.h"
+#include "pipeline/file/fileSystem.h"
+
 #include "pixelboost/asset/model.h"
-#include "pixelboost/file/fileSystem.h"
 
 #include "modelLoader.h"
 
@@ -32,7 +34,7 @@ bool ObjLoader::Process()
     if (_Model)
         return true;
     
-    pb::File* file = pb::FileSystem::Instance()->OpenFile(_Filename);
+    pl::File* file = pl::FileSystem::Instance()->OpenFile(_Filename);
     
     if (!file)
         return false;
@@ -49,7 +51,7 @@ bool ObjLoader::Process()
     std::vector<glm::vec2> uvs;
     std::vector<glm::vec3> normals;
     
-    std::vector<pb::Vertex_P3_N3_UV> verts;
+    std::vector<pb::ModelVertex> verts;
     
     enum ReadMode
     {
@@ -137,9 +139,9 @@ bool ObjLoader::Process()
     for (int i=0; i<verts.size(); i++)
     {
         pb::ModelVertex vertex;
-        vertex.Position = glm::vec3(verts[i].position[0], verts[i].position[1], verts[i].position[2]);
-        vertex.Normal = glm::vec3(verts[i].normal[0], verts[i].normal[1], verts[i].normal[2]);
-        vertex.UV = glm::vec2(verts[i].uv[0], verts[i].uv[1]);
+        vertex.Position = glm::vec3(verts[i].Position[0], verts[i].Position[1], verts[i].Position[2]);
+        vertex.Normal = glm::vec3(verts[i].Normal[0], verts[i].Normal[1], verts[i].Normal[2]);
+        vertex.UV = glm::vec2(verts[i].UV[0], verts[i].UV[1]);
         mesh.Vertices.push_back(vertex);
     }
     
@@ -158,7 +160,7 @@ pb::ModelDefinition* ObjLoader::GetModel()
     return _Model;
 }
 
-void ObjLoader::ParseVert(std::vector<pb::Vertex_P3_N3_UV>& verts, const std::string& vert, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec2>& uvs, const std::vector<glm::vec3>& normals)
+void ObjLoader::ParseVert(std::vector<pb::ModelVertex>& verts, const std::string& vert, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec2>& uvs, const std::vector<glm::vec3>& normals)
 {
     std::vector<std::string> vertIndices;
     SplitString(vert, '/', vertIndices);
@@ -166,26 +168,26 @@ void ObjLoader::ParseVert(std::vector<pb::Vertex_P3_N3_UV>& verts, const std::st
     if (vertIndices.size() < 2)
         return;
     
-    pb::Vertex_P3_N3_UV vertex;
+    pb::ModelVertex vertex;
     
     int posIndex = atoi(vertIndices[0].c_str());
     glm::vec3 pos = vertices[posIndex-1];
-    vertex.position[0] = pos[0];
-    vertex.position[1] = pos[1];
-    vertex.position[2] = pos[2];
+    vertex.Position[0] = pos[0];
+    vertex.Position[1] = pos[1];
+    vertex.Position[2] = pos[2];
     
     int uvIndex = atoi(vertIndices[1].c_str());
     glm::vec2 uv = uvs[uvIndex-1];
-    vertex.uv[0] = uv[0];
-    vertex.uv[1] = 1.f-uv[1];
+    vertex.UV[0] = uv[0];
+    vertex.UV[1] = 1.f-uv[1];
     
     if (vertIndices.size() > 2)
     {
         int normalIndex = atoi(vertIndices[2].c_str());
         glm::vec3 normal = normals[normalIndex-1];
-        vertex.normal[0] = normal[0];
-        vertex.normal[1] = normal[1];
-        vertex.normal[2] = normal[2];
+        vertex.Normal[0] = normal[0];
+        vertex.Normal[1] = normal[1];
+        vertex.Normal[2] = normal[2];
     }
     
     verts.push_back(vertex);
@@ -225,7 +227,7 @@ void FbxLoader::ProcessMesh(FbxNode* node, FbxMesh* mesh, glm::mat4x4 globalTran
     
     if (mesh->GetDeformerCount() > 1)
     {
-        printf("ERROR: Mesh has more than one deformer (%d)!\n", mesh->GetDeformerCount());
+        PlLogError("modeltool.fbx", "Mesh has more than one deformer (%d)!", mesh->GetDeformerCount());
         return;
     }
     
@@ -260,7 +262,7 @@ void FbxLoader::ProcessMesh(FbxNode* node, FbxMesh* mesh, glm::mat4x4 globalTran
                     if (cluster->GetLinkMode() != FbxCluster::eNormalize)
                     {
                         hasSkin = false;
-                        printf("ERROR: Only normalised skin link clusters are currently supported, exporting without skinning!\n");
+                        PlLogError("modeltool.fbx", "Only normalised skin link clusters are currently supported, exporting without skinning!");
                         continue;
                     }
                     
@@ -303,11 +305,11 @@ void FbxLoader::ProcessMesh(FbxNode* node, FbxMesh* mesh, glm::mat4x4 globalTran
                 if (tooManyWeights)
                 {
                     hasSkin = false;
-                    printf("ERROR: Vertex on mesh %s has too many weights (max 4), exporting without skinning!\n", node->GetName());
+                    PlLogError("modeltool.fbx", "Vertex on mesh %s has too many weights (max 4), exporting without skinning!", node->GetName());
                 }
             } else {
                 hasSkin = false;
-                printf("ERROR: Only rigid and linear skinning are currently supported, exporting without skinning!\n");
+                PlLogError("modeltool.fbx", "Only rigid and linear skinning are currently supported, exporting without skinning!");
             }
         }
     }
@@ -322,7 +324,7 @@ void FbxLoader::ProcessMesh(FbxNode* node, FbxMesh* mesh, glm::mat4x4 globalTran
     {
         if (mesh->GetPolygonSize(polyIdx) != 3)
         {
-            printf("ERROR: Unexpected poly size (%d)!\n", mesh->GetPolygonSize(polyIdx));
+            PlLogError("modeltool.fbx", "Unexpected poly size (%d)!", mesh->GetPolygonSize(polyIdx));
             continue;
         }
         
@@ -498,7 +500,7 @@ void FbxLoader::ParseNode(FbxNode* node, glm::mat4x4 parentTransform, FbxNodeAtt
     
     if (rotationOrder != eEulerXYZ)
     {
-        printf("ERROR: Unsupported rotation order, currently only Euler XYZ is supported. Transforms may not look correct.\n");
+        PlLogError("modeltool.fbx", "Unsupported rotation order, currently only Euler XYZ is supported. Transforms may not look correct.");
     }
     
     glm::quat rotationQuaternion;
@@ -532,8 +534,8 @@ bool FbxLoader::Process()
     FbxImporter* importer = FbxImporter::Create(_Manager,"");
     
     if(!importer->Initialize(_Filename.c_str(), -1, _Manager->GetIOSettings())) {
-        printf("Call to FbxImporter::Initialize() failed.\n");
-        printf("Error returned: %s\n\n", importer->GetLastErrorString());
+        PlLogError("modeltool.fbx", "Call to FbxImporter::Initialize() failed.");
+        PlLogError("modeltool.fbx", "Error returned: %s", importer->GetLastErrorString());
         return false;
     }
     

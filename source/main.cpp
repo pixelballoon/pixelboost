@@ -4,25 +4,23 @@
 #include <vector>
 
 #include "glm/glm.hpp"
+#include "json/writer.h"
 #include "lodepng/lodepng.h"
 
-#include "pixelboost/data/json/writer.h"
+#include "pipeline/debug/log.h"
 
 #include "modelExporter.h"
 #include "modelLoader.h"
 
-int main (int argc, const char * argv[])
+int main(int argc, const char * argv[])
 {
-    if (argc < 3)
+    if (argc < 2)
         return 1;
     
-    new pb::FileSystem(argv[0]);
+    std::string inputLocation = argv[1];
+    std::string outputLocation = argv[2];
     
-    pb::FileSystem::Instance()->MountReadLocation(argv[1], "/", true);
-    pb::FileSystem::Instance()->OverrideWriteDirectory(argv[1]);
-    
-    std::string inputLocation = argv[2];
-    std::string outputLocation = argv[3];
+    PlLogDebug("modeltool", "Converting model from %s to %s", inputLocation.c_str(), outputLocation.c_str());
     
     std::string extension = inputLocation.substr(inputLocation.find_last_of(".")+1);
 
@@ -38,19 +36,17 @@ int main (int argc, const char * argv[])
     }
     else
     {
-        printf("ERROR: No loader available for extension %s on model %s\n", extension.c_str(), inputLocation.c_str());
+        PlLogError("modeltool", "No loader available for extension %s on model %s", extension.c_str(), inputLocation.c_str());
         return 1;
     }
     
     if (!modelExporter->Process())
     {
-        printf("ERROR: Failed to process model %s\n", inputLocation.c_str());
+        PlLogError("modeltool", "Failed to process model %s", inputLocation.c_str());
         return 1;
     }
     
     modelExporter->Save(outputLocation);
-    
-    printf("Saving model %s -> %s\n", inputLocation.c_str(), outputLocation.c_str());
 
     return 0;
 }
