@@ -2,49 +2,44 @@
 #include <sstream>
 #include <string>
 
+#include "pipeline/debug/log.h"
+#include "pipeline/file/fileSystem.h"
+
 #include "jpegcompressor/jpge.h"
 #include "lodepng/lodepng.h"
 #include "stbimage/stb_image.h"
 #include "stbimage/stb_image_write.h"
 
-#include "pixelboost/file/fileHelpers.h"
-#include "pixelboost/file/fileSystem.h"
-
 int main(int argc, const char * argv[])
 {
-    if (argc < 3)
+    if (argc < 2)
         return 1;
     
-    new pb::FileSystem(argv[0]);
-    
-    pb::FileSystem::Instance()->MountReadLocation(argv[1], "/", true);
-    pb::FileSystem::Instance()->OverrideWriteDirectory(argv[1]);
-    
-    std::string inputLocation = argv[2];
-    std::string outputLocation = argv[3];
+    std::string inputLocation = argv[1];
+    std::string outputLocation = argv[2];
     
     std::vector<unsigned char> data;
     unsigned char* decoded;
     
-    printf("Converting %s to %s\n", argv[1], argv[2]);
+    PlLogInfo("texturetool", "Converting %s to %s", argv[1], argv[2]);
     
-    pb::File* file = pb::FileSystem::Instance()->OpenFile(inputLocation);
+    pl::File* file = pl::FileSystem::Instance()->OpenFile(inputLocation, pl::kFileModeRead);
     if (!file)
     {
-        printf("Can't open input file\n");
+        PlLogError("texturetool", "Can't open input file");
         return 1;
     }
     
     file->ReadAll(data);
-    
     delete file;
+    file = 0;
     
     int width, height, components;
     decoded = stbi_load_from_memory(&data[0], data.size(), &width, &height, &components, STBI_default);
 
     if (components == 3)
     {
-        printf("ERROR: Only PNGs with alpha are supported\n");
+        PlLogError("texturetool", "Only PNGs with alpha are supported");
         return 1;
     }
     
@@ -82,11 +77,11 @@ int main(int argc, const char * argv[])
     int alphaBufferSize;
     unsigned char* alphaBuffer = stbi_write_png_to_mem(alphaData, 0, width, height, 1, &alphaBufferSize);
     
-    file = pb::FileSystem::Instance()->OpenFile(outputLocation, pb::kFileModeWrite);
+    file = pl::FileSystem::Instance()->OpenFile(outputLocation, pl::kFileModeWrite);
     
     if (!file)
     {
-        printf("ERROR: Can't open output file\n");
+        PlLogError("texturetool", "Can't open output file");
         return 1;
     }
     
@@ -99,8 +94,6 @@ int main(int argc, const char * argv[])
     
     delete[] rgbBuffer;
     free(alphaBuffer);
-    
-    printf("Success!\n");
     
     return 0;
 }
