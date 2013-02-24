@@ -2,8 +2,10 @@
 #include <sstream>
 #include <string>
 
-#include "pixelboost/data/xml/pugixml.hpp"
-#include "pixelboost/file/fileHelpers.h"
+#include "pugixml/pugixml.hpp"
+
+#include "pipeline/debug/log.h"
+#include "pipeline/file/fileSystem.h"
 
 enum ShaderLanguage
 {
@@ -55,28 +57,25 @@ int main(int argc, const char * argv[])
 {
     bool status = true;
     
-    if (argc < 3)
+    if (argc < 2)
         return 1;
-    
-    new pb::FileSystem(argv[0]);
-    
-    pb::FileSystem::Instance()->MountReadLocation(argv[1], "/", true);
-    pb::FileSystem::Instance()->OverrideWriteDirectory(argv[1]);
     
     std::string vertex, fragment;
     
-    const char* inputLocation = argv[2];
-    const char* outputLocation = argv[3];
+    const char* inputLocation = argv[1];
+    const char* outputLocation = argv[2];
 
-    pb::File* file = pb::FileSystem::Instance()->OpenFile(inputLocation);
+    pl::File* file = pl::FileSystem::Instance()->OpenFile(inputLocation, pl::kFileModeRead);
+    
+    PlLogInfo("shadertool", "Processing shader %s, exporting to %s", inputLocation, outputLocation);
     
     std::string input;
     
-    if (file)
-    {
-        file->ReadAll(input);
-        delete file;
-    }
+    if (!file)
+        return 1;
+
+    file->ReadAll(input);
+    delete file;
     
     pugi::xml_document inputDocument;
     pugi::xml_document outputDocument;
@@ -124,7 +123,7 @@ int main(int argc, const char * argv[])
     std::ostringstream output;
     outputDocument.save(output);
     
-    file = pb::FileSystem::Instance()->OpenFile(outputLocation, pb::kFileModeWrite);
+    file = pl::FileSystem::Instance()->OpenFile(outputLocation, pl::kFileModeWrite);
     
     if (file)
     {

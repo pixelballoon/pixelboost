@@ -1,14 +1,14 @@
 cmake_minimum_required (VERSION 2.8.10)
 project (shadertool)
 
-include (../../build.cmake)
+add_subdirectory (../../pipeline ${CMAKE_BINARY_DIR}/pipeline)
 
-pixelboost_setup_pre(../../ shadertool "com.pixelballoon.shadertool" "Shadertool")
-
+include_directories(${PIPELINE_HEADERS})
 include_directories("source")
 
 set (SHADERTOOL_SOURCES
 	"source/main.cpp"
 	)
 
-pixelboost_setup_post("${SHADERTOOL_SOURCES}")
+add_executable (shadertool ${SHADERTOOL_SOURCES})
+target_link_libraries (shadertool pixelboost_pipeline)
