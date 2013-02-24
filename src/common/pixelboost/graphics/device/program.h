@@ -5,7 +5,8 @@
 #include "glm/glm.hpp"
 #include "sigslot/delegate.h"
 
-#include "pixelboost/data/json/reader.h"
+#include "json/reader.h"
+
 #include "pixelboost/graphics/device/device.h"
 
 namespace pugi

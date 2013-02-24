@@ -1,6 +1,7 @@
 #ifndef PIXELBOOST_DISABLE_GRAPHICS
 
-#include "pixelboost/data/json/reader.h"
+#include "json/reader.h"
+
 #include "pixelboost/file/fileHelpers.h"
 #include "pixelboost/framework/engine.h"
 #include "pixelboost/graphics/device/texture.h"

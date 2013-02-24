@@ -1,4 +1,4 @@
-#include "pixelboost/data/xml/resource.h"
+#include "pixelboost/data/resources/xmlResource.h"
 #include "pixelboost/resource/register.h"
 #include "pixelboost/resource/resourceManager.h"
 

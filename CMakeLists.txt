@@ -100,7 +100,6 @@ if (PIXELBOOST_BUILD_PLATFORM_IOS)
 endif (PIXELBOOST_BUILD_PLATFORM_IOS)
 
 set (PIXELBOOST_HEADERS
-	"${PIXELBOOST_LIBRARY_HEADERS}"
 	"${PIXELBOOST_HEADERS}"
 	"${PLATFORM_HEADERS}"
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/common"
@@ -110,33 +109,20 @@ set (PIXELBOOST_HEADERS
 	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/luabridge/Source"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/lua/src"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/physfs"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../shared/src/external"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../shared/src/shared"
 	CACHE INTERNAL "Complete list of pixelboost headers")
 
 include_directories("${PIXELBOOST_HEADERS}")
-
-set (ASSET_SOURCES
-	"src/common/pixelboost/asset/model.cpp"
-	"src/common/pixelboost/asset/model.h"
-	)
 
 set (AUDIO_SOURCES
 	"src/common/pixelboost/audio/audioManagerSimple.cpp"
 	"src/common/pixelboost/audio/audioManagerSimple.h"
 	)
 
-set (DATA_SOURCES
-	"src/common/pixelboost/data/json/elements.h"
-	"src/common/pixelboost/data/json/elements.inl"
-	"src/common/pixelboost/data/json/reader.h"
-	"src/common/pixelboost/data/json/reader.inl"
-	"src/common/pixelboost/data/json/visitor.h"
-	"src/common/pixelboost/data/json/writer.h"
-	"src/common/pixelboost/data/json/writer.inl"
-	"src/common/pixelboost/data/xml/resource.cpp"
-	"src/common/pixelboost/data/xml/resource.h"
-	"src/common/pixelboost/data/xml/pugiconfig.hpp"
-	"src/common/pixelboost/data/xml/pugixml.cpp"
-	"src/common/pixelboost/data/xml/pugixml.hpp"
+set (DATA_RESOURCES_SOURCES
+	"src/common/pixelboost/data/resources/xmlResource.cpp"
+	"src/common/pixelboost/data/resources/xmlResource.h"
 	)
 
 set (DB_TYPES_SOURCES
@@ -252,6 +238,11 @@ set (GRAPHICS_RENDERER_SOURCES
 	"src/common/pixelboost/graphics/renderer/sprite/sprite.h"
 	"src/common/pixelboost/graphics/renderer/sprite/spriteRenderer.cpp"
 	"src/common/pixelboost/graphics/renderer/sprite/spriteRenderer.h"
+	)
+
+set (GRAPHICS_RESOURCES_SOURCES
+	"src/common/pixelboost/graphics/resources/modelResource.cpp"
+	"src/common/pixelboost/graphics/resources/modelResource.h"
 	)
 
 set (GRAPHICS_SHADER_SOURCES
@@ -380,18 +371,6 @@ set (LOGIC_SOURCES
 	"src/common/pixelboost/logic/system.h"
 	)
 
-set (MATHS_SOURCES
-	"src/common/pixelboost/maths/boundingBox.cpp"
-	"src/common/pixelboost/maths/boundingBox.h"
-	"src/common/pixelboost/maths/boundingFrustum.cpp"
-	"src/common/pixelboost/maths/boundingFrustum.h"
-	"src/common/pixelboost/maths/boundingSphere.cpp"
-	"src/common/pixelboost/maths/boundingSphere.h"
-	"src/common/pixelboost/maths/hermiteCurve.cpp"
-	"src/common/pixelboost/maths/hermiteCurve.h"
-	"src/common/pixelboost/maths/matrixHelpers.h"
-	)
-
 set (MISC_SOURCES
 	"src/common/pixelboost/misc/gwen/inputHandler.cpp"
 	"src/common/pixelboost/misc/gwen/inputHandler.h"
@@ -435,64 +414,45 @@ set (UTIL_LOCALISATION_SOURCES
 	"src/common/pixelboost/util/localisation/string.h"
 	)
 
-set (EXTERNAL_SOURCES
-	"src/external/GL/glew.c"
-	"src/external/jpegcompressor/jpgd.cpp"
-	"src/external/jpegcompressor/jpge.cpp"
-	"src/external/lodepng/lodepng.cpp"
-	"src/external/mongoose/mongoose.c"
-	"src/external/optionparser/optionparser.h"
-	"src/external/regex/trex.c"
-	"src/external/stbimage/stb_image.c"
-	"src/external/stbimage/stb_image_write.c"
-	)
-
 set (PIXELBOOST_SOURCES
 	${ASSET_SOURCES}
-	${DATA_SOURCES}
+	${AUDIO_SOURCES}
+	${DATA_RESOURCES_SOURCES}
+	${DB_TYPES_SOURCES}
+	${DB_SOURCES}
 	${DEBUG_SOURCES}
-	${EXTERNAL_SOURCES}
 	${FILE_SOURCES}
-	${MATHS_SOURCES}
+	${FRAMEWORK_SOURCES}
+	${GRAPHICS_CAMERA_SOURCES}
+	${GRAPHICS_DEVICE_SOURCES}
+	${GRAPHICS_HELPER_SOURCES}
+	${GRAPHICS_PARTICLE_SOURCES}
+	${GRAPHICS_RENDERER_SOURCES}
+	${GRAPHICS_RESOURCES_SOURCES}
+	${GRAPHICS_SHADER_SOURCES}
+	${GRAPHICS_UI_SOURCES}
+	${GRAPHICS_SOURCES}
+	${INPUT_SOURCES}
+	${LOGIC_COMPONENT_GRAPHICS_SOURCES}
+	${LOGIC_COMPONENT_INPUT_SOURCES}
+	${LOGIC_COMPONENT_PHYSICS_2D_SOURCES}
+	${LOGIC_COMPONENT_PHYSICS_SOURCES}
+	${LOGIC_COMPONENT_TRANSFORM_SOURCES}
+	${LOGIC_COMPONENT_SOURCES}
+	${LOGIC_MESSAGE_SOURCES}
+	${LOGIC_SYSTEM_SOURCES}
+	${LOGIC_SOURCES}
+	${MISC_SOURCES}
+	${NETWORK_SOURCES}
+	${PHYSICS_2D_SOURCES}
 	${PLATFORM_SOURCES}
+	${RESOURCE_SOURCES}
+	${SCRIPTING_SOURCES}
+	${UTIL_LOCALISATION_SOURCES}
 	)
 
-if (NOT PIXELBOOST_BUILD_CLI)
-	set (PIXELBOOST_SOURCES
-		${PIXELBOOST_SOURCES}
-		${AUDIO_SOURCES}
-		${DB_TYPES_SOURCES}
-		${DB_SOURCES}
-		${FRAMEWORK_SOURCES}
-		${GRAPHICS_CAMERA_SOURCES}
-		${GRAPHICS_DEVICE_SOURCES}
-		${GRAPHICS_HELPER_SOURCES}
-		${GRAPHICS_PARTICLE_SOURCES}
-		${GRAPHICS_RENDERER_SOURCES}
-		${GRAPHICS_SHADER_SOURCES}
-		${GRAPHICS_UI_SOURCES}
-		${GRAPHICS_SOURCES}
-		${INPUT_SOURCES}
-		${LOGIC_COMPONENT_GRAPHICS_SOURCES}
-		${LOGIC_COMPONENT_INPUT_SOURCES}
-		${LOGIC_COMPONENT_PHYSICS_2D_SOURCES}
-		${LOGIC_COMPONENT_PHYSICS_SOURCES}
-		${LOGIC_COMPONENT_TRANSFORM_SOURCES}
-		${LOGIC_COMPONENT_SOURCES}
-		${LOGIC_MESSAGE_SOURCES}
-		${LOGIC_SYSTEM_SOURCES}
-		${LOGIC_SOURCES}
-		${MISC_SOURCES}
-		${NETWORK_SOURCES}
-		${PHYSICS_2D_SOURCES}
-		${RESOURCE_SOURCES}
-		${SCRIPTING_SOURCES}
-		${UTIL_LOCALISATION_SOURCES}
-		)
-endif (NOT PIXELBOOST_BUILD_CLI)
-
 add_library (pixelboost_engine STATIC ${PIXELBOOST_SOURCES})
-target_link_libraries (pixelboost_engine Box2D freetype2 lua physfs-static)
+target_link_libraries (pixelboost_engine pixelboost_shared Box2D freetype2 lua physfs-static)
 
 if (PIXELBOOST_BUILD_PLATFORM_OSX)
 	target_link_libraries (pixelboost_engine
@@ -503,7 +463,7 @@ if (PIXELBOOST_BUILD_PLATFORM_OSX)
 		"-framework OpenGL"
 		"-framework AppKit"
 		"-framework IOKit")
-	pixelboost_setup_library(ddhidlib)
+	pixelboost_library_cpp11(ddhidlib)
 endif (PIXELBOOST_BUILD_PLATFORM_OSX)
 
 if (PIXELBOOST_BUILD_PLATFORM_IOS)
@@ -523,15 +483,16 @@ if (PIXELBOOST_BUILD_PLATFORM_ANDROID)
 	target_link_libraries (pixelboost_engine GLESv2 log)
 endif (PIXELBOOST_BUILD_PLATFORM_ANDROID)
 
-pixelboost_setup_library(pixelboost_engine)
-pixelboost_setup_library(Box2D)
-pixelboost_setup_library(freetype2)
-pixelboost_setup_library(lua)
-pixelboost_setup_library(physfs-static)
+pixelboost_library_cpp11(pixelboost_engine)
+pixelboost_library_cpp11(pixelboost_shared)
+pixelboost_library_cpp11(Box2D)
+pixelboost_library_cpp11(freetype2)
+pixelboost_library_cpp11(lua)
+pixelboost_library_cpp11(physfs-static)
 
 source_group (asset FILES ${ASSET_SOURCES})
 source_group (audio FILES ${AUDIO_SOURCES})
-source_group (data FILES ${DATA_SOURCES})
+source_group (data\\resources FILES ${DATA_RESOURCES_SOURCES})
 source_group (db\\types FILES ${DB_TYPES_SOURCES})
 source_group (db FILES ${DB_SOURCES})
 source_group (debug FILES ${DEBUG_SOURCES})
@@ -542,6 +503,7 @@ source_group (graphics\\device FILES ${GRAPHICS_DEVICE_SOURCES})
 source_group (graphics\\helper FILES ${GRAPHICS_HELPER_SOURCES})
 source_group (graphics\\particle FILES ${GRAPHICS_PARTICLE_SOURCES})
 source_group (graphics\\renderer FILES ${GRAPHICS_RENDERER_SOURCES})
+source_group (graphics\\resources FILES ${GRAPHICS_RESOURCES_SOURCES})
 source_group (graphics\\shader FILES ${GRAPHICS_SHADER_SOURCES})
 source_group (graphics FILES ${GRAPHICS_SOURCES})
 source_group (input FILES ${INPUT_SOURCES})
@@ -554,7 +516,6 @@ source_group (logic\\component FILES ${LOGIC_COMPONENT_SOURCES})
 source_group (logic\\message FILES ${LOGIC_MESSAGE_SOURCES})
 source_group (logic\\system FILES ${LOGIC_SYSTEM_SOURCES})
 source_group (logic FILES ${LOGIC_SOURCES})
-source_group (maths FILES ${MATHS_SOURCES})
 source_group (misc FILES ${MISC_SOURCES})
 source_group (network FILES ${NETWORK_SOURCES})
 source_group (physics\\2d FILES ${PHYSICS_2D_SOURCES})

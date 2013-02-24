@@ -7,6 +7,20 @@ struct PHYSFS_File;
 
 namespace pb
 {
+    class FileInfo
+    {
+    public:
+        int Length;
+        int TimeStamp;
+    };
+    
+    enum FileMode
+    {
+        kFileModeRead,
+        kFileModeWrite,
+        kFileModeAppend,
+    };
+
     class File
     {
     public:
@@ -43,20 +57,6 @@ namespace pb
 
     private:
         PHYSFS_File* _File;
-    };
-    
-    class FileInfo
-    {
-    public:
-        int Length;
-        int TimeStamp;
-    };
-    
-    enum FileMode
-    {
-        kFileModeRead,
-        kFileModeWrite,
-        kFileModeAppend,
     };
     
     class FileSystem

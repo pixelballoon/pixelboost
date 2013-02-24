@@ -305,6 +305,10 @@ Model::~Model()
     
 bool Model::Load(const std::string& fileName)
 {
+    PbLogError("pb.assets", "Model loader is currently unimplemented");
+    return false;
+    
+    /*
     std::string objFilename = fileName;
     
     _ModelDefinition = new ModelDefinition();
@@ -323,6 +327,7 @@ bool Model::Load(const std::string& fileName)
     }
     
     return true;
+    */
 }
 
 const BoundingSphere& Model::GetBounds()

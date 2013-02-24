@@ -1,6 +1,7 @@
 #ifndef PIXELBOOST_DISABLE_BOX2D
 
-#include "pixelboost/data/json/reader.h"
+#include "json/reader.h"
+
 #include "pixelboost/file/fileHelpers.h"
 #include "pixelboost/physics/2d/helpers.h"
 

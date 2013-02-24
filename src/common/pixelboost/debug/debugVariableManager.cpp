@@ -6,7 +6,8 @@
 #include <cstdlib>
 #include <sstream>
 
-#include "pixelboost/data/json/writer.h"
+#include "json/writer.h"
+
 #include "pixelboost/debug/debugVariable.h"
 #include "pixelboost/debug/debugVariableManager.h"
 #include "pixelboost/file/fileHelpers.h"
