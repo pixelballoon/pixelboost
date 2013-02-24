@@ -100,6 +100,24 @@ PrimitiveRenderableLine* DebugRenderSystem::AddLine(RenderPass renderPass, int l
     return line;
 }
 
+PrimitiveRenderableRectangle* DebugRenderSystem::AddRectangle(RenderPass renderPass, int layer, glm::vec3 position, glm::vec3 rotation, glm::vec2 size, glm::vec4 color, float time)
+{
+    PrimitiveRenderableRectangle* rectangle = new pb::PrimitiveRenderableRectangle(0);
+    rectangle->SetRenderPass(renderPass);
+    rectangle->SetLayer(layer);
+    rectangle->SetSize(size);
+    rectangle->SetColor(color);
+    glm::mat4x4 transform;
+    transform = glm::translate(transform, position);
+    transform = glm::rotate(transform, rotation.x, glm::vec3(1,0,0));
+    transform = glm::rotate(transform, rotation.y, glm::vec3(0,1,0));
+    transform = glm::rotate(transform, rotation.z, glm::vec3(0,0,1));
+    rectangle->SetTransform(transform);
+    AddTimedItem(rectangle, time);
+    
+    return rectangle;
+}
+
 FontRenderable* DebugRenderSystem::AddText(RenderPass renderPass, int layer, FontAlign alignment, const std::string font, const std::string text, glm::vec3 position, glm::vec3 rotation, float size, float time)
 {
     FontRenderable* renderable = new pb::FontRenderable(0);
