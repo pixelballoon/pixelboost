@@ -11,10 +11,13 @@ enum RotationOrder
 	kRotationOrder_XYZ,
 };
 
-inline glm::mat4x4 CreateRotationMatrix(RotationOrder rotationOrder, glm::vec3 rotation)
+inline glm::mat4x4 CreateTranslateMatrix(glm::vec3 translate, glm::mat4x4 transform = glm::mat4x4())
 {
-	glm::mat4x4 transform;
+    return glm::translate(transform, translate);
+}
 
+inline glm::mat4x4 CreateRotateMatrix(RotationOrder rotationOrder, glm::vec3 rotation, glm::mat4x4 transform = glm::mat4x4())
+{
 	switch (rotationOrder)
 	{
 		case kRotationOrder_XYZ:
@@ -27,13 +30,18 @@ inline glm::mat4x4 CreateRotationMatrix(RotationOrder rotationOrder, glm::vec3 r
 	return transform;
 }
 
+inline glm::mat4x4 CreateScaleMatrix(glm::vec3 scale, glm::mat4x4 transform = glm::mat4x4())
+{
+    return glm::scale(transform, scale);
+}
+
 inline glm::mat4x4 CreateTransformMatrix(RotationOrder rotationOrder, glm::vec3 translate, glm::vec3 rotate, glm::vec3 scale)
 {
 	glm::mat4x4 transform;
 
-	transform = glm::translate(transform, translate);
-	transform = transform * CreateRotationMatrix(rotationOrder, rotate);
-	transform = glm::scale(transform, scale);
+	transform = CreateTranslateMatrix(translate, transform);
+	transform = CreateRotateMatrix(rotationOrder, rotate, transform);
+	transform = CreateScaleMatrix(scale, transform);
 
 	return transform;
 }
