@@ -7,6 +7,8 @@
 
 using namespace pb;
 
+PB_DEFINE_COMPONENT_DERIVED(pb::ParallaxTransformComponent, pb::TransformComponent)
+
 ParallaxTransformComponent::ParallaxTransformComponent(Entity* parent, Uid parallaxEntityId, Uid parentTransform)
     : TransformComponent(parent, parentTransform)
     , _Dirty(true)
@@ -30,16 +32,6 @@ ParallaxTransformComponent::~ParallaxTransformComponent()
     {
         parallaxEntity->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &ParallaxTransformComponent::OnTransformChanged));
     }
-}
-
-Uid ParallaxTransformComponent::GetType()
-{
-    return GetStaticType();
-}
-
-Uid ParallaxTransformComponent::GetStaticType()
-{
-    return TransformComponent::GetStaticType();
 }
 
 const glm::mat4x4& ParallaxTransformComponent::GetMatrix()

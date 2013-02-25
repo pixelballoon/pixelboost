@@ -14,12 +14,11 @@ class PrimitiveRenderableEllipse;
     
 class EllipseComponent : public Component
 {
+    PB_DECLARE_COMPONENT
+    
 public:
     EllipseComponent(Entity* parent);
     virtual ~EllipseComponent();
-    
-    virtual Uid GetType();
-    static Uid GetStaticType();
     
     void SetLayer(int layer);
     

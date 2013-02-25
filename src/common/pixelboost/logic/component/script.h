@@ -17,14 +17,13 @@ namespace pb
     
     class ScriptComponent : public Component
     {
+        PB_DECLARE_COMPONENT
+        
     public:
         ScriptComponent(Entity* parent, const ScriptComponentDefinition* definition = 0);
         virtual ~ScriptComponent();
         
         static void RegisterLuaClass(lua_State* state);
-        
-        Uid GetType();
-        static Uid GetStaticType();
         
         void SetActive(bool active);
         

@@ -4,8 +4,9 @@
 #include "pixelboost/logic/message/transform.h"
 #include "pixelboost/logic/entity.h"
 
-namespace pb
-{
+using namespace pb;
+
+PB_DEFINE_COMPONENT(pb::TransformComponent)
 
 TransformComponent::TransformComponent(Entity* parent, Uid parentTransform)
     : Component(parent)
@@ -16,16 +17,4 @@ TransformComponent::TransformComponent(Entity* parent, Uid parentTransform)
 TransformComponent::~TransformComponent()
 {
     
-}
-
-Uid TransformComponent::GetType()
-{
-    return GetStaticType();
-}
-
-Uid TransformComponent::GetStaticType()
-{
-    return TypeHash("pb::TransformComponent");
-}
-
 }

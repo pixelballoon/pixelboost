@@ -10,6 +10,8 @@
 
 using namespace pb;
 
+PB_DEFINE_COMPONENT(pb::ScriptComponent)
+
 ScriptComponent::ScriptComponent(Entity* parent, const ScriptComponentDefinition* definition)
     : Component(parent)
 {
@@ -49,16 +51,6 @@ void ScriptComponent::RegisterLuaClass(lua_State* state)
             .addFunction("WaitSeconds", &ScriptComponent::LuaWaitSeconds)
         .endClass()
     .endNamespace();
-}
-
-Uid ScriptComponent::GetType()
-{
-    return GetStaticType();
-}
-
-Uid ScriptComponent::GetStaticType()
-{
-    return TypeHash("pb::ScriptComponent");
 }
 
 void ScriptComponent::SetActive(bool active)

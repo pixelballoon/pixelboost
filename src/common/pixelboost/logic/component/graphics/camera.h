@@ -17,13 +17,12 @@ namespace pb
     
     class CameraComponent : public Component
     {
+        PB_DECLARE_COMPONENT
+        
     public:
         CameraComponent(Entity* parent, Camera* camera);
         virtual ~CameraComponent();
-        
-        Uid GetType();
-        static Uid GetStaticType();
-        
+                
     private:
         void OnTransformChanged(const Message& message);
         void UpdateTransform();

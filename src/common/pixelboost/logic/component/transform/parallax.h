@@ -11,12 +11,11 @@ namespace pb
     
     class ParallaxTransformComponent : public TransformComponent
     {
+        PB_DECLARE_COMPONENT
+        
     public:
         ParallaxTransformComponent(Entity* parent, Uid parallaxEntityId, Uid parentTransform = 0);
         virtual ~ParallaxTransformComponent();
-        
-        Uid GetType();
-        static Uid GetStaticType();
         
         const glm::mat4x4& GetMatrix();
         

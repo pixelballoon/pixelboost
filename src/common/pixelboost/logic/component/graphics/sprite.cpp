@@ -11,6 +11,8 @@
 
 using namespace pb;
 
+PB_DEFINE_COMPONENT(pb::SpriteComponent)
+
 SpriteComponent::SpriteComponent(Entity* parent, const std::string& sprite)
     : Component(parent)
 {
@@ -31,16 +33,6 @@ SpriteComponent::~SpriteComponent()
     GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
     
     delete _Renderable;
-}
-
-Uid SpriteComponent::GetType()
-{
-    return GetStaticType();
-}
-
-Uid SpriteComponent::GetStaticType()
-{
-    return TypeHash("pb::SpriteComponent");
 }
 
 glm::vec2 SpriteComponent::GetSize()

@@ -249,6 +249,8 @@ void ParticleSystem::UpdateParticle(Particle* particle, float time)
         particle->Scale = Definition->ModifierScale->Evaluate(life, particle->Variant);
 }
 
+PB_DEFINE_COMPONENT(ParticleComponent)
+
 ParticleComponent::ParticleComponent(Entity* entity)
     : Component(entity)
 {
@@ -269,16 +271,6 @@ ParticleComponent::~ParticleComponent()
     GetScene()->GetSystemByType<RenderSystem>()->RemoveItem(_Renderable);
     
     delete _Renderable;
-}
-
-Uid ParticleComponent::GetType()
-{
-    return GetStaticType();
-}
-
-Uid ParticleComponent::GetStaticType()
-{
-    return TypeHash("pb::ParticleComponent");
 }
 
 void ParticleComponent::SetRenderPass(RenderPass renderPass)

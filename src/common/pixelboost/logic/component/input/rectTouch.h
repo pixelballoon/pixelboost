@@ -12,12 +12,11 @@ namespace pb
 
     class RectTouchComponent : public Component, public TouchHandler
     {
+        PB_DECLARE_COMPONENT
+        
     public:
         RectTouchComponent(Entity* parent, bool debugRender = false);
         virtual ~RectTouchComponent();
-        
-        virtual Uid GetType();
-        static Uid GetStaticType();
         
         void SetLocalTransform(const glm::mat4x4& localTransform);
         const glm::mat4x4& GetLocalTransform();
@@ -28,6 +27,8 @@ namespace pb
         
     private:
         glm::vec3 GetPosition();
+        
+        virtual int GetInputHandlerPriority();
         
         virtual bool OnTouchDown(Touch touch);
         virtual bool OnTouchMove(Touch touch);

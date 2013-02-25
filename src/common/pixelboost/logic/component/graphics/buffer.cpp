@@ -7,6 +7,8 @@
 
 using namespace pb;
 
+PB_DEFINE_COMPONENT(BufferComponent)
+
 BufferComponent::BufferComponent(Entity* entity, IndexBuffer* indexBuffer, VertexBuffer* vertexBuffer, Texture* texture, int numElements)
     : Component(entity)
 {
@@ -26,16 +28,6 @@ BufferComponent::~BufferComponent()
     GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
     
     delete _Renderable;
-}
-
-Uid BufferComponent::GetType()
-{
-    return BufferComponent::GetStaticType();
-}
-
-Uid BufferComponent::GetStaticType()
-{
-    return TypeHash("pb::BufferComponent");
 }
 
 void BufferComponent::SetLayer(int layer)

@@ -15,6 +15,8 @@ namespace pb
     
     class PhysicsBody2DComponent : public PhysicsComponent2D
     {
+        PB_DECLARE_COMPONENT
+        
     public:
         enum BodyShape
         {
@@ -26,9 +28,6 @@ namespace pb
         PhysicsBody2DComponent(Entity* parent, BodyType type, BodyShape shape, glm::vec2 size);
         PhysicsBody2DComponent(Entity* parent, BodyType type, FixtureDefinition2D& fixtureDefinition);
         ~PhysicsBody2DComponent();
-        
-        virtual Uid GetType();
-        static Uid GetStaticType();
         
     private:
         void OnUpdate(const Message& message);

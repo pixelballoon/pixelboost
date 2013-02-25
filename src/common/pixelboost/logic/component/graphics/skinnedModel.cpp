@@ -16,6 +16,8 @@
 
 using namespace pb;
 
+PB_DEFINE_COMPONENT(pb::SkinnedModelComponent)
+
 SkinnedModelComponent::SkinnedModelComponent(Entity* parent, Model* model, Texture* texture)
     : Component(parent)
     , _SkeletonDebug(false)
@@ -48,16 +50,6 @@ SkinnedModelComponent::~SkinnedModelComponent()
     
     delete _Renderable;
     delete _AnimationState;
-}
-
-Uid SkinnedModelComponent::GetType()
-{
-    return GetStaticType();
-}
-
-Uid SkinnedModelComponent::GetStaticType()
-{
-    return TypeHash("pb::SkinnedModelComponent");
 }
 
 void SkinnedModelComponent::SetShader(Shader* shader)

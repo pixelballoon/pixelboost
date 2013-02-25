@@ -14,12 +14,11 @@ namespace pb
     
     class BufferComponent : public Component
     {
+        PB_DECLARE_COMPONENT
+        
     public:
         BufferComponent(Entity* entity, IndexBuffer* indexBuffer = 0, VertexBuffer* vertexBuffer = 0, Texture* texture = 0, int numElements = 0);
         virtual ~BufferComponent();
-        
-        virtual Uid GetType();
-        static Uid GetStaticType();
         
         void SetLayer(int layer);
         

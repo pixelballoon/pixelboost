@@ -16,7 +16,7 @@ template <class T>T* Entity::GetComponentByType()
 {
     for (ComponentList::iterator componentIt = _Components.begin(); componentIt != _Components.end(); ++componentIt)
     {
-        if ((*componentIt)->GetType() == T::GetStaticType() && (*componentIt)->_State != Component::kComponentDestroyed)
+        if ((*componentIt)->IsA(T::GetStaticType()) && (*componentIt)->_State != Component::kComponentDestroyed)
         {
             return static_cast<T*>(*componentIt);
         }
@@ -31,7 +31,7 @@ template <class T> Entity::ComponentList Entity::GetComponentsByType()
     
     for (ComponentList::iterator componentIt = _Components.begin(); componentIt != _Components.end(); ++componentIt)
     {
-        if ((*componentIt)->GetType() == T::GetStaticType() && (*componentIt)->_State != Component::kComponentDestroyed)
+        if ((*componentIt)->IsA(T::GetStaticType()) && (*componentIt)->_State != Component::kComponentDestroyed)
         {
             components.push_back(*componentIt);
         }

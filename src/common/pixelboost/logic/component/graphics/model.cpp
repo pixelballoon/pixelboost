@@ -15,6 +15,8 @@
 
 using namespace pb;
 
+PB_DEFINE_COMPONENT(pb::ModelComponent)
+
 ModelComponent::ModelComponent(Entity* parent, Model* model, Texture* texture)
     : Component(parent)
 {
@@ -36,16 +38,6 @@ ModelComponent::~ModelComponent()
     GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
     
     delete _Renderable;
-}
-
-Uid ModelComponent::GetType()
-{
-    return GetStaticType();
-}
-
-Uid ModelComponent::GetStaticType()
-{
-    return TypeHash("pb::ModelComponent");
 }
 
 void ModelComponent::SetShader(Shader* shader)

@@ -8,6 +8,8 @@
 
 using namespace pb;
 
+PB_DEFINE_COMPONENT(LineComponent)
+
 LineComponent::LineComponent(Entity* parent)
     : Component(parent)
 {
@@ -21,11 +23,6 @@ LineComponent::~LineComponent()
     GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
     
     delete _Renderable;
-}
-
-Uid LineComponent::GetType()
-{
-    return TypeHash("rectangle");
 }
 
 void LineComponent::SetColor(glm::vec4 color)

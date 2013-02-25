@@ -8,6 +8,8 @@
 
 using namespace pb;
 
+PB_DEFINE_COMPONENT(pb::CameraComponent)
+
 CameraComponent::CameraComponent(Entity* parent, Camera* camera)
     : Component(parent)
 {
@@ -23,16 +25,6 @@ CameraComponent::~CameraComponent()
     GetParent()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &CameraComponent::OnTransformChanged));
     
     delete _Camera;
-}
-
-Uid CameraComponent::GetType()
-{
-    return GetStaticType();
-}
-
-Uid CameraComponent::GetStaticType()
-{
-    return TypeHash("pb::CameraComponent");
 }
 
 void CameraComponent::OnTransformChanged(const Message& message)

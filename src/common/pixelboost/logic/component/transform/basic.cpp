@@ -7,6 +7,8 @@
 
 using namespace pb;
 
+PB_DEFINE_COMPONENT_DERIVED(pb::BasicTransformComponent, pb::TransformComponent)
+
 BasicTransformComponent::BasicTransformComponent(Entity* parent, Uid parentTransform)
     : TransformComponent(parent, parentTransform)
     , _Dirty(true)
@@ -18,16 +20,6 @@ BasicTransformComponent::BasicTransformComponent(Entity* parent, Uid parentTrans
 BasicTransformComponent::~BasicTransformComponent()
 {
     
-}
-
-Uid BasicTransformComponent::GetType()
-{
-    return GetStaticType();
-}
-
-Uid BasicTransformComponent::GetStaticType()
-{
-    return TransformComponent::GetStaticType();
 }
 
 const glm::mat4x4& BasicTransformComponent::GetMatrix()

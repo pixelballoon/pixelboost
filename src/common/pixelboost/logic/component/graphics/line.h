@@ -12,11 +12,11 @@ class PrimitiveRenderableLine;
     
 class LineComponent : public Component
 {
+    PB_DECLARE_COMPONENT
+    
 public:
     LineComponent(Entity* parent);
     virtual ~LineComponent();
-    
-    Uid GetType();
     
     void SetColor(glm::vec4 color);
     glm::vec4 GetColor();

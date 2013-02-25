@@ -4,6 +4,10 @@
 
 struct lua_State;
 
+#define PB_DECLARE_COMPONENT public: virtual bool IsA(pb::Uid type) const; virtual pb::Uid GetType() const; static pb::Uid GetStaticType();
+#define PB_DEFINE_COMPONENT_DERIVED(className, parent) bool className::IsA(pb::Uid type) const { return GetStaticType() == type || parent::IsA(type); } pb::Uid className::GetType() const { return GetStaticType(); }  pb::Uid className::GetStaticType() { return pb::TypeHash(#className); }
+#define PB_DEFINE_COMPONENT(className) PB_DEFINE_COMPONENT_DERIVED(className, pb::Component)
+
 namespace pb
 {
     
@@ -27,7 +31,8 @@ public:
         kComponentDestroyed
     };
     
-    virtual Uid GetType() = 0;
+    virtual bool IsA(Uid type) const;
+    virtual Uid GetType() const = 0;
     
     Uid GetUid();
     

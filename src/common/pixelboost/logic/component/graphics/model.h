@@ -16,12 +16,11 @@ namespace pb
     
     class ModelComponent : public Component
     {
+        PB_DECLARE_COMPONENT
+        
     public:
         ModelComponent(Entity* parent, Model* model, Texture* texture);
         virtual ~ModelComponent();
-        
-        Uid GetType();
-        static Uid GetStaticType();
         
         void SetShader(Shader* shader);
         void SetLayer(int layer);

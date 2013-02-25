@@ -20,13 +20,12 @@ namespace pb
     
     class SkinnedModelComponent : public Component
     {
+        PB_DECLARE_COMPONENT
+        
     public:
         SkinnedModelComponent(Entity* parent, Model* model, Texture* texture);
         virtual ~SkinnedModelComponent();
-        
-        Uid GetType();
-        static Uid GetStaticType();
-        
+                
         void SetShader(Shader* shader);
         void SetLayer(int layer);
         

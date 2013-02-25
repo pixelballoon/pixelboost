@@ -15,12 +15,11 @@ class SpriteRenderable;
 
 class SpriteComponent : public Component
 {
+    PB_DECLARE_COMPONENT
+    
 public:
     SpriteComponent(Entity* parent, const std::string& sprite);
     virtual ~SpriteComponent();
-    
-    Uid GetType();
-    static Uid GetStaticType();
     
     glm::vec2 GetSize();
     

@@ -16,12 +16,11 @@ namespace pb
     
     class FontComponent : public Component
     {
+        PB_DECLARE_COMPONENT
+        
     public:
         FontComponent(Entity* parent, const std::string& font, const std::string& text);
         virtual ~FontComponent();
-        
-        Uid GetType();
-        static Uid GetStaticType();
         
         void SetRenderPass(RenderPass renderPass);
         void SetLayer(int layer);

@@ -12,6 +12,8 @@
 
 using namespace pb;
 
+PB_DEFINE_COMPONENT(pb::FontComponent)
+
 FontComponent::FontComponent(Entity* parent, const std::string& font, const std::string& text)
     : Component(parent)
 {
@@ -33,16 +35,6 @@ FontComponent::~FontComponent()
     GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
     
     delete _Renderable;
-}
-
-Uid FontComponent::GetType()
-{
-    return GetStaticType();
-}
-
-Uid FontComponent::GetStaticType()
-{
-    return TypeHash("pb::FontComponent");
 }
 
 void FontComponent::SetRenderPass(RenderPass renderPass)

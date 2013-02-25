@@ -15,6 +15,8 @@ class Message;
     
 class PhysicsUserBody2DComponent : public PhysicsComponent2D
 {
+    PB_DECLARE_COMPONENT
+    
 public:
     enum BodyShape
     {
@@ -26,9 +28,6 @@ public:
     PhysicsUserBody2DComponent(Entity* parent, BodyType type, BodyShape shape, glm::vec2 size);
     PhysicsUserBody2DComponent(Entity* parent, BodyType type, FixtureDefinition2D& definition);
     ~PhysicsUserBody2DComponent();
-    
-    virtual Uid GetType();
-    static Uid GetStaticType();
     
 private:
     void OnTransformChanged(const Message& message);

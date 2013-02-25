@@ -10,9 +10,11 @@
 
 using namespace pb;
 
+PB_DEFINE_COMPONENT(pb::RectTouchComponent)
+
 RectTouchComponent::RectTouchComponent(Entity* parent, bool debugRender)
     : Component(parent)
-    , _CaptureEvents(true)
+    , _CaptureEvents(false)
     , _DebugRender(debugRender)
     , _MultiTouch(false)
 {
@@ -32,16 +34,6 @@ RectTouchComponent::~RectTouchComponent()
     {
         GetParent()->UnregisterMessageHandler<DebugRenderMessage>(MessageHandler(this, &RectTouchComponent::OnDebugRender));
     }
-}
-
-Uid RectTouchComponent::GetType()
-{
-    return GetStaticType();
-}
-
-Uid RectTouchComponent::GetStaticType()
-{
-    return TypeHash("pb::RectTouchComponent");
 }
 
 void RectTouchComponent::SetLocalTransform(const glm::mat4x4& localTransform)
@@ -84,6 +76,11 @@ glm::vec3 RectTouchComponent::GetPosition()
     }
     
     return glm::vec3(position.x, position.y, position.z);
+}
+
+int RectTouchComponent::GetInputHandlerPriority()
+{
+    return 0;
 }
 
 bool RectTouchComponent::OnTouchDown(Touch touch)

@@ -28,6 +28,11 @@ void Component::RegisterLuaClass(lua_State* state)
     .endNamespace();
 }
 
+bool Component::IsA(Uid type) const
+{
+    return false;
+}
+
 Uid Component::GetUid()
 {
     return _Uid;

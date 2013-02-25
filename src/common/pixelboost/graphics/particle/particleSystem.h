@@ -236,12 +236,11 @@ public:
 
 class ParticleComponent : public Component
 {
+    PB_DECLARE_COMPONENT
+    
 public:
     ParticleComponent(Entity* entity);
     ~ParticleComponent();
-    
-    Uid GetType();
-    static Uid GetStaticType();
     
     void SetRenderPass(RenderPass renderPass);
     void SetLayer(int layer);

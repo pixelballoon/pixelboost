@@ -12,6 +12,8 @@
 
 using namespace pb;
 
+PB_DEFINE_COMPONENT(pb::PhysicsBody2DComponent)
+
 PhysicsBody2DComponent::PhysicsBody2DComponent(Entity* parent, BodyType type, BodyShape shape, glm::vec2 size)
     : PhysicsComponent2D(parent)
 {
@@ -112,16 +114,6 @@ PhysicsBody2DComponent::~PhysicsBody2DComponent()
     b2World* world = physicsSystem->GetPhysicsWorld();
     
     world->DestroyBody(_Body);
-}
-
-Uid PhysicsBody2DComponent::GetType()
-{
-    return GetStaticType();
-}
-
-Uid PhysicsBody2DComponent::GetStaticType()
-{
-    return TypeHash("pb::PhysicsBody2DComponent");
 }
 
 void PhysicsBody2DComponent::OnUpdate(const Message& message)

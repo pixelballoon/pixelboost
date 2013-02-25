@@ -9,6 +9,8 @@
 
 using namespace pb;
 
+PB_DEFINE_COMPONENT(pb::EllipseComponent)
+
 EllipseComponent::EllipseComponent(Entity* parent)
     : Component(parent)
 {
@@ -28,16 +30,6 @@ EllipseComponent::~EllipseComponent()
     GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
     
     delete _Renderable;
-}
-
-Uid EllipseComponent::GetType()
-{
-    return EllipseComponent::GetStaticType();
-}
-
-Uid EllipseComponent::GetStaticType()
-{
-    return TypeHash("pb::EllipseComponent");
 }
 
 void EllipseComponent::SetLayer(int layer)

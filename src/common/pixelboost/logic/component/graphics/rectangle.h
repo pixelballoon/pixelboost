@@ -15,12 +15,11 @@ class PrimitiveRenderableRectangle;
     
 class RectangleComponent : public Component
 {
+    PB_DECLARE_COMPONENT
+    
 public:
     RectangleComponent(Entity* parent);
     virtual ~RectangleComponent();
-    
-    virtual Uid GetType();
-    static Uid GetStaticType();    
     
     void SetRenderPass(RenderPass renderPass);
     void SetLayer(int layer);

@@ -9,6 +9,8 @@
 
 using namespace pb;
 
+PB_DEFINE_COMPONENT(pb::RectangleComponent)
+
 RectangleComponent::RectangleComponent(Entity* parent)
     : Component(parent)
 {
@@ -28,16 +30,6 @@ RectangleComponent::~RectangleComponent()
     GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
     
     delete _Renderable;
-}
-
-Uid RectangleComponent::GetType()
-{
-    return RectangleComponent::GetStaticType();
-}
-
-Uid RectangleComponent::GetStaticType()
-{
-    return TypeHash("pb::RectangleComponent");
 }
 
 void RectangleComponent::SetRenderPass(RenderPass renderPass)

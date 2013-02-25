@@ -9,12 +9,11 @@ namespace pb
 
     class TransformComponent : public Component
     {
+        PB_DECLARE_COMPONENT
+        
     public:
         TransformComponent(Entity* parent, Uid parentTransform);
         virtual ~TransformComponent();
-        
-        Uid GetType();
-        static Uid GetStaticType();
         
         virtual const glm::mat4x4& GetMatrix() = 0;
         
