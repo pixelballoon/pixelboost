@@ -7,4 +7,6 @@ void PbAssert(int value)
 {
     assert(value);
 }
+#else
+#define PbAssert(v) do {} while(false);
 #endif
