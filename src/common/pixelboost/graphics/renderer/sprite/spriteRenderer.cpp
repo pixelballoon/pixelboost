@@ -199,7 +199,7 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
             bufferData[3].uv[1] = min[1];
         }
         
-        glm::vec4 color = renderable._Tint * renderable._Tint.a;
+        glm::vec4 color = renderable._Tint;
         
         bufferData[0].color[0] = color.r;
         bufferData[0].color[1] = color.g;
