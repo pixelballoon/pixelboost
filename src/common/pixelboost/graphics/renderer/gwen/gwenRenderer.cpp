@@ -228,7 +228,7 @@ void GwenRenderer::DrawTexturedRect(Gwen::Texture* definition, Gwen::Rect rect, 
     if (GraphicsDevice::Instance()->GetBoundTexture() != texture)
         PurgeBuffer(true);
     
-    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
+    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
     
     GraphicsDevice::Instance()->BindTexture(texture);
     
@@ -335,7 +335,7 @@ void GwenRenderer::RenderText(Gwen::Font* font, Gwen::Point pos, const Gwen::Uni
     _ShaderPass->GetShaderProgram()->SetUniform("PB_ModelViewMatrix", _Renderable->GetModelViewMatrix() * modelMatrix);
     _ShaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", glm::vec4(0,0,0,1));
     
-    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
+    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
     
     pb::Texture* prevTexture = GraphicsDevice::Instance()->BindTexture(renderFont->texture);
     GraphicsDevice::Instance()->BindIndexBuffer(_FontIndexBuffer);

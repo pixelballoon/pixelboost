@@ -392,7 +392,7 @@ void ModelRenderer::Render(int count, Renderable** renderables, Viewport* viewpo
             continue;
         
         GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, renderable._AlphaBlend);
-        GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendSourceAlpha, GraphicsDevice::kBlendOneMinusSourceAlpha);
+        GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
         
         shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewMatrix", renderable.GetModelViewMatrix());
         shaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", renderable._Tint);
