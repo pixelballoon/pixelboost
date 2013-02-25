@@ -4,6 +4,8 @@
 
 using namespace pb;
 
+PB_DEFINE_RESOURCE(pb::XmlResource)
+
 XmlResource::XmlResource()
 {
     
@@ -12,16 +14,6 @@ XmlResource::XmlResource()
 XmlResource::~XmlResource()
 {
     
-}
-
-Uid XmlResource::GetResourceType()
-{
-    return GetStaticResourceType();
-}
-
-Uid XmlResource::GetStaticResourceType()
-{
-    return TypeHash("pb::XmlResource");
 }
 
 bool XmlResource::ProcessResource(ResourceState state, const std::string& filename, std::string& error)

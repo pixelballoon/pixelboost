@@ -4,17 +4,18 @@
 namespace pb
 {
     
+    class File;
+    
     class ModelResource : public pb::Resource
     {
+        PB_DECLARE_RESOURCE
+        
     public:
         ModelResource();
         ~ModelResource();
         
-        virtual Uid GetResourceType();
-        static Uid GetStaticResourceType();
-        
         virtual bool ProcessResource(ResourceState state, const std::string& filename, std::string& error);
-        static ResourceThread GetResourceThread(ResourceState state);
+        virtual ResourceThread GetResourceThread(ResourceState state);
         
         const ModelDefinition& GetModelDefinition();
         

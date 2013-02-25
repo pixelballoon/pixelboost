@@ -13,15 +13,14 @@ namespace pb
 
 class XmlResource : public pb::Resource
 {
+    PB_DECLARE_RESOURCE
+    
 public:
     XmlResource();
     ~XmlResource();
     
-    virtual Uid GetResourceType();
-	static Uid GetStaticResourceType();
-    
     virtual bool ProcessResource(ResourceState state, const std::string& filename, std::string& error);
-    static ResourceThread GetResourceThread(ResourceState state);
+    virtual ResourceThread GetResourceThread(ResourceState state);
     
     const pugi::xml_document& GetXmlDocument();
     

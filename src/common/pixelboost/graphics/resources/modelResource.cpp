@@ -5,6 +5,8 @@
 
 using namespace pb;
 
+PB_DEFINE_RESOURCE(pb::ModelResource)
+
 ModelResource::ModelResource()
 {
     
@@ -13,16 +15,6 @@ ModelResource::ModelResource()
 ModelResource::~ModelResource()
 {
     
-}
-
-Uid ModelResource::GetResourceType()
-{
-    return GetStaticResourceType();
-}
-
-Uid ModelResource::GetStaticResourceType()
-{
-    return TypeHash("pb::ModelResource");
 }
 
 bool ModelResource::ProcessResource(ResourceState state, const std::string& filename, std::string& error)
