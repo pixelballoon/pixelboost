@@ -30,7 +30,7 @@ namespace pb
         virtual Shader* GetShader();
         
         void SetBounds(BoundingSphere bounds);
-        void SetLocalTransform(const glm::mat4x4& localTransform);
+        void SetTransform(const glm::mat4x4& localTransform);
         
         void SetIndexBuffer(IndexBuffer* indexBuffer);
         IndexBuffer* GetIndexBuffer();
@@ -46,7 +46,7 @@ namespace pb
 
     private:
         BoundingSphere _Bounds;
-        glm::mat4x4 _LocalTransform;
+        glm::mat4x4 _Transform;
         
         IndexBuffer* _IndexBuffer;
         VertexBuffer* _VertexBuffer;

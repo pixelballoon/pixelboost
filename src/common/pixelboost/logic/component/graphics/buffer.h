@@ -8,6 +8,8 @@ namespace pb
     class BufferRenderable;
     class Effect;
     class IndexBuffer;
+    class Message;
+    class Shader;
     class VertexBuffer;
     
     class BufferComponent : public Component
@@ -35,8 +37,15 @@ namespace pb
         
         void SetNumElements(int numElements);
         int GetNumElements();
-    
+        
+        void SetLocalTransform(const glm::mat4x4& transform);
+        
     private:
+        void OnTransformChanged(const Message& message);
+        void UpdateTransform();
+        
+        glm::mat4x4 _LocalTransform;
+
         BufferRenderable* _Renderable;
     };
     

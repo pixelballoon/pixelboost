@@ -44,7 +44,7 @@ void BufferRenderable::CalculateBounds()
 
 void BufferRenderable::CalculateWorldMatrix()
 {
-    SetWorldMatrix(_LocalTransform);
+    SetWorldMatrix(_Transform);
 }
 
 Shader* BufferRenderable::GetShader()
@@ -61,9 +61,11 @@ void BufferRenderable::SetBounds(BoundingSphere bounds)
     _Bounds = bounds;
 }
 
-void BufferRenderable::SetLocalTransform(const glm::mat4x4& localTransform)
+void BufferRenderable::SetTransform(const glm::mat4x4& transform)
 {
-    _LocalTransform = localTransform;
+    _Transform = transform;
+    DirtyBounds();
+    DirtyWorldMatrix();
 }
 
 void BufferRenderable::SetIndexBuffer(IndexBuffer* indexBuffer)
@@ -120,10 +122,10 @@ BufferRenderer::~BufferRenderer()
 
 void BufferRenderer::Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass)
 {
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, true);
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
     
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
     GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
     
     shaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
