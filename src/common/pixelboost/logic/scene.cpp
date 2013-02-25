@@ -69,9 +69,8 @@ void Scene::Update(float timeDelta, float gameDelta)
     
     for (EntityMap::iterator it = _NewEntities.begin(); it != _NewEntities.end(); ++it)
     {
-#ifndef PIXELBOOST_DISABLE_DEBUG
         PbAssert(_Entities.find(it->first) == _Entities.end());
-#endif
+
         _Entities[it->first] = it->second;
     }
     _NewEntities.clear();
