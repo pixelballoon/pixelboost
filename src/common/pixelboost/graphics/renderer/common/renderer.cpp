@@ -92,7 +92,7 @@ void Renderer::SetHandler(int renderableType, IRenderer* renderer)
 
 static bool RenderableBackToFrontSorter(const Renderable* a, const Renderable* b)
 {
-    return a->GetModelViewMatrix()[3][2] > b->GetModelViewMatrix()[3][2];
+    return a->GetModelViewMatrix()[3][2] < b->GetModelViewMatrix()[3][2];
 }
 
 void Renderer::FlushBuffer(Viewport* viewport, Camera* camera)
