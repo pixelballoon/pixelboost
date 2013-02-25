@@ -457,12 +457,17 @@ target_link_libraries (pixelboost_engine pixelboost_shared Box2D freetype2 lua p
 if (PIXELBOOST_BUILD_PLATFORM_OSX)
 	target_link_libraries (pixelboost_engine
 		ddhidlib
+		"-framework ApplicationServices"
+		"-framework CoreFoundation"
 		"-framework CoreGraphics"
+		"-framework CoreServices"
 		"-framework Cocoa"
+		"-framework Carbon"
 		"-framework Foundation"
 		"-framework OpenGL"
 		"-framework AppKit"
-		"-framework IOKit")
+		"-framework IOKit"
+		)
 	pixelboost_library_cpp11(ddhidlib)
 endif (PIXELBOOST_BUILD_PLATFORM_OSX)
 
