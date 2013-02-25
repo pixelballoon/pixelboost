@@ -8,6 +8,9 @@
 
 struct lua_State;
 
+#define PB_DECLARE_ENTITY public: virtual pb::Uid GetType() const; static pb::Uid GetStaticType(); private:
+#define PB_DEFINE_ENTITY(className) pb::Uid className::GetType() const { return GetStaticType(); } pb::Uid className::GetStaticType() { return pb::TypeHash(#className); }
+
 namespace pb
 {
     
