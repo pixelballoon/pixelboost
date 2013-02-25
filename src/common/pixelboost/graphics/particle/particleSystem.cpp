@@ -62,7 +62,7 @@ void ParticleDefinitionEmitter::Update(ParticleSystem* system, float time)
         
         CreateParticle(system, &particle);
         
-        glm::vec4 direction = CreateRotationMatrix(kRotationOrder_XYZ, particle.Rotation) * glm::vec4(0,1,0,0);
+        glm::vec4 direction = CreateRotateMatrix(kRotationOrder_XYZ, particle.Rotation) * glm::vec4(0,1,0,0);
         particle.Velocity = glm::vec3(direction.x, direction.y, direction.z) * particle.Speed;
         system->UpdateParticle(&particle, glm::linearRand(0.f, time));
         
