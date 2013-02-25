@@ -61,7 +61,7 @@ bool Texture::LoadFromFile(const std::string& path, bool createMips)
 {
     bool status = true;
 
-    PbLogDebug("graphics.texture", "Loading texture from file (%s)\n", path.c_str());
+    PbLogDebug("pb.graphics.texture", "Loading texture from file (%s)", path.c_str());
     
     if (path.length() >= 4 && path.substr(path.length()-4) == ".jpa")
     {
@@ -129,6 +129,17 @@ bool Texture::LoadFromFile(const std::string& path, bool createMips)
             createMips = false;
         
         delete file;
+        
+        if (components == 4)
+        {
+            for (int i=0; i<width*height*4; i+=4)
+            {
+                float alpha = static_cast<float>(decoded[i+3])/255.f;
+                decoded[i+0] *= alpha;
+                decoded[i+1] *= alpha;
+                decoded[i+2] *= alpha;
+            }
+        }
         
         status = LoadFromBytes(decoded, width, height, createMips, components == 3 ? kTextureFormatRGB : kTextureFormatRGBA);
         
