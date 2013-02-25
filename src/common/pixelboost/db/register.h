@@ -140,7 +140,7 @@ namespace pb
 
 #define __PB_DB_PARSE_INT(field) { \
     field = 0; \
-    if (lua_isnumber(state, -1)) \
+    if (lua_isnumber(state, -1)) { \
         field = lua_tonumber(state, -1); \
     } \
 }
