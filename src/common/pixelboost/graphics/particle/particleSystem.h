@@ -66,6 +66,17 @@ public:
     float Speed;
 };
     
+class ParticleDefinitionEmitterRectangle : public ParticleDefinitionEmitter
+{
+public:
+    ParticleDefinitionEmitterRectangle();
+    
+    virtual void CreateParticle(ParticleSystem* system, Particle* particle);
+    
+public:
+    glm::vec2 Size;
+};
+    
 class ParticleValueInit1D
 {
 public:

@@ -72,12 +72,24 @@ void ParticleDefinitionEmitter::Update(ParticleSystem* system, float time)
 
 ParticleDefinitionEmitterCone::ParticleDefinitionEmitterCone()
 {
-    
+    Range = 45.f;
+    Speed = 0;
 }
 
 void ParticleDefinitionEmitterCone::CreateParticle(ParticleSystem* system, Particle* particle)
 {
     particle->Rotation += glm::vec3(glm::linearRand(-Range, Range), glm::linearRand(-Range, Range), glm::linearRand(-Range, Range));
+}
+
+ParticleDefinitionEmitterRectangle::ParticleDefinitionEmitterRectangle()
+{
+    
+}
+
+void ParticleDefinitionEmitterRectangle::CreateParticle(ParticleSystem* system, Particle* particle)
+{
+    glm::vec4 position = system->Transform * glm::vec4(glm::linearRand(-Size/2.f, Size/2.f), 0, 1);
+    particle->Position = glm::vec3(position.x, position.y, position.z);
 }
 
 void ParticleValueInit1D::Set(float value)
