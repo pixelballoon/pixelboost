@@ -355,9 +355,9 @@ Gwen::Point GwenRenderer::MeasureText(Gwen::Font* font, const Gwen::UnicodeStrin
     Engine::Instance()->GetFontRenderer()->LoadFont(fontName, "/fonts/"+fontName, false);
     
     float size = font->size * Scale();
-    float length = Engine::Instance()->GetFontRenderer()->MeasureString(fontName, Gwen::Utility::UnicodeToString(text), size/32.f).x*32.f;
+    glm::vec2 stringSize = Engine::Instance()->GetFontRenderer()->MeasureString(fontName, Gwen::Utility::UnicodeToString(text), size);
     
-    return Gwen::Point(length, size);
+    return Gwen::Point(stringSize.x, stringSize.y);
 }
 
 void GwenRenderer::PurgeBuffer(bool force)

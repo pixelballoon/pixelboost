@@ -164,6 +164,7 @@ glm::vec2 Font::FillVertexBuffer(VertexBuffer* vertexBuffer, const std::string& 
     
     int numCharacters = 0;
     
+    float maxLineHeight = 0.f;
     float maxLineLength = 0.f;
     float offsetX = 0.f;
     float offsetY = 0.f;
@@ -185,6 +186,7 @@ glm::vec2 Font::FillVertexBuffer(VertexBuffer* vertexBuffer, const std::string& 
             vertices += 4;
             numCharacters++;
             
+            maxLineHeight = glm::max(charIt->second.height, maxLineHeight);
             offsetX += charIt->second.xAdvance;
             
             if (i<wideString.length()-1)
@@ -201,7 +203,7 @@ glm::vec2 Font::FillVertexBuffer(VertexBuffer* vertexBuffer, const std::string& 
     
     vertexBuffer->Unlock(numCharacters*4);
     
-    return glm::vec2(maxLineLength, glm::abs(offsetY - 1.f));
+    return glm::vec2(maxLineLength, glm::abs(offsetY - maxLineHeight));
 }
 
 void Font::AddCharacter(Vertex_P3_UV* buffer, const Font::Character& character, glm::vec2 position, float baseline)
@@ -468,6 +470,7 @@ glm::vec2 FontRenderer::MeasureString(const std::string& name, const std::string
     
     font = fontIt->second;
     
+    float maxLineHeight = 0.f;
     float maxLineLength = 0.f;
     float offsetX = 0.f;
     float offsetY = 0.f;
@@ -478,7 +481,8 @@ glm::vec2 FontRenderer::MeasureString(const std::string& name, const std::string
     {
         if (wideString[i] == '\n')
         {
-            maxLineLength = glm::max(maxLineLength, offsetX);
+            maxLineHeight = 0.f;
+            maxLineLength = glm::max(offsetX, maxLineLength);
             offsetX = 0.f;
             offsetY -= 1.f;
         } else {
@@ -486,6 +490,8 @@ glm::vec2 FontRenderer::MeasureString(const std::string& name, const std::string
             
             if (charIt == font->chars.end())
                 continue;
+
+            maxLineHeight = glm::max(charIt->second.height, maxLineHeight);
             
             offsetX += charIt->second.xAdvance;
             
@@ -501,7 +507,7 @@ glm::vec2 FontRenderer::MeasureString(const std::string& name, const std::string
     
     maxLineLength = glm::max(maxLineLength, offsetX);
     
-    return glm::vec2(maxLineLength * size, glm::abs((offsetY-2.f) * size));
+    return glm::vec2(maxLineLength * size, glm::abs((offsetY-maxLineHeight) * size));
 }
 
 void FontRenderer::SplitString(const std::string& string, char seperator, std::vector<std::string>& output)
