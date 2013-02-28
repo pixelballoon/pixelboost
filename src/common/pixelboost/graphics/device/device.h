@@ -15,6 +15,17 @@ class IndexBuffer;
 class Material;
 class ShaderProgram;
 class VertexBuffer;
+    
+class RenderBufferCapture
+{
+public:
+    RenderBufferCapture(unsigned char* data, int width, int height);
+    ~RenderBufferCapture();
+
+    unsigned char* Data;
+    int Width;
+    int Height;
+};
 
 class GraphicsDevice
 {
@@ -37,7 +48,7 @@ public:
     void SetDisplayDensity(float density);
     float GetDisplayDensity();
     
-    virtual unsigned char* CaptureRenderBuffer();
+    virtual std::shared_ptr<RenderBufferCapture> CaptureRenderBuffer();
 
     virtual void SetClearColor(glm::vec4 color);
     virtual void ClearBuffers();

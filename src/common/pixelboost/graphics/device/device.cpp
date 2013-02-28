@@ -9,6 +9,18 @@
 
 using namespace pb;
 
+RenderBufferCapture::RenderBufferCapture(unsigned char* data, int width, int height)
+{
+    Data = data;
+    Width = width;
+    Height = height;
+}
+
+RenderBufferCapture::~RenderBufferCapture()
+{
+    delete[] Data;
+}
+
 GraphicsDevice::GraphicsDevice()
     : _DisplayResolution(0,0)
 {
@@ -48,9 +60,9 @@ float GraphicsDevice::GetDisplayDensity()
     return _DisplayDensity;
 }
 
-unsigned char* GraphicsDevice::CaptureRenderBuffer()
+std::shared_ptr<RenderBufferCapture> GraphicsDevice::CaptureRenderBuffer()
 {
-    return 0;
+    return std::shared_ptr<RenderBufferCapture>(new RenderBufferCapture(0,0,0));
 }
 
 void GraphicsDevice::SetClearColor(glm::vec4 color)

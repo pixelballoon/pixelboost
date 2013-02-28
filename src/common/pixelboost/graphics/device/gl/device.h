@@ -70,7 +70,7 @@ public:
     virtual ~GraphicsDeviceGL();
     
 public:
-    virtual unsigned char* CaptureRenderBuffer();
+    virtual std::shared_ptr<RenderBufferCapture> CaptureRenderBuffer();
     
     virtual void SetClearColor(glm::vec4 color);
     virtual void ClearBuffers();

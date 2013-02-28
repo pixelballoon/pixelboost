@@ -196,17 +196,15 @@ GraphicsDeviceGL::~GraphicsDeviceGL()
     
 }
 
-unsigned char* GraphicsDeviceGL::CaptureRenderBuffer()
+std::shared_ptr<RenderBufferCapture> GraphicsDeviceGL::CaptureRenderBuffer()
 {    
-    int width, height;
-    
-    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &width);
-    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &height);
+    GLint width = GetDisplayResolution().x;
+    GLint height = GetDisplayResolution().y;
 
     unsigned char* buffer = new unsigned char[width * height * 4];
     glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
     
-    return buffer;
+    return std::shared_ptr<RenderBufferCapture>(new RenderBufferCapture(buffer, width, height));
 }
 
 void GraphicsDeviceGL::SetClearColor(glm::vec4 color)
