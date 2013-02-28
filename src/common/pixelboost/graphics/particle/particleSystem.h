@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <vector>
 
 #include "glm/glm.hpp"
@@ -75,6 +76,7 @@ public:
     
 public:
     glm::vec2 Size;
+    bool RandomDirection;
 };
     
 class ParticleValueInit1D
@@ -129,6 +131,14 @@ public:
     virtual glm::vec3 Evaluate(float x, float variant) = 0;
 };
     
+class ParticleValueModifierColor
+{
+public:
+    virtual ~ParticleValueModifierColor();
+    
+    virtual glm::vec4 Evaluate(float x, float variant) = 0;
+};
+    
 class ParticleValueCurve1D : public ParticleValueModifier1D
 {
 public:
@@ -169,6 +179,32 @@ public:
     HermiteCurve2D CurveMaxZ;
 };
     
+class ParticleValueCurveColor : public ParticleValueModifierColor
+{
+public:
+    virtual glm::vec4 Evaluate(float x, float variant);
+    
+    HermiteCurve2D CurveR;
+    HermiteCurve2D CurveG;
+    HermiteCurve2D CurveB;
+    HermiteCurve2D CurveA;
+};
+
+class ParticleValueTwoCurveColor : public ParticleValueModifierColor
+{
+public:
+    virtual glm::vec4 Evaluate(float x, float variant);
+    
+    HermiteCurve2D CurveMinR;
+    HermiteCurve2D CurveMinG;
+    HermiteCurve2D CurveMinB;
+    HermiteCurve2D CurveMinA;
+    HermiteCurve2D CurveMaxR;
+    HermiteCurve2D CurveMaxG;
+    HermiteCurve2D CurveMaxB;
+    HermiteCurve2D CurveMaxA;
+};
+    
 class ParticleMeshDefinition
 {
 public:
@@ -204,7 +240,6 @@ public:
     ParticleValueInit1D StartLife;
     ParticleValueInit1D StartScale;
     ParticleValueInit1D StartSpeed;
-    ParticleValueInit3D StartRotation;
     ParticleValueInit3D StartRotationSpeed;
     ParticleValueInitColor StartColor;
 
@@ -218,6 +253,7 @@ public:
 	ParticleSystemDefinition* SubSystemCreate;
 	ParticleSystemDefinition* SubSystemDeath;
 
+    ParticleValueModifierColor* ModifierColor;
     ParticleValueModifier1D* ModifierScale;
     ParticleValueModifier3D* ModifierVelocity;
 

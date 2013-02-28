@@ -1,4 +1,5 @@
 #include "glm/gtc/random.hpp"
+#include "glm/gtc/swizzle.hpp"
 
 #include "pixelboost/framework/engine.h"
 #include "pixelboost/graphics/particle/particleSystem.h"
@@ -47,14 +48,9 @@ void ParticleDefinitionEmitter::Update(ParticleSystem* system, float time)
         
         Particle particle;
         
-        glm::vec4 position = system->Transform * glm::vec4(0,0,0,1);
-        glm::vec4 rotation = system->Transform * glm::vec4(system->Definition->StartRotation.GetRandValue(), 0);
-        
-        particle.Position = glm::vec3(position.x, position.y, position.z);
         particle.Color = system->Definition->StartColor.GetRandValue();
         particle.StartLife = system->Definition->StartLife.GetRandValue();
         particle.Life = particle.StartLife;
-        particle.Rotation = glm::vec3(rotation.x, rotation.y, rotation.z);
         particle.RotationSpeed = system->Definition->StartRotationSpeed.GetRandValue();
         particle.Scale = system->Definition->StartScale.GetRandValue();
         particle.Speed = system->Definition->StartSpeed.GetRandValue();
@@ -78,18 +74,26 @@ ParticleDefinitionEmitterCone::ParticleDefinitionEmitterCone()
 
 void ParticleDefinitionEmitterCone::CreateParticle(ParticleSystem* system, Particle* particle)
 {
-    particle->Rotation += glm::vec3(glm::linearRand(-Range, Range), glm::linearRand(-Range, Range), glm::linearRand(-Range, Range));
+    particle->Position = glm::swizzle<glm::X, glm::Y, glm::Z>(system->Transform * glm::vec4(0,0,0,1));
+    particle->Rotation = glm::swizzle<glm::X, glm::Y, glm::Z>(system->Transform * glm::vec4(glm::linearRand(-Range, Range), glm::linearRand(-Range, Range), glm::linearRand(-Range, Range), 0));
 }
 
 ParticleDefinitionEmitterRectangle::ParticleDefinitionEmitterRectangle()
 {
-    
+    RandomDirection = true;
 }
 
 void ParticleDefinitionEmitterRectangle::CreateParticle(ParticleSystem* system, Particle* particle)
 {
-    glm::vec4 position = system->Transform * glm::vec4(glm::linearRand(-Size/2.f, Size/2.f), 0, 1);
-    particle->Position = glm::vec3(position.x, position.y, position.z);
+    particle->Position = glm::swizzle<glm::X, glm::Y, glm::Z>(system->Transform * glm::vec4(glm::linearRand(-Size/2.f, Size/2.f), 0, 1));
+    
+    if (RandomDirection)
+    {
+        particle->Rotation = glm::vec3(0, 0, glm::linearRand(-180.f, 180.f));
+    } else
+    {
+        particle->Rotation = glm::swizzle<glm::X, glm::Y, glm::Z>(system->Transform * glm::vec4(0,0,0,1));
+    }
 }
 
 void ParticleValueInit1D::Set(float value)
@@ -173,6 +177,21 @@ glm::vec3 ParticleValueTwoCurve3D::Evaluate(float x, float variant)
     return glm::mix(glm::vec3(CurveMinX.Evaluate(x), CurveMinY.Evaluate(x), CurveMinZ.Evaluate(x)), glm::vec3(CurveMaxX.Evaluate(x), CurveMaxY.Evaluate(x), CurveMaxZ.Evaluate(x)), variant);
 }
 
+ParticleValueModifierColor::~ParticleValueModifierColor()
+{
+    
+}
+
+glm::vec4 ParticleValueCurveColor::Evaluate(float x, float variant)
+{
+    return glm::vec4(CurveR.Evaluate(x), CurveG.Evaluate(x), CurveB.Evaluate(x), CurveA.Evaluate(x));
+}
+
+glm::vec4 ParticleValueTwoCurveColor::Evaluate(float x, float variant)
+{
+    return glm::mix(glm::vec4(CurveMinR.Evaluate(x), CurveMinG.Evaluate(x), CurveMinB.Evaluate(x), CurveMinA.Evaluate(x)), glm::vec4(CurveMaxR.Evaluate(x), CurveMaxG.Evaluate(x), CurveMaxB.Evaluate(x), CurveMaxA.Evaluate(x)), variant);
+}
+
 ParticleSpriteDefinition::ParticleSpriteDefinition(const std::string& sprite)
 {
     SpriteDefinition = Engine::Instance()->GetSpriteRenderer()->GetSprite(sprite);
@@ -185,12 +204,12 @@ ParticleSystemDefinition::ParticleSystemDefinition()
     StartLife.Set(1.f);
     StartScale.Set(1.f);
     StartSpeed.Set(0.f);
-    StartRotation.Set(glm::vec3(0,0,0));
     StartRotationSpeed.Set(glm::vec3(0,0,0));
     StartColor.Set(glm::vec4(1,1,1,1));
     
     Emitter = 0;
     
+    ModifierColor = 0;
     ModifierScale = 0;
     ModifierVelocity = 0;
     
@@ -204,6 +223,9 @@ ParticleSystemDefinition::~ParticleSystemDefinition()
 {
     if (Emitter)
         delete Emitter;
+    
+    if (ModifierColor)
+        delete ModifierColor;
     
     if (ModifierScale)
         delete ModifierScale;
@@ -253,6 +275,9 @@ void ParticleSystem::UpdateParticle(Particle* particle, float time)
     particle->Velocity += Definition->Gravity * time;
     
     float life = 1.f-(particle->Life/particle->StartLife);
+    
+    if (Definition->ModifierColor != 0)
+        particle->Color = Definition->ModifierColor->Evaluate(life, particle->Variant);
     
     if (Definition->ModifierVelocity != 0)
         particle->Velocity = Definition->ModifierVelocity->Evaluate(life, particle->Variant);
