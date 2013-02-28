@@ -204,19 +204,19 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewp
         bufferData[0].color[0] = color.r;
         bufferData[0].color[1] = color.g;
         bufferData[0].color[2] = color.b;
-        bufferData[0].color[3] = 1;
+        bufferData[0].color[3] = color.a;
         bufferData[1].color[0] = color.r;
         bufferData[1].color[1] = color.g;
         bufferData[1].color[2] = color.b;
-        bufferData[1].color[3] = 1;
+        bufferData[1].color[3] = color.a;
         bufferData[2].color[0] = color.r;
         bufferData[2].color[1] = color.g;
         bufferData[2].color[2] = color.b;
-        bufferData[2].color[3] = 1;
+        bufferData[2].color[3] = color.a;
         bufferData[3].color[0] = color.r;
         bufferData[3].color[1] = color.g;
         bufferData[3].color[2] = color.b;
-        bufferData[3].color[3] = 1;
+        bufferData[3].color[3] = color.a;
         
         glm::vec4 a = renderable.GetModelViewMatrix() * glm::vec4(-0.5, -0.5, 0, 1);
         glm::vec4 b = renderable.GetModelViewMatrix() * glm::vec4(-0.5, 0.5, 0, 1);
