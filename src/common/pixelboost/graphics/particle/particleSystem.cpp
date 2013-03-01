@@ -290,6 +290,7 @@ PB_DEFINE_COMPONENT(ParticleComponent)
 
 ParticleComponent::ParticleComponent(Entity* entity)
     : Component(entity)
+    , _UseGlobalTime(false)
 {
     _System = new ParticleSystem();
     
@@ -330,6 +331,11 @@ ParticleSystem* ParticleComponent::GetSystem()
     return _System;
 }
 
+void ParticleComponent::SetUseGlobalTime(bool useGlobalTime)
+{
+    _UseGlobalTime = useGlobalTime;
+}
+
 void ParticleComponent::OnTransformChanged(const Message& message)
 {
     _WorldMatrix = GetParent()->GetComponentByType<TransformComponent>()->GetMatrix() * _LocalTransform;
@@ -340,5 +346,5 @@ void ParticleComponent::OnUpdate(const Message& message)
     const pb::UpdateMessage& updateMessage = static_cast<const UpdateMessage&>(message);
     
     _System->Transform = GetParent()->GetComponentByType<TransformComponent>()->GetMatrix() * _LocalTransform;
-    _System->Update(updateMessage.GetGameDelta());
+    _System->Update(_UseGlobalTime ? updateMessage.GetTimeDelta() : updateMessage.GetGameDelta());
 }

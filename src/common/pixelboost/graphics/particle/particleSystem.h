@@ -296,6 +296,8 @@ public:
     
     ParticleSystem* GetSystem();
     
+    void SetUseGlobalTime(bool useGlobalTime);
+    
 private:
     void OnTransformChanged(const Message& message);
     void OnUpdate(const Message& message);
@@ -304,6 +306,8 @@ private:
     glm::mat4x4 _LocalTransform;
     ParticleRenderable* _Renderable;
     ParticleSystem* _System;
+    
+    bool _UseGlobalTime;
 };
 
 }
