@@ -44,6 +44,7 @@ public:
 public:
     struct ProjectConfig
     {
+        std::string databaseRoot;
         std::string projectRoot;
         std::string commonSchema;
         std::vector<std::string> imageRoots;

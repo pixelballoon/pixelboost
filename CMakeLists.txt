@@ -3,11 +3,14 @@ project (editor)
 
 include (../../build.cmake)
 
-pixelboost_setup_pre(../../ editor "com.pixelballoon.editor" "Editor")
+pixelboost_setup_pre (../../ editor "com.pixelballoon.editor" "Editor")
+
+add_subdirectory (../../pipeline ${CMAKE_BINARY_DIR}/pipeline)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-reorder")
 
-include_directories("source")
+include_directories ("source")
+include_directories("${PIPELINE_HEADERS}")
 
 set (COMMAND_STANDARD_SOURCES
 	"source/command/standard/checkDepth.cpp"
@@ -153,4 +156,6 @@ source_group (view\\ui\\property FILES ${VIEW_UI_PROPERTY_SOURCES})
 source_group (view\\ui\\settings FILES ${VIEW_UI_SETTINGS_SOURCES})
 source_group (view FILES ${VIEW_SOURCES})
 
-pixelboost_setup_post("${EDITOR_SOURCES}")
+pixelboost_setup_post ("${EDITOR_SOURCES}")
+pixelboost_library_cpp11 (pixelboost_pipeline)
+target_link_libraries (editor pixelboost_pipeline)

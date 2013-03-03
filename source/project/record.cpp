@@ -13,6 +13,7 @@ extern "C" {
 #include "lundump.h"
 }
 
+#include "pipeline/file/fileSystem.h"
 #include "pixelboost/file/fileHelpers.h"
 
 #include "project/entity.h"
@@ -101,7 +102,7 @@ bool ProjectRecord::Close()
 
 bool ProjectRecord::Save()
 {
-    pb::FileSystem::Instance()->CreateDirectory("records");
+    //pl::FileSystem::Instance()->CreateDirectory("records");
     
     char location[1024];
     sprintf(location, "records/%X.txt", GetUid());
@@ -126,7 +127,7 @@ bool ProjectRecord::Save()
     std::stringstream contents;
     json::Writer::Write(record, contents);
     
-    pb::File* file = pb::FileSystem::Instance()->OpenFile(location, pb::kFileModeWrite);
+    pl::File* file = pl::FileSystem::Instance()->OpenFile(GetProject()->GetConfig().databaseRoot + location, pl::kFileModeWrite);
     file->Write(contents.str());
     delete file;
     

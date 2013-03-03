@@ -55,7 +55,6 @@ bool Project::Open(const std::string& directory)
     if (_IsOpen)
         Close();
     
-    pb::FileSystem::Instance()->OverrideWriteDirectory(directory);
     pb::FileSystem::Instance()->MountReadLocation(directory, "editor_project", true);
     
     _Location = directory;
@@ -104,12 +103,14 @@ bool Project::OpenConfig(const std::string& filename)
         delete file;
     }
     
+    _Config.databaseRoot = _Location;
+    
     json::Object config;
     
     json::Reader::Read(config, contents);
     
     json::String& projectRoot = config["project_root"];
-    _Config.projectRoot = projectRoot;
+    _Config.projectRoot = projectRoot.Value();
     
     json::String& commonSchema = config["common_schema"];
     _Config.commonSchema = commonSchema;
