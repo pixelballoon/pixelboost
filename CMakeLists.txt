@@ -2,7 +2,9 @@ cmake_minimum_required (VERSION 2.8.10)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-reorder")
 
-add_subdirectory (../shared ${CMAKE_BINARY_DIR}/shared)
+if (NOT TARGET pixelboost_shared)
+	add_subdirectory (../shared ${CMAKE_BINARY_DIR}/shared)
+endif (NOT TARGET pixelboost_shared)
 
 set (PIPELINE_HEADERS
 	"${PIPELINE_HEADERS}"
