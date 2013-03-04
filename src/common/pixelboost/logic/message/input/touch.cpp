@@ -2,6 +2,8 @@
 
 using namespace pb;
 
+PB_DEFINE_MESSAGE(TouchMessage)
+
 TouchMessage::TouchMessage(Entity* entity, Component* component, int touchIndex, glm::vec2 touchPosition)
     : Message(entity, component)
     , _TouchIndex(touchIndex)
@@ -25,6 +27,8 @@ glm::vec2 TouchMessage::GetTouchPosition() const
     return _TouchPosition;
 }
 
+PB_DEFINE_MESSAGE(TouchDownMessage)
+
 TouchDownMessage::TouchDownMessage(Entity* entity, Component* component, int touchIndex, glm::vec2 touchPosition)
     : TouchMessage(entity, component, touchIndex, touchPosition)
 {
@@ -36,15 +40,7 @@ TouchDownMessage::~TouchDownMessage()
     
 }
 
-Uid TouchDownMessage::GetType() const
-{
-    return GetStaticType();
-}
-
-Uid TouchDownMessage::GetStaticType()
-{
-    return TypeHash("pb::TouchDownMessage");
-}
+PB_DEFINE_MESSAGE(TouchMoveMessage)
 
 TouchMoveMessage::TouchMoveMessage(Entity* entity, Component* component, int touchIndex, glm::vec2 touchPosition)
     : TouchMessage(entity, component, touchIndex, touchPosition)
@@ -57,15 +53,7 @@ TouchMoveMessage::~TouchMoveMessage()
     
 }
 
-Uid TouchMoveMessage::GetType() const
-{
-    return GetStaticType();
-}
-
-Uid TouchMoveMessage::GetStaticType()
-{
-    return TypeHash("pb::TouchMoveMessage");
-}
+PB_DEFINE_MESSAGE(TouchUpMessage)
 
 TouchUpMessage::TouchUpMessage(Entity* entity, Component* component, int touchIndex, glm::vec2 touchPosition)
     : TouchMessage(entity, component, touchIndex, touchPosition)
@@ -76,14 +64,4 @@ TouchUpMessage::TouchUpMessage(Entity* entity, Component* component, int touchIn
 TouchUpMessage::~TouchUpMessage()
 {
     
-}
-
-Uid TouchUpMessage::GetType() const
-{
-    return GetStaticType();
-}
-
-Uid TouchUpMessage::GetStaticType()
-{
-    return TypeHash("pb::TouchUpMessage");
 }

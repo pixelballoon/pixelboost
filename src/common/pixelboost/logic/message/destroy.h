@@ -7,12 +7,11 @@ namespace pb
     
 class DestroyMessage : public Message
 {
+    PB_DECLARE_MESSAGE
+    
 public:
     DestroyMessage(Entity* entity, Component* component);
     virtual ~DestroyMessage();
-    
-    virtual Uid GetType() const;
-    static Uid GetStaticType();    
 };
     
 }

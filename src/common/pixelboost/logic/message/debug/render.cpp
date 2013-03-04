@@ -2,6 +2,8 @@
 
 using namespace pb;
 
+PB_DEFINE_MESSAGE(DebugRenderMessage)
+
 DebugRenderMessage::DebugRenderMessage(DebugRenderSystem* renderSystem)
     : Message(0,0)
     , _DebugRenderSystem(renderSystem)
@@ -12,16 +14,6 @@ DebugRenderMessage::DebugRenderMessage(DebugRenderSystem* renderSystem)
 DebugRenderMessage::~DebugRenderMessage()
 {
     
-}
-
-Uid DebugRenderMessage::GetType() const
-{
-    return GetStaticType();
-}
-
-Uid DebugRenderMessage::GetStaticType()
-{
-    return TypeHash("pb::DebugRenderMessage");
 }
 
 DebugRenderSystem* DebugRenderMessage::GetDebugRenderSystem() const

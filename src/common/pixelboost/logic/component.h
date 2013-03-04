@@ -32,7 +32,8 @@ public:
     };
     
     virtual bool IsA(Uid type) const;
-    virtual Uid GetType() const = 0;
+    virtual Uid GetType() const;
+    static Uid GetStaticType();
     
     Uid GetUid();
     

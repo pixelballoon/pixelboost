@@ -2,6 +2,8 @@
 
 using namespace pb;
 
+PB_DEFINE_MESSAGE(UpdateMessage)
+
 UpdateMessage::UpdateMessage(float timeDelta, float gameDelta)
     : Message(0, 0)
     , _GameDelta(gameDelta)
@@ -13,16 +15,6 @@ UpdateMessage::UpdateMessage(float timeDelta, float gameDelta)
 UpdateMessage::~UpdateMessage()
 {
     
-}
-
-Uid UpdateMessage::GetType() const
-{
-    return GetStaticType();
-}
-
-Uid UpdateMessage::GetStaticType()
-{
-    return TypeHash("pb::UpdateMessage");
 }
 
 float UpdateMessage::GetGameDelta() const

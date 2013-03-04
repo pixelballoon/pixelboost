@@ -7,12 +7,11 @@ namespace pb
 
 class UpdateMessage : public Message
 {
+    PB_DECLARE_MESSAGE
+    
 public:
     UpdateMessage(float timeDelta, float gameDelta);
     virtual ~UpdateMessage();
-    
-    Uid GetType() const;
-    static Uid GetStaticType();
     
     float GetGameDelta() const;
     float GetTimeDelta() const;

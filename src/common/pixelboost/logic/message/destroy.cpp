@@ -2,6 +2,8 @@
 
 using namespace pb;
 
+PB_DEFINE_MESSAGE(DestroyMessage)
+
 DestroyMessage::DestroyMessage(Entity* entity, Component* component)
     : Message(entity, component)
 {
@@ -11,14 +13,4 @@ DestroyMessage::DestroyMessage(Entity* entity, Component* component)
 DestroyMessage::~DestroyMessage()
 {
     
-}
-
-Uid DestroyMessage::GetType() const
-{
-    return GetStaticType();
-}
-
-Uid DestroyMessage::GetStaticType()
-{
-    return TypeHash("pb::DestroyMessage");
 }

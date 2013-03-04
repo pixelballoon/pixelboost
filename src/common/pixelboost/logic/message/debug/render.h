@@ -9,12 +9,11 @@ namespace pb
     
     class DebugRenderMessage : public Message
     {
+        PB_DECLARE_MESSAGE
+        
     public:
         DebugRenderMessage(DebugRenderSystem* renderSystem);
         virtual ~DebugRenderMessage();
-        
-        virtual Uid GetType() const;
-        static Uid GetStaticType();
         
         DebugRenderSystem* GetDebugRenderSystem() const;
         

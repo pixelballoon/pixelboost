@@ -7,12 +7,11 @@ namespace pb
     
 class ParticleFinishedMessage : public Message
 {
+    PB_DECLARE_MESSAGE
+    
 public:
     ParticleFinishedMessage(Entity* entity, Component* component);
     virtual ~ParticleFinishedMessage();
-    
-    Uid GetType() const;
-    static Uid GetStaticType();
     
 private:
 };

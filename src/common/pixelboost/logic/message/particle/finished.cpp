@@ -2,8 +2,10 @@
 
 using namespace pb;
 
+PB_DEFINE_MESSAGE(ParticleFinishedMessage)
+
 ParticleFinishedMessage::ParticleFinishedMessage(Entity* entity, Component* component)
-: Message(entity, component)
+    : Message(entity, component)
 {
     
 }
@@ -11,14 +13,4 @@ ParticleFinishedMessage::ParticleFinishedMessage(Entity* entity, Component* comp
 ParticleFinishedMessage::~ParticleFinishedMessage()
 {
     
-}
-
-Uid ParticleFinishedMessage::GetType() const
-{
-    return GetStaticType();
-}
-
-Uid ParticleFinishedMessage::GetStaticType()
-{
-    return TypeHash("pb::ParticleFinishedMessage");
 }

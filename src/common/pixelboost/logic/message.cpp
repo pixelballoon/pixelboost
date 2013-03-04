@@ -25,6 +25,16 @@ void Message::RegisterLuaClass(lua_State* state)
     .endNamespace();
 }
 
+Uid Message::GetType() const
+{
+    return GetStaticType();
+}
+
+Uid Message::GetStaticType()
+{
+    return TypeHash("pb::Message");
+}
+
 Entity* Message::GetEntity() const
 {
     return _Entity;

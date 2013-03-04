@@ -8,8 +8,10 @@ namespace pb
 
     class PhysicsComponent;
     
-    class PhysicsCollisionMessage : public pb::Message
+    class PhysicsCollisionMessage : public Message
     {
+        PB_DECLARE_MESSAGE
+        
     public:
         PhysicsCollisionMessage(PhysicsComponent* other, glm::vec2 position, glm::vec2 normal);
         ~PhysicsCollisionMessage();
@@ -26,22 +28,20 @@ namespace pb
     
     class PhysicsCollisionStartMessage : public PhysicsCollisionMessage
     {
+        PB_DECLARE_MESSAGE
+        
     public:
         PhysicsCollisionStartMessage(PhysicsComponent* other, glm::vec2 position, glm::vec2 normal);
         ~PhysicsCollisionStartMessage();
-        
-        virtual Uid GetType() const;
-        static Uid GetStaticType();
     };
     
     class PhysicsCollisionEndMessage : public PhysicsCollisionMessage
     {
+        PB_DECLARE_MESSAGE
+        
     public:
         PhysicsCollisionEndMessage(PhysicsComponent* other, glm::vec2 position, glm::vec2 normal);
         ~PhysicsCollisionEndMessage();
-        
-        virtual Uid GetType() const;
-        static Uid GetStaticType();
     };
     
 }

@@ -30,7 +30,17 @@ void Component::RegisterLuaClass(lua_State* state)
 
 bool Component::IsA(Uid type) const
 {
-    return false;
+    return type == GetType();
+}
+
+Uid Component::GetType() const
+{
+    return GetStaticType();
+}
+
+Uid Component::GetStaticType()
+{
+    return TypeHash("pb::Component");
 }
 
 Uid Component::GetUid()

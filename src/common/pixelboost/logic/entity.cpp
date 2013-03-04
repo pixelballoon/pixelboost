@@ -73,6 +73,16 @@ Uid Entity::GetUid()
     return _Uid;
 }
 
+Uid Entity::GetType() const
+{
+    return GetStaticType();
+}
+
+pb::Uid Entity::GetStaticType()
+{
+    return pb::TypeHash("pb::Entity");
+}
+
 const DbEntity* Entity::GetCreationEntity() const
 {
     return _CreationEntity;

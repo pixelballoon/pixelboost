@@ -40,7 +40,9 @@ public:
     Uid GetCreationUid();
     
     Uid GetUid();
-    virtual Uid GetType() const = 0;
+    
+    virtual Uid GetType() const;
+    static pb::Uid GetStaticType();
     
     const DbEntity* GetCreationEntity() const;
     template<class T> const T* GetData() const;

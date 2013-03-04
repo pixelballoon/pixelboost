@@ -4,6 +4,9 @@
 
 struct lua_State;
 
+#define PB_DECLARE_MESSAGE public: virtual pb::Uid GetType() const; static pb::Uid GetStaticType(); private:
+#define PB_DEFINE_MESSAGE(className) pb::Uid className::GetType() const { return GetStaticType(); } pb::Uid className::GetStaticType() { return pb::TypeHash(#className); }
+
 namespace pb
 {
 
@@ -18,7 +21,8 @@ namespace pb
         
         static void RegisterLuaClass(lua_State* state);
         
-        virtual Uid GetType() const = 0;
+        virtual Uid GetType() const;
+        static Uid GetStaticType();        
         
         Entity* GetEntity() const;
         Component* GetComponent() const;

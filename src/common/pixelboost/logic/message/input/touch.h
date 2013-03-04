@@ -11,6 +11,8 @@ class Viewport;
     
     class TouchMessage : public Message
     {
+        PB_DECLARE_MESSAGE
+        
     public:
         TouchMessage(Entity* entity, Component* component, int touchIndex, glm::vec2 touchPosition);
         virtual ~TouchMessage();
@@ -26,32 +28,29 @@ class Viewport;
     
     class TouchDownMessage : public TouchMessage
     {
+        PB_DECLARE_MESSAGE
+        
     public:
         TouchDownMessage(Entity* entity, Component* component, int touchIndex, glm::vec2 touchPosition);
         virtual ~TouchDownMessage();
-        
-        Uid GetType() const;
-        static Uid GetStaticType();
     };
     
     class TouchMoveMessage : public TouchMessage
     {
+        PB_DECLARE_MESSAGE
+        
     public:
         TouchMoveMessage(Entity* entity, Component* component, int touchIndex, glm::vec2 touchPosition);
         virtual ~TouchMoveMessage();
-        
-        Uid GetType() const;
-        static Uid GetStaticType();
     };
     
     class TouchUpMessage : public TouchMessage
     {
+        PB_DECLARE_MESSAGE
+        
     public:
         TouchUpMessage(Entity* entity, Component* component, int touchIndex, glm::vec2 touchPosition);
         virtual ~TouchUpMessage();
-        
-        Uid GetType() const;
-        static Uid GetStaticType();
     };
     
 }

@@ -7,12 +7,11 @@ namespace pb
     
 class TransformChangedMessage : public Message
 {
+    PB_DECLARE_MESSAGE
+    
 public:
     TransformChangedMessage(Entity* entity, Component* component);
     virtual ~TransformChangedMessage();
-    
-    Uid GetType() const;
-    static Uid GetStaticType();
     
 private:
 };
