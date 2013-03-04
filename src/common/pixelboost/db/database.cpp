@@ -4,6 +4,7 @@
 #include "pixelboost/db/entity.h"
 #include "pixelboost/db/record.h"
 #include "pixelboost/db/register.h"
+#include "pixelboost/debug/log.h"
 #include "pixelboost/file/fileHelpers.h"
 
 using namespace pb;
@@ -67,14 +68,17 @@ bool Database::OpenDatabase()
     pb::File* file = pb::FileSystem::Instance()->OpenFile(filename);
     
     if (!file)
+    {
+        PbLogError("pb.database", "Unable to open database index (%s)", filename.c_str());
         return false;
+    }
     
     file->ReadAll(contents);
     delete file;
     
     if (luaL_loadstring(_State, contents.c_str()) || lua_pcall(_State, 0, 0, 0))
     {
-        printf("Can't open file: %s", lua_tostring(_State, -1));
+        PbLogError("pb.database", "Can't open file: %s", lua_tostring(_State, -1));
         return false;
     }
     
@@ -139,7 +143,7 @@ DbRecord* Database::OpenRecord(Uid recordId)
     
     if (luaL_loadstring(_State, contents.c_str()) || lua_pcall(_State, 0, 0, 0))
     {
-        printf("Can't open file: %s\n", lua_tostring(_State, -1));
+        PbLogError("pb.database", "Can't open file: %s", lua_tostring(_State, -1));
         return 0;
     }
     
@@ -155,7 +159,7 @@ DbRecord* Database::OpenRecord(Uid recordId)
     if (!lua_isstring(_State, -1))
     {
         lua_pop(_State, -1);
-        printf("Unknown record type");
+        PbLogError("pb.database", "Unknown record type");
         return 0;
     }
     
@@ -280,7 +284,7 @@ DbRecord* Database::OpenRecord(Uid recordId)
                     entity->Load();
                     record->AddEntity(entity);
                 } else {
-                    printf("Unable to create entity of type (%u)\n", type);
+                    PbLogError("pb.database", "Unable to create entity of type (%u)", type);
                 }
             }
             
