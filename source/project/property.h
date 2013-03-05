@@ -5,9 +5,6 @@
 
 #include "project/definitions.h"
 
-namespace pixeleditor
-{
-
 class PropertyAtom;
 class PropertyArray;
 class PropertyPointer;
@@ -140,5 +137,3 @@ public:
 private:
     std::vector<unsigned int> _ArrayElements;
 };
-
-}

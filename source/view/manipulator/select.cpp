@@ -12,8 +12,6 @@
 #include "core.h"
 #include "view.h"
 
-using namespace pixeleditor;
-
 SelectManipulator::SelectManipulator(pb::Scene* scene)
     : Manipulator(scene)
     , _Active(false)

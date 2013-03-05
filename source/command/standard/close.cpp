@@ -4,8 +4,6 @@
 #include "project/project.h"
 #include "core.h"
 
-using namespace pixeleditor;
-
 Command* CloseCommand::Create()
 {
     return new CloseCommand();

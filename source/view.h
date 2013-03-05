@@ -38,9 +38,6 @@ namespace pb
     class Viewport;
 }
 
-namespace pixeleditor
-{
-
 class CommandManager;
 class Core;
 class HttpInterface;
@@ -148,5 +145,3 @@ private:
     int _LaunchArgc;
     const char** _LaunchArgv;
 };
-    
-}

@@ -15,25 +15,22 @@ namespace Gwen
     }
 }
 
-namespace pixeleditor
+class Project;
+
+class CreatePanel : public Gwen::Controls::ScrollControl
 {
-    class Project;
+public:
+    CreatePanel(Gwen::Controls::Base* parent);
+    ~CreatePanel();
     
-    class CreatePanel : public Gwen::Controls::ScrollControl
-    {
-    public:
-        CreatePanel(Gwen::Controls::Base* parent);
-        ~CreatePanel();
-        
-    private:
-        void Clear();
-        
-        void OnProjectOpened(Project* project);
-        void OnProjectClosed(Project* project);
-        
-        void OnItemSelected(Gwen::Controls::Base* item);
-        
-    private:
-        Gwen::Controls::TabControl* _Tabs;
-    };    
-}
+private:
+    void Clear();
+    
+    void OnProjectOpened(Project* project);
+    void OnProjectClosed(Project* project);
+    
+    void OnItemSelected(Gwen::Controls::Base* item);
+    
+private:
+    Gwen::Controls::TabControl* _Tabs;
+};    

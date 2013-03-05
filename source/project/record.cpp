@@ -21,8 +21,6 @@ extern "C" {
 #include "project/project.h"
 #include "project/schema.h"
 
-using namespace pixeleditor;
-
 ProjectRecord::ProjectRecord(Project* project)
     : ProjectStruct(project)
     , _IsOpen(false)

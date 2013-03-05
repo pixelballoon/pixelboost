@@ -11,8 +11,6 @@
 #include "json/writer.h"
 #include "pixelboost/framework/definitions.h"
 
-using namespace pixeleditor;
-
 ProjectStruct::ProjectStruct(Project* project, const SchemaStruct* type)
     : _Uid(0)
     , _Name("")

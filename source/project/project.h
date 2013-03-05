@@ -11,9 +11,6 @@
 
 #include "project/definitions.h"
 
-namespace pixeleditor
-{
-
 class ProjectEntity;
 class ProjectRecord;
 class Schema;
@@ -91,5 +88,3 @@ private:
     
     ProjectConfig _Config;
 };
-    
-}

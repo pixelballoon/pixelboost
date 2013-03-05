@@ -10,8 +10,6 @@
 #include "view/entity/entity.h"
 #include "view.h"
 
-using namespace pixeleditor;
-
 ModelViewProperty::ModelViewProperty(ViewEntity* parent, const std::string& path, const SchemaItem* schemaItem)
     : ViewProperty(parent, path, schemaItem)
 {

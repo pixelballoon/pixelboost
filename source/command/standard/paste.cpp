@@ -9,8 +9,6 @@
 #include "project/schema.h"
 #include "core.h"
 
-using namespace pixeleditor;
-
 Command* PasteCommand::Create()
 {
     return new PasteCommand();

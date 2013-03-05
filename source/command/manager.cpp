@@ -3,8 +3,6 @@
 #include "command/base.h"
 #include "command/manager.h"
 
-using namespace pixeleditor;
-
 CommandManager::CommandManager()
 {
     

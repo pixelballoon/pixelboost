@@ -7,9 +7,6 @@
 
 #include "project/definitions.h"
 
-namespace pixeleditor
-{
-
 class Selection
 {
 public:
@@ -37,5 +34,3 @@ public:
 private:
     Entities _Selection;
 };
-
-}

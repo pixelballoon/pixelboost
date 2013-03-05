@@ -7,8 +7,6 @@
 #include "core.h"
 #include "view.h"
 
-using namespace pixeleditor;
-
 MoveManipulator::MoveManipulator(pb::Scene* scene)
     : Manipulator(scene)
     , _Snap(0,0,0)

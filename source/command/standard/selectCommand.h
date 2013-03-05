@@ -3,9 +3,6 @@
 #include "command/base.h"
 #include "core/selection.h"
 
-namespace pixeleditor
-{
-
 class SelectCommand : public Command
 {
 public:
@@ -24,5 +21,3 @@ public:
 private:
     Selection _Selection;
 };
-    
-}

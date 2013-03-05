@@ -1,8 +1,6 @@
 #include "core/selection.h"
 #include "core/uidHelpers.h"
 
-using namespace pixeleditor;
-
 Selection::Selection()
 {
     

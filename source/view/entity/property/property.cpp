@@ -5,8 +5,6 @@
 #include "view/entity/property/property.h"
 #include "view/entity/entity.h"
 
-using namespace pixeleditor;
-
 PB_DEFINE_ENTITY(ViewProperty)
 
 ViewProperty::ViewProperty(ViewEntity* parent, const std::string& path, const SchemaItem* schemaItem)

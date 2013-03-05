@@ -11,8 +11,6 @@
 #include "core.h"
 #include "view.h"
 
-using namespace pixeleditor;
-
 Command* DeleteCommand::Create()
 {
     return new DeleteCommand();

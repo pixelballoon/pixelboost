@@ -12,8 +12,6 @@
 #include "core.h"
 #include "view.h"
 
-using namespace pixeleditor;
-
 CreateManipulator::CreateManipulator(pb::Scene* scene)
     : Manipulator(scene)
     , _CreateMode(false)
@@ -150,7 +148,7 @@ void CreateManipulator::CreateEntity(glm::vec3 position)
         Core::Instance()->GetCommandManager()->Exec("select", "-u " + entityIdString);
     }
     
-    pixeleditor::ViewEntity* viewEntity = View::Instance()->GetLevel()->GetEntityById(entityId);
+    ViewEntity* viewEntity = View::Instance()->GetLevel()->GetEntityById(entityId);
     
     if (viewEntity)
     {

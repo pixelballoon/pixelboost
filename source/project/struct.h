@@ -15,9 +15,6 @@ namespace json
     class Object;
 }
 
-namespace pixeleditor
-{
-
 class Project;
 class ProjectRecord;
 class Property;
@@ -91,5 +88,3 @@ private:
     
     PropertyMap _Properties;
 };
-    
-}

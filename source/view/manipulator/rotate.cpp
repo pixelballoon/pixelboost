@@ -7,8 +7,6 @@
 #include "core.h"
 #include "view.h"
 
-using namespace pixeleditor;
-
 RotateManipulator::RotateManipulator(pb::Scene* scene)
     : Manipulator(scene)
 {

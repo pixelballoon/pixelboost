@@ -3,9 +3,6 @@
 #include "command/base.h"
 #include "project/definitions.h"
 
-namespace pixeleditor
-{
-
 class CreateEntityCommand : public Command
 {
 public:
@@ -26,5 +23,3 @@ private:
     Uid _RecordId;
     Uid _EntityUid;
 };
-    
-}

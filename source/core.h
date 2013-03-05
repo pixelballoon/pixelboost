@@ -16,9 +16,6 @@ namespace pb
     class NetworkServer;
 }
 
-namespace pixeleditor
-{
-
 class CommandManager;
 class Project;
 
@@ -59,5 +56,3 @@ private:
     
     json::Object* _Clipboard;
 };
-    
-}

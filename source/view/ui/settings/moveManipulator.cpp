@@ -7,8 +7,6 @@
 #include "view/ui/settings/moveManipulator.h"
 #include "view.h"
 
-using namespace pixeleditor;
-
 MoveManipulatorWindow::MoveManipulatorWindow(Gwen::Controls::Base* parent)
     : Gwen::Controls::WindowControl(parent)
 {

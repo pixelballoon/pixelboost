@@ -5,8 +5,6 @@
 #include "project/schema.h"
 #include "project/schemaParser.h"
 
-using namespace pixeleditor;
-
 class Token
 {
 public:

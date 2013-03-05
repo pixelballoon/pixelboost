@@ -11,8 +11,6 @@
 #include "core.h"
 #include "view.h"
 
-using namespace pixeleditor;
-
 static const int TILE_SIZE = 100;
 
 class CreateButton : public Gwen::Controls::Button

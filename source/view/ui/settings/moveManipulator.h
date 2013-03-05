@@ -10,21 +10,16 @@ namespace Gwen
     }
 }
 
-namespace pixeleditor
+class MoveManipulatorWindow : public Gwen::Controls::WindowControl
 {
+public:
+    MoveManipulatorWindow(Gwen::Controls::Base* parent);
+    ~MoveManipulatorWindow();
     
-    class MoveManipulatorWindow : public Gwen::Controls::WindowControl
-    {
-    public:
-        MoveManipulatorWindow(Gwen::Controls::Base* parent);
-        ~MoveManipulatorWindow();
-        
-    private:
-        void OnSnapChanged(Gwen::Controls::Base* item);
-        
-        Gwen::Controls::TextBox* _SnapX;
-        Gwen::Controls::TextBox* _SnapY;
-        Gwen::Controls::TextBox* _SnapZ;
-    };
+private:
+    void OnSnapChanged(Gwen::Controls::Base* item);
     
-}
+    Gwen::Controls::TextBox* _SnapX;
+    Gwen::Controls::TextBox* _SnapY;
+    Gwen::Controls::TextBox* _SnapZ;
+};

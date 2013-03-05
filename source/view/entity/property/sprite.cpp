@@ -12,8 +12,6 @@
 #include "view/entity/entity.h"
 #include "view.h"
 
-using namespace pixeleditor;
-
 SpriteViewProperty::SpriteViewProperty(ViewEntity* parent, const std::string& path, const SchemaItem* schemaItem)
     : ViewProperty(parent, path, schemaItem)
 {

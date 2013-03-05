@@ -6,8 +6,6 @@
 #include "core/uidHelpers.h"
 #include "core.h"
 
-using namespace pixeleditor;
-
 Command* SelectCommand::Create()
 {
     return new SelectCommand();

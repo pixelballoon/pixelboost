@@ -5,8 +5,6 @@
 #include "view/ui/settings/networkWindow.h"
 #include "core.h"
 
-using namespace pixeleditor;
-
 NetworkWindow::NetworkWindow(Gwen::Controls::Base* parent)
     : Gwen::Controls::WindowControl(parent)
 {

@@ -7,8 +7,6 @@
 #include "project/schema.h"
 #include "core.h"
 
-using namespace pixeleditor;
-
 Command* CreateEntityCommand::Create()
 {
     return new CreateEntityCommand();

@@ -46,8 +46,6 @@
 #include "core.h"
 #include "view.h"
 
-using namespace pixeleditor;
-
 namespace pb
 {
     Engine* Engine::Create(void* platformContext, int argc, const char** argv)
@@ -56,7 +54,7 @@ namespace pb
     }
 }
 
-class pixeleditor::ViewKeyboardHandler : public pb::KeyboardHandler
+class ViewKeyboardHandler : public pb::KeyboardHandler
 {
 public:
     ViewKeyboardHandler()
@@ -120,7 +118,7 @@ public:
     }
 };
 
-class pixeleditor::ViewMouseHandler : public pb::MouseHandler
+class ViewMouseHandler : public pb::MouseHandler
 {
 public:
     ViewMouseHandler()

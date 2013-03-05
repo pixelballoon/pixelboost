@@ -8,8 +8,6 @@
 
 #include "json/writer.h"
 
-using namespace pixeleditor;
-
 ProjectEntity::ProjectEntity(ProjectRecord* record, const SchemaEntity* type)
     : ProjectStruct(record->GetProject(), type)
     , _Record(record)

@@ -6,8 +6,6 @@
 #include "project/schema.h"
 #include "view/ui/create/createRecord.h"
 
-using namespace pixeleditor;
-
 CreateRecordWindow::CreateRecordWindow(Gwen::Controls::Base* parent)
     : Gwen::Controls::WindowControl(parent)
 {

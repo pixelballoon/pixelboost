@@ -10,8 +10,6 @@
 #include "command/standard/transformCommand.h"
 #include "core.h"
 
-using namespace pixeleditor;
-
 void Core::RegisterCoreCommands()
 {
     REGISTER_COMMAND(OpenCommand);

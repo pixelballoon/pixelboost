@@ -5,8 +5,6 @@
 #include "command/manager.h"
 #include "project/project.h"
 
-using namespace pixeleditor;
-
 Core* Core::_Instance = 0;
 
 Core::Core()

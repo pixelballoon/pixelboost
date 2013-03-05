@@ -8,8 +8,6 @@
 #include "project/schemaParser.h"
 #include "project/struct.h"
 
-using namespace pixeleditor;
-    
 std::vector<std::string> &SplitString(const std::string &s, char delim, std::vector<std::string> &items)
 {
     std::stringstream stream(s);

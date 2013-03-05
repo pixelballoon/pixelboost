@@ -15,9 +15,6 @@ namespace json
     class Object;
 }
 
-namespace pixeleditor
-{
-
 class ProjectRecord;
 class Property;
 class PropertyAtom;
@@ -63,5 +60,3 @@ private:
     float _Rotation;
     glm::vec3 _Scale;
 };
-    
-}

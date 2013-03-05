@@ -19,69 +19,64 @@ namespace pb
     class Scene;
 }
 
-namespace pixeleditor
+class Project;
+class ProjectEntity;
+class ProjectRecord;
+class ProjectStruct;
+class Property;
+class ViewEntity;
+
+class Level : public pb::MouseHandler, public pb::Entity
 {
+public:
+    Level(pb::Scene* scene);
+    ~Level();
     
-    class Project;
-    class ProjectEntity;
-    class ProjectRecord;
-    class ProjectStruct;
-    class Property;
-    class ViewEntity;
+    virtual pb::Uid GetType() const;
+    static pb::Uid GetStaticType();
+            
+    void Update(float time);
     
-    class Level : public pb::MouseHandler, public pb::Entity
-    {
-    public:
-        Level(pb::Scene* scene);
-        ~Level();
-        
-        virtual pb::Uid GetType() const;
-        static pb::Uid GetStaticType();
-                
-        void Update(float time);
-        
-        void Clear();
-        
-        void SetRecord(ProjectRecord* record);
-        
-    public:
-        typedef std::map<Uid, ViewEntity*> EntityMap;
-        typedef std::vector<ViewEntity*> EntityList;
-        
-    public:
-        const EntityMap& GetEntities();
-        ViewEntity* GetEntityById(Uid uid);
-        EntityList GetEntitiesInBounds(const pb::BoundingBox& bounds);
-        
-        sigslot::Signal1<ViewEntity*> entityAdded;
-        sigslot::Signal1<ViewEntity*> entityRemoved;
-        
-    private:
-        void CreateEntity(Uid uid);
-        void CreateEntity(ProjectEntity* entity);
-        void DestroyEntity(ProjectEntity* entity);
-        void DestroyEntity(ViewEntity* entity);
-        
-        void UpdateSize();
-        
-    private:
-        virtual int GetInputHandlerPriority();
-        
-        virtual bool OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifier, glm::vec2 position);
-        virtual bool OnMouseUp(pb::MouseButton button, pb::ModifierKeys modifier, glm::vec2 position);
-        virtual bool OnMouseMove(glm::vec2 position);
-        
-        virtual void OnRecordRemoved(Project* project, ProjectRecord* record);
-        virtual void OnEntityAdded(ProjectRecord* record, ProjectEntity* entity);
-        virtual void OnEntityRemoved(ProjectRecord* record, ProjectEntity* entity);
-        
-        virtual void OnPropertyChanged(ProjectStruct* structure, Property* property);
-        
-    private:
-        ProjectRecord* _Record;
-        pb::RectangleComponent* _LevelBounds;
-        
-        EntityMap _Entities;
-    };
+    void Clear();
     
-}
+    void SetRecord(ProjectRecord* record);
+    
+public:
+    typedef std::map<Uid, ViewEntity*> EntityMap;
+    typedef std::vector<ViewEntity*> EntityList;
+    
+public:
+    const EntityMap& GetEntities();
+    ViewEntity* GetEntityById(Uid uid);
+    EntityList GetEntitiesInBounds(const pb::BoundingBox& bounds);
+    
+    sigslot::Signal1<ViewEntity*> entityAdded;
+    sigslot::Signal1<ViewEntity*> entityRemoved;
+    
+private:
+    void CreateEntity(Uid uid);
+    void CreateEntity(ProjectEntity* entity);
+    void DestroyEntity(ProjectEntity* entity);
+    void DestroyEntity(ViewEntity* entity);
+    
+    void UpdateSize();
+    
+private:
+    virtual int GetInputHandlerPriority();
+    
+    virtual bool OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifier, glm::vec2 position);
+    virtual bool OnMouseUp(pb::MouseButton button, pb::ModifierKeys modifier, glm::vec2 position);
+    virtual bool OnMouseMove(glm::vec2 position);
+    
+    virtual void OnRecordRemoved(Project* project, ProjectRecord* record);
+    virtual void OnEntityAdded(ProjectRecord* record, ProjectEntity* entity);
+    virtual void OnEntityRemoved(ProjectRecord* record, ProjectEntity* entity);
+    
+    virtual void OnPropertyChanged(ProjectStruct* structure, Property* property);
+    
+private:
+    ProjectRecord* _Record;
+    pb::RectangleComponent* _LevelBounds;
+    
+    EntityMap _Entities;
+};

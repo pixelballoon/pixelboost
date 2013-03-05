@@ -14,8 +14,6 @@
 
 #include "core.h"
 
-using namespace pixeleditor;
-
 bool GetDirectoryListing(const std::string& directory, std::vector<std::string>& files)
 {
     DIR* dir;

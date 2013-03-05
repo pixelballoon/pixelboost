@@ -3,8 +3,6 @@
 
 #include "command/base.h"
 
-using namespace pixeleditor;
-
 std::string Trim(const std::string& str)
 {
     std::string::size_type a = str.find_first_not_of(' ');

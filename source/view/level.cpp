@@ -16,8 +16,6 @@
 #include "core.h"
 #include "view.h"
 
-using namespace pixeleditor;
-
 Level::Level(pb::Scene* scene)
     : Entity(scene, 0, 0)
     , _Record(0)

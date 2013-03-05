@@ -13,8 +13,6 @@
 #include "core.h"
 #include "view.h"
 
-using namespace pixeleditor;
-
 Command* CheckDepthCommand::Create()
 {
     return new CheckDepthCommand();

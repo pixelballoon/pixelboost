@@ -4,9 +4,6 @@
 #include <string>
 #include <vector>
 
-namespace pixeleditor
-{
-
 class Command;
 
 class Command
@@ -29,5 +26,3 @@ private:
     typedef std::map<std::string, std::vector<std::string> > ArgumentMap;
     ArgumentMap _Arguments;
 };
-    
-}

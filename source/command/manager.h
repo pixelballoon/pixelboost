@@ -4,9 +4,6 @@
 #include <string>
 #include <vector>
 
-namespace pixeleditor
-{
-
 class Command;
 
 #define REGISTER_COMMAND(a) Core::Instance()->GetCommandManager()->RegisterCommand(a::GetStaticName(), &a::Create);
@@ -36,5 +33,3 @@ private:
     CommandList _UndoStack;
     CommandList _RedoStack;
 };
-    
-}

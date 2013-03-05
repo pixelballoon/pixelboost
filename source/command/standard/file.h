@@ -2,9 +2,6 @@
 
 #include "command/base.h"
 
-namespace pixeleditor
-{
-
 class SaveCommand : public Command
 {
 public:
@@ -48,5 +45,3 @@ public:
     
     virtual bool Do(std::string& returnString);
 };
-    
-}

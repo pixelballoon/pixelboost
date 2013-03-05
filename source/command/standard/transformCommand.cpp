@@ -5,8 +5,6 @@
 #include "project/project.h"
 #include "core.h"
 
-using namespace pixeleditor;
-    
 Command* TransformCommand::Create()
 {
     return new TransformCommand();

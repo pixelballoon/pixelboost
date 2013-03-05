@@ -7,8 +7,6 @@
 #include "view/ui/settings/rotateManipulator.h"
 #include "view.h"
 
-using namespace pixeleditor;
-
 RotateManipulatorWindow::RotateManipulatorWindow(Gwen::Controls::Base* parent)
     : Gwen::Controls::WindowControl(parent)
 {

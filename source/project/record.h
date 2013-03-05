@@ -9,9 +9,6 @@
 #include "project/definitions.h"
 #include "project/struct.h"
 
-namespace pixeleditor
-{
-
 class Project;
 class ProjectEntity;
 class Schema;
@@ -57,5 +54,3 @@ private:
     
     EntityMap _Entities;
 };
-    
-}

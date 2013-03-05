@@ -5,9 +5,6 @@
 #include "command/base.h"
 #include "project/definitions.h"
 
-namespace pixeleditor
-{
-    
 class ProjectEntity;
 
 class DeleteCommand : public Command
@@ -29,5 +26,3 @@ public:
 private:
     std::vector<std::pair<Uid, ProjectEntity*> > _Entities;
 };
-    
-}

@@ -11,9 +11,6 @@ namespace Gwen
     }
 }
 
-namespace pixeleditor
-{
-
 class NetworkWindow : public Gwen::Controls::WindowControl
 {
 public:
@@ -28,5 +25,3 @@ private:
     Gwen::Controls::TextBox* _PortBox;
     Gwen::Controls::Button* _ReconnectButton;
 };
-    
-}

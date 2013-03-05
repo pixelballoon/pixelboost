@@ -3,9 +3,7 @@
 #include "view/manipulator/manipulator.h"
 #include "view.h"
 
-using namespace pixeleditor;
-
-class pixeleditor::ManipulatorKeyboardHandler : public pb::KeyboardHandler
+class ManipulatorKeyboardHandler : public pb::KeyboardHandler
 {
 public:
     ManipulatorKeyboardHandler()
@@ -32,7 +30,7 @@ public:
     }
 };
 
-class pixeleditor::ManipulatorMouseHandler : public pb::MouseHandler
+class ManipulatorMouseHandler : public pb::MouseHandler
 {
 public:
     ManipulatorMouseHandler()
@@ -125,7 +123,7 @@ void ManipulatorManager::Render(int layer)
     _ActiveManipulator->Render(layer);
 }
 
-void ManipulatorManager::AddManipulator(pixeleditor::Manipulator* manipulator)
+void ManipulatorManager::AddManipulator(Manipulator* manipulator)
 {
     _Manipulators[manipulator->GetName()] = manipulator;
 }

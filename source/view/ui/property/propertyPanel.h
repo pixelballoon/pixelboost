@@ -6,9 +6,6 @@
 
 #include "Gwen/Controls/ScrollControl.h"
 
-namespace pixeleditor
-{
-
 class ProjectStruct;
 class SchemaPropertyAtom;
 class Selection;
@@ -33,7 +30,7 @@ private:
     glm::vec2 AddReference(glm::vec2 offset, const SchemaPropertyReference* reference, ProjectStruct* item, const std::string& path);
     glm::vec2 AddArray(glm::vec2 offset, const SchemaPropertyArray* array, ProjectStruct* item, const std::string& path);
     
-    void OnSelectionChanged(const pixeleditor::Selection* selection);
+    void OnSelectionChanged(const Selection* selection);
     
     void OnAtomChanged(Gwen::Controls::Base* input);
     void OnPointerChanged(Gwen::Controls::Base* input);
@@ -48,5 +45,3 @@ private:
     
     ProjectStruct* _SelectedItem;
 };
-
-}

@@ -12,21 +12,16 @@ namespace Gwen
     }
 }
 
-namespace pixeleditor
+class CreateRecordWindow : public Gwen::Controls::WindowControl
 {
+public:
+    CreateRecordWindow(Gwen::Controls::Base* parent);
+    ~CreateRecordWindow();
     
-    class CreateRecordWindow : public Gwen::Controls::WindowControl
-    {
-    public:
-        CreateRecordWindow(Gwen::Controls::Base* parent);
-        ~CreateRecordWindow();
-        
-    private:
-        void OnCreate(Gwen::Controls::Base* item);
-        
-        Gwen::Controls::TextBox* _NameField;
-        Gwen::Controls::ComboBox* _TypeField;
-        Gwen::Controls::Button* _CreateButton;
-    };
+private:
+    void OnCreate(Gwen::Controls::Base* item);
     
-}
+    Gwen::Controls::TextBox* _NameField;
+    Gwen::Controls::ComboBox* _TypeField;
+    Gwen::Controls::Button* _CreateButton;
+};

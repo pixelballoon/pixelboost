@@ -5,8 +5,6 @@
 #include "project/project.h"
 #include "core.h"
 
-using namespace pixeleditor;
-
 Command* OpenCommand::Create()
 {
     return new OpenCommand();

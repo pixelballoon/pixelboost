@@ -10,8 +10,6 @@
 #include "core.h"
 #include "view.h"
 
-using namespace pixeleditor;
-
 Command* CopyCommand::Create()
 {
     return new CopyCommand();

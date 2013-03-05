@@ -14,8 +14,6 @@
 #include "core.h"
 #include "view.h"
 
-using namespace pixeleditor;
-
 PB_DEFINE_ENTITY(ViewEntity)
 
 ViewEntity::ViewEntity(pb::Scene* scene, ProjectEntity* entity)
@@ -196,7 +194,7 @@ Uid ViewEntity::GeneratePropertyId(const std::string& path)
     return uid;
 }
 
-void ViewEntity::OnSelectionChanged(const pixeleditor::Selection* selection)
+void ViewEntity::OnSelectionChanged(const Selection* selection)
 {
     if (selection->IsSelected(GenerateSelectionUid(GetEntityUid())))
     {

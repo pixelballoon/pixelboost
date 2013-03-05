@@ -15,8 +15,6 @@
 #include "core.h"
 #include "view.h"
 
-using namespace pixeleditor;
-
 static const int ARRAY_BUTTON_HEIGHT = 25;
 static const int ARRAY_BUTTON_SPACING = 5;
 static const int ARRAY_BUTTON_WIDTH = 25;
@@ -318,7 +316,7 @@ glm::vec2 PropertyPanel::AddArray(glm::vec2 offset, const SchemaPropertyArray* a
     return size;
 }
 
-void PropertyPanel::OnSelectionChanged(const pixeleditor::Selection* selection)
+void PropertyPanel::OnSelectionChanged(const Selection* selection)
 {
     if (!_Pinned)
     {

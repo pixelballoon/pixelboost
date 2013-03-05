@@ -9,9 +9,6 @@
 
 #include "project/definitions.h"
 
-namespace pixeleditor
-{
-
 class ProjectStruct;
 class Schema;
 class SchemaEntity;
@@ -283,5 +280,3 @@ public:
 private:
     std::string _Type;
 };
-    
-}

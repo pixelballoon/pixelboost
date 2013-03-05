@@ -4,8 +4,6 @@
 #include "project/record.h"
 #include "project/struct.h"
 
-using namespace pixeleditor;
-
 Property::Property(ProjectStruct* s, const SchemaProperty* schemaProperty)
     : _Struct(s)
     , _SchemaProperty(schemaProperty)
