@@ -14,14 +14,19 @@ using namespace pb;
 
 PB_DEFINE_COMPONENT_DERIVED(pb::PhysicsUserBody2DComponent, pb::PhysicsComponent2D)
 
-PhysicsUserBody2DComponent::PhysicsUserBody2DComponent(Entity* parent, BodyType type, BodyShape shape, glm::vec2 size)
-    : PhysicsComponent2D(parent)
+PhysicsUserBody2DComponent::PhysicsUserBody2DComponent(Entity* entity)
+    : PhysicsComponent2D(entity)
+{
+    
+}
+
+void PhysicsUserBody2DComponent::Initialise(BodyType type, BodyShape shape, glm::vec2 size)
 {
     pb::PhysicsSystem2D* physicsSystem = GetScene()->GetSystemByType<pb::PhysicsSystem2D>();
     
     b2World* world = physicsSystem->GetPhysicsWorld();
     
-    pb::TransformComponent* transform = GetParent()->GetComponentByType<pb::TransformComponent>();
+    pb::TransformComponent* transform = GetEntity()->GetComponent<pb::TransformComponent>();
     glm::vec3 position = transform->GetPosition();
     
     b2BodyDef bodyDef;
@@ -66,17 +71,16 @@ PhysicsUserBody2DComponent::PhysicsUserBody2DComponent(Entity* parent, BodyType 
     _Body->CreateFixture(&fixtureDef);
     _Body->SetTransform(b2Vec2(position.x, position.y), glm::radians(transform->GetRotation().z));
     
-    GetParent()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &PhysicsUserBody2DComponent::OnTransformChanged));
+    GetEntity()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &PhysicsUserBody2DComponent::OnTransformChanged));
 }
 
-PhysicsUserBody2DComponent::PhysicsUserBody2DComponent(Entity* parent, BodyType type, FixtureDefinition2D& fixtureDefinition)
-    : PhysicsComponent2D(parent)
+void PhysicsUserBody2DComponent::Initialise(BodyType type, FixtureDefinition2D& fixtureDefinition)
 {
     pb::PhysicsSystem2D* physicsSystem = GetScene()->GetSystemByType<pb::PhysicsSystem2D>();
     
     b2World* world = physicsSystem->GetPhysicsWorld();
     
-    pb::TransformComponent* transform = GetParent()->GetComponentByType<pb::TransformComponent>();
+    pb::TransformComponent* transform = GetEntity()->GetComponent<pb::TransformComponent>();
     glm::vec3 position = transform->GetPosition();
     glm::vec3 scale = transform->GetScale();
     
@@ -99,12 +103,12 @@ PhysicsUserBody2DComponent::PhysicsUserBody2DComponent(Entity* parent, BodyType 
     _Body = PhysicsHelpers2D::CreateBodyFromDefinition(world, bodyDefinition, fixtureDefinition, 1.f, glm::vec2(scale.x, scale.y));
     _Body->SetTransform(b2Vec2(position.x, position.y), glm::radians(transform->GetRotation().z));
     
-    GetParent()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &PhysicsUserBody2DComponent::OnTransformChanged));
+    GetEntity()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &PhysicsUserBody2DComponent::OnTransformChanged));
 }
 
 PhysicsUserBody2DComponent::~PhysicsUserBody2DComponent()
 {
-    GetParent()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &PhysicsUserBody2DComponent::OnTransformChanged));
+    GetEntity()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &PhysicsUserBody2DComponent::OnTransformChanged));
     
     pb::PhysicsSystem2D* physicsSystem = GetScene()->GetSystemByType<pb::PhysicsSystem2D>();
     
@@ -120,7 +124,7 @@ void PhysicsUserBody2DComponent::OnTransformChanged(const Message& message)
 
 void PhysicsUserBody2DComponent::UpdateTransform()
 {
-    TransformComponent* transform = GetParent()->GetComponentByType<TransformComponent>();    
+    TransformComponent* transform = GetEntity()->GetComponent<TransformComponent>();    
     
     if (transform)
     {

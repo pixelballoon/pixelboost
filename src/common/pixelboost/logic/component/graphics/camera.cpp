@@ -10,19 +10,19 @@ using namespace pb;
 
 PB_DEFINE_COMPONENT(pb::CameraComponent)
 
-CameraComponent::CameraComponent(Entity* parent, Camera* camera)
+CameraComponent::CameraComponent(Entity* parent)
     : Component(parent)
 {
-    _Camera = camera;
+    _Camera = 0;
     
-    GetParent()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &CameraComponent::OnTransformChanged));
+    GetEntity()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &CameraComponent::OnTransformChanged));
     
     UpdateTransform();
 }
 
 CameraComponent::~CameraComponent()
 {
-    GetParent()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &CameraComponent::OnTransformChanged));
+    GetEntity()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &CameraComponent::OnTransformChanged));
     
     delete _Camera;
 }
@@ -32,13 +32,21 @@ void CameraComponent::OnTransformChanged(const Message& message)
     UpdateTransform();
 }
 
+void CameraComponent::SetCamera(Camera* camera)
+{
+    _Camera = camera;
+}
+
 void CameraComponent::UpdateTransform()
 {
-    TransformComponent* transform = GetParent()->GetComponentByType<TransformComponent>();    
+    if (!_Camera)
+        return;
     
-    if (transform)
-    {
-        _Camera->Position = transform->GetPosition();
-        _Camera->Rotation = transform->GetRotation();
-    }
+    TransformComponent* transform = GetEntity()->GetComponent<TransformComponent>();    
+    
+    if (!transform)
+        return;
+
+    _Camera->Position = transform->GetPosition();
+    _Camera->Rotation = transform->GetRotation();
 }

@@ -25,9 +25,11 @@ namespace pb
         };
         
     public:
-        PhysicsBody2DComponent(Entity* parent, BodyType type, BodyShape shape, glm::vec2 size);
-        PhysicsBody2DComponent(Entity* parent, BodyType type, FixtureDefinition2D& fixtureDefinition);
+        PhysicsBody2DComponent(Entity* entity);
         ~PhysicsBody2DComponent();
+        
+        void Initialise(BodyType type, BodyShape shape, glm::vec2 size);
+        void Initialise(BodyType type, FixtureDefinition2D& fixtureDefinition);
         
     private:
         void OnUpdate(const Message& message);

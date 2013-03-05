@@ -1,4 +1,5 @@
 #include "pixelboost/db/entity.h"
+#include "pixelboost/debug/assert.h"
 #include "pixelboost/logic/component.h"
 
 namespace pb
@@ -12,32 +13,26 @@ template<class T> const T* Entity::GetData() const
     return _CreationEntity->GetData<T>();
 }
 
-template <class T>T* Entity::GetComponentByType()
+template <class T>T* Entity::CreateComponent()
 {
-    for (ComponentList::iterator componentIt = _Components.begin(); componentIt != _Components.end(); ++componentIt)
-    {
-        if ((*componentIt)->IsA(T::GetStaticType()) && (*componentIt)->_State != Component::kComponentDestroyed)
-        {
-            return static_cast<T*>(*componentIt);
-        }
-    }
-    
-    return 0;
+    PbAssert(_Components.find(T::GetStaticType()) == _Components.end() || _Components[T::GetStaticType()] == 0);
+
+    T* component = static_cast<T*>(T::Create(this));
+    _Components[component->GetType()] = component;
+    return component;
 }
 
-template <class T> Entity::ComponentList Entity::GetComponentsByType()
+template <class T>T* Entity::GetComponent()
 {
-    ComponentList components;
-    
-    for (ComponentList::iterator componentIt = _Components.begin(); componentIt != _Components.end(); ++componentIt)
+    for (const auto& component : _Components)
     {
-        if ((*componentIt)->IsA(T::GetStaticType()) && (*componentIt)->_State != Component::kComponentDestroyed)
+        if (component.second && component.second->IsA(T::GetStaticType()))
         {
-            components.push_back(*componentIt);
+            return static_cast<T*>(component.second);
         }
     }
-    
-    return components;
+
+    return 0;
 }
 
 template <class T> void Entity::RegisterMessageHandler(MessageHandler handler)

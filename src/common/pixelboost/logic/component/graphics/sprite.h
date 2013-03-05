@@ -17,10 +17,11 @@ class SpriteComponent : public Component
 {
     PB_DECLARE_COMPONENT
     
-public:
-    SpriteComponent(Entity* parent, const std::string& sprite);
+protected:
+    SpriteComponent(Entity* parent);
     virtual ~SpriteComponent();
     
+public:
     glm::vec2 GetSize();
     
     void SetRenderPass(RenderPass renderPass);

@@ -25,9 +25,11 @@ public:
     };
     
 public:
-    PhysicsUserBody2DComponent(Entity* parent, BodyType type, BodyShape shape, glm::vec2 size);
-    PhysicsUserBody2DComponent(Entity* parent, BodyType type, FixtureDefinition2D& definition);
+    PhysicsUserBody2DComponent(Entity* parent);
     ~PhysicsUserBody2DComponent();
+    
+    void Initialise(BodyType type, BodyShape shape, glm::vec2 size);
+    void Initialise(BodyType type, FixtureDefinition2D& definition);
     
 private:
     void OnTransformChanged(const Message& message);

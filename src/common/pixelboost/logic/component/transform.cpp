@@ -6,9 +6,9 @@
 
 using namespace pb;
 
-PB_DEFINE_COMPONENT(pb::TransformComponent)
+PB_DEFINE_COMPONENT_ABSTRACT(pb::TransformComponent)
 
-TransformComponent::TransformComponent(Entity* parent, Uid parentTransform)
+TransformComponent::TransformComponent(Entity* parent)
     : Component(parent)
 {
     

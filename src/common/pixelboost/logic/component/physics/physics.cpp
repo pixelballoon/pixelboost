@@ -2,8 +2,10 @@
 
 using namespace pb;
 
+PB_DEFINE_COMPONENT(PhysicsComponent)
+
 PhysicsComponent::PhysicsComponent(Entity* parent)
-    : pb::Component(parent)
+    : Component(parent)
     , _UserData(0)
 {
     

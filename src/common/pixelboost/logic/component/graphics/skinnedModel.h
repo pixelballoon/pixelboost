@@ -22,10 +22,11 @@ namespace pb
     {
         PB_DECLARE_COMPONENT
         
-    public:
-        SkinnedModelComponent(Entity* parent, Model* model, Texture* texture);
+    protected:
+        SkinnedModelComponent(Entity* parent);
         virtual ~SkinnedModelComponent();
-                
+        
+    public:
         void SetShader(Shader* shader);
         void SetLayer(int layer);
         

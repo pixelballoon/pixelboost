@@ -18,14 +18,14 @@ RectangleComponent::RectangleComponent(Entity* parent)
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
     
-    GetParent()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &RectangleComponent::OnTransformChanged));
+    GetEntity()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &RectangleComponent::OnTransformChanged));
     
     UpdateTransform();
 }
 
 RectangleComponent::~RectangleComponent()
 {
-    GetParent()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &RectangleComponent::OnTransformChanged));
+    GetEntity()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &RectangleComponent::OnTransformChanged));
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
     
@@ -86,7 +86,7 @@ void RectangleComponent::OnTransformChanged(const Message& message)
 
 void RectangleComponent::UpdateTransform()
 {
-    TransformComponent* transform = GetParent()->GetComponentByType<TransformComponent>();    
+    TransformComponent* transform = GetEntity()->GetComponent<TransformComponent>();
     
     if (transform)
     {

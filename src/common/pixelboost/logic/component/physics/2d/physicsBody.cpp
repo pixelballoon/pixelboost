@@ -14,14 +14,19 @@ using namespace pb;
 
 PB_DEFINE_COMPONENT(pb::PhysicsBody2DComponent)
 
-PhysicsBody2DComponent::PhysicsBody2DComponent(Entity* parent, BodyType type, BodyShape shape, glm::vec2 size)
-    : PhysicsComponent2D(parent)
+PhysicsBody2DComponent::PhysicsBody2DComponent(Entity* entity)
+    : PhysicsComponent2D(entity)
 {
-    pb::PhysicsSystem2D* physicsSystem = GetScene()->GetSystemByType<pb::PhysicsSystem2D>();
+    
+}
+
+void PhysicsBody2DComponent::Initialise(BodyType type, BodyShape shape, glm::vec2 size)
+{
+    PhysicsSystem2D* physicsSystem = GetScene()->GetSystemByType<pb::PhysicsSystem2D>();
     
     b2World* world = physicsSystem->GetPhysicsWorld();
     
-    pb::TransformComponent* transform = GetParent()->GetComponentByType<pb::TransformComponent>();
+    pb::TransformComponent* transform = GetEntity()->GetComponent<pb::TransformComponent>();
     glm::vec3 position = transform->GetPosition();
     glm::vec3 rotation = transform->GetRotation();
     
@@ -69,17 +74,16 @@ PhysicsBody2DComponent::PhysicsBody2DComponent(Entity* parent, BodyType type, Bo
     _Body = world->CreateBody(&bodyDefinition);
     _Body->CreateFixture(&fixtureDef);
     
-    GetParent()->RegisterMessageHandler<UpdateMessage>(MessageHandler(this, &PhysicsBody2DComponent::OnUpdate));
+    GetEntity()->RegisterMessageHandler<UpdateMessage>(MessageHandler(this, &PhysicsBody2DComponent::OnUpdate));
 }
 
-PhysicsBody2DComponent::PhysicsBody2DComponent(Entity* parent, BodyType type, FixtureDefinition2D& fixtureDefinition)
-    : PhysicsComponent2D(parent)
+void PhysicsBody2DComponent::Initialise(BodyType type, FixtureDefinition2D& fixtureDefinition)
 {
     pb::PhysicsSystem2D* physicsSystem = GetScene()->GetSystemByType<pb::PhysicsSystem2D>();
     
     b2World* world = physicsSystem->GetPhysicsWorld();
     
-    pb::TransformComponent* transform = GetParent()->GetComponentByType<pb::TransformComponent>();
+    pb::TransformComponent* transform = GetEntity()->GetComponent<pb::TransformComponent>();
     glm::vec3 position = transform->GetPosition();
     glm::vec3 scale = transform->GetScale();
     
@@ -102,12 +106,12 @@ PhysicsBody2DComponent::PhysicsBody2DComponent(Entity* parent, BodyType type, Fi
     _Body = PhysicsHelpers2D::CreateBodyFromDefinition(world, bodyDefinition, fixtureDefinition, 1.f, glm::vec2(scale.x, scale.y));
     _Body->SetTransform(b2Vec2(position.x, position.y), glm::radians(transform->GetRotation().z));
     
-    GetParent()->RegisterMessageHandler<UpdateMessage>(MessageHandler(this, &PhysicsBody2DComponent::OnUpdate));
+    GetEntity()->RegisterMessageHandler<UpdateMessage>(MessageHandler(this, &PhysicsBody2DComponent::OnUpdate));
 }
 
 PhysicsBody2DComponent::~PhysicsBody2DComponent()
 {
-    GetParent()->UnregisterMessageHandler<UpdateMessage>(MessageHandler(this, &PhysicsBody2DComponent::OnUpdate));
+    GetEntity()->UnregisterMessageHandler<UpdateMessage>(MessageHandler(this, &PhysicsBody2DComponent::OnUpdate));
     
     pb::PhysicsSystem2D* physicsSystem = GetScene()->GetSystemByType<pb::PhysicsSystem2D>();
     
@@ -123,7 +127,7 @@ void PhysicsBody2DComponent::OnUpdate(const Message& message)
 
 void PhysicsBody2DComponent::UpdateTransform()
 {
-    TransformComponent* transform = GetParent()->GetComponentByType<TransformComponent>();
+    TransformComponent* transform = GetEntity()->GetComponent<TransformComponent>();
     
     if (transform)
     {

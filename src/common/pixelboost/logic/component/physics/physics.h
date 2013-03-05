@@ -7,10 +7,13 @@ namespace pb
     
 class PhysicsComponent : public Component
 {
-public:
+    PB_DECLARE_COMPONENT
+    
+protected:
     PhysicsComponent(Entity* parent);
     ~PhysicsComponent();
     
+public:
     void SetUserData(void* userData);
     void* GetUserData();
     

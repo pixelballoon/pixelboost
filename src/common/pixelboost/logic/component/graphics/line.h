@@ -14,10 +14,11 @@ class LineComponent : public Component
 {
     PB_DECLARE_COMPONENT
     
-public:
+protected:
     LineComponent(Entity* parent);
     virtual ~LineComponent();
     
+public:
     void SetColor(glm::vec4 color);
     glm::vec4 GetColor();
     

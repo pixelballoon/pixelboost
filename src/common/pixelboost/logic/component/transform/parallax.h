@@ -14,8 +14,10 @@ namespace pb
         PB_DECLARE_COMPONENT
         
     public:
-        ParallaxTransformComponent(Entity* parent, Uid parallaxEntityId, Uid parentTransform = 0);
+        ParallaxTransformComponent(Entity* parent);
         virtual ~ParallaxTransformComponent();
+        
+        void SetParallaxEntity(Uid parallaxEntityId);
         
         const glm::mat4x4& GetMatrix();
         

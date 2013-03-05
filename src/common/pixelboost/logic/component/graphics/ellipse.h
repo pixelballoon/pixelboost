@@ -16,10 +16,11 @@ class EllipseComponent : public Component
 {
     PB_DECLARE_COMPONENT
     
-public:
+protected:
     EllipseComponent(Entity* parent);
     virtual ~EllipseComponent();
     
+public:
     void SetLayer(int layer);
     
     void SetColor(glm::vec4 color);

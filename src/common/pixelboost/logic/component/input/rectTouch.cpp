@@ -22,7 +22,7 @@ RectTouchComponent::RectTouchComponent(Entity* parent, bool debugRender)
     
     if (_DebugRender)
     {
-        GetParent()->RegisterMessageHandler<DebugRenderMessage>(MessageHandler(this, &RectTouchComponent::OnDebugRender));
+        GetEntity()->RegisterMessageHandler<DebugRenderMessage>(MessageHandler(this, &RectTouchComponent::OnDebugRender));
     }
 }
 
@@ -32,7 +32,7 @@ RectTouchComponent::~RectTouchComponent()
     
     if (_DebugRender)
     {
-        GetParent()->UnregisterMessageHandler<DebugRenderMessage>(MessageHandler(this, &RectTouchComponent::OnDebugRender));
+        GetEntity()->UnregisterMessageHandler<DebugRenderMessage>(MessageHandler(this, &RectTouchComponent::OnDebugRender));
     }
 }
 
@@ -65,7 +65,7 @@ glm::vec3 RectTouchComponent::GetPosition()
 {
     glm::vec4 position;
     
-    TransformComponent* transform = GetParent()->GetComponentByType<TransformComponent>();
+    TransformComponent* transform = GetEntity()->GetComponent<TransformComponent>();
     
     if (transform)
     {
@@ -97,8 +97,8 @@ bool RectTouchComponent::OnTouchDown(Touch touch)
     {
         if (AddTouch(touch, screenPos))
         {
-            TouchDownMessage message(GetParent(), this, touch.GetId(), screenPos-glm::vec2(position.x, position.y));
-            GetScene()->SendMessage(GetParentUid(), message);
+            TouchDownMessage message(GetEntity(), this, touch.GetId(), screenPos-glm::vec2(position.x, position.y));
+            GetScene()->SendMessage(GetEntityUid(), message);
         }
         
         return _CaptureEvents;
@@ -117,8 +117,8 @@ bool RectTouchComponent::OnTouchMove(Touch touch)
     
     _Touches[touch.GetId()] = screenPos;
     
-    TouchMoveMessage message(GetParent(), this, touch.GetId(), screenPos-glm::vec2(position.x, position.y));
-    GetScene()->SendMessage(GetParentUid(), message);
+    TouchMoveMessage message(GetEntity(), this, touch.GetId(), screenPos-glm::vec2(position.x, position.y));
+    GetScene()->SendMessage(GetEntityUid(), message);
     
     return _CaptureEvents;
 }
@@ -133,8 +133,8 @@ bool RectTouchComponent::OnTouchUp(Touch touch)
     glm::vec3 position = GetPosition();
     glm::vec2 screenPos = touch.GetViewportPosition();
     
-    TouchUpMessage message(GetParent(), this, touch.GetId(), screenPos-glm::vec2(position.x, position.y));
-    GetScene()->SendMessage(GetParentUid(), message);
+    TouchUpMessage message(GetEntity(), this, touch.GetId(), screenPos-glm::vec2(position.x, position.y));
+    GetScene()->SendMessage(GetEntityUid(), message);
     
     return _CaptureEvents;
 }

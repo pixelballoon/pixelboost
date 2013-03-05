@@ -9,21 +9,21 @@ using namespace pb;
 
 PB_DEFINE_COMPONENT(BufferComponent)
 
-BufferComponent::BufferComponent(Entity* entity, IndexBuffer* indexBuffer, VertexBuffer* vertexBuffer, Texture* texture, int numElements)
-    : Component(entity)
+BufferComponent::BufferComponent(Entity* parent)
+    : Component(parent)
 {
-    _Renderable = new BufferRenderable(GetParentUid(), indexBuffer, vertexBuffer, texture, numElements);
+    _Renderable = new BufferRenderable(GetEntityUid(), 0, 0, 0, 0);
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
     
-    GetParent()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &BufferComponent::OnTransformChanged));
+    GetEntity()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &BufferComponent::OnTransformChanged));
     
     UpdateTransform();
 }
 
 BufferComponent::~BufferComponent()
 {
-    GetParent()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &BufferComponent::OnTransformChanged));
+    GetEntity()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &BufferComponent::OnTransformChanged));
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
     
@@ -99,7 +99,7 @@ void BufferComponent::OnTransformChanged(const Message& message)
 
 void BufferComponent::UpdateTransform()
 {
-    TransformComponent* transform = GetParent()->GetComponentByType<TransformComponent>();
+    TransformComponent* transform = GetEntity()->GetComponent<TransformComponent>();
     
     if (transform)
     {

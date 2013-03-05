@@ -11,10 +11,11 @@ namespace pb
     {
         PB_DECLARE_COMPONENT
         
-    public:
-        BasicTransformComponent(Entity* parent, Uid parentTransform = 0);
+    protected:
+        BasicTransformComponent(Entity* parent);
         virtual ~BasicTransformComponent();
         
+    public:
         const glm::mat4x4& GetMatrix();
         
         void SetTransform(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale);

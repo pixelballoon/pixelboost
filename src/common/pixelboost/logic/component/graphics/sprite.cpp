@@ -13,22 +13,21 @@ using namespace pb;
 
 PB_DEFINE_COMPONENT(pb::SpriteComponent)
 
-SpriteComponent::SpriteComponent(Entity* parent, const std::string& sprite)
+SpriteComponent::SpriteComponent(Entity* parent)
     : Component(parent)
 {
     _Renderable = new SpriteRenderable(parent->GetUid());
-    _Renderable->SetSprite(Engine::Instance()->GetSpriteRenderer()->GetSprite(sprite));
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
     
-    GetParent()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &SpriteComponent::OnTransformChanged));
+    GetEntity()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &SpriteComponent::OnTransformChanged));
     
     UpdateTransform();
 }
 
 SpriteComponent::~SpriteComponent()
 {
-    GetParent()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &SpriteComponent::OnTransformChanged));
+    GetEntity()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &SpriteComponent::OnTransformChanged));
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
     
@@ -77,7 +76,7 @@ void SpriteComponent::OnTransformChanged(const Message& message)
 
 void SpriteComponent::UpdateTransform()
 {
-    TransformComponent* transform = GetParent()->GetComponentByType<TransformComponent>();    
+    TransformComponent* transform = GetEntity()->GetComponent<TransformComponent>();    
     
     if (transform)
     {

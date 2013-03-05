@@ -18,10 +18,11 @@ namespace pb
     {
         PB_DECLARE_COMPONENT
         
-    public:
-        ModelComponent(Entity* parent, Model* model, Texture* texture);
+    protected:
+        ModelComponent(Entity* parent);
         virtual ~ModelComponent();
         
+    public:
         void SetShader(Shader* shader);
         void SetLayer(int layer);
         

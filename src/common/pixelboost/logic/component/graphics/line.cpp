@@ -55,7 +55,7 @@ void LineComponent::OnTransformChanged(const Message& message)
 
 void LineComponent::UpdateTransform()
 {
-    TransformComponent* transform = GetParent()->GetComponentByType<TransformComponent>();
+    TransformComponent* transform = GetEntity()->GetComponent<TransformComponent>();
     
     if (transform)
     {

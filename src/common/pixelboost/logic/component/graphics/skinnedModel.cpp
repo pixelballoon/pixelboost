@@ -18,20 +18,17 @@ using namespace pb;
 
 PB_DEFINE_COMPONENT(pb::SkinnedModelComponent)
 
-SkinnedModelComponent::SkinnedModelComponent(Entity* parent, Model* model, Texture* texture)
+SkinnedModelComponent::SkinnedModelComponent(Entity* parent)
     : Component(parent)
     , _SkeletonDebug(false)
+    , _AnimationState(0)
 {
     _Renderable = new ModelRenderable(parent->GetUid());
-    _Renderable->SetModel(model);
-    _Renderable->SetTexture(texture);
     
-    _AnimationState = new SkinnedAnimationState(model->GetDefinition());
+    GetScene()->GetSystemByType<RenderSystem>()->AddItem(_Renderable);
     
-    GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
-    
-    GetParent()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &SkinnedModelComponent::OnTransformChanged));
-    GetParent()->RegisterMessageHandler<UpdateMessage>(MessageHandler(this, &SkinnedModelComponent::OnUpdate));
+    GetEntity()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &SkinnedModelComponent::OnTransformChanged));
+    GetEntity()->RegisterMessageHandler<UpdateMessage>(MessageHandler(this, &SkinnedModelComponent::OnUpdate));
     
     UpdateTransform();
 }
@@ -40,13 +37,13 @@ SkinnedModelComponent::~SkinnedModelComponent()
 {
     if (_SkeletonDebug)
     {
-        GetParent()->UnregisterMessageHandler<DebugRenderMessage>(MessageHandler(this, &SkinnedModelComponent::OnDebugRender));
+        GetEntity()->UnregisterMessageHandler<DebugRenderMessage>(MessageHandler(this, &SkinnedModelComponent::OnDebugRender));
     }
     
-    GetParent()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &SkinnedModelComponent::OnTransformChanged));
-    GetParent()->UnregisterMessageHandler<UpdateMessage>(MessageHandler(this, &SkinnedModelComponent::OnUpdate));
+    GetEntity()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &SkinnedModelComponent::OnTransformChanged));
+    GetEntity()->UnregisterMessageHandler<UpdateMessage>(MessageHandler(this, &SkinnedModelComponent::OnUpdate));
     
-    GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
+    GetScene()->GetSystemByType<RenderSystem>()->RemoveItem(_Renderable);
     
     delete _Renderable;
     delete _AnimationState;
@@ -65,6 +62,7 @@ void SkinnedModelComponent::SetLayer(int layer)
 void SkinnedModelComponent::SetModel(Model* model)
 {
     _Renderable->SetModel(model);
+    _AnimationState = new SkinnedAnimationState(model->GetDefinition());
 }
 
 Model* SkinnedModelComponent::GetModel()
@@ -108,9 +106,9 @@ void SkinnedModelComponent::SetSkeletonDebug(bool debug)
     
     if (debug)
     {
-        GetParent()->RegisterMessageHandler<pb::DebugRenderMessage>(MessageHandler(this, &SkinnedModelComponent::OnDebugRender));
+        GetEntity()->RegisterMessageHandler<DebugRenderMessage>(MessageHandler(this, &SkinnedModelComponent::OnDebugRender));
     } else {
-        GetParent()->UnregisterMessageHandler<pb::DebugRenderMessage>(MessageHandler(this, &SkinnedModelComponent::OnDebugRender));
+        GetEntity()->UnregisterMessageHandler<DebugRenderMessage>(MessageHandler(this, &SkinnedModelComponent::OnDebugRender));
     }
 }
 
@@ -132,16 +130,16 @@ glm::mat4x4 SkinnedModelComponent::GetBoneTransform(const ModelBoneDefinition& b
 
 void SkinnedModelComponent::OnDebugRender(const Message& message)
 {
-    const pb::DebugRenderMessage& debugMessage = static_cast<const pb::DebugRenderMessage&>(message);
+    const DebugRenderMessage& debugMessage = static_cast<const DebugRenderMessage&>(message);
     
-    pb::Model* model = _Renderable->GetModel();
+    Model* model = _Renderable->GetModel();
     
     if (!model)
         return;
     
-    glm::mat4x4 transformMatrix = GetParent()->GetComponentByType<pb::TransformComponent>()->GetMatrix() * _LocalTransform;
+    glm::mat4x4 transformMatrix = GetEntity()->GetComponent<TransformComponent>()->GetMatrix() * _LocalTransform;
     
-    for (std::vector<pb::ModelBoneDefinition>::iterator it = model->GetDefinition()->Bones.begin(); it != model->GetDefinition()->Bones.end(); ++it)
+    for (std::vector<ModelBoneDefinition>::iterator it = model->GetDefinition()->Bones.begin(); it != model->GetDefinition()->Bones.end(); ++it)
     {
         if (it->_ParentId != -1)
         {
@@ -151,7 +149,7 @@ void SkinnedModelComponent::OnDebugRender(const Message& message)
             glm::vec4 posA = transformMatrix * boneTransform * glm::vec4(0,0,0,1);
             glm::vec4 posB = transformMatrix * parentBoneTransform * glm::vec4(0,0,0,1);
             
-            debugMessage.GetDebugRenderSystem()->AddLine(pb::kRenderPassScene, 10, glm::vec3(posA.x, posA.y, posA.z), glm::vec3(posB.x, posB.y, posB.z), glm::vec4(it->_ParentId * 0.2, it->_ParentId * 0.2, it->_ParentId * 0.2, 1));
+            debugMessage.GetDebugRenderSystem()->AddLine(kRenderPassScene, 10, glm::vec3(posA.x, posA.y, posA.z), glm::vec3(posB.x, posB.y, posB.z), glm::vec4(it->_ParentId * 0.2, it->_ParentId * 0.2, it->_ParentId * 0.2, 1));
         }
     }
 }
@@ -171,7 +169,7 @@ void SkinnedModelComponent::OnUpdate(const Message& message)
 
 void SkinnedModelComponent::UpdateTransform()
 {
-    TransformComponent* transform = GetParent()->GetComponentByType<TransformComponent>();    
+    TransformComponent* transform = GetEntity()->GetComponent<TransformComponent>();    
     
     if (transform)
     {

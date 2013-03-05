@@ -4,9 +4,11 @@
 
 struct lua_State;
 
-#define PB_DECLARE_COMPONENT public: virtual bool IsA(pb::Uid type) const; virtual pb::Uid GetType() const; static pb::Uid GetStaticType();
-#define PB_DEFINE_COMPONENT_DERIVED(className, parent) bool className::IsA(pb::Uid type) const { return GetStaticType() == type || parent::IsA(type); } pb::Uid className::GetType() const { return GetStaticType(); }  pb::Uid className::GetStaticType() { return pb::TypeHash(#className); }
+#define PB_DECLARE_COMPONENT public: static pb::Component* Create(pb::Entity* entity); virtual bool IsA(pb::Uid type) const; virtual pb::Uid GetType() const; static pb::Uid GetStaticType();
+#define PB_DEFINE_COMPONENT_DERIVED_ABSTRACT(className, parent) bool className::IsA(pb::Uid type) const { return GetStaticType() == type || parent::IsA(type); } pb::Uid className::GetType() const { return GetStaticType(); }  pb::Uid className::GetStaticType() { return pb::TypeHash(#className); }
+#define PB_DEFINE_COMPONENT_DERIVED(className, parent) pb::Component* className::Create(pb::Entity* entity) { return new className(entity); } PB_DEFINE_COMPONENT_DERIVED_ABSTRACT(className, parent)
 #define PB_DEFINE_COMPONENT(className) PB_DEFINE_COMPONENT_DERIVED(className, pb::Component)
+#define PB_DEFINE_COMPONENT_ABSTRACT(className) PB_DEFINE_COMPONENT_DERIVED_ABSTRACT(className, pb::Component)
 
 namespace pb
 {
@@ -16,13 +18,12 @@ class Scene;
 
 class Component
 {
-public:
-    Component(Entity* parent);
-    
-    static void RegisterLuaClass(lua_State* state);
-    
 protected:
+    Component(Entity* entity);
     virtual ~Component();
+    
+public:
+    static void RegisterLuaClass(lua_State* state);
     
 public:
     enum ComponentState
@@ -35,15 +36,12 @@ public:
     virtual Uid GetType() const;
     static Uid GetStaticType();
     
-    Uid GetUid();
-    
     Scene* GetScene();
-    Entity* GetParent();
-    pb::Uid GetParentUid();
+    Entity* GetEntity();
+    pb::Uid GetEntityUid();
     
 private:
     Entity* _Parent;
-    Uid _Uid;
     
     ComponentState _State;
     

@@ -29,13 +29,13 @@ ScriptComponent::ScriptComponent(Entity* parent, const ScriptComponentDefinition
         }
     }
     
-    GetParent()->RegisterMessageHandler<UpdateMessage>(MessageHandler(this, &ScriptComponent::OnUpdate));
+    GetEntity()->RegisterMessageHandler<UpdateMessage>(MessageHandler(this, &ScriptComponent::OnUpdate));
 }
 
 ScriptComponent::~ScriptComponent()
 {
-    GetParent()->UnregisterMessageHandler(MessageHandler(this, &ScriptComponent::OnMessage));
-    GetParent()->UnregisterMessageHandler<UpdateMessage>(MessageHandler(this, &ScriptComponent::OnUpdate));
+    GetEntity()->UnregisterMessageHandler(MessageHandler(this, &ScriptComponent::OnMessage));
+    GetEntity()->UnregisterMessageHandler<UpdateMessage>(MessageHandler(this, &ScriptComponent::OnUpdate));
     
     delete _Script;
 }
@@ -59,7 +59,7 @@ void ScriptComponent::SetActive(bool active)
     
     if (active == true)
     {
-        GetParent()->RegisterMessageHandler<UpdateMessage>(MessageHandler(this, &ScriptComponent::OnUpdate));
+        GetEntity()->RegisterMessageHandler<UpdateMessage>(MessageHandler(this, &ScriptComponent::OnUpdate));
     }
 }
 
@@ -139,13 +139,13 @@ void ScriptComponent::OnUpdate(const Message& message)
   
     if (_WaitMessage.size() == 0 && pendingMessages > 0)
     {
-        GetParent()->UnregisterMessageHandler(MessageHandler(this, &ScriptComponent::OnMessage));
+        GetEntity()->UnregisterMessageHandler(MessageHandler(this, &ScriptComponent::OnMessage));
     }
     
     if (_Threads.size() == 0)
     {
         _Active = false;
-        GetParent()->UnregisterMessageHandler<UpdateMessage>(MessageHandler(this, &ScriptComponent::OnUpdate));
+        GetEntity()->UnregisterMessageHandler<UpdateMessage>(MessageHandler(this, &ScriptComponent::OnUpdate));
     }
 }
 
@@ -217,7 +217,7 @@ bool ScriptComponent::UpdateState(int threadIndex, float gameDelta)
 
 void ScriptComponent::LuaSendMessage(const Message* message)
 {
-    GetScene()->SendMessage(GetParentUid(), *message);
+    GetScene()->SendMessage(GetEntityUid(), *message);
 }
 
 void ScriptComponent::LuaSendMessageTarget(Uid target, const Message* message)
@@ -227,7 +227,7 @@ void ScriptComponent::LuaSendMessageTarget(Uid target, const Message* message)
 
 void ScriptComponent::LuaWaitMessage(const std::string& message, lua_State* state)
 {
-    GetParent()->RegisterMessageHandler(MessageHandler(this, &ScriptComponent::OnMessage));
+    GetEntity()->RegisterMessageHandler(MessageHandler(this, &ScriptComponent::OnMessage));
     
     int threadIndex = AddThread(state);
     _WaitMessage[threadIndex] = pb::TypeHash(message.c_str());

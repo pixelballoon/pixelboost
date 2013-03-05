@@ -8,8 +8,7 @@ Component::Component(Entity* parent)
     : _Parent(parent)
     , _State(kComponentCreated)
 {
-    _Uid = parent->GenerateComponentId();
-    parent->AddComponent(this);
+    
 }
 
 Component::~Component()
@@ -22,8 +21,8 @@ void Component::RegisterLuaClass(lua_State* state)
     luabridge::getGlobalNamespace(state)
     .beginNamespace("pb")
         .beginClass<Component>("Component")
-            .addFunction("GetParent", &Component::GetParent)
-            .addFunction("GetParentUid", &Component::GetParentUid)
+            .addFunction("GetEntity", &Component::GetEntity)
+            .addFunction("GetEntityUid", &Component::GetEntityUid)
         .endClass()
     .endNamespace();
 }
@@ -43,22 +42,17 @@ Uid Component::GetStaticType()
     return TypeHash("pb::Component");
 }
 
-Uid Component::GetUid()
-{
-    return _Uid;
-}
-
 Scene* Component::GetScene()
 {
     return _Parent->GetScene();
 }
 
-Entity* Component::GetParent()
+Entity* Component::GetEntity()
 {
     return _Parent;
 }
 
-pb::Uid Component::GetParentUid()
+pb::Uid Component::GetEntityUid()
 {
     return _Parent->GetUid();
 }

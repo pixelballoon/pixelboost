@@ -19,10 +19,11 @@ namespace pb
     {
         PB_DECLARE_COMPONENT
         
-    public:
+    protected:
         ScriptComponent(Entity* parent, const ScriptComponentDefinition* definition = 0);
         virtual ~ScriptComponent();
         
+    public:
         static void RegisterLuaClass(lua_State* state);
         
         void SetActive(bool active);

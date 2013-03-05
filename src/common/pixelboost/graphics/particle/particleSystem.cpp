@@ -288,23 +288,23 @@ void ParticleSystem::UpdateParticle(Particle* particle, float time)
 
 PB_DEFINE_COMPONENT(ParticleComponent)
 
-ParticleComponent::ParticleComponent(Entity* entity)
-    : Component(entity)
+ParticleComponent::ParticleComponent(Entity* parent)
+    : Component(parent)
     , _UseGlobalTime(false)
 {
     _System = new ParticleSystem();
     
-    GetParent()->RegisterMessageHandler<TransformComponent>(MessageHandler(this, &ParticleComponent::OnTransformChanged));
-    GetParent()->RegisterMessageHandler<UpdateMessage>(MessageHandler(this, &ParticleComponent::OnUpdate));
+    GetEntity()->RegisterMessageHandler<TransformComponent>(MessageHandler(this, &ParticleComponent::OnTransformChanged));
+    GetEntity()->RegisterMessageHandler<UpdateMessage>(MessageHandler(this, &ParticleComponent::OnUpdate));
     
-    _Renderable = new ParticleRenderable(GetParentUid(), _System);
+    _Renderable = new ParticleRenderable(GetEntityUid(), _System);
     GetScene()->GetSystemByType<RenderSystem>()->AddItem(_Renderable);
 }
 
 ParticleComponent::~ParticleComponent()
 {
-    GetParent()->UnregisterMessageHandler<TransformComponent>(MessageHandler(this, &ParticleComponent::OnTransformChanged));
-    GetParent()->UnregisterMessageHandler<UpdateMessage>(MessageHandler(this, &ParticleComponent::OnUpdate));
+    GetEntity()->UnregisterMessageHandler<TransformComponent>(MessageHandler(this, &ParticleComponent::OnTransformChanged));
+    GetEntity()->UnregisterMessageHandler<UpdateMessage>(MessageHandler(this, &ParticleComponent::OnUpdate));
 
     GetScene()->GetSystemByType<RenderSystem>()->RemoveItem(_Renderable);
     
@@ -338,13 +338,13 @@ void ParticleComponent::SetUseGlobalTime(bool useGlobalTime)
 
 void ParticleComponent::OnTransformChanged(const Message& message)
 {
-    _WorldMatrix = GetParent()->GetComponentByType<TransformComponent>()->GetMatrix() * _LocalTransform;
+    _WorldMatrix = GetEntity()->GetComponent<TransformComponent>()->GetMatrix() * _LocalTransform;
 }
 
 void ParticleComponent::OnUpdate(const Message& message)
 {
     const pb::UpdateMessage& updateMessage = static_cast<const UpdateMessage&>(message);
     
-    _System->Transform = GetParent()->GetComponentByType<TransformComponent>()->GetMatrix() * _LocalTransform;
+    _System->Transform = GetEntity()->GetComponent<TransformComponent>()->GetMatrix() * _LocalTransform;
     _System->Update(_UseGlobalTime ? updateMessage.GetTimeDelta() : updateMessage.GetGameDelta());
 }

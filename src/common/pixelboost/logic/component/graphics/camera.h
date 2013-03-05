@@ -19,9 +19,12 @@ namespace pb
     {
         PB_DECLARE_COMPONENT
         
-    public:
-        CameraComponent(Entity* parent, Camera* camera);
+    protected:
+        CameraComponent(Entity* entity);
         virtual ~CameraComponent();
+        
+    public:
+        void SetCamera(Camera* camera);
                 
     private:
         void OnTransformChanged(const Message& message);

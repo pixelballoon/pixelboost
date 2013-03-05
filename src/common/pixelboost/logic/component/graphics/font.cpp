@@ -14,23 +14,21 @@ using namespace pb;
 
 PB_DEFINE_COMPONENT(pb::FontComponent)
 
-FontComponent::FontComponent(Entity* parent, const std::string& font, const std::string& text)
+FontComponent::FontComponent(Entity* parent)
     : Component(parent)
 {
-    _Renderable = new FontRenderable(GetParent()->GetUid());
-    _Renderable->SetFont(font);
-    _Renderable->SetText(text);
+    _Renderable = new FontRenderable(GetEntity()->GetUid());
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
     
-    GetParent()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &FontComponent::OnTransformChanged));
+    GetEntity()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &FontComponent::OnTransformChanged));
     
     UpdateTransform();
 }
 
 FontComponent::~FontComponent()
 {
-    GetParent()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &FontComponent::OnTransformChanged));
+    GetEntity()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &FontComponent::OnTransformChanged));
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
     
@@ -86,7 +84,7 @@ void FontComponent::OnTransformChanged(const Message& message)
 
 void FontComponent::UpdateTransform()
 {
-    TransformComponent* transform = GetParent()->GetComponentByType<TransformComponent>();    
+    TransformComponent* transform = GetEntity()->GetComponent<TransformComponent>();    
     
     if (transform)
     {

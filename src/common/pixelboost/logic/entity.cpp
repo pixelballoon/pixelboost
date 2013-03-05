@@ -1,4 +1,5 @@
 #include "pixelboost/db/entity.h"
+#include "pixelboost/debug/assert.h"
 #include "pixelboost/logic/message/destroy.h"
 #include "pixelboost/logic/component.h"
 #include "pixelboost/logic/entity.h"
@@ -8,38 +9,56 @@
 
 using namespace pb;
 
-Entity::Entity(Scene* scene, DbEntity* entity)
-    : _NextFreeUid(1)
-    , _Scene(scene)
+Entity::Entity(Scene* scene, Entity* parent, DbEntity* entity)
+    : _Scene(scene)
+    , _Parent(parent)
     , _Uid(0)
     , _State(kEntityCreated)
     , _HandlingMessage(0)
 {
-    _CreationUid = 0;
     _CreationEntity = entity;
     if (_CreationEntity)
     {
-        _CreationUid = _CreationEntity->GetUid();
         _CreationEntity->structDestroyed.Connect(this, &Entity::HandleCreationEntityDestroyed);
-        _CreationEntity->structReloaded.Connect(this, &Entity::OnCreationEntityReloaded);
+        _CreationEntity->structReloaded.Connect(this, &Entity::HandleCreationEntityReloaded);
     }
     
     _Uid = _Scene->GenerateEntityId();
     
     _Scene->AddEntity(this);
+    
+    if (parent)
+    {
+        parent->AddChild(this);
+    }
 }
 
 Entity::~Entity()
 {
-    if (_CreationEntity)
+    if (_Parent)
     {
-        _CreationEntity->structDestroyed.Disconnect(this, &Entity::OnCreationEntityDestroyed);
-        _CreationEntity->structReloaded.Disconnect(this, &Entity::OnCreationEntityReloaded);
+        _Parent->RemoveChild(this);
     }
     
-    for (ComponentList::iterator componentIt = _Components.begin(); componentIt != _Components.end(); ++componentIt)
+    if (_CreationEntity)
     {
-        delete *componentIt;
+        _CreationEntity->structDestroyed.Disconnect(this, &Entity::HandleCreationEntityDestroyed);
+        _CreationEntity->structReloaded.Disconnect(this, &Entity::HandleCreationEntityReloaded);
+    }
+    
+    for (const auto& child : _Children)
+    {
+        child->_Parent = 0;
+    }
+    
+    for (const auto& component : _Components)
+    {
+        delete component.second;
+    }
+    
+    for (const auto& component : _PendingComponents)
+    {
+        delete component;
     }
 }
 
@@ -58,6 +77,11 @@ Scene* Entity::GetScene()
     return _Scene;
 }
 
+Entity* Entity::GetParent()
+{
+    return _Parent;
+}
+
 Uid Entity::GetCreationUid()
 {
     if (_CreationEntity)
@@ -71,6 +95,16 @@ Uid Entity::GetCreationUid()
 Uid Entity::GetUid()
 {
     return _Uid;
+}
+
+const std::string& Entity::GetName()
+{
+    return _Name;
+}
+
+void Entity::SetName(const std::string& name)
+{
+    _Name = name;
 }
 
 Uid Entity::GetType() const
@@ -90,7 +124,17 @@ const DbEntity* Entity::GetCreationEntity() const
 
 void Entity::Destroy()
 {
-    _State = kEntityDestroyed;
+    if (_State != kEntityDestroyed)
+    {
+        for (const auto& child : _Children)
+        {
+            child->_Parent = 0;
+            child->Destroy();
+        }
+        _Children.clear();
+        
+        _State = kEntityDestroyed;
+    }
 }
 
 Entity::EntityState Entity::GetState()
@@ -98,20 +142,28 @@ Entity::EntityState Entity::GetState()
     return _State;
 }
 
-Uid Entity::GenerateComponentId()
+const std::set<Entity*>& Entity::GetChildren()
 {
-    return _NextFreeUid++;
+    return _Children;
 }
 
-void Entity::AddComponent(Component* component)
+Entity* Entity::FindChildByName(const std::string& name)
 {
-    _Components.push_back(component);
+    for (const auto& child : _Children)
+    {
+        if (child->GetName() == name)
+            return child;
+    }
+    
+    return 0;
 }
 
 void Entity::DestroyComponent(Component* component)
 {
     if (component)
     {
+        _PendingComponents.insert(component);
+        _Components[component->GetType()] = 0;
         component->_State = Component::kComponentDestroyed;
         _Scene->AddEntityPurge(this);
     }
@@ -121,77 +173,23 @@ void Entity::DestroyAllComponents()
 {
     if (_Components.size())
     {
-        for (ComponentList::iterator componentIt = _Components.begin(); componentIt != _Components.end(); componentIt++)
+        for (auto& component : _Components)
         {
-            (*componentIt)->_State = Component::kComponentDestroyed;
+            if (component.second)
+            {
+                _PendingComponents.insert(component.second);
+                component.second->_State = Component::kComponentDestroyed;
+                component.second = 0;
+            }
         }
         
         _Scene->AddEntityPurge(this);
     }
 }
 
-void Entity::PurgeComponents()
+Entity::ComponentMap Entity::GetComponents()
 {
-    for (ComponentList::iterator componentIt = _Components.begin(); componentIt != _Components.end();)
-    {
-        Component* component = *componentIt;
-        if (component->_State == Component::kComponentDestroyed)
-        {
-            delete component;
-            componentIt = _Components.erase(componentIt);
-        } else {
-            ++componentIt;
-        }
-    }
-}
-
-Component* Entity::GetComponentById(Uid componentId)
-{
-    for (ComponentList::iterator componentIt = _Components.begin(); componentIt != _Components.end(); ++componentIt)
-    {
-        if ((*componentIt)->GetUid() == componentId)
-            return *componentIt;
-    }
-    
-    return 0;
-}
-
-void Entity::SyncMessageHandlers()
-{
-    for (std::map<Uid, std::vector<MessageHandler> >::iterator typeIt = _MessageHandlerDelayedAdd.begin(); typeIt != _MessageHandlerDelayedAdd.end(); ++typeIt)
-    {
-        MessageSignal* signal = 0;
-        if (typeIt->first == 0)
-        {
-            signal = &_GenericMessageHandlers;
-        } else {
-            signal = &_MessageHandlers[typeIt->first];
-        }
-        
-        for (std::vector<MessageHandler>::iterator handlerIt = typeIt->second.begin(); handlerIt != typeIt->second.end(); ++handlerIt)
-        {
-            signal->Connect(*handlerIt);
-        }
-    }
-
-    for (std::map<Uid, std::vector<MessageHandler> >::iterator typeIt = _MessageHandlerDelayedRemove.begin(); typeIt != _MessageHandlerDelayedRemove.end(); ++typeIt)
-    {
-        MessageSignal* signal = 0;
-        if (typeIt->first == 0)
-        {
-            signal = &_GenericMessageHandlers;
-        } else {
-            signal = &_MessageHandlers[typeIt->first];
-        }
-        
-        for (std::vector<MessageHandler>::iterator handlerIt = typeIt->second.begin(); handlerIt != typeIt->second.end(); ++handlerIt)
-        {
-            signal->Disconnect(*handlerIt);
-        }
-    }
-    
-    _MessageHandlerDelayedAdd.clear();
-    _MessageHandlerDelayedRemove.clear();
+    return _Components;
 }
 
 void Entity::RegisterMessageHandler(MessageHandler handler)
@@ -212,6 +210,16 @@ void Entity::UnregisterMessageHandler(MessageHandler handler)
     } else {
         _GenericMessageHandlers.Disconnect(handler);
     }
+}
+
+void Entity::AddChild(Entity* child)
+{
+    _Children.insert(child);
+}
+
+void Entity::RemoveChild(Entity* child)
+{
+    _Children.erase(child);
 }
 
 void Entity::HandleMessage(const Message& message)
@@ -235,24 +243,63 @@ void Entity::HandleMessage(const Message& message)
     SyncMessageHandlers();
 }
 
-void Entity::OnCreationEntityDestroyed()
+
+void Entity::Purge()
 {
+    for (auto& component : _PendingComponents)
+    {
+        delete component;
+    }
     
+    _PendingComponents.clear();
 }
 
-void Entity::OnCreationEntityReloaded()
+void Entity::SyncMessageHandlers()
 {
+    for (std::map<Uid, std::vector<MessageHandler> >::iterator typeIt = _MessageHandlerDelayedAdd.begin(); typeIt != _MessageHandlerDelayedAdd.end(); ++typeIt)
+    {
+        MessageSignal* signal = 0;
+        if (typeIt->first == 0)
+        {
+            signal = &_GenericMessageHandlers;
+        } else {
+            signal = &_MessageHandlers[typeIt->first];
+        }
+        
+        for (std::vector<MessageHandler>::iterator handlerIt = typeIt->second.begin(); handlerIt != typeIt->second.end(); ++handlerIt)
+        {
+            signal->Connect(*handlerIt);
+        }
+    }
     
+    for (std::map<Uid, std::vector<MessageHandler> >::iterator typeIt = _MessageHandlerDelayedRemove.begin(); typeIt != _MessageHandlerDelayedRemove.end(); ++typeIt)
+    {
+        MessageSignal* signal = 0;
+        if (typeIt->first == 0)
+        {
+            signal = &_GenericMessageHandlers;
+        } else {
+            signal = &_MessageHandlers[typeIt->first];
+        }
+        
+        for (std::vector<MessageHandler>::iterator handlerIt = typeIt->second.begin(); handlerIt != typeIt->second.end(); ++handlerIt)
+        {
+            signal->Disconnect(*handlerIt);
+        }
+    }
+    
+    _MessageHandlerDelayedAdd.clear();
+    _MessageHandlerDelayedRemove.clear();
 }
 
 void Entity::HandleCreationEntityDestroyed()
 {    
     _CreationEntity = 0;
     
-    OnCreationEntityDestroyed();
+    // TODO : Send notification message
 }
 
 void Entity::HandleCreationEntityReloaded()
 {
-    OnCreationEntityReloaded();
+    // TODO : Send notification message
 }

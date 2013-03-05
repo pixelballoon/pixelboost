@@ -285,10 +285,11 @@ class ParticleComponent : public Component
 {
     PB_DECLARE_COMPONENT
     
-public:
-    ParticleComponent(Entity* entity);
+protected:
+    ParticleComponent(Entity* parent);
     ~ParticleComponent();
     
+public:
     void SetRenderPass(RenderPass renderPass);
     void SetLayer(int layer);
     

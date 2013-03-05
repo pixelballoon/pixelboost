@@ -9,19 +9,14 @@ using namespace pb;
 
 PB_DEFINE_COMPONENT_DERIVED(pb::ParallaxTransformComponent, pb::TransformComponent)
 
-ParallaxTransformComponent::ParallaxTransformComponent(Entity* parent, Uid parallaxEntityId, Uid parentTransform)
-    : TransformComponent(parent, parentTransform)
+ParallaxTransformComponent::ParallaxTransformComponent(Entity* parent)
+    : TransformComponent(parent)
     , _Dirty(true)
     , _ParallaxScale(1,1,1)
     , _Scale(1,1,1)
-    , _ParallaxEntityId(parallaxEntityId)
+    , _ParallaxEntityId(0)
 {
-    Entity* parallaxEntity = GetScene()->GetEntityById(parallaxEntityId);
-    
-    if (parallaxEntity)
-    {
-        parallaxEntity->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &ParallaxTransformComponent::OnTransformChanged));
-    }
+
 }
 
 ParallaxTransformComponent::~ParallaxTransformComponent()
@@ -31,6 +26,16 @@ ParallaxTransformComponent::~ParallaxTransformComponent()
     if (parallaxEntity)
     {
         parallaxEntity->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &ParallaxTransformComponent::OnTransformChanged));
+    }
+}
+
+void ParallaxTransformComponent::SetParallaxEntity(Uid parallaxEntityId)
+{
+    Entity* parallaxEntity = GetScene()->GetEntityById(parallaxEntityId);
+    
+    if (parallaxEntity)
+    {
+        parallaxEntity->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &ParallaxTransformComponent::OnTransformChanged));
     }
 }
 
@@ -107,13 +112,13 @@ void ParallaxTransformComponent::OnChanged()
 {
     _Dirty = true;
     
-    TransformChangedMessage message(GetParent(), this);
-    GetScene()->SendMessage(GetParentUid(), message);
+    TransformChangedMessage message(GetEntity(), this);
+    GetScene()->SendMessage(GetEntityUid(), message);
 }
 
 void ParallaxTransformComponent::OnTransformChanged(const Message& message)
 {
-    glm::vec3 position = static_cast<const TransformChangedMessage&>(message).GetEntity()->GetComponentByType<TransformComponent>()->GetPosition();
+    glm::vec3 position = static_cast<const TransformChangedMessage&>(message).GetEntity()->GetComponent<TransformComponent>()->GetPosition();
     _ParallaxPosition = glm::vec3(position.x, position.y, 0);
     
     OnChanged();

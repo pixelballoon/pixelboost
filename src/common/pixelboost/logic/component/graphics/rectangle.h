@@ -17,10 +17,11 @@ class RectangleComponent : public Component
 {
     PB_DECLARE_COMPONENT
     
-public:
+protected:
     RectangleComponent(Entity* parent);
     virtual ~RectangleComponent();
     
+public:
     void SetRenderPass(RenderPass renderPass);
     void SetLayer(int layer);
     

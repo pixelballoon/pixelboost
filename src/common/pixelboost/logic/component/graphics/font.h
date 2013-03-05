@@ -18,10 +18,11 @@ namespace pb
     {
         PB_DECLARE_COMPONENT
         
-    public:
-        FontComponent(Entity* parent, const std::string& font, const std::string& text);
+    protected:
+        FontComponent(Entity* parent);
         virtual ~FontComponent();
         
+    public:
         void SetRenderPass(RenderPass renderPass);
         void SetLayer(int layer);
         void SetAlignment(FontAlign alignment);

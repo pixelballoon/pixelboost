@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <string>
 #include <vector>
 
 #include "pixelboost/framework/definitions.h"
@@ -22,7 +23,7 @@ class Scene;
 class Entity
 {
 public:
-    Entity(Scene* scene, DbEntity* creationEntity);
+    Entity(Scene* scene, Entity* parent, DbEntity* creationEntity);
     virtual ~Entity();
     
     static void RegisterLuaClass(lua_State* state);
@@ -36,10 +37,13 @@ public:
     
 public:
     Scene* GetScene();
+    Entity* GetParent();
     
     Uid GetCreationUid();
-    
     Uid GetUid();
+    
+    const std::string& GetName();
+    void SetName(const std::string& name);
     
     virtual Uid GetType() const;
     static pb::Uid GetStaticType();
@@ -51,44 +55,47 @@ public:
     EntityState GetState();
 
 public:
-    typedef std::vector<Component*> ComponentList;
+    typedef std::map<Uid, Component*> ComponentMap;
     
 public:
-    Uid GenerateComponentId();
-        
-public:
+    const std::set<Entity*>& GetChildren();
+    Entity* FindChildByName(const std::string& name);
+    
+    template <class T>T* CreateComponent();
     void DestroyComponent(Component* component);
     void DestroyAllComponents();
     
-    Component* GetComponentById(Uid componentId);
-    
-    template <class T>T* GetComponentByType();
-    template <class T> ComponentList GetComponentsByType();
+    template <class T>T* GetComponent();
+    ComponentMap GetComponents();
 
     void RegisterMessageHandler(MessageHandler handler);
     void UnregisterMessageHandler(MessageHandler handler);
     template <class T> void RegisterMessageHandler(MessageHandler handler);
     template <class T> void UnregisterMessageHandler(MessageHandler handler);
+
+private:
+    void AddChild(Entity* child);
+    void RemoveChild(Entity* child);
     
     void HandleMessage(const Message& message);
     
-    virtual void OnCreationEntityDestroyed();
-    virtual void OnCreationEntityReloaded();
-    
-private:
+    void Purge();
     void SyncMessageHandlers();
     
-    void AddComponent(Component* component);
-    void PurgeComponents();
-    
+private:
     void HandleCreationEntityDestroyed();
     void HandleCreationEntityReloaded();
     
+private:
     typedef sigslot::Signal1<const Message&> MessageSignal;
     
     typedef std::map<Uid, MessageSignal> MessageHandlers;
     
-    ComponentList _Components;
+    std::set<Entity*> _Children;
+    
+    ComponentMap _Components;
+    std::set<Component*> _PendingComponents;
+    
     MessageHandlers _MessageHandlers;
     MessageSignal _GenericMessageHandlers;
     
@@ -97,13 +104,13 @@ private:
     std::map<Uid, std::vector<MessageHandler> > _MessageHandlerDelayedRemove;
     
     Scene* _Scene;
+    Entity* _Parent;
     
     DbEntity* _CreationEntity;
-    Uid _CreationUid;
     
     Uid _Uid;
     
-    Uid _NextFreeUid;
+    std::string _Name;
     
     EntityState _State;
     

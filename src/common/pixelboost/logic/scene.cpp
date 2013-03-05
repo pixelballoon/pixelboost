@@ -52,7 +52,7 @@ void Scene::Update(float timeDelta, float gameDelta)
 {
     for (EntitySet::iterator it = _PurgeSet.begin(); it != _PurgeSet.end(); ++it)
     {
-        (*it)->PurgeComponents();
+        (*it)->Purge();
     }
     _PurgeSet.clear();
     

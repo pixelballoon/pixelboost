@@ -14,10 +14,11 @@ namespace pb
     {
         PB_DECLARE_COMPONENT
         
-    public:
+    protected:
         RectTouchComponent(Entity* parent, bool debugRender = false);
         virtual ~RectTouchComponent();
         
+    public:
         void SetLocalTransform(const glm::mat4x4& localTransform);
         const glm::mat4x4& GetLocalTransform();
         

@@ -17,23 +17,21 @@ using namespace pb;
 
 PB_DEFINE_COMPONENT(pb::ModelComponent)
 
-ModelComponent::ModelComponent(Entity* parent, Model* model, Texture* texture)
+ModelComponent::ModelComponent(Entity* parent)
     : Component(parent)
 {
     _Renderable = new ModelRenderable(parent->GetUid());
-    _Renderable->SetModel(model);
-    _Renderable->SetTexture(texture);
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
     
-    GetParent()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &ModelComponent::OnTransformChanged));
+    GetEntity()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &ModelComponent::OnTransformChanged));
     
     UpdateTransform();
 }
 
 ModelComponent::~ModelComponent()
 {
-    GetParent()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &ModelComponent::OnTransformChanged));
+    GetEntity()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &ModelComponent::OnTransformChanged));
     
     GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
     
@@ -94,7 +92,7 @@ void ModelComponent::OnTransformChanged(const Message& message)
 
 void ModelComponent::UpdateTransform()
 {
-    TransformComponent* transform = GetParent()->GetComponentByType<TransformComponent>();    
+    TransformComponent* transform = GetEntity()->GetComponent<TransformComponent>();    
     
     if (transform)
     {

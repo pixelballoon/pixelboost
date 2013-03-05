@@ -16,10 +16,11 @@ namespace pb
     {
         PB_DECLARE_COMPONENT
         
-    public:
-        BufferComponent(Entity* entity, IndexBuffer* indexBuffer = 0, VertexBuffer* vertexBuffer = 0, Texture* texture = 0, int numElements = 0);
+    protected:
+        BufferComponent(Entity* parent);
         virtual ~BufferComponent();
         
+    public:
         void SetLayer(int layer);
         
         void SetIndexBuffer(IndexBuffer* indexBuffer);

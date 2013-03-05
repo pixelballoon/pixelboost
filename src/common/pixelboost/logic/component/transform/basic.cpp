@@ -9,8 +9,8 @@ using namespace pb;
 
 PB_DEFINE_COMPONENT_DERIVED(pb::BasicTransformComponent, pb::TransformComponent)
 
-BasicTransformComponent::BasicTransformComponent(Entity* parent, Uid parentTransform)
-    : TransformComponent(parent, parentTransform)
+BasicTransformComponent::BasicTransformComponent(Entity* parent)
+    : TransformComponent(parent)
     , _Dirty(true)
     , _Scale(1,1,1)
 {
@@ -26,7 +26,14 @@ const glm::mat4x4& BasicTransformComponent::GetMatrix()
 {
     if (_Dirty)
     {
-        _Matrix = glm::translate(glm::mat4x4(), _Position);
+        _Matrix = glm::mat4x4();
+        
+        if (GetEntity()->GetParent())
+        {
+            _Matrix = GetEntity()->GetParent()->GetComponent<TransformComponent>()->GetMatrix();
+        }
+        
+        _Matrix = glm::translate(_Matrix, _Position);
         _Matrix = glm::scale(_Matrix, _Scale);
         _Matrix = glm::rotate(_Matrix, _Rotation.x, glm::vec3(1,0,0));
         _Matrix = glm::rotate(_Matrix, _Rotation.y, glm::vec3(0,1,0));
@@ -85,6 +92,6 @@ void BasicTransformComponent::OnChanged()
 {
     _Dirty = true;
     
-    TransformChangedMessage message(GetParent(), this);
-    GetScene()->SendMessage(GetParentUid(), message);
+    TransformChangedMessage message(GetEntity(), this);
+    GetScene()->SendMessage(GetEntityUid(), message);
 }
