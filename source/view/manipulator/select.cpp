@@ -19,7 +19,7 @@ SelectManipulator::SelectManipulator(pb::Scene* scene)
     , _Active(false)
     , _BoundsComponent(0)
 {
-    new pb::BasicTransformComponent(this);
+    CreateComponent<pb::BasicTransformComponent>();
 }
 
 SelectManipulator::~SelectManipulator()
@@ -53,7 +53,7 @@ void SelectManipulator::Render(int layer)
     {
         if (!_BoundsComponent)
         {
-            _BoundsComponent = new pb::RectangleComponent(this);
+            _BoundsComponent = CreateComponent<pb::RectangleComponent>();
             _BoundsComponent->SetColor(glm::vec4(0.0, 0.0, 0.1, 0.1));
             _BoundsComponent->SetSolid(true);
             _BoundsComponent->SetLayer(2);

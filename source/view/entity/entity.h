@@ -28,12 +28,11 @@ namespace pixeleditor
     
     class ViewEntity : public pb::Entity
     {
+        PB_DECLARE_ENTITY
+        
     public:
         ViewEntity(pb::Scene* scene, ProjectEntity* entity);
         virtual ~ViewEntity();
-        
-        virtual pb::Uid GetType() const;
-        static pb::Uid GetStaticType();
         
         void Update(float time);
         void Render(int layer);

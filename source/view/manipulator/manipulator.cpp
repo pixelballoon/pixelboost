@@ -65,7 +65,7 @@ public:
 };
     
 Manipulator::Manipulator(pb::Scene* scene)
-    : pb::Entity(scene, 0)
+    : pb::Entity(scene, 0, 0)
 {
     
 }

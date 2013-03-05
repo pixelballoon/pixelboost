@@ -16,15 +16,14 @@ using namespace pixeleditor;
 RectangleViewProperty::RectangleViewProperty(ViewEntity* parent, const std::string& path, const SchemaItem* schemaItem)
     : ViewProperty(parent, path, schemaItem)
 {
-    _RectangleComponent = new pb::RectangleComponent(parent);
-    _RectangleComponent->SetLayer(1);
+    CreateComponent<pb::RectangleComponent>()->SetLayer(1);
     
     Refresh();
 }
 
 RectangleViewProperty::~RectangleViewProperty()
 {
-    _Parent->DestroyComponent(_RectangleComponent);
+    DestroyComponent(GetComponent<pb::RectangleComponent>());
 }
 
 void RectangleViewProperty::Update(float time)
@@ -45,16 +44,17 @@ void RectangleViewProperty::Refresh()
     bool solid = visualisation->EvaluateParamBool(GetProjectEntity(), "solid", GetPath(), true);
     glm::vec4 color = visualisation->EvaluateParamColor(GetProjectEntity(), "color", GetPath());
     
-    _RectangleComponent->SetSize(size);
-    _RectangleComponent->SetSolid(solid);
-    _RectangleComponent->SetColor(color);
+    pb::RectangleComponent* rectangle = GetComponent<pb::RectangleComponent>();
+    rectangle->SetSize(size);
+    rectangle->SetSolid(solid);
+    rectangle->SetColor(color);
 }
 
 pb::BoundingBox RectangleViewProperty::CalculateBounds()
 {
-    glm::vec3 size(_RectangleComponent->GetSize(), 0);
-    size *= _Parent->GetScale();
+    glm::vec3 size(GetComponent<pb::RectangleComponent>()->GetSize(), 0);
+    size *= GetViewEntity()->GetScale();
     
-    glm::vec3 center = glm::vec3(_Parent->GetPosition()[0], _Parent->GetPosition()[1], 0);
+    glm::vec3 center = glm::vec3(GetViewEntity()->GetPosition()[0], GetViewEntity()->GetPosition()[1], 0);
     return pb::BoundingBox(center-size/2.f, center+size/2.f);
 }

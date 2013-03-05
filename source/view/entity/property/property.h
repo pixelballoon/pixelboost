@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "pixelboost/logic/entity.h"
 #include "pixelboost/maths/boundingBox.h"
 
 namespace pixeleditor
@@ -9,8 +10,10 @@ namespace pixeleditor
     class SchemaItem;
     class ViewEntity;
     
-    class ViewProperty
+    class ViewProperty : public pb::Entity
     {
+        PB_DECLARE_ENTITY
+        
     public:
         ViewProperty(ViewEntity* parent, const std::string& path, const SchemaItem* schemaItem);
         virtual ~ViewProperty();
@@ -20,6 +23,7 @@ namespace pixeleditor
         
         virtual void Refresh();
         
+        ViewEntity* GetViewEntity();
         ProjectEntity* GetProjectEntity();
         
         const std::string& GetPath();
@@ -33,7 +37,6 @@ namespace pixeleditor
         virtual pb::BoundingBox CalculateBounds();
         
         Uid _PropertyId;
-        ViewEntity* _Parent;
         std::string _Path;
         const SchemaItem* _SchemaItem;
         

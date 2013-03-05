@@ -25,7 +25,5 @@ namespace pixeleditor
         
     private:
         std::string _Sprite;
-        
-        pb::SpriteComponent* _SpriteComponent;
     };
 }

@@ -15,15 +15,14 @@ using namespace pixeleditor;
 ModelViewProperty::ModelViewProperty(ViewEntity* parent, const std::string& path, const SchemaItem* schemaItem)
     : ViewProperty(parent, path, schemaItem)
 {
-    _ModelComponent = new pb::ModelComponent(parent, 0, 0);
-    _ModelComponent->SetLayer(1);
+    CreateComponent<pb::ModelComponent>()->SetLayer(1);
     
     Refresh();
 }
 
 ModelViewProperty::~ModelViewProperty()
 {
-    _Parent->DestroyComponent(_ModelComponent);
+    DestroyComponent(GetComponent<pb::ModelComponent>());
 }
 
 void ModelViewProperty::Update(float time)
@@ -45,7 +44,7 @@ void ModelViewProperty::Refresh()
     if (model != _Model)
     {
         _Model = model;
-        _ModelComponent->SetModel(View::Instance()->GetModelRenderer()->LoadModel(_Model, "editor_models/"+_Model));
+        GetComponent<pb::ModelComponent>()->SetModel(View::Instance()->GetModelRenderer()->LoadModel(_Model, "editor_models/"+_Model));
         DirtyBounds();
     }
     
@@ -54,7 +53,7 @@ void ModelViewProperty::Refresh()
     if (texture != _Texture)
     {
         _Texture = texture;
-        _ModelComponent->SetTexture(View::Instance()->GetModelRenderer()->LoadTexture(_Texture, "editor_images/"+_Texture));
+        GetComponent<pb::ModelComponent>()->SetTexture(View::Instance()->GetModelRenderer()->LoadTexture(_Texture, "editor_images/"+_Texture));
     }
     
     if (visualisation->HasParamValue("rotation"))
@@ -65,7 +64,7 @@ void ModelViewProperty::Refresh()
         transform = glm::rotate(transform, rotation.x, glm::vec3(1,0,0));
         transform = glm::rotate(transform, rotation.y, glm::vec3(0,1,0));
         transform = glm::rotate(transform, rotation.z, glm::vec3(0,0,1));
-        _ModelComponent->SetLocalTransform(transform);
+        GetComponent<pb::ModelComponent>()->SetLocalTransform(transform);
     }
 }
 
@@ -73,6 +72,6 @@ pb::BoundingBox ModelViewProperty::CalculateBounds()
 {
     glm::vec3 size(1,1,1);
     
-    glm::vec3 center = glm::vec3(_Parent->GetPosition()[0], _Parent->GetPosition()[1], 0);
+    glm::vec3 center = glm::vec3(GetViewEntity()->GetPosition()[0], GetViewEntity()->GetPosition()[1], 0);
     return pb::BoundingBox(center-size/2.f, center+size/2.f);
 }

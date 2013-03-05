@@ -22,8 +22,5 @@ namespace pixeleditor
         
     protected:
         virtual pb::BoundingBox CalculateBounds();
-        
-    private:
-        pb::RectangleComponent* _RectangleComponent;
     };
 }

@@ -26,7 +26,5 @@ namespace pixeleditor
     private:
         std::string _Model;
         std::string _Texture;
-        
-        pb::ModelComponent* _ModelComponent;
     };
 }

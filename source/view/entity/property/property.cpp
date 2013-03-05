@@ -1,3 +1,5 @@
+#include "pixelboost/logic/component/transform/basic.h"
+
 #include "core/uidHelpers.h"
 #include "project/entity.h"
 #include "view/entity/property/property.h"
@@ -5,18 +7,22 @@
 
 using namespace pixeleditor;
 
+PB_DEFINE_ENTITY(ViewProperty)
+
 ViewProperty::ViewProperty(ViewEntity* parent, const std::string& path, const SchemaItem* schemaItem)
-    : _Parent(parent)
+    : pb::Entity(parent->GetScene(), parent, 0)
     , _Path(path)
     , _SchemaItem(schemaItem)
     , _BoundsDirty(true)
 {
-    _PropertyId = _Parent->AddProperty(this);
+    CreateComponent<pb::BasicTransformComponent>();
+    
+    _PropertyId = GetViewEntity()->AddProperty(this);
 }
 
 ViewProperty::~ViewProperty()
 {
-    _Parent->RemoveProperty(this);
+    GetViewEntity()->RemoveProperty(this);
 }
 
 void ViewProperty::Update(float time)
@@ -34,14 +40,19 @@ void ViewProperty::Refresh()
     
 }
 
+ViewEntity* ViewProperty::GetViewEntity()
+{
+    return static_cast<ViewEntity*>(GetParent());
+}
+
 ProjectEntity* ViewProperty::GetProjectEntity()
 {
-    return _Parent->GetEntity();
+    return GetViewEntity()->GetEntity();
 }
 
 Uid ViewProperty::GetUid()
 {
-    return GenerateSelectionUid(_Parent->GetUid(), _PropertyId);
+    return GenerateSelectionUid(GetParent()->GetUid(), _PropertyId);
 }
 
 
@@ -60,7 +71,7 @@ void ViewProperty::DirtyBounds()
     if (!_BoundsDirty)
     {
         _BoundsDirty = true;
-        _Parent->DirtyBounds();
+        GetViewEntity()->DirtyBounds();
     }
 }
 

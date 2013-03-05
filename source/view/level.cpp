@@ -19,16 +19,16 @@
 using namespace pixeleditor;
 
 Level::Level(pb::Scene* scene)
-    : Entity(scene, 0)
+    : Entity(scene, 0, 0)
     , _Record(0)
 {
     View::Instance()->GetMouseManager()->AddHandler(this);
     
     Core::Instance()->GetProject()->recordRemoved.Connect(this, &Level::OnRecordRemoved);
     
-    new pb::BasicTransformComponent(this);
+    CreateComponent<pb::BasicTransformComponent>();
     
-    _LevelBounds = new pb::RectangleComponent(this);
+    _LevelBounds = CreateComponent<pb::RectangleComponent>();
     _LevelBounds->SetColor(glm::vec4(0.6, 0.6, 0.6, 1.0));
     _LevelBounds->SetSolid(true);
     _LevelBounds->SetLayer(0);
