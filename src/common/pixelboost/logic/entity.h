@@ -9,8 +9,9 @@
 
 struct lua_State;
 
-#define PB_DECLARE_ENTITY public: virtual pb::Uid GetType() const; static pb::Uid GetStaticType(); private:
-#define PB_DEFINE_ENTITY(className) pb::Uid className::GetType() const { return GetStaticType(); } pb::Uid className::GetStaticType() { return pb::TypeHash(#className); }
+#define PB_DECLARE_ENTITY public: static pb::Entity* Create(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity); virtual pb::Uid GetType() const; static pb::Uid GetStaticType(); private:
+#define PB_DEFINE_ENTITY_ABSTRACT(className) pb::Uid className::GetType() const { return GetStaticType(); } pb::Uid className::GetStaticType() { return pb::TypeHash(#className); }
+#define PB_DEFINE_ENTITY(className) pb::Entity* className::Create(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity) { return new className(scene, parent, creationEntity); } PB_DEFINE_ENTITY_ABSTRACT(className)
 
 namespace pb
 {
@@ -22,10 +23,11 @@ class Scene;
 
 class Entity
 {
-public:
+protected:
     Entity(Scene* scene, Entity* parent, DbEntity* creationEntity);
     virtual ~Entity();
     
+public:
     static void RegisterLuaClass(lua_State* state);
     
 public:
@@ -53,9 +55,6 @@ public:
 
     void Destroy();
     EntityState GetState();
-
-public:
-    typedef std::map<Uid, Component*> ComponentMap;
     
 public:
     const std::set<Entity*>& GetChildren();
@@ -66,12 +65,14 @@ public:
     void DestroyAllComponents();
     
     template <class T>T* GetComponent();
-    ComponentMap GetComponents();
+    std::vector<Component*> GetComponents();
 
     void RegisterMessageHandler(MessageHandler handler);
     void UnregisterMessageHandler(MessageHandler handler);
     template <class T> void RegisterMessageHandler(MessageHandler handler);
     template <class T> void UnregisterMessageHandler(MessageHandler handler);
+    
+    void SendMessage(const Message& message, bool broadcastParents = false, bool broadcastChildren = false);
 
 private:
     void AddChild(Entity* child);
@@ -93,15 +94,14 @@ private:
     
     std::set<Entity*> _Children;
     
-    ComponentMap _Components;
+    std::map<Uid, Component*> _Components;
     std::set<Component*> _PendingComponents;
     
     MessageHandlers _MessageHandlers;
-    MessageSignal _GenericMessageHandlers;
     
     int _HandlingMessage;
-    std::map<Uid, std::vector<MessageHandler> > _MessageHandlerDelayedAdd;
-    std::map<Uid, std::vector<MessageHandler> > _MessageHandlerDelayedRemove;
+    std::map<Uid, std::set<MessageHandler> > _MessageHandlerDelayedAdd;
+    std::map<Uid, std::set<MessageHandler> > _MessageHandlerDelayedRemove;
     
     Scene* _Scene;
     Entity* _Parent;

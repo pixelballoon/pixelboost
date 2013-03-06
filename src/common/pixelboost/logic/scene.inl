@@ -13,6 +13,13 @@ template <class T>T* Scene::GetSystemByType()
     return 0;    
 }
 
+template <class T>T* Scene::CreateEntity(Entity* parent, DbEntity* creationEntity)
+{
+    T* entity = static_cast<T*>(T::Create(this, parent, creationEntity));
+    AddEntity(entity);
+    return entity;
+}
+
 template <class T> Scene::EntityMap Scene::GetEntitiesByType()
 {
     EntityMap entities;

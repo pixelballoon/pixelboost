@@ -39,7 +39,8 @@ template <class T> void Entity::RegisterMessageHandler(MessageHandler handler)
 {
     if (_HandlingMessage)
     {
-        _MessageHandlerDelayedAdd[T::GetStaticType()].push_back(handler);
+        _MessageHandlerDelayedAdd[T::GetStaticType()].insert(handler);
+        _MessageHandlerDelayedRemove[T::GetStaticType()].erase(handler);
     } else {
         _MessageHandlers[T::GetStaticType()].Connect(handler);
     }
@@ -49,7 +50,8 @@ template <class T> void Entity::UnregisterMessageHandler(MessageHandler handler)
 {
     if (_HandlingMessage)
     {
-        _MessageHandlerDelayedRemove[T::GetStaticType()].push_back(handler);
+        _MessageHandlerDelayedAdd[T::GetStaticType()].erase(handler);
+        _MessageHandlerDelayedRemove[T::GetStaticType()].insert(handler);
     } else {
         _MessageHandlers[T::GetStaticType()].Disconnect(handler);
     }

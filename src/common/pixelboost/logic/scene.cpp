@@ -61,6 +61,7 @@ void Scene::Update(float timeDelta, float gameDelta)
         if (it->second->GetState() == Entity::kEntityDestroyed)
         {
             delete it->second;
+            _PurgeSet.erase(it->second);
             _Entities.erase(it++);
         } else {
             ++it;
@@ -99,9 +100,7 @@ void Scene::Update(float timeDelta, float gameDelta)
         }
     }
     
-    UpdateMessage message(timeDelta, gameDelta);
-    
-    BroadcastMessage(message);
+    BroadcastMessage(UpdateMessage(timeDelta, gameDelta));
 }
 
 void Scene::Render(Viewport* viewport, RenderPass renderPass)
@@ -141,9 +140,8 @@ pb::Uid Scene::GenerateEntityId()
 
 void Scene::AddEntity(Entity* entity)
 {
-#ifndef PIXELBOOST_DISABLE_DEBUG
     PbAssert(_NewEntities.find(entity->GetUid()) == _NewEntities.end());
-#endif
+
     _NewEntities[entity->GetUid()] = entity;
 }
 
@@ -190,7 +188,7 @@ void Scene::BroadcastMessage(const Message& message)
     for (EntityMap::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
     {
         if (it->second->GetState() != Entity::kEntityDestroyed)
-            it->second->HandleMessage(message);
+            it->second->SendMessage(message);
     }
     
     for (SystemMap::iterator it = _Systems.begin(); it != _Systems.end(); ++it)
@@ -204,7 +202,7 @@ void Scene::SendMessage(Uid uid, const Message& message)
     Entity* entity = GetEntityById(uid);
     
     if (entity && entity->GetState() != Entity::kEntityDestroyed)
-        entity->HandleMessage(message);
+        entity->SendMessage(message);
 }
 
 void Scene::BroadcastDelayedMessage(float delay, const Message* message)

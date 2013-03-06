@@ -13,6 +13,7 @@ struct lua_State;
 namespace pb
 {
     
+class DbEntity;
 class DelayedMessage;
 class Entity;
 class Message;
@@ -39,6 +40,7 @@ public:
     
     pb::Uid GenerateEntityId();
     
+    template <class T>T* CreateEntity(Entity* parent, DbEntity* creationEntity);
     void DestroyEntity(Entity* entity);
     void DestroyAllEntities();
     
