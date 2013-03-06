@@ -49,7 +49,7 @@ void BasicTransformComponent::SetTransform(const glm::vec3& position, const glm:
     _Rotation = rotation;
     _Scale = scale;
     
-    OnChanged();
+    Dirty();
 }
 
 glm::vec3 BasicTransformComponent::GetPosition()
@@ -61,7 +61,7 @@ void BasicTransformComponent::SetPosition(const glm::vec3& position)
 {
     _Position = position;
     
-    OnChanged();
+    Dirty();
 }
 
 glm::vec3 BasicTransformComponent::GetRotation()
@@ -73,7 +73,7 @@ void BasicTransformComponent::SetRotation(const glm::vec3& rotation)
 {
     _Rotation = rotation;
     
-    OnChanged();
+    Dirty();
 }
 
 glm::vec3 BasicTransformComponent::GetScale()
@@ -85,12 +85,21 @@ void BasicTransformComponent::SetScale(const glm::vec3& scale)
 {
     _Scale = scale;
     
-    OnChanged();
+    Dirty();
 }
 
-void BasicTransformComponent::OnChanged()
+void BasicTransformComponent::Dirty()
 {
     _Dirty = true;
+    
+    for (const auto& child : GetEntity()->GetChildren())
+    {
+        TransformComponent* transform = child->GetComponent<pb::TransformComponent>();
+        if (transform)
+        {
+            transform->Dirty();
+        }
+    }
     
     TransformChangedMessage message(GetEntity(), this);
     GetScene()->SendMessage(GetEntityUid(), message);

@@ -29,6 +29,8 @@ namespace pb
         virtual glm::vec3 GetScale() = 0;
         virtual void SetScale(const glm::vec3& scale) = 0;
         
+        virtual void Dirty();
+        
     private:
     };
 

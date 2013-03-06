@@ -29,9 +29,9 @@ namespace pb
         glm::vec3 GetScale();
         void SetScale(const glm::vec3& scale);
         
-    private:
-        void OnChanged();
+        virtual void Dirty();
         
+    private:
         bool _Dirty;
         glm::mat4x4 _Matrix;
         glm::vec3 _Position;

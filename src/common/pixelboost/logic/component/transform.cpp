@@ -18,3 +18,8 @@ TransformComponent::~TransformComponent()
 {
     
 }
+
+void TransformComponent::Dirty()
+{
+    
+}
