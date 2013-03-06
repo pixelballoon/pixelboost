@@ -286,7 +286,7 @@ void ParticleSystem::UpdateParticle(Particle* particle, float time)
         particle->Scale = Definition->ModifierScale->Evaluate(life, particle->Variant);
 }
 
-PB_DEFINE_COMPONENT(ParticleComponent)
+PB_DEFINE_COMPONENT(pb::ParticleComponent)
 
 ParticleComponent::ParticleComponent(Entity* parent)
     : Component(parent)

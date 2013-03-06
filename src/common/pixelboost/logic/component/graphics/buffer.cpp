@@ -7,7 +7,7 @@
 
 using namespace pb;
 
-PB_DEFINE_COMPONENT(BufferComponent)
+PB_DEFINE_COMPONENT(pb::BufferComponent)
 
 BufferComponent::BufferComponent(Entity* parent)
     : Component(parent)

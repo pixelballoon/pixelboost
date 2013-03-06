@@ -8,7 +8,7 @@
 
 using namespace pb;
 
-PB_DEFINE_COMPONENT(LineComponent)
+PB_DEFINE_COMPONENT(pb::LineComponent)
 
 LineComponent::LineComponent(Entity* parent)
     : Component(parent)

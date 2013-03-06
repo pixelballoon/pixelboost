@@ -2,7 +2,7 @@
 
 using namespace pb;
 
-PB_DEFINE_COMPONENT(PhysicsComponent)
+PB_DEFINE_COMPONENT(pb::PhysicsComponent)
 
 PhysicsComponent::PhysicsComponent(Entity* parent)
     : Component(parent)

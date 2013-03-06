@@ -2,7 +2,7 @@
 
 using namespace pb;
 
-PB_DEFINE_MESSAGE(DebugRenderMessage)
+PB_DEFINE_MESSAGE(pb::DebugRenderMessage)
 
 DebugRenderMessage::DebugRenderMessage(DebugRenderSystem* renderSystem)
     : Message(0,0)

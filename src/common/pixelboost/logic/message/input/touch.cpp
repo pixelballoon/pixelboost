@@ -2,7 +2,7 @@
 
 using namespace pb;
 
-PB_DEFINE_MESSAGE(TouchMessage)
+PB_DEFINE_MESSAGE(pb::TouchMessage)
 
 TouchMessage::TouchMessage(Entity* entity, Component* component, int touchIndex, glm::vec2 touchPosition)
     : Message(entity, component)
@@ -27,7 +27,7 @@ glm::vec2 TouchMessage::GetTouchPosition() const
     return _TouchPosition;
 }
 
-PB_DEFINE_MESSAGE(TouchDownMessage)
+PB_DEFINE_MESSAGE(pb::TouchDownMessage)
 
 TouchDownMessage::TouchDownMessage(Entity* entity, Component* component, int touchIndex, glm::vec2 touchPosition)
     : TouchMessage(entity, component, touchIndex, touchPosition)
@@ -40,7 +40,7 @@ TouchDownMessage::~TouchDownMessage()
     
 }
 
-PB_DEFINE_MESSAGE(TouchMoveMessage)
+PB_DEFINE_MESSAGE(pb::TouchMoveMessage)
 
 TouchMoveMessage::TouchMoveMessage(Entity* entity, Component* component, int touchIndex, glm::vec2 touchPosition)
     : TouchMessage(entity, component, touchIndex, touchPosition)
@@ -53,7 +53,7 @@ TouchMoveMessage::~TouchMoveMessage()
     
 }
 
-PB_DEFINE_MESSAGE(TouchUpMessage)
+PB_DEFINE_MESSAGE(pb::TouchUpMessage)
 
 TouchUpMessage::TouchUpMessage(Entity* entity, Component* component, int touchIndex, glm::vec2 touchPosition)
     : TouchMessage(entity, component, touchIndex, touchPosition)
