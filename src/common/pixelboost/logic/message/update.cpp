@@ -2,7 +2,7 @@
 
 using namespace pb;
 
-PB_DEFINE_MESSAGE(UpdateMessage)
+PB_DEFINE_MESSAGE(pb::UpdateMessage)
 
 UpdateMessage::UpdateMessage(float timeDelta, float gameDelta)
     : Message(0, 0)
@@ -25,4 +25,17 @@ float UpdateMessage::GetGameDelta() const
 float UpdateMessage::GetTimeDelta() const
 {
     return _TimeDelta;
+}
+
+PB_DEFINE_MESSAGE(pb::PostUpdateMessage)
+
+PostUpdateMessage::PostUpdateMessage()
+    : Message(0, 0)
+{
+    
+}
+
+PostUpdateMessage::~PostUpdateMessage()
+{
+    
 }

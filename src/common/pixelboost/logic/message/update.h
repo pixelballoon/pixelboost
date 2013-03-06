@@ -21,4 +21,15 @@ private:
     float _TimeDelta;
 };
     
+class PostUpdateMessage : public Message
+{
+    PB_DECLARE_MESSAGE
+    
+public:
+    PostUpdateMessage();
+    virtual ~PostUpdateMessage();
+    
+private:
+};
+    
 }

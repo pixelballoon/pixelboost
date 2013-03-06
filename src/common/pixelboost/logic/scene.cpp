@@ -101,6 +101,7 @@ void Scene::Update(float timeDelta, float gameDelta)
     }
     
     BroadcastMessage(UpdateMessage(timeDelta, gameDelta));
+    BroadcastMessage(PostUpdateMessage());
 }
 
 void Scene::Render(Viewport* viewport, RenderPass renderPass)
