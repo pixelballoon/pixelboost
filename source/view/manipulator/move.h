@@ -5,13 +5,13 @@
 
 class MoveManipulator : public Manipulator
 {
-public:
-    MoveManipulator(pb::Scene* scene);
+    PB_DECLARE_ENTITY
+    
+protected:
+    MoveManipulator(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity);
     virtual ~MoveManipulator();
     
-    virtual pb::Uid GetType() const;
-    static pb::Uid GetStaticType();
-    
+public:
     virtual std::string GetName();
     virtual char GetKey();
     

@@ -7,8 +7,10 @@
 #include "core.h"
 #include "view.h"
 
-MoveManipulator::MoveManipulator(pb::Scene* scene)
-    : Manipulator(scene)
+PB_DEFINE_ENTITY(MoveManipulator)
+
+MoveManipulator::MoveManipulator(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity)
+    : Manipulator(scene, parent, creationEntity)
     , _Snap(0,0,0)
 {
     
@@ -17,16 +19,6 @@ MoveManipulator::MoveManipulator(pb::Scene* scene)
 MoveManipulator::~MoveManipulator()
 {
     
-}
-
-pb::Uid MoveManipulator::GetType() const
-{
-    return MoveManipulator::GetStaticType();
-}
-
-pb::Uid MoveManipulator::GetStaticType()
-{
-    return pb::TypeHash("MoveManipulator");
 }
 
 std::string MoveManipulator::GetName()

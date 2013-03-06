@@ -12,27 +12,26 @@
 #include "view/entity/entity.h"
 #include "view.h"
 
-SpriteViewProperty::SpriteViewProperty(ViewEntity* parent, const std::string& path, const SchemaItem* schemaItem)
-    : ViewProperty(parent, path, schemaItem)
+PB_DEFINE_ENTITY(SpriteViewProperty)
+
+SpriteViewProperty::SpriteViewProperty(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity)
+    : ViewProperty(scene, parent, creationEntity)
 {
-    CreateComponent<pb::SpriteComponent>()->SetLayer(1);
     
-    Refresh();
 }
 
 SpriteViewProperty::~SpriteViewProperty()
 {
-    DestroyComponent(GetComponent<pb::SpriteComponent>());
+    
 }
 
-void SpriteViewProperty::Update(float time)
+void SpriteViewProperty::Initialise(const std::string &path, const SchemaItem *schemaItem)
 {
-    ViewProperty::Update(time);
-}
-
-void SpriteViewProperty::Render(int layer)
-{
-    ViewProperty::Render(layer);
+    ViewProperty::Initialise(path, schemaItem);
+    
+    CreateComponent<pb::SpriteComponent>()->SetLayer(1);
+    
+    Refresh();
 }
 
 void SpriteViewProperty::Refresh()

@@ -2,13 +2,13 @@
 
 class SelectManipulator : public Manipulator
 {
-public:
-    SelectManipulator(pb::Scene* scene);
+    PB_DECLARE_ENTITY
+    
+protected:
+    SelectManipulator(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity);
     virtual ~SelectManipulator();
     
-    virtual pb::Uid GetType() const;
-    static pb::Uid GetStaticType();
-    
+public:
     virtual std::string GetName();
     virtual char GetKey();
     

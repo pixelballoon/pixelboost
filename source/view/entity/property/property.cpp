@@ -7,10 +7,8 @@
 
 PB_DEFINE_ENTITY(ViewProperty)
 
-ViewProperty::ViewProperty(ViewEntity* parent, const std::string& path, const SchemaItem* schemaItem)
-    : pb::Entity(parent->GetScene(), parent, 0)
-    , _Path(path)
-    , _SchemaItem(schemaItem)
+ViewProperty::ViewProperty(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity)
+    : pb::Entity(scene, parent, creationEntity)
     , _BoundsDirty(true)
 {
     CreateComponent<pb::BasicTransformComponent>();
@@ -20,17 +18,14 @@ ViewProperty::ViewProperty(ViewEntity* parent, const std::string& path, const Sc
 
 ViewProperty::~ViewProperty()
 {
-    GetViewEntity()->RemoveProperty(this);
+    if (GetViewEntity())
+        GetViewEntity()->RemoveProperty(this);
 }
 
-void ViewProperty::Update(float time)
+void ViewProperty::Initialise(const std::string& path, const SchemaItem* schemaItem)
 {
-    
-}
-
-void ViewProperty::Render(int layer)
-{
-    
+    _Path = path;
+    _SchemaItem = schemaItem;
 }
 
 void ViewProperty::Refresh()

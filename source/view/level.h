@@ -28,15 +28,13 @@ class ViewEntity;
 
 class Level : public pb::MouseHandler, public pb::Entity
 {
-public:
-    Level(pb::Scene* scene);
+    PB_DECLARE_ENTITY
+    
+protected:
+    Level(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationData);
     ~Level();
     
-    virtual pb::Uid GetType() const;
-    static pb::Uid GetStaticType();
-            
-    void Update(float time);
-    
+public:
     void Clear();
     
     void SetRecord(ProjectRecord* record);

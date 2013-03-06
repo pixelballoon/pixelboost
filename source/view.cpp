@@ -237,14 +237,14 @@ void View::Initialise()
     pb::Renderer::Instance()->AddViewport(_UiViewport);
     
     _ManipulatorManager = new ManipulatorManager(_LevelScene);
-    _ManipulatorManager->AddManipulator(new SelectManipulator(_LevelScene));
-    _ManipulatorManager->AddManipulator(new MoveManipulator(_LevelScene));
-    _ManipulatorManager->AddManipulator(new RotateManipulator(_LevelScene));
-    _ManipulatorManager->AddManipulator(new ScaleManipulator(_LevelScene));
-    _ManipulatorManager->AddManipulator(new CreateManipulator(_LevelScene));
+    _ManipulatorManager->AddManipulator(_LevelScene->CreateEntity<SelectManipulator>(0, 0));
+    _ManipulatorManager->AddManipulator(_LevelScene->CreateEntity<MoveManipulator>(0, 0));
+    _ManipulatorManager->AddManipulator(_LevelScene->CreateEntity<RotateManipulator>(0, 0));
+    _ManipulatorManager->AddManipulator(_LevelScene->CreateEntity<ScaleManipulator>(0, 0));
+    _ManipulatorManager->AddManipulator(_LevelScene->CreateEntity<CreateManipulator>(0, 0));
     _ManipulatorManager->SetActiveManipulator("select");
     
-    _Level = new Level(_LevelScene);
+    _Level = _LevelScene->CreateEntity<Level>(0, 0);
     
     _GwenRenderer = new pb::GwenRenderer();
     _GwenRenderer->Init();

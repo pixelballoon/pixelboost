@@ -12,12 +12,12 @@ class ViewProperty : public pb::Entity
 {
     PB_DECLARE_ENTITY
     
-public:
-    ViewProperty(ViewEntity* parent, const std::string& path, const SchemaItem* schemaItem);
+protected:
+    ViewProperty(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity);
     virtual ~ViewProperty();
     
-    virtual void Update(float time);
-    virtual void Render(int layer);
+public:
+    virtual void Initialise(const std::string& path, const SchemaItem* schemaItem);
     
     virtual void Refresh();
     

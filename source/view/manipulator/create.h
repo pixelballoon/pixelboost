@@ -5,12 +5,11 @@
 
 class CreateManipulator : public Manipulator
 {
-public:
-    CreateManipulator(pb::Scene* scene);
-    virtual ~CreateManipulator();
+    PB_DECLARE_ENTITY
     
-    virtual pb::Uid GetType() const;
-    static pb::Uid GetStaticType();
+public:
+    CreateManipulator(pb::Scene* scene, pb::Entity* entity, pb::DbEntity* creationEntity);
+    virtual ~CreateManipulator();
     
     virtual std::string GetName();
     

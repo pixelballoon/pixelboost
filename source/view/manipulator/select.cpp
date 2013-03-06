@@ -12,8 +12,10 @@
 #include "core.h"
 #include "view.h"
 
-SelectManipulator::SelectManipulator(pb::Scene* scene)
-    : Manipulator(scene)
+PB_DEFINE_ENTITY(SelectManipulator)
+
+SelectManipulator::SelectManipulator(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity)
+    : Manipulator(scene, parent, creationEntity)
     , _Active(false)
     , _BoundsComponent(0)
 {
@@ -23,16 +25,6 @@ SelectManipulator::SelectManipulator(pb::Scene* scene)
 SelectManipulator::~SelectManipulator()
 {
     
-}
-
-pb::Uid SelectManipulator::GetType() const
-{
-    return SelectManipulator::GetStaticType();
-}
-
-pb::Uid SelectManipulator::GetStaticType()
-{
-    return pb::TypeHash("SelectManipulator");
 }
 
 std::string SelectManipulator::GetName()

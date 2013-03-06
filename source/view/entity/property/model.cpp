@@ -10,27 +10,26 @@
 #include "view/entity/entity.h"
 #include "view.h"
 
-ModelViewProperty::ModelViewProperty(ViewEntity* parent, const std::string& path, const SchemaItem* schemaItem)
-    : ViewProperty(parent, path, schemaItem)
+PB_DEFINE_ENTITY(ModelViewProperty)
+
+ModelViewProperty::ModelViewProperty(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity)
+    : ViewProperty(scene, parent, creationEntity)
 {
-    CreateComponent<pb::ModelComponent>()->SetLayer(1);
     
-    Refresh();
 }
 
 ModelViewProperty::~ModelViewProperty()
 {
-    DestroyComponent(GetComponent<pb::ModelComponent>());
+    
 }
 
-void ModelViewProperty::Update(float time)
+void ModelViewProperty::Initialise(const std::string &path, const SchemaItem *schemaItem)
 {
-    ViewProperty::Update(time);
-}
-
-void ModelViewProperty::Render(int layer)
-{
-    ViewProperty::Render(layer);
+    ViewProperty::Initialise(path, schemaItem);
+    
+    CreateComponent<pb::ModelComponent>()->SetLayer(1);
+    
+    Refresh();
 }
 
 void ModelViewProperty::Refresh()

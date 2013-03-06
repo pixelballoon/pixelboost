@@ -16,8 +16,10 @@
 #include "core.h"
 #include "view.h"
 
-Level::Level(pb::Scene* scene)
-    : Entity(scene, 0, 0)
+PB_DEFINE_ENTITY(Level)
+
+Level::Level(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationData)
+    : Entity(scene, parent, creationData)
     , _Record(0)
 {
     View::Instance()->GetMouseManager()->AddHandler(this);
@@ -40,24 +42,6 @@ Level::~Level()
     View::Instance()->GetMouseManager()->RemoveHandler(this);
     
     Clear();
-}
-
-pb::Uid Level::GetType() const
-{
-    return Level::GetStaticType();
-}
-
-pb::Uid Level::GetStaticType()
-{
-    return pb::TypeHash("Level");
-}
-
-void Level::Update(float time)
-{
-    for (EntityMap::iterator it = _Entities.begin(); it != _Entities.end(); ++it)
-    {
-        it->second->Update(time);
-    }    
 }
 
 void Level::Clear()
@@ -139,7 +123,8 @@ void Level::CreateEntity(Uid uid)
 
 void Level::CreateEntity(ProjectEntity* entity)
 {
-    ViewEntity* viewEntity = new ViewEntity(GetScene(), entity);
+    ViewEntity* viewEntity = GetScene()->CreateEntity<ViewEntity>(0, 0);
+    viewEntity->Initialise(entity);
     _Entities[viewEntity->GetEntityUid()] = viewEntity;
     entityAdded(viewEntity);
 }
@@ -162,7 +147,7 @@ void Level::DestroyEntity(ViewEntity* entity)
     
     if (it != _Entities.end())
     {
-        GetScene()->DestroyEntity(it->second);
+        it->second->Destroy();
         entityRemoved(it->second);
         _Entities.erase(it);
     }

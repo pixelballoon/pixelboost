@@ -5,13 +5,13 @@
 
 class RotateManipulator : public Manipulator
 {
-public:
-    RotateManipulator(pb::Scene* scene);
+    PB_DECLARE_ENTITY
+    
+protected:
+    RotateManipulator(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity);
     virtual ~RotateManipulator();
     
-    virtual pb::Uid GetType() const;
-    static pb::Uid GetStaticType();
-    
+public:
     virtual std::string GetName();
     virtual char GetKey();
     

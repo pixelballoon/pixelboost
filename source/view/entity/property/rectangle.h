@@ -9,13 +9,15 @@ namespace pb
 
 class RectangleViewProperty : public ViewProperty
 {
-public:
-    RectangleViewProperty(ViewEntity* parent, const std::string& path, const SchemaItem* item);
+    PB_DECLARE_ENTITY
+    
+protected:
+    RectangleViewProperty(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity);
     virtual ~RectangleViewProperty();
     
-    virtual void Update(float time);
-    virtual void Render(int layer);
-    
+public:
+    virtual void Initialise(const std::string &path, const SchemaItem *schemaItem);
+
     virtual void Refresh();
     
 protected:

@@ -61,9 +61,11 @@ public:
         return View::Instance()->GetManipulatorManager()->OnMouseMove(position);
     }
 };
+
+PB_DEFINE_ENTITY_ABSTRACT(Manipulator)
     
-Manipulator::Manipulator(pb::Scene* scene)
-    : pb::Entity(scene, 0, 0)
+Manipulator::Manipulator(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity)
+    : pb::Entity(scene, parent, creationEntity)
 {
     
 }

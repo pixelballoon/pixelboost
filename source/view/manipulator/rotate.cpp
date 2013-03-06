@@ -7,8 +7,10 @@
 #include "core.h"
 #include "view.h"
 
-RotateManipulator::RotateManipulator(pb::Scene* scene)
-    : Manipulator(scene)
+PB_DEFINE_ENTITY(RotateManipulator)
+
+RotateManipulator::RotateManipulator(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity)
+    : Manipulator(scene, parent, creationEntity)
 {
     
 }
@@ -16,16 +18,6 @@ RotateManipulator::RotateManipulator(pb::Scene* scene)
 RotateManipulator::~RotateManipulator()
 {
     
-}
-
-pb::Uid RotateManipulator::GetType() const
-{
-    return RotateManipulator::GetStaticType();
-}
-
-pb::Uid RotateManipulator::GetStaticType()
-{
-    return pb::TypeHash("RotateManipulator");
 }
 
 std::string RotateManipulator::GetName()

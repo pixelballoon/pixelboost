@@ -12,8 +12,10 @@
 #include "core.h"
 #include "view.h"
 
-CreateManipulator::CreateManipulator(pb::Scene* scene)
-    : Manipulator(scene)
+PB_DEFINE_ENTITY(CreateManipulator)
+
+CreateManipulator::CreateManipulator(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity)
+    : Manipulator(scene, parent, creationEntity)
     , _CreateMode(false)
 {
     
@@ -22,16 +24,6 @@ CreateManipulator::CreateManipulator(pb::Scene* scene)
 CreateManipulator::~CreateManipulator()
 {
     
-}
-
-pb::Uid CreateManipulator::GetType() const
-{
-    return CreateManipulator::GetStaticType();
-}
-
-pb::Uid CreateManipulator::GetStaticType()
-{
-    return pb::TypeHash("CreateManipulator");
 }
 
 std::string CreateManipulator::GetName()

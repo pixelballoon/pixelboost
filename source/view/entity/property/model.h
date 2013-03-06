@@ -9,12 +9,14 @@ namespace pb
 
 class ModelViewProperty : public ViewProperty
 {
-public:
-    ModelViewProperty(ViewEntity* parent, const std::string& path, const SchemaItem* item);
+    PB_DECLARE_ENTITY
+    
+protected:
+    ModelViewProperty(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity);
     virtual ~ModelViewProperty();
     
-    virtual void Update(float time);
-    virtual void Render(int layer);
+public:
+    virtual void Initialise(const std::string &path, const SchemaItem *schemaItem);
     
     virtual void Refresh();
     

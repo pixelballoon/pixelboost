@@ -28,12 +28,12 @@ class ViewEntity : public pb::Entity
 {
     PB_DECLARE_ENTITY
     
-public:
-    ViewEntity(pb::Scene* scene, ProjectEntity* entity);
+protected:
+    ViewEntity(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity);
     virtual ~ViewEntity();
     
-    void Update(float time);
-    void Render(int layer);
+public:
+    void Initialise(ProjectEntity* entity);
     
     ProjectEntity* GetEntity();
     
@@ -61,6 +61,8 @@ public:
     ViewProperty* GetPropertyById(Uid uid);
 
 private:
+    void OnUpdate(const pb::Message& message);
+    
     void OnSelectionChanged(const Selection* selection);
     
     Uid AddProperty(ViewProperty* property);
@@ -90,7 +92,6 @@ private:
     
     bool _BoundsDirty;
     pb::BoundingBox _BoundingBox;
-    pb::RectangleComponent* _BoundsComponent;
     
     friend class ViewProperty;
 };

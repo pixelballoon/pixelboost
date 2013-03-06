@@ -5,13 +5,13 @@
 
 class ScaleManipulator : public Manipulator
 {
-public:
-    ScaleManipulator(pb::Scene* scene);
+    PB_DECLARE_ENTITY
+    
+protected:
+    ScaleManipulator(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity);
     virtual ~ScaleManipulator();
     
-    virtual pb::Uid GetType() const;
-    static pb::Uid GetStaticType();
-    
+public:  
     virtual std::string GetName();
     virtual char GetKey();
     

@@ -7,8 +7,10 @@
 #include "core.h"
 #include "view.h"
 
-ScaleManipulator::ScaleManipulator(pb::Scene* scene)
-    : Manipulator(scene)
+PB_DEFINE_ENTITY(ScaleManipulator)
+
+ScaleManipulator::ScaleManipulator(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity)
+    : Manipulator(scene, parent, creationEntity)
 {
     
 }
@@ -16,16 +18,6 @@ ScaleManipulator::ScaleManipulator(pb::Scene* scene)
 ScaleManipulator::~ScaleManipulator()
 {
     
-}
-
-pb::Uid ScaleManipulator::GetType() const
-{
-    return ScaleManipulator::GetStaticType();
-}
-
-pb::Uid ScaleManipulator::GetStaticType()
-{
-    return pb::TypeHash("ScaleManipulator");
 }
 
 std::string ScaleManipulator::GetName()

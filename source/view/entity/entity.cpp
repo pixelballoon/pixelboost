@@ -1,6 +1,8 @@
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 #include "pixelboost/logic/component/graphics/rectangle.h"
 #include "pixelboost/logic/component/transform/basic.h"
+#include "pixelboost/logic/message/update.h"
+#include "pixelboost/logic/scene.h"
 
 #include "core/selection.h"
 #include "core/uidHelpers.h"
@@ -16,23 +18,11 @@
 
 PB_DEFINE_ENTITY(ViewEntity)
 
-ViewEntity::ViewEntity(pb::Scene* scene, ProjectEntity* entity)
-    : pb::Entity(scene, 0, 0)
-    , _BoundsComponent(0)
-    , _Entity(entity)
+ViewEntity::ViewEntity(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity)
+    : pb::Entity(scene, parent, creationEntity)
+    , _Entity(0)
 {
-    CreateComponent<pb::BasicTransformComponent>();
-
-    ResetTransform();
     
-    ParseProperties();
-    
-    _Entity->propertyChanged.Connect(this, &ViewEntity::OnPropertyChanged);
-    _Entity->destroyed.Connect(this, &ViewEntity::OnDestroyed);
-    
-    Core::Instance()->GetSelection().selectionChanged.Connect(this, &ViewEntity::OnSelectionChanged);
-    
-    OnSelectionChanged(&Core::Instance()->GetSelection());
 }
 
 ViewEntity::~ViewEntity()
@@ -46,17 +36,22 @@ ViewEntity::~ViewEntity()
     }
 }
 
-void ViewEntity::Update(float time)
+void ViewEntity::Initialise(ProjectEntity* entity)
 {
-    for (PropertyMap::iterator it = _Properties.begin(); it != _Properties.end(); ++it)
-    {
-        it->second->Update(time);
-    }
-}
-
-void ViewEntity::Render(int layer)
-{
-
+    _Entity = entity;
+    
+    CreateComponent<pb::BasicTransformComponent>();
+    
+    ResetTransform();
+    
+    ParseProperties();
+    
+    _Entity->propertyChanged.Connect(this, &ViewEntity::OnPropertyChanged);
+    _Entity->destroyed.Connect(this, &ViewEntity::OnDestroyed);
+    
+    Core::Instance()->GetSelection().selectionChanged.Connect(this, &ViewEntity::OnSelectionChanged);
+    
+    OnSelectionChanged(&Core::Instance()->GetSelection());
 }
 
 ProjectEntity* ViewEntity::GetEntity()
@@ -176,7 +171,7 @@ void ViewEntity::RemovePropertyById(Uid uid)
     PropertyMap::iterator it = _Properties.find(uid);
     if (it != _Properties.end())
     {
-        delete it->second;
+        it->second->Destroy();
         _Properties.erase(it);
     }
 }
@@ -194,25 +189,39 @@ Uid ViewEntity::GeneratePropertyId(const std::string& path)
     return uid;
 }
 
+void ViewEntity::OnUpdate(const pb::Message& message)
+{
+    pb::RectangleComponent* bounds = GetComponent<pb::RectangleComponent>();
+    
+    if (bounds)
+    {
+        UpdateBounds();
+        bounds->SetSize(glm::vec2(_BoundingBox.GetSize().x, _BoundingBox.GetSize().y)/glm::vec2(GetScale().x, GetScale().y));
+    }
+    
+    UnregisterMessageHandler<pb::UpdateMessage>(pb::MessageHandler(this, &ViewEntity::OnUpdate));
+}
+
 void ViewEntity::OnSelectionChanged(const Selection* selection)
 {
+    pb::RectangleComponent* bounds = GetComponent<pb::RectangleComponent>();
+    
     if (selection->IsSelected(GenerateSelectionUid(GetEntityUid())))
     {
         UpdateBounds();
         
-        if (!_BoundsComponent)
+        if (!bounds)
         {
-            _BoundsComponent = CreateComponent<pb::RectangleComponent>();
-            _BoundsComponent->SetColor(glm::vec4(0.2, 0.2, 0.4, 0.3));
-            _BoundsComponent->SetSolid(true);
-            _BoundsComponent->SetLayer(2);
-            _BoundsComponent->SetSize(glm::vec2(_BoundingBox.GetSize().x, _BoundingBox.GetSize().y)/glm::vec2(GetScale().x, GetScale().y));
+            bounds = CreateComponent<pb::RectangleComponent>();
+            bounds->SetColor(glm::vec4(0.2, 0.2, 0.4, 0.3));
+            bounds->SetSolid(true);
+            bounds->SetLayer(2);
+            bounds->SetSize(glm::vec2(_BoundingBox.GetSize().x, _BoundingBox.GetSize().y)/glm::vec2(GetScale().x, GetScale().y));
         }
     } else {
-        if (_BoundsComponent)
+        if (bounds)
         {
-            DestroyComponent(_BoundsComponent);
-            _BoundsComponent = 0;
+            DestroyComponent(bounds);
         }
     }
 }
@@ -293,13 +302,13 @@ void ViewEntity::ParseItem(const std::string& path, const SchemaItem* item)
         
         if (type == "sprite")
         {
-            new SpriteViewProperty(this, path, item);
+            GetScene()->CreateEntity<SpriteViewProperty>(this, 0)->Initialise(path, item);
         } else if (type == "model")
         {
-            new ModelViewProperty(this, path, item);
+            GetScene()->CreateEntity<ModelViewProperty>(this, 0)->Initialise(path, item);
         } else if (type == "rectangle")
         {
-            new RectangleViewProperty(this, path, item);
+            GetScene()->CreateEntity<RectangleViewProperty>(this, 0)->Initialise(path, item);
         }
     }
 }
@@ -326,6 +335,11 @@ void ViewEntity::DirtyBounds()
     for (PropertyMap::iterator it = _Properties.begin(); it != _Properties.end(); ++it)
     {
         it->second->DirtyBounds();
+    }
+    
+    if (GetComponent<pb::RectangleComponent>())
+    {
+        RegisterMessageHandler<pb::UpdateMessage>(pb::MessageHandler(this, &ViewEntity::OnUpdate));
     }
 }
 

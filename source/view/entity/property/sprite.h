@@ -9,12 +9,14 @@ namespace pb
 
 class SpriteViewProperty : public ViewProperty
 {
-public:
-    SpriteViewProperty(ViewEntity* parent, const std::string& path, const SchemaItem* item);
+    PB_DECLARE_ENTITY
+    
+protected:
+    SpriteViewProperty(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity);
     virtual ~SpriteViewProperty();
     
-    virtual void Update(float time);
-    virtual void Render(int layer);
+public:
+    virtual void Initialise(const std::string &path, const SchemaItem *schemaItem);
     
     virtual void Refresh();
     

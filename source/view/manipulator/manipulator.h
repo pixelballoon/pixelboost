@@ -18,10 +18,13 @@ class ManipulatorMouseHandler;
 
 class Manipulator : public pb::Entity
 {
-public:
-    Manipulator(pb::Scene* scene);
+    PB_DECLARE_ENTITY
+    
+protected:
+    Manipulator(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity);
     virtual ~Manipulator();
     
+public:
     virtual std::string GetName() = 0;
     virtual char GetKey();
     

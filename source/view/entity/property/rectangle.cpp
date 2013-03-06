@@ -11,27 +11,26 @@
 #include "view/entity/entity.h"
 #include "view.h"
 
-RectangleViewProperty::RectangleViewProperty(ViewEntity* parent, const std::string& path, const SchemaItem* schemaItem)
-    : ViewProperty(parent, path, schemaItem)
+PB_DEFINE_ENTITY(RectangleViewProperty)
+
+RectangleViewProperty::RectangleViewProperty(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity)
+    : ViewProperty(scene, parent, creationEntity)
 {
-    CreateComponent<pb::RectangleComponent>()->SetLayer(1);
     
-    Refresh();
 }
 
 RectangleViewProperty::~RectangleViewProperty()
 {
-    DestroyComponent(GetComponent<pb::RectangleComponent>());
+    
 }
 
-void RectangleViewProperty::Update(float time)
+void RectangleViewProperty::Initialise(const std::string &path, const SchemaItem *schemaItem)
 {
-    ViewProperty::Update(time);
-}
-
-void RectangleViewProperty::Render(int layer)
-{
-    ViewProperty::Render(layer);
+    ViewProperty::Initialise(path, schemaItem);
+    
+    CreateComponent<pb::RectangleComponent>()->SetLayer(1);
+    
+    Refresh();
 }
 
 void RectangleViewProperty::Refresh()
