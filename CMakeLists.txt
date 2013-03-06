@@ -111,6 +111,11 @@ set (VIEW_UI_PROPERTY_SOURCES
 	"source/view/ui/property/propertyPanel.h"
 	)
 
+set (VIEW_UI_SCENE_SOURCES
+	"source/view/ui/scene/sceneViewPanel.cpp"
+	"source/view/ui/scene/sceneViewPanel.h"
+	)
+
 set (VIEW_UI_SETTINGS_SOURCES
 	"source/view/ui/settings/moveManipulator.cpp"
 	"source/view/ui/settings/moveManipulator.h"
@@ -136,6 +141,7 @@ set (EDITOR_SOURCES
 	${VIEW_MANIPULATOR_SOURCES}
 	${VIEW_UI_CREATE_SOURCES}
 	${VIEW_UI_PROPERTY_SOURCES}
+	${VIEW_UI_SCENE_SOURCES}
 	${VIEW_UI_SETTINGS_SOURCES}
 	${VIEW_SOURCES}
 	"source/core.cpp"
@@ -153,6 +159,7 @@ source_group (view\\entity FILES ${VIEW_ENTITY_SOURCES})
 source_group (view\\manipulator FILES ${VIEW_MANIPULATOR_SOURCES})
 source_group (view\\ui\\create FILES ${VIEW_UI_CREATE_SOURCES})
 source_group (view\\ui\\property FILES ${VIEW_UI_PROPERTY_SOURCES})
+source_group (view\\ui\\scene FILES ${VIEW_UI_SCENE_SOURCES})
 source_group (view\\ui\\settings FILES ${VIEW_UI_SETTINGS_SOURCES})
 source_group (view FILES ${VIEW_SOURCES})
 
