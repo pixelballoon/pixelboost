@@ -11,6 +11,7 @@
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/buffer/bufferRenderer.h"
 #include "pixelboost/graphics/renderer/font/fontRenderer.h"
+#include "pixelboost/graphics/renderer/gui/guiRenderer.h"
 #include "pixelboost/graphics/renderer/model/modelRenderer.h"
 #include "pixelboost/graphics/renderer/particle/particleRenderer.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
@@ -75,6 +76,7 @@ Engine::Engine(void* platformContext, int argc, const char** argv)
     _SpriteRenderer = new SpriteRenderer();
     _PrimitiveRenderer = new PrimitiveRenderer();
     _FontRenderer = new FontRenderer();
+    new GuiRenderer();
 #endif
 
 #ifndef PIXELBOOST_DISABLE_GAMECENTER
@@ -107,6 +109,7 @@ Engine::~Engine()
 #endif
     
 #ifndef PIXELBOOST_DISABLE_GRAPHICS
+    delete GuiRenderer::Instance();
     delete _BufferRenderer;
     delete _FontRenderer;
     delete _ModelRenderer;

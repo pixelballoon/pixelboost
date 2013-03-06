@@ -225,7 +225,9 @@ set (GRAPHICS_RENDERER_SOURCES
 	"src/common/pixelboost/graphics/renderer/common/renderer.cpp"
 	"src/common/pixelboost/graphics/renderer/common/renderer.h"
 	"src/common/pixelboost/graphics/renderer/font/fontRenderer.cpp"
-	"src/common/pixelboost/graphics/renderer/font/fontRenderer.h"	
+	"src/common/pixelboost/graphics/renderer/font/fontRenderer.h"
+	"src/common/pixelboost/graphics/renderer/gui/guiRenderer.cpp"
+	"src/common/pixelboost/graphics/renderer/gui/guiRenderer.h"	
 	"src/common/pixelboost/graphics/renderer/gwen/gwenRenderer.cpp"
 	"src/common/pixelboost/graphics/renderer/gwen/gwenRenderer.h"
 	"src/common/pixelboost/graphics/renderer/model/modelRenderer.cpp"
@@ -280,6 +282,8 @@ set (LOGIC_COMPONENT_GRAPHICS_SOURCES
 	"src/common/pixelboost/logic/component/graphics/ellipse.h"
 	"src/common/pixelboost/logic/component/graphics/font.cpp"
 	"src/common/pixelboost/logic/component/graphics/font.h"
+	"src/common/pixelboost/logic/component/graphics/gui.cpp"
+	"src/common/pixelboost/logic/component/graphics/gui.h"
 	"src/common/pixelboost/logic/component/graphics/line.cpp"
 	"src/common/pixelboost/logic/component/graphics/line.h"
 	"src/common/pixelboost/logic/component/graphics/model.cpp"
@@ -328,6 +332,8 @@ set (LOGIC_COMPONENT_SOURCES
 set (LOGIC_MESSAGE_SOURCES
 	"src/common/pixelboost/logic/message/debug/render.cpp"
 	"src/common/pixelboost/logic/message/debug/render.h"
+	"src/common/pixelboost/logic/message/graphics/gui.cpp"
+	"src/common/pixelboost/logic/message/graphics/gui.h"
 	"src/common/pixelboost/logic/message/input/touch.cpp"
 	"src/common/pixelboost/logic/message/input/touch.h"
 	"src/common/pixelboost/logic/message/particle/finished.cpp"
@@ -342,15 +348,26 @@ set (LOGIC_MESSAGE_SOURCES
 	"src/common/pixelboost/logic/message/update.h"
 	)
 
-set (LOGIC_SYSTEM_SOURCES
+set (LOGIC_SYSTEM_DEBUG_SOURCES
 	"src/common/pixelboost/logic/system/debug/render.cpp"
 	"src/common/pixelboost/logic/system/debug/render.h"
+	)
+
+set (LOGIC_SYSTEM_GRAPHICS_GUI_SOURCES
+	"src/common/pixelboost/logic/system/graphics/gui/gui.cpp"
+	"src/common/pixelboost/logic/system/graphics/gui/gui.h"
+	)
+
+set (LOGIC_SYSTEM_GRAPHICS_RENDER_SOURCES
 	"src/common/pixelboost/logic/system/graphics/render/basic.cpp"
 	"src/common/pixelboost/logic/system/graphics/render/basic.h"
 	"src/common/pixelboost/logic/system/graphics/render/bounds.cpp"
 	"src/common/pixelboost/logic/system/graphics/render/bounds.h"
 	"src/common/pixelboost/logic/system/graphics/render/render.cpp"
 	"src/common/pixelboost/logic/system/graphics/render/render.h"
+	)
+
+set (LOGIC_SYSTEM_PHYSICS_SOURCES
 	"src/common/pixelboost/logic/system/physics/2d/physics.cpp"
 	"src/common/pixelboost/logic/system/physics/2d/physics.h"
 	)
@@ -440,7 +457,10 @@ set (PIXELBOOST_SOURCES
 	${LOGIC_COMPONENT_TRANSFORM_SOURCES}
 	${LOGIC_COMPONENT_SOURCES}
 	${LOGIC_MESSAGE_SOURCES}
-	${LOGIC_SYSTEM_SOURCES}
+	${LOGIC_SYSTEM_DEBUG_SOURCES}
+	${LOGIC_SYSTEM_GRAPHICS_GUI_SOURCES}
+	${LOGIC_SYSTEM_GRAPHICS_RENDER_SOURCES}
+	${LOGIC_SYSTEM_PHYSICS_SOURCES}
 	${LOGIC_SOURCES}
 	${MISC_SOURCES}
 	${NETWORK_SOURCES}
@@ -519,7 +539,10 @@ source_group (logic\\component\\physics FILES ${LOGIC_COMPONENT_PHYSICS_SOURCES}
 source_group (logic\\component\\transform FILES ${LOGIC_COMPONENT_TRANSFORM_SOURCES})
 source_group (logic\\component FILES ${LOGIC_COMPONENT_SOURCES})
 source_group (logic\\message FILES ${LOGIC_MESSAGE_SOURCES})
-source_group (logic\\system FILES ${LOGIC_SYSTEM_SOURCES})
+source_group (logic\\system\\debug FILES ${LOGIC_SYSTEM_DEBUG_SOURCES})
+source_group (logic\\system\\graphics\\gui FILES ${LOGIC_SYSTEM_GRAPHICS_GUI_SOURCES})
+source_group (logic\\system\\graphics\\render FILES ${LOGIC_SYSTEM_GRAPHICS_RENDER_SOURCES})	
+source_group (logic\\system\\physics FILES ${LOGIC_SYSTEM_PHYSICS_SOURCES})
 source_group (logic FILES ${LOGIC_SOURCES})
 source_group (misc FILES ${MISC_SOURCES})
 source_group (network FILES ${NETWORK_SOURCES})
