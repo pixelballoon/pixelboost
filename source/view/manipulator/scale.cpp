@@ -20,7 +20,7 @@ ScaleManipulator::~ScaleManipulator()
     
 }
 
-std::string ScaleManipulator::GetName()
+std::string ScaleManipulator::GetManipulatorName()
 {
     return "scale";
 }

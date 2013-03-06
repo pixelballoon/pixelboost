@@ -20,7 +20,7 @@ RotateManipulator::~RotateManipulator()
     
 }
 
-std::string RotateManipulator::GetName()
+std::string RotateManipulator::GetManipulatorName()
 {
     return "rotate";
 }

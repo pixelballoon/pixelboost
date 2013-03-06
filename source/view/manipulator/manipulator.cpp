@@ -127,7 +127,7 @@ void ManipulatorManager::Render(int layer)
 
 void ManipulatorManager::AddManipulator(Manipulator* manipulator)
 {
-    _Manipulators[manipulator->GetName()] = manipulator;
+    _Manipulators[manipulator->GetManipulatorName()] = manipulator;
 }
 
 Manipulator* ManipulatorManager::GetManipulator(const std::string& name)
@@ -182,7 +182,7 @@ bool ManipulatorManager::OnKeyDown(pb::KeyboardKey key, pb::ModifierKeys modifie
         {
             if (character == it->second->GetKey())
             {
-                SetActiveManipulator(it->second->GetName());
+                SetActiveManipulator(it->second->GetManipulatorName());
                 return true;
             }
         }

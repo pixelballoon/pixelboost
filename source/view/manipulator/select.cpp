@@ -27,7 +27,7 @@ SelectManipulator::~SelectManipulator()
     
 }
 
-std::string SelectManipulator::GetName()
+std::string SelectManipulator::GetManipulatorName()
 {
     return "select";
 }

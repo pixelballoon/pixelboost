@@ -9,7 +9,7 @@ protected:
     virtual ~SelectManipulator();
     
 public:
-    virtual std::string GetName();
+    virtual std::string GetManipulatorName();
     virtual char GetKey();
     
     virtual void Render(int layer);

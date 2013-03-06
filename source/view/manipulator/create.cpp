@@ -26,7 +26,7 @@ CreateManipulator::~CreateManipulator()
     
 }
 
-std::string CreateManipulator::GetName()
+std::string CreateManipulator::GetManipulatorName()
 {
     return "create";
 }

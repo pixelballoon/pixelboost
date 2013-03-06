@@ -11,7 +11,7 @@ public:
     CreateManipulator(pb::Scene* scene, pb::Entity* entity, pb::DbEntity* creationEntity);
     virtual ~CreateManipulator();
     
-    virtual std::string GetName();
+    virtual std::string GetManipulatorName();
     
 public:
     void SetEntityType(const std::string& entity);

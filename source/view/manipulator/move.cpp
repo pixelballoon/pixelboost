@@ -21,7 +21,7 @@ MoveManipulator::~MoveManipulator()
     
 }
 
-std::string MoveManipulator::GetName()
+std::string MoveManipulator::GetManipulatorName()
 {
     return "move";
 }

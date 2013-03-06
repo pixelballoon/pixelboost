@@ -25,7 +25,7 @@ protected:
     virtual ~Manipulator();
     
 public:
-    virtual std::string GetName() = 0;
+    virtual std::string GetManipulatorName() = 0;
     virtual char GetKey();
     
     virtual void Render(int layer);

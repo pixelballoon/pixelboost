@@ -12,7 +12,7 @@ protected:
     virtual ~MoveManipulator();
     
 public:
-    virtual std::string GetName();
+    virtual std::string GetManipulatorName();
     virtual char GetKey();
     
     virtual bool OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position);
