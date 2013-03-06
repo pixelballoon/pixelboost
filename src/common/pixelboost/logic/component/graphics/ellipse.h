@@ -4,7 +4,7 @@
 
 #include "glm/glm.hpp"
 
-#include "pixelboost/logic/component.h"
+#include "pixelboost/logic/component/graphics/renderable.h"
 
 namespace pb
 {
@@ -12,7 +12,7 @@ namespace pb
 class Message;
 class PrimitiveRenderableEllipse;
     
-class EllipseComponent : public Component
+class EllipseComponent : public RenderableComponent<PrimitiveRenderableEllipse>
 {
     PB_DECLARE_COMPONENT
     
@@ -31,16 +31,6 @@ public:
     
     void SetSolid(bool solid);
     bool GetSolid();
-    
-    void SetLocalTransform(const glm::mat4x4& transform);
-    
-private:
-    void OnTransformChanged(const Message& message);
-    void UpdateTransform();
-    
-private:
-    glm::mat4x4 _LocalTransform;
-    PrimitiveRenderableEllipse* _Renderable;
 };
     
 }

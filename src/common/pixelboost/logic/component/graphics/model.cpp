@@ -15,92 +15,57 @@
 
 using namespace pb;
 
+template class pb::RenderableComponent<pb::ModelRenderable>;
+
 PB_DEFINE_COMPONENT(pb::ModelComponent)
 
 ModelComponent::ModelComponent(Entity* parent)
-    : Component(parent)
+    : RenderableComponent<pb::ModelRenderable>(parent)
 {
-    _Renderable = new ModelRenderable(parent->GetUid());
-    
-    GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
-    
-    GetEntity()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &ModelComponent::OnTransformChanged));
-    
-    UpdateTransform();
+
 }
 
 ModelComponent::~ModelComponent()
 {
-    GetEntity()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &ModelComponent::OnTransformChanged));
-    
-    GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
-    
-    delete _Renderable;
+
 }
 
 void ModelComponent::SetShader(Shader* shader)
 {
-    _Renderable->SetShader(shader);
+    GetRenderable()->SetShader(shader);
 }
 
 void ModelComponent::SetLayer(int layer)
 {
-    _Renderable->SetLayer(layer);
+    GetRenderable()->SetLayer(layer);
 }
 
 void ModelComponent::SetModel(Model* model)
 {
-    _Renderable->SetModel(model);
+    GetRenderable()->SetModel(model);
 }
 
 Model* ModelComponent::GetModel()
 {
-    return _Renderable->GetModel();
+    return GetRenderable()->GetModel();
 }
 
 void ModelComponent::SetTexture(Texture* texture)
 {
-    _Renderable->SetTexture(texture);
+    GetRenderable()->SetTexture(texture);
 }
 
 Texture* ModelComponent::GetTexture()
 {
-    return _Renderable->GetTexture();
+    return GetRenderable()->GetTexture();
 }
 
 void ModelComponent::SetTint(const glm::vec4& tint)
 {
-    _Renderable->SetTint(tint);
+    GetRenderable()->SetTint(tint);
 }
 
 void ModelComponent::SetAlphaBlend(bool alphaBlend)
 {
-    _Renderable->SetAlphaBlend(alphaBlend);
-}
-
-void ModelComponent::SetLocalTransform(const glm::mat4x4& transform)
-{
-    _LocalTransform = transform;
-    
-    UpdateTransform();
-}
-
-void ModelComponent::OnTransformChanged(const Message& message)
-{
-    UpdateTransform();
-}
-
-void ModelComponent::UpdateTransform()
-{
-    TransformComponent* transform = GetEntity()->GetComponent<TransformComponent>();    
-    
-    if (transform)
-    {
-        _Renderable->SetTransform(transform->GetMatrix() * _LocalTransform);
-    }
-}
-
-const ModelRenderable* ModelComponent::GetRenderable() const
-{
-    return _Renderable;
+    GetRenderable()->SetAlphaBlend(alphaBlend);
 }

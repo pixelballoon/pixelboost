@@ -18,7 +18,7 @@ namespace pb
     class BufferRenderable : public Renderable
     {
     public:
-        BufferRenderable(Uid entityId, IndexBuffer* indexBuffer, VertexBuffer* vertexBuffer, Texture* texture, int numElements);
+        BufferRenderable(Uid entityId);
         virtual ~BufferRenderable();
         
         virtual Uid GetType();

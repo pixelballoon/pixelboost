@@ -10,101 +10,67 @@ using namespace pb;
 PB_DEFINE_COMPONENT(pb::BufferComponent)
 
 BufferComponent::BufferComponent(Entity* parent)
-    : Component(parent)
+    : RenderableComponent<BufferRenderable>(parent)
 {
-    _Renderable = new BufferRenderable(GetEntityUid(), 0, 0, 0, 0);
     
-    GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
-    
-    GetEntity()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &BufferComponent::OnTransformChanged));
-    
-    UpdateTransform();
 }
 
 BufferComponent::~BufferComponent()
 {
-    GetEntity()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &BufferComponent::OnTransformChanged));
     
-    GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
-    
-    delete _Renderable;
 }
 
 void BufferComponent::SetLayer(int layer)
 {
-    _Renderable->SetLayer(layer);
+    GetRenderable()->SetLayer(layer);
 }
 
 void BufferComponent::SetIndexBuffer(IndexBuffer* indexBuffer)
 {
-    _Renderable->SetIndexBuffer(indexBuffer);
+    GetRenderable()->SetIndexBuffer(indexBuffer);
 }
 
 IndexBuffer* BufferComponent::GetIndexBuffer()
 {
-    return _Renderable->GetIndexBuffer();
+    return GetRenderable()->GetIndexBuffer();
 }
 
 void BufferComponent::SetVertexBuffer(VertexBuffer* vertexBuffer)
 {
-    _Renderable->SetVertexBuffer(vertexBuffer);
+    GetRenderable()->SetVertexBuffer(vertexBuffer);
 }
 
 VertexBuffer* BufferComponent::GetVertexBuffer()
 {
-    return _Renderable->GetVertexBuffer();
+    return GetRenderable()->GetVertexBuffer();
 }
 
 void BufferComponent::SetTexture(Texture* texture)
 {
-    _Renderable->SetTexture(texture);
+    GetRenderable()->SetTexture(texture);
 }
 
 Texture* BufferComponent::GetTexture()
 {
-    return _Renderable->GetTexture();
+    return GetRenderable()->GetTexture();
 }
 
 void BufferComponent::SetShader(Shader* shader)
 {
-    _Renderable->SetShader(shader);
+    GetRenderable()->SetShader(shader);
 }
 
 Shader* BufferComponent::GetShader()
 {
-    return _Renderable->GetShader();
+    return GetRenderable()->GetShader();
 }
 
 void BufferComponent::SetNumElements(int numElements)
 {
-    _Renderable->SetNumElements(numElements);
+    GetRenderable()->SetNumElements(numElements);
 }
 
 int BufferComponent::GetNumElements()
 {
-    return _Renderable->GetNumElements();
-}
-
-void BufferComponent::SetLocalTransform(const glm::mat4x4& transform)
-{
-    _LocalTransform = transform;
-    
-    UpdateTransform();
-}
-
-void BufferComponent::OnTransformChanged(const Message& message)
-{
-    UpdateTransform();
-}
-
-void BufferComponent::UpdateTransform()
-{
-    TransformComponent* transform = GetEntity()->GetComponent<TransformComponent>();
-    
-    if (transform)
-    {
-        _Renderable->SetTransform(transform->GetMatrix() * _LocalTransform);
-    } else {
-        _Renderable->SetTransform(_LocalTransform);
-    }
+    return GetRenderable()->GetNumElements();
 }

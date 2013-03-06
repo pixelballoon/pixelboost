@@ -14,72 +14,40 @@ using namespace pb;
 PB_DEFINE_COMPONENT(pb::SpriteComponent)
 
 SpriteComponent::SpriteComponent(Entity* parent)
-    : Component(parent)
+    : RenderableComponent<pb::SpriteRenderable>(parent)
 {
-    _Renderable = new SpriteRenderable(parent->GetUid());
     
-    GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
-    
-    GetEntity()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &SpriteComponent::OnTransformChanged));
-    
-    UpdateTransform();
 }
 
 SpriteComponent::~SpriteComponent()
 {
-    GetEntity()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &SpriteComponent::OnTransformChanged));
     
-    GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
-    
-    delete _Renderable;
 }
 
 glm::vec2 SpriteComponent::GetSize()
 {
-    if (_Renderable->GetSprite())
-        return _Renderable->GetSprite()->_Size;
+    if (GetRenderable()->GetSprite())
+        return GetRenderable()->GetSprite()->_Size;
     
     return glm::vec2(0,0);
 }
 
 void SpriteComponent::SetRenderPass(RenderPass renderPass)
 {
-    _Renderable->SetRenderPass(renderPass);
+    GetRenderable()->SetRenderPass(renderPass);
 }
 
 void SpriteComponent::SetLayer(int layer)
 {
-    _Renderable->SetLayer(layer);
+    GetRenderable()->SetLayer(layer);
 }
 
 void SpriteComponent::SetSprite(const std::string& sprite)
 {
-    _Renderable->SetSprite(Engine::Instance()->GetSpriteRenderer()->GetSprite(sprite));
+    GetRenderable()->SetSprite(Engine::Instance()->GetSpriteRenderer()->GetSprite(sprite));
 }
 
 void SpriteComponent::SetTint(const glm::vec4& tint)
 {
-    _Renderable->SetTint(tint);
-}
-
-void SpriteComponent::SetLocalTransform(const glm::mat4x4& transform)
-{
-    _LocalTransform = transform;
-    
-    UpdateTransform();
-}
-
-void SpriteComponent::OnTransformChanged(const Message& message)
-{
-    UpdateTransform();
-}
-
-void SpriteComponent::UpdateTransform()
-{
-    TransformComponent* transform = GetEntity()->GetComponent<TransformComponent>();    
-    
-    if (transform)
-    {
-        _Renderable->SetTransform(transform->GetMatrix() * _LocalTransform);
-    }
+    GetRenderable()->SetTint(tint);
 }

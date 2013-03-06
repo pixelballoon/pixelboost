@@ -12,81 +12,47 @@ using namespace pb;
 PB_DEFINE_COMPONENT(pb::EllipseComponent)
 
 EllipseComponent::EllipseComponent(Entity* parent)
-    : Component(parent)
+    : RenderableComponent<pb::PrimitiveRenderableEllipse>(parent)
 {
-    _Renderable = new PrimitiveRenderableEllipse(parent->GetUid());
     
-    GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
-    
-    GetEntity()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &EllipseComponent::OnTransformChanged));
-    
-    UpdateTransform();
 }
 
 EllipseComponent::~EllipseComponent()
 {
-    GetEntity()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &EllipseComponent::OnTransformChanged));
     
-    GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
-    
-    delete _Renderable;
 }
 
 void EllipseComponent::SetLayer(int layer)
 {
-    _Renderable->SetLayer(layer);
+    GetRenderable()->SetLayer(layer);
 }
 
 void EllipseComponent::SetColor(glm::vec4 color)
 {
-    _Renderable->SetColor(color);
+    GetRenderable()->SetColor(color);
 }
 
 glm::vec4 EllipseComponent::GetColor()
 {
-    return _Renderable->GetColor();
+    return GetRenderable()->GetColor();
 }
 
 void EllipseComponent::SetSize(glm::vec2 size)
 {
-    _Renderable->SetSize(size);
+    GetRenderable()->SetSize(size);
 }
 
 glm::vec2 EllipseComponent::GetSize()
 {
-    return _Renderable->GetSize();
+    return GetRenderable()->GetSize();
 }
 
 void EllipseComponent::SetSolid(bool solid)
 {
-    _Renderable->SetSolid(solid);
+    GetRenderable()->SetSolid(solid);
 }
 
 bool EllipseComponent::GetSolid()
 {
-    return _Renderable->GetSolid();
-}
-
-void EllipseComponent::SetLocalTransform(const glm::mat4x4& transform)
-{
-    _LocalTransform = transform;
-    
-    UpdateTransform();
-}
-
-void EllipseComponent::OnTransformChanged(const Message& message)
-{
-    UpdateTransform();
-}
-
-void EllipseComponent::UpdateTransform()
-{
-    TransformComponent* transform = GetEntity()->GetComponent<TransformComponent>();
-    
-    if (transform)
-    {
-        _Renderable->SetTransform(transform->GetMatrix() * _LocalTransform);
-    } else {
-        _Renderable->SetTransform(_LocalTransform);
-    }
+    return GetRenderable()->GetSolid();
 }

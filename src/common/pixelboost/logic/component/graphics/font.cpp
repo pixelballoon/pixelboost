@@ -15,79 +15,47 @@ using namespace pb;
 PB_DEFINE_COMPONENT(pb::FontComponent)
 
 FontComponent::FontComponent(Entity* parent)
-    : Component(parent)
+    : RenderableComponent<pb::FontRenderable>(parent)
 {
-    _Renderable = new FontRenderable(GetEntity()->GetUid());
-    
-    GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
-    
-    GetEntity()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &FontComponent::OnTransformChanged));
-    
-    UpdateTransform();
+
 }
 
 FontComponent::~FontComponent()
 {
-    GetEntity()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &FontComponent::OnTransformChanged));
-    
-    GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
-    
-    delete _Renderable;
+
 }
 
 void FontComponent::SetRenderPass(RenderPass renderPass)
 {
-    _Renderable->SetRenderPass(renderPass);
+    GetRenderable()->SetRenderPass(renderPass);
 }
 
 void FontComponent::SetLayer(int layer)
 {
-    _Renderable->SetLayer(layer);
+    GetRenderable()->SetLayer(layer);
 }
 
 void FontComponent::SetAlignment(FontAlign alignment)
 {
-    _Renderable->SetAlignment(alignment);
+    GetRenderable()->SetAlignment(alignment);
 }
 
 void FontComponent::SetFont(const std::string& font)
 {
-    _Renderable->SetFont(font);
+    GetRenderable()->SetFont(font);
 }
 
 void FontComponent::SetText(const std::string& text)
 {
-    _Renderable->SetText(text);
+    GetRenderable()->SetText(text);
 }
 
 void FontComponent::SetTint(const glm::vec4& tint)
 {
-    _Renderable->SetTint(tint);
+    GetRenderable()->SetTint(tint);
 }
 
 void FontComponent::SetSize(float size)
 {
-    _Renderable->SetSize(size);
-}
-
-void FontComponent::SetLocalTransform(const glm::mat4x4& transform)
-{
-    _LocalTransform = transform;
-    
-    UpdateTransform();
-}
-
-void FontComponent::OnTransformChanged(const Message& message)
-{
-    UpdateTransform();
-}
-
-void FontComponent::UpdateTransform()
-{
-    TransformComponent* transform = GetEntity()->GetComponent<TransformComponent>();    
-    
-    if (transform)
-    {
-        _Renderable->SetTransform(transform->GetMatrix() * _LocalTransform);
-    }
+    GetRenderable()->SetSize(size);
 }

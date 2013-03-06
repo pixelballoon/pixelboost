@@ -6,7 +6,7 @@
 
 #include "pixelboost/graphics/renderer/common/renderable.h"
 #include "pixelboost/graphics/renderer/font/fontRenderer.h"
-#include "pixelboost/logic/component.h"
+#include "pixelboost/logic/component/graphics/renderable.h"
 
 namespace pb
 {
@@ -18,7 +18,7 @@ namespace pb
     class ModelRenderable;
     class SkinnedAnimationState;
     
-    class SkinnedModelComponent : public Component
+    class SkinnedModelComponent : public RenderableComponent<ModelRenderable>
     {
         PB_DECLARE_COMPONENT
         
@@ -38,21 +38,14 @@ namespace pb
         
         void SetTint(const glm::vec4& tint);
         
-        void SetLocalTransform(const glm::mat4x4& transform);
-
         void SetAnimation(const std::string& animation);
         
         void SetSkeletonDebug(bool debug);
         
     private:
         void OnDebugRender(const Message& message);
-        void OnTransformChanged(const Message& message);
         void OnUpdate(const Message& message);
-        void UpdateTransform();
-        
-        glm::mat4x4 _LocalTransform;
-        ModelRenderable* _Renderable;
-        
+
         SkinnedAnimationState* _AnimationState;
         
         bool _SkeletonDebug;

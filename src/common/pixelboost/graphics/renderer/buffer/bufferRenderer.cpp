@@ -12,12 +12,12 @@
 
 using namespace pb;
 
-BufferRenderable::BufferRenderable(Uid entityId, IndexBuffer* indexBuffer, VertexBuffer* vertexBuffer, Texture* texture, int numElements)
+BufferRenderable::BufferRenderable(Uid entityId)
     : Renderable(entityId)
-    , _IndexBuffer(indexBuffer)
-    , _VertexBuffer(vertexBuffer)
-    , _Texture(texture)
-    , _NumElements(numElements)
+    , _IndexBuffer(0)
+    , _VertexBuffer(0)
+    , _Texture(0)
+    , _NumElements(0)
 {
     
 }

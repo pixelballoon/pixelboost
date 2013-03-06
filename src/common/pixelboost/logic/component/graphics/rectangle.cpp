@@ -12,86 +12,42 @@ using namespace pb;
 PB_DEFINE_COMPONENT(pb::RectangleComponent)
 
 RectangleComponent::RectangleComponent(Entity* parent)
-    : Component(parent)
+    : RenderableComponent<PrimitiveRenderableRectangle>(parent)
 {
-    _Renderable = new PrimitiveRenderableRectangle(parent->GetUid());
-    
-    GetScene()->GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
-    
-    GetEntity()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &RectangleComponent::OnTransformChanged));
-    
-    UpdateTransform();
+
 }
 
 RectangleComponent::~RectangleComponent()
 {
-    GetEntity()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &RectangleComponent::OnTransformChanged));
-    
-    GetScene()->GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
-    
-    delete _Renderable;
-}
 
-void RectangleComponent::SetRenderPass(RenderPass renderPass)
-{
-    _Renderable->SetRenderPass(renderPass);
-}
-
-void RectangleComponent::SetLayer(int layer)
-{
-    _Renderable->SetLayer(layer);
 }
 
 void RectangleComponent::SetColor(glm::vec4 color)
 {
-    _Renderable->SetColor(color);
+    GetRenderable()->SetColor(color);
 }
 
 glm::vec4 RectangleComponent::GetColor()
 {
-    return _Renderable->GetColor();
+    return GetRenderable()->GetColor();
 }
 
 void RectangleComponent::SetSize(glm::vec2 size)
 {
-    _Renderable->SetSize(size);
+    GetRenderable()->SetSize(size);
 }
 
 glm::vec2 RectangleComponent::GetSize()
 {
-    return _Renderable->GetSize();
+    return GetRenderable()->GetSize();
 }
 
 void RectangleComponent::SetSolid(bool solid)
 {
-    _Renderable->SetSolid(solid);
+    GetRenderable()->SetSolid(solid);
 }
 
 bool RectangleComponent::GetSolid()
 {
-    return _Renderable->GetSolid();
-}
-
-void RectangleComponent::SetLocalTransform(const glm::mat4x4& transform)
-{
-    _LocalTransform = transform;
-    
-    UpdateTransform();
-}
-
-void RectangleComponent::OnTransformChanged(const Message& message)
-{
-    UpdateTransform();
-}
-
-void RectangleComponent::UpdateTransform()
-{
-    TransformComponent* transform = GetEntity()->GetComponent<TransformComponent>();
-    
-    if (transform)
-    {
-        _Renderable->SetTransform(transform->GetMatrix() * _LocalTransform);
-    } else {
-        _Renderable->SetTransform(_LocalTransform);
-    }
+    return GetRenderable()->GetSolid();
 }

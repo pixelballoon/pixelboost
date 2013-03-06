@@ -19,18 +19,11 @@ using namespace pb;
 PB_DEFINE_COMPONENT(pb::SkinnedModelComponent)
 
 SkinnedModelComponent::SkinnedModelComponent(Entity* parent)
-    : Component(parent)
+    : RenderableComponent<pb::ModelRenderable>(parent)
     , _SkeletonDebug(false)
     , _AnimationState(0)
 {
-    _Renderable = new ModelRenderable(parent->GetUid());
-    
-    GetScene()->GetSystemByType<RenderSystem>()->AddItem(_Renderable);
-    
-    GetEntity()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &SkinnedModelComponent::OnTransformChanged));
     GetEntity()->RegisterMessageHandler<UpdateMessage>(MessageHandler(this, &SkinnedModelComponent::OnUpdate));
-    
-    UpdateTransform();
 }
 
 SkinnedModelComponent::~SkinnedModelComponent()
@@ -40,56 +33,45 @@ SkinnedModelComponent::~SkinnedModelComponent()
         GetEntity()->UnregisterMessageHandler<DebugRenderMessage>(MessageHandler(this, &SkinnedModelComponent::OnDebugRender));
     }
     
-    GetEntity()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &SkinnedModelComponent::OnTransformChanged));
     GetEntity()->UnregisterMessageHandler<UpdateMessage>(MessageHandler(this, &SkinnedModelComponent::OnUpdate));
-    
-    GetScene()->GetSystemByType<RenderSystem>()->RemoveItem(_Renderable);
-    
-    delete _Renderable;
+
     delete _AnimationState;
 }
 
 void SkinnedModelComponent::SetShader(Shader* shader)
 {
-    _Renderable->SetShader(shader);
+    GetRenderable()->SetShader(shader);
 }
 
 void SkinnedModelComponent::SetLayer(int layer)
 {
-    _Renderable->SetLayer(layer);
+    GetRenderable()->SetLayer(layer);
 }
 
 void SkinnedModelComponent::SetModel(Model* model)
 {
-    _Renderable->SetModel(model);
+    GetRenderable()->SetModel(model);
     _AnimationState = new SkinnedAnimationState(model->GetDefinition());
 }
 
 Model* SkinnedModelComponent::GetModel()
 {
-    return _Renderable->GetModel();
+    return GetRenderable()->GetModel();
 }
 
 void SkinnedModelComponent::SetTexture(Texture* texture)
 {
-    _Renderable->SetTexture(texture);
+    GetRenderable()->SetTexture(texture);
 }
 
 Texture* SkinnedModelComponent::GetTexture()
 {
-    return _Renderable->GetTexture();
+    return GetRenderable()->GetTexture();
 }
 
 void SkinnedModelComponent::SetTint(const glm::vec4& tint)
 {
-    _Renderable->SetTint(tint);
-}
-
-void SkinnedModelComponent::SetLocalTransform(const glm::mat4x4& transform)
-{
-    _LocalTransform = transform;
-    
-    UpdateTransform();
+    GetRenderable()->SetTint(tint);
 }
 
 void SkinnedModelComponent::SetAnimation(const std::string& animation)
@@ -132,12 +114,12 @@ void SkinnedModelComponent::OnDebugRender(const Message& message)
 {
     const DebugRenderMessage& debugMessage = static_cast<const DebugRenderMessage&>(message);
     
-    Model* model = _Renderable->GetModel();
+    Model* model = GetRenderable()->GetModel();
     
     if (!model)
         return;
     
-    glm::mat4x4 transformMatrix = GetEntity()->GetComponent<TransformComponent>()->GetMatrix() * _LocalTransform;
+    glm::mat4x4 transformMatrix = GetEntity()->GetComponent<TransformComponent>()->GetMatrix() * GetLocalTransform();
     
     for (std::vector<ModelBoneDefinition>::iterator it = model->GetDefinition()->Bones.begin(); it != model->GetDefinition()->Bones.end(); ++it)
     {
@@ -154,26 +136,10 @@ void SkinnedModelComponent::OnDebugRender(const Message& message)
     }
 }
 
-void SkinnedModelComponent::OnTransformChanged(const Message& message)
-{
-    UpdateTransform();
-}
-
 void SkinnedModelComponent::OnUpdate(const Message& message)
 {
     const UpdateMessage& updateMessage = static_cast<const UpdateMessage&>(message);
     
     _AnimationState->AdvanceAnimation(updateMessage.GetGameDelta());
-    _AnimationState->SoftwareSkin(_Renderable->GetModel());
+    _AnimationState->SoftwareSkin(GetRenderable()->GetModel());
 }
-
-void SkinnedModelComponent::UpdateTransform()
-{
-    TransformComponent* transform = GetEntity()->GetComponent<TransformComponent>();    
-    
-    if (transform)
-    {
-        _Renderable->SetTransform(transform->GetMatrix() * _LocalTransform);
-    }
-}
-

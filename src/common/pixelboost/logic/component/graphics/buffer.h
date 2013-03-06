@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pixelboost/logic/component.h"
+#include "pixelboost/logic/component/graphics/renderable.h"
 
 namespace pb
 {
@@ -12,7 +12,7 @@ namespace pb
     class Shader;
     class VertexBuffer;
     
-    class BufferComponent : public Component
+    class BufferComponent : public RenderableComponent<BufferRenderable>
     {
         PB_DECLARE_COMPONENT
         
@@ -37,16 +37,6 @@ namespace pb
         
         void SetNumElements(int numElements);
         int GetNumElements();
-        
-        void SetLocalTransform(const glm::mat4x4& transform);
-        
-    private:
-        void OnTransformChanged(const Message& message);
-        void UpdateTransform();
-        
-        glm::mat4x4 _LocalTransform;
-
-        BufferRenderable* _Renderable;
     };
     
 }

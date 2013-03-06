@@ -6,7 +6,7 @@
 
 #include "pixelboost/graphics/renderer/common/renderable.h"
 #include "pixelboost/graphics/renderer/font/fontRenderer.h"
-#include "pixelboost/logic/component.h"
+#include "pixelboost/logic/component/graphics/renderable.h"
 
 namespace pb
 {
@@ -14,7 +14,7 @@ namespace pb
     class Message;
     class ModelRenderable;
     
-    class ModelComponent : public Component
+    class ModelComponent : public RenderableComponent<ModelRenderable>
     {
         PB_DECLARE_COMPONENT
         
@@ -35,17 +35,6 @@ namespace pb
         void SetTint(const glm::vec4& tint);
         
         void SetAlphaBlend(bool alphaBlend);
-        
-        void SetLocalTransform(const glm::mat4x4& transform);
-        
-        const ModelRenderable* GetRenderable() const;
-        
-    private:
-        void OnTransformChanged(const Message& message);
-        void UpdateTransform();
-        
-        glm::mat4x4 _LocalTransform;
-        ModelRenderable* _Renderable;
     };
     
 }
