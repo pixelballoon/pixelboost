@@ -100,7 +100,7 @@ void ScriptComponent::OnUpdate(const Message& message)
     if (!_Active)
         return;
     
-    const UpdateMessage& updateMessage = static_cast<const UpdateMessage&>(message);
+    auto updateMessage = message.As<UpdateMessage>();
     
     int pendingMessages = _WaitMessage.size();
     

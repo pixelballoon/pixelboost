@@ -143,7 +143,7 @@ void RectTouchComponent::OnDebugRender(const pb::Message& message)
 {
     for (std::map<int, glm::vec2>::iterator it = _Touches.begin(); it != _Touches.end(); ++it)
     {
-        const pb::DebugRenderMessage& debugRenderMessage = static_cast<const pb::DebugRenderMessage&>(message);
+        auto debugRenderMessage = message.As<DebugRenderMessage>();
         debugRenderMessage.GetDebugRenderSystem()->AddEllipse(pb::kRenderPassUi, 16, glm::vec3(it->second, 0.f), glm::vec3(0,0,0), glm::vec2(0.2,0.2));
         debugRenderMessage.GetDebugRenderSystem()->AddEllipse(pb::kRenderPassUi, 16, glm::vec3(it->second, 0.f), glm::vec3(0,0,0), glm::vec2(3,3));
     }

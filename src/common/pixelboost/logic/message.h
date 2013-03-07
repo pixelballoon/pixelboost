@@ -21,6 +21,8 @@ namespace pb
         
         static void RegisterLuaClass(lua_State* state);
         
+        template<class T> const T& As() const;
+        
         virtual Uid GetType() const;
         static Uid GetStaticType();        
         
@@ -33,3 +35,5 @@ namespace pb
     };
     
 }
+
+#include "pixelboost/logic/message.inl"

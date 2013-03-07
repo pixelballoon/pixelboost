@@ -112,7 +112,7 @@ glm::mat4x4 SkinnedModelComponent::GetBoneTransform(const ModelBoneDefinition& b
 
 void SkinnedModelComponent::OnDebugRender(const Message& message)
 {
-    const DebugRenderMessage& debugMessage = static_cast<const DebugRenderMessage&>(message);
+    auto debugMessage = message.As<DebugRenderMessage>();
     
     Model* model = GetRenderable()->GetModel();
     
@@ -138,7 +138,7 @@ void SkinnedModelComponent::OnDebugRender(const Message& message)
 
 void SkinnedModelComponent::OnUpdate(const Message& message)
 {
-    const UpdateMessage& updateMessage = static_cast<const UpdateMessage&>(message);
+    auto updateMessage = message.As<UpdateMessage>();
     
     _AnimationState->AdvanceAnimation(updateMessage.GetGameDelta());
     _AnimationState->SoftwareSkin(GetRenderable()->GetModel());

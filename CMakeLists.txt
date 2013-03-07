@@ -383,6 +383,7 @@ set (LOGIC_SOURCES
 	"src/common/pixelboost/logic/entity.inl"
 	"src/common/pixelboost/logic/message.cpp"
 	"src/common/pixelboost/logic/message.h"
+	"src/common/pixelboost/logic/message.inl"
 	"src/common/pixelboost/logic/scene.cpp"
 	"src/common/pixelboost/logic/scene.h"
 	"src/common/pixelboost/logic/scene.inl"

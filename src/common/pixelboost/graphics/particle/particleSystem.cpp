@@ -343,7 +343,7 @@ void ParticleComponent::OnTransformChanged(const Message& message)
 
 void ParticleComponent::OnUpdate(const Message& message)
 {
-    const pb::UpdateMessage& updateMessage = static_cast<const UpdateMessage&>(message);
+    auto updateMessage = message.As<UpdateMessage>();
     
     _System->Transform = GetEntity()->GetComponent<TransformComponent>()->GetMatrix() * _LocalTransform;
     _System->Update(_UseGlobalTime ? updateMessage.GetTimeDelta() : updateMessage.GetGameDelta());

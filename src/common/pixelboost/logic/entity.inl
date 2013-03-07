@@ -5,7 +5,7 @@
 namespace pb
 {
 
-template<class T> const T* Entity::GetData() const
+template <class T> const T* Entity::GetData() const
 {
     if (!_CreationEntity)
         return 0;
