@@ -179,6 +179,7 @@ FileSystem::FileSystem(const char* appPath)
     
     PbLogDebug("pb.file.system", "Setting write directory (%s)", pb::FileHelpers::GetSavePath().c_str());
     PHYSFS_setWriteDir(pb::FileHelpers::GetSavePath().c_str());
+    PHYSFS_mount(pb::FileHelpers::GetSavePath().c_str(), "/", 0);
 }
 
 FileSystem::~FileSystem()

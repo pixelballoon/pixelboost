@@ -2,6 +2,8 @@
 
 #include <Foundation/Foundation.h>
 
+#include <sys/stat.h>
+
 #include "pixelboost/file/fileHelpers.h"
 
 namespace pb
@@ -21,9 +23,13 @@ std::string GetBundlePath()
 std::string GetSavePath()
 {
     NSArray* dirPaths;
-    dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    dirPaths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
     
-    return std::string([[dirPaths objectAtIndex:0] UTF8String]);
+    std::string path = std::string([[dirPaths objectAtIndex:0] UTF8String]) + "/" + PIXELBOOST_BUILD_IDENTIFIER + "/";
+    
+    mkdir(path.c_str(), 0755);
+    
+    return path;
 }
         
 }
