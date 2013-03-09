@@ -51,19 +51,14 @@ public:
 public:
     void BroadcastMessage(const Message& message);
     void SendMessage(Uid uid, const Message& message);
-    void BroadcastDelayedMessage(float delay, const Message* message);
-    void SendDelayedMessage(Uid uid, float delay, const Message* message);
     
 private:
     void AddEntity(Entity* entity);
     void AddEntityPurge(Entity* entity);
     
-    typedef std::pair<Uid, const Message*> DelayedMessage;
-    typedef std::vector<std::pair<float, DelayedMessage> > DelayedMessageList;
     typedef std::set<Entity*> EntitySet;
     typedef std::map<Uid, SceneSystem*> SystemMap;
     
-    DelayedMessageList _DelayedMessages;
     EntityMap _NewEntities;
     EntityMap _Entities;
     SystemMap _Systems;

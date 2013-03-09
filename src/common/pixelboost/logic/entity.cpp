@@ -227,15 +227,18 @@ void Entity::RemoveChild(Entity* child)
     _Children.erase(child);
 }
 
-void Entity::SendMessage(const Message& message, bool broadcastParents, bool broadcastChildren)
+void Entity::SendMessage(const Message& message, bool sendToSelf, bool broadcastParents, bool broadcastChildren)
 {
-    HandleMessage(message);
+    if (sendToSelf)
+    {
+        HandleMessage(message);
+    }
     
     if (broadcastParents)
     {
         if (_Parent)
         {
-            _Parent->SendMessage(message, true, false);
+            _Parent->SendMessage(message, true, true, false);
         }
     }
     
@@ -243,7 +246,7 @@ void Entity::SendMessage(const Message& message, bool broadcastParents, bool bro
     {
         for (const auto& child : _Children)
         {
-            child->SendMessage(message, false, true);
+            child->SendMessage(message, true, false, true);
         }
     }
 }

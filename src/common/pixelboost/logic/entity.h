@@ -72,7 +72,7 @@ public:
     template <class T> void RegisterMessageHandler(MessageHandler handler);
     template <class T> void UnregisterMessageHandler(MessageHandler handler);
     
-    void SendMessage(const Message& message, bool broadcastParents = false, bool broadcastChildren = false);
+    void SendMessage(const Message& message, bool sendToSelf = true, bool broadcastParents = false, bool broadcastChildren = false);
 
 private:
     void AddChild(Entity* child);
