@@ -4,6 +4,7 @@
 #include "pixelboost/logic/message/transform.h"
 #include "pixelboost/logic/entity.h"
 #include "pixelboost/logic/scene.h"
+#include "pixelboost/maths/matrixHelpers.h"
 
 using namespace pb;
 
@@ -33,11 +34,7 @@ const glm::mat4x4& BasicTransformComponent::GetMatrix()
             _Matrix = GetEntity()->GetParent()->GetComponent<TransformComponent>()->GetMatrix();
         }
         
-        _Matrix = glm::translate(_Matrix, _Position);
-        _Matrix = glm::scale(_Matrix, _Scale);
-        _Matrix = glm::rotate(_Matrix, _Rotation.x, glm::vec3(1,0,0));
-        _Matrix = glm::rotate(_Matrix, _Rotation.y, glm::vec3(0,1,0));
-        _Matrix = glm::rotate(_Matrix, _Rotation.z, glm::vec3(0,0,1));
+        _Matrix = CreateTransformMatrix(pb::kRotationOrder_XYZ, _Position, _Rotation, _Scale, _Matrix);
     }
     
     return _Matrix;
