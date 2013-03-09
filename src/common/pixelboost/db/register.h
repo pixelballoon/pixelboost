@@ -96,46 +96,46 @@ namespace pb
     };
 }
 
-#define PB_DB_DECLARE_CLASS(type) class type ; void PbRegisterDb ## type ();
-#define PB_DB_DECLARE_STRUCT(type) struct type ; void PbRegisterDbStruct ## type (pb::Database* database); void PbDeserialise ## type (pb::Database* database, pb::DbRecord* record, void* data);
+#define PB_DB_DECLARE_CLASS(type) class type ; void PbRegisterDb ## type ## Definition ();
+#define PB_DB_DECLARE_STRUCT(type) struct type ; void PbRegisterDbStruct ## type  ## Definition (pb::Database* database); void PbDeserialise ## type  ## Definition (pb::Database* database, pb::DbRecord* record, void* data);
 
-#define PB_DB_HAS_BINDING(type) friend void PB_Deserialise ## type (void* data)
+#define PB_DB_HAS_BINDING(type) friend void PB_Deserialise ## type ## Definition (void* data)
 
 #define PB_DB_BEGIN_NAMESPACE(namespace) void PbRegisterDb_ ## namespace (pb::Database* database) {
-#define PB_DB_REGISTER_STRUCT(type) PbRegisterDbStruct ## type (database);
+#define PB_DB_REGISTER_STRUCT(type) PbRegisterDbStruct ## type ## Definition (database);
 #define PB_DB_END_NAMESPACE }
 
 #define PB_DB_DECLARE_NAMESPACE(namespace) void PbRegisterDb_ ## namespace(pb::Database* database);
 #define PB_DB_REGISTER_NAMESPACE(database, namespace) PbRegisterDb_ ## namespace(database);
 
-#define PB_DB_BEGIN_STRUCT(type, name) \
+#define PB_DB_BEGIN_STRUCT(type) \
 	namespace pb { \
 		class Database; \
 		class DbRecord; \
 	} \
-    void* PbCreate ## type (); \
-    void PbDestroy ## type (void* object); \
-    void PbRegister ## type (); \
-    void PbDeserialise ## type (pb::Database* database, pb::DbRecord* record, void* data); \
-    void PbRegisterDbStruct ## type (pb::Database* database) { \
-        database->RegisterCreate(pb::TypeHash(name), &PbCreate ## type ); \
-        database->RegisterDestroy(pb::TypeHash(name), &PbDestroy ## type ); \
-        database->RegisterDeserialise(pb::TypeHash(name), &PbDeserialise ## type ); \
+    void* PbCreate ## type ## Definition (); \
+    void PbDestroy ## type ## Definition (void* object); \
+    void PbRegister ## type ## Definition (); \
+    void PbDeserialise ## type ## Definition (pb::Database* database, pb::DbRecord* record, void* data); \
+    void PbRegisterDbStruct ## type ## Definition (pb::Database* database) { \
+        database->RegisterCreate(pb::TypeHash(#type), &PbCreate ## type ## Definition ); \
+        database->RegisterDestroy(pb::TypeHash(#type), &PbDestroy ## type ## Definition ); \
+        database->RegisterDeserialise(pb::TypeHash(#type), &PbDeserialise ## type ## Definition ); \
     } \
-    void* PbCreate ## type () { \
-        return new type(); \
+    void* PbCreate ## type ## Definition () { \
+        return new type ## Definition(); \
     } \
-    void PbDestroy ## type (void* object) { \
-        delete (type*)(object); \
+    void PbDestroy ## type ## Definition (void* object) { \
+        delete (type ## Definition*)(object); \
     } \
-    void PbDeserialise ## type (pb::Database* database, pb::DbRecord* record, void* data) { \
-        type& object = *static_cast<type*>(data); \
+    void PbDeserialise ## type ## Definition (pb::Database* database, pb::DbRecord* record, void* data) { \
+        type ## Definition& object = *static_cast<type ## Definition*>(data); \
         (void)object; \
         lua_State* state = database->GetLuaState(); \
         (void)state;
 
 #define PB_DB_DERIVED_STRUCT(type) { \
-	PbDeserialise ## type (database, record, data); \
+	PbDeserialise ## type ## Definition (database, record, data); \
 }
 
 #define __PB_DB_PARSE_INT(field) { \
@@ -201,44 +201,44 @@ namespace pb
     lua_pop(state, 1); \
 }
 
-#define PB_DB_FIELD_INT(field, name) { \
-    lua_getfield(state, -1, name); \
+#define PB_DB_FIELD_INT(field) { \
+    lua_getfield(state, -1, #field); \
     __PB_DB_PARSE_INT(object.field) \
     lua_pop(state, 1); \
 }
 
-#define PB_DB_FIELD_FLOAT(field, name) { \
-    lua_getfield(state, -1, name); \
+#define PB_DB_FIELD_FLOAT(field) { \
+    lua_getfield(state, -1, #field); \
     __PB_DB_PARSE_FLOAT(object.field) \
     lua_pop(state, 1); \
 }
 
-#define PB_DB_FIELD_STRING(field, name) { \
-    lua_getfield(state, -1, name); \
+#define PB_DB_FIELD_STRING(field) { \
+    lua_getfield(state, -1, #field); \
     __PB_DB_PARSE_STRING(object.field) \
     lua_pop(state, 1); \
 }
 
-#define PB_DB_FIELD_STRUCT(field, name, type) { \
-    lua_getfield(state, -1, name); \
-    __PB_DB_PARSE_STRUCT(object.field, type) \
+#define PB_DB_FIELD_STRUCT(field, type) { \
+    lua_getfield(state, -1, #field); \
+    __PB_DB_PARSE_STRUCT(object.field, type ## Definition) \
     lua_pop(state, 1); \
 }
 
-#define PB_DB_FIELD_POINTER(field, name) { \
-    lua_getfield(state, -1, name); \
+#define PB_DB_FIELD_POINTER(field) { \
+    lua_getfield(state, -1, #field); \
 	__PB_DB_PARSE_POINTER(object.field) \
     lua_pop(state, 1); \
 }
 
-#define PB_DB_FIELD_REFERENCE(field, name) { \
-	lua_getfield(state, -1, name); \
+#define PB_DB_FIELD_REFERENCE(field) { \
+	lua_getfield(state, -1, #field); \
 	__PB_DB_PARSE_REFERENCE(object.field) \
 	lua_pop(state, 1); \
 }
 
-#define PB_DB_FIELD_ARRAY_INT(field, name) { \
-    __PB_DB_PARSE_ARRAY_START(object.field, name, int) \
+#define PB_DB_FIELD_ARRAY_INT(field) { \
+    __PB_DB_PARSE_ARRAY_START(object.field, #field, int) \
     __PB_DB_PARSE_INT(arrayItem) \
     __PB_DB_PARSE_ARRAY_END(object.field) \
 }
@@ -249,26 +249,26 @@ namespace pb
     __PB_DB_PARSE_ARRAY_END(object.field) \
 }
 
-#define PB_DB_FIELD_ARRAY_STRING(field, name) { \
-    __PB_DB_PARSE_ARRAY_START(object.field, name, std::string) \
+#define PB_DB_FIELD_ARRAY_STRING(field) { \
+    __PB_DB_PARSE_ARRAY_START(object.field, #field, std::string) \
     __PB_DB_PARSE_STRING(arrayItem) \
     __PB_DB_PARSE_ARRAY_END(object.field) \
 }
 
-#define PB_DB_FIELD_ARRAY_STRUCT(field, name, type) { \
-    __PB_DB_PARSE_ARRAY_START(object.field, name, type) \
-    __PB_DB_PARSE_STRUCT(arrayItem, type), \
+#define PB_DB_FIELD_ARRAY_STRUCT(field, type) { \
+    __PB_DB_PARSE_ARRAY_START(object.field, #field, type ## Definition) \
+    __PB_DB_PARSE_STRUCT(arrayItem, type ## Definition), \
     __PB_DB_PARSE_ARRAY_END(object.field) \
 }
 
-#define PB_DB_FIELD_ARRAY_POINTER(field, name, type) { \
-    __PB_DB_PARSE_ARRAY_START(object.field, name, pb::DbPointer<type>) \
+#define PB_DB_FIELD_ARRAY_POINTER(field, type) { \
+    __PB_DB_PARSE_ARRAY_START(object.field, #field, pb::DbPointer<type ## Definition>) \
     __PB_DB_PARSE_POINTER(arrayItem) \
     __PB_DB_PARSE_ARRAY_END(object.field) \
 }
 
-#define PB_DB_FIELD_ARRAY_REFERENCE(field, name, type) { \
-    __PB_DB_PARSE_ARRAY_START(object.field, name, pb::DbReference<type>) \
+#define PB_DB_FIELD_ARRAY_REFERENCE(field, type) { \
+    __PB_DB_PARSE_ARRAY_START(object.field, #field, pb::DbReference<type ## Definition>) \
     __PB_DB_PARSE_REFERENCE(arrayItem) \
     __PB_DB_PARSE_ARRAY_END(object.field) \
 } 
