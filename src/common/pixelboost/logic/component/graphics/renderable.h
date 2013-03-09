@@ -2,6 +2,7 @@
 
 #include "glm/glm.hpp"
 
+#include "pixelboost/graphics/definitions.h"
 #include "pixelboost/logic/component.h"
 
 namespace pb

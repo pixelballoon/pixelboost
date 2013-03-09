@@ -4,14 +4,13 @@
 
 #include "glm/glm.hpp"
 
-#include "pixelboost/graphics/renderer/common/renderable.h"
+#include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
 #include "pixelboost/logic/component/graphics/renderable.h"
 
 namespace pb
 {
 
 class Message;
-class SpriteRenderable;
 
 class SpriteComponent : public RenderableComponent<SpriteRenderable>
 {
