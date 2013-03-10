@@ -16,22 +16,27 @@ namespace pb
         virtual ~TransformComponent();
         
     public:
-        virtual const glm::mat4x4& GetMatrix() = 0;
+        const glm::mat4x4& GetMatrix();
         
-        virtual void SetTransform(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale) = 0;
+        void SetTransform(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale);
         
-        virtual glm::vec3 GetPosition() = 0;
-        virtual void SetPosition(const glm::vec3& position) = 0;
+        glm::vec3 GetPosition();
+        void SetPosition(const glm::vec3& position);
         
-        virtual glm::vec3 GetRotation() = 0;
-        virtual void SetRotation(const glm::vec3& rotation) = 0;
+        glm::vec3 GetRotation();
+        void SetRotation(const glm::vec3& rotation);
         
-        virtual glm::vec3 GetScale() = 0;
-        virtual void SetScale(const glm::vec3& scale) = 0;
+        glm::vec3 GetScale();
+        void SetScale(const glm::vec3& scale);
         
-        virtual void Dirty();
+        void Dirty();
         
     private:
+        bool _Dirty;
+        glm::mat4x4 _Matrix;
+        glm::vec3 _Position;
+        glm::vec3 _Rotation;
+        glm::vec3 _Scale;
     };
 
 }

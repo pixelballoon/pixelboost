@@ -316,13 +316,6 @@ set (LOGIC_COMPONENT_PHYSICS_SOURCES
 	"src/common/pixelboost/logic/component/physics/physics.h"
 	)
 
-set (LOGIC_COMPONENT_TRANSFORM_SOURCES
-	"src/common/pixelboost/logic/component/transform/basic.cpp"
-	"src/common/pixelboost/logic/component/transform/basic.h"
-	"src/common/pixelboost/logic/component/transform/parallax.cpp"
-	"src/common/pixelboost/logic/component/transform/parallax.h"
-	)
-
 set (LOGIC_COMPONENT_SOURCES
 	"src/common/pixelboost/logic/component/script.cpp"
 	"src/common/pixelboost/logic/component/script.h"
@@ -456,7 +449,6 @@ set (PIXELBOOST_SOURCES
 	${LOGIC_COMPONENT_INPUT_SOURCES}
 	${LOGIC_COMPONENT_PHYSICS_2D_SOURCES}
 	${LOGIC_COMPONENT_PHYSICS_SOURCES}
-	${LOGIC_COMPONENT_TRANSFORM_SOURCES}
 	${LOGIC_COMPONENT_SOURCES}
 	${LOGIC_MESSAGE_SOURCES}
 	${LOGIC_SYSTEM_DEBUG_SOURCES}
