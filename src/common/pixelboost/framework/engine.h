@@ -31,7 +31,7 @@ class TouchManager;
 class Engine
 {
 protected:
-	Engine(void* platformContext, int argc, const char** argv);
+	Engine(void* platformContext, int argc, const char** argv, bool enableNetworkDebug=true);
     
 public:
     virtual ~Engine();

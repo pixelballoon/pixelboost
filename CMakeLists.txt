@@ -104,6 +104,7 @@ set (PIXELBOOST_HEADERS
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/common"
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/external"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/box2d"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/enet/include"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/freetype2/include"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/luabridge/Source"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/lua/src"
@@ -466,7 +467,7 @@ set (PIXELBOOST_SOURCES
 	)
 
 add_library (pixelboost_engine STATIC ${PIXELBOOST_SOURCES})
-target_link_libraries (pixelboost_engine pixelboost_shared Box2D freetype2 lua physfs-static)
+target_link_libraries (pixelboost_engine pixelboost_shared Box2D enet freetype2 lua physfs-static)
 
 if (PIXELBOOST_BUILD_PLATFORM_OSX)
 	target_link_libraries (pixelboost_engine
@@ -505,6 +506,7 @@ endif (PIXELBOOST_BUILD_PLATFORM_ANDROID)
 pixelboost_library_cpp11(pixelboost_engine)
 pixelboost_library_cpp11(pixelboost_shared)
 pixelboost_library_cpp11(Box2D)
+pixelboost_library_cpp11(enet)
 pixelboost_library_cpp11(freetype2)
 pixelboost_library_cpp11(lua)
 pixelboost_library_cpp11(physfs-static)
