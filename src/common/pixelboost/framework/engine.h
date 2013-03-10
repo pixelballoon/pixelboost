@@ -45,6 +45,7 @@ public:
 	virtual void Initialise();
     
     GameCenter* GetGameCenter() const;
+    NetworkServer* GetDebugNetworkServer() const;
 
     BufferRenderer* GetBufferRenderer() const;
     FontRenderer* GetFontRenderer() const;

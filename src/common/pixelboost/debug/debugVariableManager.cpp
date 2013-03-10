@@ -1,25 +1,22 @@
-#ifdef PIXELBOOST_PLATFORM_WINDOWS
-	#include <BaseTsd.h>
-#endif
-
 #include <cstdio>
 #include <cstdlib>
 #include <sstream>
 
 #include "json/writer.h"
 
+#include "pixelboost/framework/engine.h"
 #include "pixelboost/debug/debugVariable.h"
 #include "pixelboost/debug/debugVariableManager.h"
-#include "pixelboost/file/fileHelpers.h"
+#include "pixelboost/network/networkMessage.h"
 
 using namespace pb;
     
 DebugVariableManager* DebugVariableManager::_Instance = 0;
 
 DebugVariableManager::DebugVariableManager(const std::string& htmlLocation)
-    : HttpServer()
+    : NetworkHandler('dbvs')
 {
-    Start(9091, FileHelpers::GetBundlePath()+"/"+htmlLocation);
+    
 }
 
 DebugVariableManager::~DebugVariableManager()
@@ -41,7 +38,7 @@ DebugVariableManager* DebugVariableManager::Instance()
 
 void DebugVariableManager::AddVariable(DebugVariable* variable)
 {
-    _Variables[variable->GetId()] = variable;
+    _Variables[variable->GetName()] = variable;
 }
     
 const DebugVariableManager::VariableMap& DebugVariableManager::GetVariables() const
@@ -49,284 +46,194 @@ const DebugVariableManager::VariableMap& DebugVariableManager::GetVariables() co
     return _Variables;
 }
 
-bool DebugVariableManager::OnHttpRequest(HttpServer::RequestType type, const std::string& uri, const std::string& query, const std::string& data, HttpConnection& connection)
+void DebugVariableManager::OnReceive(NetworkConnection& connection, NetworkMessage& message)
 {
-    int split = uri.find('/', 1);
+    const char* command;
+    if (!message.ReadString(command))
+        return;
     
-    std::string command;
-    std::string argumentString;
-    std::vector<std::string> arguments;
-    
-    if (split > 0)
+    if (strcmp(command, "list") == 0)
     {
-        command = uri.substr(1, split-1);
-        argumentString = uri.substr(split);
-    } else {
-        command = uri.substr(1);
-    }
-    
-    while (argumentString.length() > 1)
-    {
-        int split = argumentString.find('/', 1);
+        NetworkMessage reply;
+        reply.SetProtocol('dbvr');
+        reply.WriteString("varlist");
+        reply.WriteInt(_Variables.size());
         
-        std::string argument;
-        
-        if (split > 0)
+        for (VariableMap::const_iterator it = _Variables.begin(); it != _Variables.end(); ++it)
         {
-            argument = argumentString.substr(1, split-1);
-            argumentString = argumentString.substr(split);
-        } else {
-            argument = argumentString.substr(1);
-            argumentString = "";
-        }
-        
-        if (argument.length() > 0)
-            arguments.push_back(argument);
-        else
-            break;
-    }
-    
-    if (command == "variables" && type == kRequestTypeGet)
-    {
-        OnGetVariables(connection);
-        return true;
-    } else if (command == "variable" && type == kRequestTypeGet)
-    {
-        if (arguments.size())
-        {
-            DebugVariableManager::VariableMap::const_iterator it = _Variables.find(atoi(arguments[0].c_str()));
+            reply.WriteString(it->second->GetName());
+            reply.WriteInt(it->second->GetVariableType());
             
-            if (it != _Variables.end())
+            switch(it->second->GetVariableType())
             {
-                OnGetVariable(connection, it->second);
-                return true;
+                case DebugVariable::kVariableTypeInteger:
+                    reply.WriteInt(static_cast<DebugInteger*>(it->second)->_Min);
+                    reply.WriteInt(static_cast<DebugInteger*>(it->second)->_Max);
+                    break;
+                    
+                case DebugVariable::kVariableTypeFloat:
+                    reply.WriteFloat(static_cast<DebugFloat*>(it->second)->_Min);
+                    reply.WriteFloat(static_cast<DebugFloat*>(it->second)->_Max);
+                    break;
+                    
+                default:
+                    break;
             }
         }
-    } else if (command == "variable" && type == kRequestTypePut)
+        
+        connection.Send(reply);
+    }
+    
+    if (strcmp(command, "value") == 0)
     {
-        if (arguments.size() && data != "")
+        const char* name;
+        if (!message.ReadString(name))
+            return;
+        
+        VariableMap::const_iterator it = _Variables.find(name);
+        
+        if (it == _Variables.end())
+            return;
+        
+        DebugVariableManager::Instance()->SendValue(it->second);
+    }
+    
+    if (strcmp(command, "set") == 0)
+    {
+        const char* name;
+        if (!message.ReadString(name))
+            return;
+        
+        DebugVariableManager::VariableMap::const_iterator it = _Variables.find(name);
+        
+        if (it != _Variables.end())
         {
-            DebugVariableManager::VariableMap::const_iterator it = _Variables.find(atoi(arguments[0].c_str()));
+            DebugVariable* variable = it->second;
             
-            if (it != _Variables.end())
+            switch (variable->GetVariableType())
             {
-                json::Object o;
-                if (json::Reader::Read(o, data))
+                case DebugVariable::kVariableTypeInteger:
                 {
-                    OnSetVariable(connection, it->second, o);
+                    int value;
+                    if (!message.ReadInt(value))
+                        return;
+                    
+                    static_cast<DebugInteger*>(variable)->_Value = value;
+                    break;
                 }
-                return true;
-            }
-        }
-    } else if (command == "variable" && type == kRequestTypeDelete)
-    {
-        if (arguments.size())
-        {
-            DebugVariableManager::VariableMap::const_iterator it = _Variables.find(atoi(arguments[0].c_str()));
-            
-            if (it != _Variables.end())
-            {
-                OnResetVariable(connection, it->second);
-                return true;
+                    
+                case DebugVariable::kVariableTypeFloat:
+                {
+                    float value;
+                    if (!message.ReadFloat(value))
+                        return;
+                    
+                    static_cast<DebugFloat*>(variable)->_Value = value;
+                    break;
+                }
+                    
+                case DebugVariable::kVariableTypeString:
+                {
+                    const char* value;
+                    if (!message.ReadString(value))
+                        return;
+                    
+                    static_cast<DebugString*>(variable)->_Value = value;
+                    break;
+                }
+                    
+                case DebugVariable::kVariableTypeBool:
+                {
+                    char value;
+                    if (!message.ReadChar(value))
+                        return;
+                    
+                    static_cast<DebugBool*>(variable)->_Value = value;
+                    break;
+                }
+                    
+                case DebugVariable::kVariableTypeColor:
+                {
+                    float r, g, b, a;
+                    if (!message.ReadFloat(r) || !message.ReadFloat(g) || !message.ReadFloat(b) || !message.ReadFloat(a))
+                        return;
+                    
+                    DebugColor* colour = static_cast<DebugColor*>(variable);
+                    colour->_ValueR = r;
+                    colour->_ValueG = g;
+                    colour->_ValueB = b;
+                    colour->_ValueA = a;
+                    break;
+                }
+                    
+                case DebugVariable::kVariableTypeFunction:
+                {
+                    DebugFunction* function = static_cast<DebugFunction*>(variable);
+                    function->_Callback(function->_UserData);
+                    break;
+                }
+                    
+                default:
+                    break;
             }
         }
     }
-    
-    if (type == kRequestTypeGet)
-        return false; // No over-ride, default to finding html
-    else
-        return true;
 }
-    
-void DebugVariableManager::OnGetVariables(HttpConnection& connection)
+
+void DebugVariableManager::SendValue(DebugVariable* variable)
 {
-    json::Array variables;
+    if (!Engine::Instance() || !Engine::Instance()->GetDebugNetworkServer())
+        return;
     
-    for (VariableMap::iterator it = _Variables.begin(); it != _Variables.end(); ++it)
-    {
-        json::Object variable;
-        
-        PopulateVariable(it->second, variable);
-        
-        variables.Insert(variable);
-    }
+    NetworkServer* networkServer = Engine::Instance()->GetDebugNetworkServer();
     
-    std::stringstream contentStream;
-    json::Writer::Write(variables, contentStream);
+    NetworkMessage message;
+    message.SetProtocol('dbvr');
+    message.WriteString("value");
+    message.WriteString(variable->GetName());
+    message.WriteInt(variable->GetVariableType());
     
-    std::string content = contentStream.str();
-    
-    connection.AddHeader("Content-Type", "application/json;charset=utf-8");
-    
-    char contentLength[64];
-    sprintf(contentLength, "%d", static_cast<int>(content.length()));
-    connection.AddHeader("Content-Length", contentLength);
-    connection.SetContent(content);
-    connection.Send();
-}
-    
-void DebugVariableManager::OnGetVariable(HttpConnection& connection, DebugVariable* variable)
-{
-    json::Object json;
-    
-    PopulateVariable(variable, json);
-    
-    std::stringstream contentStream;
-    json::Writer::Write(json, contentStream);
-    
-    std::string content = contentStream.str();
-    
-    connection.AddHeader("Content-Type", "application/json;charset=utf-8");
-    
-    char contentLength[64];
-    sprintf(contentLength, "%d", static_cast<int>(content.length()));
-    connection.AddHeader("Content-Length", contentLength);
-    connection.SetContent(content);
-    connection.Send();
-}
-    
-void DebugVariableManager::OnSetVariable(HttpConnection& connection, DebugVariable* variable, json::Object& params)
-{    
     switch (variable->GetVariableType())
     {
         case DebugVariable::kVariableTypeInteger:
         {
-            static_cast<DebugInteger*>(variable)->_Value = static_cast<json::Number>(params["value"]).Value();
+            message.WriteInt(static_cast<DebugInteger*>(variable)->_Value);
             break;
         }
             
         case DebugVariable::kVariableTypeFloat:
         {
-            static_cast<DebugFloat*>(variable)->_Value = static_cast<json::Number>(params["value"]).Value();
+            message.WriteFloat(static_cast<DebugFloat*>(variable)->_Value);
             break;
         }
             
         case DebugVariable::kVariableTypeString:
         {
-            static_cast<DebugString*>(variable)->_Value = static_cast<json::String>(params["value"]).Value();
+            message.WriteString(static_cast<DebugString*>(variable)->_Value.c_str());
             break;
         }
             
         case DebugVariable::kVariableTypeBool:
         {
-            static_cast<DebugBool*>(variable)->_Value = static_cast<json::Boolean>(params["value"]).Value();;
+            message.WriteChar(static_cast<DebugBool*>(variable)->_Value);
             break;
         }
             
         case DebugVariable::kVariableTypeColor:
         {
-            DebugColor* color = static_cast<DebugColor*>(variable);
-            color->_ValueR = static_cast<json::Number>(params["value"]["r"]).Value();
-            color->_ValueG = static_cast<json::Number>(params["value"]["g"]).Value();
-            color->_ValueB = static_cast<json::Number>(params["value"]["b"]).Value();
-            color->_ValueA = static_cast<json::Number>(params["value"]["a"]).Value();
-            break;
-        }
-            
-        case DebugVariable::kVariableTypeFunction:
-        {
-            DebugFunction* function = static_cast<DebugFunction*>(variable);
-            function->_Callback(function->_UserData);
+            DebugColor* colour = static_cast<DebugColor*>(variable);
+            message.WriteFloat(colour->_ValueR);
+            message.WriteFloat(colour->_ValueG);
+            message.WriteFloat(colour->_ValueB);
+            message.WriteFloat(colour->_ValueA);
             break;
         }
             
         default:
             break;
     }
+    
+    networkServer->SendMessage(message);
 }
-    
-void DebugVariableManager::OnResetVariable(HttpConnection& connection, DebugVariable* variable)
-{
-    variable->Reset();
-    
-    json::Object json;
-    
-    PopulateVariable(variable, json);
-    
-    std::stringstream contentStream;
-    json::Writer::Write(json, contentStream);
-    
-    std::string content = contentStream.str();
-    
-    connection.AddHeader("Content-Type", "application/json;charset=utf-8");
-    
-    char contentLength[64];
-    sprintf(contentLength, "%d", static_cast<int>(content.length()));
-    connection.AddHeader("Content-Length", contentLength);
-    connection.SetContent(content);
-    connection.Send();
-}
-    
-void DebugVariableManager::PopulateVariable(DebugVariable* variable, json::Object& o)
-{
-    o["name"] = json::String(variable->GetName());
-    o["id"] = json::Number(variable->GetId());
-    
-    std::string type;
-    
-    switch (variable->GetVariableType())
-    {
-        case DebugVariable::kVariableTypeBool:
-        {
-            DebugBool* debugVariable = static_cast<DebugBool*>(variable);
-            o["type"] = json::String("bool");
-            o["originalValue"] = json::Boolean(debugVariable->_Original);
-            o["value"] = json::Boolean(debugVariable->_Value);
-            break;
-        }
-        case DebugVariable::kVariableTypeString:
-        {
-            DebugString* debugVariable = static_cast<DebugString*>(variable);
-            o["type"] = json::String("string");
-            o["originalValue"] = json::String(debugVariable->_Original);
-            o["value"] = json::String(debugVariable->_Value);
-            break;
-        }
-        case DebugVariable::kVariableTypeInteger:
-        {
-            DebugInteger* debugVariable = static_cast<DebugInteger*>(variable);
-            o["type"] = json::String("int");
-            o["min"] = json::Number(debugVariable->_Min);
-            o["max"] = json::Number(debugVariable->_Max);
-            o["value"] = json::Number(debugVariable->_Value);
-            break;
-        }
-        case DebugVariable::kVariableTypeFloat:
-        {
-            DebugFloat* debugVariable = static_cast<DebugFloat*>(variable);
-            o["type"] = json::String("float");
-            o["min"] = json::Number(debugVariable->_Min);
-            o["max"] = json::Number(debugVariable->_Max);
-            o["originalValue"] = json::Number(debugVariable->_Original);
-            o["value"] = json::Number(debugVariable->_Value);
-            break;
-        }
-        case DebugVariable::kVariableTypeColor:
-        {
-            DebugColor* debugVariable = static_cast<DebugColor*>(variable);
-            o["type"] = json::String("color");
-            json::Object original;
-            original["r"] = json::Number(debugVariable->_OriginalR);
-            original["g"] = json::Number(debugVariable->_OriginalG);
-            original["b"] = json::Number(debugVariable->_OriginalB);
-            original["a"] = json::Number(debugVariable->_OriginalA);
-            o["originalValue"] = original;
-            json::Object value;
-            value["r"] = json::Number(debugVariable->_ValueR);
-            value["g"] = json::Number(debugVariable->_ValueG);
-            value["b"] = json::Number(debugVariable->_ValueB);
-            value["a"] = json::Number(debugVariable->_ValueA);
-            o["value"] = value;
-            break;
-        }
-        case DebugVariable::kVariableTypeFunction:
-        {
-            o["type"] = json::String("function");
-            break;
-        }
-    }
-    
-    o["modified"] = json::Boolean(variable->HasVariableChanged());
-}
-    
+
 #endif

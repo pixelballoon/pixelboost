@@ -40,6 +40,7 @@ Engine::Engine(void* platformContext, int argc, const char** argv)
     : _GameTime(0)
     , _PlatformContext(platformContext)
     , _TotalTime(0)
+    , _DebugNetwork(0)
 {
     _Instance = this;
     
@@ -95,6 +96,7 @@ Engine::Engine(void* platformContext, int argc, const char** argv)
     _DebugNetwork = new NetworkServer();
     _DebugDatabaseHandler = new DebugDatabaseHandler();
     _DebugNetwork->RegisterHandler(_DebugDatabaseHandler);
+    _DebugNetwork->RegisterHandler(DebugVariableManager::Instance());
 #endif
 }
 
@@ -154,7 +156,12 @@ GameCenter* Engine::GetGameCenter() const
 {
     return _GameCenter;
 }
-    
+
+NetworkServer* Engine::GetDebugNetworkServer() const
+{
+    return _DebugNetwork;
+}
+
 BufferRenderer* Engine::GetBufferRenderer() const
 {
     return _BufferRenderer;

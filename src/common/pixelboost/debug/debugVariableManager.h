@@ -3,7 +3,7 @@
 #include <map>
 #include <string>
 
-#include "pixelboost/network/http/httpServer.h"
+#include "pixelboost/network/networkServer.h"
 
 namespace json
 {
@@ -15,31 +15,24 @@ namespace pb
     
 class DebugVariable;
 
-class DebugVariableManager : public HttpServer
+class DebugVariableManager : public NetworkHandler
 {
 public:
     DebugVariableManager(const std::string& htmlLocation = "data/pixelboost/debug/html");
-    ~DebugVariableManager();
+    virtual ~DebugVariableManager();
     
     static DebugVariableManager* Instance();
     
 private:
 #ifndef PIXELBOOST_BUILD_RELEASE    
-    typedef std::map<int, DebugVariable*> VariableMap;
+    typedef std::map<std::string, DebugVariable*> VariableMap;
     
     void AddVariable(DebugVariable* variable);
-    void SendValue(DebugVariable* variable);
-    
-    virtual bool OnHttpRequest(RequestType type, const std::string& uri, const std::string& query, const std::string& data, HttpConnection& connection);
-    
-    void OnGetVariables(HttpConnection& connection);
-    void OnGetVariable(HttpConnection& connection, DebugVariable* variable);
-    void OnSetVariable(HttpConnection& connection, DebugVariable* variable, json::Object& params);
-    void OnResetVariable(HttpConnection& connection, DebugVariable* variable);
-    
-    void PopulateVariable(DebugVariable* variable, json::Object& o);
-    
     const VariableMap& GetVariables() const;
+    
+    virtual void OnReceive(NetworkConnection& connection, NetworkMessage& message);
+    
+    void SendValue(DebugVariable* variable);
 #endif
     
 private:
