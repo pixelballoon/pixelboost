@@ -29,7 +29,7 @@ bool File::ReadAll(std::vector<unsigned char>& data)
     len = PHYSFS_fileLength(_File);
     PHYSFS_seek(_File, 0);
     temp = new unsigned char[len+1];
-    PHYSFS_read(_File, temp, len, 1);
+    PHYSFS_readBytes(_File, temp, len);
     temp[len] = 0;
     
     data.assign(temp, temp+len);
@@ -49,7 +49,7 @@ bool File::ReadAll(std::string& data)
     len = PHYSFS_fileLength(_File);
     PHYSFS_seek(_File, 0);
     temp = new char[len+1];
-    PHYSFS_read(_File, temp, len, 1);
+    PHYSFS_readBytes(_File, temp, len);
     temp[len] = 0;
     
     data.assign(temp, len);
@@ -61,85 +61,85 @@ bool File::ReadAll(std::string& data)
 
 bool File::Read(unsigned char* data, int length)
 {
-    PHYSFS_read(_File, data, 1, length);
+    PHYSFS_readBytes(_File, data, length);
     return true;
 }
 
 bool File::Read(char& data)
 {
-    PHYSFS_read(_File, &data, sizeof(char), 1);
+    PHYSFS_readBytes(_File, &data, sizeof(char));
     return true;
 }
 
 bool File::Read(float& data)
 {
-    PHYSFS_read(_File, &data, sizeof(float), 1);
+    PHYSFS_readBytes(_File, &data, sizeof(float));
     return true;
 }
 
 bool File::Read(short& data)
 {
-    PHYSFS_read(_File, &data, sizeof(short), 1);
+    PHYSFS_readBytes(_File, &data, sizeof(short));
     return true;
 }
 
 bool File::Read(int& data)
 {
-    PHYSFS_read(_File, &data, sizeof(int), 1);
+    PHYSFS_readBytes(_File, &data, sizeof(int));
     return true;
 }
 
 bool File::Read(bool& data)
 {
-    PHYSFS_read(_File, &data, sizeof(bool), 1);
+    PHYSFS_readBytes(_File, &data, sizeof(bool));
     return true;
 }
 
 bool File::Write(const std::vector<unsigned char>& data)
 {
-    PHYSFS_write(_File, &data[0], 1, data.size());
+    PHYSFS_writeBytes(_File, &data[0], data.size());
     return true;
 }
 
 bool File::Write(const unsigned char* data, int length)
 {
-    PHYSFS_write(_File, data, 1, length);
+    PHYSFS_writeBytes(_File, data, length);
     return true;
 }
 
 bool File::Write(const std::string& data)
 {
-    PHYSFS_write(_File, data.c_str(), 1, data.length());
+    PHYSFS_writeBytes(_File, data.c_str(), data.length());
     return true;
 }
 
 bool File::Write(const char& data)
 {
-    PHYSFS_write(_File, &data, sizeof(char), 1);
+    PHYSFS_writeBytes(_File, &data, sizeof(char));
     return true;
 }
 
 bool File::Write(const float& data)
 {
-    PHYSFS_write(_File, &data, sizeof(float), 1);
+    PHYSFS_writeBytes(_File, &data, sizeof(float));
     return true;
 }
 
 bool File::Write(const short& data)
 {
-    PHYSFS_write(_File, &data, sizeof(short), 1);
+    PHYSFS_writeBytes(_File, &data, sizeof(short));
     return true;
 }
 
 bool File::Write(const int& data)
 {
-    PHYSFS_write(_File, &data, sizeof(int), 1);
+    PHYSFS_writeBytes(_File, &data, sizeof(int));
     return true;
 }
 
 bool File::Write(const bool& data)
 {
-    PHYSFS_write(_File, &data, sizeof(bool), 1);
+    PHYSFS_writeBytes(_File, &data, sizeof(bool));
     return true;
 }
 

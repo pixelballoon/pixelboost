@@ -38,13 +38,11 @@ if (PIXELBOOST_BUILD_PLATFORM_OSX)
 		"src/platform/mac/pixelboost/util/localisation/localisation.mm"
 		)
 
-	if (NOT PIXELBOOST_BUILD_CLI)
-		set (PLATFORM_SOURCES ${PLATFORM_SOURCES}
-			"src/platform/mac/pixelboost/framework/AppDelegate.mm"
-			"src/platform/mac/pixelboost/framework/main.m"
-			"src/platform/mac/pixelboost/framework/MainView.mm"
-			)
-	endif (NOT PIXELBOOST_BUILD_CLI)
+	set (PLATFORM_SOURCES ${PLATFORM_SOURCES}
+		"src/platform/mac/pixelboost/framework/AppDelegate.mm"
+		"src/platform/mac/pixelboost/framework/main.m"
+		"src/platform/mac/pixelboost/framework/MainView.mm"
+		)
 endif (PIXELBOOST_BUILD_PLATFORM_OSX)
 
 if (PIXELBOOST_BUILD_PLATFORM_IOS)
@@ -109,7 +107,7 @@ set (PIXELBOOST_HEADERS
 	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/freetype2/include"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/luabridge/Source"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/lua/src"
-	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/physfs"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../libs/physfs/src"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../shared/src/external"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../shared/src/shared"
 	CACHE INTERNAL "Complete list of pixelboost headers")
