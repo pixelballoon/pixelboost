@@ -1,0 +1,1 @@
+set (PIXELBOOST_DATA_DIRS "data")
