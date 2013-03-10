@@ -44,16 +44,16 @@ void LogSubscriberConsole::OnLogMessage(LogLevel logLevel, const std::string& sy
     switch (logLevel)
     {
         case kLogLevelDebug:
-            __android_log_print(ANDROID_LOG_DEBUG, system, "%s", message.c_str());
+            __android_log_print(ANDROID_LOG_DEBUG, system.c_str(), "%s", message.c_str());
             break;
         case kLogLevelError:
-            __android_log_print(ANDROID_LOG_ERROR, system, "%s", message.c_str());
+            __android_log_print(ANDROID_LOG_ERROR, system.c_str(), "%s", message.c_str());
             break;
         case kLogLevelInfo:
-            __android_log_print(ANDROID_LOG_INFO, system, "%s", message.c_str());
+            __android_log_print(ANDROID_LOG_INFO, system.c_str(), "%s", message.c_str());
             break;
         case kLogLevelWarn:
-            __android_log_print(ANDROID_LOG_WARN, system, "%s", message.c_str());
+            __android_log_print(ANDROID_LOG_WARN, system.c_str(), "%s", message.c_str());
             break;
         case kLogLevelNone:
             break;
