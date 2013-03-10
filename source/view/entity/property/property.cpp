@@ -1,4 +1,4 @@
-#include "pixelboost/logic/component/transform/basic.h"
+#include "pixelboost/logic/component/transform.h"
 
 #include "core/uidHelpers.h"
 #include "project/entity.h"
@@ -11,7 +11,7 @@ ViewProperty::ViewProperty(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* c
     : pb::Entity(scene, parent, creationEntity)
     , _BoundsDirty(true)
 {
-    CreateComponent<pb::BasicTransformComponent>();
+    CreateComponent<pb::TransformComponent>();
     
     _PropertyId = GetViewEntity()->AddProperty(this);
 }

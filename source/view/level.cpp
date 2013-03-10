@@ -3,7 +3,7 @@
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 #include "pixelboost/logic/component/graphics/rectangle.h"
-#include "pixelboost/logic/component/transform/basic.h"
+#include "pixelboost/logic/component/transform.h"
 #include "pixelboost/logic/scene.h"
 
 #include "command/manager.h"
@@ -26,7 +26,7 @@ Level::Level(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationData)
     
     Core::Instance()->GetProject()->recordRemoved.Connect(this, &Level::OnRecordRemoved);
     
-    CreateComponent<pb::BasicTransformComponent>();
+    CreateComponent<pb::TransformComponent>();
     
     _LevelBounds = CreateComponent<pb::RectangleComponent>();
     _LevelBounds->SetColor(glm::vec4(0.6, 0.6, 0.6, 1.0));

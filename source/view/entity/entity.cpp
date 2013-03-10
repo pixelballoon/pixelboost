@@ -1,6 +1,6 @@
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 #include "pixelboost/logic/component/graphics/rectangle.h"
-#include "pixelboost/logic/component/transform/basic.h"
+#include "pixelboost/logic/component/transform.h"
 #include "pixelboost/logic/message/update.h"
 #include "pixelboost/logic/scene.h"
 
@@ -40,7 +40,7 @@ void ViewEntity::Initialise(ProjectEntity* entity)
 {
     _Entity = entity;
     
-    CreateComponent<pb::BasicTransformComponent>();
+    CreateComponent<pb::TransformComponent>();
     
     ResetTransform();
     
