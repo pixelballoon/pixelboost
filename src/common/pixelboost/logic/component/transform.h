@@ -29,10 +29,19 @@ namespace pb
         glm::vec3 GetScale();
         void SetScale(const glm::vec3& scale);
         
-        void Dirty();
+        void Dirty(bool dirtyThis);
         
     private:
-        bool _Dirty;
+        enum DirtyType
+        {
+            kDirtyTypeNone,
+            kDirtyTypeThis,
+            kDirtyTypeParent,
+        };
+        
+        DirtyType _Dirty;
+        
+        glm::mat4x4 _LocalMatrix;
         glm::mat4x4 _Matrix;
         glm::vec3 _Position;
         glm::vec3 _Rotation;

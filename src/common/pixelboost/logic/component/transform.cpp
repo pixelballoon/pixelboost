@@ -12,7 +12,7 @@ PB_DEFINE_COMPONENT(pb::TransformComponent)
 
 TransformComponent::TransformComponent(Entity* parent)
     : Component(parent)
-    , _Dirty(true)
+    , _Dirty(kDirtyTypeNone)
     , _Scale(1,1,1)
 {
     
@@ -25,19 +25,25 @@ TransformComponent::~TransformComponent()
 
 const glm::mat4x4& TransformComponent::GetMatrix()
 {
-    if (_Dirty)
+    if (_Dirty != kDirtyTypeNone)
     {
-        _Matrix = glm::mat4x4();
+        if (_Dirty == kDirtyTypeThis)
+        {
+            _LocalMatrix = CreateTransformMatrix(pb::kRotationOrder_XYZ, _Position, _Rotation, _Scale);
+        }
         
         if (GetEntity()->GetParent())
         {
-            _Matrix = GetEntity()->GetParent()->GetComponent<TransformComponent>()->GetMatrix();
+            _Matrix = _LocalMatrix * GetEntity()->GetParent()->GetComponent<TransformComponent>()->GetMatrix();
         }
-        
-        _Matrix = CreateTransformMatrix(pb::kRotationOrder_XYZ, _Position, _Rotation, _Scale, _Matrix);
     }
     
-    return _Matrix;
+    if (GetEntity()->GetParent())
+    {
+        return _Matrix;
+    }
+    
+    return _LocalMatrix;
 }
 
 void TransformComponent::SetTransform(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale)
@@ -46,7 +52,7 @@ void TransformComponent::SetTransform(const glm::vec3& position, const glm::vec3
     _Rotation = rotation;
     _Scale = scale;
     
-    Dirty();
+    Dirty(true);
 }
 
 glm::vec3 TransformComponent::GetPosition()
@@ -58,7 +64,7 @@ void TransformComponent::SetPosition(const glm::vec3& position)
 {
     _Position = position;
     
-    Dirty();
+    Dirty(true);
 }
 
 glm::vec3 TransformComponent::GetRotation()
@@ -70,7 +76,7 @@ void TransformComponent::SetRotation(const glm::vec3& rotation)
 {
     _Rotation = rotation;
     
-    Dirty();
+    Dirty(true);
 }
 
 glm::vec3 TransformComponent::GetScale()
@@ -82,19 +88,20 @@ void TransformComponent::SetScale(const glm::vec3& scale)
 {
     _Scale = scale;
     
-    Dirty();
+    Dirty(true);
 }
 
-void TransformComponent::Dirty()
+void TransformComponent::Dirty(bool dirtyThis)
 {
-    _Dirty = true;
+    if (_Dirty != kDirtyTypeThis)
+        _Dirty = dirtyThis ? kDirtyTypeThis : kDirtyTypeParent;
     
     for (const auto& child : GetEntity()->GetChildren())
     {
         TransformComponent* transform = child->GetComponent<pb::TransformComponent>();
         if (transform)
         {
-            transform->Dirty();
+            transform->Dirty(false);
         }
     }
     
