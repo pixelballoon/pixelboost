@@ -10,8 +10,7 @@
 #include "pixelboost/logic/scene.h"
 
 #include "core/game.h"
-#include "screens/gameScreen.h"
-#include "screens/menuScreen.h"
+#include "screens/mainScreen.h"
 
 namespace pb
 {
@@ -23,12 +22,9 @@ namespace pb
 
 Game::Game(void* viewController, int argc, const char** argv)
     : pb::Engine(viewController, argc, argv, false)
-    , _GameMode(kGameModeUninitialised)
 {
-    _GameScreen = new GameScreen();
-    _MenuScreen = new MenuScreen();
-    
-    SetMode(kGameModeMenu);
+    _MainScreen = new MainScreen();
+    _MainScreen->SetActive(true);
 }
 
 Game::~Game()
@@ -43,58 +39,12 @@ Game* Game::Instance()
 
 void Game::Update(float timeDelta, float gameDelta)
 {
-    switch (_GameMode)
-    {
-        case kGameModeGame:
-            _GameScreen->Update(timeDelta, gameDelta);
-            break;
-            
-        case kGameModeMenu:
-            _MenuScreen->Update(timeDelta, gameDelta);
-            
-        case kGameModeUninitialised:
-            break;
-    }
+    _MainScreen->Update(timeDelta, gameDelta);
     
     Engine::Update(timeDelta, gameDelta);
 }
 
-void Game::SetMode(GameMode gameMode)
+MainScreen* Game::GetMainScreen()
 {
-    switch (_GameMode)
-    {
-        case kGameModeGame:
-            _GameScreen->SetActive(false);
-            break;
-        case kGameModeMenu:
-            _MenuScreen->SetActive(false);
-            break;
-        case kGameModeUninitialised:
-            break;
-    }
-    
-    _GameMode = gameMode;
-    
-    switch (_GameMode)
-    {
-        case kGameModeGame:
-            _GameScreen->SetActive(true);
-            break;
-        case kGameModeMenu:
-            _MenuScreen->SetActive(true);
-            break;
-        case kGameModeUninitialised:
-            PbAssert(!"You shouldn't be setting game mode to this...");
-            break;
-    }
-}
-
-GameScreen* Game::GetGameScreen()
-{
-    return _GameScreen;
-}
-
-MenuScreen* Game::GetMenuScreen()
-{
-    return _MenuScreen;
+    return _MainScreen;
 }

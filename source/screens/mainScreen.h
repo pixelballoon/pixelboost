@@ -13,13 +13,13 @@ namespace pb
     class Viewport;
 }
 
-class MenuInputHandler;
+class MainInputHandler;
 
-class MenuScreen : public pb::Screen, public pb::NetworkHandler
+class MainScreen : public pb::Screen, public pb::NetworkHandler
 {
 public:
-    MenuScreen();
-    ~MenuScreen();
+    MainScreen();
+    ~MainScreen();
     
     virtual void Update(float timeDelta, float gameDelta);
     
@@ -33,7 +33,7 @@ private:
     
     void AddControls();
     
-    MenuInputHandler* _InputHandler;
+    MainInputHandler* _InputHandler;
 
     pb::NetworkDiscoveryClient* _DiscoveryClient;
     pb::NetworkClient* _Client;

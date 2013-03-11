@@ -2,15 +2,7 @@
 
 #include "pixelboost/framework/engine.h"
 
-enum GameMode
-{
-    kGameModeUninitialised,
-    kGameModeGame,
-    kGameModeMenu
-};
-
-class GameScreen;
-class MenuScreen;
+class MainScreen;
 
 class Game : public pb::Engine
 {
@@ -22,14 +14,8 @@ public:
     
     virtual void Update(float timeDelta, float gameDelta);
     
-    void SetMode(GameMode gameMode);
-    
-    GameScreen* GetGameScreen();
-    MenuScreen* GetMenuScreen();
+    MainScreen* GetMainScreen();
     
 private:
-    GameScreen* _GameScreen;
-    MenuScreen* _MenuScreen;
-    
-    GameMode _GameMode;
+    MainScreen* _MainScreen;
 };

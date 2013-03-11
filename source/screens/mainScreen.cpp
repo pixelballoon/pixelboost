@@ -2,21 +2,24 @@
 #include "pixelboost/debug/log.h"
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/camera/viewport.h"
+#include "pixelboost/graphics/renderer/gui/guiRenderer.h"
 #include "pixelboost/input/mouseManager.h"
 #include "pixelboost/input/touchManager.h"
-#include "pixelboost/logic/component/graphics/rectangle.h"
+#include "pixelboost/logic/component/graphics/gui.h"
+#include "pixelboost/logic/message/graphics/gui.h"
+#include "pixelboost/logic/system/graphics/gui/gui.h"
 #include "pixelboost/logic/system/graphics/render/bounds.h"
 #include "pixelboost/logic/scene.h"
 #include "pixelboost/network/networkMessage.h"
 #include "pixelboost/network/networkServer.h"
 
 #include "core/game.h"
-#include "screens/menuScreen.h"
+#include "screens/mainScreen.h"
 
-class MenuInputHandler : public pb::MouseHandler, public pb::TouchHandler
+class MainInputHandler : public pb::MouseHandler, public pb::TouchHandler
 {
 public:
-    MenuInputHandler()
+    MainInputHandler()
     {
         
     }
@@ -28,56 +31,67 @@ public:
     
     virtual bool OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position)
     {
-        Game::Instance()->SetMode(kGameModeGame);
         return false;
     }
     
     virtual bool OnTouchDown(pb::Touch touch)
     {
-        Game::Instance()->SetMode(kGameModeGame);
         return false;
     }
 };
 
-class TitleText : public pb::Entity
+class MainGui : public pb::Entity
 {
     PB_DECLARE_ENTITY
     
 public:
-    TitleText(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity)
+    MainGui(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity)
         : pb::Entity(scene, parent, creationEntity)
     {
-        pb::RectangleComponent* rect = CreateComponent<pb::RectangleComponent>();
-        rect->SetSize(glm::vec2(5,1));
-        rect->SetSolid(true);
+        CreateComponent<pb::TransformComponent>();
+        CreateComponent<pb::GuiComponent>();
+        
+        RegisterMessageHandler<pb::GuiRenderMessage>(pb::MessageHandler(this, &MainGui::OnGuiRender));
     }
     
-    virtual ~TitleText()
+    virtual ~MainGui()
     {
         
     }
+    
+private:
+    void OnGuiRender(const pb::Message& message)
+    {
+        auto guiRenderMessage = message.As<pb::GuiRenderMessage>();
+        
+        auto guiSystem = guiRenderMessage.GetGuiRenderSystem();
+        auto guiComponent = guiRenderMessage.GetGuiComponent();
+        
+        guiSystem->DoButton(guiComponent, glm::vec2(0,0), glm::vec2(4,1));
+        guiSystem->DoButton(guiComponent, glm::vec2(0,1.5), glm::vec2(4,1));
+    }
 };
 
-PB_DEFINE_ENTITY(TitleText)
+PB_DEFINE_ENTITY(MainGui)
 
-MenuScreen::MenuScreen()
+MainScreen::MainScreen()
     : NetworkHandler('dbvr')
     , _Scene(0)
     , _Viewport(0)
 {
-    _InputHandler = new MenuInputHandler();
+    _InputHandler = new MainInputHandler();
     
     _DiscoveryClient = pb::NetworkManager::Instance()->ClientDiscover(9091, "pb::debugvariable");
 
     _Client = 0;
 }
 
-MenuScreen::~MenuScreen()
+MainScreen::~MainScreen()
 {
     
 }
 
-void MenuScreen::Update(float timeDelta, float gameDelta)
+void MainScreen::Update(float timeDelta, float gameDelta)
 {
     if (_Scene)
     {
@@ -97,7 +111,7 @@ void MenuScreen::Update(float timeDelta, float gameDelta)
     }
 }
 
-void MenuScreen::SetActive(bool active)
+void MainScreen::SetActive(bool active)
 {
     Screen::SetActive(active);
     
@@ -113,6 +127,7 @@ void MenuScreen::SetActive(bool active)
         AddViewport(_Viewport);
         
         _Scene->AddSystem(new pb::BoundsRenderSystem());
+        _Scene->AddSystem(new pb::GuiRenderSystem());
         
         AddControls();
     } else {
@@ -127,7 +142,7 @@ void MenuScreen::SetActive(bool active)
     }
 }
 
-void MenuScreen::OnConnectionOpened(pb::NetworkConnection& connection)
+void MainScreen::OnConnectionOpened(pb::NetworkConnection& connection)
 {
     pb::NetworkMessage message;
     
@@ -137,12 +152,12 @@ void MenuScreen::OnConnectionOpened(pb::NetworkConnection& connection)
     _Client->BroadcastMessage(message);
 }
 
-void MenuScreen::OnConnectionClosed(pb::NetworkConnection& connection)
+void MainScreen::OnConnectionClosed(pb::NetworkConnection& connection)
 {
     
 }
 
-void MenuScreen::OnReceive(pb::NetworkConnection& connection, pb::NetworkMessage& message)
+void MainScreen::OnReceive(pb::NetworkConnection& connection, pb::NetworkMessage& message)
 {
     const char* command;
     if (!message.ReadString(command))
@@ -212,7 +227,7 @@ void MenuScreen::OnReceive(pb::NetworkConnection& connection, pb::NetworkMessage
     }
 }
 
-void MenuScreen::AddControls()
+void MainScreen::AddControls()
 {
-    _Scene->CreateEntity<TitleText>(0, 0);
+    _Scene->CreateEntity<MainGui>(0, 0);
 }

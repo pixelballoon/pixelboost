@@ -15,10 +15,8 @@ set (CORE_SOURCES
 	)
 
 set (SCREEN_SOURCES
-	"source/screens/gameScreen.cpp"
-	"source/screens/gameScreen.h"
-	"source/screens/menuScreen.cpp"
-	"source/screens/menuScreen.h"
+	"source/screens/mainScreen.cpp"
+	"source/screens/mainScreen.h"
 	)
 
 set (TEMPLATE_SOURCES
