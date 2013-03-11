@@ -166,7 +166,7 @@ public:
 };
 
 View::View(void* platformContext, int argc, const char** argv)
-    : pb::Engine(platformContext, argc, argv)
+    : pb::Engine(platformContext, argc, argv, false)
     , _LaunchArgc(argc)
     , _LaunchArgv(argv)
     , _Record(0)
