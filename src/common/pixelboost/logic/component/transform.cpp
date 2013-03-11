@@ -12,7 +12,7 @@ PB_DEFINE_COMPONENT(pb::TransformComponent)
 
 TransformComponent::TransformComponent(Entity* parent)
     : Component(parent)
-    , _Dirty(kDirtyTypeNone)
+    , _Dirty(kDirtyTypeThis)
     , _Scale(1,1,1)
 {
     
@@ -34,7 +34,7 @@ const glm::mat4x4& TransformComponent::GetMatrix()
         
         if (GetEntity()->GetParent())
         {
-            _Matrix = _LocalMatrix * GetEntity()->GetParent()->GetComponent<TransformComponent>()->GetMatrix();
+            _Matrix = GetEntity()->GetParent()->GetComponent<TransformComponent>()->GetMatrix() * _LocalMatrix;
         }
     }
     
