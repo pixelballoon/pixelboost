@@ -14,10 +14,10 @@ namespace pb
 {
 
 NetworkMessage::NetworkMessage()
-: _Length(0)
-, _Offset(0)
-, _Protocol(0)
-, _Buffer(0)
+    : _Length(0)
+    , _Offset(0)
+    , _Protocol(0)
+    , _Buffer(0)
 {
 #ifndef PIXELBOOST_DISABLE_NETWORKING
     _Buffer = new char[NETWORK_MAX_MESSAGE_LENGTH];
@@ -25,9 +25,9 @@ NetworkMessage::NetworkMessage()
 }
 
 NetworkMessage::NetworkMessage(const NetworkMessage& src)
-: _Protocol(src._Protocol)
-, _Offset(src._Offset)
-, _Length(src._Length)
+    : _Protocol(src._Protocol)
+    , _Offset(src._Offset)
+    , _Length(src._Length)
 {
 #ifndef PIXELBOOST_DISABLE_NETWORKING
     _Buffer = new char[NETWORK_MAX_MESSAGE_LENGTH];
@@ -260,7 +260,7 @@ int NetworkMessage::GetDataLength()
 
 int NetworkMessage::GetMessageLength()
 {
-    return _Length + 8; // 4 bytes for length, 4 for protocol
+    return _Length + 4; // 4 bytes for protocol
 }
 
 int NetworkMessage::ConstructMessage(char* buffer, int maxLength)
@@ -269,13 +269,10 @@ int NetworkMessage::ConstructMessage(char* buffer, int maxLength)
     if (GetMessageLength() > maxLength)
         return 0;
     
-    int32_t messageLength = htonl(GetMessageLength());
-    
     uint32_t protocol = htonl(_Protocol);
     
-    memcpy(buffer, &messageLength, 4);
-    memcpy(&buffer[4], &protocol, 4);
-    memcpy(&buffer[8], _Buffer, _Length);
+    memcpy(&buffer[0], &protocol, 4);
+    memcpy(&buffer[4], _Buffer, _Length);
     
     return GetMessageLength();
 #else

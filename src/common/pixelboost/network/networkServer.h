@@ -1,15 +1,16 @@
 #pragma once
 
 #include <map>
-#include <queue>
+#include <set>
 #include <string>
 #include <vector>
+
+#include "enet/enet.h"
 
 namespace pb
 {
     class NetworkConnection;
     class NetworkMessage;
-    class NetworkServer;
     
     class NetworkHandler
     {
@@ -28,115 +29,163 @@ namespace pb
         int _Protocol;
     };
     
-    class NetworkConnection
+    class NetworkHost
     {
+    protected:
+        NetworkHost();
+        virtual ~NetworkHost();
+
     public:
-        NetworkConnection(NetworkServer* networkManager);
-        ~NetworkConnection();
-        
         void Close();
         
-        bool IsOpen();
+        bool RegisterHandler(NetworkHandler* handler);
+        void BroadcastMessage(NetworkMessage& message);
         
-        int GetConnectionId();
-        
+    private:
         void Update();
+        
+        void HandleMessage(NetworkMessage& message);
+        
+    protected:
+        ENetHost* _Host;
+        
+        std::vector<NetworkConnection*> _Connections;
+        std::map<int, std::vector<NetworkHandler*> > _Handlers;
+        
+        friend class NetworkManager;
+    };
+    
+    class NetworkClient : public NetworkHost
+    {
+    protected:
+        NetworkClient(const std::string& address, int port);
+        ~NetworkClient();
+        
+    public:
+        std::vector<NetworkConnection*> GetConnection();
+        
+        friend class NetworkManager;
+    };
+    
+    class NetworkServer : public NetworkHost
+    {
+    protected:
+        NetworkServer(int port, int maxConnections);
+        ~NetworkServer();
+        
+    public:
+        std::vector<NetworkConnection*> GetConnections();
+        
+        friend class NetworkManager;
+    };
+    
+    class NetworkDiscovery
+    {
+    protected:
+        NetworkDiscovery(int port);
+        virtual ~NetworkDiscovery();
+        
+        virtual void Update();
+        
+        int Send(ENetSocket* output, ENetAddress *address, NetworkMessage& message);
+        
+        virtual void OnMessage(ENetAddress sender, NetworkMessage& message) = 0;
+        
+    protected:
+        int _Port;
+        ENetSocket _Socket;
+        
+        friend class NetworkManager;
+    };
+    
+    class NetworkDiscoveryServer : public NetworkDiscovery
+    {
+    protected:
+        NetworkDiscoveryServer(int port);
+        ~NetworkDiscoveryServer();
+        
+    public:
+        NetworkDiscoveryServer* AddService(const std::string& service);
+        
+    protected:
+        virtual void Update();
+        virtual void OnMessage(ENetAddress sender, NetworkMessage& message);
+        
+    protected:
+        std::set<std::string> _Services;
+        
+        friend class NetworkManager;
+    };
+    
+    class NetworkDiscoveryClient : public NetworkDiscovery
+    {
+    protected:
+        NetworkDiscoveryClient(int port, const std::string& service);
+        ~NetworkDiscoveryClient();
+        
+        virtual void Update();
+        virtual void OnMessage(ENetAddress sender, NetworkMessage& message);
+        
+    public:
+        void Refresh();
+        
+        const std::vector<std::string>& GetHosts();
+        
+    protected:
+        std::vector<std::string> _Hosts;
+        
+        bool _RefreshPending;
+        std::string _Service;
+        
+        friend class NetworkManager;
+    };
+    
+    class NetworkConnection
+    {
+    protected:
+        NetworkConnection(ENetPeer* peer);
+        ~NetworkConnection();
+        
+    public:
+        void Close();
         
         void Send(NetworkMessage& message);
         
     private:
-        void ProcessSend();
-        void ProcessRecv();
+        ENetPeer* _Peer;
         
-        void SetConnection(int connection);
-        
-        NetworkServer* _NetworkManager;
-        
-        bool _IsReading;
-        bool _IsOpen;
-        
-        int _Connection;
-        
-        std::queue<NetworkMessage*> _SendQueue;
-        
-        char* _SendBuffer;
-        int _SendOffset;
-        int _SendLength;
-        
-        char* _RecvBuffer;
-        int _RecvOffset;
-        int _RecvLength;
-        
-        friend class NetworkServer;
+        friend class NetworkHost;
+        friend class NetworkManager;
     };
     
-    class NetworkServer
+    class NetworkManager
     {
     public:
-        NetworkServer();
-        ~NetworkServer();
+        NetworkManager();
+        ~NetworkManager();
         
-        static NetworkServer* Instance();
+        static NetworkManager* Instance();
         
-        void StartServer(int port, int maxConnections=8);
-        void StopServer();
+        std::string GetHostName();
         
-        void OpenClient(const std::string& host, int port);
-        void CloseClient();
+        NetworkServer* StartServer(int port, int maxConnections);
+        NetworkClient* ClientConnect(const std::string& address, int port);
         
-        const std::string& GetClientHost();
-        int GetClientPort();
+        void CloseHost(NetworkHost* host);
         
-        NetworkConnection& GetClientConnection();
+        NetworkDiscoveryServer* StartDiscoveryServer(int port);
+        NetworkDiscoveryClient* ClientDiscover(int port, const std::string& service);
         
+        void CloseDiscovery(NetworkDiscovery* discovery);
+
         void Update();
-        
-        bool RegisterHandler(NetworkHandler* handler);
-        
-        void SendMessage(NetworkMessage& message);
-        
+
     private:
-        void ConnectionOpened(NetworkConnection& connection);
-        void ConnectionClosed(NetworkConnection& connection);
-        void HandleMessage(NetworkConnection& connection, NetworkMessage& message);
+        std::set<NetworkHost*> _Hosts;
+        std::set<NetworkDiscovery*> _Discovery;
         
-    private:
-        typedef std::map<int, NetworkHandler*> HandlerMap;
-        typedef std::vector<NetworkConnection*> ConnectionList;
-        
-    private:
-        enum State
-        {
-            kStateStarting,
-            kStateBinding,
-            kStateListening,
-            kStateConnecting,
-            kStateConnected,
-            kStateDisconnecting,
-            kStateDisconnected
-        };
-        
-        HandlerMap _Handlers;
-        
-        State _ServerState;
-        State _ClientState;
-        
-        int _ServerSocket;
-        int _ClientSocket;
-        
-        int _ServerPort;
-        
-        std::string _ClientHost;
-        int _ClientPort;
-        
-        NetworkConnection* _ClientConnection;
-        ConnectionList _ServerConnections;
-        
-        int _MaxConnections;
-        
-        static NetworkServer* _Instance;
+        static NetworkManager* _Instance;
         
         friend class NetworkConnection;
     };
-    
 }

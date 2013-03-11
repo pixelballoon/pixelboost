@@ -20,6 +20,7 @@ class JoystickManager;
 class KeyboardManager;
 class ModelRenderer;
 class MouseManager;
+class NetworkDiscoveryServer;
 class NetworkServer;
 class ParticleRenderer;
 class PrimitiveRenderer;
@@ -96,6 +97,7 @@ private:
     MouseManager* _MouseManager;
 	TouchManager* _TouchManager;
     
+    NetworkDiscoveryServer* _DebugDiscovery;
     NetworkServer* _DebugNetwork;
     DebugDatabaseHandler* _DebugDatabaseHandler;
 	

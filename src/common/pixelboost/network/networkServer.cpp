@@ -1,384 +1,125 @@
-#if defined(PIXELBOOST_PLATFORM_WINDOWS)
-	#include <WinSock.h>
-    #define PIXELBOOST_DISABLE_NETWORKING
-#elif defined(PIXELBOOST_PLATFORM_NACL)
-    #define PIXELBOOST_DISABLE_NETWORKING
-#else
-    #include <arpa/inet.h>
-    #include <netinet/in.h>
-    #include <sys/socket.h>
+#if defined(PIXELBOOST_PLATFORM_IOS)
+    #include <UIKit/UIKit.h>
+#elif defined(PIXELBOOST_PLATFORM_OSX)
+    #include <Foundation/Foundation.h>
 #endif
 
-#include <errno.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <unistd.h>
+#include "enet/enet.h"
 
+#include "pixelboost/debug/log.h"
 #include "pixelboost/network/networkMessage.h"
 #include "pixelboost/network/networkServer.h"
 
-namespace pb
+using namespace pb;
+
+NetworkManager* NetworkManager::_Instance = 0;
+
+NetworkHandler::NetworkHandler(int protocol)
+    : _Protocol(protocol)
 {
     
-    NetworkServer* NetworkServer::_Instance = 0;
+}
+
+NetworkHandler::~NetworkHandler()
+{
     
-    NetworkHandler::NetworkHandler(int protocol)
-    : _Protocol(protocol)
+}
+
+int NetworkHandler::GetProtocol()
+{
+    return _Protocol;
+}
+
+void NetworkHandler::OnConnectionOpened(NetworkConnection& connection)
+{
+    
+}
+
+void NetworkHandler::OnConnectionClosed(NetworkConnection& connection)
+{
+    
+}
+
+void NetworkHandler::OnReceive(NetworkConnection& connection, NetworkMessage& message)
+{
+    
+}
+
+NetworkHost::NetworkHost()
+    : _Host(0)
+{
+    
+}
+
+NetworkHost::~NetworkHost()
+{
+    enet_host_destroy(_Host);
+}
+
+void NetworkHost::Close()
+{
+    NetworkManager::Instance()->CloseHost(this);
+}
+
+bool NetworkHost::RegisterHandler(NetworkHandler* handler)
+{
+    if (_Handlers.find(handler->GetProtocol()) != _Handlers.end())
+        return false;
+    
+    _Handlers[handler->GetProtocol()].push_back(handler);
+    
+    return true;
+}
+
+void NetworkHost::BroadcastMessage(NetworkMessage& message)
+{
+    for (auto& connection : _Connections)
     {
-        
+        connection->Send(message);
     }
+}
+
+void NetworkHost::Update()
+{
+    ENetEvent event;
     
-    NetworkHandler::~NetworkHandler()
+    while (enet_host_service (_Host, &event, 0) > 0)
     {
-        
-    }
-    
-    int NetworkHandler::GetProtocol()
-    {
-        return _Protocol;
-    }
-    
-    void NetworkHandler::OnConnectionOpened(NetworkConnection& connection)
-    {
-        
-    }
-    
-    void NetworkHandler::OnConnectionClosed(NetworkConnection& connection)
-    {
-        
-    }
-    
-    void NetworkHandler::OnReceive(NetworkConnection& connection, NetworkMessage& message)
-    {
-        
-    }
-    
-    NetworkConnection::NetworkConnection(NetworkServer* networkManager)
-    : _NetworkManager(networkManager)
-    , _IsOpen(false)
-    , _Connection(0)
-    , _IsReading(false)
-    , _SendLength(0)
-    , _RecvLength(0)
-    , _SendOffset(0)
-    , _RecvOffset(0)
-    {
-        _SendBuffer = new char[NETWORK_MAX_MESSAGE_LENGTH];
-        _RecvBuffer = new char[NETWORK_MAX_MESSAGE_LENGTH];
-    }
-    
-    NetworkConnection::~NetworkConnection()
-    {
-        delete[] _SendBuffer;
-        delete[] _RecvBuffer;
-    }
-    
-    void NetworkConnection::Close()
-    {
-#ifndef PIXELBOOST_PLATFORM_WINDOWS
-        if (_IsOpen)
+        switch (event.type)
         {
-            close(_Connection);
-            
-            _IsOpen = false;
-            
-            _NetworkManager->ConnectionClosed(*this);
-            
-            _RecvOffset = 0;
-            _SendOffset = 0;
-            _SendLength = 0;
-            _RecvLength = 0;
-            _IsReading = false;
-        }
-#endif
-    }
-    
-    bool NetworkConnection::IsOpen()
-    {
-        return _IsOpen;
-    }
-    
-    int NetworkConnection::GetConnectionId()
-    {
-        return _Connection;
-    }
-    
-    void NetworkConnection::Update()
-    {
-        ProcessSend();
-        ProcessRecv();
-    }
-    
-    void NetworkConnection::Send(NetworkMessage& message)
-	{
-        if (!_IsOpen)
-            return;
-        
-        _SendQueue.push(new NetworkMessage(message));
-    }
-    
-    void NetworkConnection::ProcessSend()
-    {
-#ifndef PIXELBOOST_DISABLE_NETWORKING
-        int sendProcessed = 0;
-        
-        while (sendProcessed < 50)
-        {
-            if (_SendLength == 0)
+            case ENET_EVENT_TYPE_CONNECT:
             {
-                if (_SendQueue.size())
+                NetworkConnection* connection = new NetworkConnection(event.peer);
+                
+                _Connections.push_back(connection);
+                
+                for (auto& handlerList : _Handlers)
                 {
-                    NetworkMessage* message = _SendQueue.front();
-                    _SendQueue.pop();
-                    int messageLength = message->ConstructMessage(_SendBuffer, NETWORK_MAX_MESSAGE_LENGTH);
-                    delete message;
-                    _SendLength = messageLength;
-                    _SendOffset = 0;
-                }
-                else
-                {
-                    return;
-                }
-            }
-            
-            if (_SendLength)
-            {
-                int sendLength = static_cast<int>(send(_Connection, &_SendBuffer[_SendOffset], _SendLength, 0));
-                
-                if (sendLength <= 0)
-                    return;
-                
-                _SendLength -= sendLength;
-                _SendOffset += sendLength;
-            }
-            
-            sendProcessed++;
-        }
-#endif
-    }
-    
-    void NetworkConnection::ProcessRecv()
-    {
-#ifndef PIXELBOOST_DISABLE_NETWORKING
-        int recvProcessed = 0;
-        
-        while (recvProcessed < 50)
-        {
-            int maxRecv = _IsReading ? _RecvLength-_RecvOffset : 4-_RecvOffset;
-            
-            if (maxRecv == 0)
-            {
-                NetworkMessage msg;
-                msg.SetData(_RecvLength, &_RecvBuffer[4]);
-                
-                _NetworkManager->HandleMessage(*this, msg);
-                
-                _RecvOffset = 0;
-                _IsReading = false;
-                maxRecv = 4;
-            }
-            
-            int recvLength = static_cast<int>(recv(_Connection, &_RecvBuffer[_RecvOffset], maxRecv, 0));
-            
-            if (recvLength == 0)
-            {
-                _IsOpen = false;
-                _NetworkManager->ConnectionClosed(*this);
-                return;
-            }
-            
-            if (recvLength < 0)
-            {
-                if (errno == EAGAIN)
-                    return;
-                
-                if (errno == ECONNRESET)
-                {
-                    _IsOpen = false;
-                    _NetworkManager->ConnectionClosed(*this);
-                    return;
-                }
-                
-                fprintf(stderr, "Error Receiving: %s\n", strerror(errno));
-                
-                return;
-            }
-            
-            if (!_IsReading && (_RecvOffset+recvLength) == 4)
-            {
-                int32_t messageLength;
-                memcpy(&messageLength, _RecvBuffer, 4);
-                _RecvLength = ntohl(messageLength);
-                _IsReading = true;
-            }
-            
-            _RecvOffset += recvLength;
-            
-            recvProcessed++;
-        }
-#endif
-    }
-    
-    
-    void NetworkConnection::SetConnection(int connection)
-    {
-        _IsOpen = true;
-        _Connection = connection;
-        _IsReading = false;
-        _RecvLength = 0;
-        _SendLength = 0;
-        _RecvOffset = 0;
-        _SendOffset = 0;
-        
-        _NetworkManager->ConnectionOpened(*this);
-    }
-    
-    NetworkServer::NetworkServer()
-    : _MaxConnections(0)
-    , _ServerState(kStateDisconnected)
-    , _ClientState(kStateDisconnected)
-    , _ClientPort(0)
-    {
-        _ClientConnection = new NetworkConnection(this);
-        _ClientHost = new char[255];
-        _Instance = this;
-    }
-    
-    NetworkServer::~NetworkServer()
-    {
-        _Instance = 0;
-        
-        _Handlers.clear();
-        
-        StopServer();
-        CloseClient();
-        
-        delete _ClientConnection;
-    }
-    
-    NetworkServer* NetworkServer::Instance()
-    {
-        return _Instance;
-    }
-    
-    void NetworkServer::StartServer(int port, int maxConnections)
-    {
-        StopServer();
-        
-        _MaxConnections = maxConnections;
-        _ServerPort = port;
-        _ServerState = kStateStarting;
-        
-        for (int i=0; i<maxConnections; i++)
-            _ServerConnections.push_back(new NetworkConnection(this));
-    }
-    
-    void NetworkServer::StopServer()
-    {
-        if (_ServerState == kStateDisconnected)
-            return;
-        
-        _ServerState = kStateDisconnecting;
-        
-        while (_ServerState != kStateDisconnected)
-            Update();
-        
-        for (ConnectionList::iterator it = _ServerConnections.begin(); it != _ServerConnections.end(); ++it)
-            delete *it;    
-        _ServerConnections.clear();
-    }
-    
-    void NetworkServer::OpenClient(const std::string& host, int port)
-    {
-        CloseClient();
-        
-        _ClientHost = host;
-        _ClientPort = port;
-        _ClientState = kStateStarting;
-    }
-    
-    const std::string& NetworkServer::GetClientHost()
-    {
-        return _ClientHost;
-    }
-    
-    int NetworkServer::GetClientPort()
-    {
-        return _ClientPort;
-    }
-    
-    void NetworkServer::CloseClient()
-    {
-        if (_ClientState == kStateDisconnected)
-            return;
-        
-        _ClientState = kStateDisconnecting;
-        
-        while (_ClientState != kStateDisconnected)
-            Update();
-    }
-    
-    NetworkConnection& NetworkServer::GetClientConnection()
-    {
-        return *_ClientConnection;
-    }
-    
-    void NetworkServer::Update()
-    {
-#ifndef PIXELBOOST_DISABLE_NETWORKING
-        switch (_ServerState)
-        {
-            case kStateStarting:
-            {         
-                _ServerSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-                
-                int flags = fcntl(_ServerSocket, F_GETFL, 0);
-                fcntl(_ServerSocket, F_SETFL, flags|O_NONBLOCK);
-                
-                int optval = 1;
-                setsockopt(_ServerSocket, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof optval);
-                
-                _ServerState = kStateBinding;
-                
-                break;
-            }
-                
-            case kStateBinding:
-            {
-                sockaddr_in server;
-                
-                server.sin_family = AF_INET;
-                server.sin_addr.s_addr = htonl(INADDR_ANY);
-                server.sin_port = htons(_ServerPort);
-                
-                if (bind(_ServerSocket, (struct sockaddr*)&server, sizeof(sockaddr_in)) == 0)
-                {
-                    listen(_ServerSocket, _MaxConnections);
-                    
-                    _ServerState = kStateListening;
-                } else {
-                    fprintf(stderr, "Error Binding: %s\n", strerror(errno));
-                }
-                
-                break;
-            }
-                
-            case kStateListening:
-            {           
-                int connectionId = accept(_ServerSocket, 0, 0);
-                
-                for (ConnectionList::iterator it = _ServerConnections.begin(); it != _ServerConnections.end(); ++it)
-                {
-                    if ((*it)->IsOpen())
+                    for (auto& handler : handlerList.second)
                     {
-                        (*it)->Update();
+                        handler->OnConnectionOpened(*connection);
                     }
-                    else
+                }
+                
+                break;
+            }
+                
+            case ENET_EVENT_TYPE_RECEIVE:
+            {
+                NetworkMessage message;
+                message.SetData(event.packet->dataLength, reinterpret_cast<char*>(event.packet->data));
+                
+                enet_packet_destroy (event.packet);
+                
+                auto& handlerList = _Handlers[message.GetProtocol()];
+                
+                for (auto& connection : _Connections)
+                {
+                    if (event.peer == connection->_Peer)
                     {
-                        if (connectionId > 0)
+                        for (auto& handler : handlerList)
                         {
-                            (*it)->SetConnection(connectionId);
-                            connectionId = 0;
+                            handler->OnReceive(*connection, message);
                         }
                     }
                 }
@@ -386,131 +127,435 @@ namespace pb
                 break;
             }
                 
-            case kStateDisconnecting:
+            case ENET_EVENT_TYPE_DISCONNECT:
             {
-                for (ConnectionList::iterator it = _ServerConnections.begin(); it != _ServerConnections.end(); ++it)
+                for (auto it = _Connections.begin(); it != _Connections.end(); ++it)
                 {
-                    if ((*it)->IsOpen())
-                        (*it)->Close();
-                }
-                close(_ServerSocket);
-                _ServerState = kStateDisconnected;
-                break;
-            }
-                
-            default:
-                break;
-        }
-        
-        switch (_ClientState)
-        {
-            case kStateStarting:
-            {         
-                _ClientSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-                
-                int flags = fcntl(_ClientSocket, F_GETFL, 0);
-                fcntl(_ClientSocket, F_SETFL, flags|O_NONBLOCK);
-                
-                int optval = 1;
-                setsockopt(_ClientSocket, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof optval);
-                
-                _ClientState = kStateConnecting;
-                
-                break;
-            }
-                
-            case kStateConnecting:
-                sockaddr_in server;
-                
-                server.sin_family = AF_INET;
-                inet_pton(AF_INET, _ClientHost.c_str(), &(server.sin_addr));
-                server.sin_port = htons(_ClientPort);
-                
-                if (connect(_ClientSocket, (struct sockaddr*)&server, sizeof(sockaddr_in)) == 0)
-                {
-                    _ClientState = kStateConnected;
-                    _ClientConnection->SetConnection(_ClientSocket);
-                } else {
-                    if (errno == EISCONN)   
+                    if (event.peer == (*it)->_Peer)
                     {
-                        _ClientState = kStateConnected;
-                        _ClientConnection->SetConnection(_ClientSocket);
+                        for (auto& handlerList : _Handlers)
+                        {
+                            for (auto& handler : handlerList.second)
+                            {
+                                handler->OnConnectionClosed(**it);
+                            }
+                        }
+                        _Connections.erase(it);
+                        delete *it;
                         break;
                     }
-                    
-                    if (errno != EINPROGRESS && errno != EALREADY)
-                    {
-                        close(_ClientSocket);
-                        _ClientState = kStateStarting;
-                    }
                 }
                 
-                break;
-                
-            case kStateConnected:
-            {
-                if (_ClientConnection->IsOpen())
-                    _ClientConnection->Update();
-                else
-                    _ClientState = kStateConnecting;
-                
-                break;
-            }
-                
-            case kStateDisconnecting:
-            {
-                _ClientConnection->Close();
-                _ClientState = kStateDisconnected;
                 break;
             }
                 
             default:
                 break;
         }
-#endif
+    }
+}
+
+void NetworkHost::HandleMessage(NetworkMessage& message)
+{
+    
+}
+
+NetworkClient::NetworkClient(const std::string& client, int port)
+    : NetworkHost()
+{
+    _Host = enet_host_create(0, 1, 2, 0, 0);
+    
+    if (!_Host)
+    {
+        PbLogError("pb.network", "Error creating enet client host");
+        return;
     }
     
-    bool NetworkServer::RegisterHandler(NetworkHandler* handler)
+    ENetAddress address;
+    ENetPeer *peer;
+    
+    enet_address_set_host(&address, client.c_str());
+    address.port = port;
+
+    peer = enet_host_connect(_Host, &address, 2, 0);
+    if (!peer)
     {
-        if (_Handlers.find(handler->GetProtocol()) != _Handlers.end())
-            return false;
+        PbLogDebug("pb.network", "No available peers for new connection to %s:%d", client.c_str(), port);
+    }
+}
+
+NetworkClient::~NetworkClient()
+{
+    
+}
+
+NetworkServer::NetworkServer(int port, int maxConnections)
+    : NetworkHost()
+{
+    ENetAddress address;
+    address.host = ENET_HOST_ANY;
+    address.port = port;
+    
+    _Host = enet_host_create(&address, maxConnections, 2, 0, 0);
+    
+    if (_Host == 0)
+    {
+        PbLogError("pb.network", "Error creating enet server host");
+        return;
+    }
+}
+
+NetworkServer::~NetworkServer()
+{
+    
+}
+
+NetworkDiscovery::NetworkDiscovery(int port)
+    : _Port(port)
+    , _Socket(0)
+{
+    
+}
+
+NetworkDiscovery::~NetworkDiscovery()
+{
+    
+}
+
+void NetworkDiscovery::Update()
+{
+    if (!_Socket)
+        return;
+    
+    ENetAddress sender;
+    ENetBuffer buffer;
+    
+    buffer.data = malloc(128);
+    buffer.dataLength = 128;
+    
+    int length = enet_socket_receive(_Socket, &sender, &buffer, 1);
+    if (length > 0)
+    {
+        pb::NetworkMessage message;
+        message.SetData(length, reinterpret_cast<char*>(buffer.data));
         
-        _Handlers[handler->GetProtocol()] = handler;
-        
-        return true;
+        OnMessage(sender, message);
     }
     
-    void NetworkServer::SendMessage(NetworkMessage& message)
+    free(buffer.data);
+}
+
+int NetworkDiscovery::Send(ENetSocket* output, ENetAddress* address, NetworkMessage& message)
+{
+    ENetSocket socket;
+
+    socket = enet_socket_create(ENET_SOCKET_TYPE_DATAGRAM);
+    if(socket == ENET_SOCKET_NULL)
+        return -1;
+    
+    enet_socket_set_option(socket, ENET_SOCKOPT_NONBLOCK, 1);
+
+    if(address->host == ENET_HOST_BROADCAST)
+        enet_socket_set_option(socket, ENET_SOCKOPT_BROADCAST, 1);
+
+    char* data = new char[message.GetMessageLength()];
+    int length = message.ConstructMessage(data, message.GetMessageLength());
+    
+    ENetBuffer buffer;
+    buffer.data = data;
+    buffer.dataLength = length;
+    int error = enet_socket_send(socket, address, &buffer, 1);
+    
+    delete data;
+    
+    if (output)
     {
-        for (ConnectionList::iterator it = _ServerConnections.begin(); it != _ServerConnections.end(); ++it)
+        *output = socket;
+    } else {
+        enet_socket_destroy(socket);
+    }
+    
+    if (error <= 0)
+    {
+        return error;
+    }
+
+    return length;
+}
+
+NetworkDiscoveryServer::NetworkDiscoveryServer(int port)
+    : NetworkDiscovery(port)
+{
+    
+}
+
+NetworkDiscoveryServer::~NetworkDiscoveryServer()
+{
+    
+}
+
+NetworkDiscoveryServer* NetworkDiscoveryServer::AddService(const std::string& service)
+{
+    _Services.insert(service);
+    return this;
+}
+
+void NetworkDiscoveryServer::Update()
+{
+    NetworkDiscovery::Update();
+    
+    if (!_Socket)
+    {
+        ENetAddress address;
+        address.host = ENET_HOST_ANY;
+        address.port = _Port;
+        
+        _Socket = enet_socket_create(ENET_SOCKET_TYPE_DATAGRAM);
+        if(_Socket == ENET_SOCKET_NULL)
         {
-            if ((*it)->IsOpen())
+            return;
+        }
+        
+        enet_socket_set_option(_Socket, ENET_SOCKOPT_REUSEADDR, 1);
+        
+        if(enet_socket_bind(_Socket, &address) < 0)
+        {
+            enet_socket_destroy(_Socket);
+            _Socket = 0;
+            return;
+        }
+        
+        enet_socket_set_option(_Socket, ENET_SOCKOPT_NONBLOCK, 1);
+    }
+}
+
+void NetworkDiscoveryServer::OnMessage(ENetAddress sender, NetworkMessage& message)
+{
+    if (message.GetProtocol() == 'dscr')
+    {
+        PbLogDebug("pb.network", "Send reply to discovery");
+        
+        std::string hostname = NetworkManager::Instance()->GetHostName();
+        
+        NetworkMessage reply;
+        reply.SetProtocol('dsca');
+        reply.WriteString(hostname.c_str());
+        
+        reply.WriteInt(_Services.size());
+        for (const auto& service : _Services)
+        {
+            reply.WriteString(service.c_str());
+        }
+        
+        Send(0, &sender, reply);
+    }
+}
+
+NetworkDiscoveryClient::NetworkDiscoveryClient(int port, const std::string& service)
+    : NetworkDiscovery(port)
+    , _RefreshPending(true)
+    , _Service(service)
+
+{
+    
+}
+
+NetworkDiscoveryClient::~NetworkDiscoveryClient()
+{
+    
+}
+
+void NetworkDiscoveryClient::Update()
+{
+    NetworkDiscovery::Update();
+    
+    if (_RefreshPending)
+        Refresh();
+}
+
+void NetworkDiscoveryClient::OnMessage(ENetAddress sender, NetworkMessage& message)
+{
+    if (message.GetProtocol() == 'dsca')
+    {
+        const char* hostname;
+        message.ReadString(hostname);
+        
+        int numServices;
+        message.ReadInt(numServices);
+        
+        for (int i=0; i<numServices; i++)
+        {
+            const char* service;
+            message.ReadString(service);
+            
+            if (service == _Service)
             {
-                (*it)->Send(message);
+                char ip[128];
+                enet_address_get_host_ip(&sender, ip, 128);
+                _Hosts.push_back(ip);
+                PbLogDebug("pb.network", "Received reply to service (%s) discovery (%s/%s)", _Service.c_str(), hostname, ip);
+                
+                return;
             }
         }
     }
+}
+
+void NetworkDiscoveryClient::Refresh()
+{
+    _RefreshPending = true;
     
-    void NetworkServer::ConnectionOpened(NetworkConnection& connection)
+    ENetAddress address;
+    address.host = ENET_HOST_BROADCAST;
+    address.port = _Port;
+    
+    pb::NetworkMessage message;
+    message.SetProtocol('dscr');
+    
+    if (_Socket)
     {
-        for (HandlerMap::iterator it = _Handlers.begin(); it != _Handlers.end(); ++it)
-            it->second->OnConnectionOpened(connection);
+        enet_socket_destroy(_Socket);
+        _Socket = 0;
     }
     
-    void NetworkServer::ConnectionClosed(NetworkConnection& connection)
+    if (Send(&_Socket, &address, message))
     {
-        for (HandlerMap::iterator it = _Handlers.begin(); it != _Handlers.end(); ++it)
-            it->second->OnConnectionClosed(connection);
+        PbLogDebug("pb.network", "Sent discovery message");
+        _RefreshPending = false;
+    }
+}
+
+const std::vector<std::string>& NetworkDiscoveryClient::GetHosts()
+{
+    return _Hosts;
+}
+
+NetworkConnection::NetworkConnection(ENetPeer* peer)
+    : _Peer(peer)
+{
+
+}
+
+NetworkConnection::~NetworkConnection()
+{
+    
+}
+
+void NetworkConnection::Close()
+{
+    enet_peer_disconnect(_Peer, 0);
+}
+
+void NetworkConnection::Send(NetworkMessage& message)
+{
+    char* buffer = new char[message.GetMessageLength()];
+    int length = message.ConstructMessage(buffer, message.GetMessageLength());
+
+    ENetPacket* packet = enet_packet_create(buffer, length, ENET_PACKET_FLAG_RELIABLE);
+    
+    enet_peer_send(_Peer, 0, packet);
+}
+
+NetworkManager::NetworkManager()
+{
+    _Instance = this;
+    
+    enet_initialize();
+}
+
+NetworkManager::~NetworkManager()
+{
+    _Instance = 0;
+    
+    for (auto& host : _Hosts)
+    {
+        CloseHost(host);
     }
     
-    void NetworkServer::HandleMessage(NetworkConnection& connection, NetworkMessage& message)
+    for (auto& discovery : _Discovery)
     {
-        HandlerMap::iterator it = _Handlers.find(message.GetProtocol());
-        
-        if (it == _Handlers.end())
-            return;
-        
-        it->second->OnReceive(connection, message);
+        CloseDiscovery(discovery);
+    }
+       
+    enet_deinitialize();
+}
+
+NetworkManager* NetworkManager::Instance()
+{
+    return _Instance;
+}
+
+std::string NetworkManager::GetHostName()
+{
+#if defined(PIXELBOOST_PLATFORM_OSX)
+    return [[[NSHost currentHost] localizedName] UTF8String];
+#elif defined(PIXELBOOST_PLATFORM_IOS)
+    return [[[UIDevice currentDevice] name] UTF8String];
+#endif
+    return "Unknown";
+}
+
+NetworkServer* NetworkManager::StartServer(int port, int maxConnections)
+{
+    NetworkServer* server = new NetworkServer(port, maxConnections);
+    
+    _Hosts.insert(server);
+    
+    return server;
+}
+
+NetworkClient* NetworkManager::ClientConnect(const std::string& address, int port)
+{
+    NetworkClient* client = new NetworkClient(address, port);
+    
+    _Hosts.insert(client);
+    
+    return client;
+}
+
+void NetworkManager::CloseHost(NetworkHost* host)
+{
+    _Hosts.erase(host);
+    
+    delete host;
+}
+
+NetworkDiscoveryServer* NetworkManager::StartDiscoveryServer(int port)
+{
+    NetworkDiscoveryServer* discovery = new NetworkDiscoveryServer(port);
+    
+    _Discovery.insert(discovery);
+    
+    return discovery;
+}
+
+NetworkDiscoveryClient* NetworkManager::ClientDiscover(int port, const std::string& service)
+{
+    NetworkDiscoveryClient* discovery = new NetworkDiscoveryClient(port, service);
+    
+    _Discovery.insert(discovery);
+    
+    return discovery;
+}
+
+
+
+void NetworkManager::CloseDiscovery(NetworkDiscovery* discovery)
+{
+    _Discovery.erase(discovery);
+    
+    delete discovery;
+}
+
+void NetworkManager::Update()
+{
+    for (auto& host : _Hosts)
+    {
+        host->Update();
     }
     
+    for (auto& discovery : _Discovery)
+    {
+        discovery->Update();
+    }
 }

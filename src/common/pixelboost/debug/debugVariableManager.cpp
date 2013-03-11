@@ -8,6 +8,7 @@
 #include "pixelboost/debug/debugVariable.h"
 #include "pixelboost/debug/debugVariableManager.h"
 #include "pixelboost/network/networkMessage.h"
+#include "pixelboost/network/networkServer.h"
 
 using namespace pb;
     
@@ -233,7 +234,7 @@ void DebugVariableManager::SendValue(DebugVariable* variable)
             break;
     }
     
-    networkServer->SendMessage(message);
+    networkServer->BroadcastMessage(message);
 }
 
 #endif

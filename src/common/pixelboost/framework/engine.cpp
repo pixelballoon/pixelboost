@@ -1,4 +1,3 @@
-#include "enet/enet.h"
 #include "optionparser/optionparser.h"
 
 #include "pixelboost/audio/audioManagerSimple.h"
@@ -44,8 +43,6 @@ Engine::Engine(void* platformContext, int argc, const char** argv, bool enableNe
     , _DebugNetwork(0)
 {
     _Instance = this;
-    
-    enet_initialize();
     
     LogSystem::Instance()->AddSubscriber(new LogSubscriberConsole());
     
@@ -94,15 +91,18 @@ Engine::Engine(void* platformContext, int argc, const char** argv, bool enableNe
     _MouseManager = new MouseManager();
     _TouchManager = new TouchManager();
 #endif
+    
+    NetworkManager* networkManager = new NetworkManager();
 
 #ifndef PIXELBOOST_DISABLE_DEBUG
     if (enableNetworkDebug)
     {
-        _DebugNetwork = new NetworkServer();
+        _DebugDiscovery = networkManager->StartDiscoveryServer(9091);
+        _DebugDiscovery->AddService("pb::debugvariable");
+        _DebugNetwork = networkManager->StartServer(9090, 8);
         _DebugDatabaseHandler = new DebugDatabaseHandler();
         _DebugNetwork->RegisterHandler(_DebugDatabaseHandler);
         _DebugNetwork->RegisterHandler(DebugVariableManager::Instance());
-        _DebugNetwork->StartServer(9090, 1);
     }
 #endif
 }
@@ -111,7 +111,7 @@ Engine::~Engine()
 {
     _Instance = 0;
     
-    delete _FileSystem;
+    delete NetworkManager::Instance();
     
 #ifndef PIXELBOOST_DISABLE_GAMECENTER
     delete _GameCenter;
@@ -135,7 +135,7 @@ Engine::~Engine()
     delete _TouchManager;
 #endif
     
-    enet_deinitialize();
+    delete _FileSystem;
 }
 
 void Engine::RegisterLuaClass(lua_State* state)
@@ -268,12 +268,7 @@ void Engine::Update(float timeDelta, float gameDelta)
     
     ResourceManager::Instance()->Update(timeDelta);
     
-#ifndef PIXELBOOST_DISABLE_DEBUG
-    if (_DebugNetwork)
-    {
-        _DebugNetwork->Update();
-    }
-#endif
+    NetworkManager::Instance()->Update();
 }
 
 void Engine::Render()
