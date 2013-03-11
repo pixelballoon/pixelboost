@@ -228,6 +228,7 @@ bool Project::Export(bool networkExport)
     
     if (networkExport)
     {
+        /*
         if (!Core::Instance()->GetNetworkManager()->GetClientConnection().IsOpen())
             return false;
         
@@ -266,6 +267,7 @@ bool Project::Export(bool networkExport)
             message.WriteString(main.c_str());
             Core::Instance()->GetNetworkManager()->GetClientConnection().Send(message);
         }
+        */
     }
     
     return true;

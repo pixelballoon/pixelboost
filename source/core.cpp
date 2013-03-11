@@ -15,8 +15,6 @@ Core::Core()
     _CommandManager = new CommandManager();
     _Project = new Project();
     
-    _NetworkManager = new pb::NetworkServer();
-    
     RegisterCoreCommands();
 }
 
@@ -35,17 +33,12 @@ Core* Core::Instance()
 
 void Core::Update()
 {
-    _NetworkManager->Update();
+    
 }
 
 CommandManager* Core::GetCommandManager()
 {
     return _CommandManager;
-}
-
-pb::NetworkServer* Core::GetNetworkManager()
-{
-    return _NetworkManager;
 }
 
 Project* Core::GetProject()

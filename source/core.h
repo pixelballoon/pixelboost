@@ -48,7 +48,6 @@ private:
     static Core* _Instance;
     
     CommandManager* _CommandManager;
-    pb::NetworkServer* _NetworkManager;
     
     Project* _Project;
     
