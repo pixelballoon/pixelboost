@@ -22,7 +22,7 @@ namespace pb
 }
 
 Game::Game(void* viewController, int argc, const char** argv)
-    : pb::Engine(viewController, argc, argv)
+    : pb::Engine(viewController, argc, argv, false)
     , _GameMode(kGameModeUninitialised)
 {
     _GameScreen = new GameScreen();
