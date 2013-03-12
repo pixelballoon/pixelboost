@@ -35,7 +35,7 @@ glm::vec2 GuiComponent::GetSize()
     return _Size;
 }
 
-void GuiComponent::OnGui(GuiGlobalState& state, GuiRenderSystem* system, GuiRenderMessage::EventType eventType)
+void GuiComponent::OnGui(GuiState& state, GuiRenderSystem* system, GuiRenderMessage::EventType eventType)
 {
     GetEntity()->SendMessage(GuiRenderMessage(state, system, this, eventType));
 }

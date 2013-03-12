@@ -22,10 +22,10 @@ namespace pb
         };
         
     public:
-        GuiRenderMessage(GuiGlobalState& state, GuiRenderSystem* renderSystem, GuiComponent* guiComponent, EventType eventType, GuiInputEvent inputEvent = GuiInputEvent());
+        GuiRenderMessage(GuiState& state, GuiRenderSystem* renderSystem, GuiComponent* guiComponent, EventType eventType, GuiInputEvent inputEvent = GuiInputEvent());
         virtual ~GuiRenderMessage();
         
-        GuiGlobalState& GetState() const;
+        GuiState& GetState() const;
         
         GuiRenderSystem* GetGuiRenderSystem() const;
         GuiComponent* GetGuiComponent() const;
@@ -34,7 +34,7 @@ namespace pb
         GuiInputEvent GetInputEvent() const;
         
     private:
-        GuiGlobalState& _State;
+        GuiState& _State;
         
         GuiRenderSystem* _GuiRenderSystem;
         GuiComponent* _GuiComponent;

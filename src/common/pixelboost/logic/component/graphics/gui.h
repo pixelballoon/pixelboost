@@ -12,8 +12,8 @@ namespace pb
     class GuiRenderSystem;
     class Message;
     
-    struct GuiGlobalState;
     struct GuiInputEvent;
+    struct GuiState;
     
     class GuiComponent : public RenderableComponent<GuiRenderable>
     {
@@ -28,7 +28,7 @@ namespace pb
         glm::vec2 GetSize();
         
     private:
-        void OnGui(GuiGlobalState& state, GuiRenderSystem* system, GuiRenderMessage::EventType eventType);
+        void OnGui(GuiState& state, GuiRenderSystem* system, GuiRenderMessage::EventType eventType);
         
         glm::vec2 _Size;
         

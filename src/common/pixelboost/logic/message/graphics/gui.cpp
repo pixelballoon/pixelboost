@@ -4,7 +4,7 @@ using namespace pb;
 
 PB_DEFINE_MESSAGE(pb::GuiRenderMessage)
 
-GuiRenderMessage::GuiRenderMessage(GuiGlobalState& state, GuiRenderSystem* renderSystem, GuiComponent* guiComponent, EventType eventType, GuiInputEvent inputEvent)
+GuiRenderMessage::GuiRenderMessage(GuiState& state, GuiRenderSystem* renderSystem, GuiComponent* guiComponent, EventType eventType, GuiInputEvent inputEvent)
     : Message(0,0)
     , _State(state)
     , _GuiRenderSystem(renderSystem)
@@ -20,7 +20,7 @@ GuiRenderMessage::~GuiRenderMessage()
     
 }
 
-GuiGlobalState& GuiRenderMessage::GetState() const
+GuiState& GuiRenderMessage::GetState() const
 {
     return _State;
 }

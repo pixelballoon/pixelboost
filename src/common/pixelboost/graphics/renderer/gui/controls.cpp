@@ -7,30 +7,44 @@
 
 using namespace pb;
 
-void GuiControls::BeginArea(const GuiRenderMessage& message, GuiId guiId, const std::vector<GuiLayoutHint>& hints)
+void GuiControls::BeginArea(const GuiRenderMessage& message, const std::vector<GuiLayoutHint>& hints)
 {
-    if (message.GetEventType() == GuiRenderMessage::kEventTypeLayout)
-    {
-        message.GetGuiRenderSystem()->AddLayout(guiId, hints, glm::vec2(0,0));
-        return;
-    }
+
 }
 
-void GuiControls::EndArea()
+void GuiControls::EndArea(const GuiRenderMessage& message)
 {
     
 }
 
-void GuiControls::BeginScrollArea(const GuiRenderMessage& message, GuiId guiId, const std::vector<GuiLayoutHint>& hints)
+void GuiControls::BeginHorizontal(const GuiRenderMessage& message, const std::vector<GuiLayoutHint>& hints)
 {
     if (message.GetEventType() == GuiRenderMessage::kEventTypeLayout)
     {
-        message.GetGuiRenderSystem()->AddLayout(guiId, hints, glm::vec2(0,0));
+        GuiLayoutArea area;
+        area.Type = GuiLayoutArea::kLayoutTypeHorizontal;
+        area.Position = message.GetState().LayoutStack.top().Pointer;
+        area.Pointer = area.Position;
+        message.GetGuiRenderSystem()->PushLayoutArea(area);
         return;
     }
 }
 
-void GuiControls::EndScrollArea()
+void GuiControls::EndHorizontal(const GuiRenderMessage& message)
+{
+    if (message.GetEventType() == GuiRenderMessage::kEventTypeLayout)
+    {
+        message.GetGuiRenderSystem()->PopLayoutArea();
+        return;
+    }
+}
+
+void GuiControls::BeginScrollArea(const GuiRenderMessage& message, const std::vector<GuiLayoutHint>& hints)
+{
+
+}
+
+void GuiControls::EndScrollArea(const GuiRenderMessage& message)
 {
     
 }
@@ -50,7 +64,7 @@ bool GuiControls::DoButton(const GuiRenderMessage& message, GuiId guiId, const s
     
     GuiLayout layout = message.GetGuiRenderSystem()->GetLayout(guiId);
 
-    GuiGlobalState& state = message.GetState();
+    GuiState& state = message.GetState();
     
     bool pressed = false;
     
@@ -85,16 +99,19 @@ bool GuiControls::DoButton(const GuiRenderMessage& message, GuiId guiId, const s
         }
     }
     
-    GuiRenderable* renderable = message.GetGuiComponent()->GetRenderable();
-    
-    if (state.Active.Item == guiId)
+    if (message.GetEventType() == GuiRenderMessage::kEventTypeRender)
     {
-        renderable->RenderBoxOutline(layout.Position + glm::vec2(5,5), layout.Size - glm::vec2(10,10), glm::vec4(1.f,0.1,0.1,1));
+        GuiRenderable* renderable = message.GetGuiComponent()->GetRenderable();
+        
+        if (state.Active.Item == guiId)
+        {
+            renderable->RenderBoxOutline(layout.Position + glm::vec2(5,5), layout.Size - glm::vec2(10,10), glm::vec4(1.f,0.1,0.1,1));
+        }
+        
+        renderable->RenderBoxOutline(layout.Position, layout.Size, (message.GetState().Hot.Item == guiId) ? glm::vec4(1,0,1,1) : glm::vec4(0.5,0.5,0.5,1));
+        
+        renderable->RenderText(layout.Position, "Test", glm::vec4(1,1,1,1));
     }
-    
-    renderable->RenderBoxOutline(layout.Position, layout.Size, (message.GetState().Hot.Item == guiId) ? glm::vec4(1,0,1,1) : glm::vec4(0.5,0.5,0.5,1));
-    
-    renderable->RenderText(layout.Position, "Test", glm::vec4(1,1,1,1));
     
     return pressed;
 }

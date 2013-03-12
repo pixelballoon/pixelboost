@@ -17,6 +17,7 @@ GuiRenderSystem::GuiRenderSystem()
     Engine::Instance()->GetKeyboardManager()->AddHandler(this);
     Engine::Instance()->GetMouseManager()->AddHandler(this);
     
+    _State.Skin.Padding = glm::vec2(5,5);
     _State.Active.Item = {0,0,0};
 }
 
@@ -38,21 +39,10 @@ Uid GuiRenderSystem::GetStaticType()
 
 void GuiRenderSystem::Update(Scene* scene, float totalTime, float gameTime)
 {
-    /*
-    if (_InputEvents.size())
-    {
-        //_State.HotItem = {0,0,0};
-    }
-    
-    for (const auto& gui : _GuiItems)
-    {
-        //gui->OnLayout(_State, this);
-    }
-    */
     for (const auto& event : _InputEvents)
     {
-        //for (const auto& gui : _GuiItems)
-        //{
+//      for (const auto& gui : _GuiItems)
+        {
             if (event.Type == GuiInputEvent::kInputEventMouse)
             {
                 if (event.Mouse.Type == MouseEvent::kMouseEventMove)
@@ -78,7 +68,7 @@ void GuiRenderSystem::Update(Scene* scene, float totalTime, float gameTime)
             }
             
             //gui->OnInput(_State, this, event);
-        //}
+        }
     }
     
     _InputEvents.clear();
@@ -93,6 +83,15 @@ void GuiRenderSystem::Render(Scene* scene, Viewport* viewport, RenderPass render
             _State.Active.Item = {0,0,0};
         }
         
+        GuiLayoutArea rootLayout;
+        rootLayout.Type = GuiLayoutArea::kLayoutTypeVertical;
+        rootLayout.Position = _State.Skin.Padding;
+        rootLayout.Pointer = rootLayout.Position;
+        rootLayout.Size = gui->GetSize();
+        
+        _State.LayoutStack.empty();
+        _State.LayoutStack.push(rootLayout);
+        
         _State.Active.Active = false;
         _State.Hot.Item = {0,0,0};
         gui->GetRenderable()->ClearCommands();
@@ -104,12 +103,51 @@ void GuiRenderSystem::Render(Scene* scene, Viewport* viewport, RenderPass render
     }
 }
 
+void GuiRenderSystem::PushLayoutArea(GuiLayoutArea area)
+{
+    _State.LayoutStack.push(area);
+}
+
+GuiLayoutArea GuiRenderSystem::PopLayoutArea()
+{
+    GuiLayoutArea top = _State.LayoutStack.top();
+    _State.LayoutStack.pop();
+    
+    GuiLayoutArea& current = _State.LayoutStack.top();
+    
+    if (current.Type == GuiLayoutArea::kLayoutTypeHorizontal)
+    {
+        current.Size.x += top.Size.x + _State.Skin.Padding.x;
+        current.Size.y = glm::max(current.Size.y, top.Size.y);
+        current.Pointer.x += top.Size.x + _State.Skin.Padding.x;
+    } else {
+        current.Size.x = glm::max(current.Size.x, top.Size.x);
+        current.Size.y += top.Size.y + _State.Skin.Padding.y;
+        current.Pointer.y += top.Size.y + _State.Skin.Padding.y;
+    }
+    
+    return top;
+}
+
 void GuiRenderSystem::AddLayout(GuiId guiId, const std::vector<GuiLayoutHint> hints, glm::vec2 size)
 {
+    GuiLayoutArea& area = _State.LayoutStack.top();
+    
     GuiLayout layout;
-    layout.Position = glm::vec2(10,10);
+    layout.Position = area.Pointer;
     layout.Size = size;
     _GuiLayout[guiId] = layout;
+    
+    if (area.Type == GuiLayoutArea::kLayoutTypeHorizontal)
+    {
+        area.Size.x += size.x + _State.Skin.Padding.x;
+        area.Size.y = glm::max(area.Size.y, size.y);
+        area.Pointer.x += size.x + _State.Skin.Padding.x;
+    } else {
+        area.Size.x = glm::max(area.Size.x, size.x);
+        area.Size.y += size.y + _State.Skin.Padding.y;
+        area.Pointer.y += size.y + _State.Skin.Padding.y;
+    }
 }
 
 GuiLayout GuiRenderSystem::GetLayout(GuiId guiId)
