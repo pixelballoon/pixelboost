@@ -10,6 +10,7 @@
 #include "pixelboost/graphics/renderer/gui/guiRenderer.h"
 #include "pixelboost/graphics/shader/shader.h"
 #include "pixelboost/graphics/shader/manager.h"
+#include "pixelboost/maths/matrixHelpers.h"
 
 using namespace pb;
 
@@ -43,7 +44,7 @@ void GuiRenderable::CalculateBounds()
 
 void GuiRenderable::CalculateWorldMatrix()
 {
-    SetWorldMatrix(glm::mat4x4());
+    SetWorldMatrix(_Transform * CreateScaleMatrix(glm::vec3(1.f/32.f, 1.f/32.f, 1.f/32.f)));
 }
 
 Shader* GuiRenderable::GetShader()
@@ -52,7 +53,7 @@ Shader* GuiRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return Renderer::Instance()->GetShaderManager()->GetShader("/shaders/pb_solid.shc");
+    return Renderer::Instance()->GetShaderManager()->GetShader("/shaders/pb_solidColor.shc");
 }
 
 void GuiRenderable::SetTransform(const glm::mat4x4& transform)
@@ -60,6 +61,11 @@ void GuiRenderable::SetTransform(const glm::mat4x4& transform)
     _Transform = transform;
     DirtyBounds();
     DirtyWorldMatrix();
+}
+
+void GuiRenderable::ClearCommands()
+{
+    _Commands.clear();
 }
 
 void GuiRenderable::SetScissor(bool enabled, glm::vec4 region)
@@ -89,9 +95,36 @@ void GuiRenderable::RenderLine(glm::vec2 start, glm::vec2 end, glm::vec4 color)
     _Commands.push_back(command);
 }
 
-void GuiRenderable::RenderBox(glm::vec2 topLeft, glm::vec2 bottomRight, glm::vec4 color)
+void GuiRenderable::RenderBoxFilled(glm::vec2 position, glm::vec2 size, glm::vec4 color)
 {
-    
+    GuiCommand command;
+    command.Type = GuiCommand::kCommandTypeBox;
+    command.Box.Position[0] = position.x;
+    command.Box.Position[1] = position.y;
+    command.Box.Size[0] = size.x;
+    command.Box.Size[1] = size.y;
+    command.Box.Color[0] = color.r;
+    command.Box.Color[1] = color.g;
+    command.Box.Color[2] = color.b;
+    command.Box.Color[3] = color.a;
+    command.Box.Outline = false;
+    _Commands.push_back(command);
+}
+
+void GuiRenderable::RenderBoxOutline(glm::vec2 position, glm::vec2 size, glm::vec4 color)
+{
+    GuiCommand command;
+    command.Type = GuiCommand::kCommandTypeBox;
+    command.Box.Position[0] = position.x;
+    command.Box.Position[1] = position.y;
+    command.Box.Size[0] = size.x;
+    command.Box.Size[1] = size.y;
+    command.Box.Color[0] = color.r;
+    command.Box.Color[1] = color.g;
+    command.Box.Color[2] = color.b;
+    command.Box.Color[3] = color.a;
+    command.Box.Outline = true;
+    _Commands.push_back(command);
 }
 
 void GuiRenderable::RenderText(glm::vec2 position, const char* text, glm::vec4 color)
@@ -144,14 +177,14 @@ GuiRenderer::GuiRenderer()
     
     Renderer::Instance()->SetHandler(GuiRenderable::GetStaticType(), this);
     
-    Renderer::Instance()->GetShaderManager()->LoadShader("/shaders/pb_solid.shc");
+    Renderer::Instance()->GetShaderManager()->LoadShader("/shaders/pb_solidColor.shc");
 }
 
 GuiRenderer::~GuiRenderer()
 {
     _Instance = 0;
     
-    Renderer::Instance()->GetShaderManager()->UnloadShader("/shaders/pb_solid.shc");
+    Renderer::Instance()->GetShaderManager()->UnloadShader("/shaders/pb_solidColor.shc");
 }
 
 GuiRenderer* GuiRenderer::Instance()
@@ -193,6 +226,79 @@ void GuiRenderer::Render(int count, Renderable** renderables, Viewport* viewport
                 }
                 case GuiRenderable::GuiCommand::kCommandTypeBox:
                 {
+                    if (command.Box.Outline)
+                    {
+                        if (_ElementType != GraphicsDevice::kElementLines)
+                        {
+                            PurgeBuffer();
+                            _ElementType = GraphicsDevice::kElementLines;
+                        }
+                        
+                        _VertexData[_ElementCount].position[0] = command.Box.Position[0];
+                        _VertexData[_ElementCount].position[1] = -command.Box.Position[1];
+                        _VertexData[_ElementCount].color[0] = command.Box.Color[0];
+                        _VertexData[_ElementCount].color[1] = command.Box.Color[1];
+                        _VertexData[_ElementCount].color[2] = command.Box.Color[2];
+                        _VertexData[_ElementCount].color[3] = command.Box.Color[3];
+                        _ElementCount++;
+                        
+                        _VertexData[_ElementCount].position[0] = command.Box.Position[0] + command.Box.Size[0];
+                        _VertexData[_ElementCount].position[1] = -command.Box.Position[1];
+                        _VertexData[_ElementCount].color[0] = command.Box.Color[0];
+                        _VertexData[_ElementCount].color[1] = command.Box.Color[1];
+                        _VertexData[_ElementCount].color[2] = command.Box.Color[2];
+                        _VertexData[_ElementCount].color[3] = command.Box.Color[3];
+                        _ElementCount++;
+                        
+                        _VertexData[_ElementCount].position[0] = command.Box.Position[0] + command.Box.Size[0];
+                        _VertexData[_ElementCount].position[1] = -command.Box.Position[1];
+                        _VertexData[_ElementCount].color[0] = command.Box.Color[0];
+                        _VertexData[_ElementCount].color[1] = command.Box.Color[1];
+                        _VertexData[_ElementCount].color[2] = command.Box.Color[2];
+                        _VertexData[_ElementCount].color[3] = command.Box.Color[3];
+                        _ElementCount++;
+                        
+                        _VertexData[_ElementCount].position[0] = command.Box.Position[0] + command.Box.Size[0];
+                        _VertexData[_ElementCount].position[1] = -command.Box.Position[1] - command.Box.Size[1];
+                        _VertexData[_ElementCount].color[0] = command.Box.Color[0];
+                        _VertexData[_ElementCount].color[1] = command.Box.Color[1];
+                        _VertexData[_ElementCount].color[2] = command.Box.Color[2];
+                        _VertexData[_ElementCount].color[3] = command.Box.Color[3];
+                        _ElementCount++;
+                        
+                        _VertexData[_ElementCount].position[0] = command.Box.Position[0] + command.Box.Size[0];
+                        _VertexData[_ElementCount].position[1] = -command.Box.Position[1] - command.Box.Size[1];
+                        _VertexData[_ElementCount].color[0] = command.Box.Color[0];
+                        _VertexData[_ElementCount].color[1] = command.Box.Color[1];
+                        _VertexData[_ElementCount].color[2] = command.Box.Color[2];
+                        _VertexData[_ElementCount].color[3] = command.Box.Color[3];
+                        _ElementCount++;
+                        
+                        _VertexData[_ElementCount].position[0] = command.Box.Position[0];
+                        _VertexData[_ElementCount].position[1] = -command.Box.Position[1] - command.Box.Size[1];
+                        _VertexData[_ElementCount].color[0] = command.Box.Color[0];
+                        _VertexData[_ElementCount].color[1] = command.Box.Color[1];
+                        _VertexData[_ElementCount].color[2] = command.Box.Color[2];
+                        _VertexData[_ElementCount].color[3] = command.Box.Color[3];
+                        _ElementCount++;
+                        
+                        _VertexData[_ElementCount].position[0] = command.Box.Position[0];
+                        _VertexData[_ElementCount].position[1] = -command.Box.Position[1] - command.Box.Size[1];
+                        _VertexData[_ElementCount].color[0] = command.Box.Color[0];
+                        _VertexData[_ElementCount].color[1] = command.Box.Color[1];
+                        _VertexData[_ElementCount].color[2] = command.Box.Color[2];
+                        _VertexData[_ElementCount].color[3] = command.Box.Color[3];
+                        _ElementCount++;
+                        
+                        _VertexData[_ElementCount].position[0] = command.Box.Position[0];
+                        _VertexData[_ElementCount].position[1] = -command.Box.Position[1];
+                        _VertexData[_ElementCount].color[0] = command.Box.Color[0];
+                        _VertexData[_ElementCount].color[1] = command.Box.Color[1];
+                        _VertexData[_ElementCount].color[2] = command.Box.Color[2];
+                        _VertexData[_ElementCount].color[3] = command.Box.Color[3];
+                        _ElementCount++;
+                    }
+                    
                     break;
                 }
                 case GuiRenderable::GuiCommand::kCommandTypeLine:
@@ -204,7 +310,7 @@ void GuiRenderer::Render(int count, Renderable** renderables, Viewport* viewport
                     }
                     
                     _VertexData[_ElementCount].position[0] = command.Line.Start[0];
-                    _VertexData[_ElementCount].position[1] = command.Line.Start[1];
+                    _VertexData[_ElementCount].position[1] = -command.Line.Start[1];
                     _VertexData[_ElementCount].color[0] = command.Line.Color[0];
                     _VertexData[_ElementCount].color[1] = command.Line.Color[1];
                     _VertexData[_ElementCount].color[2] = command.Line.Color[2];
@@ -212,7 +318,7 @@ void GuiRenderer::Render(int count, Renderable** renderables, Viewport* viewport
                     _ElementCount++;
                     
                     _VertexData[_ElementCount].position[0] = command.Line.End[0];
-                    _VertexData[_ElementCount].position[1] = command.Line.End[1];
+                    _VertexData[_ElementCount].position[1] = -command.Line.End[1];
                     _VertexData[_ElementCount].color[0] = command.Line.Color[0];
                     _VertexData[_ElementCount].color[1] = command.Line.Color[1];
                     _VertexData[_ElementCount].color[2] = command.Line.Color[2];

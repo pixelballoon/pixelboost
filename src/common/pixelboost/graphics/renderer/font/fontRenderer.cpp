@@ -158,7 +158,7 @@ glm::vec2 Font::FillVertexBuffer(VertexBuffer* vertexBuffer, const std::string& 
 {
     vertexBuffer->Lock();
     
-    Vertex_P3_UV* vertices = static_cast<Vertex_P3_UV*>(vertexBuffer->GetData());
+    Vertex_P3_C4_UV* vertices = static_cast<Vertex_P3_C4_UV*>(vertexBuffer->GetData());
     
     wstring wideString = UTF8toUTF32(string);
     
@@ -206,7 +206,7 @@ glm::vec2 Font::FillVertexBuffer(VertexBuffer* vertexBuffer, const std::string& 
     return glm::vec2(maxLineLength, glm::abs(offsetY - maxLineHeight));
 }
 
-void Font::AddCharacter(Vertex_P3_UV* buffer, const Font::Character& character, glm::vec2 position, float baseline)
+void Font::AddCharacter(Vertex_P3_C4_UV* buffer, const Font::Character& character, glm::vec2 position, float baseline)
 {
     float xOffset = character.xOffset;
     float yOffset = -character.yOffset + baseline;
@@ -237,7 +237,7 @@ FontRenderer::FontRenderer(int maxCharacters)
     : _MaxCharacters(maxCharacters)
 {
     _IndexBuffer = GraphicsDevice::Instance()->CreateIndexBuffer(kBufferFormatStatic, _MaxCharacters*6);
-    _VertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatDynamic, kVertexFormat_P3_UV, _MaxCharacters*4);
+    _VertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatDynamic, kVertexFormat_P3_C4_UV, _MaxCharacters*4);
     
     _IndexBuffer->Lock();
     

@@ -5,23 +5,27 @@
   <subshader class="default">
     <pass>
       <program language="glsl">
+
+      varying lowp vec2 textureVarying;
+          varying lowp vec4 colorVarying;
+          
         #ifdef VERTEX
           attribute vec4 PB_Attr_Position;
+          attribute vec4 PB_Attr_Color0;
    
           uniform mat4 PB_ModelViewMatrix;
           uniform mat4 PB_ProjectionMatrix;
            
           void main()
           {
+              colorVarying = PB_Attr_Color0;
               gl_Position = PB_ProjectionMatrix * PB_ModelViewMatrix * PB_Attr_Position;
           }
         #endif
         #ifdef FRAGMENT
-          uniform lowp vec4 _DiffuseColor;
-     
           void main()
           {
-              gl_FragColor = _DiffuseColor;
+              gl_FragColor =  colorVarying;
           }
         #endif
       </program>

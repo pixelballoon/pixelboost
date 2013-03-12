@@ -24,14 +24,8 @@ namespace pb
         
     private:
         int GetInputHandlerPriority();
-        bool OnKeyDown(KeyboardKey key, ModifierKeys modifier, char character);
-        bool OnKeyUp(KeyboardKey key, ModifierKeys modifier, char character);
-        bool OnMouseDown(MouseButton button, ModifierKeys modifierKeys, glm::vec2 position);
-        bool OnMouseMove(glm::vec2 position);
-        bool OnMouseUp(MouseButton button, ModifierKeys modifierKeys, glm::vec2 position);
-        bool OnMouseScroll(ModifierKeys modifierKeys, glm::vec2 scroll);
-        bool OnMouseZoom(glm::vec2 zoom);
-        bool OnMouseRotate(float rotate);
+        bool OnKeyboardEvent(KeyboardEvent event);
+        bool OnMouseEvent(MouseEvent event);
         
         glm::vec2 _PrevMouse;
         

@@ -31,9 +31,12 @@ namespace pb
         void SetTransform(const glm::mat4x4& transform);
         
     public:
-        void SetScissor(bool Enabled, glm::vec4 region);
+        void ClearCommands();
+        
+        void SetScissor(bool enabled, glm::vec4 region = glm::vec4(0,0,1,1));
         void RenderLine(glm::vec2 start, glm::vec2 end, glm::vec4 color);
-        void RenderBox(glm::vec2 topLeft, glm::vec2 bottomRight, glm::vec4 color);
+        void RenderBoxFilled(glm::vec2 position, glm::vec2 size, glm::vec4 color);
+        void RenderBoxOutline(glm::vec2 position, glm::vec2 size, glm::vec4 color);
         void RenderText(glm::vec2 position, const char* text, glm::vec4 color);
         
     private:
@@ -52,9 +55,10 @@ namespace pb
         
         struct GuiCommandBox
         {
-            float TopLeft[2];
-            float BottomRight[2];
+            float Position[2];
+            float Size[2];
             float Color[4];
+            bool Outline;
         };
         
         struct GuiCommandText

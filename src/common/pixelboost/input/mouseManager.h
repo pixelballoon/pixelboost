@@ -9,6 +9,8 @@
 
 namespace pb
 {
+    class Viewport;
+    
     enum MouseModifier
     {
         kModifierShift = 1,
@@ -23,18 +25,66 @@ namespace pb
         kMouseButtonRight = 2
     };
     
+    struct MouseEvent
+    {
+        enum EventType
+        {
+            kMouseEventDown,
+            kMouseEventUp,
+            kMouseEventMove,
+            kMouseEventScroll,
+            kMouseEventRotate,
+            kMouseEventZoom,
+        } Type;
+        
+        Viewport* Viewport;
+        
+        struct ButtonEvent
+        {
+            MouseButton Button;
+            ModifierKeys ModifierKeys;
+            float Position[2];
+        };
+        
+        struct MoveEvent
+        {
+            float Position[2];
+        };
+        
+        struct ScrollEvent
+        {
+            ModifierKeys Modifier;
+            float Delta[2];
+        };
+        
+        struct ZoomEvent
+        {
+            float Delta[2];
+        };
+        
+        struct RotateEvent
+        {
+            float Value;
+        };
+        
+        union
+        {
+            ButtonEvent Down;
+            ButtonEvent Up;
+            MoveEvent Move;
+            ScrollEvent Scroll;
+            ZoomEvent Zoom;
+            RotateEvent Rotate;
+        };
+    };
+    
     class MouseHandler : public virtual InputHandler
     {
     public:
         MouseHandler();
         virtual ~MouseHandler();
         
-        virtual bool OnMouseDown(MouseButton button, ModifierKeys modifierKeys, glm::vec2 position);
-        virtual bool OnMouseUp(MouseButton button, ModifierKeys modifierKeys, glm::vec2 position);
-        virtual bool OnMouseMove(glm::vec2 position);
-        virtual bool OnMouseScroll(ModifierKeys modifierKeys, glm::vec2 delta);
-        virtual bool OnMouseZoom(glm::vec2 zoom);
-        virtual bool OnMouseRotate(float rotate);
+        virtual bool OnMouseEvent(MouseEvent event) = 0;
     };
     
     class MouseManager : public InputManager

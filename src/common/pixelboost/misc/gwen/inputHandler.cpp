@@ -30,96 +30,78 @@ int GwenInputHandler::GetInputHandlerPriority()
     return 1000;
 }
 
-bool GwenInputHandler::OnKeyDown(KeyboardKey key, ModifierKeys modifier, char character)
+bool GwenInputHandler::OnKeyboardEvent(KeyboardEvent event)
 {
-    if (modifier == kModifierKeyControl)
-        return false;
-    
-    if (Gwen::KeyboardFocus == _Root)
-        return false;
-    
-    if (key == kKeyboardKeyCharacter)
-        return _Canvas->InputCharacter(character);
-    else if (key == kKeyboardKeySpace)
-        return _Canvas->InputCharacter(' ');
-    else
-        return _Canvas->InputKey(key, true);
-    
+    switch (event.Type)
+    {
+        case KeyboardEvent::kKeyboardEventDown:
+        {
+            if (event.Modifier == kModifierKeyControl)
+                return false;
+            
+            if (Gwen::KeyboardFocus == _Root)
+                return false;
+            
+            if (event.Key == kKeyboardKeyCharacter)
+                return _Canvas->InputCharacter(event.Character);
+            else if (event.Key == kKeyboardKeySpace)
+                return _Canvas->InputCharacter(' ');
+            else
+                return _Canvas->InputKey(event.Key, true);
+            
+            return false;
+        }
+            
+        case KeyboardEvent::kKeyboardEventUp:
+        {
+            if (event.Modifier == kModifierKeyControl)
+                return false;
+            
+            if (Gwen::KeyboardFocus == _Root)
+                return false;
+            
+            if (event.Key != kKeyboardKeyCharacter && event.Key != kKeyboardKeySpace)
+                return _Canvas->InputKey(event.Key, false);
+                    
+            return false;
+        }
+    }
     return false;
 }
 
-bool GwenInputHandler::OnKeyUp(KeyboardKey key, ModifierKeys modifier, char character)
+bool GwenInputHandler::OnMouseEvent(MouseEvent event)
 {
-    if (modifier == kModifierKeyControl)
-        return false;
+    switch (event.Type)
+    {
+        case MouseEvent::kMouseEventDown:
+        {
+            _Canvas->InputMouseButton((int)event.Down.Button, true);
+            break;
+        }
+        case MouseEvent::kMouseEventUp:
+        {
+            _Canvas->InputMouseButton((int)event.Up.Button, false);
+            break;
+        }
+        case MouseEvent::kMouseEventMove:
+        {
+            glm::vec2 position(event.Move.Position[0], event.Move.Position[1]);
+            
+            glm::vec2 delta = position - _PrevMouse;
+            _PrevMouse = position;
+            
+            _Canvas->InputMouseMoved(position.x, position.y, delta[0], delta[1]);
+            break;
+        }
+        case MouseEvent::kMouseEventScroll:
+        {
+            _Canvas->InputMouseWheel(event.Scroll.Delta[1]*10);
+            break;
+        }
+        default:
+            break;
+    }
     
-    if (Gwen::KeyboardFocus == _Root)
-        return false;
-    
-    if (key != kKeyboardKeyCharacter && key != kKeyboardKeySpace)
-        return _Canvas->InputKey(key, false);
-    
-    return false;
-}
-
-bool GwenInputHandler::OnMouseDown(MouseButton button, ModifierKeys modifierKeys, glm::vec2 position)
-{
-    _Canvas->InputMouseButton((int)button, true);
-    
-    Gwen::Controls::Base* hoveredControl = Gwen::HoveredControl;
-    if (!hoveredControl || hoveredControl == _Root)
-        return false;
-    
-    return true;
-}
-
-bool GwenInputHandler::OnMouseMove(glm::vec2 position)
-{
-    glm::vec2 delta = position - _PrevMouse;
-    _PrevMouse = position;
-    
-    _Canvas->InputMouseMoved(position.x, position.y, delta[0], delta[1]);
-    
-    Gwen::Controls::Base* hoveredControl = Gwen::HoveredControl;
-    if (!hoveredControl || hoveredControl == _Root)
-        return false;
-    
-    return true;
-}
-
-bool GwenInputHandler::OnMouseUp(MouseButton button, ModifierKeys modifierKeys, glm::vec2 position)
-{
-    _Canvas->InputMouseButton((int)button, false);
-    
-    Gwen::Controls::Base* hoveredControl = Gwen::HoveredControl;
-    if (!hoveredControl || hoveredControl == _Root)
-        return false;
-    
-    return true;
-}
-
-bool GwenInputHandler::OnMouseScroll(ModifierKeys modifierKeys, glm::vec2 scroll)
-{
-    _Canvas->InputMouseWheel(scroll.y*10);
-    
-    Gwen::Controls::Base* hoveredControl = Gwen::HoveredControl;
-    if (!hoveredControl || hoveredControl == _Root)
-        return false;
-    
-    return true;
-}
-
-bool GwenInputHandler::OnMouseZoom(glm::vec2 zoom)
-{
-    Gwen::Controls::Base* hoveredControl = Gwen::HoveredControl;
-    if (!hoveredControl || hoveredControl == _Root)
-        return false;
-    
-    return true;
-}
-
-bool GwenInputHandler::OnMouseRotate(float rotate)
-{
     Gwen::Controls::Base* hoveredControl = Gwen::HoveredControl;
     if (!hoveredControl || hoveredControl == _Root)
         return false;

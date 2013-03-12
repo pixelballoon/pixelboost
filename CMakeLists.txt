@@ -226,6 +226,8 @@ set (GRAPHICS_RENDERER_SOURCES
 	"src/common/pixelboost/graphics/renderer/common/renderer.h"
 	"src/common/pixelboost/graphics/renderer/font/fontRenderer.cpp"
 	"src/common/pixelboost/graphics/renderer/font/fontRenderer.h"
+	"src/common/pixelboost/graphics/renderer/gui/controls.cpp"
+	"src/common/pixelboost/graphics/renderer/gui/controls.h"	
 	"src/common/pixelboost/graphics/renderer/gui/guiRenderer.cpp"
 	"src/common/pixelboost/graphics/renderer/gui/guiRenderer.h"	
 	"src/common/pixelboost/graphics/renderer/gwen/gwenRenderer.cpp"

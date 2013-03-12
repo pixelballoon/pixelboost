@@ -8,13 +8,13 @@
 
 using namespace pb;
 
-Touch::Touch()
+TouchEvent::TouchEvent()
     : _IsValid(false)
 {
     
 }
 
-Touch::Touch(int touchId, Viewport* viewport, glm::vec2 position)
+TouchEvent::TouchEvent(int touchId, Viewport* viewport, glm::vec2 position)
     : _IsValid(true)
     , _Id(touchId)
     , _Viewport(viewport)
@@ -23,27 +23,27 @@ Touch::Touch(int touchId, Viewport* viewport, glm::vec2 position)
 
 }
 
-bool Touch::IsValid()
+bool TouchEvent::IsValid()
 {
     return _IsValid;
 }
 
-int Touch::GetId()
+int TouchEvent::GetId()
 {
     return _Id;
 }
 
-Viewport* Touch::GetViewport()
+Viewport* TouchEvent::GetViewport()
 {
     return _Viewport;
 }
 
-glm::vec2 Touch::GetScreenPosition()
+glm::vec2 TouchEvent::GetScreenPosition()
 {
     return _Position;
 }
 
-glm::vec2 Touch::GetViewportPosition()
+glm::vec2 TouchEvent::GetViewportPosition()
 {
     if (!_Viewport)
         return glm::vec2(0,0);
@@ -61,12 +61,12 @@ glm::vec2 Touch::GetViewportPosition()
     return position;
 }
 
-bool Touch::operator==(Touch const& b)
+bool TouchEvent::operator==(TouchEvent const& b)
 {
     return (IsValid() && b._IsValid && _Id == b._Id);
 }
 
-bool Touch::operator!=(Touch const& b)
+bool TouchEvent::operator!=(TouchEvent const& b)
 {
     return !(*this == b);
 }
@@ -81,17 +81,17 @@ TouchHandler::~TouchHandler()
     
 }
 
-bool TouchHandler::OnTouchDown(Touch touch)
+bool TouchHandler::OnTouchDown(TouchEvent touch)
 {
     return false;
 }
 
-bool TouchHandler::OnTouchUp(Touch touch)
+bool TouchHandler::OnTouchUp(TouchEvent touch)
 {
     return false;
 }
 
-bool TouchHandler::OnTouchMove(Touch touch)
+bool TouchHandler::OnTouchMove(TouchEvent touch)
 {
     return false;
 }
@@ -115,7 +115,7 @@ void TouchManager::OnTouchDown(int touchId, glm::vec2 position)
         const Renderer::ViewportList& viewports = Renderer::Instance()->GetViewports();
         for (Renderer::ViewportList::const_iterator viewportIt = viewports.begin(); viewportIt != viewports.end(); ++viewportIt)
         {
-            Touch touch(touchId, *viewportIt, position);
+            TouchEvent touch(touchId, *viewportIt, position);
             if (dynamic_cast<TouchHandler*>(*handlerIt)->OnTouchDown(touch))
                 return;
         }
@@ -131,7 +131,7 @@ void TouchManager::OnTouchUp(int touchId, glm::vec2 position)
         const Renderer::ViewportList& viewports = Renderer::Instance()->GetViewports();
         for (Renderer::ViewportList::const_iterator viewportIt = viewports.begin(); viewportIt != viewports.end(); ++viewportIt)
         {
-            Touch touch(touchId, *viewportIt, position);
+            TouchEvent touch(touchId, *viewportIt, position);
             dynamic_cast<TouchHandler*>(*handlerIt)->OnTouchUp(touch);
         }
     }
@@ -146,7 +146,7 @@ void TouchManager::OnTouchMove(int touchId, glm::vec2 position)
         const Renderer::ViewportList& viewports = Renderer::Instance()->GetViewports();
         for (Renderer::ViewportList::const_iterator viewportIt = viewports.begin(); viewportIt != viewports.end(); ++viewportIt)
         {
-            Touch touch(touchId, *viewportIt, position);
+            TouchEvent touch(touchId, *viewportIt, position);
             if (dynamic_cast<TouchHandler*>(*handlerIt)->OnTouchMove(touch))
                 return;
         }

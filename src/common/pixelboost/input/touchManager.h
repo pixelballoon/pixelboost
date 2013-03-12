@@ -10,11 +10,11 @@ namespace pb
 {
     class Viewport;
     
-    class Touch
+    class TouchEvent
     {
     public:
-        Touch();
-        Touch(int touchId, Viewport* viewport, glm::vec2 position);
+        TouchEvent();
+        TouchEvent(int touchId, Viewport* viewport, glm::vec2 position);
               
         bool IsValid();
         int GetId();
@@ -22,8 +22,8 @@ namespace pb
         glm::vec2 GetScreenPosition();
         glm::vec2 GetViewportPosition();
         
-        bool operator==(Touch const& b);
-        bool operator!=(Touch const& b);
+        bool operator==(TouchEvent const& b);
+        bool operator!=(TouchEvent const& b);
         
     private:
         bool _IsValid;
@@ -38,9 +38,9 @@ namespace pb
         TouchHandler();
         virtual ~TouchHandler();
         
-        virtual bool OnTouchDown(Touch touch);
-        virtual bool OnTouchUp(Touch touch);
-        virtual bool OnTouchMove(Touch touch);
+        virtual bool OnTouchDown(TouchEvent touch);
+        virtual bool OnTouchUp(TouchEvent touch);
+        virtual bool OnTouchMove(TouchEvent touch);
     };
     
     class TouchManager : public InputManager

@@ -36,14 +36,26 @@ namespace pb
         kModifierKeyAlt = 4,
     };
     
+    struct KeyboardEvent
+    {
+        enum EventType
+        {
+            kKeyboardEventDown,
+            kKeyboardEventUp,
+        } Type;
+        
+        KeyboardKey Key;
+        ModifierKeys Modifier;
+        char Character;
+    };
+    
     class KeyboardHandler : public virtual InputHandler
     {
     public:
         KeyboardHandler();
         virtual ~KeyboardHandler();
         
-        virtual bool OnKeyDown(KeyboardKey key, ModifierKeys modifier, char character) = 0;
-        virtual bool OnKeyUp(KeyboardKey key, ModifierKeys modifier, char character) = 0;
+        virtual bool OnKeyboardEvent(KeyboardEvent event) = 0;
     };
     
     class KeyboardManager : public InputManager

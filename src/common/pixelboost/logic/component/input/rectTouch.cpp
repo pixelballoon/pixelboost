@@ -83,7 +83,7 @@ int RectTouchComponent::GetInputHandlerPriority()
     return 0;
 }
 
-bool RectTouchComponent::OnTouchDown(Touch touch)
+bool RectTouchComponent::OnTouchDown(TouchEvent touch)
 {
     if (touch.GetViewport()->GetScene() != GetScene())
         return false;
@@ -107,7 +107,7 @@ bool RectTouchComponent::OnTouchDown(Touch touch)
     return false;
 }
 
-bool RectTouchComponent::OnTouchMove(Touch touch)
+bool RectTouchComponent::OnTouchMove(TouchEvent touch)
 {
     if (!HasTouch(touch))
         return false;
@@ -123,7 +123,7 @@ bool RectTouchComponent::OnTouchMove(Touch touch)
     return _CaptureEvents;
 }
 
-bool RectTouchComponent::OnTouchUp(Touch touch)
+bool RectTouchComponent::OnTouchUp(TouchEvent touch)
 {
     if (!HasTouch(touch))
         return false;
@@ -149,7 +149,7 @@ void RectTouchComponent::OnDebugRender(const pb::Message& message)
     }
 }
 
-bool RectTouchComponent::AddTouch(Touch touch, glm::vec2 position)
+bool RectTouchComponent::AddTouch(TouchEvent touch, glm::vec2 position)
 {
     if (_Touches.size() && !_MultiTouch)
         return false;
@@ -159,14 +159,14 @@ bool RectTouchComponent::AddTouch(Touch touch, glm::vec2 position)
     return true;
 }
 
-void RectTouchComponent::RemoveTouch(Touch touch)
+void RectTouchComponent::RemoveTouch(TouchEvent touch)
 {
     std::map<int, glm::vec2>::iterator it = _Touches.find(touch.GetId());
     if (it != _Touches.end())
         _Touches.erase(it);
 }
 
-bool RectTouchComponent::HasTouch(Touch touch)
+bool RectTouchComponent::HasTouch(TouchEvent touch)
 {
     return _Touches.find(touch.GetId()) != _Touches.end();
 }

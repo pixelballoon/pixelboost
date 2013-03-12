@@ -31,15 +31,15 @@ namespace pb
         
         virtual int GetInputHandlerPriority();
         
-        virtual bool OnTouchDown(Touch touch);
-        virtual bool OnTouchMove(Touch touch);
-        virtual bool OnTouchUp(Touch touch);
+        virtual bool OnTouchDown(TouchEvent touch);
+        virtual bool OnTouchMove(TouchEvent touch);
+        virtual bool OnTouchUp(TouchEvent touch);
         
         void OnDebugRender(const pb::Message& message);
         
-        bool AddTouch(Touch touch, glm::vec2 position);
-        void RemoveTouch(Touch touch);
-        bool HasTouch(Touch touch);
+        bool AddTouch(TouchEvent touch, glm::vec2 position);
+        void RemoveTouch(TouchEvent touch);
+        bool HasTouch(TouchEvent touch);
         
         glm::vec2 _Size;
         glm::mat4x4 _LocalTransform;

@@ -97,7 +97,7 @@ GwenRenderer::GwenRenderer()
     _IndexBuffer->Unlock();
     
     _FontIndexBuffer = pb::GraphicsDevice::Instance()->CreateIndexBuffer(pb::kBufferFormatStatic, 6*_MaxQuads);
-    _FontVertexBuffer = pb::GraphicsDevice::Instance()->CreateVertexBuffer(pb::kBufferFormatDynamic, pb::kVertexFormat_P3_UV, 4*_MaxQuads);
+    _FontVertexBuffer = pb::GraphicsDevice::Instance()->CreateVertexBuffer(pb::kBufferFormatDynamic, pb::kVertexFormat_P3_C4_UV, 4*_MaxQuads);
     
     _FontIndexBuffer->Lock();
     indicies = _FontIndexBuffer->GetData();

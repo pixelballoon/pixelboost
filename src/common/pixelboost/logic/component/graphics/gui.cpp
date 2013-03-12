@@ -25,7 +25,17 @@ GuiComponent::~GuiComponent()
 	GetScene()->GetSystemByType<GuiRenderSystem>()->RemoveGui(this);
 }
 
-void GuiComponent::Render(GuiRenderSystem* system)
+void GuiComponent::SetSize(glm::vec2 size)
 {
-    GetEntity()->SendMessage(GuiRenderMessage(system, this));
+    _Size = size;
+}
+
+glm::vec2 GuiComponent::GetSize()
+{
+    return _Size;
+}
+
+void GuiComponent::OnGui(GuiGlobalState& state, GuiRenderSystem* system, GuiRenderMessage::EventType eventType)
+{
+    GetEntity()->SendMessage(GuiRenderMessage(state, system, this, eventType));
 }
