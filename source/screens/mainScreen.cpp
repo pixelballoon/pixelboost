@@ -51,13 +51,21 @@ private:
     {
         auto guiRenderMessage = message.As<pb::GuiRenderMessage>();
         
-        pb::GuiControls::BeginArea(guiRenderMessage, PbGuiId(guiRenderMessage, 0));
+        pb::GuiControls::BeginArea(guiRenderMessage);
+        pb::GuiControls::BeginHorizontal(guiRenderMessage);
         if (pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Refresh"))
         {
             Game::Instance()->GetMainScreen()->RefreshHosts();
         }
+        pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "A");
+        pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "B");
         pb::GuiControls::DoCombo(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Test", {"a", "b", "c"});
-        pb::GuiControls::EndArea();
+        pb::GuiControls::EndHorizontal(guiRenderMessage);
+        pb::GuiControls::BeginHorizontal(guiRenderMessage);
+        pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "C");
+        pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "D");
+        pb::GuiControls::EndHorizontal(guiRenderMessage);
+        pb::GuiControls::EndArea(guiRenderMessage);
     }
 };
 
