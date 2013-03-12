@@ -22,8 +22,6 @@ Level::Level(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationData)
     : Entity(scene, parent, creationData)
     , _Record(0)
 {
-    View::Instance()->GetMouseManager()->AddHandler(this);
-    
     Core::Instance()->GetProject()->recordRemoved.Connect(this, &Level::OnRecordRemoved);
     
     CreateComponent<pb::TransformComponent>();
@@ -38,8 +36,6 @@ Level::Level(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationData)
 Level::~Level()
 {
     Core::Instance()->GetProject()->recordRemoved.Disconnect(this, &Level::OnRecordRemoved);
-    
-    View::Instance()->GetMouseManager()->RemoveHandler(this);
     
     Clear();
 }
@@ -195,26 +191,6 @@ void Level::UpdateSize()
     
     _LevelBounds->SetSize(size);
     _LevelBounds->SetLocalTransform(glm::translate(glm::mat4x4(), offset));
-}
-
-int Level::GetInputHandlerPriority()
-{
-    return 1;
-}
-
-bool Level::OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifier, glm::vec2 position)
-{
-    return false;
-}
-
-bool Level::OnMouseUp(pb::MouseButton button, pb::ModifierKeys modifier, glm::vec2 position)
-{
-    return false;
-}
-
-bool Level::OnMouseMove(glm::vec2 position)
-{
-    return false;
 }
 
 void Level::OnRecordRemoved(Project* project, ProjectRecord* record)

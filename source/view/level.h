@@ -26,7 +26,7 @@ class ProjectStruct;
 class Property;
 class ViewEntity;
 
-class Level : public pb::MouseHandler, public pb::Entity
+class Level : public pb::Entity
 {
     PB_DECLARE_ENTITY
     
@@ -60,12 +60,6 @@ private:
     void UpdateSize();
     
 private:
-    virtual int GetInputHandlerPriority();
-    
-    virtual bool OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifier, glm::vec2 position);
-    virtual bool OnMouseUp(pb::MouseButton button, pb::ModifierKeys modifier, glm::vec2 position);
-    virtual bool OnMouseMove(glm::vec2 position);
-    
     virtual void OnRecordRemoved(Project* project, ProjectRecord* record);
     virtual void OnEntityAdded(ProjectRecord* record, ProjectEntity* entity);
     virtual void OnEntityRemoved(ProjectRecord* record, ProjectEntity* entity);

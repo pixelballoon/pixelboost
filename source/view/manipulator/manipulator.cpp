@@ -19,14 +19,23 @@ public:
         return 1;
     }
     
-    virtual bool OnKeyDown(pb::KeyboardKey key, pb::ModifierKeys modifier, char character)
+    virtual bool OnKeyboardEvent(pb::KeyboardEvent event)
     {
-        return View::Instance()->GetManipulatorManager()->OnKeyDown(key, modifier, character);
-    }
-    
-    virtual bool OnKeyUp(pb::KeyboardKey key, pb::ModifierKeys modifier, char character)
-    {
-        return View::Instance()->GetManipulatorManager()->OnKeyUp(key, modifier, character);
+        switch (event.Type)
+        {
+            case pb::KeyboardEvent::kKeyboardEventDown:
+            {
+                View::Instance()->GetManipulatorManager()->OnKeyDown(event.Key, event.Modifier, event.Character);
+                break;
+            }
+            case pb::KeyboardEvent::kKeyboardEventUp:
+            {
+                View::Instance()->GetManipulatorManager()->OnKeyUp(event.Key, event.Modifier, event.Character);
+                break;
+            }
+        }
+        
+        return false;
     }
 };
 
@@ -46,19 +55,25 @@ public:
         return 1;
     }
     
-    virtual bool OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position)
+    virtual bool OnMouseEvent(pb::MouseEvent event)
     {
-        return View::Instance()->GetManipulatorManager()->OnMouseDown(button, modifierKeys, position);
-    }
-    
-    virtual bool OnMouseUp(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position)
-    {
-        return View::Instance()->GetManipulatorManager()->OnMouseUp(button, modifierKeys, position);
-    }
-    
-    virtual bool OnMouseMove(glm::vec2 position)
-    {
-        return View::Instance()->GetManipulatorManager()->OnMouseMove(position);
+        switch (event.Type)
+        {
+            case pb::MouseEvent::kMouseEventDown:
+            {
+                return View::Instance()->GetManipulatorManager()->OnMouseDown(event.Down.Button, event.Down.ModifierKeys, glm::vec2(event.Down.Position[0], event.Down.Position[1]));
+            }
+            case pb::MouseEvent::kMouseEventUp:
+            {
+                return View::Instance()->GetManipulatorManager()->OnMouseUp(event.Up.Button, event.Up.ModifierKeys, glm::vec2(event.Up.Position[0], event.Up.Position[1]));
+            }
+            case pb::MouseEvent::kMouseEventMove:
+            {
+                return View::Instance()->GetManipulatorManager()->OnMouseMove(glm::vec2(event.Move.Position[0], event.Move.Position[1]));
+            }
+            default:
+                return false;
+        }
     }
 };
 

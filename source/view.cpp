@@ -70,17 +70,20 @@ public:
         return 0;
     }
     
-    virtual bool OnKeyDown(pb::KeyboardKey key, pb::ModifierKeys modifier, char character)
+    virtual bool OnKeyboardEvent(pb::KeyboardEvent event)
     {
-        if (key == pb::kKeyboardKeyBackspace || key == pb::kKeyboardKeyDelete)
+        if (event.Type != pb::KeyboardEvent::kKeyboardEventDown)
+            return false;
+        
+        if (event.Key == pb::kKeyboardKeyBackspace || event.Key == pb::kKeyboardKeyDelete)
         {
             Core::Instance()->GetCommandManager()->Exec("delete");
             return true;
         }
         
-        if (key == pb::kKeyboardKeyCharacter && modifier == pb::kModifierKeyControl)
+        if (event.Key == pb::kKeyboardKeyCharacter && event.Modifier == pb::kModifierKeyControl)
         {
-            switch (character)
+            switch (event.Character)
             {
             case 'e':
                 Core::Instance()->GetCommandManager()->Exec("export");
@@ -111,11 +114,6 @@ public:
         
         return false;
     }
-    
-    virtual bool OnKeyUp(pb::KeyboardKey key, pb::ModifierKeys modifier, char character)
-    {
-        return false;
-    }
 };
 
 class ViewMouseHandler : public pb::MouseHandler
@@ -134,34 +132,29 @@ public:
         return 0;
     }
     
-    virtual bool OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position)
+    virtual bool OnMouseEvent(pb::MouseEvent event)
     {
-        return false;
-    }
-    
-    virtual bool OnMouseUp(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position)
-    {
-        return false;
-    }
-    
-    virtual bool OnMouseMove(glm::vec2 position)
-    {
-        return false;
-    }
-    
-    virtual bool OnMouseScroll(pb::ModifierKeys modifierKeys, glm::vec2 delta)
-    {
-        if (modifierKeys & pb::kModifierCtrl)
-            View::Instance()->Zoom(delta.y/1200.f);
-        else
-            View::Instance()->Scroll(delta/10.f);
-        return true;
-    }
-    
-    virtual bool OnMouseZoom(glm::vec2 delta)
-    {
-        View::Instance()->Zoom(delta.x);
-        return true;
+        switch (event.Type)
+        {
+            case pb::MouseEvent::kMouseEventScroll:
+            {
+                if (event.Scroll.Modifier & pb::kModifierCtrl)
+                {
+                    View::Instance()->Zoom(event.Scroll.Delta[1]/1200.f);
+                } else
+                {
+                    View::Instance()->Scroll(glm::vec2(event.Scroll.Delta[0], event.Scroll.Delta[1])/10.f);
+                }
+                return true;
+            }
+            case pb::MouseEvent::kMouseEventZoom:
+            {
+                View::Instance()->Zoom(event.Zoom.Delta[0]);
+                return true;
+            }
+            default:
+                return false;
+        }
     }
 };
 

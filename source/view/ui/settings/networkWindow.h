@@ -21,7 +21,9 @@ private:
     void OnAddressChanged(Gwen::Controls::Base* item);
     void OnConnect(Gwen::Controls::Base* item);
     
+    /*
     Gwen::Controls::TextBox* _AddressBox;
     Gwen::Controls::TextBox* _PortBox;
     Gwen::Controls::Button* _ReconnectButton;
+    */
 };
