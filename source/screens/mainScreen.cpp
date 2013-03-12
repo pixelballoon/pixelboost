@@ -2,11 +2,13 @@
 #include "pixelboost/debug/log.h"
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/camera/viewport.h"
+#include "pixelboost/graphics/renderer/gui/controls.h"
 #include "pixelboost/graphics/renderer/gui/guiRenderer.h"
 #include "pixelboost/input/mouseManager.h"
 #include "pixelboost/input/touchManager.h"
 #include "pixelboost/logic/component/graphics/gui.h"
 #include "pixelboost/logic/message/graphics/gui.h"
+#include "pixelboost/logic/message/update.h"
 #include "pixelboost/logic/system/graphics/gui/gui.h"
 #include "pixelboost/logic/system/graphics/render/bounds.h"
 #include "pixelboost/logic/scene.h"
@@ -15,30 +17,6 @@
 
 #include "core/game.h"
 #include "screens/mainScreen.h"
-
-class MainInputHandler : public pb::MouseHandler, public pb::TouchHandler
-{
-public:
-    MainInputHandler()
-    {
-        
-    }
-    
-    virtual int GetInputHandlerPriority()
-    {
-        return 0;
-    }
-    
-    virtual bool OnMouseDown(pb::MouseButton button, pb::ModifierKeys modifierKeys, glm::vec2 position)
-    {
-        return false;
-    }
-    
-    virtual bool OnTouchDown(pb::Touch touch)
-    {
-        return false;
-    }
-};
 
 class MainGui : public pb::Entity
 {
@@ -51,6 +29,7 @@ public:
         CreateComponent<pb::TransformComponent>();
         CreateComponent<pb::GuiComponent>();
         
+        RegisterMessageHandler<pb::UpdateMessage>(pb::MessageHandler(this, &MainGui::OnUpdate));
         RegisterMessageHandler<pb::GuiRenderMessage>(pb::MessageHandler(this, &MainGui::OnGuiRender));
     }
     
@@ -60,15 +39,25 @@ public:
     }
     
 private:
+    void OnUpdate(const pb::Message& message)
+    {
+        glm::vec3 position = glm::vec3(-pb::GraphicsDevice::Instance()->GetDisplayResolution()/(pb::GraphicsDevice::Instance()->GetDisplayDensity()*2.f), 0.f);
+        position.y = -position.y;
+        GetComponent<pb::TransformComponent>()->SetPosition(position);
+        GetComponent<pb::GuiComponent>()->SetSize(pb::GraphicsDevice::Instance()->GetDisplayResolution());
+    }
+    
     void OnGuiRender(const pb::Message& message)
     {
         auto guiRenderMessage = message.As<pb::GuiRenderMessage>();
         
-        auto guiSystem = guiRenderMessage.GetGuiRenderSystem();
-        auto guiComponent = guiRenderMessage.GetGuiComponent();
-        
-        guiSystem->DoButton(guiComponent, glm::vec2(0,0), glm::vec2(4,1));
-        guiSystem->DoButton(guiComponent, glm::vec2(0,1.5), glm::vec2(4,1));
+        pb::GuiControls::BeginArea(guiRenderMessage, PbGuiId(guiRenderMessage, 0));
+        if (pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Refresh"))
+        {
+            Game::Instance()->GetMainScreen()->RefreshHosts();
+        }
+        pb::GuiControls::DoCombo(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Test", {"a", "b", "c"});
+        pb::GuiControls::EndArea();
     }
 };
 
@@ -79,8 +68,6 @@ MainScreen::MainScreen()
     , _Scene(0)
     , _Viewport(0)
 {
-    _InputHandler = new MainInputHandler();
-    
     _DiscoveryClient = pb::NetworkManager::Instance()->ClientDiscover(9091, "pb::debugvariable");
 
     _Client = 0;
@@ -117,8 +104,6 @@ void MainScreen::SetActive(bool active)
     
     if (active)
     {
-        Game::Instance()->GetTouchManager()->AddHandler(_InputHandler);
-        
         _Camera = new pb::OrthographicCamera();
         _Scene = new pb::Scene();
         _Viewport = new pb::Viewport(0, _Camera);
@@ -131,8 +116,6 @@ void MainScreen::SetActive(bool active)
         
         AddControls();
     } else {
-        Game::Instance()->GetTouchManager()->RemoveHandler(_InputHandler);
-        
         DestroyViewport(_Viewport);
         _Viewport = 0;
         delete _Camera;
@@ -140,6 +123,11 @@ void MainScreen::SetActive(bool active)
         //delete _Scene;
         //_Scene = 0;
     }
+}
+
+void MainScreen::RefreshHosts()
+{
+    _DiscoveryClient->Refresh();
 }
 
 void MainScreen::OnConnectionOpened(pb::NetworkConnection& connection)

@@ -25,6 +25,8 @@ public:
     
     virtual void SetActive(bool active);
     
+    void RefreshHosts();
+    
 private:
     virtual void OnConnectionOpened(pb::NetworkConnection& connection);
     virtual void OnConnectionClosed(pb::NetworkConnection& connection);
@@ -33,12 +35,10 @@ private:
     
     void AddControls();
     
-    MainInputHandler* _InputHandler;
-
     pb::NetworkDiscoveryClient* _DiscoveryClient;
     pb::NetworkClient* _Client;
     
-    pb::OrthographicCamera* _Camera;
+    pb::Camera* _Camera;
     pb::Scene* _Scene;
     pb::Viewport* _Viewport;
 };
