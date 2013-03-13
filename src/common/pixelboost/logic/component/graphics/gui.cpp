@@ -17,12 +17,12 @@ GuiComponent::GuiComponent(Entity* parent)
 {
     SetRenderPass(pb::kRenderPassUi);
     
-    GetScene()->GetSystemByType<GuiRenderSystem>()->AddGui(this);
+    GetScene()->GetSystemByType<GuiSystem>()->AddGui(this);
 }
 
 GuiComponent::~GuiComponent()
 {
-	GetScene()->GetSystemByType<GuiRenderSystem>()->RemoveGui(this);
+	GetScene()->GetSystemByType<GuiSystem>()->RemoveGui(this);
 }
 
 void GuiComponent::SetSize(glm::vec2 size)
@@ -35,7 +35,7 @@ glm::vec2 GuiComponent::GetSize()
     return _Size;
 }
 
-void GuiComponent::OnGui(GuiState& state, GuiRenderSystem* system, GuiRenderMessage::EventType eventType)
+void GuiComponent::OnGui(GuiState& state, GuiSystem* system, GuiRenderMessage::EventType eventType)
 {
     GetEntity()->SendMessage(GuiRenderMessage(state, system, this, eventType));
 }

@@ -1,8 +1,7 @@
 #pragma once
 
 #include <set>
-#include <stack>
-#include <vector>
+#include <string>
 
 #include "pixelboost/input/keyboardManager.h"
 #include "pixelboost/input/mouseManager.h"
@@ -17,6 +16,9 @@ namespace pb
 {
     class GuiComponent;
     class GuiRenderMessage;
+    
+    struct GuiLayoutArea;
+    struct GuiLayout;
     
     struct GuiId
     {
@@ -50,40 +52,62 @@ namespace pb
     {
         enum HintType
         {
+            kTypeFixedWidth,
+            kTypeFixedHeight,
             kTypeMinWidth,
             kTypeMinHeight,
             kTypeMaxWidth,
             kTypeMaxHeight,
-            kTypeFillWidth,
-            kTypeFillHeight,
+            kTypeExpandWidth,
+            kTypeExpandHeight,
         } Type;
         
-        float Value;
+        union
+        {
+            float Float;
+            bool Bool;
+        };
         
-        GuiLayoutHint(HintType type, float value) { Type = type; Value = value; }
+        GuiLayoutHint(HintType type, float value=0.f) { Type = type; Float = value; }
+        GuiLayoutHint(HintType type, bool value) { Type = type; Bool = value; }
+        
+        static GuiLayoutHint Width(float width) { return GuiLayoutHint(kTypeFixedWidth, width); }
+        static GuiLayoutHint Height(float height) { return GuiLayoutHint(kTypeFixedHeight, height); }
+        static GuiLayoutHint ExpandWidth(bool expand = true) { return GuiLayoutHint(kTypeExpandWidth, expand); }
+        static GuiLayoutHint ExpandHeight(bool expand = true) { return GuiLayoutHint(kTypeExpandHeight, expand); }
     };
     
     struct GuiLayout
     {
-        glm::vec2 Position;
-        glm::vec2 Size;
-    };
-    
-    struct GuiLayoutArea
-    {
+        GuiLayout();
+        void ProcessHints(const std::vector<GuiLayoutHint>& hints, glm::vec2 size);
+        
         enum LayoutType
         {
             kLayoutTypeVertical,
             kLayoutTypeHorizontal,
-        } Type;
+        } LayoutType;
+        
+        GuiLayout* Parent;
+        std::vector<GuiLayout*> Children;
         
         glm::vec2 Position;
         glm::vec2 Size;
-        glm::vec2 Pointer;
+        
+        int ChildrenPending;
+        glm::vec2 RemainingSize;
+        
+        bool PendingPosition;
+        bool PendingSize;
+        
+        bool HasMinMax;
+        glm::vec4 MinMaxSize;
+        bool Expand[2];
     };
-    
+        
     struct GuiSkin
     {
+        std::string Font;
         glm::vec2 Padding;
     };
     
@@ -106,15 +130,15 @@ namespace pb
         bool MouseDown;
         bool MousePressed;
         bool MouseReleased;
-        
-        std::stack<GuiLayoutArea> LayoutStack;
+
+        std::vector<GuiLayout*> LayoutStack;
     };
     
-    class GuiRenderSystem : public SceneSystem, public MouseHandler, public KeyboardHandler
+    class GuiSystem : public SceneSystem, public MouseHandler, public KeyboardHandler
     {
     public:
-        GuiRenderSystem();
-        virtual ~GuiRenderSystem();
+        GuiSystem();
+        virtual ~GuiSystem();
         
         virtual Uid GetType() const;
         static Uid GetStaticType();
@@ -122,13 +146,26 @@ namespace pb
         virtual void Update(Scene* scene, float totalTime, float gameTime);
         virtual void Render(Scene* scene, Viewport* viewport, RenderPass renderPass);
         
-        void PushLayoutArea(GuiLayoutArea layout);
-        GuiLayoutArea PopLayoutArea();
+        void PushLayoutArea(const GuiLayout& layout, GuiId guiId, const std::vector<GuiLayoutHint> hints);
+        GuiLayout* PopLayoutArea();
+        GuiLayout* GetLayoutArea(GuiId guiId);
         
         void AddLayout(GuiId guiId, const std::vector<GuiLayoutHint> hints, glm::vec2 size);
-        GuiLayout GetLayout(GuiId guiId);
+        GuiLayout* GetLayout(GuiId guiId);
         
     private:
+        struct LayoutResult
+        {
+            bool Pending;
+            glm::vec2 Size;
+        };
+        
+        void ProcessLayouts();
+        LayoutResult ProcessLayout(GuiLayout* layout, glm::vec2 position);
+        
+        void Clear();
+        void ClearLayout(GuiLayout* layout);
+        
         void AddGui(GuiComponent* component);
         void RemoveGui(GuiComponent* component);
         
@@ -140,7 +177,8 @@ namespace pb
         std::vector<GuiInputEvent> _InputEvents;
         std::set<GuiComponent*> _GuiItems;
         
-        std::map<GuiId, GuiLayout> _GuiLayout;
+        std::map<GuiId, GuiLayout*> _GuiArea;
+        std::map<GuiId, GuiLayout*> _GuiLayout;
         GuiState _State;
         
         friend class GuiComponent;

@@ -9,7 +9,7 @@ namespace pb
 {
     
     class GuiRenderable;
-    class GuiRenderSystem;
+    class GuiSystem;
     class Message;
     
     struct GuiInputEvent;
@@ -28,11 +28,11 @@ namespace pb
         glm::vec2 GetSize();
         
     private:
-        void OnGui(GuiState& state, GuiRenderSystem* system, GuiRenderMessage::EventType eventType);
+        void OnGui(GuiState& state, GuiSystem* system, GuiRenderMessage::EventType eventType);
         
         glm::vec2 _Size;
         
-        friend class GuiRenderSystem;
+        friend class GuiSystem;
     };
     
 }

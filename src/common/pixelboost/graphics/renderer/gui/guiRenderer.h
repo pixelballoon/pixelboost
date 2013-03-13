@@ -37,37 +37,11 @@ namespace pb
         void RenderLine(glm::vec2 start, glm::vec2 end, glm::vec4 color);
         void RenderBoxFilled(glm::vec2 position, glm::vec2 size, glm::vec4 color);
         void RenderBoxOutline(glm::vec2 position, glm::vec2 size, glm::vec4 color);
-        void RenderText(glm::vec2 position, const char* text, glm::vec4 color);
+        void RenderText(glm::vec2 position, const std::string& font, const std::string& string, float size, glm::vec4 color);
+        
+        glm::vec2 MeasureText(const std::string& font, const std::string& string, float size);
         
     private:
-        struct GuiCommandScissor
-        {
-            bool Enabled;
-            float Region[4];
-        };
-        
-        struct GuiCommandLine
-        {
-            float Start[2];
-            float End[2];
-            float Color[4];
-        };
-        
-        struct GuiCommandBox
-        {
-            float Position[2];
-            float Size[2];
-            float Color[4];
-            bool Outline;
-        };
-        
-        struct GuiCommandText
-        {
-            float Position[2];
-            char* Text;
-            float Color[4];
-        };
-        
         struct GuiCommand
         {
             enum CommandType
@@ -78,16 +52,52 @@ namespace pb
                 kCommandTypeText,
             } Type;
             
-            union
+            GuiCommand(CommandType type)
+                : Type(type)
             {
-                GuiCommandScissor Scissor;
-                GuiCommandLine Line;
-                GuiCommandBox Box;
-                GuiCommandText Text;
-            };
+                
+            }
+        };
+
+        struct GuiCommandScissor : public GuiCommand
+        {
+            GuiCommandScissor() : GuiCommand(kCommandTypeScissor) {}
+            
+            bool Enabled;
+            float Region[4];
         };
         
-        std::vector<GuiCommand> _Commands;
+        struct GuiCommandLine : public GuiCommand
+        {
+            GuiCommandLine() : GuiCommand(kCommandTypeLine) {}
+            
+            float Start[2];
+            float End[2];
+            float Color[4];
+        };
+        
+        struct GuiCommandBox : public GuiCommand
+        {
+            GuiCommandBox() : GuiCommand(kCommandTypeBox) {}
+            
+            float Position[2];
+            float Size[2];
+            float Color[4];
+            bool Outline;
+        };
+        
+        struct GuiCommandText : public GuiCommand
+        {
+            GuiCommandText() : GuiCommand(kCommandTypeText) {}
+            
+            float Position[2];
+            std::string Font;
+            std::string String;
+            float Size;
+            float Color[4];
+        };
+        
+        std::vector<GuiCommand*> _Commands;
         
         glm::mat4x4 _Transform;
 
@@ -114,12 +124,13 @@ namespace pb
         
         Vertex_P3_C4_UV* _VertexData;
         
-        GraphicsDevice::ElementType _ElementType;
         int _ElementCount;
-
+        int _VertexCount;
         int _MaxElements;
-        int _MaxQuads;
+        int _MaxVertices;
         
+        GraphicsDevice::ElementType _ElementType;
+
         static GuiRenderer* _Instance;
     };
 }

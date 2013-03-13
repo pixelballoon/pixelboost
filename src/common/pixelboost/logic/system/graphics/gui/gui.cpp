@@ -12,32 +12,92 @@
 
 using namespace pb;
 
-GuiRenderSystem::GuiRenderSystem()
+GuiLayout::GuiLayout()
+{
+    PendingPosition = false;
+    PendingSize = false;
+    HasMinMax = false;
+    Expand[0] = Expand[1] = false;
+}
+
+void GuiLayout::ProcessHints(const std::vector<GuiLayoutHint>& hints, glm::vec2 size)
+{
+    if (Parent->LayoutType == GuiLayout::kLayoutTypeVertical)
+    {
+        Expand[0] = true;
+    }
+    
+    for (const auto& hint : hints)
+    {
+        switch (hint.Type)
+        {
+            case GuiLayoutHint::kTypeFixedWidth:
+            {
+                Expand[0] = false;
+                size.x = hint.Float;
+                break;
+            }
+            case GuiLayoutHint::kTypeFixedHeight:
+            {
+                Expand[0] = false;
+                size.y = hint.Float;
+                break;
+            }
+            case GuiLayoutHint::kTypeExpandWidth:
+            {
+                Expand[0] = hint.Bool;
+                break;
+            }
+            case GuiLayoutHint::kTypeExpandHeight:
+            {
+                Expand[1] = hint.Bool;
+                break;
+            }
+            default:
+                break;
+        }
+    }
+    
+    if (Expand[0] == true)
+    {
+        size.x = -1;
+    }
+    if (Expand[1] == true)
+    {
+        size.y = -1;
+    }
+    
+    Size = size;
+    PendingSize = (size.x < 0 || size.y < 0);
+}
+
+GuiSystem::GuiSystem()
 {
     Engine::Instance()->GetKeyboardManager()->AddHandler(this);
     Engine::Instance()->GetMouseManager()->AddHandler(this);
     
+    _State.Skin.Font = "helvetica";
     _State.Skin.Padding = glm::vec2(5,5);
     _State.Active.Item = {0,0,0};
 }
 
-GuiRenderSystem::~GuiRenderSystem()
+GuiSystem::~GuiSystem()
 {
     Engine::Instance()->GetKeyboardManager()->RemoveHandler(this);
     Engine::Instance()->GetMouseManager()->RemoveHandler(this);
 }
 
-Uid GuiRenderSystem::GetType() const
+Uid GuiSystem::GetType() const
 {
-    return GuiRenderSystem::GetStaticType();
+    return GuiSystem::GetStaticType();
 }
 
-Uid GuiRenderSystem::GetStaticType()
+Uid GuiSystem::GetStaticType()
 {
-    return TypeHash("pb::GuiRenderSystem");
+    return TypeHash("pb::GuiSystem");
 }
 
-void GuiRenderSystem::Update(Scene* scene, float totalTime, float gameTime)
+void GuiSystem::Update(Scene* scene, float totalTime, float gameTime)
 {
     for (const auto& event : _InputEvents)
     {
@@ -74,7 +134,7 @@ void GuiRenderSystem::Update(Scene* scene, float totalTime, float gameTime)
     _InputEvents.clear();
 }
 
-void GuiRenderSystem::Render(Scene* scene, Viewport* viewport, RenderPass renderPass)
+void GuiSystem::Render(Scene* scene, Viewport* viewport, RenderPass renderPass)
 {
     for (const auto& gui : _GuiItems)
     {
@@ -83,19 +143,27 @@ void GuiRenderSystem::Render(Scene* scene, Viewport* viewport, RenderPass render
             _State.Active.Item = {0,0,0};
         }
         
-        GuiLayoutArea rootLayout;
-        rootLayout.Type = GuiLayoutArea::kLayoutTypeVertical;
-        rootLayout.Position = _State.Skin.Padding;
-        rootLayout.Pointer = rootLayout.Position;
+        Clear();
+        
+        GuiLayout rootLayout;
+        rootLayout.Parent = 0;
+        rootLayout.LayoutType = GuiLayout::kLayoutTypeVertical;
+        rootLayout.Position = glm::vec2(0,0);
         rootLayout.Size = gui->GetSize();
         
-        _State.LayoutStack.empty();
-        _State.LayoutStack.push(rootLayout);
+        GuiLayout* root = new GuiLayout(rootLayout);
+        
+        _State.LayoutStack.push_back(root);
         
         _State.Active.Active = false;
         _State.Hot.Item = {0,0,0};
         gui->GetRenderable()->ClearCommands();
         gui->OnGui(_State, this, GuiRenderMessage::kEventTypeLayout);
+        
+        ProcessLayouts();
+        
+        gui->OnGui(_State, this, GuiRenderMessage::kEventTypeInput);
+        
         gui->OnGui(_State, this, GuiRenderMessage::kEventTypeRender);
         
         _State.MousePressed = false;
@@ -103,74 +171,187 @@ void GuiRenderSystem::Render(Scene* scene, Viewport* viewport, RenderPass render
     }
 }
 
-void GuiRenderSystem::PushLayoutArea(GuiLayoutArea area)
+void GuiSystem::PushLayoutArea(const GuiLayout& area, GuiId guiId, const std::vector<GuiLayoutHint> hints)
 {
-    _State.LayoutStack.push(area);
+    GuiLayout* parent = _State.LayoutStack.back();
+    GuiLayout* layout = new GuiLayout(area);
+    
+    parent->Children.push_back(layout);
+    layout->PendingPosition = true;
+    layout->Parent = parent;
+    
+    _State.LayoutStack.push_back(layout);
+    
+    layout->ProcessHints(hints, glm::vec2(-1,-1));
+    
+    PbAssert(_GuiArea.find(guiId) == _GuiArea.end());
+    
+    _GuiArea[guiId] = layout;
 }
 
-GuiLayoutArea GuiRenderSystem::PopLayoutArea()
+GuiLayout* GuiSystem::PopLayoutArea()
 {
-    GuiLayoutArea top = _State.LayoutStack.top();
-    _State.LayoutStack.pop();
-    
-    GuiLayoutArea& current = _State.LayoutStack.top();
-    
-    if (current.Type == GuiLayoutArea::kLayoutTypeHorizontal)
-    {
-        current.Size.x += top.Size.x + _State.Skin.Padding.x;
-        current.Size.y = glm::max(current.Size.y, top.Size.y);
-        current.Pointer.x += top.Size.x + _State.Skin.Padding.x;
-    } else {
-        current.Size.x = glm::max(current.Size.x, top.Size.x);
-        current.Size.y += top.Size.y + _State.Skin.Padding.y;
-        current.Pointer.y += top.Size.y + _State.Skin.Padding.y;
-    }
+    GuiLayout* top = _State.LayoutStack.back();
+    _State.LayoutStack.pop_back();
     
     return top;
 }
 
-void GuiRenderSystem::AddLayout(GuiId guiId, const std::vector<GuiLayoutHint> hints, glm::vec2 size)
+GuiLayout* GuiSystem::GetLayoutArea(GuiId guiId)
 {
-    GuiLayoutArea& area = _State.LayoutStack.top();
-    
-    GuiLayout layout;
-    layout.Position = area.Pointer;
-    layout.Size = size;
-    _GuiLayout[guiId] = layout;
-    
-    if (area.Type == GuiLayoutArea::kLayoutTypeHorizontal)
-    {
-        area.Size.x += size.x + _State.Skin.Padding.x;
-        area.Size.y = glm::max(area.Size.y, size.y);
-        area.Pointer.x += size.x + _State.Skin.Padding.x;
-    } else {
-        area.Size.x = glm::max(area.Size.x, size.x);
-        area.Size.y += size.y + _State.Skin.Padding.y;
-        area.Pointer.y += size.y + _State.Skin.Padding.y;
-    }
+    return _GuiArea[guiId];
 }
 
-GuiLayout GuiRenderSystem::GetLayout(GuiId guiId)
+void GuiSystem::AddLayout(GuiId guiId, const std::vector<GuiLayoutHint> hints, glm::vec2 size)
+{
+    GuiLayout* area = _State.LayoutStack.back();
+    
+    GuiLayout* layout = new GuiLayout();
+
+    layout->Parent = area;
+    layout->Size = size;
+    layout->PendingPosition = true;
+    
+    layout->ProcessHints(hints, size);
+    
+    PbAssert(_GuiLayout.find(guiId) == _GuiLayout.end());
+        
+    area->Children.push_back(layout);
+    _GuiLayout[guiId] = layout;
+}
+
+GuiLayout* GuiSystem::GetLayout(GuiId guiId)
 {
     return _GuiLayout[guiId];
 }
 
-void GuiRenderSystem::AddGui(GuiComponent* component)
+void GuiSystem::ProcessLayouts()
+{
+    PbLogDebug("pb.gui", "process layout");
+    
+    bool processing = true;
+    do
+    {
+        PbLogDebug("pb.gui", "pass");
+        processing = ProcessLayout(_State.LayoutStack.front(), _State.LayoutStack.front()->Position).Pending;
+    } while (processing);
+}
+
+GuiSystem::LayoutResult GuiSystem::ProcessLayout(GuiLayout* layout, glm::vec2 position)
+{
+    glm::vec2 size;
+    
+    if (layout->PendingPosition && !layout->Parent->PendingPosition && !layout->Parent->PendingSize)
+    {
+        layout->Position = layout->Parent->Position + position;
+        layout->PendingPosition = false;
+    }
+    
+    if (layout->PendingPosition)
+    {
+        position.x = -1.f;
+    }
+    
+    layout->RemainingSize = layout->Size;
+    layout->ChildrenPending = layout->Children.size();
+    
+    for (const auto& child : layout->Children)
+    {
+        LayoutResult result = ProcessLayout(child, position);
+        
+        if (!result.Pending)
+        {
+            layout->RemainingSize -= result.Size;
+            layout->ChildrenPending--;
+            
+            if (layout->LayoutType == GuiLayout::kLayoutTypeHorizontal)
+            {
+                position.x += result.Size.x;
+            } else {
+                position.y += result.Size.y;
+            }
+        }
+    }
+    
+    if (layout->PendingSize)
+    {
+        if (!layout->Parent->PendingSize)
+        {
+            if (layout->Size.x < 0.f)
+            {
+                if (layout->Expand[0])
+                {
+                    layout->Size.x = layout->Parent->Size.x;
+                }
+
+                layout->PendingSize = false;
+            }
+            
+            if (layout->Size.y < 0.f)
+            {
+                if (layout->Expand[1])
+                {
+                    layout->Size.y = layout->Parent->Size.y;
+                }
+                
+                layout->PendingSize = false;
+            }
+        }
+    }
+    
+    LayoutResult result;
+    result.Pending = layout->ChildrenPending > 0 || layout->PendingSize || layout->PendingPosition;
+    result.Size = layout->Size;
+    return result;
+}
+
+void GuiSystem::Clear()
+{
+    if (_State.LayoutStack.size() == 0)
+    {
+        return;
+    }
+    
+    while (_State.LayoutStack.size() > 1)
+    {
+        _State.LayoutStack.pop_back();
+    }
+    
+    PbAssert(_State.LayoutStack.size() == 1);
+    
+    ClearLayout(_State.LayoutStack.back());
+    
+    _State.LayoutStack.clear();
+    _GuiArea.clear();
+    _GuiLayout.clear();
+}
+
+void GuiSystem::ClearLayout(GuiLayout* layout)
+{
+    for (const auto& child : layout->Children)
+    {
+        ClearLayout(child);
+    }
+    
+    delete layout;
+}
+
+void GuiSystem::AddGui(GuiComponent* component)
 {
     _GuiItems.insert(component);
 }
 
-void GuiRenderSystem::RemoveGui(GuiComponent* component)
+void GuiSystem::RemoveGui(GuiComponent* component)
 {
     _GuiItems.erase(component);
 }
 
-int GuiRenderSystem::GetInputHandlerPriority()
+int GuiSystem::GetInputHandlerPriority()
 {
     return 10;
 }
 
-bool GuiRenderSystem::OnMouseEvent(MouseEvent event)
+bool GuiSystem::OnMouseEvent(MouseEvent event)
 {
     GuiInputEvent inputEvent;
     inputEvent.Type = GuiInputEvent::kInputEventMouse;
@@ -190,7 +371,7 @@ bool GuiRenderSystem::OnMouseEvent(MouseEvent event)
     return false;
 }
 
-bool GuiRenderSystem::OnKeyboardEvent(KeyboardEvent event)
+bool GuiSystem::OnKeyboardEvent(KeyboardEvent event)
 {
     return false;
 }

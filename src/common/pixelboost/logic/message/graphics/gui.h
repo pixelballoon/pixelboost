@@ -7,7 +7,6 @@ namespace pb
 {
     
     class GuiComponent;
-    class GuiRenderSystem;
     
     class GuiRenderMessage : public Message
     {
@@ -22,12 +21,12 @@ namespace pb
         };
         
     public:
-        GuiRenderMessage(GuiState& state, GuiRenderSystem* renderSystem, GuiComponent* guiComponent, EventType eventType, GuiInputEvent inputEvent = GuiInputEvent());
+        GuiRenderMessage(GuiState& state, GuiSystem* system, GuiComponent* guiComponent, EventType eventType, GuiInputEvent inputEvent = GuiInputEvent());
         virtual ~GuiRenderMessage();
         
         GuiState& GetState() const;
         
-        GuiRenderSystem* GetGuiRenderSystem() const;
+        GuiSystem* GetGuiSystem() const;
         GuiComponent* GetGuiComponent() const;
         
         EventType GetEventType() const;
@@ -36,7 +35,7 @@ namespace pb
     private:
         GuiState& _State;
         
-        GuiRenderSystem* _GuiRenderSystem;
+        GuiSystem* _GuiSystem;
         GuiComponent* _GuiComponent;
         
         EventType _EventType;

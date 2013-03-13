@@ -16,13 +16,16 @@ namespace pb
     class GuiControls
     {
     public:
-        static void BeginArea(const GuiRenderMessage& message, const std::vector<GuiLayoutHint>& hints = std::vector<GuiLayoutHint>());
+        static void BeginArea(const GuiRenderMessage& message, GuiId guiId, const std::vector<GuiLayoutHint>& hints = std::vector<GuiLayoutHint>());
         static void EndArea(const GuiRenderMessage& message);
         
-        static void BeginHorizontal(const GuiRenderMessage& message, const std::vector<GuiLayoutHint>& hints = std::vector<GuiLayoutHint>());
+        static void BeginHorizontal(const GuiRenderMessage& message, GuiId guiId, const std::vector<GuiLayoutHint>& hints = std::vector<GuiLayoutHint>());
         static void EndHorizontal(const GuiRenderMessage& message);
+
+        static void BeginVertical(const GuiRenderMessage& message, GuiId guiId, const std::vector<GuiLayoutHint>& hints = std::vector<GuiLayoutHint>());
+        static void EndVertical(const GuiRenderMessage& message);
         
-        static void BeginScrollArea(const GuiRenderMessage& message, const std::vector<GuiLayoutHint>& hints = std::vector<GuiLayoutHint>());
+        static void BeginScrollArea(const GuiRenderMessage& message, GuiId guiId, const std::vector<GuiLayoutHint>& hints = std::vector<GuiLayoutHint>());
         static void EndScrollArea(const GuiRenderMessage& message);
         
     public:

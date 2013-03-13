@@ -7,6 +7,7 @@
 #include "pixelboost/graphics/device/program.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
+#include "pixelboost/graphics/renderer/font/fontRenderer.h"
 #include "pixelboost/graphics/renderer/gui/guiRenderer.h"
 #include "pixelboost/graphics/shader/shader.h"
 #include "pixelboost/graphics/shader/manager.h"
@@ -65,87 +66,102 @@ void GuiRenderable::SetTransform(const glm::mat4x4& transform)
 
 void GuiRenderable::ClearCommands()
 {
+    for (const auto& command : _Commands)
+    {
+        delete command;
+    }
     _Commands.clear();
 }
 
 void GuiRenderable::SetScissor(bool enabled, glm::vec4 region)
 {
-    GuiCommand command;
-    command.Type = GuiCommand::kCommandTypeScissor;
-    command.Scissor.Enabled = enabled;
-    command.Scissor.Region[0] = region.x;
-    command.Scissor.Region[1] = region.y;
-    command.Scissor.Region[2] = region.z;
-    command.Scissor.Region[3] = region.w;
-    _Commands.push_back(command);
+    GuiCommandScissor* scissor = new GuiCommandScissor();
+    scissor->Enabled = enabled;
+    scissor->Region[0] = region.x;
+    scissor->Region[1] = region.y;
+    scissor->Region[2] = region.z;
+    scissor->Region[3] = region.w;
+    _Commands.push_back(scissor);
 }
 
 void GuiRenderable::RenderLine(glm::vec2 start, glm::vec2 end, glm::vec4 color)
 {
-    GuiCommand command;
-    command.Type = GuiCommand::kCommandTypeLine;
-    command.Line.Start[0] = start.x;
-    command.Line.Start[1] = start.y;
-    command.Line.End[0] = end.x;
-    command.Line.End[1] = end.y;
-    command.Line.Color[0] = color.r;
-    command.Line.Color[1] = color.g;
-    command.Line.Color[2] = color.b;
-    command.Line.Color[3] = color.a;
-    _Commands.push_back(command);
+    GuiCommandLine* line = new GuiCommandLine();
+    line->Start[0] = start.x;
+    line->Start[1] = start.y;
+    line->End[0] = end.x;
+    line->End[1] = end.y;
+    line->Color[0] = color.r;
+    line->Color[1] = color.g;
+    line->Color[2] = color.b;
+    line->Color[3] = color.a;
+    _Commands.push_back(line);
 }
 
 void GuiRenderable::RenderBoxFilled(glm::vec2 position, glm::vec2 size, glm::vec4 color)
 {
-    GuiCommand command;
-    command.Type = GuiCommand::kCommandTypeBox;
-    command.Box.Position[0] = position.x;
-    command.Box.Position[1] = position.y;
-    command.Box.Size[0] = size.x;
-    command.Box.Size[1] = size.y;
-    command.Box.Color[0] = color.r;
-    command.Box.Color[1] = color.g;
-    command.Box.Color[2] = color.b;
-    command.Box.Color[3] = color.a;
-    command.Box.Outline = false;
-    _Commands.push_back(command);
+    GuiCommandBox* box = new GuiCommandBox(); 
+    box->Position[0] = position.x;
+    box->Position[1] = position.y;
+    box->Size[0] = size.x;
+    box->Size[1] = size.y;
+    box->Color[0] = color.r;
+    box->Color[1] = color.g;
+    box->Color[2] = color.b;
+    box->Color[3] = color.a;
+    box->Outline = false;
+    _Commands.push_back(box);
 }
 
 void GuiRenderable::RenderBoxOutline(glm::vec2 position, glm::vec2 size, glm::vec4 color)
 {
-    GuiCommand command;
-    command.Type = GuiCommand::kCommandTypeBox;
-    command.Box.Position[0] = position.x;
-    command.Box.Position[1] = position.y;
-    command.Box.Size[0] = size.x;
-    command.Box.Size[1] = size.y;
-    command.Box.Color[0] = color.r;
-    command.Box.Color[1] = color.g;
-    command.Box.Color[2] = color.b;
-    command.Box.Color[3] = color.a;
-    command.Box.Outline = true;
-    _Commands.push_back(command);
+    GuiCommandBox* box = new GuiCommandBox();
+    box->Position[0] = position.x;
+    box->Position[1] = position.y;
+    box->Size[0] = size.x;
+    box->Size[1] = size.y;
+    box->Color[0] = color.r;
+    box->Color[1] = color.g;
+    box->Color[2] = color.b;
+    box->Color[3] = color.a;
+    box->Outline = true;
+    _Commands.push_back(box);
 }
 
-void GuiRenderable::RenderText(glm::vec2 position, const char* text, glm::vec4 color)
+void GuiRenderable::RenderText(glm::vec2 position, const std::string& font, const std::string& string, float size, glm::vec4 color)
 {
-    
+    GuiCommandText* text = new GuiCommandText();
+    text->Position[0] = position.x;
+    text->Position[1] = position.y;
+    text->Color[0] = color.r;
+    text->Color[1] = color.g;
+    text->Color[2] = color.b;
+    text->Color[3] = color.a;
+    text->Font = font;
+    text->String = string;
+    text->Size = size;
+    _Commands.push_back(text);
+}
+
+glm::vec2 GuiRenderable::MeasureText(const std::string& font, const std::string& string, float size)
+{
+    return Engine::Instance()->GetFontRenderer()->MeasureString(font, string, size);
 }
 
 GuiRenderer::GuiRenderer()
 {
     _Instance = this;
     
-    _MaxQuads = 4000;
-    _MaxElements = 6*_MaxQuads;
+    _MaxElements = 500;
+    _MaxVertices = 4*_MaxElements;
     
-    _LineIndexBuffer = pb::GraphicsDevice::Instance()->CreateIndexBuffer(pb::kBufferFormatStatic, 2*_MaxQuads);
-    _TriangleIndexBuffer = pb::GraphicsDevice::Instance()->CreateIndexBuffer(pb::kBufferFormatStatic, 6*_MaxQuads);
+    _LineIndexBuffer = GraphicsDevice::Instance()->CreateIndexBuffer(kBufferFormatStatic, 2*_MaxElements);
+    _TriangleIndexBuffer = GraphicsDevice::Instance()->CreateIndexBuffer(kBufferFormatStatic, 6*_MaxElements);
     
-    _VertexBuffer = pb::GraphicsDevice::Instance()->CreateVertexBuffer(pb::kBufferFormatDynamic, pb::kVertexFormat_P3_C4_UV, 4*_MaxQuads);
+    _VertexBuffer = pb::GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatDynamic, kVertexFormat_P3_C4_UV, 4*_MaxElements);
     _VertexBuffer->Lock();
     Vertex_P3_C4_UV* vertices = static_cast<Vertex_P3_C4_UV*>(_VertexBuffer->GetData());
-    for (int i=0; i<4*_MaxQuads; i++)
+    for (int i=0; i<4*_MaxElements; i++)
     {
         vertices[i].position[2] = 0;
     }
@@ -154,7 +170,7 @@ GuiRenderer::GuiRenderer()
     unsigned short* indicies = 0;
     _LineIndexBuffer->Lock();
     indicies = _LineIndexBuffer->GetData();
-    for (int i=0; i<_MaxQuads*2; i++)
+    for (int i=0; i<_MaxElements*2; i++)
     {
         indicies[i] = i;
     }
@@ -162,7 +178,7 @@ GuiRenderer::GuiRenderer()
     
     _TriangleIndexBuffer->Lock();
     indicies = _TriangleIndexBuffer->GetData();
-    for (int i=0; i<_MaxQuads; i++)
+    for (int i=0; i<_MaxElements; i++)
     {
         int offset = i * 4;
         indicies[0] = offset + 0;
@@ -201,7 +217,10 @@ void GuiRenderer::Render(int count, Renderable** renderables, Viewport* viewport
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
     
+    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
+    
     _ElementType = pb::GraphicsDevice::kElementTriangles;
+    _VertexCount = 0;
     _ElementCount = 0;
     
     _VertexBuffer->Lock();
@@ -215,18 +234,22 @@ void GuiRenderer::Render(int count, Renderable** renderables, Viewport* viewport
 
         for (const auto& command : renderable->_Commands)
         {
-            switch (command.Type)
+            switch (command->Type)
             {
                 case GuiRenderable::GuiCommand::kCommandTypeScissor:
                 {
                     PurgeBuffer();
-                    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateScissor, command.Scissor.Enabled);
-                    GraphicsDevice::Instance()->SetScissor(glm::vec4(command.Scissor.Region[0], command.Scissor.Region[1], command.Scissor.Region[2], command.Scissor.Region[3]));
+                    
+                    GuiRenderable::GuiCommandScissor* scissor = static_cast<GuiRenderable::GuiCommandScissor*>(command);
+                    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateScissor, scissor->Enabled);
+                    GraphicsDevice::Instance()->SetScissor(glm::vec4(scissor->Region[0], scissor->Region[1], scissor->Region[2], scissor->Region[3]));
                     break;
                 }
                 case GuiRenderable::GuiCommand::kCommandTypeBox:
                 {
-                    if (command.Box.Outline)
+                    GuiRenderable::GuiCommandBox* box = static_cast<GuiRenderable::GuiCommandBox*>(command);
+                    
+                    if (box->Outline)
                     {
                         if (_ElementType != GraphicsDevice::kElementLines)
                         {
@@ -234,68 +257,110 @@ void GuiRenderer::Render(int count, Renderable** renderables, Viewport* viewport
                             _ElementType = GraphicsDevice::kElementLines;
                         }
                         
-                        _VertexData[_ElementCount].position[0] = command.Box.Position[0];
-                        _VertexData[_ElementCount].position[1] = -command.Box.Position[1];
-                        _VertexData[_ElementCount].color[0] = command.Box.Color[0];
-                        _VertexData[_ElementCount].color[1] = command.Box.Color[1];
-                        _VertexData[_ElementCount].color[2] = command.Box.Color[2];
-                        _VertexData[_ElementCount].color[3] = command.Box.Color[3];
-                        _ElementCount++;
+                        _VertexData[_VertexCount].position[0] = box->Position[0];
+                        _VertexData[_VertexCount].position[1] = -box->Position[1];
+                        _VertexData[_VertexCount].color[0] = box->Color[0];
+                        _VertexData[_VertexCount].color[1] = box->Color[1];
+                        _VertexData[_VertexCount].color[2] = box->Color[2];
+                        _VertexData[_VertexCount].color[3] = box->Color[3];
+                        _VertexCount++;
                         
-                        _VertexData[_ElementCount].position[0] = command.Box.Position[0] + command.Box.Size[0];
-                        _VertexData[_ElementCount].position[1] = -command.Box.Position[1];
-                        _VertexData[_ElementCount].color[0] = command.Box.Color[0];
-                        _VertexData[_ElementCount].color[1] = command.Box.Color[1];
-                        _VertexData[_ElementCount].color[2] = command.Box.Color[2];
-                        _VertexData[_ElementCount].color[3] = command.Box.Color[3];
-                        _ElementCount++;
+                        _VertexData[_VertexCount].position[0] = box->Position[0] + box->Size[0];
+                        _VertexData[_VertexCount].position[1] = -box->Position[1];
+                        _VertexData[_VertexCount].color[0] = box->Color[0];
+                        _VertexData[_VertexCount].color[1] = box->Color[1];
+                        _VertexData[_VertexCount].color[2] = box->Color[2];
+                        _VertexData[_VertexCount].color[3] = box->Color[3];
+                        _VertexCount++;
                         
-                        _VertexData[_ElementCount].position[0] = command.Box.Position[0] + command.Box.Size[0];
-                        _VertexData[_ElementCount].position[1] = -command.Box.Position[1];
-                        _VertexData[_ElementCount].color[0] = command.Box.Color[0];
-                        _VertexData[_ElementCount].color[1] = command.Box.Color[1];
-                        _VertexData[_ElementCount].color[2] = command.Box.Color[2];
-                        _VertexData[_ElementCount].color[3] = command.Box.Color[3];
-                        _ElementCount++;
+                        _VertexData[_VertexCount].position[0] = box->Position[0] + box->Size[0];
+                        _VertexData[_VertexCount].position[1] = -box->Position[1];
+                        _VertexData[_VertexCount].color[0] = box->Color[0];
+                        _VertexData[_VertexCount].color[1] = box->Color[1];
+                        _VertexData[_VertexCount].color[2] = box->Color[2];
+                        _VertexData[_VertexCount].color[3] = box->Color[3];
+                        _VertexCount++;
                         
-                        _VertexData[_ElementCount].position[0] = command.Box.Position[0] + command.Box.Size[0];
-                        _VertexData[_ElementCount].position[1] = -command.Box.Position[1] - command.Box.Size[1];
-                        _VertexData[_ElementCount].color[0] = command.Box.Color[0];
-                        _VertexData[_ElementCount].color[1] = command.Box.Color[1];
-                        _VertexData[_ElementCount].color[2] = command.Box.Color[2];
-                        _VertexData[_ElementCount].color[3] = command.Box.Color[3];
-                        _ElementCount++;
+                        _VertexData[_VertexCount].position[0] = box->Position[0] + box->Size[0];
+                        _VertexData[_VertexCount].position[1] = -box->Position[1] - box->Size[1];
+                        _VertexData[_VertexCount].color[0] = box->Color[0];
+                        _VertexData[_VertexCount].color[1] = box->Color[1];
+                        _VertexData[_VertexCount].color[2] = box->Color[2];
+                        _VertexData[_VertexCount].color[3] = box->Color[3];
+                        _VertexCount++;
                         
-                        _VertexData[_ElementCount].position[0] = command.Box.Position[0] + command.Box.Size[0];
-                        _VertexData[_ElementCount].position[1] = -command.Box.Position[1] - command.Box.Size[1];
-                        _VertexData[_ElementCount].color[0] = command.Box.Color[0];
-                        _VertexData[_ElementCount].color[1] = command.Box.Color[1];
-                        _VertexData[_ElementCount].color[2] = command.Box.Color[2];
-                        _VertexData[_ElementCount].color[3] = command.Box.Color[3];
-                        _ElementCount++;
+                        _VertexData[_VertexCount].position[0] = box->Position[0] + box->Size[0];
+                        _VertexData[_VertexCount].position[1] = -box->Position[1] - box->Size[1];
+                        _VertexData[_VertexCount].color[0] = box->Color[0];
+                        _VertexData[_VertexCount].color[1] = box->Color[1];
+                        _VertexData[_VertexCount].color[2] = box->Color[2];
+                        _VertexData[_VertexCount].color[3] = box->Color[3];
+                        _VertexCount++;
                         
-                        _VertexData[_ElementCount].position[0] = command.Box.Position[0];
-                        _VertexData[_ElementCount].position[1] = -command.Box.Position[1] - command.Box.Size[1];
-                        _VertexData[_ElementCount].color[0] = command.Box.Color[0];
-                        _VertexData[_ElementCount].color[1] = command.Box.Color[1];
-                        _VertexData[_ElementCount].color[2] = command.Box.Color[2];
-                        _VertexData[_ElementCount].color[3] = command.Box.Color[3];
-                        _ElementCount++;
+                        _VertexData[_VertexCount].position[0] = box->Position[0];
+                        _VertexData[_VertexCount].position[1] = -box->Position[1] - box->Size[1];
+                        _VertexData[_VertexCount].color[0] = box->Color[0];
+                        _VertexData[_VertexCount].color[1] = box->Color[1];
+                        _VertexData[_VertexCount].color[2] = box->Color[2];
+                        _VertexData[_VertexCount].color[3] = box->Color[3];
+                        _VertexCount++;
                         
-                        _VertexData[_ElementCount].position[0] = command.Box.Position[0];
-                        _VertexData[_ElementCount].position[1] = -command.Box.Position[1] - command.Box.Size[1];
-                        _VertexData[_ElementCount].color[0] = command.Box.Color[0];
-                        _VertexData[_ElementCount].color[1] = command.Box.Color[1];
-                        _VertexData[_ElementCount].color[2] = command.Box.Color[2];
-                        _VertexData[_ElementCount].color[3] = command.Box.Color[3];
-                        _ElementCount++;
+                        _VertexData[_VertexCount].position[0] = box->Position[0];
+                        _VertexData[_VertexCount].position[1] = -box->Position[1] - box->Size[1];
+                        _VertexData[_VertexCount].color[0] = box->Color[0];
+                        _VertexData[_VertexCount].color[1] = box->Color[1];
+                        _VertexData[_VertexCount].color[2] = box->Color[2];
+                        _VertexData[_VertexCount].color[3] = box->Color[3];
+                        _VertexCount++;
                         
-                        _VertexData[_ElementCount].position[0] = command.Box.Position[0];
-                        _VertexData[_ElementCount].position[1] = -command.Box.Position[1];
-                        _VertexData[_ElementCount].color[0] = command.Box.Color[0];
-                        _VertexData[_ElementCount].color[1] = command.Box.Color[1];
-                        _VertexData[_ElementCount].color[2] = command.Box.Color[2];
-                        _VertexData[_ElementCount].color[3] = command.Box.Color[3];
+                        _VertexData[_VertexCount].position[0] = box->Position[0];
+                        _VertexData[_VertexCount].position[1] = -box->Position[1];
+                        _VertexData[_VertexCount].color[0] = box->Color[0];
+                        _VertexData[_VertexCount].color[1] = box->Color[1];
+                        _VertexData[_VertexCount].color[2] = box->Color[2];
+                        _VertexData[_VertexCount].color[3] = box->Color[3];
+                        _VertexCount++;
+                        
+                        _ElementCount += 4;
+                    } else {
+                        if (_ElementType != GraphicsDevice::kElementTriangles)
+                        {
+                            PurgeBuffer();
+                            _ElementType = GraphicsDevice::kElementTriangles;
+                        }
+                        
+                        _VertexData[_VertexCount].position[0] = box->Position[0];
+                        _VertexData[_VertexCount].position[1] = -box->Position[1] - box->Size[1];
+                        _VertexData[_VertexCount].color[0] = box->Color[0];
+                        _VertexData[_VertexCount].color[1] = box->Color[1];
+                        _VertexData[_VertexCount].color[2] = box->Color[2];
+                        _VertexData[_VertexCount].color[3] = box->Color[3];
+                        _VertexCount++;
+                        
+                        _VertexData[_VertexCount].position[0] = box->Position[0];
+                        _VertexData[_VertexCount].position[1] = -box->Position[1];
+                        _VertexData[_VertexCount].color[0] = box->Color[0];
+                        _VertexData[_VertexCount].color[1] = box->Color[1];
+                        _VertexData[_VertexCount].color[2] = box->Color[2];
+                        _VertexData[_VertexCount].color[3] = box->Color[3];
+                        _VertexCount++;
+                        
+                        _VertexData[_VertexCount].position[0] = box->Position[0] + box->Size[0];
+                        _VertexData[_VertexCount].position[1] = -box->Position[1];
+                        _VertexData[_VertexCount].color[0] = box->Color[0];
+                        _VertexData[_VertexCount].color[1] = box->Color[1];
+                        _VertexData[_VertexCount].color[2] = box->Color[2];
+                        _VertexData[_VertexCount].color[3] = box->Color[3];
+                        _VertexCount++;
+                        
+                        _VertexData[_VertexCount].position[0] = box->Position[0] + box->Size[0];
+                        _VertexData[_VertexCount].position[1] = -box->Position[1] - box->Size[1];
+                        _VertexData[_VertexCount].color[0] = box->Color[0];
+                        _VertexData[_VertexCount].color[1] = box->Color[1];
+                        _VertexData[_VertexCount].color[2] = box->Color[2];
+                        _VertexData[_VertexCount].color[3] = box->Color[3];
+                        _VertexCount++;
+                        
                         _ElementCount++;
                     }
                     
@@ -309,26 +374,57 @@ void GuiRenderer::Render(int count, Renderable** renderables, Viewport* viewport
                         _ElementType = GraphicsDevice::kElementLines;
                     }
                     
-                    _VertexData[_ElementCount].position[0] = command.Line.Start[0];
-                    _VertexData[_ElementCount].position[1] = -command.Line.Start[1];
-                    _VertexData[_ElementCount].color[0] = command.Line.Color[0];
-                    _VertexData[_ElementCount].color[1] = command.Line.Color[1];
-                    _VertexData[_ElementCount].color[2] = command.Line.Color[2];
-                    _VertexData[_ElementCount].color[3] = command.Line.Color[3];
-                    _ElementCount++;
+                    GuiRenderable::GuiCommandLine* line = static_cast<GuiRenderable::GuiCommandLine*>(command);
                     
-                    _VertexData[_ElementCount].position[0] = command.Line.End[0];
-                    _VertexData[_ElementCount].position[1] = -command.Line.End[1];
-                    _VertexData[_ElementCount].color[0] = command.Line.Color[0];
-                    _VertexData[_ElementCount].color[1] = command.Line.Color[1];
-                    _VertexData[_ElementCount].color[2] = command.Line.Color[2];
-                    _VertexData[_ElementCount].color[3] = command.Line.Color[3];
+                    _VertexData[_VertexCount].position[0] = line->Start[0];
+                    _VertexData[_VertexCount].position[1] = -line->Start[1];
+                    _VertexData[_VertexCount].color[0] = line->Color[0];
+                    _VertexData[_VertexCount].color[1] = line->Color[1];
+                    _VertexData[_VertexCount].color[2] = line->Color[2];
+                    _VertexData[_VertexCount].color[3] = line->Color[3];
+                    _VertexCount++;
+                    
+                    _VertexData[_VertexCount].position[0] = line->End[0];
+                    _VertexData[_VertexCount].position[1] = -line->End[1];
+                    _VertexData[_VertexCount].color[0] = line->Color[0];
+                    _VertexData[_VertexCount].color[1] = line->Color[1];
+                    _VertexData[_VertexCount].color[2] = line->Color[2];
+                    _VertexData[_VertexCount].color[3] = line->Color[3];
+                    _VertexCount++;
+                    
                     _ElementCount++;
                     
                     break;
                 }
                 case GuiRenderable::GuiCommand::kCommandTypeText:
                 {
+                    //if (_ElementType != GraphicsDevice::kElementTriangles)
+                    {
+                        PurgeBuffer();
+                        _ElementType = GraphicsDevice::kElementTriangles;
+                    }
+                                        
+                    GuiRenderable::GuiCommandText* text = static_cast<GuiRenderable::GuiCommandText*>(command);
+                    
+                    Font* font = Engine::Instance()->GetFontRenderer()->GetFont(text->Font);
+                    
+                    if (font)
+                    {
+                        GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
+                        GraphicsDevice::Instance()->BindTexture(font->texture);
+                        
+                        int numElements = font->FillVertices(&_VertexData[_VertexCount], text->String, _MaxVertices-_VertexCount,
+                             glm::vec4(text->Color[0], text->Color[1], text->Color[2], text->Color[3]),
+                             pb::CreateTransformMatrix(pb::kRotationOrder_XYZ, glm::vec3(text->Position[0], -text->Position[1]-text->Size/2.f, 0.f), glm::vec3(0,0,0), glm::vec3(text->Size,text->Size,1.f)));
+                        _VertexCount += numElements;
+                        _ElementCount += numElements/4;
+                        
+                        PurgeBuffer();
+                        
+                        GraphicsDevice::Instance()->BindTexture(0);
+                        GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
+                    }
+                    
                     break;
                 }
             }
@@ -348,12 +444,12 @@ void GuiRenderer::Render(int count, Renderable** renderables, Viewport* viewport
 
 void GuiRenderer::PurgeBuffer()
 {
-    _VertexBuffer->Unlock(_ElementCount);
+    _VertexBuffer->Unlock(_VertexCount);
     
     GraphicsDevice::Instance()->BindIndexBuffer(_ElementType == pb::GraphicsDevice::kElementTriangles ? _TriangleIndexBuffer : _LineIndexBuffer);
     GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffer);
     
-    GraphicsDevice::Instance()->DrawElements(_ElementType, _ElementCount);
+    GraphicsDevice::Instance()->DrawElements(_ElementType, _ElementType == pb::GraphicsDevice::kElementTriangles ? _ElementCount * 6 : _ElementCount * 2);
     
     GraphicsDevice::Instance()->BindIndexBuffer(0);
     GraphicsDevice::Instance()->BindVertexBuffer(0);
@@ -362,4 +458,5 @@ void GuiRenderer::PurgeBuffer()
     _VertexData = static_cast<Vertex_P3_C4_UV*>(_VertexBuffer->GetData());
     
     _ElementCount = 0;
+    _VertexCount = 0;
 }
