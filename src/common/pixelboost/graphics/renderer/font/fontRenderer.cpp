@@ -154,12 +154,8 @@ void FontRenderable::CalculateOffset()
     DirtyBounds();
 }
 
-glm::vec2 Font::FillVertexBuffer(VertexBuffer* vertexBuffer, const std::string& string)
+int Font::FillVertices(Vertex_P3_C4_UV* vertices, const std::string& string, int maxVertices, glm::vec4 color, const glm::mat4x4& transform, glm::vec2* measuredSize)
 {
-    vertexBuffer->Lock();
-    
-    Vertex_P3_C4_UV* vertices = static_cast<Vertex_P3_C4_UV*>(vertexBuffer->GetData());
-    
     wstring wideString = UTF8toUTF32(string);
     
     int numCharacters = 0;
@@ -181,7 +177,7 @@ glm::vec2 Font::FillVertexBuffer(VertexBuffer* vertexBuffer, const std::string& 
             if (charIt == chars.end())
                 continue;
             
-            AddCharacter(vertices, charIt->second, glm::vec2(offsetX, offsetY), base);
+            AddCharacter(vertices, charIt->second, glm::vec2(offsetX, offsetY), base, color, transform);
             
             vertices += 4;
             numCharacters++;
@@ -201,34 +197,65 @@ glm::vec2 Font::FillVertexBuffer(VertexBuffer* vertexBuffer, const std::string& 
     
     maxLineLength = glm::max(offsetX, maxLineLength);
     
-    vertexBuffer->Unlock(numCharacters*4);
+    if (measuredSize)
+    {
+        *measuredSize = glm::vec2(maxLineLength, glm::abs(offsetY - maxLineHeight));
+    }
     
-    return glm::vec2(maxLineLength, glm::abs(offsetY - maxLineHeight));
+    return numCharacters*4;
 }
 
-void Font::AddCharacter(Vertex_P3_C4_UV* buffer, const Font::Character& character, glm::vec2 position, float baseline)
+void Font::AddCharacter(Vertex_P3_C4_UV* buffer, const Font::Character& character, glm::vec2 position, float baseline, glm::vec4 color, const glm::mat4x4& transform)
 {
     float xOffset = character.xOffset;
     float yOffset = -character.yOffset + baseline;
     
-    buffer[0].position[0] = position.x + xOffset;
-    buffer[0].position[1] = position.y + yOffset - character.height;
-    buffer[0].position[2] = 0.f;
+    glm::vec4 points[4];
+    
+    points[0] = glm::vec4(position.x + xOffset, position.y + yOffset - character.height, 0.f, 1.f);
+    points[1] = glm::vec4(position.x + xOffset, position.y + yOffset, 0.f, 1.f);
+    points[2] = glm::vec4(position.x + character.width + xOffset, position.y + yOffset, 0.f, 1.f);
+    points[3] = glm::vec4(position.x + character.width + xOffset, position.y + yOffset - character.height, 0.f, 1.f);
+    
+    points[0] = transform * points[0];
+    points[1] = transform * points[1];
+    points[2] = transform * points[2];
+    points[3] = transform * points[3];
+    
+    buffer[0].position[0] = points[0].x;
+    buffer[0].position[1] = points[0].y;
+    buffer[0].position[2] = points[0].z;
+    buffer[0].color[0] = color.r;
+    buffer[0].color[1] = color.g;
+    buffer[0].color[2] = color.b;
+    buffer[0].color[3] = color.a;
     buffer[0].uv[0] = character.uvx;
     buffer[0].uv[1] = character.uvy + character.uvv;
-    buffer[1].position[0] = position.x + xOffset;
-    buffer[1].position[1] = position.y + yOffset;
-    buffer[1].position[2] = 0.f;
+    buffer[1].position[0] = points[1].x;
+    buffer[1].position[1] = points[1].y;
+    buffer[1].position[2] = points[1].z;
+    buffer[1].color[0] = color.r;
+    buffer[1].color[1] = color.g;
+    buffer[1].color[2] = color.b;
+    buffer[1].color[3] = color.a;
     buffer[1].uv[0] = character.uvx;
     buffer[1].uv[1] = character.uvy;
-    buffer[2].position[0] = position.x + character.width + xOffset;
-    buffer[2].position[1] = position.y + yOffset;
-    buffer[2].position[2] = 0.f;
+    buffer[2].position[0] = points[2].x;
+    buffer[2].position[1] = points[2].y;
+    buffer[2].position[2] = points[2].z;
+    buffer[2].color[0] = color.r;
+    buffer[2].color[1] = color.g;
+    buffer[2].color[2] = color.b;
+    buffer[2].color[3] = color.a;
     buffer[2].uv[0] = character.uvx + character.uvu;
     buffer[2].uv[1] = character.uvy;
-    buffer[3].position[0] = position.x + character.width + xOffset;
-    buffer[3].position[1] = position.y + yOffset - character.height;
-    buffer[3].position[2] = 0.f;
+    buffer[3].position[0] = points[3].x;
+    buffer[3].position[1] = points[3].y;
+    buffer[3].position[2] = points[3].z;
+    buffer[3].color[0] = color.r;
+    buffer[3].color[1] = color.g;
+    buffer[3].color[2] = color.b;
+    buffer[3].color[3] = color.a;
     buffer[3].uv[0] = character.uvx + character.uvu;
     buffer[3].uv[1] = character.uvy + character.uvv;
 }
@@ -244,12 +271,12 @@ FontRenderer::FontRenderer(int maxCharacters)
     unsigned short* indices = _IndexBuffer->GetData();
     for (int i=0; i<_MaxCharacters; i++)
     {
-        indices[0] = (i*4)+2;
+        indices[0] = (i*4)+0;
         indices[1] = (i*4)+1;
-        indices[2] = (i*4)+0;
-        indices[3] = (i*4)+3;
+        indices[2] = (i*4)+2;
+        indices[3] = (i*4)+0;
         indices[4] = (i*4)+2;
-        indices[5] = (i*4)+0;
+        indices[5] = (i*4)+3;
         indices += 6;
     }
     
@@ -426,7 +453,10 @@ void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewpor
         
         font = fontIt->second;
         
-        font->FillVertexBuffer(_VertexBuffer, renderable.Text);
+        _VertexBuffer->Lock();
+        pb::Vertex_P3_C4_UV* vertices = static_cast<pb::Vertex_P3_C4_UV*>(_VertexBuffer->GetData());
+        int numElements = font->FillVertices(vertices, renderable.Text, _VertexBuffer->GetMaxSize());
+        _VertexBuffer->Unlock(numElements);
         
         GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffer);
         

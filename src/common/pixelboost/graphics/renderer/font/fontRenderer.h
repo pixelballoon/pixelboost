@@ -94,10 +94,10 @@ namespace pb
         std::map<uint32_t, Character> chars;
         std::map<std::pair<uint32_t, uint32_t>, float> kerning;
         
-        glm::vec2 FillVertexBuffer(VertexBuffer* vertexBuffer, const std::string& string);
+        int FillVertices(Vertex_P3_C4_UV* vertices, const std::string& string, int maxVertices, glm::vec4 color = glm::vec4(1,1,1,1), const glm::mat4x4& transform = glm::mat4x4(), glm::vec2* measuredSize = 0);
         
     private:
-        void AddCharacter(Vertex_P3_C4_UV* buffer, const Font::Character& character, glm::vec2 offset, float baseline);
+        void AddCharacter(Vertex_P3_C4_UV* buffer, const Font::Character& character, glm::vec2 offset, float baseline, glm::vec4 color, const glm::mat4x4& transform);
     };
     
     class FontRenderer : public IRenderer

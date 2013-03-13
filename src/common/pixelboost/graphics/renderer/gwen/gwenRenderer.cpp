@@ -104,12 +104,12 @@ GwenRenderer::GwenRenderer()
     for (int i=0; i<_MaxQuads; i++)
     {
         int offset = i * 4;
-        indicies[0] = offset + 2;
+        indicies[0] = offset + 0;
         indicies[1] = offset + 1;
-        indicies[2] = offset + 0;
-        indicies[3] = offset + 3;
+        indicies[2] = offset + 2;
+        indicies[3] = offset + 0;
         indicies[4] = offset + 2;
-        indicies[5] = offset + 0;
+        indicies[5] = offset + 3;
         indicies += 6;
     }
     _FontIndexBuffer->Unlock();
@@ -327,7 +327,10 @@ void GwenRenderer::RenderText(Gwen::Font* font, Gwen::Point pos, const Gwen::Uni
     if (!text.length())
         return;
     
-    renderFont->FillVertexBuffer(_FontVertexBuffer, Gwen::Utility::UnicodeToString(text));
+    _FontVertexBuffer->Lock();
+    pb::Vertex_P3_C4_UV* vertices = static_cast<pb::Vertex_P3_C4_UV*>(_FontVertexBuffer->GetData());
+    int numElements = renderFont->FillVertices(vertices, Gwen::Utility::UnicodeToString(text), _FontVertexBuffer->GetMaxSize());
+    _FontVertexBuffer->Unlock(numElements);
     
     glm::mat4x4 modelMatrix = glm::translate(glm::mat4x4(), glm::vec3(pos.x, -pos.y - size, 0)/32.f);
     modelMatrix = glm::scale(modelMatrix, glm::vec3(size, size, 1)/32.f);
