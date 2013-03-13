@@ -5,6 +5,7 @@
 
 namespace pb
 {
+    class Camera;
     class NetworkClient;
     class NetworkConnection;
     class NetworkMessage;

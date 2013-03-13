@@ -2,6 +2,7 @@
 #include "pixelboost/debug/log.h"
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/camera/viewport.h"
+#include "pixelboost/graphics/renderer/font/fontRenderer.h"
 #include "pixelboost/graphics/renderer/gui/controls.h"
 #include "pixelboost/graphics/renderer/gui/guiRenderer.h"
 #include "pixelboost/input/mouseManager.h"
@@ -51,20 +52,20 @@ private:
     {
         auto guiRenderMessage = message.As<pb::GuiRenderMessage>();
         
-        pb::GuiControls::BeginArea(guiRenderMessage);
-        pb::GuiControls::BeginHorizontal(guiRenderMessage);
+        pb::GuiControls::BeginArea(guiRenderMessage, PbGuiId(guiRenderMessage, 0), {pb::GuiLayoutHint::Width(300.f), pb::GuiLayoutHint::ExpandHeight()});
+        
+        
+        pb::GuiControls::BeginHorizontal(guiRenderMessage, PbGuiId(guiRenderMessage, 0), {pb::GuiLayoutHint::ExpandWidth()});
+        
         if (pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Refresh"))
         {
             Game::Instance()->GetMainScreen()->RefreshHosts();
         }
-        pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "A");
-        pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "B");
-        pb::GuiControls::DoCombo(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Test", {"a", "b", "c"});
+        
+        pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Filter Changed", {pb::GuiLayoutHint::ExpandWidth(false)});
+        
         pb::GuiControls::EndHorizontal(guiRenderMessage);
-        pb::GuiControls::BeginHorizontal(guiRenderMessage);
-        pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "C");
-        pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "D");
-        pb::GuiControls::EndHorizontal(guiRenderMessage);
+        
         pb::GuiControls::EndArea(guiRenderMessage);
     }
 };
@@ -76,6 +77,10 @@ MainScreen::MainScreen()
     , _Scene(0)
     , _Viewport(0)
 {
+    pb::GraphicsDevice::Instance()->SetClearColor(glm::vec4(43.f/255.f,43.f/255.f,43.f/255.f,1.f));
+    
+    Game::Instance()->GetFontRenderer()->LoadFont("helvetica", "/fonts/helvetica");
+    
     _DiscoveryClient = pb::NetworkManager::Instance()->ClientDiscover(9091, "pb::debugvariable");
 
     _Client = 0;
@@ -104,6 +109,11 @@ void MainScreen::Update(float timeDelta, float gameDelta)
             }
         }
     }
+    
+    if (_Viewport)
+    {
+        _Viewport->SetResolution(pb::GraphicsDevice::Instance()->GetDisplayResolution());
+    }
 }
 
 void MainScreen::SetActive(bool active)
@@ -120,7 +130,7 @@ void MainScreen::SetActive(bool active)
         AddViewport(_Viewport);
         
         _Scene->AddSystem(new pb::BoundsRenderSystem());
-        _Scene->AddSystem(new pb::GuiRenderSystem());
+        _Scene->AddSystem(new pb::GuiSystem());
         
         AddControls();
     } else {
