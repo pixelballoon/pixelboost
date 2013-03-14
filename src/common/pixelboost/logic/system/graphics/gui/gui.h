@@ -24,7 +24,16 @@ namespace pb
     {
         operator bool() { return FileHash || Component || UserData; }
         bool operator==(const GuiId& other) const { return FileHash == other.FileHash && Component == other.Component && UserData == other.UserData; }
-        bool operator<(const GuiId& other) const { return FileHash < other.FileHash || Component < other.Component || UserData < other.UserData; }
+        bool operator<(const GuiId& other) const
+        {
+            if (FileHash != other.FileHash) {
+                return FileHash < other.FileHash;
+            } else if (Component != other.Component) {
+                return Component < other.Component;
+            } else {
+                return UserData < other.UserData;
+            }
+        }
         
         pb::Uid FileHash;
         pb::GuiComponent* Component;
@@ -79,7 +88,7 @@ namespace pb
     
     struct GuiLayout
     {
-        GuiLayout();
+        GuiLayout(const std::string& tag);
         void ProcessHints(const std::vector<GuiLayoutHint>& hints, glm::vec2 size);
         
         enum LayoutType
@@ -88,20 +97,23 @@ namespace pb
             kLayoutTypeHorizontal,
         } LayoutType;
         
+        bool Valid;
+        
+        std::string Tag;
+        
         GuiLayout* Parent;
         std::vector<GuiLayout*> Children;
         
+        glm::vec2 Scroll;
         glm::vec2 Position;
+        
+        glm::vec2 LocalPosition;
         glm::vec2 Size;
+        glm::vec2 ContentsSize;
         
-        int ChildrenPending;
-        glm::vec2 RemainingSize;
+        glm::vec2 MinSize;
+        glm::vec2 MaxSize;
         
-        bool PendingPosition;
-        bool PendingSize;
-        
-        bool HasMinMax;
-        glm::vec4 MinMaxSize;
         bool Expand[2];
     };
         
@@ -127,11 +139,25 @@ namespace pb
         GuiSkin Skin;
         
         glm::vec2 MousePosition;
+        glm::vec2 MouseWheel;
         bool MouseDown;
         bool MousePressed;
         bool MouseReleased;
 
         std::vector<GuiLayout*> LayoutStack;
+    };
+    
+    struct GuiData
+    {
+        union GuiDataItem
+        {
+            bool Bool;
+            float Float;
+        };
+        
+        bool Active;
+        bool Initialised;
+        GuiDataItem Data[8];
     };
     
     class GuiSystem : public SceneSystem, public MouseHandler, public KeyboardHandler
@@ -149,19 +175,14 @@ namespace pb
         void PushLayoutArea(const GuiLayout& layout, GuiId guiId, const std::vector<GuiLayoutHint> hints);
         GuiLayout* PopLayoutArea();
         
-        void AddLayout(GuiId guiId, const std::vector<GuiLayoutHint> hints, glm::vec2 size);
+        void AddLayout(const std::string& tag, GuiId guiId, const std::vector<GuiLayoutHint> hints, glm::vec2 size);
         
         GuiLayout* GetLayout(GuiId guiId);
+        GuiData& GetData(GuiId guiId);
         
     private:
-        struct LayoutResult
-        {
-            bool Pending;
-            glm::vec2 Size;
-        };
-        
         void ProcessLayouts();
-        LayoutResult ProcessLayout(GuiLayout* layout, glm::vec2 position);
+        bool ProcessLayout(GuiLayout* layout, glm::vec2 position);
         
         void Clear();
         void ClearLayout(GuiLayout* layout);
@@ -176,6 +197,8 @@ namespace pb
         
         std::vector<GuiInputEvent> _InputEvents;
         std::set<GuiComponent*> _GuiItems;
+        
+        std::map<GuiId, GuiData> _GuiData;
         
         std::map<GuiId, GuiLayout*> _GuiArea;
         std::map<GuiId, GuiLayout*> _GuiLayout;

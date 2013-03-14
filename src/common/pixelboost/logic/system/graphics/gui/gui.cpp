@@ -12,18 +12,24 @@
 
 using namespace pb;
 
-GuiLayout::GuiLayout()
+GuiLayout::GuiLayout(const std::string& tag)
 {
-    ChildrenPending = -1;
-    PendingPosition = true;
-    PendingSize = false;
-    HasMinMax = false;
+    Valid = false;
+    Tag = tag;
+    MinSize = glm::vec2(-1,-1);
+    MaxSize = glm::vec2(-1,-1);
     Expand[0] = Expand[1] = false;
-    RemainingSize = glm::vec2(-1,-1);
+    Size = glm::vec2(-1,-1);
+    LocalPosition = glm::vec2(-1,-1);
+    Position = glm::vec2(-1,-1);
+    Scroll = glm::vec2(0,0);
+    LayoutType = kLayoutTypeHorizontal;
 }
 
 void GuiLayout::ProcessHints(const std::vector<GuiLayoutHint>& hints, glm::vec2 size)
 {
+    MinSize = size;
+    
     if (Parent->LayoutType == GuiLayout::kLayoutTypeVertical)
     {
         Expand[0] = true;
@@ -55,6 +61,26 @@ void GuiLayout::ProcessHints(const std::vector<GuiLayoutHint>& hints, glm::vec2 
                 Expand[1] = hint.Bool;
                 break;
             }
+            case GuiLayoutHint::kTypeMinWidth:
+            {
+                MinSize.x = hint.Float;
+                break;
+            }
+            case GuiLayoutHint::kTypeMinHeight:
+            {
+                MinSize.y = hint.Float;
+                break;
+            }
+            case GuiLayoutHint::kTypeMaxWidth:
+            {
+                MaxSize.x = hint.Float;
+                break;
+            }
+            case GuiLayoutHint::kTypeMaxHeight:
+            {
+                MaxSize.y = hint.Float;
+                break;
+            }
             default:
                 break;
         }
@@ -70,7 +96,6 @@ void GuiLayout::ProcessHints(const std::vector<GuiLayoutHint>& hints, glm::vec2 
     }
     
     Size = size;
-    PendingSize = (size.x < 0 || size.y < 0);
 }
 
 GuiSystem::GuiSystem()
@@ -124,15 +149,11 @@ void GuiSystem::Render(Scene* scene, Viewport* viewport, RenderPass renderPass)
             _State.Active.Item = {0,0,0};
         }
         
-        Clear();
-        
-        GuiLayout rootLayout;
+        GuiLayout rootLayout("root");
         rootLayout.Parent = 0;
         rootLayout.LayoutType = GuiLayout::kLayoutTypeVertical;
         rootLayout.Position = glm::vec2(0,0);
-        rootLayout.Size = rootLayout.RemainingSize = gui->GetSize();
-        rootLayout.PendingPosition = false;
-        rootLayout.PendingSize = false;
+        rootLayout.Size = gui->GetSize();
         
         GuiLayout* root = new GuiLayout(rootLayout);
         
@@ -151,6 +172,8 @@ void GuiSystem::Render(Scene* scene, Viewport* viewport, RenderPass renderPass)
         
         _State.MousePressed = false;
         _State.MouseReleased = false;
+        
+        Clear();
     }
 }
 
@@ -162,7 +185,6 @@ void GuiSystem::PushLayoutArea(const GuiLayout& area, GuiId guiId, const std::ve
     parent->Children.push_back(layout);
 
     layout->Parent = parent;
-    layout->PendingPosition = true;
     layout->ProcessHints(hints, glm::vec2(-1,-1));
     
     _State.LayoutStack.push_back(layout);
@@ -180,15 +202,14 @@ GuiLayout* GuiSystem::PopLayoutArea()
     return top;
 }
 
-void GuiSystem::AddLayout(GuiId guiId, const std::vector<GuiLayoutHint> hints, glm::vec2 size)
+void GuiSystem::AddLayout(const std::string& tag, GuiId guiId, const std::vector<GuiLayoutHint> hints, glm::vec2 size)
 {
     GuiLayout* parent = _State.LayoutStack.back();
-    GuiLayout* layout = new GuiLayout();
+    GuiLayout* layout = new GuiLayout(tag);
 
     parent->Children.push_back(layout);
 
     layout->Parent = parent;
-    layout->PendingPosition = true;
     layout->ProcessHints(hints, size);
     
     PbAssert(_GuiLayout.find(guiId) == _GuiLayout.end());
@@ -201,157 +222,212 @@ GuiLayout* GuiSystem::GetLayout(GuiId guiId)
     return _GuiLayout[guiId];
 }
 
-void GuiSystem::ProcessLayouts()
+GuiData& GuiSystem::GetData(GuiId guiId)
 {
-    PbLogDebug("pb.gui", "process layout");
+    auto it = _GuiData.find(guiId);
     
-    bool processing = true;
-    do
+    if (it != _GuiData.end())
     {
-        PbLogDebug("pb.gui", "pass");
-        processing = ProcessLayout(_State.LayoutStack.front(), _State.LayoutStack.front()->Position).Pending;
-    } while (processing);
+        it->second.Active = true;
+        return it->second;
+    }
+
+    GuiData& data = _GuiData[guiId];
+    data.Active = true;
+    data.Initialised = false;
+
+    return data;
 }
 
-GuiSystem::LayoutResult GuiSystem::ProcessLayout(GuiLayout* layout, glm::vec2 position)
+void GuiSystem::ProcessLayouts()
 {
-    glm::vec2 size;
-    
-    if (layout->PendingPosition)
+    while (!ProcessLayout(_State.LayoutStack.front(), _State.LayoutStack.front()->Position));
+}
+
+bool GuiSystem::ProcessLayout(GuiLayout* layout, glm::vec2 position)
+{
+    if (layout->Valid)
     {
-        if (position.x >= 0.f && position.y >= 0.f)
-        {
-            layout->Position = position;
-            layout->PendingPosition = false;
-        }
+        return true;
     }
     
-    layout->ChildrenPending = layout->Children.size();
+    glm::vec2 childrenSize;
+    glm::vec2 childrenMinSize;
+    
+    if (position.x >= 0.f)
+    {
+        float parentLocalX = 0.f;
+        float parentGlobalX = 0.f;
+        float parentScrollX = 0.f;
+        
+        if (layout->Parent)
+        {
+            parentLocalX = layout->Parent->LocalPosition.x;
+            parentGlobalX = layout->Parent->Position.x;
+            parentScrollX = layout->Parent->Scroll.x;
+        }
+        
+        layout->LocalPosition.x = position.x + parentLocalX;
+        layout->Position.x = position.x + parentGlobalX - parentScrollX;
+    }
+    
+    if (position.y >= 0.f)
+    {
+        float parentLocalY = 0.f;
+        float parentGlobalY = 0.f;
+        float parentScrollY = 0.f;
+        
+        if (layout->Parent)
+        {
+            parentLocalY = layout->Parent->LocalPosition.y;
+            parentGlobalY = layout->Parent->Position.y;
+            parentScrollY = layout->Parent->Scroll.y;
+        }
+        
+        layout->LocalPosition.y = position.y + parentLocalY;
+        layout->Position.y = position.y + parentGlobalY - parentScrollY;
+    }
+    
+    bool needAnotherPass = false;
+    int numProcessedChildren = 0;
+    
+    position = glm::vec2(0,0);
     
     for (const auto& child : layout->Children)
     {
-        LayoutResult result = ProcessLayout(child, position);
-    
-        if (result.Size.x >= 0.f && result.Size.y >= 0.f)
-        {
-            if (layout->LayoutType == GuiLayout::kLayoutTypeHorizontal)
-            {
-                position.x += result.Size.x;
-                size.x += result.Size.x;
-                size.y = glm::max(size.y, result.Size.y);
-            } else
-            {
-                position.y += result.Size.y;
-                size.x = glm::max(size.x, result.Size.x);
-                size.y += result.Size.y;
-            }
-        }
+        bool result = ProcessLayout(child, position);
         
-        if (result.Pending)
-        {
-            position = glm::vec2(-1,-1);
-        } else
-        {
-            layout->ChildrenPending--;
-        }
-    }
-    
-    if (!layout->PendingSize)
-    {
         if (layout->LayoutType == GuiLayout::kLayoutTypeHorizontal)
         {
-            layout->RemainingSize = layout->Size - glm::vec2(size.x,0);
-        } else
-        {
-            layout->RemainingSize = layout->Size - glm::vec2(0,size.y);
-        }
-    } else
-    {
-        layout->RemainingSize = glm::vec2(-1,-1);
-    }
-    
-    if (layout->ChildrenPending && layout->PendingSize)
-    {
-        if (layout->LayoutType == GuiLayout::kLayoutTypeHorizontal)
-        {
-            layout->Expand[0] = true;
-        } else
-        {
-            layout->Expand[1] = true;
-        }
-    }
-    
-    if (layout->PendingSize)
-    {
-        if (layout->Size.x < 0.f)
-        {
-            int pending = 0;
-            for (const auto& child : layout->Children)
+            childrenMinSize = glm::vec2(childrenMinSize.x + child->MinSize.x, glm::max(childrenMinSize.y, child->MinSize.y));
+            
+            if (position.x >= 0.f && child->Size.x)
             {
-                if (child->Size.x < 0.f)
-                {
-                    pending++;
-                }
+                position.x += child->Size.x;
             }
             
-            if (layout->Expand[0])
+            if (child->Size.x >= 0.f)
+                childrenSize.x += child->Size.x;
+            
+            if (child->Size.y >= 0.f)
+                childrenSize.y = glm::max(childrenSize.y, child->Size.y);
+            
+            if (child->Size.x >= 0.f && child->Size.y >= 0.f)
             {
-                if (layout->Parent->RemainingSize.x >= 0.f)
-                {
-                    layout->Size.x = layout->Parent->RemainingSize.x / glm::max(pending, 1);
-                }
-            } else if (!pending)
+                numProcessedChildren++;
+            } else {
+                position = glm::vec2(-1,-1); // Child size isn't known, so don't position further children
+            }
+        } else if (layout->LayoutType == GuiLayout::kLayoutTypeVertical)
+        {
+            childrenMinSize = glm::vec2(glm::max(childrenMinSize.x, child->MinSize.x), childrenMinSize.y + child->MinSize.y);
+            
+            if (position.y >= 0.f && child->Size.y)
             {
-                layout->Size.x = size.x;
+                position.y += child->Size.y;
+            }
+            
+            if (child->Size.x >= 0.f)
+                childrenSize.x = glm::max(childrenSize.x, child->Size.x);
+            
+            if (child->Size.y >= 0.f)
+                childrenSize.y += child->Size.y;
+            
+            if (child->Size.x >= 0.f && child->Size.y >= 0.f)
+            {
+                numProcessedChildren++;
+            } else {
+                position = glm::vec2(-1,-1); // Child size isn't known, so don't position further children
             }
         }
         
-        if (layout->Size.y < 0.f)
+        if (!result)
         {
-            int pending = 0;
-            for (const auto& child : layout->Children)
-            {
-                if (child->Size.y < 0.f)
-                {
-                    pending++;
-                }
-            }
-            
-            if (layout->Expand[1])
-            {
-                if (layout->Parent->RemainingSize.y >= 0.f)
-                {
-                    layout->Size.y = layout->Parent->RemainingSize.y / glm::max(pending, 1);
-                }
-            } else if (!pending)
-            {
-                layout->Size.y = size.y;
-            }
-        }
-        
-        if (layout->Size.x >= 0.f && layout->Size.y >= 0.f)
-        {
-            layout->PendingSize = false;
+            needAnotherPass = true;
         }
     }
     
-    LayoutResult result;
-    result.Pending = layout->ChildrenPending > 0 || layout->PendingSize || layout->PendingPosition;
-    result.Size = layout->Size;
-    return result;
+    // Make sure our minimum size encapsulates our children
+    layout->MinSize.x = glm::max(glm::max(layout->MinSize.x, childrenMinSize.x), childrenSize.x);
+    layout->MinSize.y = glm::max(glm::max(layout->MinSize.y, childrenMinSize.y), childrenSize.y);
+    
+    if (layout->Size.x < 0.f && !layout->Expand[0])
+    {
+        layout->Size.x = glm::max(glm::max(childrenSize.x, layout->MinSize.x), childrenMinSize.x);
+    }
+    
+    if (layout->Size.y < 0.f && !layout->Expand[1])
+    {
+        layout->Size.y = glm::max(glm::max(childrenSize.y, layout->MinSize.y), childrenMinSize.y);
+    }
+    
+    // Post-sizing pass
+    for (const auto& child : layout->Children)
+    {
+        if (child->Size.x < 0.f)
+        {
+            if (child->Expand[0])
+            {
+                if (layout->Size.x >= 0.f)
+                {
+                    if (layout->LayoutType == GuiLayout::kLayoutTypeHorizontal)
+                    {
+                        child->Size.x = (layout->Size.x - childrenSize.x) / glm::max((float)layout->Children.size()-numProcessedChildren, 1.f);
+                    } else if (layout->LayoutType == GuiLayout::kLayoutTypeVertical)
+                    {
+                        child->Size.x = layout->Size.x;
+                    }
+                }
+            } else {
+                child->Size.x = child->MinSize.x;
+            }
+        }
+        
+        if (child->Size.y < 0.f)
+        {
+            if (child->Expand[1])
+            {
+                if (layout->Size.y >= 0.f)
+                {
+                    if (layout->LayoutType == GuiLayout::kLayoutTypeVertical)
+                    {
+                        child->Size.y = (layout->Size.y - childrenSize.y) / glm::max((float)layout->Children.size()-numProcessedChildren, 1.f);
+                    } else if (layout->LayoutType == GuiLayout::kLayoutTypeHorizontal)
+                    {
+                        child->Size.y = layout->Size.y;
+                    }
+                }
+            } else {
+                child->Size.y = child->MinSize.y;
+            }
+        }
+    }
+    
+    layout->ContentsSize = layout->MinSize;
+    
+    //PbLogDebug("pb.gui", "Layout (%s) PV(%s) P(%f,%f) E(%s,%s), CV(%s), CS(%f,%f), S(%f,%f), MinS(%f,%f), MaxS(%f,%f) CP(%d)", needAnotherPass ? "true" : "false", layout->Tag.c_str(), layout->LocalPosition.x, layout->LocalPosition.y, layout->Expand[0] ? "true" : "false", layout->Expand[1] ? "true" : "false", /*childrenValid*/true ? "true" : "false", childrenSize.x, childrenSize.y, layout->Size.x, layout->Size.y, layout->MinSize.x, layout->MinSize.y, layout->MaxSize.x, layout->MaxSize.y, (int)(layout->Children.size()-numProcessedChildren));
+    
+    bool invalid = needAnotherPass || (layout->Children.size()-numProcessedChildren) > 0 || layout->Size.x < 0.f || layout->Size.y < 0.f || layout->LocalPosition.y < 0.f || layout->LocalPosition.y < 0.f;
+    
+    layout->Valid = !invalid;
+    
+    return !invalid;
 }
 
 void GuiSystem::Clear()
 {
-    if (_State.LayoutStack.size() == 0)
+    for (auto it = _GuiData.begin(); it != _GuiData.end();)
     {
-        return;
+        if (!it->second.Active)
+        {
+            _GuiData.erase(it++);
+        } else {
+            it->second.Active = false;
+            ++it;
+        }
     }
     
-    while (_State.LayoutStack.size() > 1)
-    {
-        _State.LayoutStack.pop_back();
-    }
+    _State.MouseWheel = glm::vec2(0,0);
     
     PbAssert(_State.LayoutStack.size() == 1);
     
@@ -402,6 +478,9 @@ bool GuiSystem::OnMouseEvent(MouseEvent event)
     {
         _State.MouseDown = false;
         _State.MouseReleased = true;
+    } else if (event.Type == MouseEvent::kMouseEventScroll)
+    {
+        _State.MouseWheel += glm::vec2(inputEvent.Mouse.Scroll.Delta[0], inputEvent.Mouse.Scroll.Delta[1]);
     }
     
     return false;

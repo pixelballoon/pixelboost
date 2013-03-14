@@ -234,6 +234,12 @@ void GuiRenderer::Render(int count, Renderable** renderables, Viewport* viewport
 
         for (const auto& command : renderable->_Commands)
         {
+            // TODO : Purge buffer at a safe location
+            if (_VertexCount > 1500)
+            {
+                PurgeBuffer();
+            }
+            
             switch (command->Type)
             {
                 case GuiRenderable::GuiCommand::kCommandTypeScissor:
