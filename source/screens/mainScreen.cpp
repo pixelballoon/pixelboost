@@ -54,17 +54,33 @@ private:
         
         pb::GuiControls::BeginArea(guiRenderMessage, PbGuiId(guiRenderMessage, 0), {pb::GuiLayoutHint::Width(300.f), pb::GuiLayoutHint::ExpandHeight()});
         
-        
-        pb::GuiControls::BeginHorizontal(guiRenderMessage, PbGuiId(guiRenderMessage, 0), {pb::GuiLayoutHint::ExpandWidth()});
-        
         if (pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Refresh"))
         {
             Game::Instance()->GetMainScreen()->RefreshHosts();
         }
         
-        pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Filter Changed", {pb::GuiLayoutHint::ExpandWidth(false)});
+        pb::GuiControls::BeginHorizontal(guiRenderMessage, PbGuiId(guiRenderMessage, 0), {pb::GuiLayoutHint::ExpandWidth(false)});
+        
+        pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Clear A", {pb::GuiLayoutHint::ExpandWidth(true)});
+        
+        pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Clear B", {pb::GuiLayoutHint::ExpandWidth(true)});
+        
+        pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Testing Long", {pb::GuiLayoutHint::ExpandWidth(false)});
+        
+        /*
+        pb::GuiControls::BeginVertical(guiRenderMessage, PbGuiId(guiRenderMessage, 0));
+        
+        pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Test A");
+        pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Test B");
+        pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Test C");
+        
+        pb::GuiControls::EndVertical(guiRenderMessage);
+        */
         
         pb::GuiControls::EndHorizontal(guiRenderMessage);
+
+        pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Clear Filter", {pb::GuiLayoutHint::ExpandWidth(false)});
+        pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Clear Filter");
         
         pb::GuiControls::EndArea(guiRenderMessage);
     }
