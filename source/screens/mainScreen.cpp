@@ -52,37 +52,46 @@ private:
     {
         auto guiRenderMessage = message.As<pb::GuiRenderMessage>();
         
-        pb::GuiControls::BeginArea(guiRenderMessage, PbGuiId(guiRenderMessage, 0), {pb::GuiLayoutHint::Width(300.f), pb::GuiLayoutHint::ExpandHeight()});
+        pb::GuiControls::BeginScrollArea(guiRenderMessage, PbGuiId(guiRenderMessage, 0), {pb::GuiLayoutHint::Width(300.f), pb::GuiLayoutHint::ExpandHeight()});
         
-        if (pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Refresh"))
+        if (!Game::Instance()->GetMainScreen()->IsConnected())
         {
-            Game::Instance()->GetMainScreen()->RefreshHosts();
+            if (pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Refresh"))
+            {
+                Game::Instance()->GetMainScreen()->RefreshHosts();
+            }
+            
+            auto hosts = Game::Instance()->GetMainScreen()->GetHosts();
+            
+            int hostIdx = 0;
+            for (const auto& host : hosts)
+            {
+                if (pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, hostIdx), host.c_str()))
+                {
+                    Game::Instance()->GetMainScreen()->ConnectTo(host);
+                }
+                hostIdx++;
+            }
+        } else {
+            if (pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Disconnect"))
+            {
+                Game::Instance()->GetMainScreen()->Disconnect();
+            }
         }
         
-        pb::GuiControls::BeginHorizontal(guiRenderMessage, PbGuiId(guiRenderMessage, 0), {pb::GuiLayoutHint::ExpandWidth(false)});
-        
-        pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Clear A", {pb::GuiLayoutHint::ExpandWidth(true)});
-        
-        pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Clear B", {pb::GuiLayoutHint::ExpandWidth(true)});
-        
-        pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Testing Long", {pb::GuiLayoutHint::ExpandWidth(false)});
-        
         /*
-        pb::GuiControls::BeginVertical(guiRenderMessage, PbGuiId(guiRenderMessage, 0));
-        
-        pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Test A");
-        pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Test B");
-        pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Test C");
-        
-        pb::GuiControls::EndVertical(guiRenderMessage);
+        for (int i=0; i<10; i++)
+        {
+            pb::GuiControls::BeginHorizontal(guiRenderMessage, PbGuiId(guiRenderMessage, i), {pb::GuiLayoutHint::ExpandWidth(true)});
+            pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, i), "Item", {pb::GuiLayoutHint::ExpandWidth(false)});
+            pb::GuiControls::BeginVertical(guiRenderMessage, PbGuiId(guiRenderMessage, i), {pb::GuiLayoutHint::ExpandWidth(false)});
+            pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, i), "Connect", {pb::GuiLayoutHint::ExpandWidth(true)});
+            pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, i), "Disconnect", {pb::GuiLayoutHint::Width(200)});
+            pb::GuiControls::EndVertical(guiRenderMessage);
+            pb::GuiControls::EndHorizontal(guiRenderMessage);
+        }
         */
-        
-        pb::GuiControls::EndHorizontal(guiRenderMessage);
-
-        pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Clear Filter", {pb::GuiLayoutHint::ExpandWidth(false)});
-        pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Clear Filter");
-        
-        pb::GuiControls::EndArea(guiRenderMessage);
+        pb::GuiControls::EndScrollArea(guiRenderMessage);
     }
 };
 
@@ -112,18 +121,6 @@ void MainScreen::Update(float timeDelta, float gameDelta)
     if (_Scene)
     {
         _Scene->Update(timeDelta, gameDelta);
-        
-        auto hosts = _DiscoveryClient->GetHosts();
-        
-        for (const auto& host : hosts)
-        {
-            if (!_Client)
-            {
-                _Client = pb::NetworkManager::Instance()->ClientConnect(host, 9090);
-                
-                _Client->RegisterHandler(this);
-            }
-        }
     }
     
     if (_Viewport)
@@ -164,6 +161,33 @@ void MainScreen::RefreshHosts()
     _DiscoveryClient->Refresh();
 }
 
+const std::vector<std::string>& MainScreen::GetHosts()
+{
+    return _DiscoveryClient->GetHosts();
+}
+
+void MainScreen::ConnectTo(const std::string& host)
+{
+    Disconnect();
+    
+    if (!_Client)
+    {
+        _Client = pb::NetworkManager::Instance()->ClientConnect(host, 9090);
+        _Client->RegisterHandler(this);
+    }
+}
+
+void MainScreen::Disconnect()
+{
+    pb::NetworkManager::Instance()->CloseHost(_Client);
+    _Client = 0;
+}
+
+bool MainScreen::IsConnected()
+{
+    return _Client && _Client->GetConnection();
+}
+
 void MainScreen::OnConnectionOpened(pb::NetworkConnection& connection)
 {
     pb::NetworkMessage message;
@@ -187,6 +211,8 @@ void MainScreen::OnReceive(pb::NetworkConnection& connection, pb::NetworkMessage
     
     if (strcmp(command, "varlist") == 0)
     {
+        PbLogDebug("pb.gametool", "Received variable list");
+        
         int numVariables;
         message.ReadInt(numVariables);
         
@@ -221,7 +247,7 @@ void MainScreen::OnReceive(pb::NetworkConnection& connection, pb::NetworkMessage
             variableQuery.WriteString(name);
             connection.Send(variableQuery);
             
-            PbLogDebug("pb.gametool", "variable %s of type %d", name, type);
+            PbLogDebug("pb.gametool", " ~~ %s : %d", name, type);
         }
     } else if (strcmp(command, "value") == 0)
     {

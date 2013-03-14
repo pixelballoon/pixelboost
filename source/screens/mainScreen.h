@@ -27,6 +27,11 @@ public:
     virtual void SetActive(bool active);
     
     void RefreshHosts();
+    const std::vector<std::string>& GetHosts();
+    
+    void ConnectTo(const std::string& host);
+    void Disconnect();
+    bool IsConnected();
     
 private:
     virtual void OnConnectionOpened(pb::NetworkConnection& connection);
