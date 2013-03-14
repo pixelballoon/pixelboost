@@ -189,6 +189,16 @@ NetworkClient::~NetworkClient()
     
 }
 
+NetworkConnection* NetworkClient::GetConnection()
+{
+    if (_Connections.size())
+    {
+        return _Connections[0];
+    }
+    
+    return 0;
+}
+
 NetworkServer::NetworkServer(int port, int maxConnections)
     : NetworkHost()
 {
@@ -208,6 +218,11 @@ NetworkServer::NetworkServer(int port, int maxConnections)
 NetworkServer::~NetworkServer()
 {
     
+}
+
+std::vector<NetworkConnection*> NetworkServer::GetConnections()
+{
+    return _Connections;
 }
 
 NetworkDiscovery::NetworkDiscovery(int port)
@@ -404,6 +419,8 @@ void NetworkDiscoveryClient::OnMessage(ENetAddress sender, NetworkMessage& messa
 void NetworkDiscoveryClient::Refresh()
 {
     _RefreshPending = true;
+    
+    _Hosts.clear();
     
     ENetAddress address;
     address.host = ENET_HOST_BROADCAST;

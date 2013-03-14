@@ -62,7 +62,7 @@ namespace pb
         ~NetworkClient();
         
     public:
-        std::vector<NetworkConnection*> GetConnection();
+        NetworkConnection* GetConnection();
         
         friend class NetworkManager;
     };
