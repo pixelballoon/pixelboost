@@ -10,7 +10,7 @@
 #define InternalPbStringify(value) #value
 #define InternalPbToString(value) InternalPbStringify(value)
 
-#define PbGuiId(message, userData) { pb::TypeHash(__FILE__ InternalPbToString(__LINE__)), message.GetGuiComponent(), userData }
+#define PbGuiId(message, userData) { pb::TypeHash(__FILE__ InternalPbToString(__LINE__)), message.GetGuiComponent(), (void*)userData }
 
 namespace pb
 {
@@ -148,9 +148,9 @@ namespace pb
         
         void PushLayoutArea(const GuiLayout& layout, GuiId guiId, const std::vector<GuiLayoutHint> hints);
         GuiLayout* PopLayoutArea();
-        GuiLayout* GetLayoutArea(GuiId guiId);
         
         void AddLayout(GuiId guiId, const std::vector<GuiLayoutHint> hints, glm::vec2 size);
+        
         GuiLayout* GetLayout(GuiId guiId);
         
     private:

@@ -19,16 +19,16 @@ void GuiControls::BeginArea(const GuiRenderMessage& message, GuiId guiId, const 
     
     if (message.GetEventType() == GuiRenderMessage::kEventTypeRender)
     {
-        GuiLayout* area = message.GetGuiSystem()->GetLayoutArea(guiId);
+        GuiLayout* layout = message.GetGuiSystem()->GetLayout(guiId);
         
-        if (!area)
+        if (!layout)
         {
             return;
         }
         
         GuiRenderable* renderable = message.GetGuiComponent()->GetRenderable();
         
-        renderable->RenderBoxFilled(area->Position, area->Size, glm::vec4(95.f/255.f,95.f/255.f,95.f/255.f,1));
+        renderable->RenderBoxFilled(layout->Position, layout->Size, glm::vec4(95.f/255.f,95.f/255.f,95.f/255.f,1));
     }
 }
 
@@ -53,16 +53,16 @@ void GuiControls::BeginHorizontal(const GuiRenderMessage& message, GuiId guiId, 
     
     if (message.GetEventType() == GuiRenderMessage::kEventTypeRender)
     {
-        GuiLayout* area = message.GetGuiSystem()->GetLayoutArea(guiId);
+        GuiLayout* layout = message.GetGuiSystem()->GetLayout(guiId);
         
-        if (!area)
+        if (!layout)
         {
             return;
         }
         
         GuiRenderable* renderable = message.GetGuiComponent()->GetRenderable();
         
-        renderable->RenderBoxFilled(area->Position, area->Size, glm::vec4(0.f,0.f,1.f,1));
+        renderable->RenderBoxOutline(layout->Position, layout->Size, glm::vec4(1.f,0.f,0.f,1));
     }
 }
 
@@ -182,7 +182,11 @@ bool GuiControls::DoButton(const GuiRenderMessage& message, GuiId guiId, const s
             color = glm::vec4(0.5,0.5,0.5,1);
         }
         
+        color *= 0.5f;
+        
         renderable->RenderBoxFilled(layout->Position, layout->Size, color);
+        
+        renderable->RenderBoxOutline(layout->Position, layout->Size, glm::vec4(0.2,0.2,0.2,0.6));
         
         renderable->RenderText(layout->Position, message.GetState().Skin.Font, caption, 20.f, glm::vec4(0,0,0,1));
     }

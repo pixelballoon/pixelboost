@@ -14,10 +14,12 @@ using namespace pb;
 
 GuiLayout::GuiLayout()
 {
-    PendingPosition = false;
+    ChildrenPending = -1;
+    PendingPosition = true;
     PendingSize = false;
     HasMinMax = false;
     Expand[0] = Expand[1] = false;
+    RemainingSize = glm::vec2(-1,-1);
 }
 
 void GuiLayout::ProcessHints(const std::vector<GuiLayoutHint>& hints, glm::vec2 size)
@@ -101,33 +103,12 @@ void GuiSystem::Update(Scene* scene, float totalTime, float gameTime)
 {
     for (const auto& event : _InputEvents)
     {
-//      for (const auto& gui : _GuiItems)
+        if (event.Type == GuiInputEvent::kInputEventMouse)
         {
-            if (event.Type == GuiInputEvent::kInputEventMouse)
+            if (event.Mouse.Type == MouseEvent::kMouseEventMove)
             {
-                if (event.Mouse.Type == MouseEvent::kMouseEventMove)
-                {
-                    /*
-                    glm::mat4x4 projectionMatrix = gui->GetRenderable()->GetRenderPass() == kRenderPassScene ? event.Mouse.Viewport->GetSceneCamera()->ProjectionMatrix : event.Mouse.Viewport->GetUiCamera()->ProjectionMatrix;
-                    
-                    glm::mat4x4 modelViewMatrix = gui->GetRenderable()->GetModelViewMatrix();
-                    glm::vec4 viewportRegion = event.Mouse.Viewport->GetNativeRegion();//glm::vec4(event.Mouse.Viewport->GetPosition(), event.Mouse.Viewport->GetResolution());
-                    
-                    glm::vec2 screenMouse = glm::vec2(event.Mouse.Move.Position[0], event.Mouse.Move.Position[1]);
-                    
-                    glm::vec3 rayStart = glm::unProject(glm::vec3(screenMouse, 0.4), modelViewMatrix, projectionMatrix, viewportRegion);
-                    glm::vec3 rayEnd = glm::unProject(glm::vec3(screenMouse, 0.6), modelViewMatrix, projectionMatrix, viewportRegion);
-                    
-                    glm::vec3 mouse = glm::mix(rayStart, rayEnd, rayStart.z / glm::distance(rayStart.z, rayEnd.z));
-                    
-                    _State.Mouse = glm::vec2(mouse.x, mouse.y);
-                    */
-                    
-                    _State.MousePosition = glm::vec2(event.Mouse.Move.Position[0], event.Mouse.Move.Position[1]);
-                }
+                _State.MousePosition = glm::vec2(event.Mouse.Move.Position[0], event.Mouse.Move.Position[1]);
             }
-            
-            //gui->OnInput(_State, this, event);
         }
     }
     
@@ -149,7 +130,9 @@ void GuiSystem::Render(Scene* scene, Viewport* viewport, RenderPass renderPass)
         rootLayout.Parent = 0;
         rootLayout.LayoutType = GuiLayout::kLayoutTypeVertical;
         rootLayout.Position = glm::vec2(0,0);
-        rootLayout.Size = gui->GetSize();
+        rootLayout.Size = rootLayout.RemainingSize = gui->GetSize();
+        rootLayout.PendingPosition = false;
+        rootLayout.PendingSize = false;
         
         GuiLayout* root = new GuiLayout(rootLayout);
         
@@ -177,16 +160,16 @@ void GuiSystem::PushLayoutArea(const GuiLayout& area, GuiId guiId, const std::ve
     GuiLayout* layout = new GuiLayout(area);
     
     parent->Children.push_back(layout);
-    layout->PendingPosition = true;
+
     layout->Parent = parent;
+    layout->PendingPosition = true;
+    layout->ProcessHints(hints, glm::vec2(-1,-1));
     
     _State.LayoutStack.push_back(layout);
     
-    layout->ProcessHints(hints, glm::vec2(-1,-1));
-    
     PbAssert(_GuiArea.find(guiId) == _GuiArea.end());
     
-    _GuiArea[guiId] = layout;
+    _GuiLayout[guiId] = layout;
 }
 
 GuiLayout* GuiSystem::PopLayoutArea()
@@ -197,26 +180,19 @@ GuiLayout* GuiSystem::PopLayoutArea()
     return top;
 }
 
-GuiLayout* GuiSystem::GetLayoutArea(GuiId guiId)
-{
-    return _GuiArea[guiId];
-}
-
 void GuiSystem::AddLayout(GuiId guiId, const std::vector<GuiLayoutHint> hints, glm::vec2 size)
 {
-    GuiLayout* area = _State.LayoutStack.back();
-    
+    GuiLayout* parent = _State.LayoutStack.back();
     GuiLayout* layout = new GuiLayout();
 
-    layout->Parent = area;
-    layout->Size = size;
+    parent->Children.push_back(layout);
+
+    layout->Parent = parent;
     layout->PendingPosition = true;
-    
     layout->ProcessHints(hints, size);
     
     PbAssert(_GuiLayout.find(guiId) == _GuiLayout.end());
-        
-    area->Children.push_back(layout);
+
     _GuiLayout[guiId] = layout;
 }
 
@@ -241,61 +217,121 @@ GuiSystem::LayoutResult GuiSystem::ProcessLayout(GuiLayout* layout, glm::vec2 po
 {
     glm::vec2 size;
     
-    if (layout->PendingPosition && !layout->Parent->PendingPosition && !layout->Parent->PendingSize)
-    {
-        layout->Position = layout->Parent->Position + position;
-        layout->PendingPosition = false;
-    }
-    
     if (layout->PendingPosition)
     {
-        position.x = -1.f;
+        if (position.x >= 0.f && position.y >= 0.f)
+        {
+            layout->Position = position;
+            layout->PendingPosition = false;
+        }
     }
     
-    layout->RemainingSize = layout->Size;
     layout->ChildrenPending = layout->Children.size();
     
     for (const auto& child : layout->Children)
     {
         LayoutResult result = ProcessLayout(child, position);
-        
-        if (!result.Pending)
+    
+        if (result.Size.x >= 0.f && result.Size.y >= 0.f)
         {
-            layout->RemainingSize -= result.Size;
-            layout->ChildrenPending--;
-            
             if (layout->LayoutType == GuiLayout::kLayoutTypeHorizontal)
             {
                 position.x += result.Size.x;
-            } else {
+                size.x += result.Size.x;
+                size.y = glm::max(size.y, result.Size.y);
+            } else
+            {
                 position.y += result.Size.y;
+                size.x = glm::max(size.x, result.Size.x);
+                size.y += result.Size.y;
             }
+        }
+        
+        if (result.Pending)
+        {
+            position = glm::vec2(-1,-1);
+        } else
+        {
+            layout->ChildrenPending--;
+        }
+    }
+    
+    if (!layout->PendingSize)
+    {
+        if (layout->LayoutType == GuiLayout::kLayoutTypeHorizontal)
+        {
+            layout->RemainingSize = layout->Size - glm::vec2(size.x,0);
+        } else
+        {
+            layout->RemainingSize = layout->Size - glm::vec2(0,size.y);
+        }
+    } else
+    {
+        layout->RemainingSize = glm::vec2(-1,-1);
+    }
+    
+    if (layout->ChildrenPending && layout->PendingSize)
+    {
+        if (layout->LayoutType == GuiLayout::kLayoutTypeHorizontal)
+        {
+            layout->Expand[0] = true;
+        } else
+        {
+            layout->Expand[1] = true;
         }
     }
     
     if (layout->PendingSize)
     {
-        if (!layout->Parent->PendingSize)
+        if (layout->Size.x < 0.f)
         {
-            if (layout->Size.x < 0.f)
+            int pending = 0;
+            for (const auto& child : layout->Children)
             {
-                if (layout->Expand[0])
+                if (child->Size.x < 0.f)
                 {
-                    layout->Size.x = layout->Parent->Size.x;
+                    pending++;
                 }
-
-                layout->PendingSize = false;
             }
             
-            if (layout->Size.y < 0.f)
+            if (layout->Expand[0])
             {
-                if (layout->Expand[1])
+                if (layout->Parent->RemainingSize.x >= 0.f)
                 {
-                    layout->Size.y = layout->Parent->Size.y;
+                    layout->Size.x = layout->Parent->RemainingSize.x / glm::max(pending, 1);
                 }
-                
-                layout->PendingSize = false;
+            } else if (!pending)
+            {
+                layout->Size.x = size.x;
             }
+        }
+        
+        if (layout->Size.y < 0.f)
+        {
+            int pending = 0;
+            for (const auto& child : layout->Children)
+            {
+                if (child->Size.y < 0.f)
+                {
+                    pending++;
+                }
+            }
+            
+            if (layout->Expand[1])
+            {
+                if (layout->Parent->RemainingSize.y >= 0.f)
+                {
+                    layout->Size.y = layout->Parent->RemainingSize.y / glm::max(pending, 1);
+                }
+            } else if (!pending)
+            {
+                layout->Size.y = size.y;
+            }
+        }
+        
+        if (layout->Size.x >= 0.f && layout->Size.y >= 0.f)
+        {
+            layout->PendingSize = false;
         }
     }
     
