@@ -104,7 +104,7 @@ MainScreen::MainScreen()
 {
     pb::GraphicsDevice::Instance()->SetClearColor(glm::vec4(43.f/255.f,43.f/255.f,43.f/255.f,1.f));
     
-    Game::Instance()->GetFontRenderer()->LoadFont("helvetica", "/fonts/helvetica");
+    pb::FontRenderer::Instance()->LoadFont("helvetica", "/fonts/helvetica");
     
     _DiscoveryClient = pb::NetworkManager::Instance()->ClientDiscover(9091, "pb::debugvariable");
 
