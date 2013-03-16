@@ -3,7 +3,6 @@
 #include "pixelboost/file/fileHelpers.h"
 #include "pixelboost/framework/engine.h"
 #include "pixelboost/graphics/device/texture.h"
-#include "pixelboost/graphics/helper/screenHelpers.h"
 #include "pixelboost/graphics/renderer/sprite/sprite.h"
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
 

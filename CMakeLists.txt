@@ -203,10 +203,6 @@ set (GRAPHICS_DEVICE_SOURCES
 	"src/common/pixelboost/graphics/device/vertexBuffer.h"
 	)
 
-set (GRAPHICS_HELPER_SOURCES
-	"src/common/pixelboost/graphics/helper/screenHelpers.cpp"
-	"src/common/pixelboost/graphics/helper/screenHelpers.h"
-	)
 
 set (GRAPHICS_PARTICLE_SOURCES
 	"src/common/pixelboost/graphics/particle/particleSystem.cpp"
@@ -440,7 +436,6 @@ set (PIXELBOOST_SOURCES
 	${FRAMEWORK_SOURCES}
 	${GRAPHICS_CAMERA_SOURCES}
 	${GRAPHICS_DEVICE_SOURCES}
-	${GRAPHICS_HELPER_SOURCES}
 	${GRAPHICS_PARTICLE_SOURCES}
 	${GRAPHICS_RENDERER_SOURCES}
 	${GRAPHICS_RESOURCES_SOURCES}
@@ -523,7 +518,6 @@ source_group (file FILES ${FILE_SOURCES})
 source_group (framework FILES ${FRAMEWORK_SOURCES})
 source_group (graphics\\camera FILES ${GRAPHICS_CAMERA_SOURCES})
 source_group (graphics\\device FILES ${GRAPHICS_DEVICE_SOURCES})
-source_group (graphics\\helper FILES ${GRAPHICS_HELPER_SOURCES})
 source_group (graphics\\particle FILES ${GRAPHICS_PARTICLE_SOURCES})
 source_group (graphics\\renderer FILES ${GRAPHICS_RENDERER_SOURCES})
 source_group (graphics\\resources FILES ${GRAPHICS_RESOURCES_SOURCES})
