@@ -210,6 +210,8 @@ View* View::Instance()
 
 void View::Initialise()
 {
+    Engine::Initialise();
+    
     _LevelCamera = new pb::OrthographicCamera();
     _LevelViewport = new pb::Viewport(0, _LevelCamera);
     _LevelScene = new pb::Scene();

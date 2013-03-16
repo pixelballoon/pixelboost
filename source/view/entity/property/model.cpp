@@ -41,7 +41,7 @@ void ModelViewProperty::Refresh()
     if (model != _Model)
     {
         _Model = model;
-        GetComponent<pb::ModelComponent>()->SetModel(View::Instance()->GetModelRenderer()->LoadModel(_Model, "editor_models/"+_Model));
+        GetComponent<pb::ModelComponent>()->SetModel(pb::ModelRenderer::Instance()->LoadModel(_Model, "editor_models/"+_Model));
         DirtyBounds();
     }
     
@@ -50,7 +50,7 @@ void ModelViewProperty::Refresh()
     if (texture != _Texture)
     {
         _Texture = texture;
-        GetComponent<pb::ModelComponent>()->SetTexture(View::Instance()->GetModelRenderer()->LoadTexture(_Texture, "editor_images/"+_Texture));
+        GetComponent<pb::ModelComponent>()->SetTexture(pb::ModelRenderer::Instance()->LoadTexture(_Texture, "editor_images/"+_Texture));
     }
     
     if (visualisation->HasParamValue("rotation"))

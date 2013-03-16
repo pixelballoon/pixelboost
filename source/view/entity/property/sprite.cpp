@@ -44,9 +44,9 @@ void SpriteViewProperty::Refresh()
     {
         _Sprite = sprite;
         
-        if (!View::Instance()->GetSpriteRenderer()->GetSpriteSheet(_Sprite))
+        if (!pb::SpriteRenderer::Instance()->GetSpriteSheet(_Sprite))
         {
-            std::shared_ptr<pb::SpriteSheet> spriteSheet = View::Instance()->GetSpriteRenderer()->CreateSpriteSheet(sprite);
+            std::shared_ptr<pb::SpriteSheet> spriteSheet = pb::SpriteRenderer::Instance()->CreateSpriteSheet(sprite);
             spriteSheet->LoadSingle("editor_sprites/" + _Sprite, Core::Instance()->GetProject()->GetConfig().pixelUnit);
         }
         
@@ -57,7 +57,7 @@ void SpriteViewProperty::Refresh()
 
 pb::BoundingBox SpriteViewProperty::CalculateBounds()
 {
-    pb::Sprite* sprite = View::Instance()->GetSpriteRenderer()->GetSprite(_Sprite);
+    pb::Sprite* sprite = pb::SpriteRenderer::Instance()->GetSprite(_Sprite);
     
     if (!sprite)
         return pb::BoundingBox();
