@@ -147,6 +147,8 @@ void Renderer::RenderBatch(Viewport* viewport, int count, Renderable** renderabl
     if (!shader)
         return;
     
+    GraphicsDevice::Instance()->ResetState();
+    
     RenderableHandlerMap::iterator it = _RenderableHandlers.find(renderable[0]->GetType());
     
     if (it != _RenderableHandlers.end())

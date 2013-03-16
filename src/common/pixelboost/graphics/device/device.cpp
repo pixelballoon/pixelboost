@@ -74,6 +74,11 @@ void GraphicsDevice::ClearBuffers()
 {
     
 }
+
+void GraphicsDevice::ResetState()
+{
+    
+}
     
 VertexBuffer* GraphicsDevice::CreateVertexBuffer(BufferFormat bufferFormat, VertexFormat vertexFormat, int length)
 {

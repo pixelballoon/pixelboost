@@ -75,6 +75,8 @@ public:
     virtual void SetClearColor(glm::vec4 color);
     virtual void ClearBuffers();
     
+    virtual void ResetState();
+    
     virtual VertexBuffer* CreateVertexBuffer(BufferFormat bufferFormat, VertexFormat vertexFormat, int length);
     virtual void DestroyVertexBuffer(VertexBuffer* buffer);
     virtual VertexBuffer* GetBoundVertexBuffer();

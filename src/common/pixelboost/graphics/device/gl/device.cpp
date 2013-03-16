@@ -218,6 +218,11 @@ void GraphicsDeviceGL::ClearBuffers()
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 }
 
+void GraphicsDeviceGL::ResetState()
+{
+    _DesiredState.Reset();
+}
+
 VertexBuffer* GraphicsDeviceGL::CreateVertexBuffer(BufferFormat bufferFormat, VertexFormat vertexFormat, int length)
 {
     VertexBuffer* vertexBuffer = GraphicsDevice::CreateVertexBuffer(bufferFormat, vertexFormat, length);
