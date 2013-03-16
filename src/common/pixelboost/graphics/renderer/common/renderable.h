@@ -42,7 +42,7 @@ public:
     void SetWorldMatrix(const glm::mat4x4& matrix);
     const glm::mat4x4& GetWorldMatrix();
     
-    void CalculateModelViewMatrix(Viewport* viewport, Camera* camera);
+    void CalculateModelViewMatrix(Viewport* viewport, const glm::mat4x4& viewMatrix);
     const glm::mat4x4& GetModelViewMatrix() const;
     
     virtual Shader* GetShader();

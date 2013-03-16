@@ -38,18 +38,18 @@ void Renderer::Render()
 {
     GraphicsDevice::Instance()->ClearBuffers();
     
-    for (ViewportList::iterator it = _Viewports.begin(); it != _Viewports.end(); ++it)
+    for (const auto& viewport : _Viewports)
     {
-        (*it)->Render(kRenderPassScene);
+        viewport->Render(kRenderPassScene);
         
-        FlushBuffer(*it, (*it)->GetSceneCamera());
+        FlushBuffer(viewport, viewport->GetSceneCamera()->ProjectionMatrix, viewport->GetSceneCamera()->ViewMatrix);
     }
     
-    for (ViewportList::iterator it = _Viewports.begin(); it != _Viewports.end(); ++it)
+    for (const auto& viewport : _Viewports)
     {
-        (*it)->Render(kRenderPassUi);
+        viewport->Render(kRenderPassUi);
         
-        FlushBuffer(*it, (*it)->GetUiCamera());
+        FlushBuffer(viewport, viewport->GetUiCamera()->ProjectionMatrix, viewport->GetSceneCamera()->ViewMatrix);
     }
 }
 
@@ -95,7 +95,7 @@ static bool RenderableBackToFrontSorter(const Renderable* a, const Renderable* b
     return a->GetModelViewMatrix()[3][2] < b->GetModelViewMatrix()[3][2];
 }
 
-void Renderer::FlushBuffer(Viewport* viewport, Camera* camera)
+void Renderer::FlushBuffer(Viewport* viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
 {
     for (int i=0; i<16; i++)
     {
@@ -106,7 +106,7 @@ void Renderer::FlushBuffer(Viewport* viewport, Camera* camera)
         
         for (RenderableList::iterator it = renderables.begin(); it != renderables.end(); ++it)
         {
-            (*it)->CalculateModelViewMatrix(viewport, camera);
+            (*it)->CalculateModelViewMatrix(viewport, viewMatrix);
         }
         
         std::stable_sort(renderables.begin(), renderables.end(), &RenderableBackToFrontSorter);
@@ -125,7 +125,7 @@ void Renderer::FlushBuffer(Viewport* viewport, Camera* camera)
             {
                 count++;
             } else {
-                RenderBatch(viewport, count, &renderables[start], shader, camera);
+                RenderBatch(viewport, count, &renderables[start], shader, projectionMatrix, viewMatrix);
                 start = i;
                 count = 1;
                 type = newType;
@@ -135,14 +135,14 @@ void Renderer::FlushBuffer(Viewport* viewport, Camera* camera)
         
         if (count > 0)
         {
-            RenderBatch(viewport, count, &renderables[start], shader, camera);
+            RenderBatch(viewport, count, &renderables[start], shader, projectionMatrix, viewMatrix);
         }
     }
     
     _Renderables.clear();
 }
 
-void Renderer::RenderBatch(Viewport* viewport, int count, Renderable** renderable, Shader* shader, Camera* camera)
+void Renderer::RenderBatch(Viewport* viewport, int count, Renderable** renderable, Shader* shader, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
 {
     if (!shader)
         return;
@@ -165,7 +165,7 @@ void Renderer::RenderBatch(Viewport* viewport, int count, Renderable** renderabl
                     {
                         ShaderPass* pass = technique->GetPass(j);
                         pass->Bind();
-                        pass->GetShaderProgram()->SetUniform("PB_ProjectionMatrix", camera->ProjectionMatrix);
+                        pass->GetShaderProgram()->SetUniform("PB_ProjectionMatrix", projectionMatrix);
                         it->second->Render(1, &renderable[i], viewport, pass);
                     }
                 }
@@ -176,7 +176,7 @@ void Renderer::RenderBatch(Viewport* viewport, int count, Renderable** renderabl
             {
                 ShaderPass* pass = technique->GetPass(i);
                 pass->Bind();
-                pass->GetShaderProgram()->SetUniform("PB_ProjectionMatrix", camera->ProjectionMatrix);
+                pass->GetShaderProgram()->SetUniform("PB_ProjectionMatrix", projectionMatrix);
                 it->second->Render(count, renderable, viewport, pass);
             }
         }

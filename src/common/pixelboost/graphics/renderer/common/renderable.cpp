@@ -106,12 +106,12 @@ const glm::mat4x4& Renderable::GetWorldMatrix()
     return _WorldMatrix;
 }
 
-void Renderable::CalculateModelViewMatrix(Viewport* viewport, Camera* camera)
+void Renderable::CalculateModelViewMatrix(Viewport* viewport, const glm::mat4x4& viewMatrix)
 {
     if (_WorldMatrixDirty)
         CalculateWorldMatrix();
     
-    _ModelViewMatrix = camera->ViewMatrix * _WorldMatrix;
+    _ModelViewMatrix = viewMatrix * _WorldMatrix;
 }
 
 const glm::mat4x4& Renderable::GetModelViewMatrix() const
