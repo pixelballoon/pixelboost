@@ -4,9 +4,8 @@
 #include "pixelboost/file/fileHelpers.h"
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/program.h"
+#include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/shader/shader.h"
-
-#ifndef PIXELBOOST_DISABLE_GRAPHICS
 
 using namespace pb;
 
@@ -180,7 +179,5 @@ ShaderTechnique* Shader::GetTechnique(Uid techniqueId)
     if (it != _Techniques.end())
         return it->second;
     
-    return 0;
+    return Renderer::Instance()->GetTechnique(techniqueId);
 }
-
-#endif

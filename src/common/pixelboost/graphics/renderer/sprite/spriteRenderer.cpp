@@ -1,7 +1,6 @@
-#ifndef PIXELBOOST_DISABLE_GRAPHICS
-
 #include "glm/gtc/matrix_transform.hpp"
 
+#include "pixelboost/debug/assert.h"
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/device/device.h"
@@ -15,6 +14,8 @@
 #include "pixelboost/graphics/shader/manager.h"
 
 using namespace pb;
+
+SpriteRenderer* SpriteRenderer::_Instance = 0;
 
 SpriteRenderable::SpriteRenderable(Uid entityId)
     : Renderable(entityId)
@@ -95,6 +96,10 @@ void SpriteRenderable::SetTint(glm::vec4 tint)
 
 SpriteRenderer::SpriteRenderer()
 {
+    PbAssert(!_Instance);
+    
+    _Instance = this;
+    
     _MaxBatchSize = 100;
     _IndexBuffer = pb::GraphicsDevice::Instance()->CreateIndexBuffer(pb::kBufferFormatStatic, _MaxBatchSize * 6);
     _VertexBuffer = pb::GraphicsDevice::Instance()->CreateVertexBuffer(pb::kBufferFormatDynamic, pb::kVertexFormat_P3_C4_UV, _MaxBatchSize * 4);
@@ -120,14 +125,30 @@ SpriteRenderer::SpriteRenderer()
 
 SpriteRenderer::~SpriteRenderer()
 {
+    _Instance = 0;
+    
     Renderer::Instance()->GetShaderManager()->UnloadShader("/shaders/pb_texturedColor.shc");
     
     pb::GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
     pb::GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
 }
-    
-void SpriteRenderer::Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass)
+
+SpriteRenderer* SpriteRenderer::Instance()
 {
+    return _Instance;
+}
+    
+void SpriteRenderer::Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
+{
+    ShaderTechnique* technique = renderables[0]->GetShader()->GetTechnique(renderScheme);
+    
+    if (!technique)
+        return;
+    
+    ShaderPass* shaderPass = technique->GetPass(0);
+    shaderPass->Bind();
+    shaderPass->GetShaderProgram()->SetUniform("PB_ProjectionMatrix", projectionMatrix);
+    
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
     
@@ -319,5 +340,3 @@ Sprite* SpriteRenderer::GetSprite(const std::string& spriteName) const
     
     return it->second;
 }
-
-#endif

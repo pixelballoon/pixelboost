@@ -43,7 +43,7 @@ namespace pb
         GwenRenderer();
         virtual ~GwenRenderer();
         
-        virtual void Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass);
+        virtual void Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix);
         
     public:
         virtual void Init();
@@ -77,7 +77,8 @@ namespace pb
         
         int _MaxQuads;
         Renderable* _Renderable;
-        Viewport* _Viewport;
+        
+        glm::vec4 _Viewport;
         ShaderPass* _ShaderPass;
         
         glm::vec4 _Color;

@@ -1,7 +1,5 @@
 #pragma once
 
-#ifndef PIXELBOOST_DISABLE_INPUT
-
 #include "glm/glm.hpp"
 
 #include "pixelboost/input/inputManager.h"
@@ -102,5 +100,3 @@ namespace pb
     };
     
 }
-
-#endif

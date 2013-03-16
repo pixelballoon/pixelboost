@@ -1,5 +1,3 @@
-#ifndef PIXELBOOST_DISABLE_INPUT
-
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/input/mouseManager.h"
 
@@ -153,5 +151,3 @@ void MouseManager::OnMouseRotate(float rotate)
         }
     }
 }
-
-#endif

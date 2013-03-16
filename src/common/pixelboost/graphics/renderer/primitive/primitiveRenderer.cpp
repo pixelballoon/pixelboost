@@ -1,5 +1,3 @@
-#ifndef PIXELBOOST_DISABLE_GRAPHICS
-
 #include "glm/gtc/matrix_transform.hpp"
 
 #include "pixelboost/graphics/device/device.h"
@@ -12,6 +10,8 @@
 #include "pixelboost/graphics/shader/manager.h"
 
 using namespace pb;
+
+PrimitiveRenderer* PrimitiveRenderer::_Instance = 0;
 
 PrimitiveRenderable::PrimitiveRenderable(Uid entityUid)
     : Renderable(entityUid)
@@ -226,6 +226,8 @@ void PrimitiveRenderableRectangle::SetSize(glm::vec2 size)
 
 PrimitiveRenderer::PrimitiveRenderer()
 {
+    _Instance = this;
+    
     {
         _BoxIndexBuffer = GraphicsDevice::Instance()->CreateIndexBuffer(kBufferFormatStatic, 6);
         _BoxVertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatStatic, kVertexFormat_P3, 4);
@@ -299,11 +301,27 @@ PrimitiveRenderer::PrimitiveRenderer()
     
 PrimitiveRenderer::~PrimitiveRenderer()
 {
+    _Instance = 0;
+    
     Renderer::Instance()->GetShaderManager()->UnloadShader("/shaders/pb_solid.shc");
 }
 
-void PrimitiveRenderer::Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass)
+PrimitiveRenderer* PrimitiveRenderer::Instance()
 {
+    return _Instance;
+}
+
+void PrimitiveRenderer::Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
+{
+    ShaderTechnique* technique = renderables[0]->GetShader()->GetTechnique(renderScheme);
+    
+    if (!technique)
+        return;
+    
+    ShaderPass* shaderPass = technique->GetPass(0);
+    shaderPass->Bind();
+    shaderPass->GetShaderProgram()->SetUniform("PB_ProjectionMatrix", projectionMatrix);
+    
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
@@ -387,5 +405,3 @@ void PrimitiveRenderer::Render(int count, Renderable** renderables, Viewport* vi
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
 }
-
-#endif

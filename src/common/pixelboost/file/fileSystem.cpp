@@ -165,6 +165,8 @@ bool File::Seek(SeekMode mode, int offset)
 
 FileSystem::FileSystem(const char* appPath)
 {
+    PbAssert(!_Instance);
+    
     _Instance = this;
     
     PHYSFS_init(appPath);

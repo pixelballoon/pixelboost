@@ -1,7 +1,5 @@
 #pragma once
 
-#ifndef PIXELBOOST_DISABLE_GRAPHICS
-
 #include <map>
 #include <vector>
 
@@ -62,9 +60,12 @@ namespace pb
         BufferRenderer();
         virtual ~BufferRenderer();
         
-        virtual void Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass);
+        static BufferRenderer* Instance();
+        
+        virtual void Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix);
+        
+    private:
+        static BufferRenderer* _Instance;
     };
     
 }
-
-#endif

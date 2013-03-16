@@ -44,7 +44,7 @@ void SpriteComponent::SetLayer(int layer)
 
 void SpriteComponent::SetSprite(const std::string& sprite)
 {
-    GetRenderable()->SetSprite(Engine::Instance()->GetSpriteRenderer()->GetSprite(sprite));
+    GetRenderable()->SetSprite(SpriteRenderer::Instance()->GetSprite(sprite));
 }
 
 void SpriteComponent::SetTint(const glm::vec4& tint)

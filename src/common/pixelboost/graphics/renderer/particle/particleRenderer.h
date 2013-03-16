@@ -82,15 +82,19 @@ public:
     ParticleRenderer();
     ~ParticleRenderer();
     
-    virtual void Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass);
+    static ParticleRenderer* Instance();
+    
+    virtual void Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix);
     
 private:
-    void Render(ParticleSystem* system, ShaderPass* shaderPass);
+    void RenderSystem(ParticleSystem* system, ShaderPass* shaderPass);
     
     IndexBuffer* _IndexBuffer;
     VertexBuffer* _VertexBuffer;
     
     int _MaxParticles;
+    
+    static ParticleRenderer* _Instance;
 };
 
 }

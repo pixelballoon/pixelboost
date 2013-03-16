@@ -105,7 +105,7 @@ namespace pb
         friend class GuiRenderer;
     };
     
-    class GuiRenderer : public pb::IRenderer
+    class GuiRenderer : public IRenderer
     {
     public:
         GuiRenderer();
@@ -113,7 +113,7 @@ namespace pb
         
         static GuiRenderer* Instance();
         
-        virtual void Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass);
+        virtual void Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix);
         
     private:
         void PurgeBuffer();

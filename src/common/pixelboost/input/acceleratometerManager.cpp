@@ -1,5 +1,3 @@
-#ifndef PIXELBOOST_DISABLE_INPUT
-
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/device/device.h"
@@ -47,5 +45,3 @@ void AccelerometerManager::OnAccelerometer(glm::vec3 attitude, glm::vec3 rotatio
         }
     }
 }
-
-#endif

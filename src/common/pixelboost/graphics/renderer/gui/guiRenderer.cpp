@@ -1,5 +1,6 @@
 #include "glm/gtc/matrix_transform.hpp"
 
+#include "pixelboost/debug/assert.h"
 #include "pixelboost/framework/engine.h"
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/camera/viewport.h"
@@ -145,11 +146,13 @@ void GuiRenderable::RenderText(glm::vec2 position, const std::string& font, cons
 
 glm::vec2 GuiRenderable::MeasureText(const std::string& font, const std::string& string, float size)
 {
-    return Engine::Instance()->GetFontRenderer()->MeasureString(font, string, size);
+    return FontRenderer::Instance()->MeasureString(font, string, size);
 }
 
 GuiRenderer::GuiRenderer()
 {
+    PbAssert(!_Instance);
+    
     _Instance = this;
     
     _MaxElements = 500;
@@ -208,8 +211,16 @@ GuiRenderer* GuiRenderer::Instance()
     return _Instance;
 }
 
-void GuiRenderer::Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass)
+void GuiRenderer::Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
 {
+    ShaderTechnique* technique = renderables[0]->GetShader()->GetTechnique(renderScheme);
+    
+    if (!technique)
+        return;
+    
+    ShaderPass* shaderPass = technique->GetPass(0);
+    shaderPass->Bind();
+    shaderPass->GetShaderProgram()->SetUniform("PB_ProjectionMatrix", projectionMatrix);
     shaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", glm::vec4(1,1,1,1));
     shaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
     
@@ -412,7 +423,7 @@ void GuiRenderer::Render(int count, Renderable** renderables, Viewport* viewport
                                         
                     GuiRenderable::GuiCommandText* text = static_cast<GuiRenderable::GuiCommandText*>(command);
                     
-                    Font* font = Engine::Instance()->GetFontRenderer()->GetFont(text->Font);
+                    Font* font = FontRenderer::Instance()->GetFont(text->Font);
                     
                     if (font)
                     {

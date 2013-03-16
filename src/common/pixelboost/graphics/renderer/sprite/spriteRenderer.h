@@ -54,7 +54,9 @@ public:
 	SpriteRenderer();
 	~SpriteRenderer();
     
-    void Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass);
+    static SpriteRenderer* Instance();
+    
+    void Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix);
 	
     std::shared_ptr<SpriteSheet> CreateSpriteSheet(const std::string& name);
     bool LoadSpriteSheet(const std::string& name, const std::string& extension, bool createMips=false, bool hasPremultipliedAlpha = true);
@@ -77,6 +79,8 @@ private:
     int _BatchSize;
     IndexBuffer* _IndexBuffer;
     VertexBuffer* _VertexBuffer;
+    
+    static SpriteRenderer* _Instance;
     
     friend class SpriteSheet;
 };

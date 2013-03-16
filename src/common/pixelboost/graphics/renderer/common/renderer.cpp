@@ -1,8 +1,7 @@
-#ifndef PIXELBOOST_DISABLE_GRAPHICS
-
 #include <algorithm>
 #include <set>
 
+#include "pixelboost/debug/assert.h"
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/device/device.h"
@@ -19,9 +18,13 @@ Renderer* Renderer::_Instance = 0;
 
 Renderer::Renderer()
 {
+    PbAssert(!_Instance);
+    
     _Instance = this;
     
     _ShaderManager = new ShaderManager();
+    
+    _TechniqueHandler = 0;
 }
 
 Renderer::~Renderer()
@@ -40,17 +43,49 @@ void Renderer::Render()
     
     for (const auto& viewport : _Viewports)
     {
-        viewport->Render(kRenderPassScene);
-        
-        FlushBuffer(viewport, viewport->GetSceneCamera()->ProjectionMatrix, viewport->GetSceneCamera()->ViewMatrix);
+        RenderViewport(viewport, kRenderPassScene);
     }
     
     for (const auto& viewport : _Viewports)
     {
-        viewport->Render(kRenderPassUi);
-        
-        FlushBuffer(viewport, viewport->GetUiCamera()->ProjectionMatrix, viewport->GetSceneCamera()->ViewMatrix);
+        RenderViewport(viewport, kRenderPassUi);
     }
+}
+
+void Renderer::RenderViewport(Viewport* viewport, RenderPass pass, Uid schemeOverride)
+{
+    glm::mat4x4 projectionMatrix;
+    glm::mat4x4 viewMatrix;
+    
+    switch (pass)
+    {
+        case kRenderPassScene:
+            projectionMatrix = viewport->GetSceneCamera()->ProjectionMatrix;
+            viewMatrix = viewport->GetSceneCamera()->ViewMatrix;
+            break;
+            
+        case kRenderPassUi:
+            projectionMatrix = viewport->GetUiCamera()->ProjectionMatrix;
+            viewMatrix = viewport->GetUiCamera()->ViewMatrix;
+            break;
+    }
+    
+    viewport->Render(pass);
+
+    FlushBuffer(viewport->GetNativeRegion(), schemeOverride ? schemeOverride : viewport->GetRenderScheme(), projectionMatrix, viewMatrix);
+}
+
+void Renderer::SetTechniqueHandler(TechniqueHandler* techniqueHandler)
+{
+    _TechniqueHandler = techniqueHandler;
+}
+
+ShaderTechnique* Renderer::GetTechnique(Uid techniqueId)
+{
+    if (!_TechniqueHandler)
+        return 0;
+    
+    return _TechniqueHandler->GetTechnique(techniqueId);
 }
 
 ShaderManager* Renderer::GetShaderManager()
@@ -95,7 +130,7 @@ static bool RenderableBackToFrontSorter(const Renderable* a, const Renderable* b
     return a->GetModelViewMatrix()[3][2] < b->GetModelViewMatrix()[3][2];
 }
 
-void Renderer::FlushBuffer(Viewport* viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
+void Renderer::FlushBuffer(const glm::vec4& viewport, Uid renderScheme, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
 {
     for (int i=0; i<16; i++)
     {
@@ -106,7 +141,7 @@ void Renderer::FlushBuffer(Viewport* viewport, const glm::mat4x4& projectionMatr
         
         for (RenderableList::iterator it = renderables.begin(); it != renderables.end(); ++it)
         {
-            (*it)->CalculateModelViewMatrix(viewport, viewMatrix);
+            (*it)->CalculateModelViewMatrix(viewMatrix);
         }
         
         std::stable_sort(renderables.begin(), renderables.end(), &RenderableBackToFrontSorter);
@@ -125,64 +160,30 @@ void Renderer::FlushBuffer(Viewport* viewport, const glm::mat4x4& projectionMatr
             {
                 count++;
             } else {
-                RenderBatch(viewport, count, &renderables[start], shader, projectionMatrix, viewMatrix);
+                RenderBatch(count, &renderables[start], renderScheme, viewport, projectionMatrix, viewMatrix);
                 start = i;
                 count = 1;
                 type = newType;
-                shader = newShader;
             }
         }
         
         if (count > 0)
         {
-            RenderBatch(viewport, count, &renderables[start], shader, projectionMatrix, viewMatrix);
+            RenderBatch(count, &renderables[start], renderScheme, viewport, projectionMatrix, viewMatrix);
         }
     }
     
     _Renderables.clear();
 }
 
-void Renderer::RenderBatch(Viewport* viewport, int count, Renderable** renderable, Shader* shader, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
+void Renderer::RenderBatch(int count, Renderable** renderable, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
 {
-    if (!shader)
-        return;
-    
     GraphicsDevice::Instance()->ResetState();
     
     RenderableHandlerMap::iterator it = _RenderableHandlers.find(renderable[0]->GetType());
     
     if (it != _RenderableHandlers.end())
     {
-        ShaderTechnique* technique = shader->GetTechnique(viewport->GetRenderScheme());
-        
-        if (!technique)
-        {
-            for (int i=0; i < count; i++)
-            {
-                technique = viewport->GetTechnique(renderable[i], shader);
-                
-                if (technique)
-                {
-                    for (int j=0; j<technique->GetNumPasses(); j++)
-                    {
-                        ShaderPass* pass = technique->GetPass(j);
-                        pass->Bind();
-                        pass->GetShaderProgram()->SetUniform("PB_ProjectionMatrix", projectionMatrix);
-                        it->second->Render(1, &renderable[i], viewport, pass);
-                    }
-                }
-            }
-        } else
-        {
-            for (int i=0; i<technique->GetNumPasses(); i++)
-            {
-                ShaderPass* pass = technique->GetPass(i);
-                pass->Bind();
-                pass->GetShaderProgram()->SetUniform("PB_ProjectionMatrix", projectionMatrix);
-                it->second->Render(count, renderable, viewport, pass);
-            }
-        }
+        it->second->Render(count, renderable, renderScheme, viewport, projectionMatrix, viewMatrix);
     }
 }
-
-#endif

@@ -1,5 +1,3 @@
-#ifndef PIXELBOOST_DISABLE_GRAPHICS
-
 #include "glm/gtc/matrix_transform.hpp"
 
 #include "pixelboost/graphics/camera/camera.h"
@@ -17,6 +15,7 @@
 
 using namespace pb;
 
+ParticleRenderer* ParticleRenderer::_Instance = 0;
 
 ParticleRenderable::ParticleRenderable(Uid entityId, ParticleSystem* system)
     : Renderable(entityId)
@@ -66,6 +65,8 @@ ParticleSystem* ParticleRenderable::GetSystem()
  
 ParticleRenderer::ParticleRenderer()
 {
+    _Instance = this;
+    
     _MaxParticles = 10000;
     
     _IndexBuffer = pb::GraphicsDevice::Instance()->CreateIndexBuffer(pb::kBufferFormatStatic, _MaxParticles*6);
@@ -93,25 +94,41 @@ ParticleRenderer::ParticleRenderer()
 
 ParticleRenderer::~ParticleRenderer()
 {
+    _Instance = 0;
+    
     pb::GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
     pb::GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
 
     Renderer::Instance()->GetShaderManager()->UnloadShader("/shaders/pb_texturedColor.shc");
 }
 
-void ParticleRenderer::Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass)
+ParticleRenderer* ParticleRenderer::Instance()
 {
+    return _Instance;
+}
+
+void ParticleRenderer::Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
+{
+    ShaderTechnique* technique = renderables[0]->GetShader()->GetTechnique(renderScheme);
+    
+    if (!technique)
+        return;
+    
+    ShaderPass* shaderPass = technique->GetPass(0);
+    shaderPass->Bind();
+    shaderPass->GetShaderProgram()->SetUniform("PB_ProjectionMatrix", projectionMatrix);
+    
     for (int i=0; i<count; i++)
     {
         ParticleRenderable& renderable = *static_cast<ParticleRenderable*>(renderables[i]);
         
         shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewMatrix", renderable.GetModelViewMatrix());
         
-        Render(renderable.GetSystem(), shaderPass);
+        RenderSystem(renderable.GetSystem(), shaderPass);
     }
 }
 
-void ParticleRenderer::Render(ParticleSystem* system, ShaderPass* shaderPass)
+void ParticleRenderer::RenderSystem(ParticleSystem* system, ShaderPass* shaderPass)
 {
     _VertexBuffer->Lock();
     
@@ -230,8 +247,6 @@ void ParticleRenderer::Render(ParticleSystem* system, ShaderPass* shaderPass)
     
     for (std::vector<ParticleSystem*>::iterator it = system->SubSystem.begin(); it != system->SubSystem.end(); ++it)
     {
-        Render(*it, shaderPass);
+        RenderSystem(*it, shaderPass);
     }
 }
-
-#endif

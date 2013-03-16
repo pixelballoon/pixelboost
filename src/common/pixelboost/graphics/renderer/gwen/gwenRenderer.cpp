@@ -124,12 +124,22 @@ GwenRenderer::~GwenRenderer()
     Renderer::Instance()->GetShaderManager()->UnloadShader("/shaders/pb_textured.shc");
 }
     
-void GwenRenderer::Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass)
+void GwenRenderer::Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
 {
-    _Viewport = viewport;
+    ShaderTechnique* technique = renderables[0]->GetShader()->GetTechnique(renderScheme);
+    
+    if (!technique)
+        return;
+    
+    ShaderPass* shaderPass = technique->GetPass(0);
+    shaderPass->Bind();
+    shaderPass->GetShaderProgram()->SetUniform("PB_ProjectionMatrix", projectionMatrix);
+    
     _ShaderPass = shaderPass;
     _ShaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", glm::vec4(1,1,1,1));
     _ShaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
+    
+    _Viewport = viewport;
     
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
@@ -209,7 +219,7 @@ void GwenRenderer::StartClip()
     
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateScissor, true);
     Gwen::Rect clip = ClipRegion();
-    GraphicsDevice::Instance()->SetScissor(glm::vec4(clip.x, _Viewport->GetResolution().y-clip.y-clip.h, clip.w, clip.h));
+    GraphicsDevice::Instance()->SetScissor(glm::vec4(clip.x, _Viewport[3]-clip.y-clip.h, clip.w, clip.h));
 }
 
 void GwenRenderer::EndClip()
@@ -321,7 +331,7 @@ void GwenRenderer::RenderText(Gwen::Font* font, Gwen::Point pos, const Gwen::Uni
 
     Gwen::String fontName = Gwen::Utility::UnicodeToString(font->facename);
 
-    pb::Font* renderFont = Engine::Instance()->GetFontRenderer()->LoadFont(fontName, "/fonts/"+fontName, false);
+    pb::Font* renderFont = pb::FontRenderer::Instance()->LoadFont(fontName, "/fonts/"+fontName, false);
 
     float size = font->size * Scale();
     if (!text.length())
@@ -355,10 +365,10 @@ Gwen::Point GwenRenderer::MeasureText(Gwen::Font* font, const Gwen::UnicodeStrin
 {
     Gwen::String fontName = Gwen::Utility::UnicodeToString(font->facename);
     
-    Engine::Instance()->GetFontRenderer()->LoadFont(fontName, "/fonts/"+fontName, false);
+    pb::FontRenderer::Instance()->LoadFont(fontName, "/fonts/"+fontName, false);
     
     float size = font->size * Scale();
-    glm::vec2 stringSize = Engine::Instance()->GetFontRenderer()->MeasureString(fontName, Gwen::Utility::UnicodeToString(text), size);
+    glm::vec2 stringSize = pb::FontRenderer::Instance()->MeasureString(fontName, Gwen::Utility::UnicodeToString(text), size);
     
     return Gwen::Point(stringSize.x, stringSize.y);
 }

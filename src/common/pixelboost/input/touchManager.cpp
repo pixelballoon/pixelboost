@@ -1,5 +1,3 @@
-#ifndef PIXELBOOST_DISABLE_INPUT
-
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/device/device.h"
@@ -152,5 +150,3 @@ void TouchManager::OnTouchMove(int touchId, glm::vec2 position)
         }
     }
 }
-
-#endif

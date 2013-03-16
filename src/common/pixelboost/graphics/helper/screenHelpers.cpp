@@ -1,5 +1,3 @@
-#ifndef PIXELBOOST_DISABLE_GRAPHICS
-
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/helper/screenHelpers.h"
 
@@ -23,5 +21,3 @@ glm::vec2 ScreenHelpers::GetWorldScale()
     
     return glm::vec2(worldScale, worldScale);
 }
-
-#endif

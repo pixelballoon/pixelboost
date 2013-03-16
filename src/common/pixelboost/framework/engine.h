@@ -47,13 +47,6 @@ public:
     
     GameCenter* GetGameCenter() const;
     NetworkServer* GetDebugNetworkServer() const;
-
-    BufferRenderer* GetBufferRenderer() const;
-    FontRenderer* GetFontRenderer() const;
-    ModelRenderer* GetModelRenderer() const;
-    ParticleRenderer* GetParticleRenderer() const;
-    PrimitiveRenderer* GetPrimitiveRenderer() const;
-	SpriteRenderer* GetSpriteRenderer() const;
     
     JoystickManager* GetJoystickManager() const;
     KeyboardManager* GetKeyboardManager() const;
@@ -84,14 +77,6 @@ private:
     
     GameCenter* _GameCenter;
 
-    BufferRenderer* _BufferRenderer;
-    FontRenderer* _FontRenderer;
-    ModelRenderer* _ModelRenderer;
-    ParticleRenderer* _ParticleRenderer;
-    PrimitiveRenderer* _PrimitiveRenderer;
-    Renderer* _Renderer;
-	SpriteRenderer* _SpriteRenderer;
-    
     JoystickManager* _JoystickManager;
     KeyboardManager* _KeyboardManager;
     MouseManager* _MouseManager;

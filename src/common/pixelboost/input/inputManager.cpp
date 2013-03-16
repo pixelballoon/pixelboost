@@ -1,5 +1,3 @@
-#ifndef PIXELBOOST_DISABLE_INPUT
-
 #include <algorithm>
 
 #include "pixelboost/input/inputManager.h"
@@ -84,5 +82,3 @@ void InputManager::UpdateHandlers()
     
     std::sort(_Handlers.begin(), _Handlers.end(), &HandlerSort);
 }
-
-#endif

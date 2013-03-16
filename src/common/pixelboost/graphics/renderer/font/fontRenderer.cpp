@@ -1,7 +1,6 @@
-#ifndef PIXELBOOST_DISABLE_GRAPHICS
-
 #include "glm/gtc/matrix_transform.hpp"
 
+#include "pixelboost/debug/assert.h"
 #include "pixelboost/file/fileHelpers.h"
 #include "pixelboost/framework/engine.h"
 #include "pixelboost/graphics/camera/camera.h"
@@ -19,6 +18,8 @@
 #include "pixelboost/util/localisation/string.h"
 
 using namespace pb;
+
+FontRenderer* FontRenderer::_Instance = 0;
 
 FontRenderable::FontRenderable(Uid entityId)
     : Renderable(entityId)
@@ -46,7 +47,7 @@ Uid FontRenderable::GetStaticType()
 void FontRenderable::CalculateBounds()
 {
     glm::vec4 position = GetWorldMatrix() * glm::vec4(0,0,0,1);
-    glm::vec2 size = Engine::Instance()->GetFontRenderer()->MeasureString(Font, Text, Size);
+    glm::vec2 size = FontRenderer::Instance()->MeasureString(Font, Text, Size);
     BoundingSphere bounds(glm::vec3(position.x, position.y, position.z), glm::max(size.x, size.y));
     SetBounds(bounds);
 }
@@ -136,7 +137,7 @@ FontAlign FontRenderable::GetAlignment()
 
 void FontRenderable::CalculateOffset()
 {
-    Offset = Engine::Instance()->GetFontRenderer()->MeasureString(Font, Text, 1.f).x;
+    Offset = FontRenderer::Instance()->MeasureString(Font, Text, 1.f).x;
     
     switch (Alignment) {
         case kFontAlignLeft:
@@ -263,6 +264,10 @@ void Font::AddCharacter(Vertex_P3_C4_UV* buffer, const Font::Character& characte
 FontRenderer::FontRenderer(int maxCharacters)
     : _MaxCharacters(maxCharacters)
 {
+    PbAssert(!_Instance);
+    
+    _Instance = this;
+    
     _IndexBuffer = GraphicsDevice::Instance()->CreateIndexBuffer(kBufferFormatStatic, _MaxCharacters*6);
     _VertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatDynamic, kVertexFormat_P3_C4_UV, _MaxCharacters*4);
     
@@ -289,6 +294,8 @@ FontRenderer::FontRenderer(int maxCharacters)
 
 FontRenderer::~FontRenderer()
 {
+    _Instance = 0;
+    
     Renderer::Instance()->GetShaderManager()->UnloadShader("/shaders/pb_textured.shc");
     
     GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
@@ -298,6 +305,11 @@ FontRenderer::~FontRenderer()
     {
         delete it->second;
     }
+}
+
+FontRenderer* FontRenderer::Instance()
+{
+    return _Instance;
 }
 
 Font* FontRenderer::LoadFont(const std::string& name, const std::string& filename, bool createMips, bool hasPremultipliedAlpha)
@@ -423,8 +435,17 @@ Font* FontRenderer::GetFont(const std::string& name)
     return 0;
 }
 
-void FontRenderer::Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass)
+void FontRenderer::Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
 {
+    ShaderTechnique* technique = renderables[0]->GetShader()->GetTechnique(renderScheme);
+    
+    if (!technique)
+        return;
+    
+    ShaderPass* shaderPass = technique->GetPass(0);
+    shaderPass->Bind();
+    shaderPass->GetShaderProgram()->SetUniform("PB_ProjectionMatrix", projectionMatrix);
+    
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
     
@@ -566,5 +587,3 @@ void FontRenderer::SplitString(const std::string& string, char seperator, std::v
         output.push_back(item);
     }
 }
-
-#endif

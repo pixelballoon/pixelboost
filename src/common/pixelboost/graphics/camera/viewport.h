@@ -29,8 +29,6 @@ public:
     glm::vec4 GetNativeRegion();
     glm::vec2 GetSize();
     
-    void SetTechniqueDelegate(sigslot::Delegate2<Renderable*, Shader*, ShaderTechnique*> delegate);
-    
     void SetResolution(glm::vec2 size);
     glm::vec2 GetResolution();
     
@@ -54,10 +52,6 @@ public:
     void Render(RenderPass renderPass);
 
 private:
-    ShaderTechnique* GetTechnique(Renderable* renderable, Shader* shader);
-    
-    sigslot::Delegate2<Renderable*, Shader*, ShaderTechnique*> _TechniqueDelegate;
-    
     Camera* _SceneCamera;
     OrthographicCamera* _UiCamera;
     Uid _RenderScheme;

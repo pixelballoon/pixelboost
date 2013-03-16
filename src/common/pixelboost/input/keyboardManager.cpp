@@ -1,5 +1,3 @@
-#ifndef PIXELBOOST_DISABLE_INPUT
-
 #include "pixelboost/input/keyboardManager.h"
 
 using namespace pb;
@@ -57,5 +55,3 @@ void KeyboardManager::OnKeyUp(KeyboardKey key, ModifierKeys modifier, char chara
             return;
     }
 }
-
-#endif

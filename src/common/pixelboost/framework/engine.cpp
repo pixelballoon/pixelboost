@@ -1,6 +1,7 @@
 #include "optionparser/optionparser.h"
 
 #include "pixelboost/audio/audioManagerSimple.h"
+#include "pixelboost/debug/assert.h"
 #include "pixelboost/debug/debugDatabaseHandler.h"
 #include "pixelboost/debug/debugVariableManager.h"
 #include "pixelboost/debug/log.h"
@@ -42,6 +43,8 @@ Engine::Engine(void* platformContext, int argc, const char** argv, bool enableNe
     , _TotalTime(0)
     , _DebugNetwork(0)
 {
+    PbAssert(!_Instance);
+    
     _Instance = this;
     
     LogSystem::Instance()->AddSubscriber(new LogSubscriberConsole());
@@ -69,28 +72,24 @@ Engine::Engine(void* platformContext, int argc, const char** argv, bool enableNe
         }
     }
     
-#ifndef PIXELBOOST_DISABLE_GRAPHICS
-    _Renderer = new Renderer();
-    _BufferRenderer = new BufferRenderer();
-    _ModelRenderer  = new ModelRenderer();
-    _ParticleRenderer = new ParticleRenderer();
-    _SpriteRenderer = new SpriteRenderer();
-    _PrimitiveRenderer = new PrimitiveRenderer();
-    _FontRenderer = new FontRenderer();
+    new Renderer();
+    new BufferRenderer();
+    new ModelRenderer();
+    new ParticleRenderer();
+    new SpriteRenderer();
+    new PrimitiveRenderer();
+    new FontRenderer();
     new GuiRenderer();
-#endif
 
 #ifndef PIXELBOOST_DISABLE_GAMECENTER
     _GameCenter = new GameCenter();
     _GameCenter->Connect();
 #endif
 
-#ifndef PIXELBOOST_DISABLE_INPUT
     _JoystickManager = new JoystickManager();
     _KeyboardManager = new KeyboardManager();
     _MouseManager = new MouseManager();
     _TouchManager = new TouchManager();
-#endif
     
     NetworkManager* networkManager = new NetworkManager();
 
@@ -117,23 +116,19 @@ Engine::~Engine()
     delete _GameCenter;
 #endif
     
-#ifndef PIXELBOOST_DISABLE_GRAPHICS
     delete GuiRenderer::Instance();
-    delete _BufferRenderer;
-    delete _FontRenderer;
-    delete _ModelRenderer;
-    delete _ParticleRenderer;
-    delete _PrimitiveRenderer;
-	delete _SpriteRenderer;
-    delete _Renderer;
-#endif
+    delete BufferRenderer::Instance();
+    delete FontRenderer::Instance();
+    delete ModelRenderer::Instance();
+    delete ParticleRenderer::Instance();
+    delete PrimitiveRenderer::Instance();
+	delete SpriteRenderer::Instance();
+    delete Renderer::Instance();
 
-#ifndef PIXELBOOST_DISABLE_INPUT
     delete _JoystickManager;
     delete _KeyboardManager;
     delete _MouseManager;
     delete _TouchManager;
-#endif
     
     delete _FileSystem;
 }
@@ -165,36 +160,6 @@ GameCenter* Engine::GetGameCenter() const
 NetworkServer* Engine::GetDebugNetworkServer() const
 {
     return _DebugNetwork;
-}
-
-BufferRenderer* Engine::GetBufferRenderer() const
-{
-    return _BufferRenderer;
-}
-    
-FontRenderer* Engine::GetFontRenderer() const
-{
-    return _FontRenderer;
-}
-
-ModelRenderer* Engine::GetModelRenderer() const
-{
-    return _ModelRenderer;
-}
-
-ParticleRenderer* Engine::GetParticleRenderer() const
-{
-    return _ParticleRenderer;
-}
-
-PrimitiveRenderer* Engine::GetPrimitiveRenderer() const
-{
-    return _PrimitiveRenderer;
-}
-
-SpriteRenderer* Engine::GetSpriteRenderer() const
-{
-    return _SpriteRenderer;
 }
 
 JoystickManager* Engine::GetJoystickManager() const
@@ -273,9 +238,7 @@ void Engine::Update(float timeDelta, float gameDelta)
 
 void Engine::Render()
 {
-#ifndef PIXELBOOST_DISABLE_GRAPHICS
-    _Renderer->Render();
-#endif
+    Renderer::Instance()->Render();
 }
 
 void* Engine::GetPlatformContext()

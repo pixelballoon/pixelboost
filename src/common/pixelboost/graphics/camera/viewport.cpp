@@ -34,11 +34,6 @@ glm::vec2 Viewport::GetSize()
     return GetResolution()/GetDensity();
 }
 
-void Viewport::SetTechniqueDelegate(sigslot::Delegate2<Renderable*, Shader*, ShaderTechnique*> delegate)
-{
-    _TechniqueDelegate = delegate;
-}
-
 void Viewport::SetResolution(glm::vec2 resolution)
 {
     _Resolution = resolution;
@@ -128,12 +123,4 @@ void Viewport::Render(RenderPass renderPass)
         
         _Scene->Render(this, renderPass);
     }
-}
-
-ShaderTechnique* Viewport::GetTechnique(Renderable* renderable, Shader* shader)
-{
-    if (_TechniqueDelegate)
-        return _TechniqueDelegate(renderable, shader);
-    
-    return 0;
 }

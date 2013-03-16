@@ -1,7 +1,5 @@
 #pragma once
 
-#ifndef PIXELBOOST_DISABLE_GRAPHICS
-
 #include "glm/glm.hpp"
 #include "sigslot/signal.h"
 
@@ -148,6 +146,4 @@ private:
 #ifdef PIXELBOOST_PLATFORM_WINDOWS
 	#define PIXELBOOST_GRAPHICS_OPENGL
     #define PIXELBOOST_GRAPHICS_OPENGL2
-#endif
-
 #endif

@@ -106,11 +106,13 @@ namespace pb
         FontRenderer(int maxCharacters=1024);
         virtual ~FontRenderer();
         
+        static FontRenderer* Instance();
+        
         Font* LoadFont(const std::string& name, const std::string& filename, bool createMips=true, bool hasPremultipliedAlpha=false);
         
         Font* GetFont(const std::string& name);
         
-        virtual void Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass);
+        virtual void Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix);
         
         float FitString(glm::vec2 region, const std::string& name, const std::string& string, float preferredSize);
         glm::vec2 MeasureString(const std::string& name, const std::string& string, float size);
@@ -125,6 +127,8 @@ namespace pb
         int _MaxCharacters;
         IndexBuffer* _IndexBuffer;
         VertexBuffer* _VertexBuffer;
+        
+        static FontRenderer* _Instance;
     };
     
 }

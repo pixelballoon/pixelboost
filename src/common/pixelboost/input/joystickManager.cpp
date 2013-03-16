@@ -1,5 +1,3 @@
-#ifndef PIXELBOOST_DISABLE_INPUT
-
 #include "pixelboost/input/joystickManager.h"
 
 using namespace pb;
@@ -71,5 +69,3 @@ void JoystickManager::OnButtonUp(int joystick, int button)
             return;
     }
 }
-
-#endif

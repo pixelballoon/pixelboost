@@ -1,7 +1,5 @@
 #pragma once
 
-#ifndef PIXELBOOST_DISABLE_INPUT
-
 #include <map>
 #include <vector>
 
@@ -44,5 +42,3 @@ namespace pb
     };
     
 }
-
-#endif

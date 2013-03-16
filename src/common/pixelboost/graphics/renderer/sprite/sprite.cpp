@@ -1,5 +1,3 @@
-#ifndef PIXELBOOST_DISABLE_GRAPHICS
-
 #include "json/reader.h"
 
 #include "pixelboost/file/fileHelpers.h"
@@ -25,7 +23,7 @@ SpriteSheet::~SpriteSheet()
 {
     for (SpriteMap::iterator it = _Sprites.begin(); it != _Sprites.end(); ++it)
     {
-        Engine::Instance()->GetSpriteRenderer()->_Sprites.erase(it->first);
+        SpriteRenderer::Instance()->_Sprites.erase(it->first);
         delete it->second;
     }
     
@@ -52,7 +50,7 @@ bool SpriteSheet::LoadSingle(const std::string& fileName, float density, bool ge
     sprite->_Offset = glm::vec2(0,0);
     
     _Sprites[spriteName] = sprite;
-    Engine::Instance()->GetSpriteRenderer()->_Sprites[spriteName] = sprite;
+    SpriteRenderer::Instance()->_Sprites[spriteName] = sprite;
     
     return true;
 }
@@ -134,7 +132,7 @@ bool SpriteSheet::LoadSheet(const std::string& name, const std::string& extensio
         
         std::string spriteName = name.substr(0, name.length()-4);
         _Sprites[spriteName] = sprite;
-        Engine::Instance()->GetSpriteRenderer()->_Sprites[spriteName] = sprite;
+        SpriteRenderer::Instance()->_Sprites[spriteName] = sprite;
     }
     
     LoadTexture("/spritesheets/images/" + name + modifier + "." + extension, generateMips);
@@ -164,5 +162,3 @@ Sprite* SpriteSheet::GetSprite(const std::string& name)
     
     return it->second;
 }
-
-#endif

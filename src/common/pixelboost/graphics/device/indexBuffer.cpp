@@ -1,5 +1,3 @@
-#ifndef PIXELBOOST_DISABLE_GRAPHICS
-
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/indexBuffer.h"
 
@@ -60,5 +58,3 @@ void IndexBuffer::Unlock(int numElements)
         _Device->UnlockIndexBuffer(this, numElements);
     }
 }
-
-#endif

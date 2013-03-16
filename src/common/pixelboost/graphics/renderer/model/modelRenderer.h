@@ -153,6 +153,8 @@ namespace pb
         ModelRenderer();
         ~ModelRenderer();
         
+        static ModelRenderer* Instance();
+        
         void Render(RenderLayer* layer);
         
         Model* LoadModel(const std::string& modelName, const std::string& fileName);
@@ -161,7 +163,7 @@ namespace pb
         Texture* LoadTexture(const std::string& textureName, const std::string& fileName, bool createMips=true);
         bool UnloadTexture(const std::string& textureName);
         
-        void Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass);
+        void Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix);
         
         Model* GetModel(const std::string& modelName);
         Texture* GetTexture(const std::string& textureName);
@@ -172,6 +174,8 @@ namespace pb
         
         ModelMap _Models;
         TextureMap _Textures;
+        
+        static ModelRenderer* _Instance;
     };
     
 }

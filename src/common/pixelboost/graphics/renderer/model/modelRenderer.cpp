@@ -1,5 +1,3 @@
-#ifndef PIXELBOOST_DISABLE_GRAPHICS
-
 #include <fstream>
 #include <sstream>
 
@@ -23,6 +21,7 @@
 
 using namespace pb;
 
+ModelRenderer* ModelRenderer::_Instance = 0;
 
 ModelRenderable::ModelRenderable(Uid entityId)
     : Renderable(entityId)
@@ -355,6 +354,10 @@ const std::vector<ModelMesh*>& Model::GetMeshes()
 
 ModelRenderer::ModelRenderer()
 {
+    PbAssert(!_Instance);
+    
+    _Instance = this;
+    
     Renderer::Instance()->SetHandler(ModelRenderable::GetStaticType(), this);
     
     Renderer::Instance()->GetShaderManager()->LoadShader("/shaders/pb_textured.shc");
@@ -362,6 +365,8 @@ ModelRenderer::ModelRenderer()
 
 ModelRenderer::~ModelRenderer()
 {
+    _Instance = 0;
+    
     Renderer::Instance()->GetShaderManager()->UnloadShader("/shaders/pb_textured.shc");
     
     for (ModelMap::iterator it = _Models.begin(); it != _Models.end(); ++it)
@@ -375,8 +380,22 @@ ModelRenderer::~ModelRenderer()
     }
 }
 
-void ModelRenderer::Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass)
+ModelRenderer* ModelRenderer::Instance()
 {
+    return _Instance;
+}
+
+void ModelRenderer::Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
+{
+    ShaderTechnique* technique = renderables[0]->GetShader()->GetTechnique(renderScheme);
+    
+    if (!technique)
+        return;
+    
+    ShaderPass* shaderPass = technique->GetPass(0);
+    shaderPass->Bind();
+    shaderPass->GetShaderProgram()->SetUniform("PB_ProjectionMatrix", projectionMatrix);
+    
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, true);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
@@ -414,7 +433,6 @@ void ModelRenderer::Render(int count, Renderable** renderables, Viewport* viewpo
   
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
-
 }
     
 Model* ModelRenderer::LoadModel(const std::string& modelName, const std::string& fileName)
@@ -510,5 +528,3 @@ Texture* ModelRenderer::GetTexture(const std::string& textureName)
     
     return it->second;
 }
-
-#endif

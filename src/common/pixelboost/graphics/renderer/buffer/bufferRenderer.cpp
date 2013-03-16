@@ -1,5 +1,4 @@
-#ifndef PIXELBOOST_DISABLE_GRAPHICS
-
+#include "pixelboost/debug/assert.h"
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/indexBuffer.h"
 #include "pixelboost/graphics/device/program.h"
@@ -11,6 +10,8 @@
 #include "pixelboost/graphics/shader/manager.h"
 
 using namespace pb;
+
+BufferRenderer* BufferRenderer::_Instance = 0;
 
 BufferRenderable::BufferRenderable(Uid entityId)
     : Renderable(entityId)
@@ -110,6 +111,10 @@ int BufferRenderable::GetNumElements()
     
 BufferRenderer::BufferRenderer()
 {
+    PbAssert(!_Instance);
+    
+    _Instance = this;
+    
     Renderer::Instance()->SetHandler(BufferRenderable::GetStaticType(), this);
     
     Renderer::Instance()->GetShaderManager()->LoadShader("/shaders/pb_textured.shc");
@@ -117,18 +122,31 @@ BufferRenderer::BufferRenderer()
     
 BufferRenderer::~BufferRenderer()
 {
-    
+    _Instance = 0;
 }
 
-void BufferRenderer::Render(int count, Renderable** renderables, Viewport* viewport, ShaderPass* shaderPass)
+BufferRenderer* BufferRenderer::Instance()
 {
+    return _Instance;
+}
+
+void BufferRenderer::Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
+{
+    ShaderTechnique* technique = renderables[0]->GetShader()->GetTechnique(renderScheme);
+    
+    if (!technique)
+        return;
+    
+    ShaderPass* shaderPass = technique->GetPass(0);
+    shaderPass->Bind();
+    shaderPass->GetShaderProgram()->SetUniform("PB_ProjectionMatrix", projectionMatrix);
+    shaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
+    
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
     
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
     GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
-    
-    shaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
     
     for (int i=0; i<count; i++)
     {
@@ -149,5 +167,3 @@ void BufferRenderer::Render(int count, Renderable** renderables, Viewport* viewp
     GraphicsDevice::Instance()->BindIndexBuffer(0);
     GraphicsDevice::Instance()->BindVertexBuffer(0);
 }
-
-#endif

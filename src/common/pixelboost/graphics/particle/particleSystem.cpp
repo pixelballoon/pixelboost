@@ -1,7 +1,6 @@
 #include "glm/gtc/random.hpp"
 #include "glm/gtc/swizzle.hpp"
 
-#include "pixelboost/framework/engine.h"
 #include "pixelboost/graphics/particle/particleSystem.h"
 #include "pixelboost/graphics/renderer/particle/particleRenderer.h"
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
@@ -194,7 +193,7 @@ glm::vec4 ParticleValueTwoCurveColor::Evaluate(float x, float variant)
 
 ParticleSpriteDefinition::ParticleSpriteDefinition(const std::string& sprite)
 {
-    SpriteDefinition = Engine::Instance()->GetSpriteRenderer()->GetSprite(sprite);
+    SpriteDefinition = SpriteRenderer::Instance()->GetSprite(sprite);
 }
 
 ParticleSystemDefinition::ParticleSystemDefinition()

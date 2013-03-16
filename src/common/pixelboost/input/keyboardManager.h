@@ -1,7 +1,5 @@
 #pragma once
 
-#ifndef PIXELBOOST_DISABLE_INPUT
-
 #include "pixelboost/input/inputManager.h"
 
 namespace pb
@@ -68,5 +66,3 @@ namespace pb
         void OnKeyUp(KeyboardKey key, ModifierKeys modifier, char character=0);
     };
 }
-
-#endif

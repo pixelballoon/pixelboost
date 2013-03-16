@@ -6,6 +6,7 @@
 
 #include "enet/enet.h"
 
+#include "pixelboost/debug/assert.h"
 #include "pixelboost/debug/log.h"
 #include "pixelboost/network/networkMessage.h"
 #include "pixelboost/network/networkServer.h"
@@ -475,6 +476,8 @@ void NetworkConnection::Send(NetworkMessage& message)
 
 NetworkManager::NetworkManager()
 {
+    PbAssert(!_Instance);
+    
     _Instance = this;
     
     enet_initialize();
