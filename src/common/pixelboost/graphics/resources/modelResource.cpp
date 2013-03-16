@@ -47,6 +47,7 @@ bool ModelResource::ProcessResource(ResourceState state, const std::string& file
         
         case kResourceStateError:
         case kResourceStateComplete:
+        case kResourceStateUnloading:
             return true;
             
     }
@@ -54,9 +55,6 @@ bool ModelResource::ProcessResource(ResourceState state, const std::string& file
 
 ResourceThread ModelResource::GetResourceThread(ResourceState state)
 {
-    if (state == kResourceStatePostProcessing)
-        return kResourceThreadMain;
-    
     return kResourceThreadAny;
 }
 

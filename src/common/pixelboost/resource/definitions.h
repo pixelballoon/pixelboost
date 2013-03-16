@@ -15,6 +15,7 @@ namespace pb
         kResourceStatePostProcessing,
         kResourceStateComplete,
         kResourceStateError,
+        kResourceStateUnloading,
     };
     
     enum ResourceError

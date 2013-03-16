@@ -9,6 +9,8 @@
 
 #include "pixelboost/graphics/renderer/common/irenderer.h"
 #include "pixelboost/graphics/renderer/common/renderable.h"
+#include "pixelboost/graphics/resources/textureResource.h"
+#include "pixelboost/resource/resourceManager.h"
 
 namespace pb
 {
@@ -82,6 +84,8 @@ namespace pb
         ShaderPass* _ShaderPass;
         
         glm::vec4 _Color;
+        
+        std::map<Gwen::Texture*, std::shared_ptr<ResourceHandle<TextureResource> > > _Textures;
     };
 }
 

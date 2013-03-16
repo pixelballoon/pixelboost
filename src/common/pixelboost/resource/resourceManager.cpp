@@ -12,11 +12,49 @@ ResourceHandleBase::ResourceHandleBase(ResourcePool* pool, const std::string& fi
     , _Error(kResourceErrorNone)
     , _Resource(resource)
 {
+    PbAssert(resource && "Resource is null, has the resource type been registered with the ResourceManager?");
 }
 
 ResourceHandleBase::~ResourceHandleBase()
 {
-    delete _Resource;
+    ResourceManager::Instance()->AddDeletedResource(_Resource);
+}
+
+void ResourceHandleBase::Process()
+{
+    if (_Resource->ProcessResource(_State, _Filename, _ErrorDetails))
+    {
+        switch (_State)
+        {
+            case kResourceStateLoading:
+                _State = kResourceStateProcessing;
+                break;
+            case kResourceStateProcessing:
+                _State = kResourceStatePostProcessing;
+                break;
+            case kResourceStatePostProcessing:
+                _State = kResourceStateComplete;
+                break;
+            case kResourceStateComplete:
+            case kResourceStateError:
+                PbAssert(!"Processing a resource in this state should never occur");
+                break;
+            case kResourceStateUnloading:
+                break;
+        }
+    } else {
+        _State = kResourceStateError;
+    }
+}
+
+void ResourceHandleBase::Unload()
+{
+    _Pool->UnloadResource(_Filename);
+}
+
+ResourceThread ResourceHandleBase::GetThread(pb::ResourceState state)
+{
+    return _Resource->GetResourceThread(state);
 }
 
 ResourceState ResourceHandleBase::GetState()
@@ -63,6 +101,11 @@ void ResourcePool::UnloadResource(const std::string& filename)
     {
         _Resources.erase(resource);
     }
+}
+
+void ResourcePool::UnloadAllResources()
+{
+    _Resources.clear();
 }
 
 bool ResourcePool::HasPending()
@@ -119,6 +162,7 @@ ResourceManager::~ResourceManager()
 
 void ResourceManager::Update(float timeDelta)
 {
+    Purge();
     Process(kResourceStateLoading, _IsLoading, _LoadingThread);
     Process(kResourceStateProcessing, _IsProcessing, _ProcessingThread);
     Process(kResourceStatePostProcessing, _IsPostProcessing, _PostProcessingThread);
@@ -204,6 +248,27 @@ void ResourceManager::ProcessResource(std::shared_ptr<ResourceHandleBase> resour
     resource->Process();
     handleVariable = false;
     resource->_ProcessingMutex.unlock();
+}
+
+void ResourceManager::AddDeletedResource(Resource* resource)
+{
+    _DeletedResources.push_back(resource);
+}
+
+void ResourceManager::Purge()
+{
+    for (const auto& resource : _DeletedResources)
+    {
+        PurgeResource(resource);
+    }
+    _DeletedResources.clear();
+}
+
+void ResourceManager::PurgeResource(Resource *resource)
+{
+    std::string error;
+    resource->ProcessResource(kResourceStateUnloading, "", error);
+    delete resource;
 }
 
 Resource* ResourceManager::CreateResourceData(int typeId)

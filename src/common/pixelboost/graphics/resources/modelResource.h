@@ -10,10 +10,11 @@ namespace pb
     {
         PB_DECLARE_RESOURCE
         
-    public:
+    protected:
         ModelResource();
         ~ModelResource();
         
+    public:
         virtual bool ProcessResource(ResourceState state, const std::string& filename, std::string& error);
         virtual ResourceThread GetResourceThread(ResourceState state);
         

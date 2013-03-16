@@ -9,6 +9,7 @@
 
 #include "pixelboost/framework/definitions.h"
 #include "pixelboost/resource/definitions.h"
+#include "pixelboost/resource/resource.h"
 
 namespace pb
 {
@@ -25,11 +26,13 @@ public:
     ~ResourceHandleBase();
     
 protected:
-    virtual void Process() = 0;
+    virtual void Process();
     
-    virtual ResourceThread GetThread(ResourceState state) = 0;
+    virtual ResourceThread GetThread(ResourceState state);
 
 public:
+    void Unload();
+    
     ResourceState GetState();
     
     ResourceError GetError();
@@ -57,12 +60,7 @@ public:
     ResourceHandle(ResourcePool* pool, const std::string& filename, Resource* data);
     ~ResourceHandle();
     
-protected:
-    virtual void Process();
-    
-    virtual ResourceThread GetThread(ResourceState state);
-    
-public:
+    T* GetResource();
     T* operator->();
     
 private:
@@ -80,6 +78,7 @@ public:
     
     template <class T> std::shared_ptr<ResourceHandle<T> > GetResource(const std::string& filename);
     void UnloadResource(const std::string& filename);
+    void UnloadAllResources();
     
     bool HasPending();
     std::shared_ptr<ResourceHandleBase> GetPending(ResourceState resourceState);
@@ -90,7 +89,6 @@ private:
     std::vector<std::shared_ptr<ResourceHandleBase> > _Pending;
     std::map<std::string, std::shared_ptr<ResourceHandleBase> > _Resources;
     
-    friend class ResourceBase;
     friend class ResourceManager;
 };
     
@@ -118,6 +116,10 @@ private:
     void Process(ResourceState state, bool& handleVariable, std::thread& thread);
     void ProcessResource(std::shared_ptr<ResourceHandleBase> resource, bool& handleVariable);
     
+    void AddDeletedResource(Resource* resource);
+    void Purge();
+    void PurgeResource(Resource* resource);
+    
     Resource* CreateResourceData(int typeId);
     
     bool _IsLoading;
@@ -129,8 +131,9 @@ private:
     
     std::map<std::string, ResourcePool*> _Pools;
     std::map<Uid, ResourceCreator> _ResourceCreation;
+    std::vector<Resource*> _DeletedResources;
     
-    friend class ResourceBase;
+    friend class ResourceHandleBase;
     friend class ResourcePool;
 };
 

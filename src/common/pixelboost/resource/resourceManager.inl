@@ -12,34 +12,9 @@ template<class T> ResourceHandle<T>::~ResourceHandle()
 {
 }
 
-template<class T> void ResourceHandle<T>::Process()
+template<class T> T* ResourceHandle<T>::GetResource()
 {
-    if (static_cast<T*>(_Resource)->ProcessResource(_State, _Filename, _ErrorDetails))
-    {
-        switch (_State)
-        {
-        case kResourceStateLoading:
-            _State = kResourceStateProcessing;
-            break;
-        case kResourceStateProcessing:
-            _State = kResourceStatePostProcessing;
-            break;
-        case kResourceStatePostProcessing:
-            _State = kResourceStateComplete;
-            break;
-        case kResourceStateComplete:
-        case kResourceStateError:
-            PbAssert(!"Processing a resource in this state should never occur");
-            break;
-        }
-    } else {
-        _State = kResourceStateError;
-    }
-}
-
-template<class T> ResourceThread ResourceHandle<T>::GetThread(ResourceState state)
-{
-    return T::GetResourceThread(state);
+    return static_cast<T*>(_Resource);
 }
 
 template<class T> T* ResourceHandle<T>::operator->()

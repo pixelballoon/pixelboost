@@ -243,6 +243,10 @@ set (GRAPHICS_RENDERER_SOURCES
 set (GRAPHICS_RESOURCES_SOURCES
 	"src/common/pixelboost/graphics/resources/modelResource.cpp"
 	"src/common/pixelboost/graphics/resources/modelResource.h"
+	"src/common/pixelboost/graphics/resources/spriteSheetResource.cpp"
+	"src/common/pixelboost/graphics/resources/spriteSheetResource.h"
+	"src/common/pixelboost/graphics/resources/textureResource.cpp"
+	"src/common/pixelboost/graphics/resources/textureResource.h"
 	)
 
 set (GRAPHICS_SHADER_SOURCES

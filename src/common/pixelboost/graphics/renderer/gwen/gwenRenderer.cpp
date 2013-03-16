@@ -8,15 +8,16 @@
 #include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/device/indexBuffer.h"
 #include "pixelboost/graphics/device/program.h"
+#include "pixelboost/graphics/device/texture.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/font/fontRenderer.h"
 #include "pixelboost/graphics/renderer/gwen/gwenRenderer.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
-#include "pixelboost/graphics/renderer/sprite/sprite.h"
-#include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
+#include "pixelboost/graphics/resources/textureResource.h"
 #include "pixelboost/graphics/shader/shader.h"
 #include "pixelboost/graphics/shader/manager.h"
+#include "pixelboost/resource/resourceManager.h"
 
 #include "Gwen/Utility.h"
 #include "Gwen/Font.h"
@@ -117,10 +118,14 @@ GwenRenderer::GwenRenderer()
     Renderer::Instance()->SetHandler(GwenRenderable::GetStaticType(), this);
     
     Renderer::Instance()->GetShaderManager()->LoadShader("/shaders/pb_textured.shc");
+    
+    pb::ResourceManager::Instance()->CreatePool("pb::gwen");
 }
 
 GwenRenderer::~GwenRenderer()
 {
+    pb::ResourceManager::Instance()->DestroyPool("pb::gwen");
+    
     Renderer::Instance()->GetShaderManager()->UnloadShader("/shaders/pb_textured.shc");
 }
     
@@ -233,7 +238,10 @@ void GwenRenderer::DrawTexturedRect(Gwen::Texture* definition, Gwen::Rect rect, 
 {
     Translate(rect);
     
-    pb::Texture* texture = static_cast<pb::Texture*>(definition->data);
+    if (_Textures[definition]->GetState() != kResourceStateComplete)
+        return;
+    
+    pb::Texture* texture = _Textures[definition]->GetResource()->GetTexture();
     
     if (GraphicsDevice::Instance()->GetBoundTexture() != texture)
         PurgeBuffer(true);
@@ -279,33 +287,38 @@ void GwenRenderer::LoadTexture(Gwen::Texture* definition)
     
     definition->width = texture->GetSize()[0];
     definition->height = texture->GetSize()[1];
-    definition->data = texture;
+    
+    _Textures[definition] = pb::ResourceManager::Instance()->GetPool("pb::gwen")->GetResource<pb::TextureResource>(fileName);
 }
 
 void GwenRenderer::FreeTexture(Gwen::Texture* definition)
 {
-    GraphicsDevice::Instance()->DestroyTexture((pb::Texture*)definition->data);
+    _Textures[definition]->Unload();
+    _Textures.erase(definition);
 }
 
-Gwen::Color GwenRenderer::PixelColour( Gwen::Texture* pTexture, unsigned int x, unsigned int y, const Gwen::Color& col_default )
+Gwen::Color GwenRenderer::PixelColour(Gwen::Texture* definition, unsigned int x, unsigned int y, const Gwen::Color& col_default)
 {
     #ifdef PIXELBOOST_GRAPHICS_OPENGL2
         // TODO: Properly implement this - it's currently taken from the OpenGL sample code, and isn't particularly nice
-
-        pb::Texture* texture = static_cast<pb::Texture*>(pTexture->data);
+    
+        if (_Textures[definition]->GetState() != kResourceStateComplete)
+            return Gwen::Color();
+        
+        pb::Texture* texture = _Textures[definition]->GetResource()->GetTexture();
 
         pb::Texture* prevTexture = GraphicsDevice::Instance()->BindTexture(texture);
 
-        if (!pTexture->width)
+        if (!definition->width)
             return col_default;
 
         unsigned int iPixelSize = sizeof(unsigned char) * 4;
 
-        unsigned char* data = (unsigned char*) malloc( iPixelSize * pTexture->width * pTexture->height );
+        unsigned char* data = (unsigned char*) malloc(iPixelSize * definition->width * definition->height);
 
         glGetTexImage( GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
-        unsigned int iOffset = (y * pTexture->width + x) * 4;
+        unsigned int iOffset = (y * definition->width + x) * 4;
 
         Gwen::Color c;
         c.r = data[0 + iOffset];

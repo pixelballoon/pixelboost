@@ -51,6 +51,7 @@ bool XmlResource::ProcessResource(ResourceState state, const std::string& filena
         case kResourceStatePostProcessing:
         case kResourceStateError:
         case kResourceStateComplete:
+        case kResourceStateUnloading:
             return true;
             
     }
