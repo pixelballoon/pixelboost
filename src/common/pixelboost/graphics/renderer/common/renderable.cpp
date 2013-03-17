@@ -10,20 +10,9 @@ Renderable::Renderable(Uid entityUid)
     : _BoundsDirty(true)
     , _Layer(0)
     , _EntityUid(entityUid)
+    , _Material(0)
     , _RenderPass(kRenderPassScene)
     , _Shader(0)
-    , _System(0)
-    , _WorldMatrixDirty(true)
-{
-    
-}
-
-Renderable::Renderable(Uid entityUid, Shader* shader)
-    : _BoundsDirty(true)
-    , _Layer(0)
-    , _EntityUid(entityUid)
-    , _RenderPass(kRenderPassScene)
-    , _Shader(shader)
     , _System(0)
     , _WorldMatrixDirty(true)
 {
@@ -122,13 +111,10 @@ const glm::mat4x4& Renderable::GetModelViewMatrix() const
 
 Material* Renderable::GetMaterial()
 {
-    if (_Material)
-        return _Material->GetResource()->GetMaterial();
-    
-    return 0;
+    return _Material;
 }
 
-void Renderable::SetMaterial(std::shared_ptr<ResourceHandle<MaterialResource> > material)
+void Renderable::SetMaterial(Material* material)
 {
     _Material = material;
 }

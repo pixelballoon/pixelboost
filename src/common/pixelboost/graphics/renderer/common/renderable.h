@@ -20,7 +20,6 @@ namespace pb
     {
     public:
         Renderable(Uid entityUid);
-        Renderable(Uid entityUid, Shader* shader);
         virtual ~Renderable();
         
         void SetSystem(RenderSystem* system);
@@ -49,7 +48,7 @@ namespace pb
         const glm::mat4x4& GetModelViewMatrix() const;
         
         Material* GetMaterial();
-        void SetMaterial(std::shared_ptr<ResourceHandle<MaterialResource> > material);
+        void SetMaterial(Material* material);
         
         virtual Shader* GetShader();
         void SetShader(Shader* shader);
@@ -70,7 +69,7 @@ namespace pb
         Uid _EntityUid;
         int _Layer;
         RenderPass _RenderPass;
-        std::shared_ptr<ResourceHandle<MaterialResource> > _Material;
+        Material* _Material;
         Shader* _Shader;
     };
     

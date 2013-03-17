@@ -10,6 +10,7 @@
 #include "pixelboost/graphics/device/program.h"
 #include "pixelboost/graphics/device/texture.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
+#include "pixelboost/graphics/material/material.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/font/fontRenderer.h"
 #include "pixelboost/graphics/renderer/gwen/gwenRenderer.h"
@@ -127,34 +128,34 @@ GwenRenderer::~GwenRenderer()
     
 void GwenRenderer::Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
 {
-    Shader* shader = renderables[0]->GetShader();
-    if (!shader)
+    Material* material = renderables[0]->GetMaterial();
+    
+    if (!material)
         return;
-    
-    ShaderTechnique* technique = shader->GetTechnique(renderScheme);
-    
-    if (!technique)
-        return;
-    
-    ShaderPass* shaderPass = technique->GetPass(0);
-    shaderPass->Bind();
-    shaderPass->GetShaderProgram()->SetUniform("PB_ProjectionMatrix", projectionMatrix);
-    
-    _ShaderPass = shaderPass;
-    _ShaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", glm::vec4(1,1,1,1));
-    _ShaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
-    
-    _Viewport = viewport;
     
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
     
-    for (int i=0; i<count; i++)
+    for (int passIndex=0; passIndex<material->GetNumPasses(renderScheme); passIndex++)
     {
-        GwenRenderable* renderable = static_cast<GwenRenderable*>(renderables[i]);
-        _Renderable = renderable;
-        renderable->_Canvas->RenderCanvas();
+        ShaderPass* shaderPass = material->Bind(renderScheme, passIndex, projectionMatrix, viewMatrix, Engine::Instance()->GetTotalTime(), Engine::Instance()->GetGameTime());
+        
+        if (!shaderPass)
+            continue;
+
+        _ShaderPass = shaderPass;
+        _ShaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", glm::vec4(1,1,1,1));
+        _ShaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
+        
+        _Viewport = viewport;
+        
+        for (int i=0; i<count; i++)
+        {
+            GwenRenderable* renderable = static_cast<GwenRenderable*>(renderables[i]);
+            _Renderable = renderable;
+            renderable->_Canvas->RenderCanvas();
+        }
     }
     
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);

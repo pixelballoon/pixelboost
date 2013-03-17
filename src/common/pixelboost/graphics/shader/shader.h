@@ -23,20 +23,22 @@ namespace pb
     public:
         enum PropertyType
         {
+            kPropertyUnknown,
             kPropertyTexture2D,
             kPropertyFloat,
             kPropertyVec4,
             kPropertyMat44,
         };
         
-        ShaderProperty(const std::string& name);
+        ShaderProperty();
+        ShaderProperty(PropertyType type);
         ~ShaderProperty();
         
-        const std::string& GetName();
-        
         void SetValue(float value);
+        void SetValue(Texture* texture);
         
         float GetFloatValue();
+        Texture* GetTextureValue();
         
     private:
         union PropertyValue
@@ -47,7 +49,7 @@ namespace pb
             float Mat44[4][4];
         };
         
-        std::string _Name;
+        PropertyType _Type;
         PropertyValue _Value;
     };
     
@@ -100,10 +102,11 @@ namespace pb
         void AddTechnique(ShaderTechnique* technique);
         ShaderTechnique* GetTechnique(Uid techniqueId);
         
-    private:
-        typedef std::map<Uid, ShaderTechnique*> TechniqueMap;
+        const std::map<std::string, ShaderProperty::PropertyType>& GetProperties();
         
-        TechniqueMap _Techniques;
+    private:
+        std::map<std::string, ShaderProperty::PropertyType> _Properties;
+        std::map<Uid, ShaderTechnique*> _Techniques;
     };
 
 }

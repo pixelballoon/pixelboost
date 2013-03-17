@@ -9,6 +9,39 @@
 
 using namespace pb;
 
+ShaderProperty::ShaderProperty()
+{
+    _Type = kPropertyUnknown;
+}
+
+ShaderProperty::ShaderProperty(PropertyType type)
+{
+    _Type = type;
+    
+    switch (_Type)
+    {
+        case kPropertyUnknown:
+            break;
+        case kPropertyFloat:
+            _Value.Float = 0.f;
+            break;
+        case kPropertyMat44:
+            memset(&_Value.Mat44, 0, sizeof(_Value.Mat44));
+            break;
+        case kPropertyVec4:
+            memset(&_Value.Vec4, 0, sizeof(_Value.Vec4));
+            break;
+        case kPropertyTexture2D:
+            _Value.Texture = 0;
+            break;
+    }
+}
+
+ShaderProperty::~ShaderProperty()
+{
+    
+}
+
 ShaderTechnique::ShaderTechnique()
     : _Uid(-1)
 {
@@ -106,9 +139,9 @@ Shader::Shader()
 
 Shader::~Shader()
 {
-    for (TechniqueMap::iterator it = _Techniques.begin(); it != _Techniques.end(); ++it)
+    for (const auto& technique : _Techniques)
     {
-        delete it->second;
+        delete technique.second;
     }
 }
 
@@ -175,9 +208,14 @@ void Shader::AddTechnique(ShaderTechnique* technique)
 
 ShaderTechnique* Shader::GetTechnique(Uid techniqueId)
 {
-    TechniqueMap::iterator it = _Techniques.find(techniqueId);
+    auto it = _Techniques.find(techniqueId);
     if (it != _Techniques.end())
         return it->second;
     
     return Renderer::Instance()->GetTechnique(techniqueId);
+}
+
+const std::map<std::string, ShaderProperty::PropertyType>& Shader::GetProperties()
+{
+    return _Properties;
 }

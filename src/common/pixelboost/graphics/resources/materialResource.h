@@ -1,11 +1,12 @@
 #pragma once
 
-#include "pixelboost/resource/resource.h"
+#include "pixelboost/resource/resourceManager.h"
 
 namespace pb
 {
     
     class Material;
+    class ShaderResource;
     
     class MaterialResource : public pb::Resource
     {
@@ -16,6 +17,7 @@ namespace pb
         ~MaterialResource();
         
     public:
+        virtual ResourceReadyState IsReadyToProcess(ResourceState state, std::string& errorDetails);
         virtual bool ProcessResource(ResourceState state, const std::string& filename, ResourceError& error, std::string& errorDetails);
         virtual ResourceThread GetResourceThread(ResourceState state);
         
@@ -23,6 +25,8 @@ namespace pb
         
     private:
         Material* _Material;
+        std::shared_ptr<ResourceHandle<ShaderResource> > _Shader;
+        
     };
     
 }

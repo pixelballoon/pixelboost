@@ -28,30 +28,27 @@ ResourceReadyState ResourceHandleBase::IsReadyToProcess()
 
 void ResourceHandleBase::Process()
 {
-    bool processed = _Resource->ProcessResource(_State, _Filename, _Error, _ErrorDetails);
+    _Resource->ProcessResource(_State, _Filename, _Error, _ErrorDetails);
     
     if (_Error == kResourceErrorNone)
     {
-        if (processed)
+        switch (_State)
         {
-            switch (_State)
-            {
-                case kResourceStateLoading:
-                    _State = kResourceStateProcessing;
-                    break;
-                case kResourceStateProcessing:
-                    _State = kResourceStatePostProcessing;
-                    break;
-                case kResourceStatePostProcessing:
-                    _State = kResourceStateComplete;
-                    break;
-                case kResourceStateComplete:
-                case kResourceStateError:
-                    PbAssert(!"Processing a resource in this state should never occur");
-                    break;
-                case kResourceStateUnloading:
-                    break;
-            }
+            case kResourceStateLoading:
+                _State = kResourceStateProcessing;
+                break;
+            case kResourceStateProcessing:
+                _State = kResourceStatePostProcessing;
+                break;
+            case kResourceStatePostProcessing:
+                _State = kResourceStateComplete;
+                break;
+            case kResourceStateComplete:
+            case kResourceStateError:
+                PbAssert(!"Processing a resource in this state should never occur");
+                break;
+            case kResourceStateUnloading:
+                break;
         }
     } else {
         _State = kResourceStateError;
