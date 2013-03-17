@@ -14,9 +14,9 @@
 #include "pixelboost/graphics/renderer/font/fontRenderer.h"
 #include "pixelboost/graphics/renderer/gwen/gwenRenderer.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
+#include "pixelboost/graphics/resources/shaderResource.h"
 #include "pixelboost/graphics/resources/textureResource.h"
 #include "pixelboost/graphics/shader/shader.h"
-#include "pixelboost/graphics/shader/manager.h"
 #include "pixelboost/resource/resourceManager.h"
 
 #include "Gwen/Utility.h"
@@ -65,7 +65,7 @@ Shader* GwenRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return Renderer::Instance()->GetShaderManager()->GetShader("/shaders/pb_textured.shc");
+    return ResourceManager::Instance()->GetPool("pb::shader")->GetResource<ShaderResource>("/shaders/pb_textured.shc")->GetResource()->GetShader();
 }
 
 GwenRenderer::GwenRenderer()
@@ -117,21 +117,21 @@ GwenRenderer::GwenRenderer()
     
     Renderer::Instance()->SetHandler(GwenRenderable::GetStaticType(), this);
     
-    Renderer::Instance()->GetShaderManager()->LoadShader("/shaders/pb_textured.shc");
-    
     pb::ResourceManager::Instance()->CreatePool("pb::gwen");
 }
 
 GwenRenderer::~GwenRenderer()
 {
     pb::ResourceManager::Instance()->DestroyPool("pb::gwen");
-    
-    Renderer::Instance()->GetShaderManager()->UnloadShader("/shaders/pb_textured.shc");
 }
     
 void GwenRenderer::Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
 {
-    ShaderTechnique* technique = renderables[0]->GetShader()->GetTechnique(renderScheme);
+    Shader* shader = renderables[0]->GetShader();
+    if (!shader)
+        return;
+    
+    ShaderTechnique* technique = shader->GetTechnique(renderScheme);
     
     if (!technique)
         return;

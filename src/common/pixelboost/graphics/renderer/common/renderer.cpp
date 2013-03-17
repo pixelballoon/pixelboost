@@ -10,7 +10,7 @@
 #include "pixelboost/graphics/renderer/common/renderable.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/shader/shader.h"
-#include "pixelboost/graphics/shader/manager.h"
+#include "pixelboost/resource/resourceManager.h"
 
 using namespace pb;
 
@@ -22,9 +22,9 @@ Renderer::Renderer()
     
     _Instance = this;
     
-    _ShaderManager = new ShaderManager();
-    
     _TechniqueHandler = 0;
+    
+    ResourceManager::Instance()->CreatePool("pb::shader");
 }
 
 Renderer::~Renderer()
@@ -86,11 +86,6 @@ ShaderTechnique* Renderer::GetTechnique(Uid techniqueId)
         return 0;
     
     return _TechniqueHandler->GetTechnique(techniqueId);
-}
-
-ShaderManager* Renderer::GetShaderManager()
-{
-    return _ShaderManager;
 }
 
 void Renderer::AttachRenderable(Renderable* renderable)

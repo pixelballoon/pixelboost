@@ -16,8 +16,9 @@
 #include "pixelboost/graphics/device/texture.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/model/modelRenderer.h"
+#include "pixelboost/graphics/resources/shaderResource.h"
 #include "pixelboost/graphics/shader/shader.h"
-#include "pixelboost/graphics/shader/manager.h"
+#include "pixelboost/resource/resourceManager.h"
 
 using namespace pb;
 
@@ -70,7 +71,7 @@ Shader* ModelRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return Renderer::Instance()->GetShaderManager()->GetShader("/shaders/pb_textured.shc");
+    return ResourceManager::Instance()->GetPool("pb::shader")->GetResource<ShaderResource>("/shaders/pb_textured.shc")->GetResource()->GetShader();
 }
 
 void ModelRenderable::SetModel(Model* model)
@@ -359,15 +360,11 @@ ModelRenderer::ModelRenderer()
     _Instance = this;
     
     Renderer::Instance()->SetHandler(ModelRenderable::GetStaticType(), this);
-    
-    Renderer::Instance()->GetShaderManager()->LoadShader("/shaders/pb_textured.shc");
 }
 
 ModelRenderer::~ModelRenderer()
 {
     _Instance = 0;
-    
-    Renderer::Instance()->GetShaderManager()->UnloadShader("/shaders/pb_textured.shc");
     
     for (ModelMap::iterator it = _Models.begin(); it != _Models.end(); ++it)
     {
@@ -387,7 +384,11 @@ ModelRenderer* ModelRenderer::Instance()
 
 void ModelRenderer::Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
 {
-    ShaderTechnique* technique = renderables[0]->GetShader()->GetTechnique(renderScheme);
+    Shader* shader = renderables[0]->GetShader();
+    if (!shader)
+        return;
+    
+    ShaderTechnique* technique = shader->GetTechnique(renderScheme);
     
     if (!technique)
         return;

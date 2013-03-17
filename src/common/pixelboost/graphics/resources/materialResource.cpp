@@ -2,6 +2,8 @@
 
 using namespace pb;
 
+PB_DEFINE_RESOURCE(pb::MaterialResource)
+
 MaterialResource::MaterialResource()
 {
     

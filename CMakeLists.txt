@@ -258,8 +258,6 @@ set (GRAPHICS_RESOURCES_SOURCES
 	)
 
 set (GRAPHICS_SHADER_SOURCES
-	"src/common/pixelboost/graphics/shader/manager.cpp"
-	"src/common/pixelboost/graphics/shader/manager.h"
 	"src/common/pixelboost/graphics/shader/shader.cpp"
 	"src/common/pixelboost/graphics/shader/shader.h"
 	)

@@ -10,9 +10,10 @@
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/font/fontRenderer.h"
 #include "pixelboost/graphics/renderer/gui/guiRenderer.h"
+#include "pixelboost/graphics/resources/shaderResource.h"
 #include "pixelboost/graphics/shader/shader.h"
-#include "pixelboost/graphics/shader/manager.h"
 #include "pixelboost/maths/matrixHelpers.h"
+#include "pixelboost/resource/resourceManager.h"
 
 using namespace pb;
 
@@ -55,7 +56,7 @@ Shader* GuiRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return Renderer::Instance()->GetShaderManager()->GetShader("/shaders/pb_solidColor.shc");
+    return ResourceManager::Instance()->GetPool("pb::shader")->GetResource<ShaderResource>("/shaders/pb_solidColor.shc")->GetResource()->GetShader();
 }
 
 void GuiRenderable::SetTransform(const glm::mat4x4& transform)
@@ -195,15 +196,11 @@ GuiRenderer::GuiRenderer()
     _TriangleIndexBuffer->Unlock();
     
     Renderer::Instance()->SetHandler(GuiRenderable::GetStaticType(), this);
-    
-    Renderer::Instance()->GetShaderManager()->LoadShader("/shaders/pb_solidColor.shc");
 }
 
 GuiRenderer::~GuiRenderer()
 {
     _Instance = 0;
-    
-    Renderer::Instance()->GetShaderManager()->UnloadShader("/shaders/pb_solidColor.shc");
 }
 
 GuiRenderer* GuiRenderer::Instance()
@@ -213,7 +210,11 @@ GuiRenderer* GuiRenderer::Instance()
 
 void GuiRenderer::Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
 {
-    ShaderTechnique* technique = renderables[0]->GetShader()->GetTechnique(renderScheme);
+    Shader* shader = renderables[0]->GetShader();
+    if (!shader)
+        return;
+    
+    ShaderTechnique* technique = shader->GetTechnique(renderScheme);
     
     if (!technique)
         return;

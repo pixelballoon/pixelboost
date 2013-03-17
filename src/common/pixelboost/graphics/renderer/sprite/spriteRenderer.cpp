@@ -10,8 +10,9 @@
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
 #include "pixelboost/graphics/renderer/sprite/sprite.h"
+#include "pixelboost/graphics/resources/shaderResource.h"
 #include "pixelboost/graphics/shader/shader.h"
-#include "pixelboost/graphics/shader/manager.h"
+#include "pixelboost/resource/resourceManager.h"
 
 using namespace pb;
 
@@ -68,7 +69,7 @@ Shader* SpriteRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return Renderer::Instance()->GetShaderManager()->GetShader("/shaders/pb_texturedColor.shc");
+    return ResourceManager::Instance()->GetPool("pb::shader")->GetResource<ShaderResource>("/shaders/pb_texturedColor.shc")->GetResource()->GetShader();
 }
 
 Sprite* SpriteRenderable::GetSprite()
@@ -119,15 +120,11 @@ SpriteRenderer::SpriteRenderer()
     _IndexBuffer->Unlock();
     
     Renderer::Instance()->SetHandler(SpriteRenderable::GetStaticType(), this);
-    
-    Renderer::Instance()->GetShaderManager()->LoadShader("/shaders/pb_texturedColor.shc");
 }
 
 SpriteRenderer::~SpriteRenderer()
 {
     _Instance = 0;
-    
-    Renderer::Instance()->GetShaderManager()->UnloadShader("/shaders/pb_texturedColor.shc");
     
     pb::GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
     pb::GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
@@ -140,7 +137,11 @@ SpriteRenderer* SpriteRenderer::Instance()
     
 void SpriteRenderer::Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
 {
-    ShaderTechnique* technique = renderables[0]->GetShader()->GetTechnique(renderScheme);
+    Shader* shader = renderables[0]->GetShader();
+    if (!shader)
+        return;
+    
+    ShaderTechnique* technique = shader->GetTechnique(renderScheme);
     
     if (!technique)
         return;

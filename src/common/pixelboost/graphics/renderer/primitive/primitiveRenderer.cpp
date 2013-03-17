@@ -6,8 +6,9 @@
 #include "pixelboost/graphics/device/vertexBuffer.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
+#include "pixelboost/graphics/resources/shaderResource.h"
 #include "pixelboost/graphics/shader/shader.h"
-#include "pixelboost/graphics/shader/manager.h"
+#include "pixelboost/resource/resourceManager.h"
 
 using namespace pb;
 
@@ -37,7 +38,7 @@ Shader* PrimitiveRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return Renderer::Instance()->GetShaderManager()->GetShader("/shaders/pb_solid.shc");
+    return ResourceManager::Instance()->GetPool("pb::shader")->GetResource<ShaderResource>("/shaders/pb_solid.shc")->GetResource()->GetShader();
 }
 
 void PrimitiveRenderable::SetTransform(const glm::mat4x4& transform)
@@ -295,15 +296,11 @@ PrimitiveRenderer::PrimitiveRenderer()
     }
     
     Renderer::Instance()->SetHandler(PrimitiveRenderable::GetStaticType(), this);
-    
-    Renderer::Instance()->GetShaderManager()->LoadShader("/shaders/pb_solid.shc");
 }
     
 PrimitiveRenderer::~PrimitiveRenderer()
 {
     _Instance = 0;
-    
-    Renderer::Instance()->GetShaderManager()->UnloadShader("/shaders/pb_solid.shc");
 }
 
 PrimitiveRenderer* PrimitiveRenderer::Instance()
@@ -313,7 +310,11 @@ PrimitiveRenderer* PrimitiveRenderer::Instance()
 
 void PrimitiveRenderer::Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
 {
-    ShaderTechnique* technique = renderables[0]->GetShader()->GetTechnique(renderScheme);
+    Shader* shader = renderables[0]->GetShader();
+    if (!shader)
+        return;
+    
+    ShaderTechnique* technique = shader->GetTechnique(renderScheme);
     
     if (!technique)
         return;

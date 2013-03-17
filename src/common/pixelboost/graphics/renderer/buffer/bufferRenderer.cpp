@@ -6,8 +6,9 @@
 #include "pixelboost/graphics/device/vertexBuffer.h"
 #include "pixelboost/graphics/renderer/buffer/bufferRenderer.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
+#include "pixelboost/graphics/resources/shaderResource.h"
 #include "pixelboost/graphics/shader/shader.h"
-#include "pixelboost/graphics/shader/manager.h"
+#include "pixelboost/resource/resourceManager.h"
 
 using namespace pb;
 
@@ -54,7 +55,7 @@ Shader* BufferRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return Renderer::Instance()->GetShaderManager()->GetShader("/shaders/pb_textured.shc");
+    return ResourceManager::Instance()->GetPool("pb::shader")->GetResource<ShaderResource>("/shaders/pb_textured.shc")->GetResource()->GetShader();
 }
 
 void BufferRenderable::SetBounds(BoundingSphere bounds)
@@ -116,8 +117,6 @@ BufferRenderer::BufferRenderer()
     _Instance = this;
     
     Renderer::Instance()->SetHandler(BufferRenderable::GetStaticType(), this);
-    
-    Renderer::Instance()->GetShaderManager()->LoadShader("/shaders/pb_textured.shc");
 }
     
 BufferRenderer::~BufferRenderer()
@@ -132,7 +131,11 @@ BufferRenderer* BufferRenderer::Instance()
 
 void BufferRenderer::Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
 {
-    ShaderTechnique* technique = renderables[0]->GetShader()->GetTechnique(renderScheme);
+    Shader* shader = renderables[0]->GetShader();
+    if (!shader)
+        return;
+    
+    ShaderTechnique* technique = shader->GetTechnique(renderScheme);
     
     if (!technique)
         return;

@@ -17,7 +17,6 @@ namespace pb
     class OrthographicCamera;
     class Renderable;
     class Shader;
-    class ShaderManager;
     class ShaderTechnique;
     class Viewport;
         
@@ -47,8 +46,6 @@ namespace pb
         void SetTechniqueHandler(TechniqueHandler* techniqueHandler);
         ShaderTechnique* GetTechnique(Uid techniqueId);
         
-        ShaderManager* GetShaderManager();
-        
         void AddViewport(Viewport* viewport);
         void RemoveViewport(Viewport* viewport);
         
@@ -71,7 +68,6 @@ namespace pb
         
     private:
         TechniqueHandler* _TechniqueHandler;
-        ShaderManager* _ShaderManager;
         
         RenderableHandlerMap _RenderableHandlers;
         ViewportList _Viewports;

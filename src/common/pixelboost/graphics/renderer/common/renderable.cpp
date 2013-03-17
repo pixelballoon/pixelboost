@@ -1,6 +1,7 @@
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/renderer/common/renderable.h"
+#include "pixelboost/graphics/resources/materialResource.h"
 #include "pixelboost/logic/system/graphics/render/render.h"
 
 using namespace pb;
@@ -117,6 +118,19 @@ void Renderable::CalculateModelViewMatrix(const glm::mat4x4& viewMatrix)
 const glm::mat4x4& Renderable::GetModelViewMatrix() const
 {
     return _ModelViewMatrix;
+}
+
+Material* Renderable::GetMaterial()
+{
+    if (_Material)
+        return _Material->GetResource()->GetMaterial();
+    
+    return 0;
+}
+
+void Renderable::SetMaterial(std::shared_ptr<ResourceHandle<MaterialResource> > material)
+{
+    _Material = material;
 }
 
 Shader* Renderable::GetShader()
