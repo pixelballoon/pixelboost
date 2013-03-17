@@ -8,6 +8,7 @@
 #include "sigslot/signal.h"
 
 #include "pixelboost/framework/engine.h"
+#include "pixelboost/resource/resourceManager.h"
 
 #include "core/selection.h"
 
@@ -30,11 +31,11 @@ namespace pb
     class GwenInputHandler;
     class GwenRenderable;
     class GwenRenderer;
+    class MaterialResource;
     class Model;
     class OrthographicCamera;
     class RenderLayer;
     class Scene;
-    class Texture;
     class Viewport;
 }
 
@@ -129,6 +130,7 @@ private:
     Gwen::Controls::Canvas* _GwenCanvas;
     pb::GwenRenderable* _GwenRenderable;
     pb::GwenRenderer* _GwenRenderer;
+    std::shared_ptr<pb::ResourceHandle<pb::MaterialResource> > _GwenMaterial;
 
     Gwen::Controls::MenuStrip* _Menu;
     Gwen::Controls::MenuItem* _CreateMenu;

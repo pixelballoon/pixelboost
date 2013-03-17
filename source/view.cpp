@@ -19,6 +19,7 @@
 #include "pixelboost/graphics/renderer/model/modelRenderer.h"
 #include "pixelboost/graphics/renderer/sprite/sprite.h"
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
+#include "pixelboost/graphics/resources/materialResource.h"
 #include "pixelboost/logic/system/graphics/render/bounds.h"
 #include "pixelboost/logic/system/graphics/render/render.h"
 #include "pixelboost/logic/scene.h"
@@ -275,6 +276,7 @@ void View::Initialise()
     Gwen::Controls::MenuItem* deviceAddress = networkMenu->GetMenu()->AddItem("Device Connection");
     deviceAddress->onPress.Add(this, &View::OnDeviceAddress);
     
+    _GwenMaterial = pb::ResourceManager::Instance()->GetPool("pb::default")->GetResource<pb::MaterialResource>("/shaders/pb_textured.shc_");
     _GwenRenderable = new pb::GwenRenderable(_GwenCanvas);
     _UiScene->GetSystemByType<pb::RenderSystem>()->AddItem(_GwenRenderable);
     
@@ -310,6 +312,11 @@ void View::Initialise()
 
 void View::Update(float timeDelta, float gameDelta)
 {
+    if (_GwenMaterial && _GwenMaterial->GetState() == pb::kResourceStateComplete)
+    {
+        _GwenRenderable->SetMaterial(_GwenMaterial->GetResource()->GetMaterial());
+    }
+    
     Engine::Update(timeDelta, gameDelta);
     
     _LevelScene->Update(timeDelta, gameDelta);
