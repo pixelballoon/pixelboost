@@ -86,22 +86,22 @@ int main(int argc, const char * argv[])
     pugi::xml_node shaderOutput = outputDocument.append_child("shader");
     shaderOutput.append_copy(shaderInput.attribute("name"));
     
-    pugi::xml_node attributesInput = shaderInput.child("attributes");
-    shaderOutput.append_copy(attributesInput);
+    pugi::xml_node propertiesInput = shaderInput.child("properties");
+    shaderOutput.append_copy(propertiesInput);
     
-    pugi::xml_node subshaderInput = shaderInput.child("subshader");
+    pugi::xml_node techniqueInput = shaderInput.child("technique");
     
-    while (!subshaderInput.empty())
+    while (!techniqueInput.empty())
     {
-        pugi::xml_node subshaderOutput = shaderOutput.append_child("subshader");
+        pugi::xml_node techniqueOutput = shaderOutput.append_child("technique");
         
-        subshaderOutput.append_copy(subshaderInput.attribute("class"));
+        techniqueOutput.append_copy(techniqueInput.attribute("name"));
         
-        pugi::xml_node passInput = subshaderInput.child("pass");
+        pugi::xml_node passInput = techniqueInput.child("pass");
         
         while (!passInput.empty())
         {
-            pugi::xml_node passOutput = subshaderOutput.append_child("pass");
+            pugi::xml_node passOutput = techniqueOutput.append_child("pass");
             
             pugi::xml_node programInput = passInput.child("program");
             
@@ -117,7 +117,7 @@ int main(int argc, const char * argv[])
             passInput = passInput.next_sibling("pass");
         }
         
-        subshaderInput = subshaderInput.next_sibling("subshader");
+        techniqueInput = techniqueInput.next_sibling("technique");
     }
     
     std::ostringstream output;
