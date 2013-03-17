@@ -203,6 +203,10 @@ set (GRAPHICS_DEVICE_SOURCES
 	"src/common/pixelboost/graphics/device/vertexBuffer.h"
 	)
 
+set (GRAPHICS_MATERIAL_SOURCES
+	"src/common/pixelboost/graphics/material/material.cpp"
+	"src/common/pixelboost/graphics/material/material.h"
+	)
 
 set (GRAPHICS_PARTICLE_SOURCES
 	"src/common/pixelboost/graphics/particle/particleSystem.cpp"
@@ -241,8 +245,12 @@ set (GRAPHICS_RENDERER_SOURCES
 	)
 
 set (GRAPHICS_RESOURCES_SOURCES
+	"src/common/pixelboost/graphics/resources/materialResource.cpp"
+	"src/common/pixelboost/graphics/resources/materialResource.h"
 	"src/common/pixelboost/graphics/resources/modelResource.cpp"
 	"src/common/pixelboost/graphics/resources/modelResource.h"
+	"src/common/pixelboost/graphics/resources/shaderResource.cpp"
+	"src/common/pixelboost/graphics/resources/shaderResource.h"
 	"src/common/pixelboost/graphics/resources/spriteSheetResource.cpp"
 	"src/common/pixelboost/graphics/resources/spriteSheetResource.h"
 	"src/common/pixelboost/graphics/resources/textureResource.cpp"
@@ -440,6 +448,7 @@ set (PIXELBOOST_SOURCES
 	${FRAMEWORK_SOURCES}
 	${GRAPHICS_CAMERA_SOURCES}
 	${GRAPHICS_DEVICE_SOURCES}
+	${GRAPHICS_MATERIAL_SOURCES}
 	${GRAPHICS_PARTICLE_SOURCES}
 	${GRAPHICS_RENDERER_SOURCES}
 	${GRAPHICS_RESOURCES_SOURCES}
@@ -522,6 +531,7 @@ source_group (file FILES ${FILE_SOURCES})
 source_group (framework FILES ${FRAMEWORK_SOURCES})
 source_group (graphics\\camera FILES ${GRAPHICS_CAMERA_SOURCES})
 source_group (graphics\\device FILES ${GRAPHICS_DEVICE_SOURCES})
+source_group (graphics\\material FILES ${GRAPHICS_MATERIAL_SOURCES})
 source_group (graphics\\particle FILES ${GRAPHICS_PARTICLE_SOURCES})
 source_group (graphics\\renderer FILES ${GRAPHICS_RENDERER_SOURCES})
 source_group (graphics\\resources FILES ${GRAPHICS_RESOURCES_SOURCES})

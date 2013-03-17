@@ -16,7 +16,7 @@ XmlResource::~XmlResource()
     
 }
 
-bool XmlResource::ProcessResource(ResourceState state, const std::string& filename, std::string& error)
+bool XmlResource::ProcessResource(ResourceState state, const std::string& filename, ResourceError& error, std::string& errorDetails)
 {
     switch (state)
     {
@@ -41,17 +41,21 @@ bool XmlResource::ProcessResource(ResourceState state, const std::string& filena
             if (result.status != pugi::status_ok)
             {
                 PbLogError("pb.resource.xml", "Error parsing XML file (%s)", result.description());
-                error = result.description();
+                error = kResourceErrorSystemError;
+                errorDetails = result.description();
                 return false;
             }
             
             return true;
         }
             
+        case kResourceStateUnloading:
+            _Document.reset();
+            return true;
+            
         case kResourceStatePostProcessing:
         case kResourceStateError:
         case kResourceStateComplete:
-        case kResourceStateUnloading:
             return true;
             
     }

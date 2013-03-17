@@ -1,8 +1,8 @@
 <shader name="pixelboost/solid">    
-  <attributes>
-  </attributes>
+  <properties>
+  </properties>
   
-  <subshader class="default">
+  <technique name="default">
     <pass>
       <program language="glsl">
         #ifdef VERTEX
@@ -26,5 +26,5 @@
         #endif
       </program>
     </pass>
-  </subshader>
+  </technique>
 </shader>

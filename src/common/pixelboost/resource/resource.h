@@ -17,7 +17,8 @@ protected:
     virtual ~Resource();
     
     virtual Uid GetResourceType() const = 0;
-    virtual bool ProcessResource(ResourceState state, const std::string& filename, std::string& error) = 0;
+    virtual ResourceReadyState IsReadyToProcess(ResourceState state, std::string& errorDetails);
+    virtual bool ProcessResource(ResourceState state, const std::string& filename, ResourceError& error, std::string& errorDetails) = 0;
     virtual ResourceThread GetResourceThread(ResourceState state) = 0;
     
     friend class ResourceHandleBase;

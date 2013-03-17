@@ -26,24 +26,36 @@ TextureResource::~TextureResource()
     
 }
 
-bool TextureResource::ProcessResource(ResourceState state, const std::string& filename, std::string& error)
+bool TextureResource::ProcessResource(ResourceState state, const std::string& filename, ResourceError& error, std::string& errorDetails)
 {
     switch (state)
     {
         case kResourceStateLoading:
-            return LoadFile(filename);
+            if (!LoadFile(filename))
+            {
+                error = kResourceErrorNoSuchResource;
+            }
             break;
             
         case kResourceStateProcessing:
-            return Decode(filename);
+            if (!Decode(filename))
+            {
+                error = kResourceErrorSystemError;
+                errorDetails = "Error decoding texture file";
+            }
             break;
             
         case kResourceStatePostProcessing:
-            return Upload();
+            if (!Upload())
+            {
+                error = kResourceErrorSystemError;
+                errorDetails = "Error uploading texture to graphics card";
+            }
             break;
             
         case kResourceStateUnloading:
             pb::GraphicsDevice::Instance()->DestroyTexture(_Texture);
+            _Texture = 0;
             break;
             
         case kResourceStateComplete:

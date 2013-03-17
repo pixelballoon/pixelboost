@@ -6,3 +6,8 @@ Resource::~Resource()
 {
     
 }
+
+ResourceReadyState Resource::IsReadyToProcess(ResourceState state, std::string& errorDetails)
+{
+    return kResourceReadyStateReady;
+}

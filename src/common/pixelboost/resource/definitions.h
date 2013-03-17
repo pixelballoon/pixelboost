@@ -8,6 +8,13 @@ namespace pb
         kResourceThreadAny,
     };
     
+    enum ResourceReadyState
+    {
+        kResourceReadyStateReady,
+        kResourceReadyStateAwaitingDependencies,
+        kResourceReadyStateError,
+    };
+    
     enum ResourceState
     {
         kResourceStateLoading,

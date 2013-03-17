@@ -30,7 +30,7 @@ Uid ShaderTechnique::GetId()
 
 bool ShaderTechnique::Load(const pugi::xml_node& attributes, const pugi::xml_node& technique)
 {
-    _Uid = TypeHash(technique.attribute("class").value());
+    _Uid = TypeHash(technique.attribute("name").value());
     
     pugi::xml_node pass = technique.child("pass");
     while (!pass.empty())
@@ -144,19 +144,19 @@ bool Shader::Load(const std::string& filename)
     
     pugi::xml_node attributes = root.child("attributes");
     
-    pugi::xml_node subShader = root.child("subshader");
+    pugi::xml_node techniques = root.child("technique");
     
-    while (!subShader.empty())
+    while (!techniques.empty())
     {
         ShaderTechnique* technique = new ShaderTechnique();
-        if (technique->Load(attributes, subShader))
+        if (technique->Load(attributes, techniques))
         {
             AddTechnique(technique);
         } else {
             delete technique;
         }
         
-        subShader = subShader.next_sibling("subshader");
+        techniques = techniques.next_sibling("technique");
     }
     
     if (_Techniques.size() == 0)

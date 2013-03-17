@@ -17,7 +17,7 @@ ModelResource::~ModelResource()
     
 }
 
-bool ModelResource::ProcessResource(ResourceState state, const std::string& filename, std::string& error)
+bool ModelResource::ProcessResource(ResourceState state, const std::string& filename, ResourceError& error, std::string& errorDetails)
 {
     switch (state)
     {
@@ -27,7 +27,8 @@ bool ModelResource::ProcessResource(ResourceState state, const std::string& file
             if (!file)
             {
                 PbLogError("pb.resource.xml", "Error opening XML file (%s)", filename.c_str());
-                return false;
+                error = kResourceErrorNoSuchResource;
+                return true;
             }
             
             LoadModel(file, _Model);

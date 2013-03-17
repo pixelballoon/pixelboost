@@ -1,9 +1,9 @@
 <shader name="pixelboost/texturedColor">    
-  <attributes>
-    <attribute name="_DiffuseTexture" type="texture2D" description="Diffuse Texture"/>
-  </attributes>
+  <properties>
+    <property name="_DiffuseTexture" type="texture2D" description="Diffuse Texture"/>
+  </properties>
   
-  <subshader class="default">
+  <technique name="default">
     <pass>
       <program language="glsl">
           varying lowp vec2 textureVarying;
@@ -35,5 +35,5 @@
         #endif
       </program>
     </pass>
-  </subshader>
+  </technique>
 </shader>

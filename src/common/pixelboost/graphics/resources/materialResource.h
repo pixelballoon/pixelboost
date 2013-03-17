@@ -1,33 +1,28 @@
 #pragma once
 
-#include <string>
-
-#include "pugixml/pugixml.hpp"
-
-#include "pixelboost/framework/definitions.h"
-#include "pixelboost/resource/definitions.h"
 #include "pixelboost/resource/resource.h"
 
 namespace pb
 {
-
-    class XmlResource : public pb::Resource
+    
+    class Material;
+    
+    class MaterialResource : public pb::Resource
     {
         PB_DECLARE_RESOURCE
         
     protected:
-        XmlResource();
-        ~XmlResource();
+        MaterialResource();
+        ~MaterialResource();
         
     public:
         virtual bool ProcessResource(ResourceState state, const std::string& filename, ResourceError& error, std::string& errorDetails);
         virtual ResourceThread GetResourceThread(ResourceState state);
         
-        const pugi::xml_document& GetXmlDocument();
+        Material* GetMaterial();
         
     private:
-        std::string _Data;
-        pugi::xml_document _Document;
+        Material* _Material;
     };
-
+    
 }

@@ -17,7 +17,7 @@ namespace pb
         SpriteSheetResource();
         ~SpriteSheetResource();
         
-        virtual bool ProcessResource(ResourceState state, const std::string& filename, std::string& error);
+        virtual bool ProcessResource(ResourceState state, const std::string& filename, ResourceError& error, std::string& errorDetails);
         virtual ResourceThread GetResourceThread(ResourceState state);
         
     public:
