@@ -34,7 +34,7 @@ namespace pb
         const std::map<std::string, ShaderProperty>& GetProperties();
         ShaderProperty* GetProperty(const std::string& name);
         
-        ShaderPass* Bind(Uid techniqueId, int passIndex, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix, float realTime, float gameTime);
+        ShaderPass* Bind(Uid techniqueId, int passIndex, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix);
         
         int GetNumPasses(Uid techniqueId);
         

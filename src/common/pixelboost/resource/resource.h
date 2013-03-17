@@ -10,19 +10,21 @@
 
 namespace pb
 {
+    
+    class ResourcePool;
 
-class Resource
-{
-protected:
-    virtual ~Resource();
-    
-    virtual Uid GetResourceType() const = 0;
-    virtual ResourceReadyState IsReadyToProcess(ResourceState state, std::string& errorDetails);
-    virtual bool ProcessResource(ResourceState state, const std::string& filename, ResourceError& error, std::string& errorDetails) = 0;
-    virtual ResourceThread GetResourceThread(ResourceState state) = 0;
-    
-    friend class ResourceHandleBase;
-    friend class ResourceManager;
-};
+    class Resource
+    {
+    protected:
+        virtual ~Resource();
+        
+        virtual Uid GetResourceType() const = 0;
+        virtual ResourceReadyState IsReadyToProcess(ResourceProcess process, std::string& errorDetails);
+        virtual ResourceError ProcessResource(ResourcePool* pool, ResourceProcess process, const std::string& filename, std::string& errorDetails) = 0;
+        virtual ResourceThread GetResourceThread(ResourceProcess process);
+        
+        friend class ResourceHandleBase;
+        friend class ResourceManager;
+    };
 
 }

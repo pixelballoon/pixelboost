@@ -23,12 +23,12 @@ ResourceHandleBase::~ResourceHandleBase()
 
 ResourceReadyState ResourceHandleBase::IsReadyToProcess()
 {
-    return _Resource->IsReadyToProcess(_State, _ErrorDetails);
+    return _Resource->IsReadyToProcess(GetProcessForState(_State), _ErrorDetails);
 }
 
 void ResourceHandleBase::Process()
 {
-    _Resource->ProcessResource(_State, _Filename, _Error, _ErrorDetails);
+    _Error = _Resource->ProcessResource(_Pool, GetProcessForState(_State), _Filename, _ErrorDetails);
     
     if (_Error == kResourceErrorNone)
     {
@@ -65,9 +65,29 @@ void ResourceHandleBase::Unload()
     _Pool->UnloadResource(_Filename);
 }
 
-ResourceThread ResourceHandleBase::GetThread(pb::ResourceState state)
+ResourceThread ResourceHandleBase::GetThread(ResourceProcess process)
 {
-    return _Resource->GetResourceThread(state);
+    return _Resource->GetResourceThread(process);
+}
+
+ResourceProcess ResourceHandleBase::GetProcessForState(ResourceState state)
+{
+    switch (state)
+    {
+        case kResourceStateLoading:
+            return kResourceProcessLoad;
+        case kResourceStateProcessing:
+            return kResourceProcessProcess;
+        case kResourceStatePostProcessing:
+            return kResourceProcessPostProcess;
+        case kResourceStateUnloading:
+            return kResourceProcessUnload;
+        default:
+        {
+            PbAssert(!"We should never be processing in this state!");
+            return kResourceProcessLoad;
+        }
+    }
 }
 
 ResourceState ResourceHandleBase::GetState()
@@ -314,7 +334,7 @@ void ResourceManager::Process(ResourceState state, bool& handleVariable, std::th
         {
             handleVariable = true;
             
-            if (resource->GetThread(state) == kResourceThreadMain)
+            if (resource->GetThread(ResourceHandleBase::GetProcessForState(state)) == kResourceThreadMain)
             {
                 ProcessResource(resource, handleVariable);
             } else {
@@ -347,9 +367,8 @@ void ResourceManager::Purge()
 
 void ResourceManager::PurgeResource(Resource *resource)
 {
-    ResourceError error;
     std::string errorDetails;
-    resource->ProcessResource(kResourceStateUnloading, "", error, errorDetails);
+    resource->ProcessResource(0, kResourceProcessUnload, "", errorDetails);
     delete resource;
 }
 

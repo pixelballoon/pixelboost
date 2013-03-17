@@ -15,34 +15,36 @@ ShaderResource::~ShaderResource()
     
 }
 
-bool ShaderResource::ProcessResource(ResourceState state, const std::string& filename, ResourceError& error, std::string& errorDetails)
+ResourceError ShaderResource::ProcessResource(ResourcePool* pool, ResourceProcess process, const std::string& filename, std::string& errorDetails)
 {
-    switch (state)
+    switch (process)
     {
         case kResourceStateLoading:
+        {
             _Shader = new Shader();
             if (!_Shader->Load(filename))
             {
                 delete _Shader;
                 _Shader = 0;
-                error = kResourceErrorUnknown;
+                return kResourceErrorUnknown;
             }
-            return true;
+            return kResourceErrorNone;
+        }
             
-        case kResourceStateUnloading:
+        case kResourceProcessUnload:
+        {
             delete _Shader;
             _Shader = 0;
-            return true;
+            return kResourceErrorNone;
+        }
 
-        default:
-            return true;
+        case kResourceProcessProcess:
+        case kResourceProcessPostProcess:
+            return kResourceErrorNone;
     }
-    error = kResourceErrorSystemError;
-    errorDetails = "Loader not yet implemented";
-    return true;
 }
 
-ResourceThread ShaderResource::GetResourceThread(ResourceState state)
+ResourceThread ShaderResource::GetResourceThread(ResourceProcess process)
 {
     return kResourceThreadMain;
 }

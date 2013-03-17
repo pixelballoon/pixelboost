@@ -26,34 +26,41 @@ TextureResource::~TextureResource()
     
 }
 
-bool TextureResource::ProcessResource(ResourceState state, const std::string& filename, ResourceError& error, std::string& errorDetails)
+ResourceError TextureResource::ProcessResource(ResourcePool* pool, ResourceProcess process, const std::string& filename, std::string& errorDetails)
 {
-    switch (state)
+    switch (process)
     {
-        case kResourceStateLoading:
+        case kResourceProcessLoad:
+        {
             if (!LoadFile(filename))
             {
-                error = kResourceErrorNoSuchResource;
+                return kResourceErrorNoSuchResource;
             }
-            break;
+            return kResourceErrorNone;
+        }
             
-        case kResourceStateProcessing:
+        case kResourceProcessProcess:
+        {
             if (!Decode(filename))
             {
-                error = kResourceErrorSystemError;
                 errorDetails = "Error decoding texture file";
+                return kResourceErrorSystemError;
             }
-            break;
+            return kResourceErrorNone;
+        }
             
-        case kResourceStatePostProcessing:
+        case kResourceProcessPostProcess:
+        {
             if (!Upload())
             {
-                error = kResourceErrorSystemError;
                 errorDetails = "Error uploading texture to graphics card";
+                return kResourceErrorSystemError;
             }
-            break;
+            return kResourceErrorNone;
+        }
             
-        case kResourceStateUnloading:
+        case kResourceProcessUnload:
+        {
             if (_Texture)
             {
                 pb::GraphicsDevice::Instance()->DestroyTexture(_Texture);
@@ -70,18 +77,14 @@ bool TextureResource::ProcessResource(ResourceState state, const std::string& fi
                 _DecodedSTB = 0;
             }
             std::vector<unsigned char>().swap(_FileData);
-            break;
-            
-        case kResourceStateComplete:
-        case kResourceStateError:
-            break;
+            return kResourceErrorNone;
+        }
     }
-    return true;
 }
 
-ResourceThread TextureResource::GetResourceThread(ResourceState state)
+ResourceThread TextureResource::GetResourceThread(ResourceProcess process)
 {
-    if (state == kResourceStatePostProcessing || state == kResourceStateUnloading)
+    if (process == kResourceProcessPostProcess || process == kResourceProcessUnload)
         return kResourceThreadMain;
         
     return kResourceThreadAny;

@@ -20,8 +20,7 @@ namespace pb
         ~XmlResource();
         
     public:
-        virtual bool ProcessResource(ResourceState state, const std::string& filename, ResourceError& error, std::string& errorDetails);
-        virtual ResourceThread GetResourceThread(ResourceState state);
+        virtual ResourceError ProcessResource(ResourcePool* pool, ResourceProcess process, const std::string& filename, std::string& errorDetails);
         
         const pugi::xml_document& GetXmlDocument();
         

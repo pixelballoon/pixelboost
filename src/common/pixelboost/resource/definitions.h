@@ -15,6 +15,14 @@ namespace pb
         kResourceReadyStateError,
     };
     
+    enum ResourceProcess
+    {
+        kResourceProcessLoad,
+        kResourceProcessProcess,
+        kResourceProcessPostProcess,
+        kResourceProcessUnload,
+    };
+    
     enum ResourceState
     {
         kResourceStateLoading,

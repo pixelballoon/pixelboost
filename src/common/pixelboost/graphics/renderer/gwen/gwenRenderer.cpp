@@ -139,7 +139,7 @@ void GwenRenderer::Render(int count, Renderable** renderables, Uid renderScheme,
     
     for (int passIndex=0; passIndex<material->GetNumPasses(renderScheme); passIndex++)
     {
-        ShaderPass* shaderPass = material->Bind(renderScheme, passIndex, projectionMatrix, viewMatrix, Engine::Instance()->GetTotalTime(), Engine::Instance()->GetGameTime());
+        ShaderPass* shaderPass = material->Bind(renderScheme, passIndex, projectionMatrix, viewMatrix);
         
         if (!shaderPass)
             continue;

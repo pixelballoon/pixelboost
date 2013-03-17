@@ -16,8 +16,8 @@ namespace pb
         ~ShaderResource();
         
     public:
-        virtual bool ProcessResource(ResourceState state, const std::string& filename, ResourceError& error, std::string& errorDetails);
-        virtual ResourceThread GetResourceThread(ResourceState state);
+        virtual ResourceError ProcessResource(ResourcePool* pool, ResourceProcess process, const std::string& filename, std::string& errorDetails);
+        virtual ResourceThread GetResourceThread(ResourceProcess process);
         
         Shader* GetShader();
         

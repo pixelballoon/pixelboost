@@ -17,9 +17,9 @@ ModelResource::~ModelResource()
     
 }
 
-bool ModelResource::ProcessResource(ResourceState state, const std::string& filename, ResourceError& error, std::string& errorDetails)
+ResourceError ModelResource::ProcessResource(ResourcePool* pool, ResourceProcess process, const std::string& filename, std::string& errorDetails)
 {
-    switch (state)
+    switch (process)
     {
         case kResourceStateLoading:
         {
@@ -27,36 +27,30 @@ bool ModelResource::ProcessResource(ResourceState state, const std::string& file
             if (!file)
             {
                 PbLogError("pb.resource.xml", "Error opening XML file (%s)", filename.c_str());
-                error = kResourceErrorNoSuchResource;
-                return true;
+                return kResourceErrorNoSuchResource;
             }
             
             LoadModel(file, _Model);
             
-            return true;
+            return kResourceErrorNone;
         }
             
         case kResourceStateProcessing:
         {
-            return true;
+            return kResourceErrorNone;
         }
             
         case kResourceStatePostProcessing:
         {
-            return true;
+            return kResourceErrorNone;
         }
-        
-        case kResourceStateError:
-        case kResourceStateComplete:
-        case kResourceStateUnloading:
-            return true;
             
+        case kResourceProcessUnload:
+        {
+            _Model = ModelDefinition();
+            return kResourceErrorNone;
+        }
     }
-}
-
-ResourceThread ModelResource::GetResourceThread(ResourceState state)
-{
-    return kResourceThreadAny;
 }
 
 const ModelDefinition& ModelResource::GetModelDefinition()

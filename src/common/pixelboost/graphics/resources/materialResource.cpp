@@ -16,53 +16,56 @@ MaterialResource::~MaterialResource()
     
 }
 
-ResourceReadyState MaterialResource::IsReadyToProcess(ResourceState state, std::string& errorDetails)
+ResourceReadyState MaterialResource::IsReadyToProcess(ResourceProcess process, std::string& errorDetails)
 {
-    switch (state)
+    switch (process)
     {
-        case kResourceStateLoading:
+        case kResourceProcessLoad:
+        case kResourceProcessPostProcess:
+        case kResourceProcessUnload:
             return kResourceReadyStateReady;
-        case kResourceStateProcessing:
+            
+        case kResourceProcessProcess:
+        {
+            if (_Shader->GetState() == kResourceStateError)
             {
-                if (_Shader->GetState() == kResourceStateError)
-                {
-                    errorDetails = "Shader resource failed to load";
-                    return kResourceReadyStateError;
-                }
-                
-                if (_Shader->GetState() != kResourceStateComplete)
-                {
-                    return kResourceReadyStateAwaitingDependencies;
-                }
-                
-                return kResourceReadyStateReady;
+                errorDetails = "Shader resource failed to load";
+                return kResourceReadyStateError;
             }
-        case kResourceStateError:
-        case kResourceStateComplete:
-        case kResourceStatePostProcessing:
-        case kResourceStateUnloading:
+            
+            if (_Shader->GetState() != kResourceStateComplete)
+            {
+                return kResourceReadyStateAwaitingDependencies;
+            }
+            
             return kResourceReadyStateReady;
+        }
     }
 }
 
-bool MaterialResource::ProcessResource(ResourceState state, const std::string& filename, ResourceError& error, std::string& errorDetails)
+ResourceError MaterialResource::ProcessResource(ResourcePool* pool, ResourceProcess process, const std::string& filename, std::string& errorDetails)
 {
-    switch (state)
+    switch (process)
     {
-        case kResourceStateLoading:
+        case kResourceProcessLoad:
         {
             _Material = new Material();
-            _Shader = ResourceManager::Instance()->GetPool("pb::default")->GetResource<ShaderResource>(filename.substr(0, filename.length()-1));
-            return true;
+            _Shader = pool->GetResource<ShaderResource>(filename.substr(0, filename.length()-1));
+            return kResourceErrorNone;
         }
 
-        case kResourceStateProcessing:
+        case kResourceProcessProcess:
         {
             _Material->SetShader(_Shader->GetResource()->GetShader());
-            return true;
+            return kResourceErrorNone;
+        }
+            
+        case kResourceProcessPostProcess:
+        {
+            return kResourceErrorNone;
         }
         
-        case kResourceStateUnloading:
+        case kResourceProcessUnload:
         {
             if (_Material)
             {
@@ -70,19 +73,12 @@ bool MaterialResource::ProcessResource(ResourceState state, const std::string& f
                 _Material = 0;
             }
             _Shader.reset();
-            return true;
+            return kResourceErrorNone;
         }
-            
-        case kResourceStateComplete:
-        case kResourceStateError:
-        case kResourceStatePostProcessing:
-            break;
     }
-
-    return true;
 }
 
-ResourceThread MaterialResource::GetResourceThread(ResourceState state)
+ResourceThread MaterialResource::GetResourceThread(ResourceProcess process)
 {
     return kResourceThreadMain;
 }

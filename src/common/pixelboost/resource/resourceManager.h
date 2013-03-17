@@ -28,8 +28,9 @@ namespace pb
     protected:
         virtual ResourceReadyState IsReadyToProcess();
         virtual void Process();
+        virtual ResourceThread GetThread(ResourceProcess state);
         
-        virtual ResourceThread GetThread(ResourceState state);
+        static ResourceProcess GetProcessForState(ResourceState state);
 
     public:
         void Load();

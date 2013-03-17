@@ -1,3 +1,4 @@
+#include "pixelboost/framework/engine.h"
 #include "pixelboost/graphics/device/program.h"
 #include "pixelboost/graphics/material/material.h"
 #include "pixelboost/graphics/shader/shader.h"
@@ -61,7 +62,7 @@ ShaderProperty* Material::GetProperty(const std::string& name)
     return 0;
 }
 
-ShaderPass* Material::Bind(Uid techniqueId, int passIndex, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix, float gameTime, float realTime)
+ShaderPass* Material::Bind(Uid techniqueId, int passIndex, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
 {
     if (!_Shader)
         return 0;
@@ -75,8 +76,8 @@ ShaderPass* Material::Bind(Uid techniqueId, int passIndex, const glm::mat4x4& pr
     pass->Bind();
     
     ShaderProgram* program = pass->GetShaderProgram();
-    program->SetUniform("PB_GameTime", gameTime);
-    program->SetUniform("PB_RealTime", realTime);
+    program->SetUniform("PB_GameTime", Engine::Instance()->GetGameTime());
+    program->SetUniform("PB_RealTime", Engine::Instance()->GetTotalTime());
     program->SetUniform("PB_ProjectionMatrix", projectionMatrix);
     program->SetUniform("PB_ViewMatrix", viewMatrix);
     

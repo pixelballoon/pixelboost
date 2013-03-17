@@ -14,18 +14,17 @@ SpriteSheetResource::~SpriteSheetResource()
     
 }
 
-bool SpriteSheetResource::ProcessResource(ResourceState state, const std::string& filename, ResourceError& error, std::string& errorDetails)
+ResourceError SpriteSheetResource::ProcessResource(ResourcePool* pool, ResourceProcess process, const std::string& filename, std::string& errorDetails)
 {
-    switch (state)
+    switch (process)
     {
         default:
-            error = kResourceErrorSystemError;
             errorDetails = "Loader not yet implemented";
-            return true;
+            return kResourceErrorSystemError;
     }
 }
 
-ResourceThread SpriteSheetResource::GetResourceThread(ResourceState state)
+ResourceThread SpriteSheetResource::GetResourceThread(ResourceProcess process)
 {
     return kResourceThreadMain;
 }

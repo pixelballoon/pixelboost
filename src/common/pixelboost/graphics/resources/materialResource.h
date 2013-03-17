@@ -17,9 +17,9 @@ namespace pb
         ~MaterialResource();
         
     public:
-        virtual ResourceReadyState IsReadyToProcess(ResourceState state, std::string& errorDetails);
-        virtual bool ProcessResource(ResourceState state, const std::string& filename, ResourceError& error, std::string& errorDetails);
-        virtual ResourceThread GetResourceThread(ResourceState state);
+        virtual ResourceReadyState IsReadyToProcess(ResourceProcess process, std::string& errorDetails);
+        virtual ResourceError ProcessResource(ResourcePool* pool, ResourceProcess process, const std::string& filename, std::string& errorDetails);
+        virtual ResourceThread GetResourceThread(ResourceProcess process);
         
         Material* GetMaterial();
         

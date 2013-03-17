@@ -7,7 +7,12 @@ Resource::~Resource()
     
 }
 
-ResourceReadyState Resource::IsReadyToProcess(ResourceState state, std::string& errorDetails)
+ResourceReadyState Resource::IsReadyToProcess(ResourceProcess process, std::string& errorDetails)
 {
     return kResourceReadyStateReady;
+}
+
+ResourceThread Resource::GetResourceThread(ResourceProcess process)
+{
+    return kResourceThreadAny;
 }

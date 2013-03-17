@@ -16,54 +16,45 @@ XmlResource::~XmlResource()
     
 }
 
-bool XmlResource::ProcessResource(ResourceState state, const std::string& filename, ResourceError& error, std::string& errorDetails)
+ResourceError XmlResource::ProcessResource(ResourcePool* pool, ResourceProcess process, const std::string& filename, std::string& errorDetails)
 {
-    switch (state)
+    switch (process)
     {
-        case kResourceStateLoading:
+        case kResourceProcessLoad:
         {
             File* file = FileSystem::Instance()->OpenFile(filename);
             if (!file)
             {
                 PbLogError("pb.resource.xml", "Error opening XML file (%s)", filename.c_str());
-                return false;
+                return kResourceErrorNoSuchResource;
             }
             
             file->ReadAll(_Data);
             delete file;
             
-            return true;
+            return kResourceErrorNone;
         }
             
-        case kResourceStateProcessing:
+        case kResourceProcessProcess:
         {
             pugi::xml_parse_result result = _Document.load(_Data.c_str());
             if (result.status != pugi::status_ok)
             {
                 PbLogError("pb.resource.xml", "Error parsing XML file (%s)", result.description());
-                error = kResourceErrorSystemError;
                 errorDetails = result.description();
-                return false;
+                return kResourceErrorSystemError;
             }
             
-            return true;
+            return kResourceErrorNone;
         }
+        
+        case kResourceProcessPostProcess:
+            return kResourceErrorNone;
             
-        case kResourceStateUnloading:
+        case kResourceProcessUnload:
             _Document.reset();
-            return true;
-            
-        case kResourceStatePostProcessing:
-        case kResourceStateError:
-        case kResourceStateComplete:
-            return true;
-            
+            return kResourceErrorNone;
     }
-}
-
-ResourceThread XmlResource::GetResourceThread(ResourceState state)
-{
-    return kResourceThreadAny;
 }
 
 const pugi::xml_document& XmlResource::GetXmlDocument()
