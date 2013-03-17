@@ -72,6 +72,9 @@ Engine::Engine(void* platformContext, int argc, const char** argv, bool enableNe
         }
     }
     
+    RegisterResources();
+    ResourceManager::Instance()->CreatePool("pb::default");
+    
     new Renderer();
     new BufferRenderer();
     new ModelRenderer();
@@ -149,7 +152,7 @@ Engine* Engine::Instance()
 
 void Engine::Initialise()
 {
-    RegisterResources();
+    
 }
 
 GameCenter* Engine::GetGameCenter() const

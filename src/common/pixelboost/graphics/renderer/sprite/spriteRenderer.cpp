@@ -69,7 +69,7 @@ Shader* SpriteRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return ResourceManager::Instance()->GetPool("pb::shader")->GetResource<ShaderResource>("/shaders/pb_texturedColor.shc")->GetResource()->GetShader();
+    return ResourceManager::Instance()->GetPool("pb::default")->GetResource<ShaderResource>("/shaders/pb_texturedColor.shc")->GetResource()->GetShader();
 }
 
 Sprite* SpriteRenderable::GetSprite()

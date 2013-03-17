@@ -48,7 +48,7 @@ namespace pb
         void CalculateModelViewMatrix(const glm::mat4x4& viewMatrix);
         const glm::mat4x4& GetModelViewMatrix() const;
         
-        virtual Material* GetMaterial();
+        Material* GetMaterial();
         void SetMaterial(std::shared_ptr<ResourceHandle<MaterialResource> > material);
         
         virtual Shader* GetShader();

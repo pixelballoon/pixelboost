@@ -56,7 +56,7 @@ Shader* GuiRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return ResourceManager::Instance()->GetPool("pb::shader")->GetResource<ShaderResource>("/shaders/pb_solidColor.shc")->GetResource()->GetShader();
+    return ResourceManager::Instance()->GetPool("pb::default")->GetResource<ShaderResource>("/shaders/pb_solidColor.shc")->GetResource()->GetShader();
 }
 
 void GuiRenderable::SetTransform(const glm::mat4x4& transform)

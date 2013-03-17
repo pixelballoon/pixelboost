@@ -38,7 +38,7 @@ Shader* PrimitiveRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return ResourceManager::Instance()->GetPool("pb::shader")->GetResource<ShaderResource>("/shaders/pb_solid.shc")->GetResource()->GetShader();
+    return ResourceManager::Instance()->GetPool("pb::default")->GetResource<ShaderResource>("/shaders/pb_solid.shc")->GetResource()->GetShader();
 }
 
 void PrimitiveRenderable::SetTransform(const glm::mat4x4& transform)

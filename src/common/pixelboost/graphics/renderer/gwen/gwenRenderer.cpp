@@ -65,7 +65,7 @@ Shader* GwenRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return ResourceManager::Instance()->GetPool("pb::shader")->GetResource<ShaderResource>("/shaders/pb_textured.shc")->GetResource()->GetShader();
+    return ResourceManager::Instance()->GetPool("pb::default")->GetResource<ShaderResource>("/shaders/pb_textured.shc")->GetResource()->GetShader();
 }
 
 GwenRenderer::GwenRenderer()

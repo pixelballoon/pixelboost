@@ -9,6 +9,7 @@
 #include "pixelboost/graphics/renderer/common/irenderer.h"
 #include "pixelboost/graphics/renderer/common/renderable.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
+#include "pixelboost/graphics/resources/shaderResource.h"
 #include "pixelboost/graphics/shader/shader.h"
 #include "pixelboost/resource/resourceManager.h"
 
@@ -24,7 +25,11 @@ Renderer::Renderer()
     
     _TechniqueHandler = 0;
     
-    ResourceManager::Instance()->CreatePool("pb::shader");
+    ResourcePool* defaultPool = ResourceManager::Instance()->GetPool("pb::default");
+    defaultPool->CacheResource<ShaderResource>("/shaders/pb_solid.shc");
+    defaultPool->CacheResource<ShaderResource>("/shaders/pb_solidColor.shc");
+    defaultPool->CacheResource<ShaderResource>("/shaders/pb_textured.shc");
+    defaultPool->CacheResource<ShaderResource>("/shaders/pb_texturedColor.shc");
 }
 
 Renderer::~Renderer()

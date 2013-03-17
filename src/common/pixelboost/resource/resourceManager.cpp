@@ -68,11 +68,6 @@ void ResourceHandleBase::Unload()
     _Pool->UnloadResource(_Filename);
 }
 
-void ResourceHandleBase::Remove()
-{
-    _Pool->RemoveResource(_Filename);
-}
-
 ResourceThread ResourceHandleBase::GetThread(pb::ResourceState state)
 {
     return _Resource->GetResourceThread(state);
@@ -120,13 +115,17 @@ void ResourcePool::LoadResource(const std::string& filename)
     
     if (resource != _Resources.end())
     {
-        std::lock(resource->second->_ProcessingMutex, _ResourceMutex);
-        
-        _Pending.push_back(resource->second);
-        resource->second->_State = kResourceStateLoading;
-        
-        resource->second->_ProcessingMutex.unlock();
-        _ResourceMutex.unlock();
+        if (auto resourceHandle = resource->second.lock())
+        {
+            std::lock(resourceHandle->_ProcessingMutex, _ResourceMutex);
+            if (resourceHandle->_State == kResourceStateLoading)
+            {
+                _Pending.push_back(resourceHandle);
+                resourceHandle->_State = kResourceStateLoading;
+            }
+            resourceHandle->_ProcessingMutex.unlock();
+            _ResourceMutex.unlock();
+        }
     }
 }
 
@@ -136,30 +135,28 @@ void ResourcePool::UnloadResource(const std::string& filename)
     
     if (resource != _Resources.end())
     {
-        std::lock(resource->second->_ProcessingMutex, _ResourceMutex);
-        if (resource->second->_State != kResourceStateLoading)
+        if (auto resourceHandle = resource->second.lock())
         {
-            _Pending.push_back(resource->second);
-            resource->second->_State = kResourceStateUnloading;
+            std::lock(resourceHandle->_ProcessingMutex, _ResourceMutex);
+            if (resourceHandle->_State != kResourceStateLoading)
+            {
+                _Pending.push_back(resourceHandle);
+                resourceHandle->_State = kResourceStateUnloading;
+            }
+            resourceHandle->_ProcessingMutex.unlock();
+            _ResourceMutex.unlock();
         }
-        resource->second->_ProcessingMutex.unlock();
-        _ResourceMutex.unlock();
     }
 }
 
-void ResourcePool::RemoveResource(const std::string& filename)
+void ResourcePool::DiscardResource(const std::string& filename)
 {
-    auto resource = _Resources.find(filename);
-    
-    if (resource != _Resources.end())
-    {
-        _Resources.erase(resource);
-    }
+    _CachedResources.erase(filename);
 }
 
-void ResourcePool::RemoveAllResources()
+void ResourcePool::DiscardAllResources(const std::string& filename)
 {
-    _Resources.clear();
+    _CachedResources.clear();
 }
 
 bool ResourcePool::HasPending()

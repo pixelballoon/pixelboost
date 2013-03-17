@@ -85,15 +85,6 @@ bool ShaderProgramGL::Link()
     return true;
 }
 
-void ShaderProgramGL::BindAttribute(int index, const std::string& name)
-{
-    glBindAttribLocation(_Program, index, name.c_str());
-    
-#ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
-    _Attributes[index] = name;
-#endif
-}
-
 void ShaderProgramGL::SetUniform(const std::string& name, int value)
 {
     glUniform1i(GetUniformLocation(name), value);

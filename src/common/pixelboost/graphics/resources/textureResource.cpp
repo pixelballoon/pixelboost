@@ -54,8 +54,22 @@ bool TextureResource::ProcessResource(ResourceState state, const std::string& fi
             break;
             
         case kResourceStateUnloading:
-            pb::GraphicsDevice::Instance()->DestroyTexture(_Texture);
-            _Texture = 0;
+            if (_Texture)
+            {
+                pb::GraphicsDevice::Instance()->DestroyTexture(_Texture);
+                _Texture = 0;
+            }
+            if (_DecodedCustom)
+            {
+                delete[] _DecodedCustom;
+                _DecodedCustom = 0;
+            }
+            if (_DecodedSTB)
+            {
+                stbi_image_free(_DecodedSTB);
+                _DecodedSTB = 0;
+            }
+            std::vector<unsigned char>().swap(_FileData);
             break;
             
         case kResourceStateComplete:

@@ -34,7 +34,6 @@ namespace pb
     public:
         void Load();
         void Unload();
-        void Remove();
         
         ResourceState GetState();
         
@@ -79,11 +78,19 @@ namespace pb
         int GetPriority();
         void SetPriority(int priority);
         
+        // GetResource will get a resource, if it doesn't exist it will load it, as soon as that resource is no longer
+        // used, it will be unloaded
         template <class T> std::shared_ptr<ResourceHandle<T> > GetResource(const std::string& filename);
+
+        // Load/unload resource work purely on resources that already exist
         void LoadResource(const std::string& filename);
         void UnloadResource(const std::string& filename);
-        void RemoveResource(const std::string& filename);
-        void RemoveAllResources();
+        
+        // Caching resources overrides the default behaviour of resource destruction. If a resource is no longer used
+        // then it will remain loaded until discarded
+        template <class T> void CacheResource(const std::string& filename);
+        void DiscardResource(const std::string& filename);
+        void DiscardAllResources(const std::string& filename);
         
         bool HasPending();
         std::shared_ptr<ResourceHandleBase> GetPending(ResourceState resourceState);
@@ -93,7 +100,9 @@ namespace pb
         
         std::mutex _ResourceMutex;
         std::vector<std::shared_ptr<ResourceHandleBase> > _Pending;
-        std::map<std::string, std::shared_ptr<ResourceHandleBase> > _Resources;
+        std::map<std::string, std::weak_ptr<ResourceHandleBase> > _Resources;
+        
+        std::map<std::string, std::shared_ptr<ResourceHandleBase> > _CachedResources;
         
         friend class ResourceManager;
     };

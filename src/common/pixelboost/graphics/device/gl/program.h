@@ -24,8 +24,6 @@ protected:
     virtual bool Link();
     
 public:
-    virtual void BindAttribute(int index, const std::string& name);
-    
     virtual void SetUniform(const std::string& name, int value);
     virtual void SetUniform(const std::string& name, float value);
     virtual void SetUniform(const std::string& name, const glm::vec3& value);
@@ -44,7 +42,6 @@ private:
 #ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
     std::string _Source;
 #endif
-    std::map<int, std::string> _Attributes;
     std::map<std::string, GLuint> _Uniforms;
     
     GLuint _Program;

@@ -26,13 +26,34 @@ template <class T> std::shared_ptr<ResourceHandle<T> > ResourcePool::GetResource
 {
     auto resource = _Resources.find(filename);
     if (resource != _Resources.end())
-        return std::static_pointer_cast<ResourceHandle<T> >(resource->second);
+    {
+        if (auto resourceHandle = resource->second.lock())
+        {
+            return std::static_pointer_cast<ResourceHandle<T> >(resourceHandle);
+        }
+    }
     
     auto newResource = std::shared_ptr<ResourceHandle<T> >(new ResourceHandle<T>(this, filename, ResourceManager::Instance()->CreateResourceData(T::GetStaticResourceType())));
     _Resources[filename] = newResource;
     _Pending.push_back(newResource);
     
     return newResource;
+}
+
+template <class T> void ResourcePool::CacheResource(const std::string& filename)
+{
+    auto resource = _Resources.find(filename);
+    
+    if (resource != _Resources.end())
+    {
+        if (auto resourceHandle = resource->second.lock())
+        {
+            _CachedResources[filename] = resourceHandle;
+            return;
+        }
+    }
+    
+    _CachedResources[filename] = GetResource<T>(filename);
 }
 
 }
