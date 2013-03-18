@@ -59,6 +59,8 @@ void Renderer::Render()
 
 void Renderer::RenderViewport(Viewport* viewport, RenderPass pass, Uid schemeOverride)
 {
+    viewport->Render(pass);
+    
     glm::mat4x4 projectionMatrix;
     glm::mat4x4 viewMatrix;
     
@@ -75,8 +77,6 @@ void Renderer::RenderViewport(Viewport* viewport, RenderPass pass, Uid schemeOve
             break;
     }
     
-    viewport->Render(pass);
-
     FlushBuffer(viewport->GetNativeRegion(), schemeOverride ? schemeOverride : viewport->GetRenderScheme(), projectionMatrix, viewMatrix);
 }
 
