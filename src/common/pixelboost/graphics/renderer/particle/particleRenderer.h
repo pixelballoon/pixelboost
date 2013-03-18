@@ -22,7 +22,7 @@ class VertexBuffer;
 class ParticleRenderable : public Renderable
 {
 public:
-    ParticleRenderable(Uid entityId, ParticleSystem* system);
+    ParticleRenderable(Uid entityId);
     ~ParticleRenderable();
     
     virtual Uid GetType();
@@ -33,10 +33,14 @@ public:
     
     virtual Shader* GetShader();
     
+    void SetSystem(ParticleSystem* system);
     ParticleSystem* GetSystem();
+    
+    void SetTransform(const glm::mat4x4& transform);
     
 private:
     ParticleSystem* _System;
+    glm::mat4x4 _Transform;
     
     friend class ParticleRenderer;
 };

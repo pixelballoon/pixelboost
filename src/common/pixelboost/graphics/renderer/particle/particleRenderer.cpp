@@ -18,9 +18,9 @@ using namespace pb;
 
 ParticleRenderer* ParticleRenderer::_Instance = 0;
 
-ParticleRenderable::ParticleRenderable(Uid entityId, ParticleSystem* system)
+ParticleRenderable::ParticleRenderable(Uid entityId)
     : Renderable(entityId)
-    , _System(system)
+    , _System(0)
 {
     
 }
@@ -59,11 +59,31 @@ Shader* ParticleRenderable::GetShader()
     return ResourceManager::Instance()->GetPool("pb::default")->GetResource<ShaderResource>("/shaders/pb_texturedColor.shc")->GetResource()->GetShader();
 }
 
+void ParticleRenderable::SetSystem(ParticleSystem* system)
+{
+    _System = system;
+
+    if (_System)
+    {
+        _System->Transform = _Transform;
+    }
+}
+
 ParticleSystem* ParticleRenderable::GetSystem()
 {
     return _System;
 }
- 
+
+void ParticleRenderable::SetTransform(const glm::mat4x4& transform)
+{
+    _Transform = transform;
+
+    if (_System)
+    {
+        _System->Transform = transform;
+    }
+}
+
 ParticleRenderer::ParticleRenderer()
 {
     _Instance = this;

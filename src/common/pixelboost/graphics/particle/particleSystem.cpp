@@ -288,41 +288,19 @@ void ParticleSystem::UpdateParticle(Particle* particle, float time)
 PB_DEFINE_COMPONENT(pb::ParticleComponent)
 
 ParticleComponent::ParticleComponent(Entity* parent)
-    : Component(parent)
+    : RenderableComponent(parent)
     , _UseGlobalTime(false)
 {
     _System = new ParticleSystem();
     
-    GetEntity()->RegisterMessageHandler<TransformComponent>(MessageHandler(this, &ParticleComponent::OnTransformChanged));
-    GetEntity()->RegisterMessageHandler<UpdateMessage>(MessageHandler(this, &ParticleComponent::OnUpdate));
+    GetRenderable()->SetSystem(_System);
     
-    _Renderable = new ParticleRenderable(GetEntityUid(), _System);
-    GetScene()->GetSystemByType<RenderSystem>()->AddItem(_Renderable);
+    GetEntity()->RegisterMessageHandler<UpdateMessage>(MessageHandler(this, &ParticleComponent::OnUpdate));
 }
 
 ParticleComponent::~ParticleComponent()
 {
-    GetEntity()->UnregisterMessageHandler<TransformComponent>(MessageHandler(this, &ParticleComponent::OnTransformChanged));
     GetEntity()->UnregisterMessageHandler<UpdateMessage>(MessageHandler(this, &ParticleComponent::OnUpdate));
-
-    GetScene()->GetSystemByType<RenderSystem>()->RemoveItem(_Renderable);
-    
-    delete _Renderable;
-}
-
-void ParticleComponent::SetRenderPass(RenderPass renderPass)
-{
-    _Renderable->SetRenderPass(renderPass);
-}
-
-void ParticleComponent::SetLayer(int layer)
-{
-    _Renderable->SetLayer(layer);
-}
-
-void ParticleComponent::SetLocalTransform(const glm::mat4x4& transform)
-{
-    _LocalTransform = transform;
 }
 
 ParticleSystem* ParticleComponent::GetSystem()
@@ -335,15 +313,9 @@ void ParticleComponent::SetUseGlobalTime(bool useGlobalTime)
     _UseGlobalTime = useGlobalTime;
 }
 
-void ParticleComponent::OnTransformChanged(const Message& message)
-{
-    _WorldMatrix = GetEntity()->GetComponent<TransformComponent>()->GetMatrix() * _LocalTransform;
-}
-
 void ParticleComponent::OnUpdate(const Message& message)
 {
     auto updateMessage = message.As<UpdateMessage>();
     
-    _System->Transform = GetEntity()->GetComponent<TransformComponent>()->GetMatrix() * _LocalTransform;
     _System->Update(_UseGlobalTime ? updateMessage.GetTimeDelta() : updateMessage.GetGameDelta());
 }

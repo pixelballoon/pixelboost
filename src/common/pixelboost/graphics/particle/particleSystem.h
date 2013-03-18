@@ -5,8 +5,8 @@
 
 #include "glm/glm.hpp"
 
-#include "pixelboost/graphics/renderer/common/renderable.h"
-#include "pixelboost/logic/component.h"
+#include "pixelboost/graphics/renderer/particle/particleRenderer.h"
+#include "pixelboost/logic/component/graphics/renderable.h"
 #include "pixelboost/maths/hermiteCurve.h"
 
 namespace pb
@@ -281,7 +281,7 @@ public:
     glm::mat4x4 Transform;
 };
 
-class ParticleComponent : public Component
+class ParticleComponent : public RenderableComponent<ParticleRenderable>
 {
     PB_DECLARE_COMPONENT
     
@@ -290,22 +290,13 @@ protected:
     ~ParticleComponent();
     
 public:
-    void SetRenderPass(RenderPass renderPass);
-    void SetLayer(int layer);
-    
-    void SetLocalTransform(const glm::mat4x4& transform);
-    
     ParticleSystem* GetSystem();
     
     void SetUseGlobalTime(bool useGlobalTime);
     
 private:
-    void OnTransformChanged(const Message& message);
     void OnUpdate(const Message& message);
     
-    glm::mat4x4 _WorldMatrix;
-    glm::mat4x4 _LocalTransform;
-    ParticleRenderable* _Renderable;
     ParticleSystem* _System;
     
     bool _UseGlobalTime;
