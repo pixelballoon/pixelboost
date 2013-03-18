@@ -7,6 +7,8 @@
 #include <thread>
 #include <vector>
 
+#include "sigslot/signal.h"
+
 #include "pixelboost/framework/definitions.h"
 #include "pixelboost/resource/definitions.h"
 #include "pixelboost/resource/resource.h"
@@ -31,6 +33,7 @@ namespace pb
         virtual ResourceThread GetThread(ResourceProcess state);
         
         static ResourceProcess GetProcessForState(ResourceState state);
+        void SetState(ResourceState state);
 
     public:
         void Load();
@@ -40,6 +43,9 @@ namespace pb
         
         ResourceError GetError();
         const std::string& GetErrorDetails();
+        
+        sigslot::Signal2<ResourceHandleBase*, bool> resourceLoaded;
+        sigslot::Signal1<ResourceHandleBase*> resourceUnloading;
         
     protected:
         std::mutex _ProcessingMutex;
@@ -102,7 +108,6 @@ namespace pb
         std::mutex _ResourceMutex;
         std::vector<std::shared_ptr<ResourceHandleBase> > _Pending;
         std::map<std::string, std::weak_ptr<ResourceHandleBase> > _Resources;
-        
         std::map<std::string, std::shared_ptr<ResourceHandleBase> > _CachedResources;
         
         friend class ResourceManager;

@@ -24,6 +24,9 @@ namespace pb
         Material* GetMaterial();
         
     private:
+        void OnResourceLoaded(ResourceHandleBase* resource, bool error);
+        void OnResourceUnloading(ResourceHandleBase* resource);
+        
         Material* _Material;
         std::shared_ptr<ResourceHandle<ShaderResource> > _Shader;
         

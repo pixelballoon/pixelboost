@@ -21,7 +21,7 @@ ResourceError ModelResource::ProcessResource(ResourcePool* pool, ResourceProcess
 {
     switch (process)
     {
-        case kResourceStateLoading:
+        case kResourceProcessLoad:
         {
             pb::File* file = pb::FileSystem::Instance()->OpenFile(filename);
             if (!file)
@@ -35,12 +35,8 @@ ResourceError ModelResource::ProcessResource(ResourcePool* pool, ResourceProcess
             return kResourceErrorNone;
         }
             
-        case kResourceStateProcessing:
-        {
-            return kResourceErrorNone;
-        }
-            
-        case kResourceStatePostProcessing:
+        case kResourceProcessProcess:
+        case kResourceProcessPostProcess:
         {
             return kResourceErrorNone;
         }

@@ -25,6 +25,7 @@ namespace pb
     
     enum ResourceState
     {
+        kResourceStateCreated,
         kResourceStateLoading,
         kResourceStateProcessing,
         kResourceStatePostProcessing,

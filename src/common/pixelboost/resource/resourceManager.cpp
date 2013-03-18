@@ -35,23 +35,26 @@ void ResourceHandleBase::Process()
         switch (_State)
         {
             case kResourceStateLoading:
-                _State = kResourceStateProcessing;
+                SetState(kResourceStateProcessing);
                 break;
             case kResourceStateProcessing:
-                _State = kResourceStatePostProcessing;
+                SetState(kResourceStatePostProcessing);
                 break;
             case kResourceStatePostProcessing:
-                _State = kResourceStateComplete;
+                SetState(kResourceStateComplete);
                 break;
+            case kResourceStateUnloading:
+                SetState(kResourceStateCreated);
+                break;
+            case kResourceStateCreated:
             case kResourceStateComplete:
             case kResourceStateError:
                 PbAssert(!"Processing a resource in this state should never occur");
                 break;
-            case kResourceStateUnloading:
-                break;
+
         }
     } else {
-        _State = kResourceStateError;
+        SetState(kResourceStateError);
     }
 }
 
@@ -105,6 +108,21 @@ const std::string& ResourceHandleBase::GetErrorDetails()
     return _ErrorDetails;
 }
 
+void ResourceHandleBase::SetState(ResourceState state)
+{
+    _State = state;
+    
+    if (_State == kResourceStateError || _State == kResourceStateComplete)
+    {
+        resourceLoaded(this, _State == kResourceStateError);
+    }
+    
+    if (_State == kResourceStateUnloading)
+    {
+        resourceUnloading(this);
+    }
+}
+
 ResourcePool::ResourcePool()
     : _Priority(0)
 {
@@ -137,8 +155,11 @@ void ResourcePool::LoadResource(const std::string& filename)
             std::lock(resourceHandle->_ProcessingMutex, _ResourceMutex);
             if (resourceHandle->_State == kResourceStateLoading)
             {
-                _Pending.push_back(resourceHandle);
-                resourceHandle->_State = kResourceStateLoading;
+                if (std::find(_Pending.begin(), _Pending.end(), resourceHandle) == _Pending.end())
+                {
+                    _Pending.push_back(resourceHandle);
+                }
+                resourceHandle->SetState(kResourceStateLoading);
             }
             resourceHandle->_ProcessingMutex.unlock();
             _ResourceMutex.unlock();
@@ -157,8 +178,11 @@ void ResourcePool::UnloadResource(const std::string& filename)
             std::lock(resourceHandle->_ProcessingMutex, _ResourceMutex);
             if (resourceHandle->_State != kResourceStateLoading)
             {
-                _Pending.push_back(resourceHandle);
-                resourceHandle->_State = kResourceStateUnloading;
+                if (std::find(_Pending.begin(), _Pending.end(), resourceHandle) == _Pending.end())
+                {
+                    _Pending.push_back(resourceHandle);
+                }
+                resourceHandle->SetState(kResourceStateLoading);
             }
             resourceHandle->_ProcessingMutex.unlock();
             _ResourceMutex.unlock();

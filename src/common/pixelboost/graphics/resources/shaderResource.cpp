@@ -19,7 +19,7 @@ ResourceError ShaderResource::ProcessResource(ResourcePool* pool, ResourceProces
 {
     switch (process)
     {
-        case kResourceStateLoading:
+        case kResourceProcessLoad:
         {
             _Shader = new Shader();
             if (!_Shader->Load(filename))

@@ -51,6 +51,12 @@ ResourceError MaterialResource::ProcessResource(ResourcePool* pool, ResourceProc
         {
             _Material = new Material();
             _Shader = pool->GetResource<ShaderResource>(filename.substr(0, filename.length()-1));
+            if (_Shader->GetState() == kResourceStateComplete)
+            {
+                OnResourceLoaded(_Shader.get(), false);
+            }
+            _Shader->resourceLoaded.Connect(this, &MaterialResource::OnResourceLoaded);
+            _Shader->resourceUnloading.Connect(this, &MaterialResource::OnResourceUnloading);
             return kResourceErrorNone;
         }
 
@@ -72,7 +78,12 @@ ResourceError MaterialResource::ProcessResource(ResourcePool* pool, ResourceProc
                 delete _Material;
                 _Material = 0;
             }
-            _Shader.reset();
+            if (_Shader)
+            {
+                _Shader->resourceLoaded.Disconnect(this, &MaterialResource::OnResourceLoaded);
+                _Shader->resourceUnloading.Disconnect(this, &MaterialResource::OnResourceUnloading);
+                _Shader.reset();
+            }
             return kResourceErrorNone;
         }
     }
@@ -86,4 +97,20 @@ ResourceThread MaterialResource::GetResourceThread(ResourceProcess process)
 Material* MaterialResource::GetMaterial()
 {
     return _Material;
+}
+
+void MaterialResource::OnResourceLoaded(ResourceHandleBase* resource, bool error)
+{
+    if (resource == _Shader.get())
+    {
+        _Material->SetShader(_Shader->GetResource()->GetShader());
+    }
+}
+
+void MaterialResource::OnResourceUnloading(ResourceHandleBase* resource)
+{
+    if (resource == _Shader.get())
+    {
+        _Material->SetShader(0);
+    }
 }
