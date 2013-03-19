@@ -13,7 +13,8 @@ MaterialResource::MaterialResource()
 
 MaterialResource::~MaterialResource()
 {
-    
+    PbAssert(!_Material);
+    PbAssert(!_Shader);
 }
 
 ResourceReadyState MaterialResource::IsReadyToProcess(ResourceProcess process, std::string& errorDetails)
@@ -33,7 +34,7 @@ ResourceReadyState MaterialResource::IsReadyToProcess(ResourceProcess process, s
                 return kResourceReadyStateError;
             }
             
-            if (_Shader->GetState() != kResourceStateComplete)
+            if (_Shader->GetState() != kResourceStateReady)
             {
                 return kResourceReadyStateAwaitingDependencies;
             }
@@ -51,7 +52,7 @@ ResourceError MaterialResource::ProcessResource(ResourcePool* pool, ResourceProc
         {
             _Material = new Material();
             _Shader = pool->GetResource<ShaderResource>(filename.substr(0, filename.length()-1));
-            if (_Shader->GetState() == kResourceStateComplete)
+            if (_Shader->GetState() == kResourceStateReady)
             {
                 OnResourceLoaded(_Shader.get(), false);
             }

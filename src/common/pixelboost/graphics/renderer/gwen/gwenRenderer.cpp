@@ -237,7 +237,7 @@ void GwenRenderer::DrawTexturedRect(Gwen::Texture* definition, Gwen::Rect rect, 
 {
     Translate(rect);
     
-    if (_Textures[definition]->GetState() != kResourceStateComplete)
+    if (_Textures[definition]->GetState() != kResourceStateReady)
         return;
     
     pb::Texture* texture = _Textures[definition]->GetResource()->GetTexture();
@@ -301,7 +301,7 @@ Gwen::Color GwenRenderer::PixelColour(Gwen::Texture* definition, unsigned int x,
     #ifdef PIXELBOOST_GRAPHICS_OPENGL2
         // TODO: Properly implement this - it's currently taken from the OpenGL sample code, and isn't particularly nice
     
-        if (_Textures[definition]->GetState() != kResourceStateComplete)
+        if (_Textures[definition]->GetState() != kResourceStateReady)
             return Gwen::Color();
         
         pb::Texture* texture = _Textures[definition]->GetResource()->GetTexture();

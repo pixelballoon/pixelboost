@@ -29,7 +29,6 @@ namespace pb
         
         Material* _Material;
         std::shared_ptr<ResourceHandle<ShaderResource> > _Shader;
-        
     };
     
 }

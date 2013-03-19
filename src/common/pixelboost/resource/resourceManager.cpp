@@ -41,13 +41,13 @@ void ResourceHandleBase::Process()
                 SetState(kResourceStatePostProcessing);
                 break;
             case kResourceStatePostProcessing:
-                SetState(kResourceStateComplete);
+                SetState(kResourceStateReady);
                 break;
             case kResourceStateUnloading:
                 SetState(kResourceStateCreated);
                 break;
             case kResourceStateCreated:
-            case kResourceStateComplete:
+            case kResourceStateReady:
             case kResourceStateError:
                 PbAssert(!"Processing a resource in this state should never occur");
                 break;
@@ -112,7 +112,7 @@ void ResourceHandleBase::SetState(ResourceState state)
 {
     _State = state;
     
-    if (_State == kResourceStateError || _State == kResourceStateComplete)
+    if (_State == kResourceStateReady || _State == kResourceStateError)
     {
         resourceLoaded(this, _State == kResourceStateError);
     }
@@ -215,7 +215,7 @@ std::shared_ptr<ResourceHandleBase> ResourcePool::GetPending(ResourceState resou
     {
         ResourceState state = (*it)->GetState();
         
-        if (state == kResourceStateComplete || state == kResourceStateError)
+        if (state == kResourceStateReady || state == kResourceStateError)
         {
             if (state == kResourceStateError)
             {

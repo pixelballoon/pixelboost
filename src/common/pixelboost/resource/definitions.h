@@ -29,7 +29,7 @@ namespace pb
         kResourceStateLoading,
         kResourceStateProcessing,
         kResourceStatePostProcessing,
-        kResourceStateComplete,
+        kResourceStateReady,
         kResourceStateError,
         kResourceStateUnloading,
     };
