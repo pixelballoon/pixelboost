@@ -74,12 +74,7 @@ ShaderPass* Material::Bind(Uid techniqueId, int passIndex, const glm::mat4x4& pr
 
     ShaderPass* pass = technique->GetPass(passIndex);
     pass->Bind();
-    
-    ShaderProgram* program = pass->GetShaderProgram();
-    program->SetUniform("PB_GameTime", Engine::Instance()->GetGameTime());
-    program->SetUniform("PB_RealTime", Engine::Instance()->GetTotalTime());
-    program->SetUniform("PB_ProjectionMatrix", projectionMatrix);
-    program->SetUniform("PB_ViewMatrix", viewMatrix);
+    pass->SetEngineUniforms(projectionMatrix, viewMatrix, Engine::Instance()->GetTotalTime(), Engine::Instance()->GetGameTime());
     
     return pass;
 }

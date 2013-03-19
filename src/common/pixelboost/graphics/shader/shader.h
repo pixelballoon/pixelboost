@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "glm/glm.hpp"
+
 #include "pixelboost/framework/definitions.h"
 
 namespace pugi
@@ -84,6 +86,7 @@ namespace pb
         bool Load(const pugi::xml_node& attributes, const pugi::xml_node& pass);
         
         void Bind();
+        void SetEngineUniforms(const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix, float realTime, float gameTime);
         
         ShaderProgram* GetShaderProgram();
         

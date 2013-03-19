@@ -127,6 +127,14 @@ void ShaderPass::Bind()
     GraphicsDevice::Instance()->BindProgram(_Program);
 }
 
+void ShaderPass::SetEngineUniforms(const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix, float realTime, float gameTime)
+{
+    _Program->SetUniform("PB_GameTime", gameTime);
+    _Program->SetUniform("PB_RealTime", realTime);
+    _Program->SetUniform("PB_ProjectionMatrix", projectionMatrix);
+    _Program->SetUniform("PB_ViewMatrix", viewMatrix);
+}
+
 ShaderProgram* ShaderPass::GetShaderProgram()
 {
     return _Program;
