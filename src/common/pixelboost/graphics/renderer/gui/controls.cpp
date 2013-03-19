@@ -234,7 +234,7 @@ bool GuiControls::DoButton(const GuiRenderMessage& message, GuiId guiId, const s
         
         renderable->RenderBoxOutline(layout->Position, layout->Size, glm::vec4(0.2,0.2,0.2,1));
         
-        renderable->RenderText(layout->Position, message.GetState().Skin.Font, caption, 20.f, glm::vec4(0,0,0,1));
+        renderable->RenderText(layout->Position + glm::vec2(2,0), message.GetState().Skin.Font, caption, 16.f, glm::vec4(0,0,0,1));
     }
     
     return false;

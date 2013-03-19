@@ -30,6 +30,10 @@ namespace pb
         
         void SetTransform(const glm::mat4x4& transform);
         
+        void SetGeometryShader(Shader* shader);
+        void SetSpriteShader(Shader* shader);
+        void SetTextShader(Shader* shader);
+        
     public:
         void ClearCommands();
         
@@ -100,8 +104,11 @@ namespace pb
         std::vector<GuiCommand*> _Commands;
         
         glm::mat4x4 _Transform;
+        
+        Shader* _GeometryShader;
+        Shader* _SpriteShader;
+        Shader* _TextShader;
 
-    private:
         friend class GuiRenderer;
     };
     
@@ -116,11 +123,13 @@ namespace pb
         virtual void Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix);
         
     private:
-        void PurgeBuffer();
+        void PurgeBuffer(GuiRenderable* renderable, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix);
 
         IndexBuffer* _LineIndexBuffer;
         IndexBuffer* _TriangleIndexBuffer;
         VertexBuffer* _VertexBuffer;
+        
+        Texture* _FontTexture;
         
         Vertex_P3_C4_UV* _VertexData;
         
@@ -129,7 +138,15 @@ namespace pb
         int _MaxElements;
         int _MaxVertices;
         
-        GraphicsDevice::ElementType _ElementType;
+        enum BatchType
+        {
+            kBatchTypeUninitialised,
+            kBatchTypeGeometryLines,
+            kBatchTypeGeometryQuads,
+            kBatchTypeSprites,
+            kBatchTypeText,
+        };
+        BatchType _BatchType;
 
         static GuiRenderer* _Instance;
     };

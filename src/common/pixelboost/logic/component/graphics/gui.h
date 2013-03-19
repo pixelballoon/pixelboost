@@ -11,6 +11,7 @@ namespace pb
     class GuiRenderable;
     class GuiSystem;
     class Message;
+    class ShaderResource;
     
     struct GuiInputEvent;
     struct GuiState;
@@ -27,10 +28,21 @@ namespace pb
         void SetSize(glm::vec2 size);
         glm::vec2 GetSize();
         
+        void SetGeometryShader(const std::string& filename);
+        void SetSpriteShader(const std::string& filename);
+        void SetTextShader(const std::string& filename);
+        
     private:
         void OnGui(GuiState& state, GuiSystem* system, GuiRenderMessage::EventType eventType);
         
+        void OnResourceLoaded(ResourceHandleBase* resource, bool error);
+        void OnResourceUnloading(ResourceHandleBase* resource);
+        
         glm::vec2 _Size;
+        
+        std::shared_ptr<ResourceHandle<ShaderResource> > _GeometryShader;
+        std::shared_ptr<ResourceHandle<ShaderResource> > _SpriteShader;
+        std::shared_ptr<ResourceHandle<ShaderResource> > _TextShader;
         
         friend class GuiSystem;
     };

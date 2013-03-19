@@ -22,7 +22,9 @@ GuiRenderer* GuiRenderer::_Instance = 0;
 GuiRenderable::GuiRenderable(Uid entityUid)
     : pb::Renderable(entityUid)
 {
-    
+    _GeometryShader = 0;
+    _SpriteShader = 0;
+    _TextShader = 0;
 }
 
 GuiRenderable::~GuiRenderable()
@@ -52,11 +54,7 @@ void GuiRenderable::CalculateWorldMatrix()
 
 Shader* GuiRenderable::GetShader()
 {
-    Shader* baseShader = Renderable::GetShader();
-    if (baseShader)
-        return baseShader;
-    
-    return ResourceManager::Instance()->GetPool("pb::default")->GetResource<ShaderResource>("/shaders/pb_solidColor.shc")->GetResource()->GetShader();
+    return 0;
 }
 
 void GuiRenderable::SetTransform(const glm::mat4x4& transform)
@@ -64,6 +62,21 @@ void GuiRenderable::SetTransform(const glm::mat4x4& transform)
     _Transform = transform;
     DirtyBounds();
     DirtyWorldMatrix();
+}
+
+void GuiRenderable::SetGeometryShader(Shader* shader)
+{
+    _GeometryShader = shader;
+}
+
+void GuiRenderable::SetSpriteShader(Shader* shader)
+{
+    _SpriteShader = shader;
+}
+
+void GuiRenderable::SetTextShader(Shader* shader)
+{
+    _TextShader = shader;
 }
 
 void GuiRenderable::ClearCommands()
@@ -210,28 +223,13 @@ GuiRenderer* GuiRenderer::Instance()
 
 void GuiRenderer::Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
 {
-    Shader* shader = renderables[0]->GetShader();
-    if (!shader)
-        return;
-    
-    ShaderTechnique* technique = shader->GetTechnique(renderScheme);
-    
-    if (!technique)
-        return;
-    
-    ShaderPass* shaderPass = technique->GetPass(0);
-    shaderPass->Bind();
-    shaderPass->GetShaderProgram()->SetUniform("PB_ProjectionMatrix", projectionMatrix);
-    shaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", glm::vec4(1,1,1,1));
-    shaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
-    
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
     
     GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
     
-    _ElementType = pb::GraphicsDevice::kElementTriangles;
+    _BatchType = kBatchTypeUninitialised;
     _VertexCount = 0;
     _ElementCount = 0;
     
@@ -242,21 +240,22 @@ void GuiRenderer::Render(int count, Renderable** renderables, Uid renderScheme, 
     {
         GuiRenderable* renderable = static_cast<GuiRenderable*>(renderables[i]);
         
-        shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewMatrix", renderable->GetModelViewMatrix());
-
+        if (!renderable->_GeometryShader || !renderable->_SpriteShader || !renderable->_TextShader)
+            continue;
+        
         for (const auto& command : renderable->_Commands)
         {
             // TODO : Purge buffer at a safe location
             if (_VertexCount > 1500)
             {
-                PurgeBuffer();
+                PurgeBuffer(renderable, projectionMatrix, viewMatrix);
             }
             
             switch (command->Type)
             {
                 case GuiRenderable::GuiCommand::kCommandTypeScissor:
                 {
-                    PurgeBuffer();
+                    PurgeBuffer(renderable, projectionMatrix, viewMatrix);
                     
                     GuiRenderable::GuiCommandScissor* scissor = static_cast<GuiRenderable::GuiCommandScissor*>(command);
                     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateScissor, scissor->Enabled);
@@ -269,10 +268,10 @@ void GuiRenderer::Render(int count, Renderable** renderables, Uid renderScheme, 
                     
                     if (box->Outline)
                     {
-                        if (_ElementType != GraphicsDevice::kElementLines)
+                        if (_BatchType != kBatchTypeGeometryLines)
                         {
-                            PurgeBuffer();
-                            _ElementType = GraphicsDevice::kElementLines;
+                            PurgeBuffer(renderable, projectionMatrix, viewMatrix);
+                            _BatchType = kBatchTypeGeometryLines;
                         }
                         
                         _VertexData[_VertexCount].position[0] = box->Position[0];
@@ -341,10 +340,10 @@ void GuiRenderer::Render(int count, Renderable** renderables, Uid renderScheme, 
                         
                         _ElementCount += 4;
                     } else {
-                        if (_ElementType != GraphicsDevice::kElementTriangles)
+                        if (_BatchType != kBatchTypeGeometryQuads)
                         {
-                            PurgeBuffer();
-                            _ElementType = GraphicsDevice::kElementTriangles;
+                            PurgeBuffer(renderable, projectionMatrix, viewMatrix);
+                            _BatchType = kBatchTypeGeometryQuads;
                         }
                         
                         _VertexData[_VertexCount].position[0] = box->Position[0];
@@ -386,10 +385,10 @@ void GuiRenderer::Render(int count, Renderable** renderables, Uid renderScheme, 
                 }
                 case GuiRenderable::GuiCommand::kCommandTypeLine:
                 {
-                    if (_ElementType != GraphicsDevice::kElementLines)
+                    if (_BatchType != kBatchTypeGeometryLines)
                     {
-                        PurgeBuffer();
-                        _ElementType = GraphicsDevice::kElementLines;
+                        PurgeBuffer(renderable, projectionMatrix, viewMatrix);
+                        _BatchType = kBatchTypeGeometryLines;
                     }
                     
                     GuiRenderable::GuiCommandLine* line = static_cast<GuiRenderable::GuiCommandLine*>(command);
@@ -416,10 +415,10 @@ void GuiRenderer::Render(int count, Renderable** renderables, Uid renderScheme, 
                 }
                 case GuiRenderable::GuiCommand::kCommandTypeText:
                 {
-                    //if (_ElementType != GraphicsDevice::kElementTriangles)
+                    if (_BatchType != kBatchTypeText)
                     {
-                        PurgeBuffer();
-                        _ElementType = GraphicsDevice::kElementTriangles;
+                        PurgeBuffer(renderable, projectionMatrix, viewMatrix);
+                        _BatchType = kBatchTypeText;
                     }
                                         
                     GuiRenderable::GuiCommandText* text = static_cast<GuiRenderable::GuiCommandText*>(command);
@@ -428,28 +427,22 @@ void GuiRenderer::Render(int count, Renderable** renderables, Uid renderScheme, 
                     
                     if (font)
                     {
-                        GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
-                        GraphicsDevice::Instance()->BindTexture(font->texture);
+                        _FontTexture = font->texture;
                         
                         int numElements = font->FillVertices(&_VertexData[_VertexCount], text->String, _MaxVertices-_VertexCount,
                              glm::vec4(text->Color[0], text->Color[1], text->Color[2], text->Color[3]),
-                             pb::CreateTransformMatrix(pb::kRotationOrder_XYZ, glm::vec3(text->Position[0], -text->Position[1]-text->Size/2.f, 0.f), glm::vec3(0,0,0), glm::vec3(text->Size,text->Size,1.f)));
+                             pb::CreateTransformMatrix(pb::kRotationOrder_XYZ, glm::vec3(text->Position[0], -text->Position[1]-text->Size, 0.f), glm::vec3(0,0,0), glm::vec3(text->Size,text->Size,1.f)));
                         _VertexCount += numElements;
                         _ElementCount += numElements/4;
-                        
-                        PurgeBuffer();
-                        
-                        GraphicsDevice::Instance()->BindTexture(0);
-                        GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
                     }
                     
                     break;
                 }
             }
         }
+        
+        PurgeBuffer(renderable, projectionMatrix, viewMatrix);
     }
-    
-    PurgeBuffer();
     
     _VertexBuffer->Unlock(0);
     _VertexData = 0;
@@ -460,17 +453,66 @@ void GuiRenderer::Render(int count, Renderable** renderables, Uid renderScheme, 
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
 }
 
-void GuiRenderer::PurgeBuffer()
+void GuiRenderer::PurgeBuffer(GuiRenderable* renderable, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
 {
     _VertexBuffer->Unlock(_VertexCount);
     
-    GraphicsDevice::Instance()->BindIndexBuffer(_ElementType == pb::GraphicsDevice::kElementTriangles ? _TriangleIndexBuffer : _LineIndexBuffer);
-    GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffer);
-    
-    GraphicsDevice::Instance()->DrawElements(_ElementType, _ElementType == pb::GraphicsDevice::kElementTriangles ? _ElementCount * 6 : _ElementCount * 2);
-    
-    GraphicsDevice::Instance()->BindIndexBuffer(0);
-    GraphicsDevice::Instance()->BindVertexBuffer(0);
+    if (_VertexCount)
+    {
+        GraphicsDevice::ElementType elementType;
+        
+        ShaderPass* pass = 0;
+        
+        switch (_BatchType)
+        {
+            case kBatchTypeUninitialised:
+                return;
+            case kBatchTypeGeometryLines:
+            {
+                GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
+                pass = renderable->_GeometryShader->GetTechnique(pb::TypeHash("default"))->GetPass(0);
+                elementType = GraphicsDevice::kElementLines;
+                break;
+            }
+            case kBatchTypeGeometryQuads:
+            {
+                GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
+                pass = renderable->_GeometryShader->GetTechnique(pb::TypeHash("default"))->GetPass(0);
+                elementType = GraphicsDevice::kElementTriangles;
+                break;
+            }
+            case kBatchTypeSprites:
+            {
+                GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
+                pass = renderable->_SpriteShader->GetTechnique(pb::TypeHash("default"))->GetPass(0);
+                elementType = GraphicsDevice::kElementTriangles;
+                break;
+            }
+            case kBatchTypeText:
+            {
+                GraphicsDevice::Instance()->BindTexture(_FontTexture);
+                GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
+                pass = renderable->_TextShader->GetTechnique(pb::TypeHash("default"))->GetPass(0);
+                elementType = GraphicsDevice::kElementTriangles;
+                break;
+            }
+        }
+        
+        pass->Bind();
+        pass->SetEngineUniforms(projectionMatrix, viewMatrix, Engine::Instance()->GetTotalTime(), Engine::Instance()->GetGameTime());
+        pass->GetShaderProgram()->SetUniform("_DiffuseColor", glm::vec4(1,0,1,1));
+        pass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
+        pass->GetShaderProgram()->SetUniform("PB_ModelViewMatrix", renderable->GetModelViewMatrix());
+        
+        GraphicsDevice::Instance()->BindIndexBuffer(elementType == pb::GraphicsDevice::kElementTriangles ? _TriangleIndexBuffer : _LineIndexBuffer);
+        GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffer);
+        
+        GraphicsDevice::Instance()->DrawElements(elementType, elementType == pb::GraphicsDevice::kElementTriangles ? _ElementCount * 6 : _ElementCount * 2);
+        
+        GraphicsDevice::Instance()->BindTexture(0);
+        GraphicsDevice::Instance()->BindIndexBuffer(0);
+        GraphicsDevice::Instance()->BindVertexBuffer(0);
+    }
     
     _VertexBuffer->Lock();
     _VertexData = static_cast<Vertex_P3_C4_UV*>(_VertexBuffer->GetData());

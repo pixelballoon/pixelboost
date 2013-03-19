@@ -1,5 +1,6 @@
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/gui/guiRenderer.h"
+#include "pixelboost/graphics/resources/shaderResource.h"
 #include "pixelboost/logic/component/graphics/gui.h"
 #include "pixelboost/logic/component/transform.h"
 #include "pixelboost/logic/message/graphics/gui.h"
@@ -18,6 +19,30 @@ GuiComponent::GuiComponent(Entity* parent)
     SetRenderPass(pb::kRenderPassUi);
     
     GetScene()->GetSystemByType<GuiSystem>()->AddGui(this);
+    
+    _GeometryShader = ResourceManager::Instance()->GetPool("pixelboost")->GetResource<ShaderResource>("/shaders/pb_solidColor.shc");
+    _GeometryShader->resourceLoaded.Connect(this, &GuiComponent::OnResourceLoaded);
+    _GeometryShader->resourceUnloading.Connect(this, &GuiComponent::OnResourceUnloading);
+    if (_GeometryShader->GetState() == kResourceStateReady)
+    {
+        OnResourceLoaded(_GeometryShader.get(), false);
+    }
+    
+    _SpriteShader = ResourceManager::Instance()->GetPool("pixelboost")->GetResource<ShaderResource>("/shaders/pb_texturedColor.shc");
+    _SpriteShader->resourceLoaded.Connect(this, &GuiComponent::OnResourceLoaded);
+    _SpriteShader->resourceUnloading.Connect(this, &GuiComponent::OnResourceUnloading);
+    if (_SpriteShader->GetState() == kResourceStateReady)
+    {
+        OnResourceLoaded(_SpriteShader.get(), false);
+    }
+    
+    _TextShader = ResourceManager::Instance()->GetPool("pixelboost")->GetResource<ShaderResource>("/shaders/pb_texturedColor.shc");
+    _TextShader->resourceLoaded.Connect(this, &GuiComponent::OnResourceLoaded);
+    _TextShader->resourceUnloading.Connect(this, &GuiComponent::OnResourceUnloading);
+    if (_TextShader->GetState() == kResourceStateReady)
+    {
+        OnResourceLoaded(_TextShader.get(), false);
+    }
 }
 
 GuiComponent::~GuiComponent()
@@ -38,4 +63,43 @@ glm::vec2 GuiComponent::GetSize()
 void GuiComponent::OnGui(GuiState& state, GuiSystem* system, GuiRenderMessage::EventType eventType)
 {
     GetEntity()->SendMessage(GuiRenderMessage(state, system, this, eventType));
+}
+
+void GuiComponent::OnResourceLoaded(ResourceHandleBase* resource, bool error)
+{
+    if (error)
+        return;
+    
+    if (resource == _GeometryShader.get())
+    {
+        GetRenderable()->SetGeometryShader(_GeometryShader->GetResource()->GetShader());
+    }
+    
+    if (resource == _SpriteShader.get())
+    {
+        GetRenderable()->SetSpriteShader(_SpriteShader->GetResource()->GetShader());
+    }
+    
+    if (resource == _TextShader.get())
+    {
+        GetRenderable()->SetTextShader(_TextShader->GetResource()->GetShader());
+    }
+}
+
+void GuiComponent::OnResourceUnloading(ResourceHandleBase* resource)
+{
+    if (resource == _GeometryShader.get())
+    {
+        GetRenderable()->SetGeometryShader(0);
+    }
+    
+    if (resource == _SpriteShader.get())
+    {
+        GetRenderable()->SetSpriteShader(0);
+    }
+    
+    if (resource == _TextShader.get())
+    {
+        GetRenderable()->SetTextShader(0);
+    }
 }
