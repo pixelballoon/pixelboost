@@ -366,7 +366,7 @@ Font* FontRenderer::LoadFont(const std::string& name, const std::string& filenam
         {
             int size = (int)strtol(data["size"].c_str(), 0, 10);
             
-            font->size = size;
+            font->sourceSize = size;
         } else if (elementType == "common")
         {
             int lineHeight = (int)strtol(data["lineHeight"].c_str(), 0, 10);
@@ -374,8 +374,8 @@ Font* FontRenderer::LoadFont(const std::string& name, const std::string& filenam
             int scaleW = (int)strtol(data["scaleW"].c_str(), 0, 10);
             int scaleH = (int)strtol(data["scaleH"].c_str(), 0, 10);
             
-            font->base = (float)base/(float)font->size;
-            font->lineHeight = (float)lineHeight / (float)scaleH;
+            font->base = (float)base/font->sourceSize;
+            font->lineHeight = (float)lineHeight/font->sourceSize;
             texSize = glm::vec2(scaleW, scaleH);
         } else if (elementType == "page")
         {
@@ -395,15 +395,15 @@ Font* FontRenderer::LoadFont(const std::string& name, const std::string& filenam
             float yoffset = strtol(data["yoffset"].c_str(), 0, 10);
             float xadvance = strtol(data["xadvance"].c_str(), 0, 10);
             
-            character.width = width/(float)font->size;
-            character.height = height/(float)font->size;
+            character.width = width/(float)font->sourceSize;
+            character.height = height/(float)font->sourceSize;
             character.uvx = x/texSize[0];
             character.uvy = y/texSize[1];
             character.uvu = width/texSize[0];
             character.uvv = height/texSize[1];
-            character.xOffset = xoffset/(float)font->size;
-            character.yOffset = yoffset/(float)font->size;
-            character.xAdvance = xadvance/(float)font->size;
+            character.xOffset = xoffset/(float)font->sourceSize;
+            character.yOffset = yoffset/(float)font->sourceSize;
+            character.xAdvance = xadvance/(float)font->sourceSize;
             
             font->chars[charCode] = character;
         } else if (elementType == "kerning")

@@ -88,7 +88,7 @@ namespace pb
         };
         
         Texture* texture;
-        int size;
+        int sourceSize;
         float base;
         float lineHeight;
         std::map<uint32_t, Character> chars;
