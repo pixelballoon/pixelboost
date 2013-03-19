@@ -73,7 +73,8 @@ Engine::Engine(void* platformContext, int argc, const char** argv, bool enableNe
     }
     
     RegisterResources();
-    ResourceManager::Instance()->CreatePool("pb::default");
+    ResourceManager::Instance()->CreatePool("default");
+    ResourceManager::Instance()->CreatePool("pixelboost");
     
     new Renderer();
     new BufferRenderer();

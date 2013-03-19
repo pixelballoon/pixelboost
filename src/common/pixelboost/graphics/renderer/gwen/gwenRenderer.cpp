@@ -66,7 +66,7 @@ Shader* GwenRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return ResourceManager::Instance()->GetPool("pb::default")->GetResource<ShaderResource>("/shaders/pb_textured.shc")->GetResource()->GetShader();
+    return ResourceManager::Instance()->GetPool("pixelboost")->GetResource<ShaderResource>("/shaders/pb_textured.shc")->GetResource()->GetShader();
 }
 
 GwenRenderer::GwenRenderer()
@@ -117,13 +117,11 @@ GwenRenderer::GwenRenderer()
     _FontIndexBuffer->Unlock();
     
     Renderer::Instance()->SetHandler(GwenRenderable::GetStaticType(), this);
-    
-    pb::ResourceManager::Instance()->CreatePool("pb::gwen");
 }
 
 GwenRenderer::~GwenRenderer()
 {
-    pb::ResourceManager::Instance()->DestroyPool("pb::gwen");
+
 }
     
 void GwenRenderer::Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
@@ -289,7 +287,7 @@ void GwenRenderer::LoadTexture(Gwen::Texture* definition)
     definition->width = texture->GetSize()[0];
     definition->height = texture->GetSize()[1];
     
-    _Textures[definition] = pb::ResourceManager::Instance()->GetPool("pb::gwen")->GetResource<pb::TextureResource>(fileName);
+    _Textures[definition] = pb::ResourceManager::Instance()->GetPool("default")->GetResource<pb::TextureResource>(fileName);
 }
 
 void GwenRenderer::FreeTexture(Gwen::Texture* definition)
