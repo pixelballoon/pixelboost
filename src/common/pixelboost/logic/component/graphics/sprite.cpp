@@ -2,6 +2,7 @@
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/sprite/sprite.h"
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
+#include "pixelboost/graphics/resources/spriteSheetResource.h"
 #include "pixelboost/logic/component/graphics/sprite.h"
 #include "pixelboost/logic/component/transform.h"
 #include "pixelboost/logic/message/transform.h"
@@ -21,33 +22,63 @@ SpriteComponent::SpriteComponent(Entity* parent)
 
 SpriteComponent::~SpriteComponent()
 {
-    
+    if (_SpriteSheet)
+    {
+        _SpriteSheet->resourceLoaded.Disconnect(this, &SpriteComponent::OnResourceLoaded);
+        _SpriteSheet->resourceUnloading.Disconnect(this, &SpriteComponent::OnResourceUnloading);
+    }
 }
 
 glm::vec2 SpriteComponent::GetSize()
 {
     if (GetRenderable()->GetSprite())
-        return GetRenderable()->GetSprite()->_Size;
+        return GetRenderable()->GetSprite()->Size;
     
     return glm::vec2(0,0);
 }
 
-void SpriteComponent::SetRenderPass(RenderPass renderPass)
+void SpriteComponent::SetSprite(const std::string& filename, const std::string& sprite, const std::string& pool)
 {
-    GetRenderable()->SetRenderPass(renderPass);
+    _SpriteName = sprite;
+    SetSprite(0);
+    
+    _SpriteSheet = pb::ResourceManager::Instance()->GetPool(pool)->GetResource<pb::SpriteSheetResource>(filename);
+    _SpriteSheet->resourceLoaded.Connect(this, &SpriteComponent::OnResourceLoaded);
+    _SpriteSheet->resourceUnloading.Connect(this, &SpriteComponent::OnResourceUnloading);
+    
+    if (_SpriteSheet->GetState() == kResourceStateReady)
+    {
+        OnResourceLoaded(_SpriteSheet.get(), false);
+    }
 }
 
-void SpriteComponent::SetLayer(int layer)
+void SpriteComponent::SetSprite(Sprite* sprite)
 {
-    GetRenderable()->SetLayer(layer);
+    if (_SpriteSheet)
+    {
+        _SpriteSheet->resourceLoaded.Disconnect(this, &SpriteComponent::OnResourceLoaded);
+        _SpriteSheet->resourceUnloading.Disconnect(this, &SpriteComponent::OnResourceUnloading);
+        _SpriteSheet.reset();
+    }
+    
+    GetRenderable()->SetSprite(sprite);
 }
 
-void SpriteComponent::SetSprite(const std::string& sprite)
+void SpriteComponent::OnResourceLoaded(ResourceHandleBase* resource, bool error)
 {
-    GetRenderable()->SetSprite(SpriteRenderer::Instance()->GetSprite(sprite));
+    if (!error)
+    {
+        if (resource == _SpriteSheet.get())
+        {
+            GetRenderable()->SetSprite(_SpriteSheet->GetResource()->GetSpriteSheet()->GetSprite(_SpriteName));
+        }
+    }
 }
 
-void SpriteComponent::SetTint(const glm::vec4& tint)
+void SpriteComponent::OnResourceUnloading(ResourceHandleBase* resource)
 {
-    GetRenderable()->SetTint(tint);
+    if (resource == _SpriteSheet.get())
+    {
+        GetRenderable()->SetSprite(0);
+    }
 }

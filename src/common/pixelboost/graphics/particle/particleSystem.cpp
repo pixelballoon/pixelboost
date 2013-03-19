@@ -4,6 +4,8 @@
 #include "pixelboost/graphics/particle/particleSystem.h"
 #include "pixelboost/graphics/renderer/particle/particleRenderer.h"
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
+#include "pixelboost/graphics/renderer/sprite/sprite.h"
+#include "pixelboost/graphics/resources/spriteSheetResource.h"
 #include "pixelboost/logic/component/transform.h"
 #include "pixelboost/logic/message/update.h"
 #include "pixelboost/logic/system/graphics/render/render.h"
@@ -191,9 +193,10 @@ glm::vec4 ParticleValueTwoCurveColor::Evaluate(float x, float variant)
     return glm::mix(glm::vec4(CurveMinR.Evaluate(x), CurveMinG.Evaluate(x), CurveMinB.Evaluate(x), CurveMinA.Evaluate(x)), glm::vec4(CurveMaxR.Evaluate(x), CurveMaxG.Evaluate(x), CurveMaxB.Evaluate(x), CurveMaxA.Evaluate(x)), variant);
 }
 
-ParticleSpriteDefinition::ParticleSpriteDefinition(const std::string& sprite)
+ParticleSpriteDefinition::ParticleSpriteDefinition(const std::string& name)
 {
-    SpriteDefinition = SpriteRenderer::Instance()->GetSprite(sprite);
+    SpriteName = name;
+    SpriteDefinition = 0;
 }
 
 ParticleSystemDefinition::ParticleSystemDefinition()
@@ -216,6 +219,9 @@ ParticleSystemDefinition::ParticleSystemDefinition()
     MaxParticles = 100;
     
     BlendMode = kBlendModeAdditive;
+    
+    RenderMesh = 0;
+    RenderSprite = 0;
 }
 
 ParticleSystemDefinition::~ParticleSystemDefinition()
@@ -300,12 +306,30 @@ ParticleComponent::ParticleComponent(Entity* parent)
 
 ParticleComponent::~ParticleComponent()
 {
+    if (_SpriteSheet)
+    {
+        _SpriteSheet->resourceLoaded.Disconnect(this, &ParticleComponent::OnResourceLoaded);
+        _SpriteSheet->resourceUnloading.Disconnect(this, &ParticleComponent::OnResourceUnloading);
+    }
+    
     GetEntity()->UnregisterMessageHandler<UpdateMessage>(MessageHandler(this, &ParticleComponent::OnUpdate));
 }
 
 ParticleSystem* ParticleComponent::GetSystem()
 {
     return _System;
+}
+
+void ParticleComponent::SetSpriteSheet(const std::string& filename, const std::string& pool)
+{
+    _SpriteSheet = ResourceManager::Instance()->GetPool(pool)->GetResource<SpriteSheetResource>(filename);
+    _SpriteSheet->resourceLoaded.Connect(this, &ParticleComponent::OnResourceLoaded);
+    _SpriteSheet->resourceUnloading.Connect(this, &ParticleComponent::OnResourceUnloading);
+    
+    if (_SpriteSheet->GetState() == kResourceStateReady)
+    {
+        OnResourceLoaded(_SpriteSheet.get(), false);
+    }
 }
 
 void ParticleComponent::SetUseGlobalTime(bool useGlobalTime)
@@ -318,4 +342,26 @@ void ParticleComponent::OnUpdate(const Message& message)
     auto updateMessage = message.As<UpdateMessage>();
     
     _System->Update(_UseGlobalTime ? updateMessage.GetTimeDelta() : updateMessage.GetGameDelta());
+}
+
+void ParticleComponent::OnResourceLoaded(ResourceHandleBase* resource, bool error)
+{
+    if (!error && resource == _SpriteSheet.get())
+    {
+        if (_System->Definition->RenderSprite)
+        {
+            _System->Definition->RenderSprite->SpriteDefinition = _SpriteSheet->GetResource()->GetSpriteSheet()->GetSprite(_System->Definition->RenderSprite->SpriteName);
+        }
+    }
+}
+
+void ParticleComponent::OnResourceUnloading(ResourceHandleBase* resource)
+{
+    if (resource == _SpriteSheet.get())
+    {
+        if (_System->Definition->RenderSprite)
+        {
+            _System->Definition->RenderSprite->SpriteDefinition = 0;
+        }
+    }
 }

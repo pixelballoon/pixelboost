@@ -47,7 +47,7 @@ void SpriteRenderable::CalculateBounds()
         BoundingSphere bounds;
         glm::vec4 position = GetWorldMatrix() * glm::vec4(0,0,0,1);
         float scale = glm::length(GetWorldMatrix() * glm::vec4(0.5774,0.5774,0.5774,0));
-        bounds.Set(glm::vec3(position.x, position.y, position.z), glm::max(sprite->_Size.x, sprite->_Size.y)*scale/2.f);
+        bounds.Set(glm::vec3(position.x, position.y, position.z), glm::max(sprite->Size.x, sprite->Size.y)*scale/2.f);
         SetBounds(bounds);
     }
 }
@@ -56,8 +56,8 @@ void SpriteRenderable::CalculateWorldMatrix()
 {
     if (_Sprite)
     {
-        glm::mat4x4 worldMatrix = glm::translate(glm::mat4x4(), glm::vec3(-_Sprite->_Offset, 0));
-        worldMatrix = glm::scale(worldMatrix, glm::vec3(_Sprite->_Size, 1));
+        glm::mat4x4 worldMatrix = glm::translate(glm::mat4x4(), glm::vec3(-_Sprite->Offset, 0));
+        worldMatrix = glm::scale(worldMatrix, glm::vec3(_Sprite->Size, 1));
         worldMatrix = _Transform * worldMatrix;
         SetWorldMatrix(worldMatrix);
     }
@@ -179,10 +179,10 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Uid renderSchem
         if (!sprite)
             continue;
         
-        if (texture != sprite->_Sheet->_Texture)
+        if (texture != sprite->_Texture)
         {
             RenderBatch();
-            texture = sprite->_Sheet->_Texture;
+            texture = sprite->_Texture;
             
             GraphicsDevice::Instance()->BindTexture(texture);
         }
@@ -194,10 +194,10 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Uid renderSchem
         
         bufferData = static_cast<Vertex_P3_C4_UV*>(_VertexBuffer->GetData()) + (_BatchSize * 4);
         
-        if (!sprite->_Rotated)
+        if (!sprite->Rotated)
         {
-            glm::vec2 min = sprite->_UvPosition;
-            glm::vec2 max = sprite->_UvPosition + glm::vec2(sprite->_UvSize[0], sprite->_UvSize[1]);
+            glm::vec2 min = sprite->UvPosition;
+            glm::vec2 max = sprite->UvPosition + glm::vec2(sprite->UvSize[0], sprite->UvSize[1]);
             
             bufferData[0].uv[0] = min[0];
             bufferData[0].uv[1] = max[1];
@@ -208,8 +208,8 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Uid renderSchem
             bufferData[3].uv[0] = max[0];
             bufferData[3].uv[1] = max[1];
         } else {
-            glm::vec2 min = sprite->_UvPosition + glm::vec2(sprite->_UvSize[1], sprite->_UvSize[0]);
-            glm::vec2 max = sprite->_UvPosition;
+            glm::vec2 min = sprite->UvPosition + glm::vec2(sprite->UvSize[1], sprite->UvSize[0]);
+            glm::vec2 max = sprite->UvPosition;
             
             bufferData[0].uv[0] = max[0];
             bufferData[0].uv[1] = max[1];
@@ -283,61 +283,4 @@ void SpriteRenderer::RenderBatch()
         _BatchSize = 0;
         _VertexBuffer->Lock();
     }
-}
-    
-std::shared_ptr<SpriteSheet> SpriteRenderer::CreateSpriteSheet(const std::string &name)
-{
-    SheetMap::iterator it = _SpriteSheets.find(name);
-    
-    if (it != _SpriteSheets.end())
-        return it->second;
-    
-    std::shared_ptr<SpriteSheet> sheet = SpriteSheet::Create();
-    _SpriteSheets[name] = sheet;
-    
-    return sheet;
-}
-
-bool SpriteRenderer::LoadSpriteSheet(const std::string& name, const std::string& extension, bool createMips, bool hasPremultipliedAlpha)
-{
-    if (!CreateSpriteSheet(name))
-        return false;
-    
-    std::shared_ptr<SpriteSheet> sheet = GetSpriteSheet(name);
-    sheet->LoadSheet(name, extension, createMips);
-
-    return true;
-}
- 
-bool SpriteRenderer::UnloadSpriteSheet(const std::string& name)
-{
-    SheetMap::iterator sheetIt = _SpriteSheets.find(name);
-    
-    if (sheetIt != _SpriteSheets.end())
-    {
-        _SpriteSheets.erase(sheetIt);
-        return true;
-    }
-    
-    return false;
-}
-    
-std::shared_ptr<SpriteSheet> SpriteRenderer::GetSpriteSheet(const std::string& sheetName) const
-{
-    SheetMap::const_iterator it = _SpriteSheets.find(sheetName);
-    
-    if (it == _SpriteSheets.end())
-        return std::shared_ptr<SpriteSheet>();
-    
-    return it->second;
-}
-    
-Sprite* SpriteRenderer::GetSprite(const std::string& spriteName) const
-{
-    SpriteMap::const_iterator it = _Sprites.find(spriteName);
-    
-    if (it == _Sprites.end())
-        return 0;
-    
-    return it->second;
 }

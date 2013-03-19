@@ -151,6 +151,11 @@ void ParticleRenderer::Render(int count, Renderable** renderables, Uid renderSch
 
 void ParticleRenderer::RenderSystem(ParticleSystem* system, ShaderPass* shaderPass)
 {
+    pb::Sprite* sprite = system->Definition->RenderSprite->SpriteDefinition;
+    
+    if (!sprite)
+        return;
+        
     _VertexBuffer->Lock();
     
     pb::Vertex_P3_C4_UV* vertexBuffer = static_cast<pb::Vertex_P3_C4_UV*>(_VertexBuffer->GetData());
@@ -159,8 +164,6 @@ void ParticleRenderer::RenderSystem(ParticleSystem* system, ShaderPass* shaderPa
     {
         int particleCount = 0;
         
-        pb::Sprite* sprite = system->Definition->RenderSprite->SpriteDefinition;
-        
         for (std::vector<Particle>::iterator it = system->Particles.begin(); it != system->Particles.end(); ++it, ++particleCount)
         {
             if (particleCount == _MaxParticles)
@@ -168,7 +171,7 @@ void ParticleRenderer::RenderSystem(ParticleSystem* system, ShaderPass* shaderPa
             
             glm::vec4 color = it->Color;
             float scale = it->Scale;
-            glm::vec2 size = sprite->_Size * glm::vec2(scale, scale);
+            glm::vec2 size = sprite->Size * glm::vec2(scale, scale);
             
             glm::mat4x4 transform = glm::translate(glm::mat4x4(), it->Position);
             transform = glm::scale(transform, glm::vec3(size, 1));
@@ -211,10 +214,10 @@ void ParticleRenderer::RenderSystem(ParticleSystem* system, ShaderPass* shaderPa
             vertexBuffer[3].color[2] = color.b * color.a;
             vertexBuffer[3].color[3] = system->Definition->BlendMode == ParticleSystemDefinition::kBlendModeAdditive ? 0 : color.a;
             
-            if (!sprite->_Rotated)
+            if (!sprite->Rotated)
             {
-                glm::vec2 min = sprite->_UvPosition;
-                glm::vec2 max = sprite->_UvPosition + sprite->_UvSize;
+                glm::vec2 min = sprite->UvPosition;
+                glm::vec2 max = sprite->UvPosition + sprite->UvSize;
                 
                 vertexBuffer[0].uv[0] = min[0];
                 vertexBuffer[0].uv[1] = max[1],
@@ -225,8 +228,8 @@ void ParticleRenderer::RenderSystem(ParticleSystem* system, ShaderPass* shaderPa
                 vertexBuffer[3].uv[0] = max[0];
                 vertexBuffer[3].uv[1] = max[1];
             } else {
-                glm::vec2 min = sprite->_UvPosition + glm::vec2(sprite->_UvSize[1], 0);
-                glm::vec2 max = sprite->_UvPosition + glm::vec2(0, sprite->_UvSize[0]);
+                glm::vec2 min = sprite->UvPosition + glm::vec2(sprite->UvSize[1], 0);
+                glm::vec2 max = sprite->UvPosition + glm::vec2(0, sprite->UvSize[0]);
                 
                 vertexBuffer[0].uv[0] = max[0];
                 vertexBuffer[0].uv[1] = max[1];
@@ -241,7 +244,7 @@ void ParticleRenderer::RenderSystem(ParticleSystem* system, ShaderPass* shaderPa
             vertexBuffer += 4;
         }
         
-        GraphicsDevice::Instance()->BindTexture(system->Definition->RenderSprite->SpriteDefinition->_Sheet->_Texture);
+        GraphicsDevice::Instance()->BindTexture(system->Definition->RenderSprite->SpriteDefinition->_Texture);
         
         _VertexBuffer->Unlock(particleCount*4);
         

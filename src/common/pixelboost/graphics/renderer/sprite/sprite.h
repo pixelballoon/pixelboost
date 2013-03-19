@@ -11,44 +11,40 @@
 namespace pb
 {
     
-class Sprite;
-    
-class SpriteSheet
-{
-private:
-    SpriteSheet();
-    
-public:
-    static std::shared_ptr<SpriteSheet> Create();
-    virtual ~SpriteSheet();
-    
-    bool LoadSingle(const std::string& fileName, float density, bool generateMips=false);
-    bool LoadSheet(const std::string& name, const std::string& extension, bool generateMips=false);
-    Texture* LoadTexture(const std::string& fileName, bool generateMips);
-    
-    Sprite* GetSprite(const std::string& name);
-    
-public:
-    Texture* _Texture;
-    
-private:
-    typedef std::map<std::string, Sprite*> SpriteMap;
-    SpriteMap _Sprites;
-    
-    friend class SpriteRenderer;
-};
+    struct Sprite;
+        
+    class SpriteSheet
+    {
+    public:
+        SpriteSheet();
+        virtual ~SpriteSheet();
+        
+        void AddSprite(const std::string& name, glm::vec2 size, glm::vec2 offset, glm::vec2 uvSize, glm::vec2 uvPosition, bool rotated);
+        Sprite* GetSprite(const std::string& name);
+        
+        void SetTexture(Texture* texture);
+        Texture* GetTexture();
 
-class Sprite
-{
-public:
-    SpriteSheet* _Sheet;
+    private:
+        std::map<std::string, Sprite> _Sprites;
+        Texture* _Texture;
+        
+        friend class SpriteRenderer;
+    };
 
-    glm::vec2 _Size;
-    glm::vec2 _Offset;
-    
-    glm::vec2 _UvSize;
-    glm::vec2 _UvPosition;
-    bool _Rotated;
-};
+    struct Sprite
+    {
+        Sprite();
+        Sprite(Texture* texture, glm::vec2 size, glm::vec2 offset, glm::vec2 uvSize, glm::vec2 uvPosition, bool rotated);
+        
+        Texture* _Texture;
+
+        glm::vec2 Size;
+        glm::vec2 Offset;
+        
+        glm::vec2 UvSize;
+        glm::vec2 UvPosition;
+        bool Rotated;
+    };
     
 }

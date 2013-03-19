@@ -97,7 +97,7 @@ Texture* TextureResource::GetTexture()
 
 bool TextureResource::LoadFile(const std::string& filename)
 {
-    PbLogDebug("pb.graphics.texture", "Loading texture from file (%s)", filename.c_str());
+    PbLogDebug("pb.resource.texture", "Loading texture from file (%s)", filename.c_str());
     
     pb::File* file = pb::FileSystem::Instance()->OpenFile(filename);
     if (!file)
@@ -116,11 +116,21 @@ bool TextureResource::Decode(const std::string& filename)
     
     if (filename.length() >= 4 && filename.substr(filename.length()-4) == ".jpa")
     {
-        int rgbLength = _FileData[0];
-        int alphaLength = _FileData[4];
+        int rgbLength;
+        int alphaLength;
+        
+        memcpy(&rgbLength, &_FileData[0], 4);
+        memcpy(&alphaLength, &_FileData[4], 4);
         
         unsigned char* decodedRgb = stbi_load_from_memory(&_FileData[8], rgbLength, &_Width, &_Height, &_Components, STBI_rgb);
         unsigned char* decodedAlpha = stbi_load_from_memory(&_FileData[8+rgbLength], alphaLength, &_Width, &_Height, &_Components, STBI_grey);
+        
+        if (!_Width || !_Height)
+        {
+            delete decodedRgb;
+            delete decodedAlpha;
+            return false;
+        }
         
         std::vector<unsigned char>().swap(_FileData);
         
@@ -170,11 +180,11 @@ bool TextureResource::Decode(const std::string& filename)
     
     if (status)
     {
-        PbLogDebug("pb.graphics.texture", "Decoded texture from file (%s)", filename.c_str());
+        PbLogDebug("pb.resource.texture", "Decoded texture from file (%s)", filename.c_str());
     }
     else
     {
-        PbLogError("pb.graphics.texture", "Failed to decode texture from file (%s)", filename.c_str());
+        PbLogError("pb.resource.texture", "Failed to decode texture from file (%s)", filename.c_str());
     }
     
     return status;

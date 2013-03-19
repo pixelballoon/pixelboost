@@ -8,156 +8,61 @@
 
 using namespace pb;
     
-std::shared_ptr<SpriteSheet> SpriteSheet::Create()
-{
-    return std::shared_ptr<SpriteSheet>(new SpriteSheet());
-}
-
 SpriteSheet::SpriteSheet()
     : _Texture(0)
 {
+
 }
 
 SpriteSheet::~SpriteSheet()
 {
-    for (SpriteMap::iterator it = _Sprites.begin(); it != _Sprites.end(); ++it)
-    {
-        SpriteRenderer::Instance()->_Sprites.erase(it->first);
-        delete it->second;
-    }
-    
-    if (_Texture)
-    {
-        GraphicsDevice::Instance()->DestroyTexture(_Texture);
-    }
+
 }
 
-bool SpriteSheet::LoadSingle(const std::string& fileName, float density, bool generateMips)
+void SpriteSheet::AddSprite(const std::string& name, glm::vec2 size, glm::vec2 offset, glm::vec2 uvSize, glm::vec2 uvPosition, bool rotated)
 {
-    if (!LoadTexture(fileName, generateMips))
-        return false;
+    PbAssert(_Sprites.find(name) == _Sprites.end());
     
-    std::string spriteName = fileName.substr(fileName.rfind("/")+1);
-    spriteName = spriteName.substr(0, spriteName.length()-4);
-    
-    Sprite* sprite = new Sprite();
-    sprite->_Sheet = this;
-    sprite->_Rotated = false;
-    sprite->_Size = _Texture->GetSize() / density;
-    sprite->_UvPosition = glm::vec2(0,0);
-    sprite->_UvSize = glm::vec2(1,1);
-    sprite->_Offset = glm::vec2(0,0);
-    
-    _Sprites[spriteName] = sprite;
-    SpriteRenderer::Instance()->_Sprites[spriteName] = sprite;
-    
-    return true;
+    _Sprites[name] = Sprite(_Texture, size, offset, uvSize, uvPosition, rotated);
 }
 
-bool SpriteSheet::LoadSheet(const std::string& name, const std::string& extension, bool generateMips)
-{
-    std::string modifier;
-    float sheetDensity = 16.f;
-    
-    if (GraphicsDevice::Instance()->GetDisplayDensity() >= 64.f)
-    {
-        modifier = "-hdr";
-        sheetDensity = 64.f;
-    }
-    else if (GraphicsDevice::Instance()->GetDisplayDensity() >= 32.f)
-    {
-        modifier = "-hd";
-        sheetDensity = 32.f;
-    }
-    
-    std::string jsonFilename = "/spritesheets/" + name + modifier + ".json";
-    
-    pb::File* file = pb::FileSystem::Instance()->OpenFile(jsonFilename);
-    
-    std::string rootData;
-    
-    if (file)
-    {
-        file->ReadAll(rootData);
-        delete file;
-    }
-    
-    json::Object root;
-    
-    json::Reader::Read(root, rootData);
-    
-    json::Object& meta = root["meta"];
-    
-    json::Object& size = meta["size"];
-    json::Number& width = size["w"];
-    json::Number& height = size["h"];
-    
-    json::Object& frames = root["frames"];
-    
-    for (json::Object::iterator it = frames.Begin(); it != frames.End(); ++it)
-    {
-        std::string name = it->name;
-        json::Object data = it->element;
-        
-        json::Object frame = data["frame"];
-        json::Number frameX = frame["x"];
-        json::Number frameY = frame["y"];
-        json::Number frameW = frame["w"];
-        json::Number frameH = frame["h"];
-        
-        json::Object spriteSourceSize = data["spriteSourceSize"];
-        json::Number spriteSourceSizeX = spriteSourceSize["x"];
-        json::Number spriteSourceSizeY = spriteSourceSize["y"];
-        json::Number spriteSourceSizeW = spriteSourceSize["w"];
-        json::Number spriteSourceSizeH = spriteSourceSize["h"];
-        
-        json::Object sourceSize = data["sourceSize"];
-        json::Number sourceSizeW = sourceSize["w"];
-        json::Number sourceSizeH = sourceSize["h"];
-        
-        json::Boolean rotated = data["rotated"];
-        
-        Sprite* sprite = new Sprite();
-        
-        sprite->_Sheet = this;
-        
-        sprite->_Size = glm::vec2(frameW.Value(), frameH.Value()) / sheetDensity;
-        sprite->_Offset = glm::vec2(sourceSizeW.Value()/2.f-spriteSourceSizeX.Value()-spriteSourceSizeW.Value()/2.f, -(sourceSizeH.Value()/2.f-spriteSourceSizeY.Value()-spriteSourceSizeH.Value()/2.f)) / GraphicsDevice::Instance()->GetDisplayDensity();
-        
-        sprite->_Rotated = rotated.Value();
-        
-        sprite->_UvPosition = glm::vec2(frameX.Value()/width.Value(), frameY.Value()/height.Value());
-        sprite->_UvSize = sprite->_Rotated ? glm::vec2(frameW.Value()/height.Value(), frameH.Value()/width.Value()) : glm::vec2(frameW.Value()/width.Value(), frameH.Value()/height.Value());
-        
-        std::string spriteName = name.substr(0, name.length()-4);
-        _Sprites[spriteName] = sprite;
-        SpriteRenderer::Instance()->_Sprites[spriteName] = sprite;
-    }
-    
-    LoadTexture("/spritesheets/images/" + name + modifier + "." + extension, generateMips);
-    
-    return true;
-}
-
-Texture* SpriteSheet::LoadTexture(const std::string& fileName, bool generateMips)
-{
-    if (_Texture)
-    {
-        GraphicsDevice::Instance()->DestroyTexture(_Texture);
-    }
-    
-    _Texture = GraphicsDevice::Instance()->CreateTexture();
-    _Texture->LoadFromFile(fileName, generateMips);
-    
-    return _Texture;
-}
-    
 Sprite* SpriteSheet::GetSprite(const std::string& name)
 {
-    SpriteMap::iterator it = _Sprites.find(name);
+    auto it = _Sprites.find(name);
     
     if (it == _Sprites.end())
         return 0;
     
-    return it->second;
+    return &it->second;
+}
+
+void SpriteSheet::SetTexture(Texture* texture)
+{
+    _Texture = texture;
+    
+    for (auto& sprite : _Sprites)
+    {
+        sprite.second._Texture = texture;
+    }
+}
+
+Texture* SpriteSheet::GetTexture()
+{
+    return _Texture;
+}
+
+Sprite::Sprite()
+{
+    _Texture = 0;
+    Rotated = false;
+}
+
+Sprite::Sprite(Texture* texture, glm::vec2 size, glm::vec2 offset, glm::vec2 uvSize, glm::vec2 uvPosition, bool rotated)
+{
+    _Texture = texture;
+    Size = size;
+    Offset = offset;
+    UvSize = uvSize;
+    UvPosition = uvPosition;
+    Rotated = rotated;
 }

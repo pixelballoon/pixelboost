@@ -17,8 +17,9 @@ namespace pb
 
 class IndexBuffer;
 class SpriteSheet;
-class Sprite;
 class VertexBuffer;
+    
+struct Sprite;
 
 class SpriteRenderable : public Renderable
 {
@@ -57,22 +58,9 @@ public:
     static SpriteRenderer* Instance();
     
     void Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix);
-	
-    std::shared_ptr<SpriteSheet> CreateSpriteSheet(const std::string& name);
-    bool LoadSpriteSheet(const std::string& name, const std::string& extension, bool createMips=false, bool hasPremultipliedAlpha = true);
-    bool UnloadSpriteSheet(const std::string& name);
-    
-    std::shared_ptr<SpriteSheet> GetSpriteSheet(const std::string& sheetName) const;
-    Sprite* GetSprite(const std::string& spriteName) const;
 		
 private:
     void RenderBatch();
-    
-    typedef std::map<std::string, Sprite*> SpriteMap;
-    typedef std::map<std::string, std::shared_ptr<SpriteSheet> > SheetMap;
-	
-    SpriteMap _Sprites;
-	SheetMap _SpriteSheets;
     
 private:
     int _MaxBatchSize;
