@@ -24,8 +24,8 @@ SpriteComponent::~SpriteComponent()
 {
     if (_SpriteSheet)
     {
-        _SpriteSheet->resourceLoaded.Disconnect(this, &SpriteComponent::OnResourceLoaded);
-        _SpriteSheet->resourceUnloading.Disconnect(this, &SpriteComponent::OnResourceUnloading);
+        _SpriteSheet->SignalResourceLoaded.Disconnect(this, &SpriteComponent::OnResourceLoaded);
+        _SpriteSheet->SignalResourceUnloading.Disconnect(this, &SpriteComponent::OnResourceUnloading);
     }
 }
 
@@ -43,8 +43,8 @@ void SpriteComponent::SetSprite(const std::string& filename, const std::string& 
     SetSprite(0);
     
     _SpriteSheet = pb::ResourceManager::Instance()->GetPool(pool)->GetResource<pb::SpriteSheetResource>(filename);
-    _SpriteSheet->resourceLoaded.Connect(this, &SpriteComponent::OnResourceLoaded);
-    _SpriteSheet->resourceUnloading.Connect(this, &SpriteComponent::OnResourceUnloading);
+    _SpriteSheet->SignalResourceLoaded.Connect(this, &SpriteComponent::OnResourceLoaded);
+    _SpriteSheet->SignalResourceUnloading.Connect(this, &SpriteComponent::OnResourceUnloading);
     
     if (_SpriteSheet->GetState() == kResourceStateReady)
     {
@@ -56,8 +56,8 @@ void SpriteComponent::SetSprite(Sprite* sprite)
 {
     if (_SpriteSheet)
     {
-        _SpriteSheet->resourceLoaded.Disconnect(this, &SpriteComponent::OnResourceLoaded);
-        _SpriteSheet->resourceUnloading.Disconnect(this, &SpriteComponent::OnResourceUnloading);
+        _SpriteSheet->SignalResourceLoaded.Disconnect(this, &SpriteComponent::OnResourceLoaded);
+        _SpriteSheet->SignalResourceUnloading.Disconnect(this, &SpriteComponent::OnResourceUnloading);
         _SpriteSheet.reset();
     }
     

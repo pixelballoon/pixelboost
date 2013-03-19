@@ -114,12 +114,12 @@ void ResourceHandleBase::SetState(ResourceState state)
     
     if (_State == kResourceStateReady || _State == kResourceStateError)
     {
-        resourceLoaded(this, _State == kResourceStateError);
+        SignalResourceLoaded(this, _State == kResourceStateError);
     }
     
     if (_State == kResourceStateUnloading)
     {
-        resourceUnloading(this);
+        SignalResourceUnloading(this);
     }
 }
 

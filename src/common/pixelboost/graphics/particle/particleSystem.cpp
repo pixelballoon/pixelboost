@@ -308,8 +308,8 @@ ParticleComponent::~ParticleComponent()
 {
     if (_SpriteSheet)
     {
-        _SpriteSheet->resourceLoaded.Disconnect(this, &ParticleComponent::OnResourceLoaded);
-        _SpriteSheet->resourceUnloading.Disconnect(this, &ParticleComponent::OnResourceUnloading);
+        _SpriteSheet->SignalResourceLoaded.Disconnect(this, &ParticleComponent::OnResourceLoaded);
+        _SpriteSheet->SignalResourceUnloading.Disconnect(this, &ParticleComponent::OnResourceUnloading);
     }
     
     GetEntity()->UnregisterMessageHandler<UpdateMessage>(MessageHandler(this, &ParticleComponent::OnUpdate));
@@ -323,8 +323,8 @@ ParticleSystem* ParticleComponent::GetSystem()
 void ParticleComponent::SetSpriteSheet(const std::string& filename, const std::string& pool)
 {
     _SpriteSheet = ResourceManager::Instance()->GetPool(pool)->GetResource<SpriteSheetResource>(filename);
-    _SpriteSheet->resourceLoaded.Connect(this, &ParticleComponent::OnResourceLoaded);
-    _SpriteSheet->resourceUnloading.Connect(this, &ParticleComponent::OnResourceUnloading);
+    _SpriteSheet->SignalResourceLoaded.Connect(this, &ParticleComponent::OnResourceLoaded);
+    _SpriteSheet->SignalResourceUnloading.Connect(this, &ParticleComponent::OnResourceUnloading);
     
     if (_SpriteSheet->GetState() == kResourceStateReady)
     {

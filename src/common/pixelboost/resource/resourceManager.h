@@ -44,8 +44,8 @@ namespace pb
         ResourceError GetError();
         const std::string& GetErrorDetails();
         
-        sigslot::Signal2<ResourceHandleBase*, bool> resourceLoaded;
-        sigslot::Signal1<ResourceHandleBase*> resourceUnloading;
+        sigslot::Signal2<ResourceHandleBase*, bool> SignalResourceLoaded;
+        sigslot::Signal1<ResourceHandleBase*> SignalResourceUnloading;
         
     protected:
         std::mutex _ProcessingMutex;

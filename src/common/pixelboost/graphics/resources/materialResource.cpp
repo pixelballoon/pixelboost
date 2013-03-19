@@ -56,8 +56,8 @@ ResourceError MaterialResource::ProcessResource(ResourcePool* pool, ResourceProc
             {
                 OnResourceLoaded(_Shader.get(), false);
             }
-            _Shader->resourceLoaded.Connect(this, &MaterialResource::OnResourceLoaded);
-            _Shader->resourceUnloading.Connect(this, &MaterialResource::OnResourceUnloading);
+            _Shader->SignalResourceLoaded.Connect(this, &MaterialResource::OnResourceLoaded);
+            _Shader->SignalResourceUnloading.Connect(this, &MaterialResource::OnResourceUnloading);
             return kResourceErrorNone;
         }
 
@@ -81,8 +81,8 @@ ResourceError MaterialResource::ProcessResource(ResourcePool* pool, ResourceProc
             }
             if (_Shader)
             {
-                _Shader->resourceLoaded.Disconnect(this, &MaterialResource::OnResourceLoaded);
-                _Shader->resourceUnloading.Disconnect(this, &MaterialResource::OnResourceUnloading);
+                _Shader->SignalResourceLoaded.Disconnect(this, &MaterialResource::OnResourceLoaded);
+                _Shader->SignalResourceUnloading.Disconnect(this, &MaterialResource::OnResourceUnloading);
                 _Shader.reset();
             }
             return kResourceErrorNone;

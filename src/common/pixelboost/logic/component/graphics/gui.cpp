@@ -21,24 +21,24 @@ GuiComponent::GuiComponent(Entity* parent)
     GetScene()->GetSystemByType<GuiSystem>()->AddGui(this);
     
     _GeometryShader = ResourceManager::Instance()->GetPool("pixelboost")->GetResource<ShaderResource>("/shaders/pb_solidColor.shc");
-    _GeometryShader->resourceLoaded.Connect(this, &GuiComponent::OnResourceLoaded);
-    _GeometryShader->resourceUnloading.Connect(this, &GuiComponent::OnResourceUnloading);
+    _GeometryShader->SignalResourceLoaded.Connect(this, &GuiComponent::OnResourceLoaded);
+    _GeometryShader->SignalResourceUnloading.Connect(this, &GuiComponent::OnResourceUnloading);
     if (_GeometryShader->GetState() == kResourceStateReady)
     {
         OnResourceLoaded(_GeometryShader.get(), false);
     }
     
     _SpriteShader = ResourceManager::Instance()->GetPool("pixelboost")->GetResource<ShaderResource>("/shaders/pb_texturedColor.shc");
-    _SpriteShader->resourceLoaded.Connect(this, &GuiComponent::OnResourceLoaded);
-    _SpriteShader->resourceUnloading.Connect(this, &GuiComponent::OnResourceUnloading);
+    _SpriteShader->SignalResourceLoaded.Connect(this, &GuiComponent::OnResourceLoaded);
+    _SpriteShader->SignalResourceUnloading.Connect(this, &GuiComponent::OnResourceUnloading);
     if (_SpriteShader->GetState() == kResourceStateReady)
     {
         OnResourceLoaded(_SpriteShader.get(), false);
     }
     
     _TextShader = ResourceManager::Instance()->GetPool("pixelboost")->GetResource<ShaderResource>("/shaders/pb_texturedColor.shc");
-    _TextShader->resourceLoaded.Connect(this, &GuiComponent::OnResourceLoaded);
-    _TextShader->resourceUnloading.Connect(this, &GuiComponent::OnResourceUnloading);
+    _TextShader->SignalResourceLoaded.Connect(this, &GuiComponent::OnResourceLoaded);
+    _TextShader->SignalResourceUnloading.Connect(this, &GuiComponent::OnResourceUnloading);
     if (_TextShader->GetState() == kResourceStateReady)
     {
         OnResourceLoaded(_TextShader.get(), false);
