@@ -2,6 +2,7 @@
 
 #include "pixelboost/graphics/renderer/sprite/sprite.h"
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
+#include "pixelboost/graphics/resources/textureResource.h"
 #include "pixelboost/logic/component/graphics/sprite.h"
 
 #include "core.h"
@@ -22,14 +23,19 @@ SpriteViewProperty::SpriteViewProperty(pb::Scene* scene, pb::Entity* parent, pb:
 
 SpriteViewProperty::~SpriteViewProperty()
 {
-    
+    if (_Texture)
+    {
+        _Texture->SignalResourceLoaded.Connect(this, &SpriteViewProperty::OnResourceLoaded);
+        _Texture->SignalResourceUnloading.Connect(this, &SpriteViewProperty::OnResourceUnloading);
+    }
 }
 
 void SpriteViewProperty::Initialise(const std::string &path, const SchemaItem *schemaItem)
 {
     ViewProperty::Initialise(path, schemaItem);
     
-    CreateComponent<pb::SpriteComponent>()->SetLayer(1);
+    pb::SpriteComponent* sprite = CreateComponent<pb::SpriteComponent>();
+    sprite->SetLayer(1);
     
     Refresh();
 }
@@ -40,31 +46,65 @@ void SpriteViewProperty::Refresh()
     
     std::string sprite = visualisation->EvaluateParamString(GetProjectEntity(), "sprite", GetPath());
     
-    if (sprite != _Sprite)
+    if (sprite != _SpriteName)
     {
-        _Sprite = sprite;
+        _SpriteName = sprite;
         
-        if (!pb::SpriteRenderer::Instance()->GetSpriteSheet(_Sprite))
+        if (_Texture)
         {
-            std::shared_ptr<pb::SpriteSheet> spriteSheet = pb::SpriteRenderer::Instance()->CreateSpriteSheet(sprite);
-            spriteSheet->LoadSingle("editor_sprites/" + _Sprite, Core::Instance()->GetProject()->GetConfig().pixelUnit);
+            _Texture->SignalResourceLoaded.Connect(this, &SpriteViewProperty::OnResourceLoaded);
+            _Texture->SignalResourceUnloading.Connect(this, &SpriteViewProperty::OnResourceUnloading);
         }
         
-        GetComponent<pb::SpriteComponent>()->SetSprite(_Sprite);
-        DirtyBounds();
+        _Texture = pb::ResourceManager::Instance()->GetPool("default")->GetResource<pb::TextureResource>("editor_images/" + _SpriteName + ".png");
+        _Texture->SignalResourceLoaded.Connect(this, &SpriteViewProperty::OnResourceLoaded);
+        _Texture->SignalResourceUnloading.Connect(this, &SpriteViewProperty::OnResourceUnloading);
+        
+        if (_Texture->GetState() == pb::kResourceStateReady)
+        {
+            OnResourceLoaded(_Texture.get(), false);
+        }
     }
 }
 
 pb::BoundingBox SpriteViewProperty::CalculateBounds()
 {
-    pb::Sprite* sprite = pb::SpriteRenderer::Instance()->GetSprite(_Sprite);
-    
-    if (!sprite)
-        return pb::BoundingBox();
-
-    glm::vec3 size(sprite->_Size[0], sprite->_Size[1], 0);
+    glm::vec3 size(_Sprite.Size[0], _Sprite.Size[1], 0);
     size *= GetViewEntity()->GetScale();
     
     glm::vec3 center = glm::vec3(GetViewEntity()->GetPosition()[0], GetViewEntity()->GetPosition()[1], 0);
     return pb::BoundingBox(center-size/2.f, center+size/2.f);
+}
+
+void SpriteViewProperty::OnResourceLoaded(pb::ResourceHandleBase* resource, bool error)
+{
+    if (error)
+        return;
+    
+    if (resource == _Texture.get())
+    {
+        _Sprite._Texture = _Texture->GetResource()->GetTexture();
+        _Sprite.Size = _Sprite._Texture->GetSize() / (float)Core::Instance()->GetProject()->GetConfig().pixelUnit;
+        _Sprite.UvPosition = glm::vec2(0,0);
+        _Sprite.UvSize = glm::vec2(1,1);
+        _Sprite.Rotated = false;
+        _Sprite.Offset = glm::vec2(0,0);
+        
+        GetComponent<pb::SpriteComponent>()->SetSprite(&_Sprite);
+        
+        DirtyBounds();
+    }
+}
+
+void SpriteViewProperty::OnResourceUnloading(pb::ResourceHandleBase* resource)
+{
+    if (resource == _Texture.get())
+    {
+        _Sprite._Texture = 0;
+        _Sprite.Size = glm::vec2(0,0);
+        
+        GetComponent<pb::SpriteComponent>()->SetSprite(0);
+        
+        DirtyBounds();
+    }
 }

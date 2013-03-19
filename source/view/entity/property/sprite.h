@@ -1,10 +1,16 @@
 #pragma once
 
+#include "pixelboost/graphics/renderer/sprite/sprite.h"
+#include "pixelboost/resource/resourceManager.h"
+
 #include "view/entity/property/property.h"
 
 namespace pb
 {
     class SpriteComponent;
+    class TextureResource;
+    
+    struct Sprite;
 }
 
 class SpriteViewProperty : public ViewProperty
@@ -24,5 +30,11 @@ protected:
     virtual pb::BoundingBox CalculateBounds();
     
 private:
-    std::string _Sprite;
+    void OnResourceLoaded(pb::ResourceHandleBase* resource, bool error);
+    void OnResourceUnloading(pb::ResourceHandleBase* resource);
+    
+    std::string _SpriteName;
+    pb::Sprite _Sprite;
+    
+    std::shared_ptr<pb::ResourceHandle<pb::TextureResource> > _Texture;
 };

@@ -118,7 +118,7 @@ bool Project::OpenConfig(const std::string& filename)
     for (json::Array::iterator it = imageRoots.Begin(); it != imageRoots.End(); ++it)
     {
         json::String imageRoot = *it;
-        _Config.imageRoots.push_back(_Location + imageRoot.Value());
+        _Config.imageRoots.push_back(_Config.projectRoot + imageRoot.Value());
     }
     
     // Model roots
@@ -126,7 +126,7 @@ bool Project::OpenConfig(const std::string& filename)
     for (json::Array::iterator it = modelRoots.Begin(); it != modelRoots.End(); ++it)
     {
         json::String modelRoot = *it;
-        _Config.modelRoots.push_back(_Location + modelRoot.Value());
+        _Config.modelRoots.push_back(_Config.projectRoot + modelRoot.Value());
     }
     
     // Export directory
