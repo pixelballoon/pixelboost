@@ -30,13 +30,20 @@ namespace pb
         const glm::mat4x4& GetLocalTransform() const;
         void SetLocalTransform(const glm::mat4x4& localTransform);
         
+        void SetMaterial(const std::string& filename, const std::string& pool = "default");
+        std::shared_ptr<ResourceHandle<MaterialResource> > GetMaterial();
+        
     private:
+        void OnResourceLoaded(ResourceHandleBase* base, bool error);
+        void OnResourceUnloading(ResourceHandleBase* base);
         void OnTransformChanged(const Message& message);
         void UpdateTransform();
         
     private:
         glm::mat4x4 _LocalTransform;
         T* _Renderable;
+        
+        std::shared_ptr<ResourceHandle<MaterialResource> > _Material;
     };
 
 }
