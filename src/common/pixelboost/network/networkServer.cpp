@@ -74,10 +74,14 @@ bool NetworkHost::RegisterHandler(NetworkHandler* handler)
 
 void NetworkHost::BroadcastMessage(NetworkMessage& message)
 {
-    for (auto& connection : _Connections)
-    {
-        connection->Send(message);
-    }
+    char* buffer = new char[message.GetMessageLength()];
+    int length = message.ConstructMessage(buffer, message.GetMessageLength());
+    
+    ENetPacket* packet = enet_packet_create(buffer, length, ENET_PACKET_FLAG_RELIABLE);
+    
+    delete[] buffer;
+    
+    enet_host_broadcast(_Host, 0, packet);
 }
 
 void NetworkHost::Update()
@@ -141,8 +145,8 @@ void NetworkHost::Update()
                                 handler->OnConnectionClosed(**it);
                             }
                         }
-                        _Connections.erase(it);
                         delete *it;
+                        _Connections.erase(it);
                         break;
                     }
                 }
@@ -470,6 +474,8 @@ void NetworkConnection::Send(NetworkMessage& message)
     int length = message.ConstructMessage(buffer, message.GetMessageLength());
 
     ENetPacket* packet = enet_packet_create(buffer, length, ENET_PACKET_FLAG_RELIABLE);
+    
+    delete[] buffer;
     
     enet_peer_send(_Peer, 0, packet);
 }
