@@ -79,18 +79,6 @@ private:
             }
         }
         
-        /*
-        for (int i=0; i<10; i++)
-        {
-            pb::GuiControls::BeginHorizontal(guiRenderMessage, PbGuiId(guiRenderMessage, i), {pb::GuiLayoutHint::ExpandWidth(true)});
-            pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, i), "Item", {pb::GuiLayoutHint::ExpandWidth(false)});
-            pb::GuiControls::BeginVertical(guiRenderMessage, PbGuiId(guiRenderMessage, i), {pb::GuiLayoutHint::ExpandWidth(false)});
-            pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, i), "Connect", {pb::GuiLayoutHint::ExpandWidth(true)});
-            pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, i), "Disconnect", {pb::GuiLayoutHint::Width(200)});
-            pb::GuiControls::EndVertical(guiRenderMessage);
-            pb::GuiControls::EndHorizontal(guiRenderMessage);
-        }
-        */
         pb::GuiControls::EndScrollArea(guiRenderMessage);
     }
 };
