@@ -314,7 +314,7 @@ void View::Update(float timeDelta, float gameDelta)
 {
     if (_GwenMaterial && _GwenMaterial->GetState() == pb::kResourceStateReady)
     {
-        _GwenRenderable->SetMaterial(_GwenMaterial->GetResource()->GetMaterial());
+        _GwenRenderable->SetMaterial(_GwenMaterial->GetMaterial());
     }
     
     Engine::Update(timeDelta, gameDelta);

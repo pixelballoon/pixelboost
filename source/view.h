@@ -130,7 +130,7 @@ private:
     Gwen::Controls::Canvas* _GwenCanvas;
     pb::GwenRenderable* _GwenRenderable;
     pb::GwenRenderer* _GwenRenderer;
-    std::shared_ptr<pb::ResourceHandle<pb::MaterialResource> > _GwenMaterial;
+    std::shared_ptr<pb::MaterialResource> _GwenMaterial;
 
     Gwen::Controls::MenuStrip* _Menu;
     Gwen::Controls::MenuItem* _CreateMenu;

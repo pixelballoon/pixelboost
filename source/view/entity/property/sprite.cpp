@@ -76,14 +76,14 @@ pb::BoundingBox SpriteViewProperty::CalculateBounds()
     return pb::BoundingBox(center-size/2.f, center+size/2.f);
 }
 
-void SpriteViewProperty::OnResourceLoaded(pb::ResourceHandleBase* resource, bool error)
+void SpriteViewProperty::OnResourceLoaded(pb::Resource* resource, bool error)
 {
     if (error)
         return;
     
     if (resource == _Texture.get())
     {
-        _Sprite._Texture = _Texture->GetResource()->GetTexture();
+        _Sprite._Texture = _Texture->GetTexture();
         _Sprite.Size = _Sprite._Texture->GetSize() / (float)Core::Instance()->GetProject()->GetConfig().pixelUnit;
         _Sprite.UvPosition = glm::vec2(0,0);
         _Sprite.UvSize = glm::vec2(1,1);
@@ -96,7 +96,7 @@ void SpriteViewProperty::OnResourceLoaded(pb::ResourceHandleBase* resource, bool
     }
 }
 
-void SpriteViewProperty::OnResourceUnloading(pb::ResourceHandleBase* resource)
+void SpriteViewProperty::OnResourceUnloading(pb::Resource* resource)
 {
     if (resource == _Texture.get())
     {

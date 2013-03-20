@@ -30,11 +30,11 @@ protected:
     virtual pb::BoundingBox CalculateBounds();
     
 private:
-    void OnResourceLoaded(pb::ResourceHandleBase* resource, bool error);
-    void OnResourceUnloading(pb::ResourceHandleBase* resource);
+    void OnResourceLoaded(pb::Resource* resource, bool error);
+    void OnResourceUnloading(pb::Resource* resource);
     
     std::string _SpriteName;
     pb::Sprite _Sprite;
     
-    std::shared_ptr<pb::ResourceHandle<pb::TextureResource> > _Texture;
+    std::shared_ptr<pb::TextureResource> _Texture;
 };
