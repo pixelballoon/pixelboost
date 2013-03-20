@@ -344,18 +344,18 @@ void ParticleComponent::OnUpdate(const Message& message)
     _System->Update(_UseGlobalTime ? updateMessage.GetTimeDelta() : updateMessage.GetGameDelta());
 }
 
-void ParticleComponent::OnResourceLoaded(ResourceHandleBase* resource, bool error)
+void ParticleComponent::OnResourceLoaded(Resource* resource, bool error)
 {
     if (!error && resource == _SpriteSheet.get())
     {
         if (_System->Definition->RenderSprite)
         {
-            _System->Definition->RenderSprite->SpriteDefinition = _SpriteSheet->GetResource()->GetSpriteSheet()->GetSprite(_System->Definition->RenderSprite->SpriteName);
+            _System->Definition->RenderSprite->SpriteDefinition = _SpriteSheet->GetSpriteSheet()->GetSprite(_System->Definition->RenderSprite->SpriteName);
         }
     }
 }
 
-void ParticleComponent::OnResourceUnloading(ResourceHandleBase* resource)
+void ParticleComponent::OnResourceUnloading(Resource* resource)
 {
     if (resource == _SpriteSheet.get())
     {

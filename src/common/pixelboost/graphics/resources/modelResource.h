@@ -11,7 +11,7 @@ namespace pb
         PB_DECLARE_RESOURCE
         
     protected:
-        ModelResource();
+        ModelResource(ResourcePool* pool, const std::string& filename);
         ~ModelResource();
         
     public:

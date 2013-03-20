@@ -29,10 +29,10 @@ namespace pb
         void SetSprite(Sprite* sprite);
         
     private:
-        void OnResourceLoaded(ResourceHandleBase* resource, bool loaded);
-        void OnResourceUnloading(ResourceHandleBase* resource);
+        void OnResourceLoaded(Resource* resource, bool loaded);
+        void OnResourceUnloading(Resource* resource);
         
-        std::shared_ptr<ResourceHandle<SpriteSheetResource> > _SpriteSheet;
+        std::shared_ptr<SpriteSheetResource> _SpriteSheet;
         std::string _SpriteName;
     };
         

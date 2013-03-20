@@ -16,7 +16,7 @@ namespace pb
         PB_DECLARE_RESOURCE
         
     protected:
-        XmlResource();
+        XmlResource(ResourcePool* pool, const std::string& filename);
         ~XmlResource();
         
     public:

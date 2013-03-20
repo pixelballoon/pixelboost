@@ -70,7 +70,7 @@ Shader* ModelRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return ResourceManager::Instance()->GetPool("pixelboost")->GetResource<ShaderResource>("/shaders/pb_textured.shc")->GetResource()->GetShader();
+    return ResourceManager::Instance()->GetPool("pixelboost")->GetResource<ShaderResource>("/shaders/pb_textured.shc")->GetShader();
 }
 
 void ModelRenderable::SetModel(Model* model)

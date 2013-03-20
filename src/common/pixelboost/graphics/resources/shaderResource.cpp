@@ -5,7 +5,8 @@ using namespace pb;
 
 PB_DEFINE_RESOURCE(pb::ShaderResource)
 
-ShaderResource::ShaderResource()
+ShaderResource::ShaderResource(ResourcePool* pool, const std::string& filename)
+    : Resource(pool, filename)
 {
     _Shader = 0;
 }

@@ -14,7 +14,7 @@ namespace pb
         PB_DECLARE_RESOURCE
         
     protected:
-        TextureResource();
+        TextureResource(ResourcePool* pool, const std::string& filename);
         ~TextureResource();
         
         virtual ResourceError ProcessResource(ResourcePool* pool, ResourceProcess process, const std::string& filename, std::string& errorDetails);

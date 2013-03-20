@@ -11,7 +11,8 @@ using namespace pb;
 
 PB_DEFINE_RESOURCE(pb::SpriteSheetResource)
 
-SpriteSheetResource::SpriteSheetResource()
+SpriteSheetResource::SpriteSheetResource(ResourcePool* pool, const std::string& filename)
+    : Resource(pool, filename)
 {
     _SpriteSheet = 0;
 }
@@ -64,7 +65,7 @@ ResourceError SpriteSheetResource::ProcessResource(ResourcePool* pool, ResourceP
         }
         case kResourceProcessProcess:
         {
-            _SpriteSheet->SetTexture(_Texture->GetResource()->GetTexture());
+            _SpriteSheet->SetTexture(_Texture->GetTexture());
             return kResourceErrorNone;
         }
         case kResourceProcessPostProcess:

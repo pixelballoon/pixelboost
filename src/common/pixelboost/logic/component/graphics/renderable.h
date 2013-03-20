@@ -2,6 +2,7 @@
 
 #include "glm/glm.hpp"
 
+#include "pixelboost/graphics/resources/materialResource.h"
 #include "pixelboost/graphics/definitions.h"
 #include "pixelboost/logic/component.h"
 
@@ -31,11 +32,11 @@ namespace pb
         void SetLocalTransform(const glm::mat4x4& localTransform);
         
         void SetMaterial(const std::string& filename, const std::string& pool = "default");
-        std::shared_ptr<ResourceHandle<MaterialResource> > GetMaterial();
+        std::shared_ptr<MaterialResource> GetMaterial();
         
     private:
-        void OnResourceLoaded(ResourceHandleBase* base, bool error);
-        void OnResourceUnloading(ResourceHandleBase* base);
+        void OnResourceLoaded(Resource* resource, bool error);
+        void OnResourceUnloading(Resource* resource);
         void OnTransformChanged(const Message& message);
         void UpdateTransform();
         
@@ -43,7 +44,7 @@ namespace pb
         glm::mat4x4 _LocalTransform;
         T* _Renderable;
         
-        std::shared_ptr<ResourceHandle<MaterialResource> > _Material;
+        std::shared_ptr<MaterialResource> _Material;
     };
 
 }

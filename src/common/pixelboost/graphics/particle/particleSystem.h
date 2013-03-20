@@ -302,14 +302,14 @@ namespace pb
     private:
         void OnUpdate(const Message& message);
         
-        void OnResourceLoaded(ResourceHandleBase* resource, bool error);
-        void OnResourceUnloading(ResourceHandleBase* resource);
+        void OnResourceLoaded(Resource* resource, bool error);
+        void OnResourceUnloading(Resource* resource);
         
         ParticleSystem* _System;
         
         bool _UseGlobalTime;
         
-        std::shared_ptr<ResourceHandle<SpriteSheetResource> > _SpriteSheet;
+        std::shared_ptr<SpriteSheetResource> _SpriteSheet;
     };
 
 }

@@ -35,14 +35,14 @@ namespace pb
     private:
         void OnGui(GuiState& state, GuiSystem* system, GuiRenderMessage::EventType eventType);
         
-        void OnResourceLoaded(ResourceHandleBase* resource, bool error);
-        void OnResourceUnloading(ResourceHandleBase* resource);
+        void OnResourceLoaded(Resource* resource, bool error);
+        void OnResourceUnloading(Resource* resource);
         
         glm::vec2 _Size;
         
-        std::shared_ptr<ResourceHandle<ShaderResource> > _GeometryShader;
-        std::shared_ptr<ResourceHandle<ShaderResource> > _SpriteShader;
-        std::shared_ptr<ResourceHandle<ShaderResource> > _TextShader;
+        std::shared_ptr<ShaderResource> _GeometryShader;
+        std::shared_ptr<ShaderResource> _SpriteShader;
+        std::shared_ptr<ShaderResource> _TextShader;
         
         friend class GuiSystem;
     };

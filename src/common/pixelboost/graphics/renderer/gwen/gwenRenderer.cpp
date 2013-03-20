@@ -65,7 +65,7 @@ Shader* GwenRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return ResourceManager::Instance()->GetPool("pixelboost")->GetResource<ShaderResource>("/shaders/pb_textured.shc")->GetResource()->GetShader();
+    return ResourceManager::Instance()->GetPool("pixelboost")->GetResource<ShaderResource>("/shaders/pb_textured.shc")->GetShader();
 }
 
 GwenRenderer::GwenRenderer()
@@ -239,7 +239,7 @@ void GwenRenderer::DrawTexturedRect(Gwen::Texture* definition, Gwen::Rect rect, 
     if (_Textures[definition]->GetState() != kResourceStateReady)
         return;
     
-    pb::Texture* texture = _Textures[definition]->GetResource()->GetTexture();
+    pb::Texture* texture = _Textures[definition]->GetTexture();
     
     if (GraphicsDevice::Instance()->GetBoundTexture() != texture)
         PurgeBuffer(true);
@@ -303,7 +303,7 @@ Gwen::Color GwenRenderer::PixelColour(Gwen::Texture* definition, unsigned int x,
         if (_Textures[definition]->GetState() != kResourceStateReady)
             return Gwen::Color();
         
-        pb::Texture* texture = _Textures[definition]->GetResource()->GetTexture();
+        pb::Texture* texture = _Textures[definition]->GetTexture();
 
         pb::Texture* prevTexture = GraphicsDevice::Instance()->BindTexture(texture);
 

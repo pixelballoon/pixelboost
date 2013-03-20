@@ -19,62 +19,6 @@ namespace pb
     class Resource;
     class ResourcePool;
         
-    class ResourceHandleBase
-    {
-    protected:
-        ResourceHandleBase(ResourcePool* pool, const std::string& filename, Resource* resource);
-        
-    public:
-        ~ResourceHandleBase();
-        
-    protected:
-        virtual ResourceReadyState IsReadyToProcess();
-        virtual void Process();
-        virtual ResourceThread GetThread(ResourceProcess state);
-        
-        static ResourceProcess GetProcessForState(ResourceState state);
-        void SetState(ResourceState state);
-
-    public:
-        void Load();
-        void Unload();
-        
-        ResourceState GetState();
-        
-        ResourceError GetError();
-        const std::string& GetErrorDetails();
-        
-        sigslot::Signal2<ResourceHandleBase*, bool> SignalResourceLoaded;
-        sigslot::Signal1<ResourceHandleBase*> SignalResourceUnloading;
-        
-    protected:
-        std::mutex _ProcessingMutex;
-        
-        ResourcePool* _Pool;
-        std::string _Filename;
-        
-        ResourceState _State;
-        ResourceError _Error;
-        std::string _ErrorDetails;
-        
-        Resource* _Resource;
-        
-        friend class ResourceManager;
-        friend class ResourcePool;
-    };
-
-    template <class T> class ResourceHandle : public ResourceHandleBase
-    {
-    public:
-        ResourceHandle(ResourcePool* pool, const std::string& filename, Resource* data);
-        ~ResourceHandle();
-        
-        T* GetResource();
-        T* operator->();
-        
-    private:
-    };
-        
     class ResourcePool
     {
     private:
@@ -87,7 +31,7 @@ namespace pb
         
         // GetResource will get a resource, if it doesn't exist it will load it, as soon as that resource is no longer
         // used, it will be unloaded
-        template <class T> std::shared_ptr<ResourceHandle<T> > GetResource(const std::string& filename);
+        template <class T> std::shared_ptr<T> GetResource(const std::string& filename);
 
         // Load/unload resource work purely on resources that already exist
         void LoadResource(const std::string& filename);
@@ -100,15 +44,17 @@ namespace pb
         void DiscardAllResources(const std::string& filename);
         
         bool HasPending();
-        std::shared_ptr<ResourceHandleBase> GetPending(ResourceState resourceState);
+        std::shared_ptr<Resource> GetPending(ResourceState resourceState);
         
     private:
+        static void ResourceDeallocator(Resource* resource);
+        
         int _Priority;
         
         std::mutex _ResourceMutex;
-        std::vector<std::shared_ptr<ResourceHandleBase> > _Pending;
-        std::map<std::string, std::weak_ptr<ResourceHandleBase> > _Resources;
-        std::map<std::string, std::shared_ptr<ResourceHandleBase> > _CachedResources;
+        std::vector<std::shared_ptr<Resource> > _Pending;
+        std::map<std::string, std::weak_ptr<Resource> > _Resources;
+        std::map<std::string, std::shared_ptr<Resource> > _CachedResources;
         
         friend class ResourceManager;
     };
@@ -135,7 +81,7 @@ namespace pb
         
     private:
         void Process(ResourceState state, bool& handleVariable, std::thread& thread);
-        void ProcessResource(std::shared_ptr<ResourceHandleBase> resource, bool& handleVariable);
+        void ProcessResource(std::shared_ptr<Resource> resource, bool& handleVariable);
         
         void AddDeletedResource(Resource* resource);
         void Purge();

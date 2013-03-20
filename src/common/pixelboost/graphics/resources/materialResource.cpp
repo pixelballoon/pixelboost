@@ -6,7 +6,8 @@ using namespace pb;
 
 PB_DEFINE_RESOURCE(pb::MaterialResource)
 
-MaterialResource::MaterialResource()
+MaterialResource::MaterialResource(ResourcePool* pool, const std::string& filename)
+    : Resource(pool, filename)
 {
     _Material = 0;
 }
@@ -63,7 +64,7 @@ ResourceError MaterialResource::ProcessResource(ResourcePool* pool, ResourceProc
 
         case kResourceProcessProcess:
         {
-            _Material->SetShader(_Shader->GetResource()->GetShader());
+            _Material->SetShader(_Shader->GetShader());
             return kResourceErrorNone;
         }
             
@@ -100,15 +101,15 @@ Material* MaterialResource::GetMaterial()
     return _Material;
 }
 
-void MaterialResource::OnResourceLoaded(ResourceHandleBase* resource, bool error)
+void MaterialResource::OnResourceLoaded(Resource* resource, bool error)
 {
     if (resource == _Shader.get())
     {
-        _Material->SetShader(_Shader->GetResource()->GetShader());
+        _Material->SetShader(_Shader->GetShader());
     }
 }
 
-void MaterialResource::OnResourceUnloading(ResourceHandleBase* resource)
+void MaterialResource::OnResourceUnloading(Resource* resource)
 {
     if (resource == _Shader.get())
     {

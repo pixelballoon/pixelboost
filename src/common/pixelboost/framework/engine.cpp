@@ -30,11 +30,6 @@
 
 using namespace pb;
 
-namespace pb
-{
-    void RegisterResources();
-}
-
 Engine* Engine::_Instance = 0;
 
 Engine::Engine(void* platformContext, int argc, const char** argv, bool enableNetworkDebug)
@@ -72,7 +67,6 @@ Engine::Engine(void* platformContext, int argc, const char** argv, bool enableNe
         }
     }
     
-    RegisterResources();
     ResourceManager::Instance()->CreatePool("default");
     ResourceManager::Instance()->CreatePool("pixelboost");
     

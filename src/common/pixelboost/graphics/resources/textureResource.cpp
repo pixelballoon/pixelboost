@@ -10,7 +10,8 @@ using namespace pb;
 
 PB_DEFINE_RESOURCE(pb::TextureResource)
 
-TextureResource::TextureResource()
+TextureResource::TextureResource(ResourcePool* pool, const std::string& filename)
+    : Resource(pool, filename)
 {
     _Texture = 0;
     _DecodedCustom = 0;
@@ -204,11 +205,13 @@ bool TextureResource::Upload()
         status = _Texture->LoadFromBytes(_DecodedCustom, _Width, _Height, _CreateMips, Texture::kTextureFormatRGBA);
         
         delete[] _DecodedCustom;
+        _DecodedCustom = 0;
     } else if (_DecodedSTB)
     {
         status = _Texture->LoadFromBytes(_DecodedSTB, _Width, _Height, _CreateMips, _Components == 3 ? Texture::kTextureFormatRGB : Texture::kTextureFormatRGBA);
         
         stbi_image_free(_DecodedSTB);
+        _DecodedSTB = 0;
     }
     
     return status;

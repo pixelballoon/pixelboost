@@ -7,7 +7,8 @@ using namespace pb;
 
 PB_DEFINE_RESOURCE(pb::ModelResource)
 
-ModelResource::ModelResource()
+ModelResource::ModelResource(ResourcePool* pool, const std::string& filename)
+    : Resource(pool, filename)
 {
     
 }

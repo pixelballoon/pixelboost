@@ -13,7 +13,7 @@ namespace pb
         PB_DECLARE_RESOURCE
         
     protected:
-        MaterialResource();
+        MaterialResource(ResourcePool* pool, const std::string& filename);
         ~MaterialResource();
         
     public:
@@ -24,11 +24,11 @@ namespace pb
         Material* GetMaterial();
         
     private:
-        void OnResourceLoaded(ResourceHandleBase* resource, bool error);
-        void OnResourceUnloading(ResourceHandleBase* resource);
+        void OnResourceLoaded(Resource* resource, bool error);
+        void OnResourceUnloading(Resource* resource);
         
         Material* _Material;
-        std::shared_ptr<ResourceHandle<ShaderResource> > _Shader;
+        std::shared_ptr<ShaderResource> _Shader;
     };
     
 }

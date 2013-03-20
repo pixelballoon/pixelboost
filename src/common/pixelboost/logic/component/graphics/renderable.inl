@@ -89,25 +89,25 @@ template <class T> void RenderableComponent<T>::SetMaterial(const std::string& f
     }
 }
 
-template <class T> std::shared_ptr<ResourceHandle<MaterialResource> > RenderableComponent<T>::GetMaterial()
+template <class T> std::shared_ptr<MaterialResource> RenderableComponent<T>::GetMaterial()
 {
     return _Material;
 }
 
-template <class T> void RenderableComponent<T>::OnResourceLoaded(ResourceHandleBase* base, bool error)
+template <class T> void RenderableComponent<T>::OnResourceLoaded(Resource* resource, bool error)
 {
     if (error)
         return;
 
-    if (base == _Material.get())
+    if (resource == _Material.get())
     {
-        _Renderable->SetMaterial(_Material->GetResource()->GetMaterial());
+        _Renderable->SetMaterial(_Material->GetMaterial());
     }
 }
 
-template <class T> void RenderableComponent<T>::OnResourceUnloading(ResourceHandleBase* base)
+template <class T> void RenderableComponent<T>::OnResourceUnloading(Resource* resource)
 {
-    if (base == _Material.get())
+    if (resource == _Material.get())
     {
         _Renderable->SetMaterial(0);
     }

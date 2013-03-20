@@ -6,7 +6,8 @@ using namespace pb;
 
 PB_DEFINE_RESOURCE(pb::XmlResource)
 
-XmlResource::XmlResource()
+XmlResource::XmlResource(ResourcePool* pool, const std::string& filename)
+    : Resource(pool, filename)
 {
     
 }

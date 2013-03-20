@@ -413,8 +413,6 @@ set (PHYSICS_2D_SOURCES
 
 set (RESOURCE_SOURCES
 	"src/common/pixelboost/resource/definitions.h"
-	"src/common/pixelboost/resource/register.cpp"
-	"src/common/pixelboost/resource/register.h"
 	"src/common/pixelboost/resource/resourceManager.cpp"
 	"src/common/pixelboost/resource/resourceManager.h"
 	"src/common/pixelboost/resource/resourceManager.inl"

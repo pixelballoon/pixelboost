@@ -12,7 +12,7 @@ namespace pb
         PB_DECLARE_RESOURCE
         
     protected:
-        ShaderResource();
+        ShaderResource(ResourcePool* pool, const std::string& filename);
         ~ShaderResource();
         
     public:

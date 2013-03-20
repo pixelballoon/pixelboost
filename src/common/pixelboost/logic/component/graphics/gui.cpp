@@ -65,28 +65,28 @@ void GuiComponent::OnGui(GuiState& state, GuiSystem* system, GuiRenderMessage::E
     GetEntity()->SendMessage(GuiRenderMessage(state, system, this, eventType));
 }
 
-void GuiComponent::OnResourceLoaded(ResourceHandleBase* resource, bool error)
+void GuiComponent::OnResourceLoaded(Resource* resource, bool error)
 {
     if (error)
         return;
     
     if (resource == _GeometryShader.get())
     {
-        GetRenderable()->SetGeometryShader(_GeometryShader->GetResource()->GetShader());
+        GetRenderable()->SetGeometryShader(_GeometryShader->GetShader());
     }
     
     if (resource == _SpriteShader.get())
     {
-        GetRenderable()->SetSpriteShader(_SpriteShader->GetResource()->GetShader());
+        GetRenderable()->SetSpriteShader(_SpriteShader->GetShader());
     }
     
     if (resource == _TextShader.get())
     {
-        GetRenderable()->SetTextShader(_TextShader->GetResource()->GetShader());
+        GetRenderable()->SetTextShader(_TextShader->GetShader());
     }
 }
 
-void GuiComponent::OnResourceUnloading(ResourceHandleBase* resource)
+void GuiComponent::OnResourceUnloading(Resource* resource)
 {
     if (resource == _GeometryShader.get())
     {

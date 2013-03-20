@@ -15,7 +15,7 @@ namespace pb
         PB_DECLARE_RESOURCE
         
     protected:
-        SpriteSheetResource();
+        SpriteSheetResource(ResourcePool* pool, const std::string& filename);
         ~SpriteSheetResource();
         
         virtual ResourceReadyState IsReadyToProcess(ResourceProcess process, std::string& errorDetails);
@@ -29,7 +29,7 @@ namespace pb
         ResourceError LoadSheet(ResourcePool* pool, const std::string& filename, std::string& errorDetails);
         
         SpriteSheet* _SpriteSheet;
-        std::shared_ptr<ResourceHandle<TextureResource> > _Texture;
+        std::shared_ptr<TextureResource> _Texture;
     };
     
 };

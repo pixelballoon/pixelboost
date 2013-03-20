@@ -85,7 +85,7 @@ namespace pb
         
         glm::vec4 _Color;
         
-        std::map<Gwen::Texture*, std::shared_ptr<ResourceHandle<TextureResource> > > _Textures;
+        std::map<Gwen::Texture*, std::shared_ptr<TextureResource> > _Textures;
     };
 }
 

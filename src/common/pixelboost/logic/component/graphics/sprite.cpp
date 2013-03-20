@@ -64,18 +64,18 @@ void SpriteComponent::SetSprite(Sprite* sprite)
     GetRenderable()->SetSprite(sprite);
 }
 
-void SpriteComponent::OnResourceLoaded(ResourceHandleBase* resource, bool error)
+void SpriteComponent::OnResourceLoaded(Resource* resource, bool error)
 {
     if (!error)
     {
         if (resource == _SpriteSheet.get())
         {
-            GetRenderable()->SetSprite(_SpriteSheet->GetResource()->GetSpriteSheet()->GetSprite(_SpriteName));
+            GetRenderable()->SetSprite(_SpriteSheet->GetSpriteSheet()->GetSprite(_SpriteName));
         }
     }
 }
 
-void SpriteComponent::OnResourceUnloading(ResourceHandleBase* resource)
+void SpriteComponent::OnResourceUnloading(Resource* resource)
 {
     if (resource == _SpriteSheet.get())
     {
