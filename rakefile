@@ -1,0 +1,202 @@
+import 'pixelboost/engine/tools/rakefile'
+
+DATA_DIRECTORY = 'data'
+
+ANDROID_ASSETS_DIRECTORY = 'build/android/assets'
+
+AUDIO_DIRECTORY = File.join DATA_DIRECTORY, 'audio'
+BGM_DIRECTORY = File.join AUDIO_DIRECTORY, 'bgm'
+SFX_DIRECTORY = File.join AUDIO_DIRECTORY, 'sfx'
+
+FONTS_DIRECTORY = File.join DATA_DIRECTORY, 'fonts'
+SCRIPTS_DIRECTORY = File.join DATA_DIRECTORY, 'scripts'
+
+SPRITESHEET_DIRECTORY = File.join DATA_DIRECTORY, 'spritesheets'
+SPRITESHEET_IMAGE_DIRECTORY = File.join SPRITESHEET_DIRECTORY, 'images'
+PHYSICS_DIRECTORY = File.join DATA_DIRECTORY, 'physics'
+MODELS_DIRECTORY = File.join DATA_DIRECTORY, 'models'
+SHADERS_DIRECTORY = File.join DATA_DIRECTORY, 'shaders'
+
+def copyTask srcGlob, targetDir, taskSymbol
+  directory targetDir
+  FileList[srcGlob].each do |f|
+    fileDirectory = File.join targetDir, File.dirname(f)
+    directory fileDirectory
+
+    target = File.join targetDir, File.basename(f)
+    file target => [f] do |t|
+      cp_r f, target
+    end
+
+    task taskSymbol => target
+  end
+end
+
+namespace :platform do
+  task :all => [:android, :ios] do
+  end
+
+  directory ANDROID_ASSETS_DIRECTORY
+  task :android_assets do
+    command = "cp -r data " + ANDROID_ASSETS_DIRECTORY
+    system command
+  end
+
+  task :android => ['assets:build', ANDROID_ASSETS_DIRECTORY, :android_assets] do
+  end
+
+  task :ios => 'assets:build' do
+  end
+end
+
+namespace :assets do
+  task :build => [:engine_data, :audio, :fonts, :sprites, :physics, :scripts, :models, :shaders] do
+  end
+  
+  copyTask 'resources/audio/bgm/*', BGM_DIRECTORY, :audio_assets
+  copyTask 'resources/audio/sfx/*', SFX_DIRECTORY, :audio_assets
+  task :audio => [BGM_DIRECTORY, SFX_DIRECTORY, :audio_assets] do
+  end
+
+    directory FONTS_DIRECTORY
+  task :fonts => [FONTS_DIRECTORY, "/usr/local/bin/gdcl"] do
+    font = Dir["resources/fonts/*.GlyphProject"].map do |font| 
+      system "/usr/local/bin/gdcl '#{font}' #{File.join FONTS_DIRECTORY, font.gsub(/.*\/([^\/]*).GlyphProject/, '\1')}-hdr -fo PlainText-fnt -rfs 1"
+      system "/usr/local/bin/gdcl '#{font}' #{File.join FONTS_DIRECTORY, font.gsub(/.*\/([^\/]*).GlyphProject/, '\1')}-hd -fo PlainText-fnt -rfs 0.5"
+      system "/usr/local/bin/gdcl '#{font}' #{File.join FONTS_DIRECTORY, font.gsub(/.*\/([^\/]*).GlyphProject/, '\1')} -fo PlainText-fnt -rfs 0.25"
+    end
+  end
+
+  directory SPRITESHEET_DIRECTORY
+  task :sprites_conversion => [SPRITESHEET_DIRECTORY, "/usr/local/bin/gdcl"] do
+    spritesheets = Dir["resources/spritesheets/*.tps"].map do |spritesheet| 
+      system "/usr/local/bin/TexturePacker '#{spritesheet}'"
+    end
+  end
+
+  directory SPRITESHEET_IMAGE_DIRECTORY
+  task :sprites => [SPRITESHEET_DIRECTORY, SPRITESHEET_IMAGE_DIRECTORY, 'tools:texturetool', :sprites_conversion] do
+    json = Dir["resources/spritesheets/exported/*.json"].map do |json|
+      system "cp '#{json}' #{File.join SPRITESHEET_DIRECTORY, json.gsub(/.*\/([^\/]*)/, '\1')}"
+    end
+    image = Dir["resources/spritesheets/exported/*.tga"].map do |image|
+      system "pixelboost/bin/texturetool '#{image}' #{File.join SPRITESHEET_DIRECTORY, "images", image.gsub(/.*\/([^\/]*).tga/, '\1')}.jpa"
+    end
+  end
+
+  directory PHYSICS_DIRECTORY
+  copyTask 'resources/physics/exported/*', PHYSICS_DIRECTORY, :physics_assets
+  task :physics => [PHYSICS_DIRECTORY, :physics_assets] do
+  end
+
+  task :engine_data do
+    command = "cp -r pixelboost/engine/data/ " + DATA_DIRECTORY
+    system command
+  end
+
+  directory MODELS_DIRECTORY
+  task :models => [MODELS_DIRECTORY, 'tools:modeltool'] do
+    models = Dir["resources/models/*.obj"].map do |model| 
+      system "pixelboost/bin/modeltool '#{model}' #{File.join MODELS_DIRECTORY, model.gsub(/.*\/([^\/]*).obj/, '\1')}.mdl"
+    end
+    models = Dir["resources/models/*.fbx"].map do |model| 
+      system "pixelboost/bin/modeltool '#{model}' #{File.join MODELS_DIRECTORY, model.gsub(/.*\/([^\/]*).fbx/, '\1')}.mdl"
+    end
+    textures = Dir["resources/models/*.png"].map do |texture| 
+      system "cp '#{texture}' #{MODELS_DIRECTORY}"
+    end
+  end
+
+  copyTask 'resources/scripts/*', SCRIPTS_DIRECTORY, :script_assets
+  task :scripts => [SCRIPTS_DIRECTORY, :script_assets] do
+  end
+
+  directory SHADERS_DIRECTORY
+  task :shaders => [SHADERS_DIRECTORY, 'tools:shadertool'] do
+    shaders = Dir["resources/shaders/*.shs"].map do |shader| 
+      system "pixelboost/bin/shadertool '#{shader}' '#{File.join SHADERS_DIRECTORY, shader.gsub(/.*\/([^\/]*).shs/, '\1')}.shc'"
+    end
+    shaders = Dir["pixelboost/engine/resources/shaders/*.shs"].map do |shader| 
+      system "pixelboost/bin/shadertool '#{shader}' '#{File.join SHADERS_DIRECTORY, shader.gsub(/.*\/([^\/]*).shs/, '\1')}.shc'"
+    end
+  end
+end
+
+namespace :tools do
+  rakeLocation = File.dirname __FILE__  
+  rakeLocation.slice! Rake.application.original_dir + "/"
+  
+  task :build => [:editor, :gametool, :modeltool, :shadertool, :texturetool] do
+  end
+
+  binDir = File.join rakeLocation, 'bin/'
+  directory binDir
+
+  task :modeltool => binDir do
+    parserDir = File.join rakeLocation, 'tools/modeltool/build'
+    Dir.chdir parserDir do
+      system 'xcodebuild ONLY_ACTIVE_ARCH=NO -target modeltool -arch x86_64 -configuration Release 1> /dev/null'
+    end
+    releaseDir = File.join parserDir, 'Release/modeltool'
+    cp releaseDir, binDir
+  end
+
+  task :shadertool => binDir do
+    parserDir = File.join rakeLocation, 'tools/shadertool/build'
+    Dir.chdir parserDir do
+      system 'xcodebuild ONLY_ACTIVE_ARCH=NO -target shadertool -arch i386 -configuration Release 1> /dev/null'
+    end
+    releaseDir = File.join parserDir, 'Release/shadertool'
+    cp releaseDir, binDir
+  end
+
+  task :texturetool => binDir do
+    parserDir = File.join rakeLocation, 'tools/texturetool/build'
+    Dir.chdir parserDir do
+      system 'xcodebuild ONLY_ACTIVE_ARCH=NO -target texturetool -arch i386 -configuration Release 1> /dev/null'
+    end
+    releaseDir = File.join parserDir, 'Release/texturetool'
+    cp releaseDir, binDir
+  end
+
+  gametoolShaderDir = File.join rakeLocation, "tools/gametool/data/shaders/"
+  directory "tools/gametool/data/"
+  directory gametoolShaderDir
+  task :gametool => [binDir, :shadertool, "tools/gametool/data/", gametoolShaderDir] do
+    parserDir = File.join rakeLocation, 'tools/gametool/build'
+    
+    shaders = Dir[File.join rakeLocation, "engine/resources/shaders/*.shs"].map do |shader| 
+      system "#{File.join binDir, '/shadertool'} '#{shader}' '#{File.join gametoolShaderDir, shader.gsub(/.*\/([^\/]*).shs/, '\1')}.shc'"
+    end
+
+    cp_r "#{File.join rakeLocation, 'tools/gametool/resources/fonts/'}", "#{File.join rakeLocation, 'tools/gametool/data/'}"
+    
+    Dir.chdir parserDir do
+      system 'xcodebuild ONLY_ACTIVE_ARCH=NO -target gametool -arch x86_64 -configuration Release 1> /dev/null'
+    end
+    releaseDir = File.join parserDir, 'Release/gametool.app'      
+    cp_r releaseDir, binDir
+    
+  end
+
+  editorShaderDir = File.join rakeLocation, "tools/editor/data/shaders/"
+  directory "tools/editor/data/"
+  directory editorShaderDir
+  task :editor => [binDir, :shadertool, "tools/editor/data/", editorShaderDir] do
+    parserDir = File.join rakeLocation, 'tools/editor/build'
+    
+    shaders = Dir[File.join rakeLocation, "engine/resources/shaders/*.shs"].map do |shader| 
+      system "#{File.join binDir, '/shadertool'} '#{shader}' '#{File.join editorShaderDir, shader.gsub(/.*\/([^\/]*).shs/, '\1')}.shc'"
+    end
+
+    cp "#{File.join rakeLocation, 'tools/editor/resources/skin.png'}", "#{File.join rakeLocation, 'tools/editor/data/'}"
+    cp_r "#{File.join rakeLocation, 'tools/editor/resources/fonts/'}", "#{File.join rakeLocation, 'tools/editor/data/'}"
+
+    Dir.chdir parserDir do
+      system 'xcodebuild ONLY_ACTIVE_ARCH=NO -target editor -arch x86_64 -configuration Release 1> /dev/null'
+    end
+    releaseDir = File.join parserDir, 'Release/editor.app'      
+    cp_r releaseDir, binDir
+    
+  end
+end
