@@ -21,8 +21,7 @@ using namespace pb;
 
 FontRenderer* FontRenderer::_Instance = 0;
 
-FontRenderable::FontRenderable(Uid entityId)
-    : Renderable(entityId)
+FontRenderable::FontRenderable()
 {
     Offset = 0.f;
     Alignment = kFontAlignCenter;

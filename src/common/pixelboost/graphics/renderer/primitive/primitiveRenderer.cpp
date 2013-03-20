@@ -14,9 +14,8 @@ using namespace pb;
 
 PrimitiveRenderer* PrimitiveRenderer::_Instance = 0;
 
-PrimitiveRenderable::PrimitiveRenderable(Uid entityUid)
-    : Renderable(entityUid)
-    , _Color(glm::vec4(1,1,1,1))
+PrimitiveRenderable::PrimitiveRenderable()
+    : _Color(glm::vec4(1,1,1,1))
 {
     
 }
@@ -58,9 +57,8 @@ void PrimitiveRenderable::SetColor(glm::vec4 color)
     _Color = color;
 }
 
-PrimitiveRenderableEllipse::PrimitiveRenderableEllipse(Uid entityUid)
-    : PrimitiveRenderable(entityUid)
-    , _Solid(false)
+PrimitiveRenderableEllipse::PrimitiveRenderableEllipse()
+    : _Solid(false)
 {
     
 }
@@ -134,8 +132,7 @@ void PrimitiveRenderableEllipse::SetSize(glm::vec2 size)
     DirtyWorldMatrix();
 }
 
-PrimitiveRenderableLine::PrimitiveRenderableLine(Uid entityUid)
-    : PrimitiveRenderable(entityUid)
+PrimitiveRenderableLine::PrimitiveRenderableLine()
 {
     
 }
@@ -178,9 +175,8 @@ void PrimitiveRenderableLine::SetEnd(glm::vec3 end)
     DirtyBounds();
 }
 
-PrimitiveRenderableRectangle::PrimitiveRenderableRectangle(Uid entityUid)
-    : PrimitiveRenderable(entityUid)
-    , _Solid(false)
+PrimitiveRenderableRectangle::PrimitiveRenderableRectangle()
+    : _Solid(false)
 {
     
 }

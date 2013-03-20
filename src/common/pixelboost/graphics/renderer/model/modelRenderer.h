@@ -27,7 +27,7 @@ namespace pb
     class ModelRenderable : public Renderable
     {
     public:
-        ModelRenderable(Uid entityId);
+        ModelRenderable();
         ~ModelRenderable();
         
         virtual Uid GetType();

@@ -18,9 +18,8 @@ using namespace pb;
 
 ParticleRenderer* ParticleRenderer::_Instance = 0;
 
-ParticleRenderable::ParticleRenderable(Uid entityId)
-    : Renderable(entityId)
-    , _System(0)
+ParticleRenderable::ParticleRenderable()
+    : _System(0)
 {
     
 }

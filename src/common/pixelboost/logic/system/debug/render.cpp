@@ -75,7 +75,7 @@ void DebugRenderSystem::Render(Scene* scene, Viewport* viewport, RenderPass rend
 
 PrimitiveRenderableEllipse* DebugRenderSystem::AddEllipse(RenderPass renderPass, int layer, glm::vec3 position, glm::vec3 rotation, glm::vec2 size, glm::vec4 color, float time)
 {
-    PrimitiveRenderableEllipse* ellipse = new pb::PrimitiveRenderableEllipse(0);
+    PrimitiveRenderableEllipse* ellipse = new PrimitiveRenderableEllipse();
     ellipse->SetRenderPass(renderPass);
     ellipse->SetPosition(position);
     ellipse->SetRotation(rotation);
@@ -89,7 +89,7 @@ PrimitiveRenderableEllipse* DebugRenderSystem::AddEllipse(RenderPass renderPass,
 
 PrimitiveRenderableLine* DebugRenderSystem::AddLine(RenderPass renderPass, int layer, glm::vec3 start, glm::vec3 end, glm::vec4 color, float time)
 {
-    PrimitiveRenderableLine* line = new pb::PrimitiveRenderableLine(0);
+    PrimitiveRenderableLine* line = new PrimitiveRenderableLine();
     line->SetRenderPass(renderPass);
     line->SetStart(start);
     line->SetEnd(end);
@@ -102,7 +102,7 @@ PrimitiveRenderableLine* DebugRenderSystem::AddLine(RenderPass renderPass, int l
 
 PrimitiveRenderableRectangle* DebugRenderSystem::AddRectangle(RenderPass renderPass, int layer, glm::vec3 position, glm::vec3 rotation, glm::vec2 size, glm::vec4 color, float time)
 {
-    PrimitiveRenderableRectangle* rectangle = new pb::PrimitiveRenderableRectangle(0);
+    PrimitiveRenderableRectangle* rectangle = new PrimitiveRenderableRectangle();
     rectangle->SetRenderPass(renderPass);
     rectangle->SetLayer(layer);
     rectangle->SetSize(size);
@@ -120,7 +120,7 @@ PrimitiveRenderableRectangle* DebugRenderSystem::AddRectangle(RenderPass renderP
 
 FontRenderable* DebugRenderSystem::AddText(RenderPass renderPass, int layer, FontAlign alignment, const std::string font, const std::string text, glm::vec3 position, glm::vec3 rotation, float size, float time)
 {
-    FontRenderable* renderable = new pb::FontRenderable(0);
+    FontRenderable* renderable = new FontRenderable();
     renderable->SetRenderPass(renderPass);
     renderable->SetLayer(layer);
     renderable->SetSize(size);

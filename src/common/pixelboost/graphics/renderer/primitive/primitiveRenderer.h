@@ -19,7 +19,7 @@ namespace pb
     class PrimitiveRenderable : public Renderable
     {
     public:
-        PrimitiveRenderable(Uid entityUid);
+        PrimitiveRenderable();
         
         virtual Uid GetType();
         static Uid GetStaticType();
@@ -51,7 +51,7 @@ namespace pb
     class PrimitiveRenderableEllipse : public PrimitiveRenderable
     {
     public:
-        PrimitiveRenderableEllipse(Uid entityUid);
+        PrimitiveRenderableEllipse();
         
         virtual void CalculateBounds();
         virtual void CalculateWorldMatrix();
@@ -82,7 +82,7 @@ namespace pb
     class PrimitiveRenderableLine : public PrimitiveRenderable
     {
     public:
-        PrimitiveRenderableLine(Uid entityUid);
+        PrimitiveRenderableLine();
         
         virtual void CalculateBounds();
         virtual void CalculateWorldMatrix();
@@ -106,7 +106,7 @@ namespace pb
     class PrimitiveRenderableRectangle : public PrimitiveRenderable
     {
     public:
-        PrimitiveRenderableRectangle(Uid entityUid);
+        PrimitiveRenderableRectangle();
         
         virtual void CalculateBounds();
         virtual void CalculateWorldMatrix();

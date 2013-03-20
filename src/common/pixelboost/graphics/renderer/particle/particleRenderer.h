@@ -22,7 +22,7 @@ class VertexBuffer;
 class ParticleRenderable : public Renderable
 {
 public:
-    ParticleRenderable(Uid entityId);
+    ParticleRenderable();
     ~ParticleRenderable();
     
     virtual Uid GetType();

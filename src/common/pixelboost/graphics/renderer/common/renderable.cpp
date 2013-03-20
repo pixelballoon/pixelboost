@@ -6,10 +6,10 @@
 
 using namespace pb;
 
-Renderable::Renderable(Uid entityUid)
+Renderable::Renderable()
     : _BoundsDirty(true)
     , _Layer(0)
-    , _EntityUid(entityUid)
+    , _Id(0)
     , _Material(0)
     , _RenderPass(kRenderPassScene)
     , _Shader(0)
@@ -29,9 +29,14 @@ void Renderable::SetSystem(RenderSystem* system)
     _System = system;
 }
 
-Uid Renderable::GetEntityUid()
+void Renderable::SetId(Uid uid)
 {
-    return _EntityUid;
+    _Id = uid;
+}
+
+Uid Renderable::GetId()
+{
+    return _Id;
 }
 
 void Renderable::SetRenderPass(RenderPass renderPass)

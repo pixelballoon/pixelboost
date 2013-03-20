@@ -18,8 +18,7 @@ using namespace pb;
 
 SpriteRenderer* SpriteRenderer::_Instance = 0;
 
-SpriteRenderable::SpriteRenderable(Uid entityId)
-    : Renderable(entityId)
+SpriteRenderable::SpriteRenderable()
 {
     _Sprite = 0;
     _Tint = glm::vec4(1,1,1,1);

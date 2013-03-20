@@ -24,7 +24,7 @@ struct Sprite;
 class SpriteRenderable : public Renderable
 {
 public:
-    SpriteRenderable(Uid entityId);
+    SpriteRenderable();
     ~SpriteRenderable();
     
     virtual Uid GetType();

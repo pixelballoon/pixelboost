@@ -17,7 +17,7 @@ namespace pb
     class GuiRenderable : public pb::Renderable
     {
     public:
-        GuiRenderable(Uid entityUid);
+        GuiRenderable();
         virtual ~GuiRenderable();
         
         virtual Uid GetType();

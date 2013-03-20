@@ -28,7 +28,7 @@ namespace pb
     class FontRenderable : public Renderable
     {
     public:
-        FontRenderable(Uid entityId);
+        FontRenderable();
         ~FontRenderable();
         
         virtual Uid GetType();

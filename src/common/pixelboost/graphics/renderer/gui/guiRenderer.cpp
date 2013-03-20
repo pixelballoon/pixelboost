@@ -19,8 +19,7 @@ using namespace pb;
 
 GuiRenderer* GuiRenderer::_Instance = 0;
 
-GuiRenderable::GuiRenderable(Uid entityUid)
-    : pb::Renderable(entityUid)
+GuiRenderable::GuiRenderable()
 {
     _GeometryShader = 0;
     _SpriteShader = 0;

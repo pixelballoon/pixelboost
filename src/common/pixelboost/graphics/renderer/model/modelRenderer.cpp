@@ -24,8 +24,7 @@ using namespace pb;
 
 ModelRenderer* ModelRenderer::_Instance = 0;
 
-ModelRenderable::ModelRenderable(Uid entityId)
-    : Renderable(entityId)
+ModelRenderable::ModelRenderable()
 {
     _AlphaBlend = false;
     _Model = 0;

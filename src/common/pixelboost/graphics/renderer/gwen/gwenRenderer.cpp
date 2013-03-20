@@ -29,8 +29,7 @@
 using namespace pb;
 
 GwenRenderable::GwenRenderable(Gwen::Controls::Canvas* canvas)
-    : pb::Renderable(0)
-    , _Canvas(canvas)
+    : _Canvas(canvas)
 {
     
 }

@@ -14,9 +14,8 @@ using namespace pb;
 
 BufferRenderer* BufferRenderer::_Instance = 0;
 
-BufferRenderable::BufferRenderable(Uid entityId)
-    : Renderable(entityId)
-    , _IndexBuffer(0)
+BufferRenderable::BufferRenderable()
+    : _IndexBuffer(0)
     , _VertexBuffer(0)
     , _Texture(0)
     , _NumElements(0)

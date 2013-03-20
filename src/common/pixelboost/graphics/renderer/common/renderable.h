@@ -19,12 +19,13 @@ namespace pb
     class Renderable
     {
     public:
-        Renderable(Uid entityUid);
+        Renderable();
         virtual ~Renderable();
         
         void SetSystem(RenderSystem* system);
         
-        Uid GetEntityUid();
+        void SetId(Uid uid);
+        Uid GetId();
         
         virtual Uid GetType() = 0;
         
@@ -66,7 +67,7 @@ namespace pb
         
     private:
         RenderSystem* _System;
-        Uid _EntityUid;
+        Uid _Id;
         int _Layer;
         RenderPass _RenderPass;
         Material* _Material;

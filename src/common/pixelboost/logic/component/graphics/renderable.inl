@@ -10,7 +10,7 @@ namespace pb
 template <class T> RenderableComponent<T>::RenderableComponent(Entity* parent)
     : Component(parent)
 {
-    _Renderable = new T(parent->GetUid());
+    _Renderable = new T();
     
     GetScene()->template GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
 
