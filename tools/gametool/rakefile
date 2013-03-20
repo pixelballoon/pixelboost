@@ -1,0 +1,114 @@
+require 'rubygems'
+
+import 'pixelboost/engine/tools/rakefile'
+import 'pixelboost/rakefile'
+
+DATA_DIRECTORY = 'data'
+
+ANDROID_ASSETS_DIRECTORY = 'build/android/assets'
+
+AUDIO_DIRECTORY = File.join DATA_DIRECTORY, 'audio'
+BGM_DIRECTORY = File.join AUDIO_DIRECTORY, 'bgm'
+SFX_DIRECTORY = File.join AUDIO_DIRECTORY, 'sfx'
+
+FONTS_DIRECTORY = File.join DATA_DIRECTORY, 'fonts'
+SCRIPTS_DIRECTORY = File.join DATA_DIRECTORY, 'scripts'
+
+SPRITESHEET_DIRECTORY = File.join DATA_DIRECTORY, 'spritesheets/images'
+PHYSICS_DIRECTORY = File.join DATA_DIRECTORY, 'physics'
+MODELS_DIRECTORY = File.join DATA_DIRECTORY, 'models'
+SHADERS_DIRECTORY = File.join DATA_DIRECTORY, 'shaders'
+
+def copyTask srcGlob, targetDir, taskSymbol
+  directory targetDir
+  FileList[srcGlob].each do |f|
+    fileDirectory = File.join targetDir, File.dirname(f)
+    directory fileDirectory
+
+    target = File.join targetDir, File.basename(f)
+    file target => [f] do |t|
+      cp_r f, target
+    end
+
+    task taskSymbol => target
+  end
+end
+
+task :default => [:android, :ios] do
+end
+
+directory ANDROID_ASSETS_DIRECTORY
+task :android_assets do
+  command = "cp -r data " + ANDROID_ASSETS_DIRECTORY
+  system command
+end
+
+task :android => ['assets:build', ANDROID_ASSETS_DIRECTORY, :android_assets] do
+end
+
+task :ios => 'assets:build' do
+end
+
+namespace :assets do
+  task :build => [:engine_data, :audio, :fonts, :sprites, :physics, :scripts, :models, :shaders] do
+  end
+  
+  copyTask 'resources/audio/bgm/*', BGM_DIRECTORY, :audio_assets
+  copyTask 'resources/audio/sfx/*', SFX_DIRECTORY, :audio_assets
+  task :audio => [BGM_DIRECTORY, SFX_DIRECTORY, :audio_assets] do
+  end
+
+  copyTask 'resources/fonts/exported/*', FONTS_DIRECTORY, :font_assets
+  task :fonts => [FONTS_DIRECTORY, :font_assets] do
+  end
+
+  directory SPRITESHEET_DIRECTORY
+  task :sprites => [SPRITESHEET_DIRECTORY] do
+    spritesheets = Dir["resources/spritesheets/*.tps"].map do |spritesheet| 
+      system "/usr/local/bin/TexturePacker '#{spritesheet}'"
+    end
+  end
+
+  task :sprites => [SPRITESHEET_DIRECTORY, 'tools:texturetool'] do
+    spritesheets = Dir["resources/spritesheets/exported/*.png"].map do |spritesheet|
+      system "pixelboost/bin/texturetool '#{Rake.application.original_dir}' '#{spritesheet}' #{File.join SPRITESHEET_DIRECTORY, spritesheet.gsub(/.*\/([^\/]*).png/, '\1')}.jpa"
+    end
+  end
+
+  directory PHYSICS_DIRECTORY
+  copyTask 'resources/physics/exported/*', PHYSICS_DIRECTORY, :physics_assets
+  task :physics => [PHYSICS_DIRECTORY, :physics_assets] do
+  end
+
+  task :engine_data do
+    command = "cp -r pixelboost/engine/data/ " + DATA_DIRECTORY
+    system command
+  end
+
+  directory MODELS_DIRECTORY
+  task :models => [MODELS_DIRECTORY, 'tools:modeltool'] do
+    models = Dir["resources/models/*.obj"].map do |model| 
+      system "pixelboost/bin/modeltool '#{Rake.application.original_dir}' '#{model}' #{File.join MODELS_DIRECTORY, model.gsub(/.*\/([^\/]*).obj/, '\1')}.mdl"
+    end
+    models = Dir["resources/models/*.fbx"].map do |model| 
+      system "pixelboost/bin/modeltool '#{Rake.application.original_dir}' '#{model}' #{File.join MODELS_DIRECTORY, model.gsub(/.*\/([^\/]*).fbx/, '\1')}.mdl"
+    end
+    textures = Dir["resources/models/*.png"].map do |texture| 
+      system "cp '#{texture}' #{MODELS_DIRECTORY}"
+    end
+  end
+
+  copyTask 'resources/scripts/*', SCRIPTS_DIRECTORY, :script_assets
+  task :scripts => [SCRIPTS_DIRECTORY, :script_assets] do
+  end
+
+  directory SHADERS_DIRECTORY
+  task :shaders => [SHADERS_DIRECTORY, 'tools:shadertool'] do
+    shaders = Dir["resources/shaders/*.shs"].map do |shader| 
+      system "pixelboost/bin/shadertool '#{Rake.application.original_dir}' '#{shader}' '#{File.join SHADERS_DIRECTORY, shader.gsub(/.*\/([^\/]*).shs/, '\1')}.shc'"
+    end
+    shaders = Dir["pixelboost/engine/resources/shaders/*.shs"].map do |shader| 
+      system "pixelboost/bin/shadertool '#{Rake.application.original_dir}' '#{shader}' '#{File.join SHADERS_DIRECTORY, shader.gsub(/.*\/([^\/]*).shs/, '\1')}.shc'"
+    end
+  end
+end
