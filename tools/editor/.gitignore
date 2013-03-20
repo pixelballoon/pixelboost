@@ -1,0 +1,7 @@
+*/*.xcodeproj/project.xcworkspace/xcuserdata/
+*/*.xcodeproj/xcuserdata/
+/builds/
+.DS_Store
+/osx/build/
+data
+build
