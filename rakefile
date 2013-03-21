@@ -16,6 +16,7 @@ SPRITESHEET_IMAGE_DIRECTORY = File.join SPRITESHEET_DIRECTORY, 'images'
 PHYSICS_DIRECTORY = File.join DATA_DIRECTORY, 'physics'
 MODELS_DIRECTORY = File.join DATA_DIRECTORY, 'models'
 SHADERS_DIRECTORY = File.join DATA_DIRECTORY, 'shaders'
+VECTOR_DIRECTORY = File.join DATA_DIRECTORY, 'vectors'
 
 def copyTask srcGlob, targetDir, taskSymbol
   directory targetDir
@@ -50,7 +51,7 @@ namespace :platform do
 end
 
 namespace :assets do
-  task :build => [:engine_data, :audio, :fonts, :sprites, :physics, :scripts, :models, :shaders] do
+  task :build => [:engine_data, :audio, :fonts, :sprites, :physics, :scripts, :models, :shaders, :vectors] do
   end
   
   copyTask 'resources/audio/bgm/*', BGM_DIRECTORY, :audio_assets
@@ -119,6 +120,11 @@ namespace :assets do
     shaders = Dir["pixelboost/engine/resources/shaders/*.shs"].map do |shader| 
       system "pixelboost/bin/shadertool '#{shader}' '#{File.join SHADERS_DIRECTORY, shader.gsub(/.*\/([^\/]*).shs/, '\1')}.shc'"
     end
+  end
+
+  directory VECTOR_DIRECTORY
+  copyTask 'resources/vectors/*', VECTOR_DIRECTORY, :vector_assets
+  task :vectors => [VECTOR_DIRECTORY, :vector_assets] do
   end
 end
 

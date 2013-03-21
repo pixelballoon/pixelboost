@@ -147,7 +147,7 @@ namespace pb
     public:
         virtual float Evaluate(float x, float variant);
         
-        HermiteCurve2D Curve;
+        HermiteCurve1D Curve;
     };
         
     class ParticleValueTwoCurve1D : public ParticleValueModifier1D
@@ -155,8 +155,8 @@ namespace pb
     public:
         virtual float Evaluate(float x, float variant);
         
-        HermiteCurve2D CurveMin;
-        HermiteCurve2D CurveMax;
+        HermiteCurve1D CurveMin;
+        HermiteCurve1D CurveMax;
     };
         
     class ParticleValueCurve3D : public ParticleValueModifier3D
@@ -164,9 +164,9 @@ namespace pb
     public:
         virtual glm::vec3 Evaluate(float x, float variant);
         
-        HermiteCurve2D CurveX;
-        HermiteCurve2D CurveY;
-        HermiteCurve2D CurveZ;
+        HermiteCurve1D CurveX;
+        HermiteCurve1D CurveY;
+        HermiteCurve1D CurveZ;
     };
 
     class ParticleValueTwoCurve3D : public ParticleValueModifier3D
@@ -174,12 +174,12 @@ namespace pb
     public:
         virtual glm::vec3 Evaluate(float x, float variant);
         
-        HermiteCurve2D CurveMinX;
-        HermiteCurve2D CurveMinY;
-        HermiteCurve2D CurveMinZ;
-        HermiteCurve2D CurveMaxX;
-        HermiteCurve2D CurveMaxY;
-        HermiteCurve2D CurveMaxZ;
+        HermiteCurve1D CurveMinX;
+        HermiteCurve1D CurveMinY;
+        HermiteCurve1D CurveMinZ;
+        HermiteCurve1D CurveMaxX;
+        HermiteCurve1D CurveMaxY;
+        HermiteCurve1D CurveMaxZ;
     };
         
     class ParticleValueCurveColor : public ParticleValueModifierColor
@@ -187,10 +187,10 @@ namespace pb
     public:
         virtual glm::vec4 Evaluate(float x, float variant);
         
-        HermiteCurve2D CurveR;
-        HermiteCurve2D CurveG;
-        HermiteCurve2D CurveB;
-        HermiteCurve2D CurveA;
+        HermiteCurve1D CurveR;
+        HermiteCurve1D CurveG;
+        HermiteCurve1D CurveB;
+        HermiteCurve1D CurveA;
     };
 
     class ParticleValueTwoCurveColor : public ParticleValueModifierColor
@@ -198,14 +198,14 @@ namespace pb
     public:
         virtual glm::vec4 Evaluate(float x, float variant);
         
-        HermiteCurve2D CurveMinR;
-        HermiteCurve2D CurveMinG;
-        HermiteCurve2D CurveMinB;
-        HermiteCurve2D CurveMinA;
-        HermiteCurve2D CurveMaxR;
-        HermiteCurve2D CurveMaxG;
-        HermiteCurve2D CurveMaxB;
-        HermiteCurve2D CurveMaxA;
+        HermiteCurve1D CurveMinR;
+        HermiteCurve1D CurveMinG;
+        HermiteCurve1D CurveMinB;
+        HermiteCurve1D CurveMinA;
+        HermiteCurve1D CurveMaxR;
+        HermiteCurve1D CurveMaxG;
+        HermiteCurve1D CurveMaxB;
+        HermiteCurve1D CurveMaxA;
     };
         
     class ParticleMeshDefinition

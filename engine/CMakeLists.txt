@@ -121,6 +121,8 @@ set (AUDIO_SOURCES
 	)
 
 set (DATA_RESOURCES_SOURCES
+	"src/common/pixelboost/data/resources/svgResource.cpp"
+	"src/common/pixelboost/data/resources/svgResource.h"
 	"src/common/pixelboost/data/resources/xmlResource.cpp"
 	"src/common/pixelboost/data/resources/xmlResource.h"
 	)

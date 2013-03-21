@@ -181,7 +181,9 @@ FileSystem::FileSystem(const char* appPath)
     
     PbLogDebug("pb.file.system", "Setting write directory (%s)", pb::FileHelpers::GetSavePath().c_str());
     PHYSFS_setWriteDir(pb::FileHelpers::GetSavePath().c_str());
-    PHYSFS_mount(pb::FileHelpers::GetSavePath().c_str(), "/", 0);
+    
+    MountReadLocation(pb::FileHelpers::GetSavePath(), "/", true);
+    MountReadLocation(pb::FileHelpers::GetSavePath() + "asset_override/", "/", true);
 }
 
 FileSystem::~FileSystem()
