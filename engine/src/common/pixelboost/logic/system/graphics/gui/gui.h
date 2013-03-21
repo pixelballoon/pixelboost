@@ -10,7 +10,8 @@
 #define InternalPbStringify(value) #value
 #define InternalPbToString(value) InternalPbStringify(value)
 
-#define PbGuiId(message, userData) { pb::TypeHash(__FILE__ InternalPbToString(__LINE__)), message.GetGuiComponent(), (void*)userData }
+#define PbGuiId(message, userData) pb::GuiId(pb::TypeHash(__FILE__ InternalPbToString(__LINE__)), message.GetGuiComponent(), (void*)userData)
+#define PbNestedGuiId(id) pb::GuiId(id, pb::TypeHash(__FILE__ InternalPbToString(__LINE__)))
 
 namespace pb
 {
@@ -22,15 +23,40 @@ namespace pb
     
     struct GuiId
     {
+    public:
+        GuiId()
+        {
+            FileHash = 0;
+            Component = 0;
+            UserData = 0;
+            NestedHash = 0;
+        }
+        GuiId(const GuiId& guiId, pb::Uid fileHash)
+        {
+            *this = guiId;
+            NestedHash += fileHash;
+        }
+        GuiId(pb::Uid fileHash, pb::GuiComponent* component, void* userData)
+        {
+            FileHash = fileHash;
+            Component = component;
+            UserData = userData;
+            NestedHash = 0;
+        }
+        ~GuiId() {}
+        
         operator bool() { return FileHash || Component || UserData; }
-        bool operator==(const GuiId& other) const { return FileHash == other.FileHash && Component == other.Component && UserData == other.UserData; }
+        bool operator==(const GuiId& other) const { return FileHash == other.FileHash && Component == other.Component && UserData == other.UserData && NestedHash == other.NestedHash; }
         bool operator<(const GuiId& other) const
         {
             if (FileHash != other.FileHash) {
                 return FileHash < other.FileHash;
             } else if (Component != other.Component) {
                 return Component < other.Component;
-            } else {
+            } else if (NestedHash != other.NestedHash) {
+                return NestedHash < other.NestedHash;
+            } else
+            {
                 return UserData < other.UserData;
             }
         }
@@ -38,6 +64,7 @@ namespace pb
         pb::Uid FileHash;
         pb::GuiComponent* Component;
         void* UserData;
+        pb::Uid NestedHash;
     };
     
     struct GuiInputEvent
