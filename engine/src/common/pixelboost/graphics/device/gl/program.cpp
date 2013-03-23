@@ -178,11 +178,6 @@ void ShaderProgramGL::OnContextLost()
 #ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
     CreateShader(_Source);
     
-    for (std::map<int, std::string>::iterator it = _Attributes.begin(); it != _Attributes.end(); ++it)
-    {
-        BindAttribute(it->first, it->second);
-    }
-    
     Link();
 #else
     PbAssert(!"Context loss has not been enabled");

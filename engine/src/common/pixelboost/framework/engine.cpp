@@ -89,14 +89,16 @@ Engine::Engine(void* platformContext, int argc, const char** argv, bool enableNe
     _MouseManager = new MouseManager();
     _TouchManager = new TouchManager();
     
-    NetworkManager* networkManager = new NetworkManager();
-
-#ifndef PIXELBOOST_DISABLE_DEBUG
+#if !defined(PIXELBOOST_PLATFORM_ANDROID)
+    new NetworkManager();
+#endif
+    
+#if !defined(PIXELBOOST_PLATFORM_ANDROID) && !defined(PIXELBOOST_DISABLE_DEBUG)
     if (enableNetworkDebug)
     {
-        _DebugDiscovery = networkManager->StartDiscoveryServer(9091);
+        _DebugDiscovery = NetworkManager::Instance()->StartDiscoveryServer(9091);
         _DebugDiscovery->AddService("pb::debugvariable");
-        _DebugNetwork = networkManager->StartServer(9090, 8);
+        _DebugNetwork = NetworkManager::Instance()->StartServer(9090, 8);
         _DebugDatabaseHandler = new DebugDatabaseHandler();
         _DebugNetwork->RegisterHandler(_DebugDatabaseHandler);
         _DebugNetwork->RegisterHandler(DebugVariableManager::Instance());
@@ -230,8 +232,9 @@ void Engine::Update(float timeDelta, float gameDelta)
 #endif
     
     ResourceManager::Instance()->Update(timeDelta);
-    
-    NetworkManager::Instance()->Update();
+
+    if (NetworkManager::Instance())    
+        NetworkManager::Instance()->Update();
 }
 
 void Engine::Render()

@@ -40,7 +40,7 @@ void MouseManager::OnMouseDown(MouseButton button, ModifierKeys modifierKeys, gl
             event.Type = MouseEvent::kMouseEventDown;
             event.Viewport = viewport;
             event.Down.Button = button;
-            event.Down.ModifierKeys = modifierKeys;
+            event.Down.Modifier = modifierKeys;
             event.Down.Position[0] = position.x;
             event.Down.Position[1] = position.y;
             
@@ -62,7 +62,7 @@ void MouseManager::OnMouseUp(MouseButton button, ModifierKeys modifierKeys, glm:
             event.Type = MouseEvent::kMouseEventUp;
             event.Viewport = viewport;
             event.Up.Button = button;
-            event.Up.ModifierKeys = modifierKeys;
+            event.Up.Modifier = modifierKeys;
             event.Up.Position[0] = position.x;
             event.Up.Position[1] = position.y;
             

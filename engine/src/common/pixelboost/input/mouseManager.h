@@ -35,12 +35,12 @@ namespace pb
             kMouseEventZoom,
         } Type;
         
-        Viewport* Viewport;
+        pb::Viewport* Viewport;
         
         struct ButtonEvent
         {
             MouseButton Button;
-            ModifierKeys ModifierKeys;
+            ModifierKeys Modifier;
             float Position[2];
         };
         

@@ -132,7 +132,6 @@ void GwenRenderer::Render(int count, Renderable** renderables, Uid renderScheme,
     
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
     
     for (int passIndex=0; passIndex<material->GetNumPasses(renderScheme); passIndex++)
     {
@@ -155,7 +154,6 @@ void GwenRenderer::Render(int count, Renderable** renderables, Uid renderScheme,
         }
     }
     
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, true);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
 }
@@ -241,7 +239,7 @@ void GwenRenderer::DrawTexturedRect(Gwen::Texture* definition, Gwen::Rect rect, 
     
     pb::Texture* texture = _Textures[definition]->GetTexture();
     
-    if (GraphicsDevice::Instance()->GetBoundTexture() != texture)
+    if (GraphicsDevice::Instance()->GetBoundTexture(0) != texture)
         PurgeBuffer(true);
     
     GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);

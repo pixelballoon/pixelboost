@@ -45,7 +45,7 @@ namespace pb
     private:
         union PropertyValue
         {
-            Texture* Texture;
+            pb::Texture* Texture;
             float Float;
             float Vec4[4];
             float Mat44[4][4];

@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "pixelboost/debug/assert.h"
 #include "pixelboost/debug/log.h"
 #include "pixelboost/resource/resourceManager.h"

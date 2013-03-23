@@ -61,11 +61,11 @@ public:
         {
             case pb::MouseEvent::kMouseEventDown:
             {
-                return View::Instance()->GetManipulatorManager()->OnMouseDown(event.Down.Button, event.Down.ModifierKeys, glm::vec2(event.Down.Position[0], event.Down.Position[1]));
+                return View::Instance()->GetManipulatorManager()->OnMouseDown(event.Down.Button, event.Down.Modifier, glm::vec2(event.Down.Position[0], event.Down.Position[1]));
             }
             case pb::MouseEvent::kMouseEventUp:
             {
-                return View::Instance()->GetManipulatorManager()->OnMouseUp(event.Up.Button, event.Up.ModifierKeys, glm::vec2(event.Up.Position[0], event.Up.Position[1]));
+                return View::Instance()->GetManipulatorManager()->OnMouseUp(event.Up.Button, event.Up.Modifier, glm::vec2(event.Up.Position[0], event.Up.Position[1]));
             }
             case pb::MouseEvent::kMouseEventMove:
             {
