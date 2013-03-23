@@ -57,12 +57,14 @@ glm::vec2 HermiteCurve2D::EvaluateParam(float t) const
         return _Points[_Points.size()-1].Position;
     }
     
-    for (int i=0; i<_Points.size()-1; i++)
+    auto it = std::lower_bound(_Points.begin(), _Points.end(), t, [](const Point& a, float b) {return a.Parameterization < b;} );
+    if (it != _Points.begin() && it != _Points.end())
     {
-        if (t < _Points[i+1].Parameterization)
-        {
-            return Evaluate(_Points[i], _Points[i+1], (t-_Points[i].Parameterization)/(_Points[i+1].Parameterization-_Points[i].Parameterization));
-        }
+        auto second = *it;
+        auto first = *(--it);
+        float u = (t-first.Parameterization)/(second.Parameterization-first.Parameterization);
+        
+        return Evaluate(first, second, u);
     }
     
     return _Points[0].Position;
@@ -80,6 +82,9 @@ void HermiteCurve2D::AddPoint(const Point& point)
 
 void HermiteCurve2D::Parameterize()
 {
+    // TODO : This isn't 100% correct, it's closer to chord-length paramaterization than arc-length
+    // It will do for now, but ultimately the best way will be able to create a second spline that maps t to s
+    
     _ArcLength = 0.f;
     
     if (!_Points.size())
