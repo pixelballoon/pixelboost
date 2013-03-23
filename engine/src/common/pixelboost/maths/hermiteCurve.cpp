@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "glm/gtx/spline.hpp"
 
 #include "pixelboost/maths/hermiteCurve.h"

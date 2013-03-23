@@ -44,8 +44,6 @@ set (MATHS_SOURCES
 	"src/shared/pixelboost/maths/boundingFrustum.h"
 	"src/shared/pixelboost/maths/boundingSphere.cpp"
 	"src/shared/pixelboost/maths/boundingSphere.h"
-	"src/shared/pixelboost/maths/hermiteCurve.cpp"
-	"src/shared/pixelboost/maths/hermiteCurve.h"
 	"src/shared/pixelboost/maths/matrixHelpers.h"
 	)
 

@@ -396,6 +396,11 @@ set (LOGIC_SOURCES
 	"src/common/pixelboost/logic/system.h"
 	)
 
+set (MATHS_SOURCES
+	"src/common/pixelboost/maths/hermiteCurve.cpp"
+	"src/common/pixelboost/maths/hermiteCurve.h"
+	)
+
 set (MISC_SOURCES
 	"src/common/pixelboost/misc/gwen/inputHandler.cpp"
 	"src/common/pixelboost/misc/gwen/inputHandler.h"
@@ -467,6 +472,7 @@ set (PIXELBOOST_SOURCES
 	${LOGIC_SYSTEM_GRAPHICS_RENDER_SOURCES}
 	${LOGIC_SYSTEM_PHYSICS_SOURCES}
 	${LOGIC_SOURCES}
+	${MATHS_SOURCES}
 	${MISC_SOURCES}
 	${NETWORK_SOURCES}
 	${PHYSICS_2D_SOURCES}
@@ -550,6 +556,7 @@ source_group (logic\\system\\graphics\\gui FILES ${LOGIC_SYSTEM_GRAPHICS_GUI_SOU
 source_group (logic\\system\\graphics\\render FILES ${LOGIC_SYSTEM_GRAPHICS_RENDER_SOURCES})	
 source_group (logic\\system\\physics FILES ${LOGIC_SYSTEM_PHYSICS_SOURCES})
 source_group (logic FILES ${LOGIC_SOURCES})
+source_group (maths FILES ${MATHS_SOURCES})
 source_group (misc FILES ${MISC_SOURCES})
 source_group (network FILES ${NETWORK_SOURCES})
 source_group (physics\\2d FILES ${PHYSICS_2D_SOURCES})
