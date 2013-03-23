@@ -71,8 +71,8 @@ public:
     
     virtual Texture* CreateTexture() = 0;
     virtual void DestroyTexture(Texture* texture);
-    virtual Texture* GetBoundTexture() = 0;
-    virtual Texture* BindTexture(Texture* texture, bool force=false) = 0;
+    virtual Texture* GetBoundTexture(int textureUnit) = 0;
+    virtual Texture* BindTexture(int textureUnit, Texture* texture, bool force=false) = 0;
     
     virtual ShaderProgram* CreateProgram() = 0;
     virtual void DestroyProgram(ShaderProgram* program);
@@ -91,7 +91,6 @@ public:
     {
         kStateBlend,
         kStateDepthTest,
-        kStateTexture2D,
         kStateScissor,
     };
     
@@ -146,4 +145,8 @@ private:
 #ifdef PIXELBOOST_PLATFORM_WINDOWS
 	#define PIXELBOOST_GRAPHICS_OPENGL
     #define PIXELBOOST_GRAPHICS_OPENGL2
+#endif
+
+#ifdef PIXELBOOST_GRAPHICS_OPENGL
+    #include "pixelboost/graphics/device/gl/device.h"
 #endif

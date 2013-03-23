@@ -12,7 +12,7 @@ template <class T> RenderableComponent<T>::RenderableComponent(Entity* parent)
 {
     _Renderable = new T();
     
-    GetScene()->template GetSystemByType<pb::RenderSystem>()->AddItem(_Renderable);
+    GetScene()->template GetSystemByType<RenderSystem>()->AddItem(_Renderable);
 
     GetEntity()->template RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &RenderableComponent<T>::OnTransformChanged));
     
@@ -29,7 +29,7 @@ template <class T> RenderableComponent<T>::~RenderableComponent()
 
     GetEntity()->template UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &RenderableComponent<T>::OnTransformChanged));
     
-    GetScene()->template GetSystemByType<pb::RenderSystem>()->RemoveItem(_Renderable);
+    GetScene()->template GetSystemByType<RenderSystem>()->RemoveItem(_Renderable);
     
     delete _Renderable;
 }

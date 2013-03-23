@@ -6,6 +6,7 @@
 #include "glm/glm.hpp"
 
 #include "pixelboost/framework/definitions.h"
+#include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/shader/shader.h"
 
 namespace pb
@@ -40,7 +41,7 @@ namespace pb
         
     private:
         Shader* _Shader;
-        Texture* _Textures[8];
+        Texture* _Textures[kNumTextureUnits];
         
         std::map<std::string, ShaderProperty> _Properties;
     };

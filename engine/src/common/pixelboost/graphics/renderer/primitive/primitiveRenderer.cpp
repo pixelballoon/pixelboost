@@ -320,7 +320,6 @@ void PrimitiveRenderer::Render(int count, Renderable** renderables, Uid renderSc
     shaderPass->GetShaderProgram()->SetUniform("PB_ProjectionMatrix", projectionMatrix);
     
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
             
     GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
@@ -399,6 +398,5 @@ void PrimitiveRenderer::Render(int count, Renderable** renderables, Uid renderSc
     }
     
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
 }

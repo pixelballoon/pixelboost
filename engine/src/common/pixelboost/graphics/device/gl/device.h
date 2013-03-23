@@ -32,6 +32,8 @@
 
 namespace pb
 {
+    
+static const int kNumTextureUnits = 32;
 
 struct DeviceState;
 class IndexBuffer;
@@ -52,7 +54,7 @@ struct DeviceState
     void UpdateStates(DeviceState& state);
     
     GLuint boundIndexBuffer;
-    GLuint boundTexture;
+    GLuint boundTexture[kNumTextureUnits];
     GLuint boundVertexBuffer;
     GLuint boundProgram;
     
@@ -95,8 +97,8 @@ public:
     
     virtual Texture* CreateTexture();
     virtual void DestroyTexture(Texture* texture);
-    virtual Texture* GetBoundTexture();
-    virtual Texture* BindTexture(Texture* texture, bool force=false);
+    virtual Texture* GetBoundTexture(int textureUnit);
+    virtual Texture* BindTexture(int textureUnit, Texture* texture, bool force=false);
     
     virtual ShaderProgram* CreateProgram();
     virtual void DestroyProgram(ShaderProgram* program);

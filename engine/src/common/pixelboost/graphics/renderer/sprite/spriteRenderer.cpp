@@ -150,8 +150,6 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Uid renderSchem
     shaderPass->GetShaderProgram()->SetUniform("PB_ProjectionMatrix", projectionMatrix);
     
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
-    
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
     GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
     
@@ -183,7 +181,7 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Uid renderSchem
             RenderBatch();
             texture = sprite->_Texture;
             
-            GraphicsDevice::Instance()->BindTexture(texture);
+            GraphicsDevice::Instance()->BindTexture(0, texture);
         }
         
         if (_BatchSize == _MaxBatchSize)
@@ -266,11 +264,10 @@ void SpriteRenderer::Render(int count, Renderable** renderables, Uid renderSchem
     
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, true);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
     
     GraphicsDevice::Instance()->BindIndexBuffer(0);
     GraphicsDevice::Instance()->BindVertexBuffer(0);
-    GraphicsDevice::Instance()->BindTexture(0);
+    GraphicsDevice::Instance()->BindTexture(0, 0);
 }
 
 void SpriteRenderer::RenderBatch()

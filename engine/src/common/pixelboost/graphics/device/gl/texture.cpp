@@ -31,7 +31,7 @@ bool TextureGL::LoadFromBytes(const unsigned char* data, int width, int height, 
     
     glGenTextures(1, &_Texture);
     
-    Texture* previousTexture = _Device->BindTexture(this, true);
+    Texture* previousTexture = _Device->BindTexture(0, this, true);
     
     if (createMips)
     {
@@ -62,16 +62,16 @@ bool TextureGL::LoadFromBytes(const unsigned char* data, int width, int height, 
         glGenerateMipmap(GL_TEXTURE_2D);
     }
 	
-    _Device->BindTexture(previousTexture);
+    _Device->BindTexture(0, previousTexture);
 
     _Size = glm::vec2(width, height);
         
     return true;
 }
 
-void TextureGL::Bind(int unit)
+void TextureGL::Bind(int textureUnit)
 {
-    _Device->BindTexture(this);
+    _Device->BindTexture(textureUnit, this);
 }
 
 #endif

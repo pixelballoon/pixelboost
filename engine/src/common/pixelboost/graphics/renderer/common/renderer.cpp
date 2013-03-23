@@ -148,6 +148,7 @@ void Renderer::FlushBuffer(const glm::vec4& viewport, Uid renderScheme, const gl
         
         Uid type = renderables[0]->GetType();
         Shader* shader = renderables[0]->GetShader();
+        Material* material = renderables[0]->GetMaterial();
         int start = 0;
         int count = 0;
         
@@ -155,8 +156,9 @@ void Renderer::FlushBuffer(const glm::vec4& viewport, Uid renderScheme, const gl
         {
             Uid newType = renderables[i]->GetType();
             Shader* newShader = renderables[i]->GetShader();
+            Material* newMaterial = renderables[i]->GetMaterial();
             
-            if (type == newType && shader == newShader)
+            if (type == newType && shader == newShader && material == newMaterial)
             {
                 count++;
             } else {

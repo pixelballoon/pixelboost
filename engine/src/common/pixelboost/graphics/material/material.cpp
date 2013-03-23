@@ -8,7 +8,7 @@ using namespace pb;
 Material::Material()
 {
     _Shader = 0;
-    for (int i=0; i<8; i++)
+    for (int i=0; i<kNumTextureUnits; i++)
     {
         _Textures[i] = 0;
     }
@@ -75,6 +75,11 @@ ShaderPass* Material::Bind(Uid techniqueId, int passIndex, const glm::mat4x4& pr
     ShaderPass* pass = technique->GetPass(passIndex);
     pass->Bind();
     pass->SetEngineUniforms(projectionMatrix, viewMatrix, Engine::Instance()->GetTotalTime(), Engine::Instance()->GetGameTime());
+    
+    for (int i=0; i<kNumTextureUnits; i++)
+    {
+        GraphicsDevice::Instance()->BindTexture(i, _Textures[i]);
+    }
     
     return pass;
 }

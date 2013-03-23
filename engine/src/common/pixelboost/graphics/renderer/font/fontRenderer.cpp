@@ -446,8 +446,6 @@ void FontRenderer::Render(int count, Renderable** renderables, Uid renderScheme,
     shaderPass->GetShaderProgram()->SetUniform("PB_ProjectionMatrix", projectionMatrix);
     
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
-    
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
     GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
     
@@ -480,7 +478,7 @@ void FontRenderer::Render(int count, Renderable** renderables, Uid renderScheme,
         
         GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffer);
         
-        GraphicsDevice::Instance()->BindTexture(font->texture);
+        GraphicsDevice::Instance()->BindTexture(0, font->texture);
         
         shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewMatrix", renderable.GetModelViewMatrix());
         shaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", renderable.Tint);
@@ -490,13 +488,12 @@ void FontRenderer::Render(int count, Renderable** renderables, Uid renderScheme,
             GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, (_VertexBuffer->GetCurrentSize()/4)*6);
     }
     
-    GraphicsDevice::Instance()->BindTexture(0);
+    GraphicsDevice::Instance()->BindTexture(0, 0);
     GraphicsDevice::Instance()->BindIndexBuffer(0);
     GraphicsDevice::Instance()->BindVertexBuffer(0);
     
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, true);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
 }
 
 float FontRenderer::FitString(glm::vec2 region, const std::string& name, const std::string& font, float preferredSize)

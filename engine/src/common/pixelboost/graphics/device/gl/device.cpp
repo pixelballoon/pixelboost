@@ -19,9 +19,13 @@ DeviceState::DeviceState()
 void DeviceState::Reset()
 {
     boundIndexBuffer = 0;
-    boundTexture = 0;
     boundVertexBuffer = 0;
     boundProgram = 0;
+    
+    for (int i=0; i<kNumTextureUnits; i++)
+    {
+        boundTexture[i] = 0;
+    }
     
     for (int i=0; i<kShaderAttributeCount; i++)
     {
@@ -154,10 +158,14 @@ void DeviceState::UpdateVertexBuffer(DeviceState& state)
 
 void DeviceState::UpdateTexture(DeviceState& state)
 {
-    if (boundTexture != state.boundTexture)
+    for (int i=0; i<kNumTextureUnits; i++)
     {
-        boundTexture = state.boundTexture;
-        glBindTexture(GL_TEXTURE_2D, boundTexture);
+        if (boundTexture[i] != state.boundTexture[i])
+        {
+            boundTexture[i] = state.boundTexture[i];
+            glActiveTexture(GL_TEXTURE0+i);
+            glBindTexture(GL_TEXTURE_2D, boundTexture[i]);
+        }
     }
 }
 
@@ -416,24 +424,24 @@ void GraphicsDeviceGL::DestroyTexture(Texture* texture)
     }
 }
 
-Texture* GraphicsDeviceGL::GetBoundTexture()
+Texture* GraphicsDeviceGL::GetBoundTexture(int textureUnit)
 {
     for (TextureList::iterator it = _Textures.begin(); it != _Textures.end(); ++it)
     {
-        if (static_cast<TextureGL*>(*it)->_Texture == _DesiredState.boundTexture)
+        if (static_cast<TextureGL*>(*it)->_Texture == _DesiredState.boundTexture[textureUnit])
             return *it;
     }
     
     return 0;
 }
     
-Texture* GraphicsDeviceGL::BindTexture(Texture* texture, bool force)
+Texture* GraphicsDeviceGL::BindTexture(int textureUnit, Texture* texture, bool force)
 {
     GLuint textureId = texture ? static_cast<TextureGL*>(texture)->_Texture : 0;
     
-    Texture* previousTexture = GetBoundTexture();
+    Texture* previousTexture = GetBoundTexture(textureUnit);
     
-    _DesiredState.boundTexture = textureId;
+    _DesiredState.boundTexture[textureUnit] = textureId;
     
     if (force)
         _CurrentState.UpdateTexture(_DesiredState);
@@ -543,8 +551,6 @@ void GraphicsDeviceGL::SetState(State state, bool enable)
         case kStateDepthTest:
             glState = GL_DEPTH_TEST;
             break;
-        case kStateTexture2D:
-            return; // There's no state for 2D texturing any more
         case kStateScissor:
             glState = GL_SCISSOR_TEST;
             break;

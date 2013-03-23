@@ -142,10 +142,10 @@ void BufferRenderer::Render(int count, Renderable** renderables, Uid renderSchem
     ShaderPass* shaderPass = technique->GetPass(0);
     shaderPass->Bind();
     shaderPass->GetShaderProgram()->SetUniform("PB_ProjectionMatrix", projectionMatrix);
+    shaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", glm::vec4(1,1,1,1));
     shaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
     
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
     
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
     GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
@@ -156,7 +156,7 @@ void BufferRenderer::Render(int count, Renderable** renderables, Uid renderSchem
         
         shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewMatrix", renderable.GetModelViewMatrix());
         
-        GraphicsDevice::Instance()->BindTexture(renderable._Texture);
+        GraphicsDevice::Instance()->BindTexture(0, renderable._Texture);
         GraphicsDevice::Instance()->BindIndexBuffer(renderable._IndexBuffer);
         GraphicsDevice::Instance()->BindVertexBuffer(renderable._VertexBuffer);
         GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, renderable._NumElements);
@@ -164,7 +164,6 @@ void BufferRenderer::Render(int count, Renderable** renderables, Uid renderSchem
     
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, true);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
     
     GraphicsDevice::Instance()->BindIndexBuffer(0);
     GraphicsDevice::Instance()->BindVertexBuffer(0);

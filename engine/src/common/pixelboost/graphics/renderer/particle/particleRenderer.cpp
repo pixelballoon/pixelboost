@@ -243,7 +243,7 @@ void ParticleRenderer::RenderSystem(ParticleSystem* system, ShaderPass* shaderPa
             vertexBuffer += 4;
         }
         
-        GraphicsDevice::Instance()->BindTexture(system->Definition->RenderSprite->SpriteDefinition->_Texture);
+        GraphicsDevice::Instance()->BindTexture(0, system->Definition->RenderSprite->SpriteDefinition->_Texture);
         
         _VertexBuffer->Unlock(particleCount*4);
         
@@ -252,7 +252,6 @@ void ParticleRenderer::RenderSystem(ParticleSystem* system, ShaderPass* shaderPa
         
         GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
         GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
-        GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
         
         GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
         
@@ -265,7 +264,6 @@ void ParticleRenderer::RenderSystem(ParticleSystem* system, ShaderPass* shaderPa
         
         GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, true);
         GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
-        GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
     }
     
     for (std::vector<ParticleSystem*>::iterator it = system->SubSystem.begin(); it != system->SubSystem.end(); ++it)

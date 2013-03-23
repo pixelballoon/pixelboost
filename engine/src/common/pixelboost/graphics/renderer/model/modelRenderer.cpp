@@ -398,7 +398,6 @@ void ModelRenderer::Render(int count, Renderable** renderables, Uid renderScheme
     
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, true);
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
     
     for (int i=0; i<count; i++)
     {
@@ -421,18 +420,17 @@ void ModelRenderer::Render(int count, Renderable** renderables, Uid renderScheme
         {
             GraphicsDevice::Instance()->BindIndexBuffer((*it)->_IndexBuffer);
             GraphicsDevice::Instance()->BindVertexBuffer((*it)->_VertexBuffer);
-            GraphicsDevice::Instance()->BindTexture(texture);
+            GraphicsDevice::Instance()->BindTexture(0, texture);
             
             GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, (*it)->GetNumVertices());
         }
     }
     
     GraphicsDevice::Instance()->BindIndexBuffer(0);
-    GraphicsDevice::Instance()->BindTexture(0);
+    GraphicsDevice::Instance()->BindTexture(0, 0);
     GraphicsDevice::Instance()->BindVertexBuffer(0);
   
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
 }
     
 Model* ModelRenderer::LoadModel(const std::string& modelName, const std::string& fileName)

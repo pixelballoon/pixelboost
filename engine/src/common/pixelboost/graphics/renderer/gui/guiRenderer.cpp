@@ -224,7 +224,6 @@ void GuiRenderer::Render(int count, Renderable** renderables, Uid renderScheme, 
 {
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
     
     GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
     
@@ -447,7 +446,6 @@ void GuiRenderer::Render(int count, Renderable** renderables, Uid renderScheme, 
     _VertexData = 0;
     
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateScissor, false);
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, true);
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
 }
@@ -468,29 +466,25 @@ void GuiRenderer::PurgeBuffer(GuiRenderable* renderable, const glm::mat4x4& proj
                 return;
             case kBatchTypeGeometryLines:
             {
-                GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
                 pass = renderable->_GeometryShader->GetTechnique(pb::TypeHash("default"))->GetPass(0);
                 elementType = GraphicsDevice::kElementLines;
                 break;
             }
             case kBatchTypeGeometryQuads:
             {
-                GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, false);
                 pass = renderable->_GeometryShader->GetTechnique(pb::TypeHash("default"))->GetPass(0);
                 elementType = GraphicsDevice::kElementTriangles;
                 break;
             }
             case kBatchTypeSprites:
             {
-                GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
                 pass = renderable->_SpriteShader->GetTechnique(pb::TypeHash("default"))->GetPass(0);
                 elementType = GraphicsDevice::kElementTriangles;
                 break;
             }
             case kBatchTypeText:
             {
-                GraphicsDevice::Instance()->BindTexture(_FontTexture);
-                GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateTexture2D, true);
+                GraphicsDevice::Instance()->BindTexture(0, _FontTexture);
                 pass = renderable->_TextShader->GetTechnique(pb::TypeHash("default"))->GetPass(0);
                 elementType = GraphicsDevice::kElementTriangles;
                 break;
@@ -508,7 +502,7 @@ void GuiRenderer::PurgeBuffer(GuiRenderable* renderable, const glm::mat4x4& proj
         
         GraphicsDevice::Instance()->DrawElements(elementType, elementType == pb::GraphicsDevice::kElementTriangles ? _ElementCount * 6 : _ElementCount * 2);
         
-        GraphicsDevice::Instance()->BindTexture(0);
+        GraphicsDevice::Instance()->BindTexture(0, 0);
         GraphicsDevice::Instance()->BindIndexBuffer(0);
         GraphicsDevice::Instance()->BindVertexBuffer(0);
     }

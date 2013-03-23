@@ -33,7 +33,7 @@ public:
 #endif
     
 protected:
-    virtual void Bind(int unit = 0) = 0;
+    virtual void Bind(int textureUnit = 0) = 0;
     
 protected:
 #ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST

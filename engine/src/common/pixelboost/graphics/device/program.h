@@ -7,8 +7,6 @@
 
 #include "json/reader.h"
 
-#include "pixelboost/graphics/device/device.h"
-
 namespace pugi
 {
     class xml_node;

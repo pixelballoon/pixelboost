@@ -246,7 +246,7 @@ void GwenRenderer::DrawTexturedRect(Gwen::Texture* definition, Gwen::Rect rect, 
     
     GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
     
-    GraphicsDevice::Instance()->BindTexture(texture);
+    GraphicsDevice::Instance()->BindTexture(0, texture);
     
     _VertexData[0].position[0] = (rect.x)/32.f;
     _VertexData[0].position[1] = (-rect.y)/32.f;
@@ -305,7 +305,7 @@ Gwen::Color GwenRenderer::PixelColour(Gwen::Texture* definition, unsigned int x,
         
         pb::Texture* texture = _Textures[definition]->GetTexture();
 
-        pb::Texture* prevTexture = GraphicsDevice::Instance()->BindTexture(texture);
+        pb::Texture* prevTexture = GraphicsDevice::Instance()->BindTexture(0, texture);
 
         if (!definition->width)
             return col_default;
@@ -326,7 +326,7 @@ Gwen::Color GwenRenderer::PixelColour(Gwen::Texture* definition, unsigned int x,
 
         free( data );
     
-        GraphicsDevice::Instance()->BindTexture(prevTexture);
+        GraphicsDevice::Instance()->BindTexture(0, prevTexture);
 
         return c;
     #else
@@ -361,13 +361,13 @@ void GwenRenderer::RenderText(Gwen::Font* font, Gwen::Point pos, const Gwen::Uni
     
     GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
     
-    pb::Texture* prevTexture = GraphicsDevice::Instance()->BindTexture(renderFont->texture);
+    pb::Texture* prevTexture = GraphicsDevice::Instance()->BindTexture(0, renderFont->texture);
     GraphicsDevice::Instance()->BindIndexBuffer(_FontIndexBuffer);
     GraphicsDevice::Instance()->BindVertexBuffer(_FontVertexBuffer);
     GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, (_FontVertexBuffer->GetCurrentSize()/4)*6);
     GraphicsDevice::Instance()->BindIndexBuffer(0);
     GraphicsDevice::Instance()->BindVertexBuffer(0);
-    GraphicsDevice::Instance()->BindTexture(prevTexture);
+    GraphicsDevice::Instance()->BindTexture(0, prevTexture);
     
     _ShaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", glm::vec4(1,1,1,1));
 }
