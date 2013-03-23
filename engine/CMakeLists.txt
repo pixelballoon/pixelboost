@@ -306,6 +306,8 @@ set (LOGIC_COMPONENT_GRAPHICS_SOURCES
     "src/common/pixelboost/logic/component/graphics/skinnedModel.h"
 	"src/common/pixelboost/logic/component/graphics/sprite.cpp"
 	"src/common/pixelboost/logic/component/graphics/sprite.h"
+	"src/common/pixelboost/logic/component/graphics/trail.cpp"
+	"src/common/pixelboost/logic/component/graphics/trail.h"
 	)
 
 set (LOGIC_COMPONENT_INPUT_SOURCES
