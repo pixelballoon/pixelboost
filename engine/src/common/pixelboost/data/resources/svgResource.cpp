@@ -84,8 +84,7 @@ private:
     std::queue<PathTokenizer::Token> _Tokens;
     
     float _Scale;
-    float _X;
-    float _Y;
+    glm::vec2 _Position;
     PathTokenizer _Tokenizer;
 };
 
@@ -351,8 +350,8 @@ PathParser::~PathParser()
 
 bool PathParser::Parse(SvgPath& path)
 {
-    _X = 0;
-    _Y = 0;
+    _Position.x = 0;
+    _Position.y = 0;
     
     _Tokenizer.Tokenize();
     _Tokens = _Tokenizer.GetTokens();
@@ -380,8 +379,8 @@ bool PathParser::Parse(SvgPath& path)
             {
                 if (numbers.size() == 2)
                 {
-                    _X = numbers[0];
-                    _Y = numbers[1];
+                    _Position.x = numbers[0];
+                    _Position.y = numbers[1];
                     numbers.clear();
                 }
                 break;
@@ -390,8 +389,8 @@ bool PathParser::Parse(SvgPath& path)
             {
                 if (numbers.size() == 2)
                 {
-                    _X += numbers[0];
-                    _Y += numbers[1];
+                    _Position.x += numbers[0];
+                    _Position.y += numbers[1];
                     numbers.clear();
                 }
                 break;
@@ -400,10 +399,10 @@ bool PathParser::Parse(SvgPath& path)
             {
                 if (numbers.size() == 6)
                 {
-                    Points.push_back(Point(_X, _Y, numbers[0], numbers[1], numbers[2], numbers[3], numbers[4], numbers[5]));
+                    Points.push_back(Point(_Position.x, _Position.y, numbers[0], numbers[1], numbers[2], numbers[3], numbers[4], numbers[5]));
                     
-                    _X = numbers[4];
-                    _Y = numbers[5];
+                    _Position.x = numbers[4];
+                    _Position.y = numbers[5];
                     
                     numbers.clear();
                 }
@@ -413,10 +412,10 @@ bool PathParser::Parse(SvgPath& path)
             {
                 if (numbers.size() == 6)
                 {
-                    Points.push_back(Point(_X, _Y, _X + numbers[0], _Y + numbers[1], _X + numbers[2], _Y + numbers[3], _X + numbers[4], _Y + numbers[5]));
+                    Points.push_back(Point(_Position.x, _Position.y, _Position.x + numbers[0], _Position.y + numbers[1], _Position.x + numbers[2], _Position.y + numbers[3], _Position.x + numbers[4], _Position.y + numbers[5]));
                     
-                    _X += numbers[4];
-                    _Y += numbers[5];
+                    _Position.x += numbers[4];
+                    _Position.y += numbers[5];
                     
                     numbers.clear();
                 }
@@ -431,17 +430,17 @@ bool PathParser::Parse(SvgPath& path)
                     
                     if (Points.size())
                     {
-                        cx = 2*_X - Points.back().cx2;
-                        cy = 2*_Y - Points.back().cy2;
+                        cx = 2*_Position.x - Points.back().cx2;
+                        cy = 2*_Position.y - Points.back().cy2;
                     } else {
-                        cx = _X;
-                        cy = _Y;
+                        cx = _Position.x;
+                        cy = _Position.y;
                     }
                     
-                    Points.push_back(Point(_X, _Y, cx, cy, numbers[0], numbers[1], numbers[2], numbers[3]));
+                    Points.push_back(Point(_Position.x, _Position.y, cx, cy, numbers[0], numbers[1], numbers[2], numbers[3]));
                     
-                    _X = numbers[2];
-                    _Y = numbers[3];
+                    _Position.x = numbers[2];
+                    _Position.y = numbers[3];
                     
                     numbers.clear();
                 }
@@ -456,17 +455,17 @@ bool PathParser::Parse(SvgPath& path)
                     
                     if (Points.size())
                     {
-                        cx = 2*_X - Points.back().cx2;
-                        cy = 2*_Y - Points.back().cy2;
+                        cx = 2*_Position.x - Points.back().cx2;
+                        cy = 2*_Position.y - Points.back().cy2;
                     } else {
-                        cx = _X;
-                        cy = _Y;
+                        cx = _Position.x;
+                        cy = _Position.y;
                     }
                     
-                    Points.push_back(Point(_X, _Y, cx, cy, _X + numbers[0], _Y + numbers[1], _X + numbers[2], _Y + numbers[3]));
+                    Points.push_back(Point(_Position.x, _Position.y, cx, cy, _Position.x + numbers[0], _Position.y + numbers[1], _Position.x + numbers[2], _Position.y + numbers[3]));
                     
-                    _X += numbers[2];
-                    _Y += numbers[3];
+                    _Position.x += numbers[2];
+                    _Position.y += numbers[3];
                     
                     numbers.clear();
                 }
