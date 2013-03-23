@@ -146,6 +146,11 @@ const std::map<std::string, SvgGroup>& SvgResource::GetGroups()
     return _Groups;
 }
 
+glm::vec2 SvgResource::GetSize()
+{
+    return _Size;
+}
+
 ResourceError SvgResource::Load(const std::string& filename)
 {
     std::string data;
