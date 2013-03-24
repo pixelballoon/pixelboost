@@ -36,11 +36,13 @@ namespace pb
         ShaderProperty(PropertyType type);
         ~ShaderProperty();
         
+        PropertyType GetType() const;
+        
+        float GetFloatValue() const;
+        Texture* GetTextureValue() const;
+        
         void SetValue(float value);
         void SetValue(Texture* texture);
-        
-        float GetFloatValue();
-        Texture* GetTextureValue();
         
     private:
         union PropertyValue

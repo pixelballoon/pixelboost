@@ -14,6 +14,7 @@ SCRIPTS_DIRECTORY = File.join DATA_DIRECTORY, 'scripts'
 SPRITESHEET_DIRECTORY = File.join DATA_DIRECTORY, 'spritesheets'
 SPRITESHEET_IMAGE_DIRECTORY = File.join SPRITESHEET_DIRECTORY, 'images'
 PHYSICS_DIRECTORY = File.join DATA_DIRECTORY, 'physics'
+MATERIALS_DIRECTORY = File.join DATA_DIRECTORY, 'materials'
 MODELS_DIRECTORY = File.join DATA_DIRECTORY, 'models'
 SHADERS_DIRECTORY = File.join DATA_DIRECTORY, 'shaders'
 VECTOR_DIRECTORY = File.join DATA_DIRECTORY, 'vectors'
@@ -51,7 +52,7 @@ namespace :platform do
 end
 
 namespace :assets do
-  task :build => [:engine_data, :audio, :fonts, :sprites, :physics, :scripts, :models, :shaders, :vectors] do
+  task :build => [:engine_data, :audio, :fonts, :sprites, :physics, :scripts, :materials, :models, :shaders, :vectors] do
   end
   
   copyTask 'resources/audio/bgm/*', BGM_DIRECTORY, :audio_assets
@@ -93,6 +94,11 @@ namespace :assets do
   task :engine_data do
     command = "cp -r pixelboost/engine/data/ " + DATA_DIRECTORY
     system command
+  end
+
+  directory MATERIALS_DIRECTORY
+  copyTask 'resources/materials/*', MATERIALS_DIRECTORY, :material_assets
+  task :materials => [MATERIALS_DIRECTORY, :material_assets] do
   end
 
   directory MODELS_DIRECTORY

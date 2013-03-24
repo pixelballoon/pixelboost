@@ -45,26 +45,6 @@ VertexBuffer* BufferComponent::GetVertexBuffer()
     return GetRenderable()->GetVertexBuffer();
 }
 
-void BufferComponent::SetTexture(Texture* texture)
-{
-    GetRenderable()->SetTexture(texture);
-}
-
-Texture* BufferComponent::GetTexture()
-{
-    return GetRenderable()->GetTexture();
-}
-
-void BufferComponent::SetShader(Shader* shader)
-{
-    GetRenderable()->SetShader(shader);
-}
-
-Shader* BufferComponent::GetShader()
-{
-    return GetRenderable()->GetShader();
-}
-
 void BufferComponent::SetNumElements(int numElements)
 {
     GetRenderable()->SetNumElements(numElements);

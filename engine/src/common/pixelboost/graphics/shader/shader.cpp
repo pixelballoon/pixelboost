@@ -42,6 +42,31 @@ ShaderProperty::~ShaderProperty()
     
 }
 
+ShaderProperty::PropertyType ShaderProperty::GetType() const
+{
+    return _Type;
+}
+
+float ShaderProperty::GetFloatValue() const
+{
+    return _Value.Float;
+}
+
+Texture* ShaderProperty::GetTextureValue() const
+{
+    return _Value.Texture;
+}
+
+void ShaderProperty::SetValue(float value)
+{
+    _Value.Float = value;
+}
+
+void ShaderProperty::SetValue(Texture* texture)
+{
+    _Value.Texture = texture;
+}
+
 ShaderTechnique::ShaderTechnique()
     : _Uid(-1)
 {

@@ -36,9 +36,6 @@ namespace pb
         void SetVertexBuffer(VertexBuffer* vertexBuffer);
         VertexBuffer* GetVertexBuffer();
         
-        void SetTexture(Texture* texture);
-        Texture* GetTexture();
-        
         void SetNumElements(int numElements);
         int GetNumElements();
 
@@ -48,7 +45,6 @@ namespace pb
         
         IndexBuffer* _IndexBuffer;
         VertexBuffer* _VertexBuffer;
-        Texture* _Texture;
         int _NumElements;
         
         friend class BufferRenderer;

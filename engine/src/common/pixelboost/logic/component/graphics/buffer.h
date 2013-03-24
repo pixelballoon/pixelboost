@@ -29,12 +29,6 @@ namespace pb
         void SetVertexBuffer(VertexBuffer* vertexBuffer);
         VertexBuffer* GetVertexBuffer();
         
-        void SetTexture(Texture* texture);
-        Texture* GetTexture();
-        
-        void SetShader(Shader* shader);
-        Shader* GetShader();
-        
         void SetNumElements(int numElements);
         int GetNumElements();
     };

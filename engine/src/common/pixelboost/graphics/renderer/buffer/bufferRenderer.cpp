@@ -4,6 +4,7 @@
 #include "pixelboost/graphics/device/program.h"
 #include "pixelboost/graphics/device/texture.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
+#include "pixelboost/graphics/material/material.h"
 #include "pixelboost/graphics/renderer/buffer/bufferRenderer.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/resources/shaderResource.h"
@@ -17,7 +18,6 @@ BufferRenderer* BufferRenderer::_Instance = 0;
 BufferRenderable::BufferRenderable()
     : _IndexBuffer(0)
     , _VertexBuffer(0)
-    , _Texture(0)
     , _NumElements(0)
 {
     
@@ -89,16 +89,6 @@ VertexBuffer* BufferRenderable::GetVertexBuffer()
     return _VertexBuffer;
 }
 
-void BufferRenderable::SetTexture(Texture* texture)
-{
-    _Texture = texture;
-}
-
-Texture* BufferRenderable::GetTexture()
-{
-    return _Texture;
-}
-
 void BufferRenderable::SetNumElements(int numElements)
 {
     _NumElements = numElements;
@@ -130,25 +120,12 @@ BufferRenderer* BufferRenderer::Instance()
 
 void BufferRenderer::Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
 {
-    Shader* shader = renderables[0]->GetShader();
-    if (!shader)
+    Material* material = renderables[0]->GetMaterial();
+    
+    if (!material)
         return;
     
-    ShaderTechnique* technique = shader->GetTechnique(renderScheme);
-    
-    if (!technique)
-        return;
-    
-    ShaderPass* shaderPass = technique->GetPass(0);
-    shaderPass->Bind();
-    shaderPass->GetShaderProgram()->SetUniform("PB_ProjectionMatrix", projectionMatrix);
-    shaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", glm::vec4(1,1,1,1));
-    shaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
-    
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
-    
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, true);
-    GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
+    ShaderPass* shaderPass = material->Bind(renderScheme, 0, projectionMatrix, viewMatrix);
     
     for (int i=0; i<count; i++)
     {
@@ -156,14 +133,10 @@ void BufferRenderer::Render(int count, Renderable** renderables, Uid renderSchem
         
         shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewMatrix", renderable.GetModelViewMatrix());
         
-        GraphicsDevice::Instance()->BindTexture(0, renderable._Texture);
         GraphicsDevice::Instance()->BindIndexBuffer(renderable._IndexBuffer);
         GraphicsDevice::Instance()->BindVertexBuffer(renderable._VertexBuffer);
         GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, renderable._NumElements);
     }
-    
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, true);
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
     
     GraphicsDevice::Instance()->BindIndexBuffer(0);
     GraphicsDevice::Instance()->BindVertexBuffer(0);

@@ -185,7 +185,7 @@ void TrailComponent::OnTransformChanged(const pb::Message& message)
     
 void TrailComponent::OnResourceLoaded(Resource* resource, bool error)
 {
-    if (!error)
+    if (error)
         return;
     
     _Renderable->SetMaterial(_Material->GetMaterial());

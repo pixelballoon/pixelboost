@@ -127,6 +127,10 @@ set (DATA_RESOURCES_SOURCES
 	"src/common/pixelboost/data/resources/xmlResource.h"
 	)
 
+set (DATA_SOURCES
+	"src/common/pixelboost/data/stringHelpers.h"
+	)
+
 set (DB_TYPES_SOURCES
 	"src/common/pixelboost/db/types/common.cpp"
 	"src/common/pixelboost/db/types/common.h"
@@ -446,6 +450,7 @@ set (PIXELBOOST_SOURCES
 	${ASSET_SOURCES}
 	${AUDIO_SOURCES}
 	${DATA_RESOURCES_SOURCES}
+	${DATA_SOURCES}
 	${DB_TYPES_SOURCES}
 	${DB_SOURCES}
 	${DEBUG_SOURCES}

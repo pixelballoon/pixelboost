@@ -19,7 +19,7 @@ TextureResource::TextureResource(ResourcePool* pool, const std::string& filename
     _Width = 0;
     _Height = 0;
     _Components = 0;
-    _CreateMips = false;
+    _CreateMips = true;
 }
 
 TextureResource::~TextureResource()

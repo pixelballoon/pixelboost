@@ -1,3 +1,4 @@
+#include "pixelboost/debug/assert.h"
 #include "pixelboost/framework/engine.h"
 #include "pixelboost/graphics/device/program.h"
 #include "pixelboost/graphics/material/material.h"
@@ -7,59 +8,16 @@ using namespace pb;
 
 Material::Material()
 {
+    _Blend = true;
+    _BlendMode.first = GraphicsDevice::kBlendOne;
+    _BlendMode.second = GraphicsDevice::kBlendOneMinusSourceAlpha;
+    _DepthTest = true;
     _Shader = 0;
-    for (int i=0; i<kNumTextureUnits; i++)
-    {
-        _Textures[i] = 0;
-    }
 }
 
 Material::~Material()
 {
     
-}
-
-Shader* Material::GetShader()
-{
-    return _Shader;
-}
-
-void Material::SetShader(Shader* shader)
-{
-    _Properties.clear();
-    _Shader = shader;
-    
-    for (const auto& property : _Shader->GetProperties())
-    {
-        _Properties[property.first] = ShaderProperty(property.second);
-    }
-}
-
-Texture* Material::GetTexture(int textureIndex)
-{
-    return _Textures[textureIndex];
-}
-
-void Material::SetTexture(int textureIndex, Texture* texture)
-{
-    _Textures[textureIndex] = texture;
-}
-
-const std::map<std::string, ShaderProperty>& Material::GetProperties()
-{
-    return _Properties;
-}
-
-ShaderProperty* Material::GetProperty(const std::string& name)
-{
-    auto it = _Properties.find(name);
-    
-    if (it != _Properties.end())
-    {
-        return &it->second;
-    }
-    
-    return 0;
 }
 
 ShaderPass* Material::Bind(Uid techniqueId, int passIndex, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
@@ -71,14 +29,37 @@ ShaderPass* Material::Bind(Uid techniqueId, int passIndex, const glm::mat4x4& pr
     
     if (!technique)
         return 0;
-
+    
     ShaderPass* pass = technique->GetPass(passIndex);
     pass->Bind();
     pass->SetEngineUniforms(projectionMatrix, viewMatrix, Engine::Instance()->GetTotalTime(), Engine::Instance()->GetGameTime());
     
-    for (int i=0; i<kNumTextureUnits; i++)
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, _Blend);
+    GraphicsDevice::Instance()->SetBlendMode(_BlendMode.first, _BlendMode.second);
+    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, _DepthTest);
+    
+    ShaderProgram* program = pass->GetShaderProgram();
+    int textureUnit = 0;
+    for (auto& property : _Properties)
     {
-        GraphicsDevice::Instance()->BindTexture(i, _Textures[i]);
+        switch (property.second.GetType())
+        {
+            case ShaderProperty::kPropertyTexture2D:
+            {
+                program->SetUniform(property.first, textureUnit);
+                GraphicsDevice::Instance()->BindTexture(textureUnit, property.second.GetTextureValue());
+                textureUnit++;
+                break;
+            }
+            case ShaderProperty::kPropertyFloat:
+            case ShaderProperty::kPropertyMat44:
+            case ShaderProperty::kPropertyVec4:
+                PbAssert(!"Property value of this type isn't yet implemented");
+                break;
+            case ShaderProperty::kPropertyUnknown:
+                PbAssert(!"Unknown property value");
+                break;
+        }
     }
     
     return pass;
@@ -98,3 +79,68 @@ int Material::GetNumPasses(Uid techniqueId)
     
     return 0;
 }
+
+Shader* Material::GetShader()
+{
+    return _Shader;
+}
+
+void Material::SetShader(Shader* shader)
+{
+    _Shader = shader;
+}
+
+bool Material::GetBlendEnabled()
+{
+    return _Blend;
+}
+
+void Material::SetBlendEnabled(bool enabled)
+{
+    _Blend = enabled;
+}
+
+std::pair<GraphicsDevice::Blend, GraphicsDevice::Blend> Material::GetBlendMode()
+{
+    return _BlendMode;
+}
+
+void Material::SetBlendMode(GraphicsDevice::Blend source, GraphicsDevice::Blend destination)
+{
+    _BlendMode.first = source;
+    _BlendMode.second = destination;
+}
+
+bool Material::GetDepthTestEnabled()
+{
+    return _DepthTest;
+}
+
+void Material::SetDepthTestEnabled(bool enabled)
+{
+    _DepthTest = enabled;
+}
+
+ShaderProperty& Material::AddProperty(const std::string& name, ShaderProperty::PropertyType type)
+{
+    _Properties[name] = ShaderProperty(type);
+    return _Properties[name];
+}
+
+const std::map<std::string, ShaderProperty>& Material::GetProperties()
+{
+    return _Properties;
+}
+
+ShaderProperty* Material::GetProperty(const std::string& name)
+{
+    auto it = _Properties.find(name);
+    
+    if (it != _Properties.end())
+    {
+        return &it->second;
+    }
+    
+    return 0;
+}
+
