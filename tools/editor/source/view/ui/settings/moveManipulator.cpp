@@ -1,3 +1,4 @@
+/*
 #include "Gwen/Controls/TextBox.h"
 
 #include "pixelboost/network/networkServer.h"
@@ -58,3 +59,4 @@ void MoveManipulatorWindow::OnSnapChanged(Gwen::Controls::Base* item)
     MoveManipulator* manipulator = static_cast<MoveManipulator*>(View::Instance()->GetManipulatorManager()->GetManipulator("move"));
     manipulator->SetSnap(glm::vec3(snapX, snapY, snapZ));
 }
+*/

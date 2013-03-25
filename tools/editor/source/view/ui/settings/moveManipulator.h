@@ -1,3 +1,4 @@
+/*
 #pragma once
 
 #include "Gwen/Controls/WindowControl.h"
@@ -23,3 +24,4 @@ private:
     Gwen::Controls::TextBox* _SnapY;
     Gwen::Controls::TextBox* _SnapZ;
 };
+*/

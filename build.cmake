@@ -35,15 +35,6 @@ macro(pixelboost_setup_pre pixelboost_dir projectname identifier title)
 	option (PIXELBOOST_BUILD_PLATFORM_IOS "Build for iOS Platform" FALSE)
 	option (PIXELBOOST_BUILD_PLATFORM_OSX "Build for OSX Platform" FALSE)
 
-	if (PIXELBOOST_LIBRARY_USE_GWEN)
-		set (PIXELBOOST_LIBRARY_HEADERS
-			"${PIXELBOOST_LIBRARY_HEADERS}"
-			"${PIXELBOOST_ROOT_DIR}/libs/gwen/gwen/include"
-			)
-		add_definitions(-DPIXELBOOST_LIBRARY_USE_GWEN)
-		add_subdirectory(${PIXELBOOST_ROOT_DIR}/libs/gwen ${CMAKE_BINARY_DIR}/gwen)
-	endif (PIXELBOOST_LIBRARY_USE_GWEN)
-
 	if (PIXELBOOST_BUILD_PLATFORM_OSX)
 		add_definitions(-DPIXELBOOST_DISABLE_GAMECENTER
 						-DPIXELBOOST_DISABLE_SOUND
@@ -158,9 +149,4 @@ macro(pixelboost_setup_post sources)
 	endif (PIXELBOOST_BUILD_PLATFORM_IOS)
 
 	pixelboost_library_cpp11(${PIXELBOOST_BUILD_NAME})
-
-	if (PIXELBOOST_LIBRARY_USE_GWEN)
-		target_link_libraries (${PIXELBOOST_BUILD_NAME} gwen)
-		pixelboost_library_cpp11(gwen)
-	endif (PIXELBOOST_LIBRARY_USE_GWEN)
 endmacro()

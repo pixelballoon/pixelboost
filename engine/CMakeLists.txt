@@ -236,8 +236,6 @@ set (GRAPHICS_RENDERER_SOURCES
 	"src/common/pixelboost/graphics/renderer/gui/controls.h"	
 	"src/common/pixelboost/graphics/renderer/gui/guiRenderer.cpp"
 	"src/common/pixelboost/graphics/renderer/gui/guiRenderer.h"	
-	"src/common/pixelboost/graphics/renderer/gwen/gwenRenderer.cpp"
-	"src/common/pixelboost/graphics/renderer/gwen/gwenRenderer.h"
 	"src/common/pixelboost/graphics/renderer/model/modelRenderer.cpp"
 	"src/common/pixelboost/graphics/renderer/model/modelRenderer.h"
 	"src/common/pixelboost/graphics/renderer/particle/particleRenderer.cpp"
@@ -405,11 +403,6 @@ set (MATHS_SOURCES
 	"src/common/pixelboost/maths/hermiteCurve.h"
 	)
 
-set (MISC_SOURCES
-	"src/common/pixelboost/misc/gwen/inputHandler.cpp"
-	"src/common/pixelboost/misc/gwen/inputHandler.h"
-	)
-
 set (NETWORK_SOURCES
 	"src/common/pixelboost/network/http/httpServer.cpp"
 	"src/common/pixelboost/network/http/httpServer.h"
@@ -478,7 +471,6 @@ set (PIXELBOOST_SOURCES
 	${LOGIC_SYSTEM_PHYSICS_SOURCES}
 	${LOGIC_SOURCES}
 	${MATHS_SOURCES}
-	${MISC_SOURCES}
 	${NETWORK_SOURCES}
 	${PHYSICS_2D_SOURCES}
 	${PLATFORM_SOURCES}
@@ -562,7 +554,6 @@ source_group (logic\\system\\graphics\\render FILES ${LOGIC_SYSTEM_GRAPHICS_REND
 source_group (logic\\system\\physics FILES ${LOGIC_SYSTEM_PHYSICS_SOURCES})
 source_group (logic FILES ${LOGIC_SOURCES})
 source_group (maths FILES ${MATHS_SOURCES})
-source_group (misc FILES ${MISC_SOURCES})
 source_group (network FILES ${NETWORK_SOURCES})
 source_group (physics\\2d FILES ${PHYSICS_2D_SOURCES})
 source_group (platform FILES ${PLATFORM_SOURCES})

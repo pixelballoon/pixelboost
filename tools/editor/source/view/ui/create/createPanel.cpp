@@ -1,3 +1,4 @@
+/*
 #include "glm/glm.hpp"
 
 #include "Gwen/Controls/Button.h"
@@ -132,3 +133,4 @@ void CreatePanel::OnItemSelected(Gwen::Controls::Base* item)
     createManipulator->SetEntityType(item->UserData.Get<std::string>("entity"));
     createManipulator->SetCreationData(item->UserData.Get<std::vector<std::string> >("fields"), item->UserData.Get<std::vector<std::string> >("values"));
 }
+*/

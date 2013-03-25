@@ -10,8 +10,8 @@
 #define InternalPbStringify(value) #value
 #define InternalPbToString(value) InternalPbStringify(value)
 
-#define PbGuiId(message, userData) pb::GuiId(pb::TypeHash(__FILE__ InternalPbToString(__LINE__)), message.GetGuiComponent(), (void*)userData)
-#define PbNestedGuiId(id) pb::GuiId(id, pb::TypeHash(__FILE__ InternalPbToString(__LINE__)))
+#define PbGuiId(message, userData) pb::GuiId(pb::TypeHash(__FILE__ InternalPbToString(__LINE__)), message.GetGuiComponent(), (void*)(userData))
+#define PbNestedGuiId(id, userData) pb::GuiId(id, pb::TypeHash(__FILE__ InternalPbToString(__LINE__))+userData)
 
 namespace pb
 {
@@ -170,6 +170,8 @@ namespace pb
         bool MouseDown;
         bool MousePressed;
         bool MouseReleased;
+        
+        KeyboardEvent KeyboardEvent;
 
         std::vector<GuiLayout*> LayoutStack;
     };
@@ -209,7 +211,7 @@ namespace pb
         
     private:
         void ProcessLayouts();
-        bool ProcessLayout(GuiLayout* layout, glm::vec2 position);
+        bool ProcessLayout(GuiLayout* layout, glm::vec2 position, bool positionValid);
         
         void Clear();
         void ClearLayout(GuiLayout* layout);

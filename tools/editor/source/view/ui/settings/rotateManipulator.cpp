@@ -1,3 +1,4 @@
+/*
 #include "Gwen/Controls/TextBox.h"
 
 #include "pixelboost/network/networkServer.h"
@@ -58,3 +59,4 @@ void RotateManipulatorWindow::OnSnapChanged(Gwen::Controls::Base* item)
     RotateManipulator* manipulator = static_cast<RotateManipulator*>(View::Instance()->GetManipulatorManager()->GetManipulator("rotate"));
     manipulator->SetSnap(glm::vec3(snapX, snapY, snapZ));
 }
+*/

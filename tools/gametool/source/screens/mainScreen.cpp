@@ -52,7 +52,7 @@ private:
     {
         auto guiRenderMessage = message.As<pb::GuiRenderMessage>();
         
-        pb::GuiControls::BeginScrollArea(guiRenderMessage, PbGuiId(guiRenderMessage, 0), {pb::GuiLayoutHint::Width(300.f), pb::GuiLayoutHint::ExpandHeight()});
+        auto scrollArea = pb::GuiControls::BeginScrollArea(guiRenderMessage, PbGuiId(guiRenderMessage, 0), {pb::GuiLayoutHint::Width(300.f), pb::GuiLayoutHint::ExpandHeight()});
         
         if (!Game::Instance()->GetMainScreen()->IsConnected())
         {
@@ -79,7 +79,7 @@ private:
             }
         }
         
-        pb::GuiControls::EndScrollArea(guiRenderMessage);
+        pb::GuiControls::EndScrollArea(guiRenderMessage, scrollArea);
     }
 };
 

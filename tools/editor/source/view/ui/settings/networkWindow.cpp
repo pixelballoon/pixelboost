@@ -1,3 +1,4 @@
+/*
 #include "Gwen/Controls/TextBox.h"
 
 #include "pixelboost/network/networkServer.h"
@@ -12,7 +13,6 @@ NetworkWindow::NetworkWindow(Gwen::Controls::Base* parent)
     SetPos(250, 40);
     SetTitle("Device Connection");
     
-    /*
     _AddressBox = new Gwen::Controls::TextBox(this);
     _AddressBox->SetText(Core::Instance()->GetNetworkManager()->GetClientHost());
     _AddressBox->SetPos(10, 10);
@@ -35,7 +35,6 @@ NetworkWindow::NetworkWindow(Gwen::Controls::Base* parent)
     _ReconnectButton->SetSize(200, 25);
     _ReconnectButton->SetText("Connect");
     _ReconnectButton->onPress.Add(this, &NetworkWindow::OnConnect);
-    */
 }
 
 NetworkWindow::~NetworkWindow()
@@ -52,3 +51,4 @@ void NetworkWindow::OnConnect(Gwen::Controls::Base* item)
 {
     //Core::Instance()->GetNetworkManager()->OpenClient(Core::Instance()->GetNetworkManager()->GetClientHost(), Core::Instance()->GetNetworkManager()->GetClientPort());
 }
+*/

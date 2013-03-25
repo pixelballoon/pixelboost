@@ -1,3 +1,4 @@
+/*
 #pragma once
 
 #include "Gwen/Controls/WindowControl.h"
@@ -25,3 +26,4 @@ private:
     Gwen::Controls::ComboBox* _TypeField;
     Gwen::Controls::Button* _CreateButton;
 };
+*/
