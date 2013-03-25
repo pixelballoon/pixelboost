@@ -258,7 +258,13 @@ GuiData& GuiSystem::GetData(GuiId guiId)
 
 void GuiSystem::ProcessLayouts()
 {
-    while (!ProcessLayout(_State.LayoutStack.front(), _State.LayoutStack.front()->Position, true));
+    for (int i=0; i<16; i++)
+    {
+        if (ProcessLayout(_State.LayoutStack.front(), _State.LayoutStack.front()->Position, true))
+        {
+            return;
+        }
+    }
 }
 
 bool GuiSystem::ProcessLayout(GuiLayout* layout, glm::vec2 position, bool positionValid)
