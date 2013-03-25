@@ -1,10 +1,10 @@
+#include "pixelboost/data/stringHelpers.h"
 #include "pixelboost/debug/log.h"
 #include "pixelboost/file/fileSystem.h"
 #include "pixelboost/graphics/material/material.h"
 #include "pixelboost/graphics/resources/materialResource.h"
 #include "pixelboost/graphics/resources/shaderResource.h"
 #include "pixelboost/graphics/resources/textureResource.h"
-#include "pixelboost/misc/stringHelpers.h"
 
 using namespace pb;
 

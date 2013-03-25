@@ -1,8 +1,8 @@
 #include <sstream>
 #include <vector>
 
+#include "pixelboost/data/stringHelpers.h"
 #include "pixelboost/file/fileSystem.h"
-#include "pixelboost/misc/stringHelpers.h"
 
 #include "project/schema.h"
 #include "project/schemaParser.h"

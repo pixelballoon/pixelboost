@@ -1,8 +1,8 @@
 #include "glm/gtc/matrix_transform.hpp"
 
+#include "pixelboost/data/stringHelpers.h"
 #include "pixelboost/graphics/renderer/model/modelRenderer.h"
 #include "pixelboost/logic/component/graphics/model.h"
-#include "pixelboost/misc/stringHelpers.h"
 
 #include "project/entity.h"
 #include "project/schema.h"

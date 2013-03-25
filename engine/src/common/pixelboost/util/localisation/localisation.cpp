@@ -1,5 +1,5 @@
+#include "pixelboost/data/stringHelpers.h"
 #include "pixelboost/file/fileHelpers.h"
-#include "pixelboost/misc/stringHelpers.h"
 #include "pixelboost/util/localisation/localisation.h"
 #include "pixelboost/util/localisation/string.h"
 
