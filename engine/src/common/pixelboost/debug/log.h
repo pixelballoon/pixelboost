@@ -50,7 +50,7 @@ namespace pb
         virtual void OnLogMessage(LogLevel logLevel, const std::string& system, const std::string& message);
         
     private:
-        pb::File* _File;
+        std::shared_ptr<File> _File;
     };
     
     class LogSystem

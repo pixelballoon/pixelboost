@@ -112,7 +112,7 @@ ResourceError SpriteSheetResource::LoadSheet(ResourcePool* pool, const std::stri
     
     std::string jsonFilename = filename + modifier + ".json";
     
-    pb::File* file = pb::FileSystem::Instance()->OpenFile(jsonFilename);
+    auto file = pb::FileSystem::Instance()->OpenFile(jsonFilename);
     
     if (!file)
     {
@@ -122,7 +122,6 @@ ResourceError SpriteSheetResource::LoadSheet(ResourcePool* pool, const std::stri
     std::string rootData;
     
     file->ReadAll(rootData);
-    delete file;
     
     json::Object root;
     

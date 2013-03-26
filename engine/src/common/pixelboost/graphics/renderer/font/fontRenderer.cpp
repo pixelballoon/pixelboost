@@ -330,14 +330,13 @@ Font* FontRenderer::LoadFont(const std::string& name, const std::string& filenam
     }
 
     std::string fntFilename = filename + modifier + ".fnt";
-    pb::File* file = pb::FileSystem::Instance()->OpenFile(fntFilename);
+    auto file = pb::FileSystem::Instance()->OpenFile(fntFilename);
     
     std::string fontContents;
     
     if (file)
     {
         file->ReadAll(fontContents);
-        delete file;
     }
     
     std::vector<std::string> lines;

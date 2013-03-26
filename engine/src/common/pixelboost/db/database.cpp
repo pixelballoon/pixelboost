@@ -65,7 +65,7 @@ bool Database::OpenDatabase()
     
     std::string contents;
     
-    pb::File* file = pb::FileSystem::Instance()->OpenFile(filename);
+    auto file = pb::FileSystem::Instance()->OpenFile(filename);
     
     if (!file)
     {
@@ -74,7 +74,6 @@ bool Database::OpenDatabase()
     }
     
     file->ReadAll(contents);
-    delete file;
     
     if (luaL_loadstring(_State, contents.c_str()) || lua_pcall(_State, 0, 0, 0))
     {
@@ -131,19 +130,20 @@ DbRecord* Database::OpenRecord(Uid recordId)
     char filename[1024];
     sprintf(filename, "%srecords/%X.lua", _DatabaseRoot.c_str(), recordId);
     
-    pb::File* file = pb::FileSystem::Instance()->OpenFile(filename);
+    auto file = pb::FileSystem::Instance()->OpenFile(filename);
     
     std::string contents;
     
-    if (file)
+    if (!file)
     {
-        file->ReadAll(contents);
-        delete file;
+        PbLogError("pb.database", "Can't open file (%s)", filename);
     }
+    
+    file->ReadAll(contents);
     
     if (luaL_loadstring(_State, contents.c_str()) || lua_pcall(_State, 0, 0, 0))
     {
-        PbLogError("pb.database", "Can't open file: %s", lua_tostring(_State, -1));
+        PbLogError("pb.database", "Can't parse file (%s): %s", filename, lua_tostring(_State, -1));
         return 0;
     }
     

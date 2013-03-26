@@ -91,14 +91,13 @@ bool Project::Open(const std::string& directory)
     
 bool Project::OpenConfig(const std::string& filename)
 {
-    pb::File* file = pb::FileSystem::Instance()->OpenFile(filename);
+    auto file = pb::FileSystem::Instance()->OpenFile(filename);
     
     std::string contents;
     
     if (file)
     {
         file->ReadAll(contents);
-        delete file;
     }
     
     _Config.databaseRoot = _Location;

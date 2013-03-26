@@ -502,7 +502,7 @@ bool Schema::Open(const std::string& engineFilename, const std::string& projectF
 
 bool Schema::OpenFile(const std::string& filename)
 {
-    pb::File* file = pb::FileSystem::Instance()->OpenFile(filename);
+    auto file = pb::FileSystem::Instance()->OpenFile(filename);
     
     if (!file)
         return false;
@@ -510,7 +510,6 @@ bool Schema::OpenFile(const std::string& filename)
     std::string schema;
     
     file->ReadAll(schema);
-    delete file;
     
     bool result = SchemaParser::Parse(this, schema);
     

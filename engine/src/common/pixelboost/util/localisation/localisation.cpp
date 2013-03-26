@@ -30,15 +30,16 @@ bool Localisation::Load(const std::string& directory)
 {
     std::string filename = directory + GetCurrentLocale() + ".po";
     
-    pb::File* file = pb::FileSystem::Instance()->OpenFile(filename);
+    auto file = pb::FileSystem::Instance()->OpenFile(filename);
     
     std::string contents;
     
-    if (file)
+    if (!file)
     {
-        file->ReadAll(contents);
-        delete file;
+        return false;
     }
+    
+    file->ReadAll(contents);
     
     if (!contents.length())
     {

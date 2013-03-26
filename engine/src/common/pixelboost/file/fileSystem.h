@@ -72,7 +72,7 @@ namespace pb
         void MountReadLocation(const std::string& path, const std::string& mountPoint, bool prepend);
         
     public:
-        File* OpenFile(const std::string& path, FileMode mode = kFileModeRead);
+        std::shared_ptr<File> OpenFile(const std::string& path, FileMode mode = kFileModeRead);
         bool QueryFile(FileInfo& info, const std::string& path);
         
         bool CreateDirectory(const std::string& path);

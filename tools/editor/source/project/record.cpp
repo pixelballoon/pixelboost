@@ -43,13 +43,12 @@ ProjectRecord::~ProjectRecord()
     
 bool ProjectRecord::Open(const std::string& filename)
 {
-    pb::File* file = pb::FileSystem::Instance()->OpenFile(filename);
+    auto file = pb::FileSystem::Instance()->OpenFile(filename);
     std::string contents;
     
     if (file)
     {
         file->ReadAll(contents);
-        delete file;
     }
     
     json::Object record;

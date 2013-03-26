@@ -37,11 +37,9 @@ void DebugDatabaseHandler::OnReceive(NetworkConnection& connection, NetworkMessa
     const char* contents;
     message.ReadString(contents);
     
-    pb::File* file = pb::FileSystem::Instance()->OpenFile("data/gamedata/" + filename, pb::kFileModeWrite);
-    if (file)
+    if (auto file = pb::FileSystem::Instance()->OpenFile("data/gamedata/" + filename, pb::kFileModeWrite))
     {
         file->Write(contents);
-        delete file;
     }
     
     if (filename == "main.lua")

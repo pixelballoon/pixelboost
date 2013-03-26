@@ -24,7 +24,7 @@ ResourceError ModelResource::ProcessResource(ResourcePool* pool, ResourceProcess
     {
         case kResourceProcessLoad:
         {
-            pb::File* file = pb::FileSystem::Instance()->OpenFile(filename);
+            auto file = pb::FileSystem::Instance()->OpenFile(filename);
             if (!file)
             {
                 PbLogError("pb.resource.xml", "Error opening XML file (%s)", filename.c_str());
@@ -55,14 +55,13 @@ const ModelDefinition& ModelResource::GetModelDefinition()
     return _Model;
 }
 
-bool ModelResource::LoadModel(File* file, ModelDefinition& model)
+bool ModelResource::LoadModel(std::shared_ptr<File> file, ModelDefinition& model)
 {
     short version;
     file->Read(version);
     
     if (version != ModelDefinition::kCurrentModelVersion)
     {
-        delete file;
         PbLogError("pb.graphics.model", "Model version mismatch - expected %d, got %d", ModelDefinition::kCurrentModelVersion, version);
         return false;
     }
@@ -70,7 +69,6 @@ bool ModelResource::LoadModel(File* file, ModelDefinition& model)
     short numMeshes;
     if (!file->Read(numMeshes))
     {
-        delete file;
         return false;
     }
     
@@ -79,7 +77,6 @@ bool ModelResource::LoadModel(File* file, ModelDefinition& model)
         ModelMeshDefinition o;
         if (!LoadMesh(file, o))
         {
-            delete file;
             return false;
         }
         model.Meshes.push_back(o);
@@ -88,7 +85,6 @@ bool ModelResource::LoadModel(File* file, ModelDefinition& model)
     short numBones;
     if (!file->Read(numBones))
     {
-        delete file;
         return false;
     }
     
@@ -97,7 +93,6 @@ bool ModelResource::LoadModel(File* file, ModelDefinition& model)
         ModelBoneDefinition b;
         if (!LoadBone(file, b))
         {
-            delete file;
             return false;
         }
         model.Bones.push_back(b);
@@ -106,7 +101,6 @@ bool ModelResource::LoadModel(File* file, ModelDefinition& model)
     short numAnimations;
     if (!file->Read(numAnimations))
     {
-        delete file;
         return false;
     }
     
@@ -115,18 +109,15 @@ bool ModelResource::LoadModel(File* file, ModelDefinition& model)
         ModelAnimationDefinition a;
         if (!LoadAnimation(file, a))
         {
-            delete file;
             return false;
         }
         model.Animations.push_back(a);
     }
     
-    delete file;
-    
     return true;
 }
 
-bool ModelResource::LoadMesh(File* file, ModelMeshDefinition& mesh)
+bool ModelResource::LoadMesh(std::shared_ptr<File> file, ModelMeshDefinition& mesh)
 {
     file->Read(mesh.Indexed);
     file->Read(mesh.Skinned);
@@ -207,7 +198,7 @@ bool ModelResource::LoadMesh(File* file, ModelMeshDefinition& mesh)
     return true;
 }
 
-bool ModelResource::LoadBone(File* file, ModelBoneDefinition& bone)
+bool ModelResource::LoadBone(std::shared_ptr<File> file, ModelBoneDefinition& bone)
 {
     int nameLength;
     file->Read(nameLength);
@@ -235,7 +226,7 @@ bool ModelResource::LoadBone(File* file, ModelBoneDefinition& bone)
     return true;
 }
 
-bool ModelResource::LoadAnimation(File* file, ModelAnimationDefinition& animation)
+bool ModelResource::LoadAnimation(std::shared_ptr<File> file, ModelAnimationDefinition& animation)
 {
     int nameLength;
     file->Read(nameLength);

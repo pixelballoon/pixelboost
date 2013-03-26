@@ -20,10 +20,10 @@ namespace pb
         const ModelDefinition& GetModelDefinition();
         
     private:
-        bool LoadModel(File* file, ModelDefinition& model);
-        bool LoadMesh(File* file, ModelMeshDefinition& mesh);
-        bool LoadBone(File* file, ModelBoneDefinition& bone);
-        bool LoadAnimation(File* file, ModelAnimationDefinition& animation);
+        bool LoadModel(std::shared_ptr<File> file, ModelDefinition& model);
+        bool LoadMesh(std::shared_ptr<File> file, ModelMeshDefinition& mesh);
+        bool LoadBone(std::shared_ptr<File> file, ModelBoneDefinition& bone);
+        bool LoadAnimation(std::shared_ptr<File> file, ModelAnimationDefinition& animation);
         
         ModelDefinition _Model;
     };

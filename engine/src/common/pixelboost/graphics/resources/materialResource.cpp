@@ -70,14 +70,13 @@ ResourceError MaterialResource::ProcessResource(ResourcePool* pool, ResourceProc
     {
         case kResourceProcessLoad:
         {
-            pb::File* file = FileSystem::Instance()->OpenFile(filename);
+            auto file = FileSystem::Instance()->OpenFile(filename);
             if (!file)
             {
                 return kResourceErrorNoSuchResource;
             }
             
             file->ReadAll(_FileContents);
-            delete file;
             
             return kResourceErrorNone;
         }

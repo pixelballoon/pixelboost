@@ -65,7 +65,7 @@ bool Texture::LoadFromFile(const std::string& path, bool createMips)
     
     if (path.length() >= 4 && path.substr(path.length()-4) == ".jpa")
     {
-        pb::File* file = pb::FileSystem::Instance()->OpenFile(path);
+        auto file = pb::FileSystem::Instance()->OpenFile(path);
         if (!file)
             return false;
         
@@ -116,7 +116,7 @@ bool Texture::LoadFromFile(const std::string& path, bool createMips)
         std::vector<unsigned char> data;
         unsigned char* decoded;
 
-        pb::File* file = pb::FileSystem::Instance()->OpenFile(path);
+        auto file = pb::FileSystem::Instance()->OpenFile(path);
         if (!file)
             return false;
         
@@ -127,8 +127,6 @@ bool Texture::LoadFromFile(const std::string& path, bool createMips)
 
         if (!glm::isPowerOfTwo(width) || !glm::isPowerOfTwo(height))
             createMips = false;
-        
-        delete file;
         
         if (components == 4)
         {

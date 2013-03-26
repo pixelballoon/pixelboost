@@ -23,7 +23,7 @@ ResourceError XmlResource::ProcessResource(ResourcePool* pool, ResourceProcess p
     {
         case kResourceProcessLoad:
         {
-            File* file = FileSystem::Instance()->OpenFile(filename);
+            auto file = FileSystem::Instance()->OpenFile(filename);
             if (!file)
             {
                 PbLogError("pb.resource.xml", "Error opening XML file (%s)", filename.c_str());
@@ -31,7 +31,6 @@ ResourceError XmlResource::ProcessResource(ResourcePool* pool, ResourceProcess p
             }
             
             file->ReadAll(_Data);
-            delete file;
             
             return kResourceErrorNone;
         }

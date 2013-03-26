@@ -89,7 +89,7 @@ LogSubscriberFile::LogSubscriberFile(const std::string& filename)
 
 LogSubscriberFile::~LogSubscriberFile()
 {
-    delete _File;
+    
 }
 
 void LogSubscriberFile::OnLogMessage(LogLevel logLevel, const std::string& system, const std::string& message)

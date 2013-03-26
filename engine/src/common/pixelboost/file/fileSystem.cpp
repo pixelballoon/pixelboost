@@ -208,7 +208,7 @@ void FileSystem::MountReadLocation(const std::string& path, const std::string& m
     PHYSFS_mount(path.c_str(), mountPoint.c_str(), prepend ? 0 : 1);
 }
 
-File* FileSystem::OpenFile(const std::string& path, FileMode mode)
+std::shared_ptr<File> FileSystem::OpenFile(const std::string& path, FileMode mode)
 {
     PHYSFS_file* handle = 0;
     
@@ -241,7 +241,7 @@ File* FileSystem::OpenFile(const std::string& path, FileMode mode)
     if (!handle)
         return 0;
     
-    return new File(handle);
+    return std::shared_ptr<File>(new File(handle));
 }
 
 bool FileSystem::QueryFile(FileInfo& info, const std::string& path)

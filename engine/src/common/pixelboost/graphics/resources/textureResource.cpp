@@ -100,13 +100,11 @@ bool TextureResource::LoadFile(const std::string& filename)
 {
     PbLogDebug("pb.resource.texture", "Loading texture from file (%s)", filename.c_str());
     
-    pb::File* file = pb::FileSystem::Instance()->OpenFile(filename);
+    auto file = pb::FileSystem::Instance()->OpenFile(filename);
     if (!file)
         return false;
     
     file->ReadAll(_FileData);
-    
-    delete file;
     
     return true;
 }

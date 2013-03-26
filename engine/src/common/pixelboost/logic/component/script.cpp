@@ -65,14 +65,13 @@ void ScriptComponent::SetActive(bool active)
 
 void ScriptComponent::SetSourceFile(const std::string& filename)
 {
-    File* file = FileSystem::Instance()->OpenFile(filename);
+    auto file = FileSystem::Instance()->OpenFile(filename);
     
     if (!file)
         return;
     
     std::string source;
     file->ReadAll(source);
-    delete file;
     
     SetSourceString(source);
 }

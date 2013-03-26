@@ -162,7 +162,7 @@ ResourceError SvgResource::Load(const std::string& filename)
 {
     std::string data;
     
-    pb::File* file = pb::FileSystem::Instance()->OpenFile(filename, pb::kFileModeRead);
+    auto file = pb::FileSystem::Instance()->OpenFile(filename, pb::kFileModeRead);
     
     if (!file)
     {
@@ -170,7 +170,6 @@ ResourceError SvgResource::Load(const std::string& filename)
     }
 
     file->ReadAll(data);
-    delete file;
     
     if (!_Xml.load_buffer(data.c_str(), data.length()))
     {

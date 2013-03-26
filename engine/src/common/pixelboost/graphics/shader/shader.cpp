@@ -180,7 +180,7 @@ Shader::~Shader()
 
 bool Shader::Load(const std::string& filename)
 {
-    pb::File* file = pb::FileSystem::Instance()->OpenFile(filename);
+    auto file = pb::FileSystem::Instance()->OpenFile(filename);
     
     std::string effect;
     
@@ -191,7 +191,6 @@ bool Shader::Load(const std::string& filename)
     }
     
     file->ReadAll(effect);
-    delete file;
     
     pugi::xml_document document;
     if (!document.load(effect.c_str()))
