@@ -102,17 +102,11 @@ set (VIEW_MANIPULATOR_SOURCES
 set (VIEW_UI_CREATE_SOURCES
 	"source/view/ui/create/createPanel.cpp"
 	"source/view/ui/create/createPanel.h"
-	"source/view/ui/create/createRecord.cpp"
-	"source/view/ui/create/createRecord.h"
 	)
 
 set (VIEW_UI_SETTINGS_SOURCES
-	"source/view/ui/settings/moveManipulator.cpp"
-	"source/view/ui/settings/moveManipulator.h"
 	"source/view/ui/settings/networkWindow.cpp"
 	"source/view/ui/settings/networkWindow.h"
-	"source/view/ui/settings/rotateManipulator.cpp"
-	"source/view/ui/settings/rotateManipulator.h"
 	)
 
 set (VIEW_UI_SOURCES
