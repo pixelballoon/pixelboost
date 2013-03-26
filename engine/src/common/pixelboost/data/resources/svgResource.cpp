@@ -5,6 +5,7 @@
 #include "pugixml/pugixml.hpp"
 
 #include "pixelboost/data/resources/svgResource.h"
+#include "pixelboost/debug/log.h"
 #include "pixelboost/file/fileSystem.h"
 
 using namespace pb;
@@ -26,6 +27,8 @@ public:
         kTokenTypeCurveRelative,
         kTokenTypeSmoothAbsolute,
         kTokenTypeSmoothRelative,
+        kTokenTypeLineToAbsolute,
+        kTokenTypeLineToRelative,
         kTokenTypeNumber,
     };
     
@@ -113,7 +116,12 @@ ResourceError SvgResource::ProcessResource(ResourcePool* pool, ResourceProcess p
             
             _Size = glm::vec2(atof(svg.node().attribute("width").value()), atof(svg.node().attribute("height").value()))/32.f;
             
-            ParseAll();
+            if (!ParseAll())
+            {
+                _Xml.reset();
+                errorDetails = "Failed to parse spline";
+                return kResourceErrorSystemError;
+            }
             
             _Xml.reset();
             
@@ -178,7 +186,8 @@ bool SvgResource::ParseAll()
     
     for (const auto& group : groups)
     {
-        ParseGroup(group.node().attribute("id").value());
+        if (!ParseGroup(group.node().attribute("id").value()))
+            return false;
     }
     
     return true;
@@ -199,7 +208,8 @@ bool SvgResource::ParseGroup(const std::string& name)
         path.Name = pathIt->node().attribute("id").value();
         
         PathParser parser(pathIt->node().attribute("d").value(), 32.f);
-        parser.Parse(path);
+        if (!parser.Parse(path))
+            return false;
         
         if (parser.Points.size() > 1)
         {
@@ -276,6 +286,9 @@ bool PathTokenizer::Tokenize()
                 } else if (character == 's')
                 {
                     _Tokens.push(Token(absolute?kTokenTypeSmoothAbsolute:kTokenTypeSmoothRelative));
+                } else if (character == 'l')
+                {
+                    _Tokens.push(Token(absolute?kTokenTypeLineToAbsolute:kTokenTypeLineToRelative));
                 } else if ((character >= '0' && character <= '9') || character == '-') {
                     _State = kStateNumber;
                     continue;
@@ -366,7 +379,9 @@ bool PathParser::Parse(SvgPath& path)
         if (token.type != PathTokenizer::kTokenTypeNumber)
         {
             if (numbers.size() != 0)
+            {
                 return false;
+            }
             
             stateToken = token;
         } else {
@@ -470,6 +485,14 @@ bool PathParser::Parse(SvgPath& path)
                     numbers.clear();
                 }
                 break;
+            }
+            case PathTokenizer::kTokenTypeLineToAbsolute:
+            {
+                numbers.clear();
+            }
+            case PathTokenizer::kTokenTypeLineToRelative:
+            {
+                numbers.clear();
             }
             default:
                 break;
