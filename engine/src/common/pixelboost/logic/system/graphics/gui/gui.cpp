@@ -159,7 +159,7 @@ void GuiSystem::Render(Scene* scene, Viewport* viewport, RenderPass renderPass)
             _State.Active.Item = {0,0,0};
         }
         
-        if (!_State.Keyboard.Active)
+        if (!_State.Keyboard.Active || _State.MousePressed)
         {
             _State.Keyboard.Item = {0,0,0};
         }

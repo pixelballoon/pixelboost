@@ -214,6 +214,43 @@ void GuiControls::EndScrollArea(const GuiRenderMessage& message, const GuiId& gu
     }
 }
 
+void GuiControls::DoSpacer(const GuiRenderMessage& message, const GuiId& guiId, glm::vec2 minimumSize, const std::vector<GuiLayoutHint>& hints)
+{
+    if (message.GetEventType() == GuiRenderMessage::kEventTypeLayout)
+    {
+        message.GetGuiSystem()->AddLayout("spacer", guiId, hints, minimumSize);
+    }
+}
+
+int GuiControls::DoPageSelector(const GuiRenderMessage& message, const GuiId& guiId, const std::vector<std::string>& options, const std::vector<GuiLayoutHint>& layout)
+{
+    GuiData& data = message.GetGuiSystem()->GetData(guiId);
+    
+    if (!data.Initialised)
+    {
+        data.Initialised = true;
+        data.Data[0].Integer = -1;
+    }
+    
+    if (data.Data[0].Integer == -1)
+    {
+        for (int i=0; i<options.size(); i++)
+        {
+            if (DoButton(message, PbNestedGuiId(guiId, i), options[i]))
+            {
+                data.Data[0].Integer = i;
+            }
+        }
+    } else {
+        if (DoButton(message, PbNestedGuiId(guiId, 0), "<-- Back"))
+        {
+            data.Data[0].Integer = -1;
+        }
+    }
+    
+    return data.Data[0].Integer;
+}
+
 int GuiControls::DoCombo(const GuiRenderMessage& message, const GuiId& guiId, const std::string& label, const std::vector<std::string>& options, const std::vector<GuiLayoutHint>& layout)
 {
     int returnVal = -1;
@@ -319,6 +356,7 @@ bool GuiControls::DoButton(const GuiRenderMessage& message, const GuiId& guiId, 
                 {
                     pressed = true;
                 }
+                state.Active.Item = {0,0,0};
             } else {
                 state.Active.Active = true;
             }
@@ -350,6 +388,24 @@ bool GuiControls::DoButton(const GuiRenderMessage& message, const GuiId& guiId, 
     }
     
     return false;
+}
+
+bool GuiControls::DoToggleButton(const GuiRenderMessage& message, const GuiId& guiId, const std::string& caption, const std::vector<GuiLayoutHint>& hints)
+{
+    GuiData& data = message.GetGuiSystem()->GetData(guiId);
+    
+    if (!data.Initialised)
+    {
+        data.Initialised = true;
+        data.Data[0].Bool = false;
+    }
+    
+    if (DoButton(message, PbNestedGuiId(guiId, 0), caption, hints))
+    {
+        data.Data[0].Bool = !data.Data[0].Bool;
+    }
+   
+    return data.Data[0].Bool;
 }
 
 std::pair<bool, std::string> GuiControls::DoTextBox(const GuiRenderMessage& message, const GuiId& guiId, const std::string& value, const std::vector<GuiLayoutHint>& hints)

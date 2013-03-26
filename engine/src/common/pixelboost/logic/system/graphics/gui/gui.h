@@ -182,6 +182,7 @@ namespace pb
         {
             bool Bool;
             float Float;
+            int Integer;
         };
         
         bool Active;

@@ -29,9 +29,13 @@ namespace pb
         static void EndScrollArea(const GuiRenderMessage& message, const GuiId& guiId);
         
     public:
+        static void DoSpacer(const GuiRenderMessage& message, const GuiId& guiId, glm::vec2 minimumSize, const std::vector<GuiLayoutHint>& hints = std::vector<GuiLayoutHint>());
+        
+        static int DoPageSelector(const GuiRenderMessage& message, const GuiId& guiId, const std::vector<std::string>& options, const std::vector<GuiLayoutHint>& hints = std::vector<GuiLayoutHint>());
         static int DoCombo(const GuiRenderMessage& message, const GuiId& guiId, const std::string& label, const std::vector<std::string>& options, const std::vector<GuiLayoutHint>& hints = std::vector<GuiLayoutHint>());
         static void DoLabel(const GuiRenderMessage& message, const GuiId& guiId, const std::string& label, const std::vector<GuiLayoutHint>& hints = std::vector<GuiLayoutHint>());
         static bool DoButton(const GuiRenderMessage& message, const GuiId& guiId, const std::string& caption, const std::vector<GuiLayoutHint>& hints = std::vector<GuiLayoutHint>());
+        static bool DoToggleButton(const GuiRenderMessage& message, const GuiId& guiId, const std::string& caption, const std::vector<GuiLayoutHint>& hints = std::vector<GuiLayoutHint>());
         static std::pair<bool, std::string> DoTextBox(const GuiRenderMessage& message, const GuiId& guiId, const std::string& value, const std::vector<GuiLayoutHint>& hints = std::vector<GuiLayoutHint>());
     };
     
