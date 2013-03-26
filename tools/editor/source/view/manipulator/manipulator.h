@@ -10,6 +10,7 @@
 
 namespace pb
 {
+    class GuiRenderMessage;
     class RenderLayer;
 }
 
@@ -38,6 +39,8 @@ public:
     
     virtual void OnSetActive();
     virtual void OnSetInactive();
+    
+    virtual void DoGui(const pb::GuiRenderMessage& guiRenderMessage);
 };
 
 class ManipulatorManager

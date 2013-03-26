@@ -110,6 +110,11 @@ void Manipulator::OnSetInactive()
     
 }
 
+void Manipulator::DoGui(const pb::GuiRenderMessage& guiRenderMessage)
+{
+    
+}
+
 ManipulatorManager::ManipulatorManager(pb::Scene* scene)
     : _ActiveManipulator(0)
     , _Scene(scene)

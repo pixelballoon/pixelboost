@@ -1,4 +1,6 @@
 #include "pixelboost/graphics/camera/camera.h"
+#include "pixelboost/graphics/renderer/gui/controls.h"
+#include "pixelboost/logic/message/graphics/gui.h"
 
 #include "core/selection.h"
 #include "view/entity/entity.h"
@@ -134,6 +136,24 @@ void MoveManipulator::OnSetActive()
 void MoveManipulator::OnSetInactive()
 {
     
+}
+
+void MoveManipulator::DoGui(const pb::GuiRenderMessage& guiRenderMessage)
+{
+    pb::GuiControls::DoLabel(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Snap:");
+    pb::GuiControls::BeginHorizontal(guiRenderMessage, PbGuiId(guiRenderMessage, 0));
+    int i=0;
+    for (float snap : {0.f, 0.25f, 0.5f, 1.f, 2.f, 5.f, 10.f})
+    {
+        char stringValue[32];
+        snprintf(stringValue, 32, "%g", snap);
+        if (pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, i), snap == 0.f ? "Off" : stringValue, {pb::GuiLayoutHint::ExpandWidth()}))
+        {
+            _Snap = glm::vec3(snap,snap,snap);
+        }
+        i++;
+    }
+    pb::GuiControls::EndHorizontal(guiRenderMessage);
 }
 
 glm::vec3 MoveManipulator::GetSnap() const

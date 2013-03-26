@@ -126,12 +126,12 @@ void PropertyUi::DoArray(const pb::GuiRenderMessage& guiRenderMessage, const Sch
             
             pb::GuiControls::EndHorizontal(guiRenderMessage);
         }
-        
-        if (pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "+", {pb::GuiLayoutHint::Width(20)}))
-        {
-            PropertyArray* array = item->AcquireArray(path);
-            array->AddElement();
-        }
+    }
+    
+    if (pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "+", {pb::GuiLayoutHint::Width(20)}))
+    {
+        PropertyArray* array = item->AcquireArray(path);
+        array->AddElement();
     }
 }
 

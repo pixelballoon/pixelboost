@@ -13,6 +13,7 @@
 #include "project/schema.h"
 #include "view/entity/entity.h"
 #include "view/manipulator/create.h"
+#include "view/manipulator/manipulator.h"
 #include "view/ui/editor.h"
 #include "view/ui/property.h"
 #include "view/level.h"
@@ -38,6 +39,8 @@ void DoViewport(const pb::GuiRenderMessage& message, pb::GuiId guiId, const std:
 EditorUi::EditorUi(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity)
     : pb::Entity(scene, parent, creationEntity)
 {
+    _PropertyUi = new PropertyUi();
+    
     CreateComponent<pb::TransformComponent>();
     CreateComponent<pb::GuiComponent>();
     
@@ -47,7 +50,7 @@ EditorUi::EditorUi(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationE
 
 EditorUi::~EditorUi()
 {
-    
+    delete _PropertyUi;
 }
 
 void EditorUi::OnGuiRender(const pb::Message& message)
@@ -136,20 +139,19 @@ void EditorUi::DoSceneViewPanel(const pb::GuiRenderMessage& guiRenderMessage)
         }
     } else
     {
-        std::vector<ProjectRecord*> records;
-        for (auto record : Core::Instance()->GetProject()->GetRecords())
-        {
-            records.push_back(record.second);
-        }
+        pb::GuiControls::DoLabel(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Controls:");
         
-        std::sort(records.begin(), records.end(), [](ProjectRecord* a, ProjectRecord*b) { return a->GetName() < b->GetName(); });
+        int selectedPage = pb::GuiControls::DoPageSelector(guiRenderMessage, PbGuiId(guiRenderMessage, 0), {"Create Record", "Open Record"});
         
-        for (const auto& record : records)
+        switch (selectedPage)
         {
-            if (pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, record->GetUid()), record->GetName()))
-            {
-                View::Instance()->SetRecord(record);
-            }
+            case 0:
+                DoCreateRecordPage(guiRenderMessage);
+                break;
+                
+            case 1:
+                DoOpenRecordPage(guiRenderMessage);
+                break;
         }
     }
     
@@ -176,20 +178,20 @@ void EditorUi::DoPropertyPanel(const pb::GuiRenderMessage& guiRenderMessage)
         
         if (!selectedRecord->GetType()->GetAttribute("HasLevel") || !selection.GetSelection().size())
         {
-            PropertyUi::DoProperties(guiRenderMessage, selectedRecord);
+            _PropertyUi->DoProperties(guiRenderMessage, selectedRecord);
         } else {
             Selection::Entities::const_reverse_iterator entityIt = selection.GetSelection().rbegin();
             
             if (entityIt == selection.GetSelection().rend())
             {
-                PropertyUi::DoProperties(guiRenderMessage, selectedRecord);
+                _PropertyUi->DoProperties(guiRenderMessage, selectedRecord);
             } else
             {
                 ViewEntity* entity = View::Instance()->GetLevel()->GetEntityById(entityIt->first);
                 
                 if (entity)
                 {
-                    PropertyUi::DoProperties(guiRenderMessage, entity->GetEntity());
+                    _PropertyUi->DoProperties(guiRenderMessage, entity->GetEntity());
                 }
             }
         }
@@ -205,20 +207,13 @@ void EditorUi::DoContextPanel(const pb::GuiRenderMessage& guiRenderMessage)
     {
         auto controlArea = pb::GuiControls::BeginScrollArea(guiRenderMessage, PbGuiId(guiRenderMessage, 0), {pb::GuiLayoutHint::Width(300), pb::GuiLayoutHint::ExpandHeight()});
         
-        pb::GuiControls::DoLabel(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Create Entity:");
-        
-        Schema* schema = Core::Instance()->GetProject()->GetSchema();
-        
-        for (const auto& entity : schema->GetEntities())
+        if (View::Instance()->GetManipulatorManager()->GetActiveManipulator()->GetManipulatorName() == "select")
         {
-            if (pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, pb::TypeHash(entity.first.c_str())), entity.first))
-            {
-                CreateManipulator* createManipulator = static_cast<CreateManipulator*>(View::Instance()->GetManipulatorManager()->SetActiveManipulator("create"));
-                
-                createManipulator->SetEntityType(entity.first);
-            }
+            DoContextCreate(guiRenderMessage);
+        } else {
+            DoContextManipulator(guiRenderMessage);
         }
-
+        
         pb::GuiControls::EndScrollArea(guiRenderMessage, controlArea);
     }
 }
@@ -229,5 +224,94 @@ void EditorUi::DoViewports(const pb::GuiRenderMessage& guiRenderMessage)
     if (selectedRecord && selectedRecord->GetType()->GetAttribute("HasLevel"))
     {
         DoViewport(guiRenderMessage, PbGuiId(guiRenderMessage, 0), {pb::GuiLayoutHint::ExpandWidth(), pb::GuiLayoutHint::ExpandHeight()});
+    }
+}
+
+void EditorUi::DoContextCreate(const pb::GuiRenderMessage& guiRenderMessage)
+{
+    pb::GuiControls::DoLabel(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Create Entity:");
+    
+    Schema* schema = Core::Instance()->GetProject()->GetSchema();
+    
+    for (const auto& entity : schema->GetEntities())
+    {
+        if (pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, pb::TypeHash(entity.first.c_str())), entity.first))
+        {
+            CreateManipulator* createManipulator = static_cast<CreateManipulator*>(View::Instance()->GetManipulatorManager()->SetActiveManipulator("create"));
+            
+            createManipulator->SetEntityType(entity.first);
+        }
+    }
+}
+
+void EditorUi::DoContextManipulator(const pb::GuiRenderMessage& guiRenderMessage)
+{
+    View::Instance()->GetManipulatorManager()->GetActiveManipulator()->DoGui(guiRenderMessage);
+}
+
+void EditorUi::DoCreateRecordPage(const pb::GuiRenderMessage& guiRenderMessage)
+{
+    pb::GuiControls::DoLabel(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Name:");
+    
+    auto recordName = pb::GuiControls::DoTextBox(guiRenderMessage, PbGuiId(guiRenderMessage, 0), _RecordName);
+    if (recordName.first)
+    {
+        _RecordName = recordName.second;
+    }
+    
+    pb::GuiControls::DoLabel(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Type:");
+    
+    std::vector<std::string> typeOptions;
+    for (const auto& record : Core::Instance()->GetProject()->GetSchema()->GetRecords())
+    {
+        typeOptions.push_back(record.second->GetName());
+    }
+    
+    int selectedType = pb::GuiControls::DoCombo(guiRenderMessage, PbGuiId(guiRenderMessage, 0), _RecordType, typeOptions);
+    if (selectedType >= 0)
+    {
+        _RecordType = typeOptions[selectedType];
+    }
+    
+    pb::GuiControls::DoSpacer(guiRenderMessage, PbGuiId(guiRenderMessage, 0), glm::vec2(0,20));
+    
+    if (pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Create Record"))
+    {
+        if (_RecordName.length() && _RecordType.length() && Core::Instance()->GetProject()->AddRecord(_RecordName, _RecordType))
+        {
+            View::Instance()->SetRecord(Core::Instance()->GetProject()->GetRecordByName(_RecordName));
+        }
+    }
+}
+
+void EditorUi::DoOpenRecordPage(const pb::GuiRenderMessage& guiRenderMessage)
+{
+    pb::GuiControls::DoLabel(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Filter:");
+    
+    auto filterText = pb::GuiControls::DoTextBox(guiRenderMessage, PbGuiId(guiRenderMessage, 0), _RecordFilter);
+    if (filterText.first)
+    {
+        _RecordFilter = filterText.second;
+    }
+    
+    pb::GuiControls::DoLabel(guiRenderMessage, PbGuiId(guiRenderMessage, 0), "Records:");
+    
+    std::vector<ProjectRecord*> records;
+    for (auto record : Core::Instance()->GetProject()->GetRecords())
+    {
+        if (_RecordFilter.length() == 0 || record.second->GetName().find(_RecordFilter) != std::string::npos)
+        {
+            records.push_back(record.second);
+        }
+    }
+    
+    std::sort(records.begin(), records.end(), [](ProjectRecord* a, ProjectRecord*b) { return a->GetName() < b->GetName(); });
+    
+    for (const auto& record : records)
+    {
+        if (pb::GuiControls::DoButton(guiRenderMessage, PbGuiId(guiRenderMessage, record->GetUid()), record->GetName()))
+        {
+            View::Instance()->SetRecord(record);
+        }
     }
 }

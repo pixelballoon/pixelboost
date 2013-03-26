@@ -24,6 +24,8 @@ public:
     virtual void OnSetActive();
     virtual void OnSetInactive();
     
+    virtual void DoGui(const pb::GuiRenderMessage& guiRenderMessage);
+    
     glm::vec3 GetSnap() const;
     void SetSnap(glm::vec3 snap);
     
