@@ -65,9 +65,9 @@ bool MoveManipulator::OnMouseMove(glm::vec2 position)
     
     _End = position;
     
-    glm::vec2 start = View::Instance()->GetLevelCamera()->ConvertScreenToWorld(_Start);
-    glm::vec2 end = View::Instance()->GetLevelCamera()->ConvertScreenToWorld(_End);
-    glm::vec2 transform = end-start;
+    glm::vec3 start = View::Instance()->GetActiveViewport()->ConvertScreenToWorld(_Start);
+    glm::vec3 end = View::Instance()->GetActiveViewport()->ConvertScreenToWorld(_End);
+    glm::vec3 transform = end-start;
     
     for (EntityList::iterator it = _EntityIds.begin(); it != _EntityIds.end(); ++it)
     {
@@ -75,7 +75,7 @@ bool MoveManipulator::OnMouseMove(glm::vec2 position)
         if (entity)
         {
             entity->ResetTransform();
-            glm::vec3 position = entity->GetPosition() + glm::vec3(transform,0);
+            glm::vec3 position = entity->GetPosition() + transform;
             if (_Snap.x != 0)
                 position.x = position.x - glm::mod(position.x, _Snap.x);
             if (_Snap.y != 0)

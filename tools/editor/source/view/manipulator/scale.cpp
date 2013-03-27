@@ -64,10 +64,10 @@ bool ScaleManipulator::OnMouseMove(glm::vec2 position)
     
     _End = position;
     
-    glm::vec2 start = View::Instance()->GetLevelCamera()->ConvertScreenToWorld(_Start);
-    glm::vec2 end = View::Instance()->GetLevelCamera()->ConvertScreenToWorld(_End);
-    float startLength = glm::length(start-glm::vec2(_Center.x, _Center.y));
-    float currentLength = glm::length(end-glm::vec2(_Center.x, _Center.y));
+    glm::vec3 start = View::Instance()->GetActiveViewport()->ConvertScreenToWorld(_Start);
+    glm::vec3 end = View::Instance()->GetActiveViewport()->ConvertScreenToWorld(_End);
+    float startLength = glm::length(glm::vec2(start.x, start.y)-glm::vec2(_Center.x, _Center.y));
+    float currentLength = glm::length(glm::vec2(end.x, end.y)-glm::vec2(_Center.x, _Center.y));
     
     if (startLength > 0)
     {

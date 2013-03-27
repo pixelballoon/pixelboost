@@ -71,7 +71,7 @@ public:
         
         if (event.Key == pb::kKeyboardKeyCharacter)
         {
-            if (event.Modifier == pb::kModifierKeyControl)
+            if (event.Modifier == pb::kModifierKeyCtrl)
             {
                 switch (event.Character)
                 {
@@ -86,9 +86,12 @@ public:
                         return true;
                     case 'v':
                     {
-                        char arguments[32];
-                        snprintf(arguments, 32, "-r %d", View::Instance()->GetRecord()->GetUid());
-                        Core::Instance()->GetCommandManager()->Exec("paste", arguments);
+                        if (View::Instance()->GetRecord())
+                        {
+                            char arguments[32];
+                            snprintf(arguments, 32, "-r %d", View::Instance()->GetRecord()->GetUid());
+                            Core::Instance()->GetCommandManager()->Exec("paste", arguments);
+                        }
                         return true;
                     }
                     case '[':
@@ -102,8 +105,7 @@ public:
                 switch (event.Character)
                 {
                     case 'f':
-                        View::Instance()->GetLevelCamera()->Position = glm::vec3(0,0,500);
-                        View::Instance()->GetLevelCamera()->Scale = glm::vec2(1,1);
+                        View::Instance()->GetActiveViewport()->FrameSelection();
                         return true;
                 }
             }
@@ -135,7 +137,7 @@ public:
         {
             case pb::MouseEvent::kMouseEventScroll:
             {
-                if (event.Scroll.Modifier & pb::kModifierCtrl)
+                if (event.Scroll.Modifier & pb::kModifierKeyCtrl)
                 {
                     View::Instance()->Zoom(event.Scroll.Delta[1]/1200.f);
                 } else
@@ -154,6 +156,69 @@ public:
         }
     }
 };
+
+OrthographicViewport::OrthographicViewport()
+{
+    _Camera = new pb::OrthographicCamera();
+}
+
+OrthographicViewport::~OrthographicViewport()
+{
+    delete _Camera;
+}
+
+pb::Camera* OrthographicViewport::GetCamera()
+{
+    return _Camera;
+}
+
+Viewport::ViewportType OrthographicViewport::GetType()
+{
+    return kViewportTypeOrthographic;
+}
+
+glm::vec3 OrthographicViewport::ConvertScreenToWorld(glm::vec2 position)
+{
+    return glm::vec3(_Camera->ConvertScreenToWorld(position), 0);
+}
+
+void OrthographicViewport::FrameSelection()
+{
+    _Camera->Position = glm::vec3(0,0,500);
+    _Camera->Rotation = glm::vec3(0,0,0);
+    _Camera->Scale = glm::vec2(1,1);
+}
+
+PerspectiveViewport::PerspectiveViewport()
+{
+    _Camera = new pb::OrbitalCamera();
+}
+
+PerspectiveViewport::~PerspectiveViewport()
+{
+    delete _Camera;
+}
+
+pb::Camera* PerspectiveViewport::GetCamera()
+{
+    return _Camera;
+}
+
+Viewport::ViewportType PerspectiveViewport::GetType()
+{
+    return kViewportTypePerspective;
+}
+
+glm::vec3 PerspectiveViewport::ConvertScreenToWorld(glm::vec2 position)
+{
+    return glm::vec3(0,0,0);
+}
+
+void PerspectiveViewport::FrameSelection()
+{
+    _Camera->Position = glm::vec3(0,0,0);
+    _Camera->Distance = 20.f;
+}
 
 View::View(void* platformContext, int argc, const char** argv)
     : pb::Engine(platformContext, argc, argv, false)
@@ -184,7 +249,6 @@ View::~View()
     pb::Renderer::Instance()->RemoveViewport(_LevelViewport);
     
     delete _LevelViewport;
-    delete _LevelCamera;
     delete _LevelScene;
     
     delete _KeyboardHandler;
@@ -198,8 +262,8 @@ View* View::Instance()
 
 void View::Initialise()
 {
-    _LevelCamera = new pb::OrthographicCamera();
-    _LevelViewport = new pb::Viewport(0, _LevelCamera);
+    _ActiveViewport = new OrthographicViewport();
+    _LevelViewport = new pb::Viewport(0, _ActiveViewport->GetCamera());
     _LevelScene = new pb::Scene();
     _LevelScene->AddSystem(new pb::BoundsRenderSystem());
     _LevelViewport->SetScene(_LevelScene);
@@ -255,15 +319,26 @@ void View::SetDirty()
 
 void View::Scroll(glm::vec2 offset)
 {
-    _LevelCamera->Position += glm::vec3(offset, 0);
+    _ActiveViewport->GetCamera()->Position += glm::vec3(offset, 0);
 }
 
 void View::Zoom(float delta)
 {
-    float minZoom = 0.1f;
-    float maxZoom = 2.f;
-    glm::vec2 scale = _LevelCamera->Scale;
-    _LevelCamera->Scale = glm::vec2(glm::max(glm::min(maxZoom, scale[0]+delta), minZoom), glm::max(glm::min(maxZoom, scale[1]+delta), minZoom));
+    if (_ActiveViewport->GetType() == Viewport::kViewportTypeOrthographic)
+    {
+        pb::OrthographicCamera* camera = static_cast<pb::OrthographicCamera*>(_ActiveViewport->GetCamera());
+        float minZoom = 0.1f;
+        float maxZoom = 2.f;
+        glm::vec2 scale = camera->Scale;
+        camera->Scale = glm::vec2(glm::max(glm::min(maxZoom, scale[0]+delta), minZoom), glm::max(glm::min(maxZoom, scale[1]+delta), minZoom));
+    } else if (_ActiveViewport->GetType() == Viewport::kViewportTypePerspective)
+    {
+        pb::OrbitalCamera* camera = static_cast<pb::OrbitalCamera*>(_ActiveViewport->GetCamera());
+        float minDistance = 1.f;
+        float maxDistance = 100.f;
+        float distance = camera->Distance;
+        camera->Distance = glm::max(glm::min(maxDistance, distance-(delta * 100)), minDistance);
+    }
 }
 
 pb::Scene* View::GetLevelScene()
@@ -276,9 +351,9 @@ Level* View::GetLevel()
     return _Level;
 }
 
-pb::OrthographicCamera* View::GetLevelCamera()
+Viewport* View::GetActiveViewport()
 {
-    return _LevelCamera;
+    return _ActiveViewport;
 }
 
 void View::OnDisplayResolutionChanged(glm::vec2 resolution)
@@ -298,8 +373,7 @@ void View::SetCanvasSize(glm::vec2 size)
 
 void View::SetRecord(ProjectRecord* record)
 {
-    _LevelCamera->Position = glm::vec3(0,0,500);
-    _LevelCamera->Scale = glm::vec2(1,1);
+    GetActiveViewport()->FrameSelection();
     _Record = record;
     _Level->SetRecord(_Record);
 }

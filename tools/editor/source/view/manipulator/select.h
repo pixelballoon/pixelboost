@@ -24,9 +24,17 @@ public:
     virtual void OnSetInactive();
     
 private:
+    enum Mode
+    {
+        kModeMove,
+        kModeRotate,
+        kModeSelect,
+    };
+    
     bool _Active;
-    glm::vec2 _SelectStart;
-    glm::vec2 _SelectEnd;
+    Mode _Mode;
+    glm::vec2 _MouseStart;
+    glm::vec2 _MouseEnd;
     
     pb::RectangleComponent* _BoundsComponent;
 };

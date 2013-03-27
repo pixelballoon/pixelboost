@@ -65,9 +65,9 @@ glm::vec2 OrthographicCamera::ConvertScreenToWorld(glm::vec2 screen)
 	return position;
 }
 
-PerspectiveCamera::PerspectiveCamera(glm::vec3 position, glm::vec3 rotation)
+PerspectiveCamera::PerspectiveCamera(glm::vec3 position, glm::vec3 rotation, float fieldOfView)
     : Camera(position, rotation)
-    , FieldOfView(90.f)
+    , FieldOfView(fieldOfView)
 {
     
 }
@@ -83,6 +83,33 @@ void PerspectiveCamera::CalculateTransform(Viewport* viewport)
     
     ProjectionMatrix = glm::perspectiveFov(FieldOfView, viewportSize.x, viewportSize.y, ZNear, ZFar);
     ViewMatrix = glm::rotate(glm::mat4x4(), Rotation.x, glm::vec3(1,0,0));
+    ViewMatrix = glm::rotate(ViewMatrix, Rotation.y, glm::vec3(0,1,0));
+    ViewMatrix = glm::rotate(ViewMatrix, Rotation.z, glm::vec3(0,0,1));
+    ViewMatrix = glm::translate(ViewMatrix, -Position);
+    
+    Camera::CalculateTransform(viewport);
+}
+
+OrbitalCamera::OrbitalCamera(glm::vec3 position, glm::vec3 rotation, float distance, float fieldOfView)
+    : Camera(position, rotation)
+    , Distance(distance)
+    , FieldOfView(fieldOfView)
+{
+    
+}
+
+Camera::CameraType OrbitalCamera::GetType() const
+{
+    return kCameraOrbital;
+}
+
+void OrbitalCamera::CalculateTransform(Viewport* viewport)
+{
+    glm::vec2 viewportSize = viewport->GetSize() / 2.f;
+    
+    ProjectionMatrix = glm::perspectiveFov(FieldOfView, viewportSize.x, viewportSize.y, ZNear, ZFar);
+    ViewMatrix = glm::translate(glm::mat4x4(), glm::vec3(0,0,-Distance));
+    ViewMatrix = glm::rotate(ViewMatrix, Rotation.x, glm::vec3(1,0,0));
     ViewMatrix = glm::rotate(ViewMatrix, Rotation.y, glm::vec3(0,1,0));
     ViewMatrix = glm::rotate(ViewMatrix, Rotation.z, glm::vec3(0,0,1));
     ViewMatrix = glm::translate(ViewMatrix, -Position);

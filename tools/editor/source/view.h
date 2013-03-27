@@ -13,8 +13,10 @@
 
 namespace pb
 {
+    class Camera;
     class MaterialResource;
     class Model;
+    class OrbitalCamera;
     class OrthographicCamera;
     class RenderLayer;
     class Scene;
@@ -30,6 +32,57 @@ class ProjectRecord;
 class ViewEntity;
 class ViewKeyboardHandler;
 class ViewMouseHandler;
+
+class Viewport
+{
+public:
+    enum ViewportType
+    {
+        kViewportTypeOrthographic,
+        kViewportTypePerspective,
+    };
+    
+    virtual ViewportType GetType() = 0;
+    virtual pb::Camera* GetCamera() = 0;
+    
+    virtual glm::vec3 ConvertScreenToWorld(glm::vec2 position) = 0;
+    
+    virtual void FrameSelection() = 0;
+};
+
+class OrthographicViewport : public Viewport
+{
+public:
+    OrthographicViewport();
+    ~OrthographicViewport();
+    
+    virtual pb::Camera* GetCamera();
+    virtual ViewportType GetType();
+    
+    virtual glm::vec3 ConvertScreenToWorld(glm::vec2 position);
+    
+    virtual void FrameSelection();
+    
+private:
+    pb::OrthographicCamera* _Camera;
+};
+
+class PerspectiveViewport : public Viewport
+{
+public:
+    PerspectiveViewport();
+    ~PerspectiveViewport();
+    
+    virtual pb::Camera* GetCamera();
+    virtual ViewportType GetType();
+    
+    virtual glm::vec3 ConvertScreenToWorld(glm::vec2 position);
+    
+    virtual void FrameSelection();
+    
+private:
+    pb::OrbitalCamera* _Camera;
+};
 
 class View : public pb::Engine
 {
@@ -56,7 +109,7 @@ public:
     
     pb::Scene* GetLevelScene();
     Level* GetLevel();
-    pb::OrthographicCamera* GetLevelCamera();
+    Viewport* GetActiveViewport();
     
 public:
     sigslot::Signal0<> onRedraw;
@@ -79,7 +132,8 @@ private:
     
     Level* _Level;
     
-    pb::OrthographicCamera* _LevelCamera;
+    Viewport* _ActiveViewport;
+    
     pb::Scene* _LevelScene;
     pb::Viewport* _LevelViewport;
 

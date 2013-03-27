@@ -9,13 +9,6 @@ namespace pb
 {
     class Viewport;
     
-    enum MouseModifier
-    {
-        kModifierShift = 1,
-        kModifierCtrl = 2,
-        kModifierAlt = 4,
-    };
-    
     enum MouseButton
     {
         kMouseButtonLeft = 0,

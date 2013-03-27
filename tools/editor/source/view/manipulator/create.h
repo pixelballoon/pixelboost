@@ -25,7 +25,7 @@ public:
     virtual bool OnKeyUp(pb::KeyboardKey key, pb::ModifierKeys modifier, char character);
     
 private:
-    glm::vec3 GetEntityPosition(glm::vec2 start);
+    glm::vec3 GetEntityPosition(glm::vec3 position);
     void CreateEntity(glm::vec3 position);
     
 private:

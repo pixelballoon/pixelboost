@@ -156,16 +156,16 @@ enum {
     pb::ModifierKeys modifiers = 0;
     
     if ([event modifierFlags] & NSControlKeyMask)
-        modifiers |= pb::kModifierCtrl;
+        modifiers |= pb::kModifierKeyCtrl;
     
     if ([event modifierFlags] & NSCommandKeyMask)
-        modifiers |= pb::kModifierCtrl;
+        modifiers |= pb::kModifierKeyCtrl;
     
     if ([event modifierFlags] & NSShiftKeyMask)
-        modifiers |= pb::kModifierShift;
+        modifiers |= pb::kModifierKeyShift;
     
     if ([event modifierFlags] & NSAlternateKeyMask)
-        modifiers |= pb::kModifierAlt;
+        modifiers |= pb::kModifierKeyAlt;
     
     pb::Engine::Instance()->GetTouchManager()->OnTouchDown(0, glm::vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
     pb::Engine::Instance()->GetMouseManager()->OnMouseDown(pb::kMouseButtonLeft, modifiers, glm::vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
@@ -192,16 +192,16 @@ enum {
     pb::ModifierKeys modifiers = 0;
     
     if ([event modifierFlags] & NSControlKeyMask)
-        modifiers |= pb::kModifierCtrl;
+        modifiers |= pb::kModifierKeyCtrl;
     
     if ([event modifierFlags] & NSCommandKeyMask)
-        modifiers |= pb::kModifierCtrl;
+        modifiers |= pb::kModifierKeyCtrl;
     
     if ([event modifierFlags] & NSShiftKeyMask)
-        modifiers |= pb::kModifierShift;
+        modifiers |= pb::kModifierKeyShift;
     
     if ([event modifierFlags] & NSAlternateKeyMask)
-        modifiers |= pb::kModifierAlt;
+        modifiers |= pb::kModifierKeyAlt;
     
     pb::Engine::Instance()->GetTouchManager()->OnTouchUp(0, glm::vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
     pb::Engine::Instance()->GetMouseManager()->OnMouseUp(pb::kMouseButtonLeft, modifiers, glm::vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
@@ -217,16 +217,16 @@ enum {
     pb::ModifierKeys modifiers = 0;
     
     if ([event modifierFlags] & NSControlKeyMask)
-        modifiers |= pb::kModifierCtrl;
+        modifiers |= pb::kModifierKeyCtrl;
     
     if ([event modifierFlags] & NSCommandKeyMask)
-        modifiers |= pb::kModifierCtrl;
+        modifiers |= pb::kModifierKeyCtrl;
     
     if ([event modifierFlags] & NSShiftKeyMask)
-        modifiers |= pb::kModifierShift;
+        modifiers |= pb::kModifierKeyShift;
     
     if ([event modifierFlags] & NSAlternateKeyMask)
-        modifiers |= pb::kModifierAlt;
+        modifiers |= pb::kModifierKeyAlt;
     
     pb::Engine::Instance()->GetMouseManager()->OnMouseDown(pb::kMouseButtonRight, modifiers, glm::vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
 }
@@ -251,16 +251,16 @@ enum {
     pb::ModifierKeys modifiers = 0;
     
     if ([event modifierFlags] & NSControlKeyMask)
-        modifiers |= pb::kModifierCtrl;
+        modifiers |= pb::kModifierKeyCtrl;
     
     if ([event modifierFlags] & NSCommandKeyMask)
-        modifiers |= pb::kModifierCtrl;
+        modifiers |= pb::kModifierKeyCtrl;
     
     if ([event modifierFlags] & NSShiftKeyMask)
-        modifiers |= pb::kModifierShift;
+        modifiers |= pb::kModifierKeyShift;
     
     if ([event modifierFlags] & NSAlternateKeyMask)
-        modifiers |= pb::kModifierAlt;
+        modifiers |= pb::kModifierKeyAlt;
     
     pb::Engine::Instance()->GetMouseManager()->OnMouseUp(pb::kMouseButtonRight, modifiers, glm::vec2(eventLocation.x, self.frame.size.height-eventLocation.y));
 }
@@ -273,16 +273,16 @@ enum {
     pb::ModifierKeys modifiers = 0;
     
     if ([event modifierFlags] & NSControlKeyMask)
-        modifiers |= pb::kModifierCtrl;
+        modifiers |= pb::kModifierKeyCtrl;
     
     if ([event modifierFlags] & NSCommandKeyMask)
-        modifiers |= pb::kModifierCtrl;
+        modifiers |= pb::kModifierKeyCtrl;
     
     if ([event modifierFlags] & NSShiftKeyMask)
-        modifiers |= pb::kModifierShift;
+        modifiers |= pb::kModifierKeyShift;
     
     if ([event modifierFlags] & NSAlternateKeyMask)
-        modifiers |= pb::kModifierAlt;
+        modifiers |= pb::kModifierKeyAlt;
     
     pb::Engine::Instance()->GetMouseManager()->OnMouseScroll(modifiers, glm::vec2(-event.scrollingDeltaX, event.scrollingDeltaY));
 }
@@ -303,7 +303,7 @@ enum {
     int modifier = pb::kModifierKeyNone;
     if (event.modifierFlags & NSControlKeyMask || event.modifierFlags & NSCommandKeyMask)
     {
-        modifier |= pb::kModifierKeyControl;
+        modifier |= pb::kModifierKeyCtrl;
     }
     if (event.modifierFlags & NSAlternateKeyMask)
     {
@@ -392,7 +392,7 @@ enum {
     int modifier = pb::kModifierKeyNone;
     if (event.modifierFlags & NSControlKeyMask || event.modifierFlags & NSCommandKeyMask)
     {
-        modifier |= pb::kModifierKeyControl;
+        modifier |= pb::kModifierKeyCtrl;
     }
     if (event.modifierFlags & NSAlternateKeyMask)
     {

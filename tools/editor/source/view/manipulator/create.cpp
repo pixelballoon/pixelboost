@@ -48,7 +48,7 @@ bool CreateManipulator::OnMouseDown(pb::MouseButton button, pb::ModifierKeys mod
 {
     if (button == pb::kMouseButtonLeft)
     {
-        glm::vec2 start = View::Instance()->GetLevelCamera()->ConvertScreenToWorld(position);
+        glm::vec3 start = View::Instance()->GetActiveViewport()->ConvertScreenToWorld(position);
         
         glm::vec3 position = GetEntityPosition(start);
         
@@ -80,13 +80,11 @@ bool CreateManipulator::OnMouseUp(pb::MouseButton button, pb::ModifierKeys modif
     return false;    
 }
 
-bool CreateManipulator::OnMouseMove(glm::vec2 position)
+bool CreateManipulator::OnMouseMove(glm::vec2 mouse)
 {
     if (_CreateMode)
     {
-        glm::vec2 start = View::Instance()->GetLevelCamera()->ConvertScreenToWorld(position);
-        
-        glm::vec3 position = GetEntityPosition(start);
+        glm::vec3 position = View::Instance()->GetActiveViewport()->ConvertScreenToWorld(mouse);
         
         if (glm::distance(position, _LastCreate) >= 1.f)
         {
@@ -107,11 +105,10 @@ bool CreateManipulator::OnKeyUp(pb::KeyboardKey key, pb::ModifierKeys modifier, 
     return false;
 }
 
-glm::vec3 CreateManipulator::GetEntityPosition(glm::vec2 start)
+glm::vec3 CreateManipulator::GetEntityPosition(glm::vec3 position)
 {
     glm::vec3 positionSnap = static_cast<MoveManipulator*>(View::Instance()->GetManipulatorManager()->GetManipulator("move"))->GetSnap();
     
-    glm::vec3 position = glm::vec3(start, 0.f);
     if (positionSnap.x != 0)
         position.x = position.x - glm::mod(position.x, positionSnap.x);
     if (positionSnap.y != 0)

@@ -64,11 +64,11 @@ bool RotateManipulator::OnMouseMove(glm::vec2 position)
     
     _End = position;
     
-    glm::vec2 start = View::Instance()->GetLevelCamera()->ConvertScreenToWorld(_Start);
-    glm::vec2 end = View::Instance()->GetLevelCamera()->ConvertScreenToWorld(_End);
+    glm::vec3 start = View::Instance()->GetActiveViewport()->ConvertScreenToWorld(_Start);
+    glm::vec3 end = View::Instance()->GetActiveViewport()->ConvertScreenToWorld(_End);
     
-    glm::vec2 startLine = start-glm::vec2(_Center.x, _Center.y);
-    glm::vec2 endLine = end-glm::vec2(_Center.x, _Center.y);
+    glm::vec2 startLine = glm::vec2(start.x, start.y)-glm::vec2(_Center.x, _Center.y);
+    glm::vec2 endLine = glm::vec2(end.x, end.y)-glm::vec2(_Center.x, _Center.y);
 
     float startAngle = glm::atan(startLine.y, startLine.x);
     float endAngle = glm::atan(endLine.y, endLine.x);

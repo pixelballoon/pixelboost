@@ -29,7 +29,7 @@ namespace pb
     enum ModifierKey
     {
         kModifierKeyNone = 0,
-        kModifierKeyControl = 1,
+        kModifierKeyCtrl = 1,
         kModifierKeyShift = 2,
         kModifierKeyAlt = 4,
     };
