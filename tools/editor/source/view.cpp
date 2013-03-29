@@ -104,6 +104,12 @@ public:
             } else if (event.Modifier == pb::kModifierKeyNone) {
                 switch (event.Character)
                 {
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                        View::Instance()->SetActiveViewport(event.Character-'1');
+                        return true;
                     case 'f':
                         View::Instance()->GetActiveViewport()->FrameSelection();
                         return true;
@@ -262,8 +268,14 @@ View* View::Instance()
 
 void View::Initialise()
 {
-    _ActiveViewport = new OrthographicViewport();
-    _LevelViewport = new pb::Viewport(0, _ActiveViewport->GetCamera());
+    _Viewports.push_back(new PerspectiveViewport());
+    _Viewports.push_back(new OrthographicViewport());
+    _Viewports.push_back(new OrthographicViewport());
+    _Viewports.push_back(new OrthographicViewport());
+
+    _ActiveViewport = _Viewports[1];
+    _LevelViewport = new pb::Viewport(1, _ActiveViewport->GetCamera());
+    
     _LevelScene = new pb::Scene();
     _LevelScene->AddSystem(new pb::BoundsRenderSystem());
     _LevelViewport->SetScene(_LevelScene);
@@ -354,6 +366,12 @@ Level* View::GetLevel()
 Viewport* View::GetActiveViewport()
 {
     return _ActiveViewport;
+}
+
+void View::SetActiveViewport(int index)
+{
+    _ActiveViewport = _Viewports[index];
+    _LevelViewport->SetSceneCamera(_ActiveViewport->GetCamera());
 }
 
 void View::OnDisplayResolutionChanged(glm::vec2 resolution)

@@ -110,6 +110,7 @@ public:
     pb::Scene* GetLevelScene();
     Level* GetLevel();
     Viewport* GetActiveViewport();
+    void SetActiveViewport(int index);
     
 public:
     sigslot::Signal0<> onRedraw;
@@ -133,6 +134,7 @@ private:
     Level* _Level;
     
     Viewport* _ActiveViewport;
+    std::vector<Viewport*> _Viewports;
     
     pb::Scene* _LevelScene;
     pb::Viewport* _LevelViewport;
