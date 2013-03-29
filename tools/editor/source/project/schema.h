@@ -213,6 +213,7 @@ public:
 public:
     enum SchemaAtomType
     {
+        kSchemaAtomBool,
         kSchemaAtomFloat,
         kSchemaAtomInt,
         kSchemaAtomString,

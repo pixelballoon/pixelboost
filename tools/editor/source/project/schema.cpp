@@ -688,14 +688,21 @@ SchemaItem::SchemaType SchemaProperty::GetSchemaType() const
 SchemaPropertyAtom::SchemaPropertyAtom(SchemaItem* parent, const std::string& type, const std::string& name)
     : SchemaProperty(parent, name)
 {
-    if (type == "float")
+    if (type == "bool")
+    {
+        _AtomType = kSchemaAtomBool;
+    } else if (type == "float")
+    {
         _AtomType = kSchemaAtomFloat;
-    else if (type == "int")
+    } else if (type == "int")
+    {
         _AtomType = kSchemaAtomInt;
-    else if (type == "string")
+    } else if (type == "string")
+    {
         _AtomType = kSchemaAtomString;
+    }
 }
-    
+
 SchemaPropertyAtom::~SchemaPropertyAtom()
 {
     

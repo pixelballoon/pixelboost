@@ -138,6 +138,13 @@ namespace pb
 	PbDeserialise ## type ## Definition (database, record, data); \
 }
 
+#define __PB_DB_PARSE_BOOL(field) { \
+    field = 0; \
+    if (lua_isboolean(state, -1)) { \
+        field = lua_toboolean(state, -1); \
+    } \
+}
+
 #define __PB_DB_PARSE_INT(field) { \
     field = 0; \
     if (lua_isnumber(state, -1)) { \
@@ -201,6 +208,12 @@ namespace pb
     lua_pop(state, 1); \
 }
 
+#define PB_DB_FIELD_BOOL(field) { \
+    lua_getfield(state, -1, #field); \
+    __PB_DB_PARSE_BOOL(object.field) \
+    lua_pop(state, 1); \
+}
+
 #define PB_DB_FIELD_INT(field) { \
     lua_getfield(state, -1, #field); \
     __PB_DB_PARSE_INT(object.field) \
@@ -235,6 +248,12 @@ namespace pb
 	lua_getfield(state, -1, #field); \
 	__PB_DB_PARSE_REFERENCE(object.field) \
 	lua_pop(state, 1); \
+}
+
+#define PB_DB_FIELD_ARRAY_BOOL(field) { \
+    __PB_DB_PARSE_ARRAY_START(object.field, #field, int) \
+    __PB_DB_PARSE_BOOL(arrayItem) \
+    __PB_DB_PARSE_ARRAY_END(object.field) \
 }
 
 #define PB_DB_FIELD_ARRAY_INT(field) { \

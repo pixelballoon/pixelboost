@@ -379,7 +379,7 @@ SchemaProperty* ParseProperty(SchemaItem* parent, std::vector<Token>& tokens, si
     
     counter++;
     
-    if (propertyType == SchemaProperty::kSchemaPropertyAtom && !(typeToken.data == "float" || typeToken.data == "int" || typeToken.data == "string"))
+    if (propertyType == SchemaProperty::kSchemaPropertyAtom && !(typeToken.data == "bool" || typeToken.data == "float" || typeToken.data == "int" || typeToken.data == "string"))
     {
         propertyType = SchemaProperty::kSchemaPropertyStruct;
     }

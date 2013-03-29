@@ -58,10 +58,12 @@ public:
     virtual PropertyAtom* AsAtom();
     virtual const PropertyAtom* AsAtom() const;
     
+    void SetBoolValue(bool value);
     void SetFloatValue(float value);
     void SetIntValue(int value);
     void SetStringValue(const std::string& value);
     
+    bool GetBoolValue() const;
     float GetFloatValue() const;
     int GetIntValue() const;
     const std::string& GetStringValue() const;

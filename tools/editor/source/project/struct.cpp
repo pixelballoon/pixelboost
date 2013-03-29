@@ -227,6 +227,9 @@ json::UnknownElement JsonExporter::ExportAtom(const PropertyAtom* atom, const Sc
 {
     switch (schemaAtom->GetAtomType())
     {
+        case SchemaPropertyAtom::kSchemaAtomBool:
+            return json::Boolean(atom->GetBoolValue());
+            
         case SchemaPropertyAtom::kSchemaAtomFloat:
             return json::Number(atom->GetFloatValue());
             
@@ -356,6 +359,10 @@ bool LuaExporter::ExportAtom(std::iostream& output, const PropertyAtom* atom, co
 {
     switch (schemaAtom->GetAtomType())
     {
+        case SchemaPropertyAtom::kSchemaAtomBool:
+            output << (atom->GetBoolValue() ? "true" : "false");
+            break;
+            
         case SchemaPropertyAtom::kSchemaAtomFloat:
             output << atom->GetFloatValue();
             break;

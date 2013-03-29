@@ -87,6 +87,12 @@ const PropertyAtom* PropertyAtom::AsAtom() const
     return this;
 }
 
+void PropertyAtom::SetBoolValue(bool value)
+{
+    _Value = value ? "1" : "0";
+    _Struct->propertyChanged(_Struct, this);
+}
+
 void PropertyAtom::SetFloatValue(float value)
 {
     char tmp[64];
@@ -107,6 +113,11 @@ void PropertyAtom::SetStringValue(const std::string& value)
 {
     _Value = value;
     _Struct->propertyChanged(_Struct, this);
+}
+
+bool PropertyAtom::GetBoolValue() const
+{
+    return _Value == "1";
 }
 
 float PropertyAtom::GetFloatValue() const
