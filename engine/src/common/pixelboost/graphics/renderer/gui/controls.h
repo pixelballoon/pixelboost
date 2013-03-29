@@ -36,6 +36,7 @@ namespace pb
         static void DoLabel(const GuiRenderMessage& message, const GuiId& guiId, const std::string& label, const std::vector<GuiLayoutHint>& hints = std::vector<GuiLayoutHint>());
         static bool DoButton(const GuiRenderMessage& message, const GuiId& guiId, const std::string& caption, const std::vector<GuiLayoutHint>& hints = std::vector<GuiLayoutHint>());
         static bool DoToggleButton(const GuiRenderMessage& message, const GuiId& guiId, const std::string& caption, const std::vector<GuiLayoutHint>& hints = std::vector<GuiLayoutHint>());
+        static std::pair<bool, bool> DoCheckBox(const GuiRenderMessage& message, const GuiId& guiId, bool value, const std::vector<GuiLayoutHint>& hints = std::vector<GuiLayoutHint>());
         static std::pair<bool, std::string> DoTextBox(const GuiRenderMessage& message, const GuiId& guiId, const std::string& value, const std::vector<GuiLayoutHint>& hints = std::vector<GuiLayoutHint>());
     };
     

@@ -408,6 +408,91 @@ bool GuiControls::DoToggleButton(const GuiRenderMessage& message, const GuiId& g
     return data.Data[0].Bool;
 }
 
+std::pair<bool, bool> GuiControls::DoCheckBox(const GuiRenderMessage& message, const GuiId& guiId, bool value, const std::vector<GuiLayoutHint>& hints)
+{
+    GuiRenderable* renderable = message.GetGuiComponent()->GetRenderable();
+    
+    if (message.GetEventType() == GuiRenderMessage::kEventTypeLayout)
+    {
+        message.GetGuiSystem()->AddLayout("checkbox", guiId, hints, glm::vec2(20.f, 20.f));
+        return std::make_pair(false, false);
+    }
+    
+    GuiState& state = message.GetState();
+    GuiLayout* layout = message.GetGuiSystem()->GetLayout(guiId);
+    
+    if (!layout)
+    {
+        return std::make_pair(false, false);
+    }
+    
+    if (message.GetEventType() == GuiRenderMessage::kEventTypeInput)
+    {
+        bool pressed = false;
+        
+        glm::vec2 mousePosition = state.MousePosition;
+        
+        if (mousePosition.x > layout->Position.x &&
+            mousePosition.x < layout->Position.x + 20 &&
+            mousePosition.y > layout->Position.y &&
+            mousePosition.y < layout->Position.y + 20)
+        {
+            if (!state.Hot.Item)
+            {
+                state.Hot.Item = guiId;
+            }
+            
+            if (!state.Active.Item && state.MousePressed)
+            {
+                state.Active.Item = guiId;
+            }
+        }
+        
+        if (state.Active.Item == guiId)
+        {
+            if (!state.MouseDown || state.MouseReleased)
+            {
+                if (state.Hot.Item == guiId)
+                {
+                    pressed = true;
+                }
+                state.Active.Item = {0,0,0};
+            } else {
+                state.Active.Active = true;
+            }
+        }
+        
+        return std::make_pair(pressed, !value);
+    }
+    
+    if (message.GetEventType() == GuiRenderMessage::kEventTypeRender)
+    {
+        glm::vec4 color;
+        
+        if (state.Active.Item == guiId)
+        {
+            color = glm::vec4(86.f/255.f,86.f/255.f,86.f/255.f,1);
+        } else if (state.Hot.Item == guiId)
+        {
+            color = glm::vec4(166.f/255.f,166.f/255.f,166.f/255.f,1);
+        } else
+        {
+            color = glm::vec4(0.5,0.5,0.5,1);
+        }
+        
+        renderable->RenderBoxFilled(layout->Position, glm::vec2(20,20), color);
+        
+        renderable->RenderBoxOutline(layout->Position, glm::vec2(20,20), glm::vec4(0.2,0.2,0.2,1));
+        
+        if (value)
+        {
+            renderable->RenderBoxFilled(layout->Position + glm::vec2(2,2), glm::vec2(16,15), glm::vec4(0.2,0.2,0.2,1));
+        }
+    }
+    
+    return std::make_pair(false, false);
+}
+
 std::pair<bool, std::string> GuiControls::DoTextBox(const GuiRenderMessage& message, const GuiId& guiId, const std::string& value, const std::vector<GuiLayoutHint>& hints)
 {
     GuiRenderable* renderable = message.GetGuiComponent()->GetRenderable();
@@ -489,5 +574,5 @@ std::pair<bool, std::string> GuiControls::DoTextBox(const GuiRenderMessage& mess
         renderable->RenderText(layout->Position + glm::vec2(2,0), message.GetState().Skin.Font, value, 16.f, glm::vec4(0,0,0,1));
     }
     
-    return std::pair<bool, std::string>(false, "");
+    return std::make_pair(false, "");
 }

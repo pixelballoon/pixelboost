@@ -140,10 +140,19 @@ void PropertyUi::DoAtom(const pb::GuiRenderMessage& guiRenderMessage, const Sche
     const Property* property = item->GetProperty(path);
     const PropertyAtom* propertyAtom = property ? property->AsAtom() : 0;
     
-    auto textBox = pb::GuiControls::DoTextBox(guiRenderMessage, PbGuiId(guiRenderMessage, item + pb::TypeHash(path.c_str())), propertyAtom ? propertyAtom->GetStringValue() : "");
-    if (textBox.first)
+    if (atom->GetAtomType() == SchemaPropertyAtom::kSchemaAtomBool)
     {
-        item->AcquireAtom(path)->SetStringValue(textBox.second);
+        auto checkBox = pb::GuiControls::DoCheckBox(guiRenderMessage, PbGuiId(guiRenderMessage, item + pb::TypeHash(path.c_str())), propertyAtom ? propertyAtom->GetBoolValue() : false);
+        if (checkBox.first)
+        {
+            item->AcquireAtom(path)->SetBoolValue(checkBox.second);
+        }
+    } else {
+        auto textBox = pb::GuiControls::DoTextBox(guiRenderMessage, PbGuiId(guiRenderMessage, item + pb::TypeHash(path.c_str())), propertyAtom ? propertyAtom->GetStringValue() : "");
+        if (textBox.first)
+        {
+            item->AcquireAtom(path)->SetStringValue(textBox.second);
+        }
     }
 }
 
