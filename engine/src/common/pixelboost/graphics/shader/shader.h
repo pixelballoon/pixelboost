@@ -60,12 +60,10 @@ namespace pb
     class ShaderTechnique
     {
     public:
-        ShaderTechnique();
+        ShaderTechnique(Uid techniqueId);
         ~ShaderTechnique();
         
         Uid GetId();
-        
-        bool Load(const pugi::xml_node& attributes, const pugi::xml_node& technique);
         
         int GetNumPasses();
         void AddPass(ShaderPass* pass);
@@ -77,6 +75,8 @@ namespace pb
     private:
         Uid _Uid;
         PassList _Passes;
+        
+        friend class Shader;
     };
         
     class ShaderPass
@@ -84,8 +84,6 @@ namespace pb
     public:
         ShaderPass();
         ~ShaderPass();
-        
-        bool Load(const pugi::xml_node& attributes, const pugi::xml_node& pass);
         
         void Bind();
         void SetEngineUniforms(const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix, float realTime, float gameTime);
@@ -102,10 +100,10 @@ namespace pb
         Shader();
         ~Shader();
         
-        bool Load(const std::string& filename);
-        
         void AddTechnique(ShaderTechnique* technique);
         ShaderTechnique* GetTechnique(Uid techniqueId);
+        
+        int GetNumTechniques();
         
         const std::map<std::string, ShaderProperty::PropertyType>& GetProperties();
         

@@ -67,8 +67,8 @@ void ShaderProperty::SetValue(Texture* texture)
     _Value.Texture = texture;
 }
 
-ShaderTechnique::ShaderTechnique()
-    : _Uid(-1)
+ShaderTechnique::ShaderTechnique(Uid techniqueId)
+    : _Uid(techniqueId)
 {
     
 }
@@ -84,28 +84,6 @@ ShaderTechnique::~ShaderTechnique()
 Uid ShaderTechnique::GetId()
 {
     return _Uid;
-}
-
-bool ShaderTechnique::Load(const pugi::xml_node& attributes, const pugi::xml_node& technique)
-{
-    _Uid = TypeHash(technique.attribute("name").value());
-    
-    pugi::xml_node pass = technique.child("pass");
-    while (!pass.empty())
-    {
-        ShaderPass* shaderPass = new ShaderPass();
-        if (!shaderPass->Load(attributes, pass))
-        {
-            delete shaderPass;
-            return false;
-        }
-        
-        AddPass(shaderPass);
-        
-        pass = pass.next_sibling("pass");
-    }
-    
-    return true;
 }
 
 int ShaderTechnique::GetNumPasses()
@@ -134,17 +112,6 @@ ShaderPass::ShaderPass()
 ShaderPass::~ShaderPass()
 {
     GraphicsDevice::Instance()->DestroyProgram(_Program);
-}
-
-bool ShaderPass::Load(const pugi::xml_node& attributes, const pugi::xml_node& pass)
-{
-    if (!_Program->Load(attributes, pass))
-        return false;
-    
-    if (!_Program->Link())
-        return false;
-
-    return true;
 }
 
 void ShaderPass::Bind()
@@ -178,61 +145,6 @@ Shader::~Shader()
     }
 }
 
-bool Shader::Load(const std::string& filename)
-{
-    auto file = pb::FileSystem::Instance()->OpenFile(filename);
-    
-    std::string effect;
-    
-    if (!file)
-    {
-        PbLogError("pb.graphics.shader", "Failed to load shader %s, unable to open file", filename.c_str());
-        return false;
-    }
-    
-    file->ReadAll(effect);
-    
-    pugi::xml_document document;
-    if (!document.load(effect.c_str()))
-    {
-        PbLogError("pb.graphics.shader", "Failed to parse shader %s, xml parse error", filename.c_str());
-        return false;
-    }
-
-    pugi::xml_node root = document.child("shader");
-    
-    if (root.empty())
-    {
-        PbLogError("pb.graphics.shader", "Failed to load shader %s, root node is empty", filename.c_str());
-        return false;
-    }
-    
-    pugi::xml_node attributes = root.child("attributes");
-    
-    pugi::xml_node techniques = root.child("technique");
-    
-    while (!techniques.empty())
-    {
-        ShaderTechnique* technique = new ShaderTechnique();
-        if (technique->Load(attributes, techniques))
-        {
-            AddTechnique(technique);
-        } else {
-            delete technique;
-        }
-        
-        techniques = techniques.next_sibling("technique");
-    }
-    
-    if (_Techniques.size() == 0)
-    {
-        PbLogError("pb.graphics.shader", "Failed to load shader %s, no techniques were loaded (are they compatible with this card?)", filename.c_str());
-        return false;
-    }
-        
-    return true;
-}
-
 void Shader::AddTechnique(ShaderTechnique* technique)
 {
     _Techniques[technique->GetId()] = technique;
@@ -245,6 +157,11 @@ ShaderTechnique* Shader::GetTechnique(Uid techniqueId)
         return it->second;
     
     return Renderer::Instance()->GetTechnique(techniqueId);
+}
+
+int Shader::GetNumTechniques()
+{
+    return _Techniques.size();
 }
 
 const std::map<std::string, ShaderProperty::PropertyType>& Shader::GetProperties()

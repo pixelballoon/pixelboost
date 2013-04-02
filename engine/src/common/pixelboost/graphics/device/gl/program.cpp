@@ -21,68 +21,31 @@ ShaderProgramGL::~ShaderProgramGL()
     glDeleteProgram(_Program);
 }
 
-bool ShaderProgramGL::Load(const pugi::xml_node& attributes, const pugi::xml_node& pass)
+std::string ShaderProgramGL::GetShaderLanguage() const
 {
-    std::string programType;
-    
-    pugi::xml_node program = pass.find_child_by_attribute("program", "language", "glsl");
-    
-    if (program.empty())
-        return false;
+    return "glsl";
+}
 
+bool ShaderProgramGL::SetSource(const std::string& source)
+{
     _Uniforms.clear();
     
 #ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
     _Source = program.child_value();
 #endif
     
-    return CreateShader(program.child_value());
-}
-
-bool ShaderProgramGL::Link()
-{
-    glLinkProgram(_Program);
+    _Program = glCreateProgram();
     
-    if (glGetAttribLocation(_Program, "PB_Attr_Position") >= 0)
-        glBindAttribLocation(_Program, kShaderAttributeVertexPosition, "PB_Attr_Position");
-    
-    if (glGetAttribLocation(_Program, "PB_Attr_Normal") >= 0)
-        glBindAttribLocation(_Program, kShaderAttributeVertexNormal, "PB_Attr_Normal");
-    
-    if (glGetAttribLocation(_Program, "PB_Attr_Color0") >= 0)
-        glBindAttribLocation(_Program, kShaderAttributeVertexColor0, "PB_Attr_Color0");
-    
-    if (glGetAttribLocation(_Program, "PB_Attr_Texture0") >= 0)
-        glBindAttribLocation(_Program, kShaderAttributeVertexTexture0, "PB_Attr_Texture0");
-
-    glLinkProgram(_Program);
-    
-#ifndef PIXELBOOST_DISABLE_DEBUG
-    GLint logLength;
-    glGetProgramiv(_Program, GL_INFO_LOG_LENGTH, &logLength);
-    if (logLength > 0)
-    {
-        GLchar* log = new GLchar[logLength];
-        glGetProgramInfoLog(_Program, logLength, &logLength, log);
-        PbLogError("pb.graphics.shader", "Error linking shader (%s)", log);
-        delete log;
-    }
-#endif
-    
-    GLint status;
-    glGetProgramiv(_Program, GL_LINK_STATUS, &status);
-    if (!status)
-    {
-        glDeleteShader(_FragmentShader);
-        glDeleteShader(_VertexShader);
-        glDeleteProgram(_Program);
-        _FragmentShader = 0;
-        _VertexShader = 0;
-        _Program = 0;
+    if (!CompileShader(GL_FRAGMENT_SHADER, &_FragmentShader, source))
         return false;
-    }
     
-    return true;
+    if (!CompileShader(GL_VERTEX_SHADER, &_VertexShader, source))
+        return false;
+    
+    glAttachShader(_Program, _FragmentShader);
+    glAttachShader(_Program, _VertexShader);
+    
+    return Link();
 }
 
 void ShaderProgramGL::SetUniform(const std::string& name, int value)
@@ -122,22 +85,6 @@ GLuint ShaderProgramGL::GetUniformLocation(const std::string& name)
     return location;
 }
 
-bool ShaderProgramGL::CreateShader(const std::string& source)
-{
-    _Program = glCreateProgram();
-    
-    if (!CompileShader(GL_FRAGMENT_SHADER, &_FragmentShader, source))
-        return false;
-    
-    if (!CompileShader(GL_VERTEX_SHADER, &_VertexShader, source))
-        return false;
-    
-    glAttachShader(_Program, _FragmentShader);
-    glAttachShader(_Program, _VertexShader);
-    
-    return true;
-}
-
 bool ShaderProgramGL::CompileShader(GLenum type, GLuint* shader, const std::string& source)
 {
     *shader = glCreateShader(type);
@@ -167,6 +114,52 @@ bool ShaderProgramGL::CompileShader(GLenum type, GLuint* shader, const std::stri
     if (!status)
     {
         glDeleteShader(*shader);
+        return false;
+    }
+    
+    return true;
+}
+
+bool ShaderProgramGL::Link()
+{
+    glLinkProgram(_Program);
+    
+    if (glGetAttribLocation(_Program, "PB_Attr_Position") >= 0)
+        glBindAttribLocation(_Program, kShaderAttributeVertexPosition, "PB_Attr_Position");
+    
+    if (glGetAttribLocation(_Program, "PB_Attr_Normal") >= 0)
+        glBindAttribLocation(_Program, kShaderAttributeVertexNormal, "PB_Attr_Normal");
+    
+    if (glGetAttribLocation(_Program, "PB_Attr_Color0") >= 0)
+        glBindAttribLocation(_Program, kShaderAttributeVertexColor0, "PB_Attr_Color0");
+    
+    if (glGetAttribLocation(_Program, "PB_Attr_Texture0") >= 0)
+        glBindAttribLocation(_Program, kShaderAttributeVertexTexture0, "PB_Attr_Texture0");
+    
+    glLinkProgram(_Program);
+    
+#ifndef PIXELBOOST_DISABLE_DEBUG
+    GLint logLength;
+    glGetProgramiv(_Program, GL_INFO_LOG_LENGTH, &logLength);
+    if (logLength > 0)
+    {
+        GLchar* log = new GLchar[logLength];
+        glGetProgramInfoLog(_Program, logLength, &logLength, log);
+        PbLogError("pb.graphics.shader", "Error linking shader (%s)", log);
+        delete log;
+    }
+#endif
+    
+    GLint status;
+    glGetProgramiv(_Program, GL_LINK_STATUS, &status);
+    if (!status)
+    {
+        glDeleteShader(_FragmentShader);
+        glDeleteShader(_VertexShader);
+        glDeleteProgram(_Program);
+        _FragmentShader = 0;
+        _VertexShader = 0;
+        _Program = 0;
         return false;
     }
     

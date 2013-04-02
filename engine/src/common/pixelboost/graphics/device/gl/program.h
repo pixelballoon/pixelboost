@@ -20,8 +20,9 @@ protected:
     ShaderProgramGL(GraphicsDeviceGL* device);
     virtual ~ShaderProgramGL();
     
-    virtual bool Load(const pugi::xml_node& attributes, const pugi::xml_node& pass);
-    virtual bool Link();
+    std::string GetShaderLanguage() const;
+    
+    virtual bool SetSource(const std::string& source);
     
 public:
     virtual void SetUniform(const std::string& name, int value);
@@ -35,8 +36,8 @@ public:
 private:
     GLuint GetUniformLocation(const std::string& name);
     
-    bool CreateShader(const std::string& source);
     bool CompileShader(GLenum type, GLuint* shader, const std::string& source);
+    bool Link();
     
 private:
 #ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST

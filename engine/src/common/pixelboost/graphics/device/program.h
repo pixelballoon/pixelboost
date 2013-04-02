@@ -46,8 +46,9 @@ public:
     ShaderProgram();
     virtual ~ShaderProgram();
     
-    virtual bool Load(const pugi::xml_node& attributes, const pugi::xml_node& pass) = 0;
-    virtual bool Link() = 0;
+    virtual std::string GetShaderLanguage() const = 0;
+    
+    virtual bool SetSource(const std::string& source) = 0;
     
     virtual void SetUniform(const std::string& name, int value) = 0;
     virtual void SetUniform(const std::string& name, float value) = 0;

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "pugixml/pugixml.hpp"
+
 #include "pixelboost/resource/resource.h"
 
 namespace pb
@@ -22,6 +24,9 @@ namespace pb
         Shader* GetShader();
         
     private:
+        bool ParseShader(std::string& errorDetails);
+        
+        pugi::xml_document _Document;
         Shader* _Shader;
     };
     
