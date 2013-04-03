@@ -401,6 +401,10 @@ set (LOGIC_SOURCES
 set (MATHS_SOURCES
 	"src/common/pixelboost/maths/hermiteCurve.cpp"
 	"src/common/pixelboost/maths/hermiteCurve.h"
+	"src/common/pixelboost/maths/plane.cpp"
+	"src/common/pixelboost/maths/plane.h"
+	"src/common/pixelboost/maths/ray.cpp"
+	"src/common/pixelboost/maths/ray.h"
 	)
 
 set (NETWORK_SOURCES
