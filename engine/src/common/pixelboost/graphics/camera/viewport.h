@@ -49,6 +49,9 @@ public:
     void SetScene(Scene* scene);
     Scene* GetScene();
     
+    void SetRenderFilter(Uid renderFilter);
+    Uid GetRenderFilter();
+    
     void Render(RenderPass renderPass);
 
 private:
@@ -56,6 +59,7 @@ private:
     OrthographicCamera* _UiCamera;
     Uid _RenderScheme;
     Scene* _Scene;
+    Uid _RenderFilter;
     
     int _ViewportId;
     glm::vec2 _Position;

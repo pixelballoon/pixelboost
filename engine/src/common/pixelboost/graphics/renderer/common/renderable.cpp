@@ -10,6 +10,7 @@ Renderable::Renderable()
     : _BoundsDirty(true)
     , _Layer(0)
     , _Id(0)
+    , _Group(1)
     , _Material(0)
     , _RenderPass(kRenderPassScene)
     , _Shader(0)
@@ -37,6 +38,16 @@ void Renderable::SetId(Uid uid)
 Uid Renderable::GetId()
 {
     return _Id;
+}
+
+void Renderable::SetGroup(Uid group)
+{
+    _Group = group;
+}
+
+Uid Renderable::GetGroup()
+{
+    return _Group;
 }
 
 void Renderable::SetRenderPass(RenderPass renderPass)

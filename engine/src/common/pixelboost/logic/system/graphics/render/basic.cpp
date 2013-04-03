@@ -10,6 +10,8 @@ Uid BasicRenderSystem::GetStaticType()
 
 void BasicRenderSystem::Render(Scene* scene, Viewport* viewport, RenderPass renderPass)
 {
+    RenderSystem::Render(scene, viewport, renderPass);
+    
     switch (renderPass)
     {
         case kRenderPassUi:
@@ -53,4 +55,15 @@ void BasicRenderSystem::RemoveItem(Renderable* renderable)
     _UiRenderables.erase(renderable);
     
     RenderSystem::AddItem(renderable);
+}
+
+const std::set<Renderable*>& BasicRenderSystem::GetItems(RenderPass pass)
+{
+    switch (pass)
+    {
+        case kRenderPassScene:
+            return _SceneRenderables;
+        case kRenderPassUi:
+            return _UiRenderables;
+    }
 }

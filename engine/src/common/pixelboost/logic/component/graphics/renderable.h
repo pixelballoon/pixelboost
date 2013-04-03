@@ -25,6 +25,9 @@ namespace pb
         RenderPass GetRenderPass() const;
         void SetRenderPass(RenderPass renderPass);
         
+        void SetGroup(Uid group);
+        Uid GetGroup() const;
+        
         int GetLayer() const;
         void SetLayer(int layer);
         

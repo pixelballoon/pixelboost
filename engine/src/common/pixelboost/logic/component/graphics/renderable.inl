@@ -49,6 +49,16 @@ template <class T> void RenderableComponent<T>::SetRenderPass(RenderPass renderP
     _Renderable->SetRenderPass(renderPass);
 }
 
+template <class T> Uid RenderableComponent<T>::GetGroup() const
+{
+    return _Renderable->GetGroup();
+}
+
+template <class T> void RenderableComponent<T>::SetGroup(Uid group)
+{
+    _Renderable->SetGroup(group);
+}
+
 template <class T> int RenderableComponent<T>::GetLayer() const
 {
     return _Renderable->GetLayer();

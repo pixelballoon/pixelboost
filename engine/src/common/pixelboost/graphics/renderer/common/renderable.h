@@ -22,12 +22,15 @@ namespace pb
         Renderable();
         virtual ~Renderable();
         
+        virtual Uid GetType() = 0;
+        
         void SetSystem(RenderSystem* system);
         
         void SetId(Uid uid);
         Uid GetId();
         
-        virtual Uid GetType() = 0;
+        void SetGroup(Uid group);
+        Uid GetGroup();
         
         void SetRenderPass(RenderPass renderPass);
         RenderPass GetRenderPass();
@@ -68,6 +71,7 @@ namespace pb
     private:
         RenderSystem* _System;
         Uid _Id;
+        Uid _Group;
         int _Layer;
         RenderPass _RenderPass;
         Material* _Material;

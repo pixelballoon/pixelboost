@@ -63,21 +63,29 @@ void Renderer::RenderViewport(Viewport* viewport, RenderPass pass, Uid schemeOve
     
     glm::mat4x4 projectionMatrix;
     glm::mat4x4 viewMatrix;
+    pb::Camera* camera = 0;
     
     switch (pass)
     {
         case kRenderPassScene:
-            projectionMatrix = viewport->GetSceneCamera()->ProjectionMatrix;
-            viewMatrix = viewport->GetSceneCamera()->ViewMatrix;
+        {
+            camera = viewport->GetSceneCamera();
             break;
+        }
             
         case kRenderPassUi:
-            projectionMatrix = viewport->GetUiCamera()->ProjectionMatrix;
-            viewMatrix = viewport->GetUiCamera()->ViewMatrix;
+        {
+            camera = viewport->GetUiCamera();
             break;
+        }
     }
     
-    FlushBuffer(viewport->GetNativeRegion(), schemeOverride ? schemeOverride : viewport->GetRenderScheme(), projectionMatrix, viewMatrix);
+    if (camera)
+    {
+        projectionMatrix = camera->ProjectionMatrix;
+        viewMatrix = camera->ViewMatrix;
+        FlushBuffer(viewport->GetNativeRegion(), schemeOverride ? schemeOverride : viewport->GetRenderScheme(), projectionMatrix, viewMatrix);
+    }
 }
 
 void Renderer::SetTechniqueHandler(TechniqueHandler* techniqueHandler)

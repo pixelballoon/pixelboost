@@ -12,6 +12,8 @@ Viewport::Viewport(int viewportId, Camera* camera)
     , _Scene(0)
     , _ViewportId(viewportId)
 {
+    _RenderFilter = 0b11111111111111111111111111111111;
+    
     SetRenderScheme(TypeHash("default"));
     SetResolution(GraphicsDevice::Instance()->GetDisplayResolution());
     SetDensity(GraphicsDevice::Instance()->GetDisplayDensity());
@@ -97,6 +99,16 @@ void Viewport::SetScene(Scene* scene)
 Scene* Viewport::GetScene()
 {
     return _Scene;
+}
+
+void Viewport::SetRenderFilter(Uid renderFilter)
+{
+    _RenderFilter = renderFilter;
+}
+
+Uid Viewport::GetRenderFilter()
+{
+    return _RenderFilter;
 }
 
 void Viewport::Render(RenderPass renderPass)

@@ -19,6 +19,8 @@ namespace pb
         virtual void AddItem(Renderable* renderable);
         virtual void RemoveItem(Renderable* renderable);
         
+        virtual const std::set<Renderable*>& GetItems(RenderPass pass);
+        
     private:
         typedef std::set<Renderable*> RenderableSet;
         

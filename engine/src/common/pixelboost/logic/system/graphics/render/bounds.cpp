@@ -12,6 +12,8 @@ Uid BoundsRenderSystem::GetStaticType()
 
 void BoundsRenderSystem::Render(Scene* scene, Viewport* viewport, RenderPass renderPass)
 {
+    RenderSystem::Render(scene, viewport, renderPass);
+    
     switch (renderPass)
     {
         case kRenderPassUi:
@@ -29,9 +31,12 @@ void BoundsRenderSystem::Render(Scene* scene, Viewport* viewport, RenderPass ren
             const BoundingFrustum& frustum = camera->Frustum;
             for (RenderableSet::iterator it = _SceneRenderables.begin(); it != _SceneRenderables.end(); ++it)
             {
-                const BoundingSphere& bounds = (*it)->GetBounds();
-                if (!bounds.IsValid() || frustum.Intersects(bounds))
-                    RenderItem(*it);
+                if (_RenderFilter & (*it)->GetGroup())
+                {
+                    const BoundingSphere& bounds = (*it)->GetBounds();
+                    if (!bounds.IsValid() || frustum.Intersects(bounds))
+                        RenderItem(*it);
+                }
             }
             break;
         }
@@ -59,4 +64,15 @@ void BoundsRenderSystem::RemoveItem(Renderable* renderable)
     _UiRenderables.erase(renderable);
     
     RenderSystem::AddItem(renderable);
+}
+
+const std::set<Renderable*>& BoundsRenderSystem::GetItems(RenderPass pass)
+{
+    switch (pass)
+    {
+        case kRenderPassScene:
+            return _SceneRenderables;
+        case kRenderPassUi:
+            return _UiRenderables;
+    }
 }

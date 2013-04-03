@@ -42,7 +42,7 @@ EditorUi::EditorUi(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationE
     _PropertyUi = new PropertyUi();
     
     CreateComponent<pb::TransformComponent>();
-    CreateComponent<pb::GuiComponent>();
+    CreateComponent<pb::GuiComponent>()->SetGroup(0b10);
     
     RegisterMessageHandler<pb::GuiRenderMessage>(pb::MessageHandler(this, &EditorUi::OnGuiRender));
     RegisterMessageHandler<pb::UpdateMessage>(pb::MessageHandler(this, &EditorUi::OnUpdate));
