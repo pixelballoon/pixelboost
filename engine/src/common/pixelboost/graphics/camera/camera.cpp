@@ -49,20 +49,19 @@ void OrthographicCamera::CalculateTransform(Viewport* viewport)
     Camera::CalculateTransform(viewport);
 }
 
-glm::vec2 OrthographicCamera::ConvertScreenToWorld(glm::vec2 screen)
+glm::vec2 OrthographicCamera::ConvertViewportToWorld(Viewport* viewport, glm::vec2 position)
 {
-    glm::vec2 position = screen;
+    glm::vec2 world = position;
     
-    position[0] = position[0] - GraphicsDevice::Instance()->GetDisplayResolution()[0]/2;
-    position[1] = GraphicsDevice::Instance()->GetDisplayResolution()[1]/2 - position[1];
+    world.x = world.x - viewport->GetResolution().x/2;
+    world.y = viewport->GetResolution().y/2 - world[1];
     
-	position[0] /= GraphicsDevice::Instance()->GetDisplayDensity();
-	position[1] /= GraphicsDevice::Instance()->GetDisplayDensity();
+	world /= viewport->GetDensity();
     
-    position /= glm::vec2(Scale[0], Scale[1]);
-    position += glm::vec2(Position[0], Position[1]);
+    world /= glm::vec2(Scale.x, Scale.y);
+    world += glm::vec2(Position.x, Position.y);
 	
-	return position;
+	return world;
 }
 
 PerspectiveCamera::PerspectiveCamera(glm::vec3 position, glm::vec3 rotation, float fieldOfView)

@@ -48,7 +48,7 @@ namespace pb
         
         virtual void CalculateTransform(Viewport* viewport);
         
-        virtual glm::vec2 ConvertScreenToWorld(glm::vec2 screen);
+        virtual glm::vec2 ConvertViewportToWorld(Viewport* viewport, glm::vec2 position);
         
     public:
         glm::vec2 Scale;
