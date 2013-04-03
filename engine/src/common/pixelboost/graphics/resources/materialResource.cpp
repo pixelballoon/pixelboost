@@ -142,6 +142,9 @@ void MaterialResource::ParseMaterial(ResourcePool* pool)
     StringHelpers::SplitString(_FileContents, '\n', lines);
     for (const auto& line : lines)
     {
+        if (line[0] == '#')
+            continue;
+        
         std::string param = line.substr(0, line.find_first_of('('));
         
         std::vector<std::string> values;
