@@ -7,6 +7,7 @@
 #include "sigslot/signal.h"
 
 #include "pixelboost/framework/engine.h"
+#include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/resource/resourceManager.h"
 
 #include "core/selection.h"
@@ -84,7 +85,7 @@ private:
     pb::OrbitalCamera* _Camera;
 };
 
-class View : public pb::Engine
+class View : public pb::Engine, public pb::TechniqueHandler
 {
 public:
     View(void* platformContext, int argc, const char** argv);
@@ -109,20 +110,21 @@ public:
     
     pb::Scene* GetLevelScene();
     Level* GetLevel();
+    
     Viewport* GetActiveViewport();
     void SetActiveViewport(int index);
+    
+    pb::Viewport* GetLevelViewport();
     
 public:
     sigslot::Signal0<> onRedraw;
     
 private:
+    virtual pb::ShaderTechnique* GetTechnique(pb::Uid techniqueId);
+    
     void OnDisplayResolutionChanged(glm::vec2 resolution);
     void OnDisplayDensityChanged(float density);
     
-private:
-    ProjectRecord* _Record;
-    
-private:
     void OnProjectOpened(Project* project);
     void OnProjectClosed(Project* project);
     
@@ -131,6 +133,7 @@ private:
 private:
     ManipulatorManager* _ManipulatorManager;
     
+    ProjectRecord* _Record;
     Level* _Level;
     
     Viewport* _ActiveViewport;
@@ -138,6 +141,7 @@ private:
     
     pb::Scene* _LevelScene;
     pb::Viewport* _LevelViewport;
+    pb::Viewport* _UiViewport;
 
     ViewKeyboardHandler* _KeyboardHandler;
     ViewMouseHandler* _MouseHandler;

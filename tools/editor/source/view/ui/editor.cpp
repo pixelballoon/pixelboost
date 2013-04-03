@@ -1,5 +1,8 @@
 #include "pixelboost/debug/log.h"
+#include "pixelboost/graphics/camera/viewport.h"
+#include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/renderer/gui/controls.h"
+#include "pixelboost/graphics/renderer/gui/guiRenderer.h"
 #include "pixelboost/logic/component/graphics/gui.h"
 #include "pixelboost/logic/component/transform.h"
 #include "pixelboost/logic/message/graphics/gui.h"
@@ -31,8 +34,13 @@ void DoViewport(const pb::GuiRenderMessage& message, pb::GuiId guiId, const std:
     
     if (message.GetEventType() == pb::GuiRenderMessage::kEventTypeRender)
     {
-        // TODO : Set viewport size
-        //auto layout = message.GetGuiSystem()->GetLayout(guiId);
+        auto layout = message.GetGuiSystem()->GetLayout(guiId);
+        if (layout)
+        {
+            pb::Viewport* viewport = View::Instance()->GetLevelViewport();
+            viewport->SetPosition(glm::vec2(layout->Position.x - pb::GraphicsDevice::Instance()->GetDisplayResolution().x/2.f + layout->Size.x/2.f, pb::GraphicsDevice::Instance()->GetDisplayResolution().y/2.f - layout->Position.y - layout->Size.y/2.f));
+            viewport->SetResolution(layout->Size);
+        }
     }
 }
 

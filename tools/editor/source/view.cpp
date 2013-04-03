@@ -185,7 +185,8 @@ Viewport::ViewportType OrthographicViewport::GetType()
 
 glm::vec3 OrthographicViewport::ConvertScreenToWorld(glm::vec2 position)
 {
-    return glm::vec3(_Camera->ConvertScreenToWorld(position), 0);
+    pb::Viewport* viewport = View::Instance()->GetLevelViewport();
+    return glm::vec3(_Camera->ConvertViewportToWorld(viewport, position - glm::vec2(viewport->GetNativeRegion().x, pb::GraphicsDevice::Instance()->GetDisplayResolution().y-viewport->GetNativeRegion().w-viewport->GetNativeRegion().y)), 0);
 }
 
 void OrthographicViewport::FrameSelection()
@@ -253,8 +254,11 @@ View::~View()
     View::Instance()->GetMouseManager()->RemoveHandler(_MouseHandler);
     
     pb::Renderer::Instance()->RemoveViewport(_LevelViewport);
+    pb::Renderer::Instance()->RemoveViewport(_UiViewport);
     
     delete _LevelViewport;
+    delete _UiViewport;
+    
     delete _LevelScene;
     
     delete _KeyboardHandler;
@@ -275,14 +279,18 @@ void View::Initialise()
 
     _ActiveViewport = _Viewports[1];
     _LevelViewport = new pb::Viewport(1, _ActiveViewport->GetCamera());
+    _LevelViewport->SetRenderFilter(0b1);
+    
+    _UiViewport = new pb::Viewport(2, 0);
+    _UiViewport->SetRenderFilter(0b10);
     
     _LevelScene = new pb::Scene();
     _LevelScene->AddSystem(new pb::BoundsRenderSystem());
     _LevelViewport->SetScene(_LevelScene);
-    _LevelViewport->SetDensity(32.f);
-    _LevelViewport->SetPosition(glm::vec2(0,0));
+    _UiViewport->SetScene(_LevelScene);
         
     pb::Renderer::Instance()->AddViewport(_LevelViewport);
+    pb::Renderer::Instance()->AddViewport(_UiViewport);
     
     _ManipulatorManager = new ManipulatorManager(_LevelScene);
     _ManipulatorManager->AddManipulator(_LevelScene->CreateEntity<SelectManipulator>(0, 0));
@@ -315,8 +323,6 @@ void View::Update(float timeDelta, float gameDelta)
     _LevelScene->Update(timeDelta, gameDelta);
     
     _ManipulatorManager->Render(2);
-    
-    SetCanvasSize(pb::GraphicsDevice::Instance()->GetDisplayResolution());
 }
 
 ManipulatorManager* View::GetManipulatorManager()
@@ -374,6 +380,16 @@ void View::SetActiveViewport(int index)
     _LevelViewport->SetSceneCamera(_ActiveViewport->GetCamera());
 }
 
+pb::Viewport* View::GetLevelViewport()
+{
+    return _LevelViewport;
+}
+
+pb::ShaderTechnique* View::GetTechnique(pb::Uid techniqueId)
+{
+    return 0;
+}
+
 void View::OnDisplayResolutionChanged(glm::vec2 resolution)
 {
     SetCanvasSize(resolution);
@@ -387,6 +403,7 @@ void View::OnDisplayDensityChanged(float density)
 void View::SetCanvasSize(glm::vec2 size)
 {
     _LevelViewport->SetResolution(size);
+    _UiViewport->SetResolution(size);
 }
 
 void View::SetRecord(ProjectRecord* record)
