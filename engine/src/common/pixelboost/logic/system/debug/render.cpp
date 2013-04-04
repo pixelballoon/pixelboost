@@ -17,14 +17,14 @@ DebugRenderSystem::DebugRenderSystem()
 
 DebugRenderSystem::~DebugRenderSystem()
 {
-    for (RenderableMap::iterator it = _SceneRenderables.begin(); it != _SceneRenderables.end(); ++it)
+    for (auto it = _SceneRenderables.begin(); it != _SceneRenderables.end(); ++it)
     {
-        delete it->first;
+        delete *it;
     }
     
-    for (RenderableMap::iterator it = _UiRenderables.begin(); it != _UiRenderables.end(); ++it)
+    for (auto it = _UiRenderables.begin(); it != _UiRenderables.end(); ++it)
     {
-        delete it->first;
+        delete *it;
     }
 }
 
@@ -53,23 +53,34 @@ void DebugRenderSystem::Render(Scene* scene, Viewport* viewport, RenderPass rend
     {
         case kRenderPassUi:
         {
-            for (RenderableMap::iterator it = _UiRenderables.begin(); it != _UiRenderables.end(); ++it)
+            for (auto it = _UiRenderables.begin(); it != _UiRenderables.end(); ++it)
             {
-                RenderItem(it->first);
-                it->second -= _UpdateTime;
+                RenderItem(*it);
+                _Time[*it] -= _UpdateTime;
             }
             break;
         }
             
         case kRenderPassScene:
         {
-            for (RenderableMap::iterator it = _SceneRenderables.begin(); it != _SceneRenderables.end(); ++it)
+            for (auto it = _SceneRenderables.begin(); it != _SceneRenderables.end(); ++it)
             {
-                RenderItem(it->first);
-                it->second -= _UpdateTime;
+                RenderItem(*it);
+                _Time[*it] -= _UpdateTime;
             }
             break;
         }
+    }
+}
+
+const std::set<Renderable*>& DebugRenderSystem::GetItems(RenderPass pass)
+{
+    switch (pass)
+    {
+        case kRenderPassScene:
+            return _SceneRenderables;
+        case kRenderPassUi:
+            return _UiRenderables;
     }
 }
 
@@ -143,12 +154,14 @@ void DebugRenderSystem::AddTimedItem(Renderable* renderable, float time)
     switch (renderable->GetRenderPass())
     {
         case kRenderPassScene:
-            _SceneRenderables[renderable] = time;
+            _SceneRenderables.insert(renderable);
             break;
         case kRenderPassUi:
-            _UiRenderables[renderable] = time;
+            _UiRenderables.insert(renderable);
             break;
     }
+
+    _Time[renderable] = time;
     
     RenderSystem::AddItem(renderable);
 }
@@ -157,28 +170,31 @@ void DebugRenderSystem::RemoveItem(Renderable* renderable)
 {
     _SceneRenderables.erase(renderable);
     _UiRenderables.erase(renderable);
+    _Time.erase(renderable);
     
     RenderSystem::RemoveItem(renderable);
 }
 
 void DebugRenderSystem::Clear()
 {
-    for (RenderableMap::iterator it = _SceneRenderables.begin(); it != _SceneRenderables.end();)
+    for (auto it = _SceneRenderables.begin(); it != _SceneRenderables.end();)
     {
-        if (it->second <= 0.f)
+        if (_Time[*it] <= 0.f)
         {
-            delete it->first;
+            _Time.erase(*it);
+            delete *it;
             _SceneRenderables.erase(it++);
         } else {
             ++it;
         }
     }
     
-    for (RenderableMap::iterator it = _UiRenderables.begin(); it != _UiRenderables.end();)
+    for (auto it = _UiRenderables.begin(); it != _UiRenderables.end();)
     {
-        if (it->second <= 0.f)
+        if (_Time[*it] <= 0.f)
         {
-            delete it->first;
+            _Time.erase(*it);
+            delete *it;
             _UiRenderables.erase(it++);
         } else {
             ++it;

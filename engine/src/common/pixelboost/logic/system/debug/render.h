@@ -23,6 +23,8 @@ namespace pb
         
         virtual void Update(Scene* scene, float totalTime, float gameTime);
         virtual void Render(Scene* scene, Viewport* viewport, RenderPass renderPass);
+
+        virtual const std::set<Renderable*>& GetItems(RenderPass pass);
         
         PrimitiveRenderableEllipse* AddEllipse(RenderPass renderPass, int layer, glm::vec3 position, glm::vec3 rotation, glm::vec2 size, glm::vec4 color = glm::vec4(1,1,1,1), float time = 0.f);
         PrimitiveRenderableLine* AddLine(RenderPass renderPass, int layer, glm::vec3 start, glm::vec3 end, glm::vec4 color = glm::vec4(1,1,1,1), float time = 0.f);
@@ -35,10 +37,9 @@ namespace pb
 
         void Clear();
         
-        typedef std::map<Renderable*, float> RenderableMap;
-        
-        RenderableMap _SceneRenderables;
-        RenderableMap _UiRenderables;
+        std::set<Renderable*> _SceneRenderables;
+        std::set<Renderable*> _UiRenderables;
+        std::map<Renderable*, float> _Time;
         
         float _UpdateTime;
     };
