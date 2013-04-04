@@ -164,22 +164,29 @@ ResourceManager::ResourceManager()
     , _IsProcessing(false)
     , _IsPostProcessing(false)
     , _IsUnloading(false)
+    , _LoadingThread(0)
+    , _ProcessingThread(0)
+    , _PostProcessingThread(0)
+    , _UnloadingThread(0)
 {
-    
+
 }
 
 ResourceManager::~ResourceManager()
 {
-    
+    delete _LoadingThread;
+    delete _ProcessingThread;
+    delete _PostProcessingThread;
+    delete _UnloadingThread;
 }
 
 void ResourceManager::Update(float timeDelta)
 {
     Purge();
-    Process(kResourceStateLoading, _IsLoading, _LoadingThread);
-    Process(kResourceStateProcessing, _IsProcessing, _ProcessingThread);
-    Process(kResourceStatePostProcessing, _IsPostProcessing, _PostProcessingThread);
-    Process(kResourceStateUnloading, _IsUnloading, _UnloadingThread);
+    Process(kResourceStateLoading, _IsLoading, &_LoadingThread);
+    Process(kResourceStateProcessing, _IsProcessing, &_ProcessingThread);
+    Process(kResourceStatePostProcessing, _IsPostProcessing, &_PostProcessingThread);
+    Process(kResourceStateUnloading, _IsUnloading, &_UnloadingThread);
 }
 
 ResourcePool* ResourceManager::GetPool(const std::string& name)
@@ -226,12 +233,18 @@ void ResourceManager::RegisterResourceCreator(Uid type, ResourceCreator resource
     _ResourceCreation[type] = resourceCreator;
 }
 
-void ResourceManager::Process(ResourceState state, bool& handleVariable, std::thread& thread)
+void ResourceManager::Process(ResourceState state, bool& handleVariable, std::thread** thread)
 {
     if (!handleVariable)
     {
-        if (thread.joinable())
-            thread.join();
+        #ifndef PIXELBOOST_DISABLE_THREADING
+            if (*thread && (*thread)->joinable())
+            {
+                (*thread)->join();
+                delete *thread;
+                *thread = 0;
+            }
+        #endif
         
         std::shared_ptr<Resource> resource = 0;
         
@@ -243,17 +256,24 @@ void ResourceManager::Process(ResourceState state, bool& handleVariable, std::th
                 break;
         }
         
-        if (resource && resource->_ProcessingMutex.try_lock())
-        {
-            handleVariable = true;
-            
-            if (resource->GetThread(resource->GetProcessForState(state)) == kResourceThreadMain)
+        #ifndef PIXELBOOST_DISABLE_THREADING
+            if (resource && resource->_ProcessingMutex.try_lock())
+            {
+                handleVariable = true;
+                
+                if (resource->GetThread(resource->GetProcessForState(state)) == kResourceThreadMain)
+                {
+                    ProcessResource(resource, handleVariable);
+                } else {
+                    *thread = new std::thread(&ResourceManager::ProcessResource, this, resource, std::ref(handleVariable));
+                }
+            }
+        #else
+            if (resource)
             {
                 ProcessResource(resource, handleVariable);
-            } else {
-                thread = std::thread(&ResourceManager::ProcessResource, this, resource, std::ref(handleVariable));
             }
-        }
+        #endif
     }
 }
 

@@ -1,5 +1,5 @@
 #include "pixelboost/debug/log.h"
-#include "pixelboost/file/fileSystem.cpp"
+#include "pixelboost/file/fileSystem.h"
 
 #if defined(PIXELBOOST_PLATFORM_ANDROID)
     #include <android/log.h>

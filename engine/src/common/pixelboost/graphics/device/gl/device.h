@@ -5,23 +5,21 @@
 #ifdef PIXELBOOST_GRAPHICS_OPENGL
 
 #ifdef PIXELBOOST_GRAPHICS_OPENGLES2
-    #if defined(PIXELBOOST_PLATFORM_ANDROID) || defined(PIXELBOOST_PLATFORM_NACL)
-        #include <GLES2/gl2.h>
-        #include <GLES2/gl2ext.h>
-    #else
+    #ifdef PIXELBOOST_PLATFORM_OSX
         #include <OpenGLES/ES2/gl.h>
         #include <OpenGLES/ES2/glext.h>
+    #else
+        #include <GLES2/gl2.h>
+        #include <GLES2/gl2ext.h>
     #endif
 #endif
 
 #ifdef PIXELBOOST_GRAPHICS_OPENGL2
-	#ifdef PIXELBOOST_PLATFORM_WINDOWS
-        #include "GL/glew.h"
-        #include <windows.h>
-        #include <gl/gl.h>
-	#endif
     #ifdef PIXELBOOST_PLATFORM_OSX
-		#include <OpenGL/gl.h>
+        #include <OpenGL/gl.h>
+    #else
+        #include <GL/gl.h>
+        #include <GL/glew.h>
 	#endif
 #endif
 

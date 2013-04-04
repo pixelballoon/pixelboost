@@ -1,6 +1,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 #include "pixelboost/debug/assert.h"
+#include "pixelboost/debug/log.h"
 #include "pixelboost/file/fileHelpers.h"
 #include "pixelboost/framework/engine.h"
 #include "pixelboost/graphics/camera/camera.h"
@@ -464,7 +465,7 @@ void FontRenderer::Render(int count, Renderable** renderables, Uid renderScheme,
         
         if (renderable.Text.length() > _MaxCharacters)
         {
-            wprintf(L"String (%s) is too long for the MaxCharacters value set\n", renderable.Text.c_str());
+            PbLogDebug("pb.renderer.font", "String (%s) is too long for the MaxCharacters value set\n", renderable.Text.c_str());
             continue;
         }
         

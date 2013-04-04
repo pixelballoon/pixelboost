@@ -1,6 +1,6 @@
 include (config.cmake)
 
-macro(pixelboost_library_cpp11 library)
+macro(pixelboost_setup_library library)
 	if (PIXELBOOST_BUILD_PLATFORM_OSX OR PIXELBOOST_BUILD_PLATFORM_IOS)
 		set_target_properties(${library} PROPERTIES
 			XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "gnu++0x"
@@ -26,6 +26,12 @@ macro(pixelboost_setup_pre pixelboost_dir projectname identifier title)
 	set (PIXELBOOST_BUILD_NAME ${projectname})
 	set (PIXELBOOST_BUILD_IDENTIFIER ${identifier})
 	set (PIXELBOOST_BUILD_TITLE ${title})
+
+	if (PIXELBOOST_BUILD_PLATFORM_EMSCRIPTEN)
+		set (PIXELBOOST_LIBRARY_TYPE SHARED)
+	else (PIXELBOOST_BUILD_PLATFORM_EMSCRIPTEN)
+		set (PIXELBOOST_LIBRARY_TYPE STATIC)
+	endif (PIXELBOOST_BUILD_PLATFORM_EMSCRIPTEN)
 
 	add_definitions(-DPIXELBOOST_BUILD_NAME="${projectname}")
 	add_definitions(-DPIXELBOOST_BUILD_IDENTIFIER="${identifier}")
@@ -85,6 +91,8 @@ macro(pixelboost_setup_pre pixelboost_dir projectname identifier title)
 
 	if (PIXELBOOST_BUILD_PLATFORM_ANDROID)
 		add_definitions(-DPIXELBOOST_DISABLE_GAMECENTER
+						-DPIXELBOOST_DISABLE_MONGOOSE
+						-DPIXELBOOST_DISABLE_NETWORKING
 						-DPIXELBOOST_PLATFORM_ANDROID
 						-D_GLIBCXX_HAS_GTHREADS)
 
@@ -96,6 +104,19 @@ macro(pixelboost_setup_pre pixelboost_dir projectname identifier title)
 		configure_file("${CMAKE_CURRENT_SOURCE_DIR}/pixelboost/engine/resources/platform/android/res/values/strings.xml" "${CMAKE_CURRENT_SOURCE_DIR}/build/android/res/values/strings.xml")
 	endif (PIXELBOOST_BUILD_PLATFORM_ANDROID)
 
+	if (PIXELBOOST_BUILD_PLATFORM_EMSCRIPTEN)
+		add_definitions(-DPIXELBOOST_DISABLE_MONGOOSE
+						-DPIXELBOOST_DISABLE_NETWORKING
+						-DPIXELBOOST_DISABLE_THREADING
+						-DPIXELBOOST_PLATFORM_EMSCRIPTEN)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --preload-file data")
+	endif (PIXELBOOST_BUILD_PLATFORM_EMSCRIPTEN)
+
+	if (PIXELBOOST_BUILD_PLATFORM_WINDOWS)
+		add_definitions(-DPIXELBOOST_DISABLE_CONSTEXPR)
+	endif (PIXELBOOST_BUILD_PLATFORM_WINDOWS)
+
 	add_subdirectory (${PIXELBOOST_ROOT_DIR} ${CMAKE_BINARY_DIR}/pixelboost)
 
 	include_directories("${PIXELBOOST_HEADERS}")
@@ -104,16 +125,29 @@ macro(pixelboost_setup_pre pixelboost_dir projectname identifier title)
 endmacro()
 
 macro(pixelboost_setup_post sources)
-	if (NOT PIXELBOOST_BUILD_PLATFORM_ANDROID)
-		add_executable(${PIXELBOOST_BUILD_NAME} ${sources} ${RESOURCES})
-		target_link_libraries (${PIXELBOOST_BUILD_NAME} pixelboost_engine)
-	endif (NOT PIXELBOOST_BUILD_PLATFORM_ANDROID)
-
 	if (PIXELBOOST_BUILD_PLATFORM_ANDROID)
 		add_library(pixelboost SHARED ${sources}
 			"${PIXELBOOST_ROOT_DIR}/engine/src/platform/android/pixelboost/framework/main.cpp")
-		target_link_libraries (pixelboost pixelboost_engine)
+		set (PIXELBOOST_EXE_NAME pixelboost)
+	else (PIXELBOOST_BUILD_PLATFORM_ANDROID)
+		if (PIXELBOOST_BUILD_PLATFORM_EMSCRIPTEN)
+			add_executable(${PIXELBOOST_BUILD_NAME}.html ${sources} "${PIXELBOOST_ROOT_DIR}/engine/src/platform/emscripten/pixelboost/framework/main.cpp")
+			set (PIXELBOOST_EXE_NAME ${PIXELBOOST_BUILD_NAME}.html)
+			target_link_libraries (${PIXELBOOST_EXE_NAME} pthread)
+		else (PIXELBOOST_BUILD_PLATFORM_EMSCRIPTEN)
+			add_executable(${PIXELBOOST_BUILD_NAME} ${sources} ${RESOURCES})
+			set (PIXELBOOST_EXE_NAME ${PIXELBOOST_BUILD_NAME})
+		endif (PIXELBOOST_BUILD_PLATFORM_EMSCRIPTEN)
 	endif (PIXELBOOST_BUILD_PLATFORM_ANDROID)
+
+	pixelboost_setup_library(${PIXELBOOST_EXE_NAME})
+	target_link_libraries (${PIXELBOOST_EXE_NAME} pixelboost_engine pixelboost_shared enet freetype2 lua)
+
+	if (PIXELBOOST_LIBRARY_TYPE STREQUAL "STATIC")
+		target_link_libraries (${PIXELBOOST_EXE_NAME} Box2D physfs-static)
+	else (PIXELBOOST_LIBRARY_TYPE STREQUAL "STATIC")
+		target_link_libraries (${PIXELBOOST_EXE_NAME} Box2D_shared physfs)
+	endif (PIXELBOOST_LIBRARY_TYPE STREQUAL "STATIC")
 
 	if (PIXELBOOST_BUILD_PLATFORM_OSX)
 		set_target_properties(${PIXELBOOST_BUILD_NAME} PROPERTIES
@@ -147,6 +181,4 @@ macro(pixelboost_setup_post sources)
 			XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++"
 		)
 	endif (PIXELBOOST_BUILD_PLATFORM_IOS)
-
-	pixelboost_library_cpp11(${PIXELBOOST_BUILD_NAME})
 endmacro()

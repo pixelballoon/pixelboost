@@ -147,6 +147,11 @@ private:
     #define PIXELBOOST_GRAPHICS_OPENGL2
 #endif
 
+#ifdef PIXELBOOST_PLATFORM_EMSCRIPTEN
+    #define PIXELBOOST_GRAPHICS_OPENGL
+    #define PIXELBOOST_GRAPHICS_OPENGLES2
+#endif
+
 #ifdef PIXELBOOST_GRAPHICS_OPENGL
     #include "pixelboost/graphics/device/gl/device.h"
 #endif

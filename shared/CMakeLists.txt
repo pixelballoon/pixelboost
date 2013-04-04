@@ -53,7 +53,7 @@ set (SHARED_SOURCES
 	${MATHS_SOURCES}
 	)
 
-add_library (pixelboost_shared STATIC ${SHARED_SOURCES})
+add_library (pixelboost_shared ${PIXELBOOST_LIBRARY_TYPE} ${SHARED_SOURCES})
 
 source_group (asset FILES ${ASSET_SOURCES})
 source_group (external FILES ${EXTERNAL_SOURCES})

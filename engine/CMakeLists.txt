@@ -3,8 +3,6 @@ cmake_minimum_required (VERSION 2.8.10)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-reorder")
 
 if (PIXELBOOST_BUILD_PLATFORM_ANDROID)
-	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-
 	set (PLATFORM_HEADERS
 		"${CMAKE_CURRENT_SOURCE_DIR}/src/platform/android"
 		)
@@ -96,6 +94,24 @@ if (PIXELBOOST_BUILD_PLATFORM_IOS)
 		"src/platform/ios/pixelboost/util/localisation/localisation.mm"
 		)
 endif (PIXELBOOST_BUILD_PLATFORM_IOS)
+
+if (PIXELBOOST_BUILD_PLATFORM_EMSCRIPTEN)
+	set (PLATFORM_HEADERS
+		"${CMAKE_CURRENT_SOURCE_DIR}/src/platform/emscripten"
+		)
+
+	set (PLATFORM_SOURCES
+		"src/platform/emscripten/pixelboost/audio/emscripten/audioManagerSimple.h"
+		"src/platform/emscripten/pixelboost/audio/emscripten/audioManagerSimple.cpp"
+		"src/platform/emscripten/pixelboost/file/fileHelpers.cpp"
+		"src/platform/emscripten/pixelboost/framework/eglUtil.c"
+		"src/platform/emscripten/pixelboost/framework/eglUtil.h"
+		"src/platform/emscripten/pixelboost/network/gameCenter.h"
+		"src/platform/emscripten/pixelboost/network/gameCenter.cpp"
+		"src/platform/emscripten/pixelboost/network/networkHelpers.cpp"
+		"src/platform/emscripten/pixelboost/util/localisation/localisation.cpp"
+		)
+endif (PIXELBOOST_BUILD_PLATFORM_EMSCRIPTEN)
 
 set (PIXELBOOST_HEADERS
 	"${PIXELBOOST_HEADERS}"
@@ -483,8 +499,8 @@ set (PIXELBOOST_SOURCES
 	${UTIL_LOCALISATION_SOURCES}
 	)
 
-add_library (pixelboost_engine STATIC ${PIXELBOOST_SOURCES})
-target_link_libraries (pixelboost_engine pixelboost_shared Box2D enet freetype2 lua physfs-static)
+add_library (pixelboost_engine ${PIXELBOOST_LIBRARY_TYPE} ${PIXELBOOST_SOURCES})
+target_link_libraries (pixelboost_engine)
 
 if (PIXELBOOST_BUILD_PLATFORM_OSX)
 	target_link_libraries (pixelboost_engine
@@ -500,7 +516,7 @@ if (PIXELBOOST_BUILD_PLATFORM_OSX)
 		"-framework AppKit"
 		"-framework IOKit"
 		)
-	pixelboost_library_cpp11(ddhidlib)
+	pixelboost_setup_library(ddhidlib)
 endif (PIXELBOOST_BUILD_PLATFORM_OSX)
 
 if (PIXELBOOST_BUILD_PLATFORM_IOS)
@@ -519,14 +535,6 @@ endif (PIXELBOOST_BUILD_PLATFORM_IOS)
 if (PIXELBOOST_BUILD_PLATFORM_ANDROID)
 	target_link_libraries (pixelboost_engine GLESv2 log)
 endif (PIXELBOOST_BUILD_PLATFORM_ANDROID)
-
-pixelboost_library_cpp11(pixelboost_engine)
-pixelboost_library_cpp11(pixelboost_shared)
-pixelboost_library_cpp11(Box2D)
-pixelboost_library_cpp11(enet)
-pixelboost_library_cpp11(freetype2)
-pixelboost_library_cpp11(lua)
-pixelboost_library_cpp11(physfs-static)
 
 source_group (asset FILES ${ASSET_SOURCES})
 source_group (audio FILES ${AUDIO_SOURCES})

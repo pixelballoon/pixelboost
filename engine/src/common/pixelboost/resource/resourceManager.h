@@ -80,7 +80,7 @@ namespace pb
         void RegisterResourceCreator(Uid type, ResourceCreator resourceCreator);
         
     private:
-        void Process(ResourceState state, bool& handleVariable, std::thread& thread);
+        void Process(ResourceState state, bool& handleVariable, std::thread** thread);
         void ProcessResource(std::shared_ptr<Resource> resource, bool& handleVariable);
         
         void AddDeletedResource(Resource* resource);
@@ -93,11 +93,12 @@ namespace pb
         bool _IsProcessing;
         bool _IsPostProcessing;
         bool _IsUnloading;
-        std::thread _LoadingThread;
-        std::thread _ProcessingThread;
-        std::thread _PostProcessingThread;
-        std::thread _UnloadingThread;
-        
+
+        std::thread* _LoadingThread;
+        std::thread* _ProcessingThread;
+        std::thread* _PostProcessingThread;
+        std::thread* _UnloadingThread;
+
         std::map<std::string, ResourcePool*> _Pools;
         std::map<Uid, ResourceCreator> _ResourceCreation;
         std::vector<Resource*> _DeletedResources;

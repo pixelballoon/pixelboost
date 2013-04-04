@@ -153,5 +153,5 @@ source_group (view\\ui FILES ${VIEW_UI_SOURCES})
 source_group (view FILES ${VIEW_SOURCES})
 
 pixelboost_setup_post ("${EDITOR_SOURCES}")
-pixelboost_library_cpp11 (pixelboost_pipeline)
+pixelboost_setup_library (pixelboost_pipeline)
 target_link_libraries (editor pixelboost_pipeline)

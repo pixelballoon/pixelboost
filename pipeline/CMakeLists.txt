@@ -29,7 +29,7 @@ set (PIPELINE_SOURCES
 	${FILE_SOURCES}
 	)
 
-add_library (pixelboost_pipeline STATIC ${PIPELINE_SOURCES})
+add_library (pixelboost_pipeline ${PIXELBOOST_LIBRARY_TYPE} ${PIPELINE_SOURCES})
 target_link_libraries (pixelboost_pipeline pixelboost_shared)
 
 source_group (debug FILES ${DEBUG_SOURCES})

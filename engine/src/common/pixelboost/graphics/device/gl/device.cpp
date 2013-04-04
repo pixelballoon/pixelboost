@@ -1,7 +1,7 @@
 #include "glm/gtc/type_ptr.hpp"
 
 #include "pixelboost/debug/assert.h"
-#include "pixelboost/graphics/device/device.h"
+#include "pixelboost/graphics/device/gl/device.h"
 #include "pixelboost/graphics/device/indexBuffer.h"
 #include "pixelboost/graphics/device/program.h"
 #include "pixelboost/graphics/device/texture.h"

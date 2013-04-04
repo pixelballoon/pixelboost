@@ -89,11 +89,11 @@ Engine::Engine(void* platformContext, int argc, const char** argv, bool enableNe
     _MouseManager = new MouseManager();
     _TouchManager = new TouchManager();
     
-#if !defined(PIXELBOOST_PLATFORM_ANDROID)
+#if !defined(PIXELBOOST_DISABLE_NETWORKING)
     new NetworkManager();
 #endif
     
-#if !defined(PIXELBOOST_PLATFORM_ANDROID) && !defined(PIXELBOOST_DISABLE_DEBUG)
+#if !defined(PIXELBOOST_DISABLE_NETWORKING) && !defined(PIXELBOOST_DISABLE_DEBUG)
     if (enableNetworkDebug)
     {
         _DebugDiscovery = NetworkManager::Instance()->StartDiscoveryServer(9091);

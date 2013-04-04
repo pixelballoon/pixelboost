@@ -35,7 +35,13 @@ if [ -d "../../platform/android/res/drawable-hdpi" ]; then
 fi
 cp -r ../../pixelboost/engine/src/platform/android/src .
 cp -r ../../data assets
-cmake ../../ -DPIXELBOOST_BUILD_PLATFORM_ANDROID=TRUE -DANDROID_STL=gnustl_static -DLIBRARY_OUTPUT_PATH_ROOT="`pwd`" -DCMAKE_TOOLCHAIN_FILE=pixelboost/toolchain/android.toolchain.cmake
+cmake ../../ -DPIXELBOOST_BUILD_PLATFORM_ANDROID=TRUE -DANDROID_STL=gnustl_static -DLIBRARY_OUTPUT_PATH_ROOT="`pwd`" -DCMAKE_TOOLCHAIN_FILE=pixelboost/toolchain/android.toolchain.cmake -DCMAKE_BUILD_TYPE=Release
+cd ..
+
+mkdir emscripten
+cd emscripten
+cp -r ../../data ./
+cmake ../../ -DPIXELBOOST_BUILD_PLATFORM_EMSCRIPTEN=TRUE -DEMSCRIPTEN=1 -DCMAKE_TOOLCHAIN_FILE=$EMSCRIPTEN/cmake/Platform/Emscripten_unix.cmake -DCMAKE_MODULE_PATH=$EMSCRIPTEN/cmake -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles"
 cd ..
 
 cd ..
