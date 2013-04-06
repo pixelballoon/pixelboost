@@ -31,7 +31,7 @@ bool ShaderProgramGL::SetSource(const std::string& source)
     _Uniforms.clear();
     
 #ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
-    _Source = program.child_value();
+    _Source = source;
 #endif
     
     _Program = glCreateProgram();
@@ -169,9 +169,7 @@ bool ShaderProgramGL::Link()
 void ShaderProgramGL::OnContextLost()
 {
 #ifdef PIXELBOOST_GRAPHICS_HANDLE_CONTEXT_LOST
-    CreateShader(_Source);
-    
-    Link();
+    SetSource(_Source);
 #else
     PbAssert(!"Context loss has not been enabled");
 #endif

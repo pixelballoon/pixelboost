@@ -151,7 +151,3 @@ private:
     #define PIXELBOOST_GRAPHICS_OPENGL
     #define PIXELBOOST_GRAPHICS_OPENGLES2
 #endif
-
-#ifdef PIXELBOOST_GRAPHICS_OPENGL
-    #include "pixelboost/graphics/device/gl/device.h"
-#endif

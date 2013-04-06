@@ -171,7 +171,7 @@ namespace pb
         bool MousePressed;
         bool MouseReleased;
         
-        KeyboardEvent KeyboardEvent;
+        pb::KeyboardEvent KeyboardEvent;
 
         std::vector<GuiLayout*> LayoutStack;
     };
