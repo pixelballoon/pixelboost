@@ -1,3 +1,5 @@
+#include "lualib.h"
+
 #include "pixelboost/framework/engine.h"
 #include "pixelboost/scripting/lua.h"
 

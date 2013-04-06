@@ -2,7 +2,9 @@
 #include <sstream>
 #include <sys/stat.h>
 
-#include "lua.hpp"
+#include "lua.h"
+#include "lualib.h"
+#include "lauxlib.h"
 
 #include "json/reader.h"
 #include "json/writer.h"

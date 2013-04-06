@@ -29,10 +29,8 @@ pixelboost_setup_library(freetype2)
 add_subdirectory (libs/lua)
 pixelboost_setup_library(lua)
 
-if (NOT PIXELBOOST_BUILD_PLATFORM_EMSCRIPTEN)
-	add_subdirectory (libs/enet)
-	pixelboost_setup_library(enet)
-endif (NOT PIXELBOOST_BUILD_PLATFORM_EMSCRIPTEN)
+add_subdirectory (libs/enet)
+pixelboost_setup_library(enet)
 
 if (PIXELBOOST_BUILD_PLATFORM_OSX)
 	add_subdirectory (libs/ddhidlib)

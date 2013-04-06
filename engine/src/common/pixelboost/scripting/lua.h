@@ -3,7 +3,9 @@
 #include <string>
 #include <vector>
 
-#include "lua.hpp"
+#include "lua.h"
+#include "lauxlib.h"
+
 #include "LuaBridge/LuaBridge.h"
 
 #define PB_LUA_BEGIN(namespace) void PbRegisterLua_ ## namespace(pb::LuaManager* manager) {
