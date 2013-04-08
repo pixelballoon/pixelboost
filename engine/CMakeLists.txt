@@ -104,8 +104,6 @@ if (PIXELBOOST_BUILD_PLATFORM_EMSCRIPTEN)
 		"src/platform/emscripten/pixelboost/audio/emscripten/audioManagerSimple.h"
 		"src/platform/emscripten/pixelboost/audio/emscripten/audioManagerSimple.cpp"
 		"src/platform/emscripten/pixelboost/file/fileHelpers.cpp"
-		"src/platform/emscripten/pixelboost/framework/eglUtil.c"
-		"src/platform/emscripten/pixelboost/framework/eglUtil.h"
 		"src/platform/emscripten/pixelboost/network/gameCenter.h"
 		"src/platform/emscripten/pixelboost/network/gameCenter.cpp"
 		"src/platform/emscripten/pixelboost/network/networkHelpers.cpp"
