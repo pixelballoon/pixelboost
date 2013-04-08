@@ -1,4 +1,8 @@
+#include "glm/gtc/matrix_transform.hpp"
+
+#include "pixelboost/debug/log.h"
 #include "pixelboost/framework/engine.h"
+#include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/logic/component/input/rectTouch.h"
 #include "pixelboost/logic/component/transform.h"
@@ -17,6 +21,7 @@ RectTouchComponent::RectTouchComponent(Entity* parent, bool debugRender)
     , _CaptureEvents(false)
     , _DebugRender(debugRender)
     , _MultiTouch(false)
+    , _IsUiComponent(false)
 {
     Engine::Instance()->GetTouchManager()->AddHandler(this);
     
@@ -61,9 +66,44 @@ void RectTouchComponent::SetMultiTouch(bool multiTouch)
     _MultiTouch = multiTouch;
 }
 
-glm::vec3 RectTouchComponent::GetPosition()
+void RectTouchComponent::SetIsUiComponent(bool isUiComponent)
+{
+    _IsUiComponent = isUiComponent;
+}
+
+Ray RectTouchComponent::GetTouchRay(TouchEvent touch)
+{   
+    pb::Camera* camera = 0;
+    
+    if (_IsUiComponent)
+    {
+        camera = touch.GetViewport()->GetUiCamera();
+    } else {
+        camera = touch.GetViewport()->GetSceneCamera();
+    }
+    
+    glm::mat4x4 transformMatrix;
+    TransformComponent* transform = GetEntity()->GetComponent<TransformComponent>();
+    
+    if (transform)
+    {
+        transformMatrix = transform->GetMatrix() * _LocalTransform;
+    } else {
+        transformMatrix = _LocalTransform;
+    }
+
+    glm::vec3 touchPosition(touch.GetScreenPosition().x, touch.GetViewport()->GetResolution().y - touch.GetScreenPosition().y, 0);
+    
+    glm::vec3 start = glm::unProject(touchPosition, camera->ViewMatrix * transformMatrix, camera->ProjectionMatrix, touch.GetViewport()->GetNativeRegion());
+    glm::vec3 end = glm::unProject(touchPosition + glm::vec3(0,0,1), camera->ViewMatrix * transformMatrix, camera->ProjectionMatrix, touch.GetViewport()->GetNativeRegion());
+    
+    return Ray(start, glm::normalize(end-start));
+}
+
+Plane RectTouchComponent::GetPlane()
 {
     glm::vec4 position;
+    glm::vec4 normal;
     
     TransformComponent* transform = GetEntity()->GetComponent<TransformComponent>();
     
@@ -71,11 +111,13 @@ glm::vec3 RectTouchComponent::GetPosition()
     {
         glm::mat4x4 transformMatrix = transform->GetMatrix() * _LocalTransform;
         position = transformMatrix * glm::vec4(0,0,0,1);
+        normal = transformMatrix * glm::vec4(0,0,1,0);
     } else {
         position = _LocalTransform * glm::vec4(0,0,0,1);
+        normal = _LocalTransform * glm::vec4(0,0,1,0);
     }
     
-    return glm::vec3(position.x, position.y, position.z);
+    return Plane(glm::vec3(position.x, position.y, position.z), glm::vec3(normal.x, normal.y, normal.z));
 }
 
 int RectTouchComponent::GetInputHandlerPriority()
@@ -87,23 +129,30 @@ bool RectTouchComponent::OnTouchDown(TouchEvent touch)
 {
     if (touch.GetViewport()->GetScene() != GetScene())
         return false;
-   
-    glm::vec3 position = GetPosition();
-    glm::vec2 screenPos = touch.GetViewportPosition();
-    glm::vec2 size = _Size/2.f;
     
-    if (screenPos.x > position.x-size.x && screenPos.x < position.x+size.x &&
-        screenPos.y > position.y-size.y && screenPos.y < position.y+size.y)
+    Ray ray = GetTouchRay(touch);
+    Plane plane = GetPlane();
+    
+    auto result = plane.GetIntersection(ray);
+    
+    if (result.first)
     {
-        if (AddTouch(touch, screenPos))
-        {
-            TouchDownMessage message(GetEntity(), this, touch.GetId(), screenPos-glm::vec2(position.x, position.y));
-            GetScene()->SendMessage(GetEntityUid(), message);
-        }
+        glm::vec2 size = _Size/2.f;
         
-        return _CaptureEvents;
+        if (result.second.x > -size.x && result.second.x < size.x &&
+            result.second.y > -size.y && result.second.y < size.y)
+        {
+            glm::vec2 touchPosition(result.second.x, result.second.y);
+            if (AddTouch(touch, touchPosition))
+            {
+                TouchDownMessage message(GetEntity(), this, touch.GetId(), touchPosition);
+                GetScene()->SendMessage(GetEntityUid(), message);
+            }
+            
+            return _CaptureEvents;
+        }
     }
-    
+
     return false;
 }
 
@@ -112,13 +161,20 @@ bool RectTouchComponent::OnTouchMove(TouchEvent touch)
     if (!HasTouch(touch))
         return false;
     
-    glm::vec3 position = GetPosition();
-    glm::vec2 screenPos = touch.GetViewportPosition();
+    Ray ray = GetTouchRay(touch);
+    Plane plane = GetPlane();
     
-    _Touches[touch.GetId()] = screenPos;
+    auto result = plane.GetIntersection(ray);
     
-    TouchMoveMessage message(GetEntity(), this, touch.GetId(), screenPos-glm::vec2(position.x, position.y));
-    GetScene()->SendMessage(GetEntityUid(), message);
+    if (result.first)
+    {
+        glm::vec2 touchPosition(result.second.x, result.second.y);
+        
+        _Touches[touch.GetId()] = touchPosition;
+        
+        TouchMoveMessage message(GetEntity(), this, touch.GetId(), touchPosition);
+        GetScene()->SendMessage(GetEntityUid(), message);
+    }
     
     return _CaptureEvents;
 }
@@ -128,12 +184,16 @@ bool RectTouchComponent::OnTouchUp(TouchEvent touch)
     if (!HasTouch(touch))
         return false;
     
+    Ray ray = GetTouchRay(touch);
+    Plane plane = GetPlane();
+    
+    auto result = plane.GetIntersection(ray);
+    
     RemoveTouch(touch);
     
-    glm::vec3 position = GetPosition();
-    glm::vec2 screenPos = touch.GetViewportPosition();
+    glm::vec2 touchPosition(result.second.x, result.second.y);
     
-    TouchUpMessage message(GetEntity(), this, touch.GetId(), screenPos-glm::vec2(position.x, position.y));
+    TouchUpMessage message(GetEntity(), this, touch.GetId(), touchPosition);
     GetScene()->SendMessage(GetEntityUid(), message);
     
     return _CaptureEvents;

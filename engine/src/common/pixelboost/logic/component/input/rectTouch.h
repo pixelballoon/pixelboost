@@ -4,6 +4,8 @@
 
 #include "pixelboost/input/touchManager.h"
 #include "pixelboost/logic/component.h"
+#include "pixelboost/maths/plane.h"
+#include "pixelboost/maths/ray.h"
 
 namespace pb
 {
@@ -25,9 +27,11 @@ namespace pb
         void SetSize(const glm::vec2& size);
         void SetCaptureEvents(bool captureEvents);
         void SetMultiTouch(bool multiTouch);
+        void SetIsUiComponent(bool isUiComponent);
         
     private:
-        glm::vec3 GetPosition();
+        Ray GetTouchRay(TouchEvent touch);
+        Plane GetPlane();
         
         virtual int GetInputHandlerPriority();
         
@@ -46,6 +50,7 @@ namespace pb
         
         bool _CaptureEvents;
         bool _MultiTouch;
+        bool _IsUiComponent;
         std::map<int, glm::vec2> _Touches;
         
         bool _DebugRender;
