@@ -96,8 +96,7 @@ namespace pb
     };
 }
 
-#define PB_DB_DECLARE_CLASS(type) class type ; void PbRegisterDb ## type ## Definition ();
-#define PB_DB_DECLARE_STRUCT(type) struct type ; void PbRegisterDbStruct ## type  ## Definition (pb::Database* database); void PbDeserialise ## type  ## Definition (pb::Database* database, pb::DbRecord* record, void* data);
+#define PB_DB_DECLARE_STRUCT(type) struct type ## Definition; void PbRegisterDbStruct ## type  ## Definition (pb::Database* database); void PbDeserialise ## type  ## Definition (pb::Database* database, pb::DbRecord* record, void* data);
 
 #define PB_DB_HAS_BINDING(type) friend void PB_Deserialise ## type ## Definition (void* data)
 
