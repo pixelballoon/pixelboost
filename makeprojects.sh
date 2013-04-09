@@ -44,6 +44,12 @@ cp -r ../../data ./
 cmake ../../ -DPIXELBOOST_BUILD_PLATFORM_EMSCRIPTEN=TRUE -DEMSCRIPTEN=1 -DCMAKE_TOOLCHAIN_FILE=$EMSCRIPTEN/cmake/Platform/Emscripten_unix.cmake -DCMAKE_MODULE_PATH=$EMSCRIPTEN/cmake -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles"
 cd ..
 
+mkdir emscripten_dbg
+cd emscripten_dbg
+cp -r ../../data ./
+cmake ../../ -DPIXELBOOST_BUILD_PLATFORM_EMSCRIPTEN=TRUE -DEMSCRIPTEN=1 -DCMAKE_TOOLCHAIN_FILE=$EMSCRIPTEN/cmake/Platform/Emscripten_unix.cmake -DCMAKE_MODULE_PATH=$EMSCRIPTEN/cmake -G "Unix Makefiles"
+cd ..
+
 cd ..
 cd pixelboost
 cd tools
