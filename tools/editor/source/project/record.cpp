@@ -5,15 +5,11 @@
 #include "lua.h"
 #include "lualib.h"
 #include "lauxlib.h"
+#include "lapi.h"
+#include "lundump.h"
 
 #include "json/reader.h"
 #include "json/writer.h"
-
-extern "C" {
-#include "lapi.h"
-#include "lobject.h"
-#include "lundump.h"
-}
 
 #include "pipeline/file/fileSystem.h"
 #include "pixelboost/file/fileHelpers.h"
