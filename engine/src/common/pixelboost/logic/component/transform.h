@@ -6,6 +6,8 @@
 
 namespace pb
 {
+    
+    class Message;
 
     class TransformComponent : public Component
     {
@@ -32,6 +34,10 @@ namespace pb
         void Dirty(bool dirtyThis);
         
     private:
+        void OnSetPosition(const Message& message);
+        void OnSetRotation(const Message& message);
+        void OnSetScale(const Message& message);
+        
         enum DirtyType
         {
             kDirtyTypeNone,

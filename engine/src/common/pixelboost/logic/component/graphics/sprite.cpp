@@ -1,4 +1,5 @@
 #include "pixelboost/framework/engine.h"
+#include "pixelboost/graphics/message/color.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/sprite/sprite.h"
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
@@ -17,11 +18,13 @@ PB_DEFINE_COMPONENT(pb::SpriteComponent)
 SpriteComponent::SpriteComponent(Entity* parent)
     : RenderableComponent<pb::SpriteRenderable>(parent)
 {
-    
+    GetEntity()->RegisterMessageHandler<SetColorMessage>(MessageHandler(this, &SpriteComponent::OnSetColor));
 }
 
 SpriteComponent::~SpriteComponent()
 {
+    GetEntity()->UnregisterMessageHandler<SetColorMessage>(MessageHandler(this, &SpriteComponent::OnSetColor));
+    
     if (_SpriteSheet)
     {
         _SpriteSheet->SignalResourceLoaded.Disconnect(this, &SpriteComponent::OnResourceLoaded);
@@ -62,6 +65,13 @@ void SpriteComponent::SetSprite(Sprite* sprite)
     }
     
     GetRenderable()->SetSprite(sprite);
+}
+
+void SpriteComponent::OnSetColor(const Message& message)
+{
+    auto colorMessage = message.As<SetColorMessage>();
+    
+    GetRenderable()->SetTint(colorMessage.GetColor());
 }
 
 void SpriteComponent::OnResourceLoaded(Resource* resource, bool error)

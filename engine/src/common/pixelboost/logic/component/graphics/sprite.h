@@ -29,6 +29,8 @@ namespace pb
         void SetSprite(Sprite* sprite);
         
     private:
+        void OnSetColor(const Message& message);
+        
         void OnResourceLoaded(Resource* resource, bool loaded);
         void OnResourceUnloading(Resource* resource);
         

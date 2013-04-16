@@ -129,6 +129,26 @@ set (PIXELBOOST_HEADERS
 
 include_directories("${PIXELBOOST_HEADERS}")
 
+set (ANIMATION_COMPONENT_SOURCES
+	"src/common/pixelboost/animation/component/timeline.cpp"
+	"src/common/pixelboost/animation/component/timeline.h"
+	)
+
+set (ANIMATION_EASING_SOURCES
+	"src/common/pixelboost/animation/easing/ease.cpp"
+	"src/common/pixelboost/animation/easing/ease.h"
+	)
+
+set (ANIMATION_TIMELINE_SOURCES
+	"src/common/pixelboost/animation/timeline/element.cpp"
+	"src/common/pixelboost/animation/timeline/element.h"
+	"src/common/pixelboost/animation/timeline/tween.cpp"
+	"src/common/pixelboost/animation/timeline/tween.h"
+	"src/common/pixelboost/animation/timeline/tween.inl"
+	"src/common/pixelboost/animation/timeline/timeline.cpp"
+	"src/common/pixelboost/animation/timeline/timeline.h"
+	)
+
 set (AUDIO_SOURCES
 	"src/common/pixelboost/audio/audioManagerSimple.cpp"
 	"src/common/pixelboost/audio/audioManagerSimple.h"
@@ -226,6 +246,11 @@ set (GRAPHICS_DEVICE_SOURCES
 set (GRAPHICS_MATERIAL_SOURCES
 	"src/common/pixelboost/graphics/material/material.cpp"
 	"src/common/pixelboost/graphics/material/material.h"
+	)
+
+set (GRAPHICS_MESSAGE_SOURCES
+	"src/common/pixelboost/graphics/message/color.cpp"
+	"src/common/pixelboost/graphics/message/color.h"
 	)
 
 set (GRAPHICS_PARTICLE_SOURCES
@@ -458,7 +483,9 @@ set (UTIL_LOCALISATION_SOURCES
 	)
 
 set (PIXELBOOST_SOURCES
-	${ASSET_SOURCES}
+	${ANIMATION_COMPONENT_SOURCES}
+	${ANIMATION_EASING_SOURCES}
+	${ANIMATION_TIMELINE_SOURCES}
 	${AUDIO_SOURCES}
 	${DATA_RESOURCES_SOURCES}
 	${DATA_SOURCES}
@@ -470,6 +497,7 @@ set (PIXELBOOST_SOURCES
 	${GRAPHICS_CAMERA_SOURCES}
 	${GRAPHICS_DEVICE_SOURCES}
 	${GRAPHICS_MATERIAL_SOURCES}
+	${GRAPHICS_MESSAGE_SOURCES}
 	${GRAPHICS_PARTICLE_SOURCES}
 	${GRAPHICS_RENDERER_SOURCES}
 	${GRAPHICS_RESOURCES_SOURCES}
@@ -534,7 +562,9 @@ if (PIXELBOOST_BUILD_PLATFORM_ANDROID)
 	target_link_libraries (pixelboost_engine GLESv2 log)
 endif (PIXELBOOST_BUILD_PLATFORM_ANDROID)
 
-source_group (asset FILES ${ASSET_SOURCES})
+source_group (animation\\component FILES ${ANIMATION_COMPONENT_SOURCES})
+source_group (animation\\easing FILES ${ANIMATION_EASING_SOURCES})
+source_group (animation\\timeline FILES ${ANIMATION_TIMELINE_SOURCES})
 source_group (audio FILES ${AUDIO_SOURCES})
 source_group (data\\resources FILES ${DATA_RESOURCES_SOURCES})
 source_group (db\\types FILES ${DB_TYPES_SOURCES})
@@ -545,6 +575,7 @@ source_group (framework FILES ${FRAMEWORK_SOURCES})
 source_group (graphics\\camera FILES ${GRAPHICS_CAMERA_SOURCES})
 source_group (graphics\\device FILES ${GRAPHICS_DEVICE_SOURCES})
 source_group (graphics\\material FILES ${GRAPHICS_MATERIAL_SOURCES})
+source_group (graphics\\message FILES ${GRAPHICS_MESSAGE_SOURCES})
 source_group (graphics\\particle FILES ${GRAPHICS_PARTICLE_SOURCES})
 source_group (graphics\\renderer FILES ${GRAPHICS_RENDERER_SOURCES})
 source_group (graphics\\resources FILES ${GRAPHICS_RESOURCES_SOURCES})

@@ -15,12 +15,16 @@ TransformComponent::TransformComponent(Entity* parent)
     , _Dirty(kDirtyTypeThis)
     , _Scale(1,1,1)
 {
-    
+    GetEntity()->RegisterMessageHandler<SetPositionMessage>(MessageHandler(this, &TransformComponent::OnSetPosition));
+    GetEntity()->RegisterMessageHandler<SetRotationMessage>(MessageHandler(this, &TransformComponent::OnSetRotation));
+    GetEntity()->RegisterMessageHandler<SetScaleMessage>(MessageHandler(this, &TransformComponent::OnSetScale));
 }
 
 TransformComponent::~TransformComponent()
 {
-    
+    GetEntity()->UnregisterMessageHandler<SetPositionMessage>(MessageHandler(this, &TransformComponent::OnSetPosition));
+    GetEntity()->UnregisterMessageHandler<SetRotationMessage>(MessageHandler(this, &TransformComponent::OnSetRotation));
+    GetEntity()->UnregisterMessageHandler<SetScaleMessage>(MessageHandler(this, &TransformComponent::OnSetScale));
 }
 
 const glm::mat4x4& TransformComponent::GetMatrix()
@@ -107,4 +111,25 @@ void TransformComponent::Dirty(bool dirtyThis)
     
     TransformChangedMessage message(GetEntity(), this);
     GetScene()->SendMessage(GetEntityUid(), message);
+}
+
+void TransformComponent::OnSetPosition(const Message& message)
+{
+    auto positionMessage = message.As<SetPositionMessage>();
+    
+    SetPosition(positionMessage.GetPosition());
+}
+
+void TransformComponent::OnSetRotation(const Message& message)
+{
+    auto rotationMessage = message.As<SetRotationMessage>();
+    
+    SetRotation(rotationMessage.GetRotation());
+}
+
+void TransformComponent::OnSetScale(const Message& message)
+{
+    auto scaleMessage = message.As<SetScaleMessage>();
+    
+    SetScale(scaleMessage.GetScale());
 }
