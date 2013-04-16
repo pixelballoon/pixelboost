@@ -5,7 +5,7 @@
 #ifdef PIXELBOOST_GRAPHICS_OPENGL
 
 #ifdef PIXELBOOST_GRAPHICS_OPENGLES2
-    #ifdef PIXELBOOST_PLATFORM_OSX
+    #if defined(PIXELBOOST_PLATFORM_OSX) or defined(PIXELBOOST_PLATFORM_IOS)
         #include <OpenGLES/ES2/gl.h>
         #include <OpenGLES/ES2/glext.h>
     #else
