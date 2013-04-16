@@ -51,7 +51,7 @@ public:
     static pb::Uid GetStaticType();
     
     const DbEntity* GetCreationEntity() const;
-    template<class T> const T* GetData() const;
+    template <class T> const T* GetData() const;
 
     void Destroy();
     EntityState GetState();
