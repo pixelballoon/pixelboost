@@ -61,7 +61,7 @@ private:
 class PathParser
 {
 public:
-    PathParser(const std::string& path, float scale);
+    PathParser(const std::string& path, float scale, glm::vec2 size);
     ~PathParser();
     
     bool Parse(SvgPath& path);
@@ -87,6 +87,7 @@ private:
     std::queue<PathTokenizer::Token> _Tokens;
     
     float _Scale;
+    glm::vec2 _Size;
     glm::vec2 _Position;
     PathTokenizer _Tokenizer;
 };
@@ -206,7 +207,7 @@ bool SvgResource::ParseGroup(const std::string& name)
         SvgPath path;
         path.Name = pathIt->node().attribute("id").value();
         
-        PathParser parser(pathIt->node().attribute("d").value(), 32.f);
+        PathParser parser(pathIt->node().attribute("d").value(), 32.f, _Size);
         if (!parser.Parse(path))
             return false;
         
@@ -348,9 +349,10 @@ PathParser::Point::Point(float x1, float y1, float cx1, float cy1,  float cx2, f
     
 }
 
-PathParser::PathParser(const std::string& path, float scale)
+PathParser::PathParser(const std::string& path, float scale, glm::vec2 size)
     : _Tokenizer(path)
     , _Scale(scale)
+    , _Size(size)
 {
     
 }
@@ -508,6 +510,16 @@ bool PathParser::Parse(SvgPath& path)
         point.cy1 = -point.cy1/_Scale;
         point.cy2 = -point.cy2/_Scale;
         point.y2 = -point.y2/_Scale;
+        
+        point.x1 -= _Size.x/2.f;
+        point.cx1 -= _Size.x/2.f;
+        point.cx2 -= _Size.x/2.f;
+        point.x2 -= _Size.x/2.f;
+        
+        point.y1 += _Size.y/2.f;
+        point.cy1 += _Size.y/2.f;
+        point.cy2 += _Size.y/2.f;
+        point.y2 += _Size.y/2.f;
     }
     
     return true;
