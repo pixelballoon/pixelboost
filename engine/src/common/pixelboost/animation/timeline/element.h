@@ -19,7 +19,9 @@ namespace pb
         void Reset();
         
     protected:
-        virtual void OnUpdate(float time, float delta) = 0;
+        virtual void OnPlay();
+        virtual void OnStop();
+        virtual void OnUpdate(float time, float delta);
         
         float _StartTime;
         

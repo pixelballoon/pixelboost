@@ -140,8 +140,12 @@ set (ANIMATION_EASING_SOURCES
 	)
 
 set (ANIMATION_TIMELINE_SOURCES
+	"src/common/pixelboost/animation/timeline/curve.cpp"
+	"src/common/pixelboost/animation/timeline/curve.h"
 	"src/common/pixelboost/animation/timeline/element.cpp"
 	"src/common/pixelboost/animation/timeline/element.h"
+	"src/common/pixelboost/animation/timeline/function.cpp"
+	"src/common/pixelboost/animation/timeline/function.h"
 	"src/common/pixelboost/animation/timeline/tween.cpp"
 	"src/common/pixelboost/animation/timeline/tween.h"
 	"src/common/pixelboost/animation/timeline/tween.inl"

@@ -45,16 +45,33 @@ void TimelineElement::Update(float delta, bool force)
 void TimelineElement::Play()
 {
     _IsPlaying = true;
+    OnPlay();
     Update(0, true);
 }
 
 void TimelineElement::Stop()
 {
     _IsPlaying = false;
+    OnStop();
 }
 
 void TimelineElement::Reset()
 {
     _Position = 0.f;
     Update(0, true);
+}
+
+void TimelineElement::OnPlay()
+{
+
+}
+
+void TimelineElement::OnStop()
+{
+    
+}
+
+void TimelineElement::OnUpdate(float time, float delta)
+{
+
 }
