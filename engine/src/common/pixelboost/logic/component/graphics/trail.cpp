@@ -99,7 +99,9 @@ void TrailComponent::OnTransformChanged(const pb::Message& message)
 {
     TransformComponent* transform = GetEntity()->GetComponent<TransformComponent>();
     
-    glm::vec2 point(transform->GetPosition().x, transform->GetPosition().y);
+    glm::vec4 position = transform->GetMatrix() * glm::vec4(0,0,0,1);
+    
+    glm::vec2 point(position.x, position.y);
     
     if (_Points.size() && glm::distance(point, _Points.back()) < _MinDistance)
         return;
