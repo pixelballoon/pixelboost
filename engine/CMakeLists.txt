@@ -466,11 +466,14 @@ set (PHYSICS_2D_SOURCES
 
 set (RESOURCE_SOURCES
 	"src/common/pixelboost/resource/definitions.h"
+	"src/common/pixelboost/resource/resource.cpp"
+	"src/common/pixelboost/resource/resource.h"
 	"src/common/pixelboost/resource/resourceManager.cpp"
 	"src/common/pixelboost/resource/resourceManager.h"
 	"src/common/pixelboost/resource/resourceManager.inl"
-	"src/common/pixelboost/resource/resource.cpp"
-	"src/common/pixelboost/resource/resource.h"
+	"src/common/pixelboost/resource/resourceSet.cpp"
+	"src/common/pixelboost/resource/resourceSet.h"
+	"src/common/pixelboost/resource/resourceSet.inl"
 	)
 
 set (SCRIPTING_SOURCES
