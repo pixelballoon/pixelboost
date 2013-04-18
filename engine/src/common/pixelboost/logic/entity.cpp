@@ -60,6 +60,11 @@ Entity::~Entity()
     }
 }
 
+Entity* Entity::Create(Scene* scene, Entity* parent, DbEntity* creationEntity)
+{
+    return new Entity(scene, parent, creationEntity);
+}
+
 void Entity::RegisterLuaClass(lua_State* state)
 {
     luabridge::getGlobalNamespace(state)

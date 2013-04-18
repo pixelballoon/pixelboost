@@ -27,6 +27,8 @@ protected:
     Entity(Scene* scene, Entity* parent, DbEntity* creationEntity);
     virtual ~Entity();
     
+    static pb::Entity* Create(Scene* scene, Entity* parent, DbEntity* creationEntity);
+    
 public:
     static void RegisterLuaClass(lua_State* state);
     
