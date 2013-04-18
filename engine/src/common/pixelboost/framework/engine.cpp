@@ -68,7 +68,6 @@ Engine::Engine(void* platformContext, int argc, const char** argv, bool enableNe
     }
     
     ResourceManager::Instance()->CreatePool("default");
-    ResourceManager::Instance()->CreatePool("pixelboost");
     
     new Renderer();
     new BufferRenderer();

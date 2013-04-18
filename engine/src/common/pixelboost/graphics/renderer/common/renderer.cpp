@@ -25,7 +25,7 @@ Renderer::Renderer()
     
     _TechniqueHandler = 0;
     
-    ResourcePool* defaultPool = ResourceManager::Instance()->GetPool("pixelboost");
+    ResourcePool* defaultPool = ResourceManager::Instance()->GetPool("default");
     defaultPool->CacheResource<ShaderResource>("/shaders/pb_solid.shc");
     defaultPool->CacheResource<ShaderResource>("/shaders/pb_solidColor.shc");
     defaultPool->CacheResource<ShaderResource>("/shaders/pb_textured.shc");
