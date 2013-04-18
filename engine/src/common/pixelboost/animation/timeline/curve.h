@@ -21,23 +21,31 @@ namespace pb
     class TimelineCurve : public TimelineElement
     {
     public:
-        TimelineCurve(Entity* entity, float length, const HermiteCurve2D* curve, bool orientToCurve = true, Easing easing = Easing::Linear());
-        TimelineCurve(Scene* scene, Uid entityId, float length, const HermiteCurve2D* curve, bool orientToCurve = true, Easing easing = Easing::Linear());
+        TimelineCurve(Entity* entity, float length, const HermiteCurve2D* curve, Easing easing = Easing::Linear());
+        TimelineCurve(Scene* scene, Uid entityId, float length, const HermiteCurve2D* curve, Easing easing = Easing::Linear());
         ~TimelineCurve();
         
         virtual float GetLength();
         
-        void SetCurve(const HermiteCurve2D* curve);
+        TimelineCurve* SetCurve(const HermiteCurve2D* curve);
+        TimelineCurve* SetFixedStep(bool fixedStep, float distance = 1.f);
+        TimelineCurve* SetOrientToCurve(bool orientToCurve);
         
     private:
         virtual void OnUpdate(float time, float delta);
+        
+        void Evaluate(float t);
         
         Scene* _Scene;
         Uid _EntityId;
         float _Length;
         
         const HermiteCurve2D* _Curve;
+        bool _FixedStep;
+        float _FixedStepDistance;
         bool _OrientToCurve;
+        
+        float _PrevDistance;
         
         Easing _Easing;
     };
@@ -45,8 +53,8 @@ namespace pb
     class TimelineCurveSVG : public TimelineCurve
     {
     public:
-        TimelineCurveSVG(Entity* entity, float length, const std::string& resource, bool orientToCurve = true, Easing easing = Easing::Linear(), const std::string& pool = "default");
-        TimelineCurveSVG(Scene* scene, Uid entityId, float length, const std::string& resource, bool orientToCurve = true, Easing easing = Easing::Linear(), const std::string& pool = "default");
+        TimelineCurveSVG(Entity* entity, float length, const std::string& resource, Easing easing = Easing::Linear(), const std::string& pool = "default");
+        TimelineCurveSVG(Scene* scene, Uid entityId, float length, const std::string& resource, Easing easing = Easing::Linear(), const std::string& pool = "default");
         
     private:
         void OnResourceLoaded(Resource* resource, bool error);
