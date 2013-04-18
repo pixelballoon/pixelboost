@@ -18,11 +18,15 @@ namespace pb
         
         Timeline* GetTimeline();
         void Play();
+        
+        void SetUseGlobalTime(bool useGlobalTime);
 
     private:
         void OnUpdate(const Message& message);
         
         Timeline* _Timeline;
+        
+        bool _UseGlobalTime;
     };
 
 }
