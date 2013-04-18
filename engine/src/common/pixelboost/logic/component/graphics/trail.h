@@ -12,8 +12,10 @@ namespace pb
 {
 
     class BufferRenderable;
+    class IndexBuffer;
     class MaterialResource;
     class Message;
+    class VertexBuffer;
     
     class TrailComponent : public Component
     {
