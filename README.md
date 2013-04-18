@@ -62,9 +62,10 @@ Android SDK
 Android NDK r8e
 
 Set the relevant paths in your environment, e.g.
-export PATH=~/Development/sdk/android-sdk-macosx/tools:~/Development/sdk/android-sdk-macosx/platform-tools:~/Development/sdk/android-ndk-r8e:/opt/local/bin:/opt/local/sbin:$PATH
-export ANDROID_NDK=~/Development/sdk/android-ndk-r8e
-export ANDROID_HOME=~/Development/sdk/android-ndk-r8e
+
+* export PATH=~/Development/sdk/android-sdk-macosx/tools:~/Development/sdk/android-sdk-macosx/platform-tools:~/Development/sdk/android-ndk-r8e:/opt/local/bin:/opt/local/sbin:$PATH
+* export ANDROID_NDK=~/Development/sdk/android-ndk-r8e
+* export ANDROID_HOME=~/Development/sdk/android-ndk-r8e
 
 
 Emscripten Requirements
@@ -84,9 +85,10 @@ Clone the project repository, and initialise all submodules to make sure all Pix
 Once you have the code and assets downloaded follow the next few steps
 
 Run 'launchtools.command', and note the options. You want to run in the following order:
-*Make Projects* - This will generate all of the relevant projects files for iOS, OSX, Android, and Emscripten.
-*Build Assets*  - This will build all of the assets and tools necessary for the project, including the level editor and game tools.
-*Run Editor* - This will open the level editor, we'll go over specifics on using this later, for now just hit export.
+
+1. Make Projects : This will generate all of the relevant projects files for iOS, OSX, Android, and Emscripten.
+2. Build Assets  : This will build all of the assets and tools necessary for the project, including the level editor and game tools.
+3. Run Editor    : This will open the level editor, we'll go over specifics on using this later, for now just hit export.
 
 Once these steps are complete, you're ready to run the project.
 
