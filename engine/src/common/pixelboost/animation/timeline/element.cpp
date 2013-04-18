@@ -27,6 +27,11 @@ float TimelineElement::GetEndTime()
     return _StartTime + GetLength();
 }
 
+bool TimelineElement::IsPlaying() const
+{
+    return _IsPlaying;
+}
+
 void TimelineElement::Update(float delta, bool force)
 {
     if ((_IsPlaying || force) && GetLength() > 0.f)

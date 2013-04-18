@@ -12,6 +12,8 @@ namespace pb
         float GetStartTime() const;
         float GetEndTime();
         
+        bool IsPlaying() const;
+        
         virtual float GetLength() = 0;
         void Update(float time, bool force = false);
         void Play();
