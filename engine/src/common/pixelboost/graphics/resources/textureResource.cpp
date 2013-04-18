@@ -98,8 +98,6 @@ Texture* TextureResource::GetTexture()
 
 bool TextureResource::LoadFile(const std::string& filename)
 {
-    PbLogDebug("pb.resource.texture", "Loading texture from file (%s)", filename.c_str());
-    
     auto file = pb::FileSystem::Instance()->OpenFile(filename);
     if (!file)
         return false;
@@ -175,15 +173,6 @@ bool TextureResource::Decode(const std::string& filename)
         }
         
         status = true;
-    }
-    
-    if (status)
-    {
-        PbLogDebug("pb.resource.texture", "Decoded texture from file (%s)", filename.c_str());
-    }
-    else
-    {
-        PbLogError("pb.resource.texture", "Failed to decode texture from file (%s)", filename.c_str());
     }
     
     return status;

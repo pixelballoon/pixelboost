@@ -1,3 +1,4 @@
+#include "pixelboost/debug/log.h"
 #include "pixelboost/resource/resource.h"
 
 using namespace pb;
@@ -58,6 +59,27 @@ ResourceReadyState Resource::IsReadyToProcess()
 
 void Resource::Process()
 {
+    switch (_State)
+    {
+        case kResourceStateLoading:
+            PbLogInfo("pb.resource", "Loading resource (%s)", _Filename.c_str());
+            break;
+        case kResourceStateProcessing:
+            PbLogInfo("pb.resource", "Processing resource (%s)", _Filename.c_str());
+            break;
+        case kResourceStatePostProcessing:
+            PbLogInfo("pb.resource", "Post-processing resource (%s)", _Filename.c_str());
+            break;
+        case kResourceStateUnloading:
+            PbLogInfo("pb.resource", "Unloading resource (%s)", _Filename.c_str());
+            break;
+        case kResourceStateCreated:
+        case kResourceStateReady:
+        case kResourceStateError:
+            PbAssert(!"Processing a resource in this state should never occur");
+            return;
+    }
+    
     _Error = ProcessResource(_Pool, GetProcessForState(_State), _Filename, _ErrorDetails);
     
     if (_Error == kResourceErrorNone)
@@ -79,7 +101,6 @@ void Resource::Process()
             case kResourceStateCreated:
             case kResourceStateReady:
             case kResourceStateError:
-                PbAssert(!"Processing a resource in this state should never occur");
                 break;
                 
         }

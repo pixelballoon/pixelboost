@@ -61,8 +61,6 @@ bool Texture::LoadFromFile(const std::string& path, bool createMips)
 {
     bool status = true;
 
-    PbLogDebug("pb.graphics.texture", "Loading texture from file (%s)", path.c_str());
-    
     if (path.length() >= 4 && path.substr(path.length()-4) == ".jpa")
     {
         auto file = pb::FileSystem::Instance()->OpenFile(path);
@@ -142,15 +140,6 @@ bool Texture::LoadFromFile(const std::string& path, bool createMips)
         status = LoadFromBytes(decoded, width, height, createMips, components == 3 ? kTextureFormatRGB : kTextureFormatRGBA);
         
         stbi_image_free(decoded);
-    }
-
-    if (status)
-    {
-        PbLogDebug("pb.graphics.texture", "Loaded texture from file (%s)", path.c_str());
-    }
-    else
-    {
-        PbLogError("pb.graphics.texture", "Failed to load texture from file (%s)", path.c_str());
     }
     
     return status;
