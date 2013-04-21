@@ -34,6 +34,7 @@ if [ -d "../../platform/android/res/drawable-hdpi" ]; then
 	cp -r ../../platform/android/res/drawable* res/
 fi
 cp -r ../../pixelboost/engine/src/platform/android/src .
+cp -r ../../pixelboost/libs/ouya/* libs
 cp -r ../../data assets
 cmake ../../ -DPIXELBOOST_BUILD_PLATFORM_ANDROID=TRUE -DANDROID_STL=gnustl_static -DLIBRARY_OUTPUT_PATH_ROOT="`pwd`" -DCMAKE_TOOLCHAIN_FILE=pixelboost/toolchain/android.toolchain.cmake -DCMAKE_BUILD_TYPE=Release
 cd ..

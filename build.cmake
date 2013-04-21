@@ -99,9 +99,9 @@ macro(pixelboost_setup_pre pixelboost_dir projectname identifier title)
 		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
 
-		configure_file("${CMAKE_CURRENT_SOURCE_DIR}/pixelboost/engine/resources/platform/android/custom_rules.xml" "${CMAKE_CURRENT_SOURCE_DIR}/build/android/custom_rules.xml" @ONLY)
-		configure_file("${CMAKE_CURRENT_SOURCE_DIR}/pixelboost/engine/resources/platform/android/AndroidManifest.xml" "${CMAKE_CURRENT_SOURCE_DIR}/build/android/AndroidManifest.xml")
-		configure_file("${CMAKE_CURRENT_SOURCE_DIR}/pixelboost/engine/resources/platform/android/res/values/strings.xml" "${CMAKE_CURRENT_SOURCE_DIR}/build/android/res/values/strings.xml")
+		configure_file("${PIXELBOOST_ROOT_DIR}/engine/resources/platform/android/custom_rules.xml" "${CMAKE_CURRENT_SOURCE_DIR}/build/android/custom_rules.xml" @ONLY)
+		configure_file("${PIXELBOOST_ROOT_DIR}/engine/resources/platform/android/AndroidManifest.xml" "${CMAKE_CURRENT_SOURCE_DIR}/build/android/AndroidManifest.xml")
+		configure_file("${PIXELBOOST_ROOT_DIR}/engine/resources/platform/android/res/values/strings.xml" "${CMAKE_CURRENT_SOURCE_DIR}/build/android/res/values/strings.xml")
 	endif (PIXELBOOST_BUILD_PLATFORM_ANDROID)
 
 	if (PIXELBOOST_BUILD_PLATFORM_EMSCRIPTEN)
