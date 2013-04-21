@@ -146,6 +146,8 @@ set (ANIMATION_TIMELINE_SOURCES
 	"src/common/pixelboost/animation/timeline/element.h"
 	"src/common/pixelboost/animation/timeline/function.cpp"
 	"src/common/pixelboost/animation/timeline/function.h"
+	"src/common/pixelboost/animation/timeline/simpleSound.cpp"
+	"src/common/pixelboost/animation/timeline/simpleSound.h"	
 	"src/common/pixelboost/animation/timeline/tween.cpp"
 	"src/common/pixelboost/animation/timeline/tween.h"
 	"src/common/pixelboost/animation/timeline/tween.inl"
