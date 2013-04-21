@@ -9,7 +9,7 @@
 
 struct lua_State;
 
-#define PB_DECLARE_ENTITY public: static pb::Entity* Create(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity); virtual pb::Uid GetType() const; static pb::Uid GetStaticType(); private:
+#define PB_DECLARE_ENTITY private: static pb::Entity* Create(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity); public: virtual pb::Uid GetType() const; static pb::Uid GetStaticType(); friend class pb::Scene; private:
 #define PB_DEFINE_ENTITY_ABSTRACT(className) pb::Uid className::GetType() const { return GetStaticType(); } pb::Uid className::GetStaticType() { return pb::TypeHash(#className); }
 #define PB_DEFINE_ENTITY(className) pb::Entity* className::Create(pb::Scene* scene, pb::Entity* parent, pb::DbEntity* creationEntity) { return new className(scene, parent, creationEntity); } PB_DEFINE_ENTITY_ABSTRACT(className)
 
@@ -27,6 +27,7 @@ protected:
     Entity(Scene* scene, Entity* parent, DbEntity* creationEntity);
     virtual ~Entity();
     
+private:
     static pb::Entity* Create(Scene* scene, Entity* parent, DbEntity* creationEntity);
     
 public:
