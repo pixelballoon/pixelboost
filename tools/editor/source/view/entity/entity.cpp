@@ -1,3 +1,4 @@
+#include "pixelboost/debug/log.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 #include "pixelboost/logic/component/graphics/rectangle.h"
 #include "pixelboost/logic/component/transform.h"
@@ -8,10 +9,12 @@
 #include "core/uidHelpers.h"
 #include "project/entity.h"
 #include "project/schema.h"
+#include "view/entity/property/ellipse.h"
 #include "view/entity/property/model.h"
 #include "view/entity/property/property.h"
 #include "view/entity/property/rectangle.h"
 #include "view/entity/property/sprite.h"
+#include "view/entity/property/text.h"
 #include "view/entity/entity.h"
 #include "core.h"
 #include "view.h"
@@ -309,6 +312,14 @@ void ViewEntity::ParseItem(const std::string& path, const SchemaItem* item)
         } else if (type == "rectangle")
         {
             GetScene()->CreateEntity<RectangleViewProperty>(this, 0)->Initialise(path, item);
+        } else if (type == "text")
+        {
+            GetScene()->CreateEntity<TextViewProperty>(this, 0)->Initialise(path, item);
+        } else if (type == "ellipse")
+        {
+            GetScene()->CreateEntity<EllipseViewProperty>(this, 0)->Initialise(path, item);
+        } else {
+            PbLogDebug("view.entity.property", "Unknown property type %s", type.c_str());
         }
     }
 }

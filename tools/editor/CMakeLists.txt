@@ -69,6 +69,8 @@ set (PROJECT_SOURCES
 	)
 
 set (VIEW_ENTITY_PROPERTY_SOURCES
+	"source/view/entity/property/ellipse.cpp"
+	"source/view/entity/property/ellipse.h"
 	"source/view/entity/property/model.cpp"
 	"source/view/entity/property/model.h"
 	"source/view/entity/property/property.cpp"
@@ -77,6 +79,8 @@ set (VIEW_ENTITY_PROPERTY_SOURCES
 	"source/view/entity/property/rectangle.h"
 	"source/view/entity/property/sprite.cpp"
 	"source/view/entity/property/sprite.h"
+	"source/view/entity/property/text.cpp"
+	"source/view/entity/property/text.h"
 	)
 
 set (VIEW_ENTITY_SOURCES

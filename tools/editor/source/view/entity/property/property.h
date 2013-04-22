@@ -5,6 +5,7 @@
 #include "pixelboost/logic/entity.h"
 #include "pixelboost/maths/boundingBox.h"
 
+class ProjectEntity;
 class SchemaItem;
 class ViewEntity;
 
