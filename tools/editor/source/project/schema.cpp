@@ -54,9 +54,9 @@ bool SchemaAttribute::EvaluateParamBool(ProjectStruct* structure, const std::str
     
     std::string paramValue = it->second;
     
-    if (paramValue[0] == '/')
+    if (paramValue[0] == '@')
     {
-        paramValue = structure->GetPropertyString(prefix.length() == 0 ? paramValue : (prefix.substr(0, prefix.length()-1)+paramValue), defaultValue ? "t" : "f");
+        paramValue = structure->GetPropertyString(prefix.length() == 0 ? paramValue.substr(1) : (prefix.substr(0, prefix.length()-1)+paramValue.substr(1)), defaultValue ? "t" : "f");
     }
     
     if (tolower(paramValue[0]) == 't' || tolower(paramValue[0]) == 'y')
@@ -120,9 +120,9 @@ glm::vec4 SchemaAttribute::EvaluateParamColor(ProjectStruct* structure, const st
     } else {
         for (int i=0; i<elements.size() && i<4; i++)
         {
-            if (elements[i][0] == '/')
+            if (elements[i][0] == '@')
             {
-                returnValue[i] = structure->GetPropertyFloat(prefix.length() == 0 ? elements[i] : (prefix.substr(0, prefix.length()-1)+elements[i]), defaultValue[i]);
+                returnValue[i] = structure->GetPropertyFloat(prefix.length() == 0 ? elements[i].substr(1) : (prefix.substr(0, prefix.length()-1)+elements[i].substr(1)), defaultValue[i]);
             } else {
                 returnValue[i] = atof(elements[i].c_str());
             }
@@ -141,8 +141,8 @@ float SchemaAttribute::EvaluateParamFloat(ProjectStruct* structure, const std::s
     
     std::string paramValue = it->second;
     
-    if (paramValue[0] == '/')
-        return structure->GetPropertyFloat(prefix.length() == 0 ? paramValue : (prefix.substr(0, prefix.length()-1)+paramValue), defaultValue);
+    if (paramValue[0] == '@')
+        return structure->GetPropertyFloat(prefix.length() == 0 ? paramValue.substr(1) : (prefix.substr(0, prefix.length()-1)+paramValue.substr(1)), defaultValue);
     
     return atof(paramValue.c_str());
 }
@@ -156,8 +156,8 @@ int SchemaAttribute::EvaluateParamInt(ProjectStruct* structure, const std::strin
     
     std::string paramValue = it->second;
     
-    if (paramValue[0] == '/')
-        return structure->GetPropertyFloat(prefix.length() == 0 ? paramValue : (prefix.substr(0, prefix.length()-1)+paramValue), defaultValue);
+    if (paramValue[0] == '@')
+        return structure->GetPropertyFloat(prefix.length() == 0 ? paramValue.substr(1) : (prefix.substr(0, prefix.length()-1)+paramValue.substr(1)), defaultValue);
     
     return atoi(paramValue.c_str());
 }
@@ -171,8 +171,8 @@ std::string SchemaAttribute::EvaluateParamString(ProjectStruct* structure, const
     
     std::string paramValue = it->second;
     
-    if (paramValue[0] == '/')
-        return structure->GetPropertyString(prefix.length() == 0 ? paramValue : (prefix.substr(0, prefix.length()-1)+paramValue), defaultValue);
+    if (paramValue[0] == '@')
+        return structure->GetPropertyString(prefix.length() == 0 ? paramValue.substr(1) : (prefix.substr(0, prefix.length()-1)+paramValue.substr(1)), defaultValue);
     
     return paramValue;
 }
@@ -193,9 +193,9 @@ glm::vec2 SchemaAttribute::EvaluateParamVector2(ProjectStruct* structure, const 
     
     for (int i=0; i<elements.size() && i<2; i++)
     {
-        if (elements[i][0] == '/')
+        if (elements[i][0] == '@')
         {
-            returnValue[i] = structure->GetPropertyFloat(prefix.length() == 0 ? elements[i] : (prefix.substr(0, prefix.length()-1)+elements[i]), defaultValue[i]);
+            returnValue[i] = structure->GetPropertyFloat(prefix.length() == 0 ? elements[i].substr(1) : (prefix.substr(0, prefix.length()-1)+elements[i].substr(1)), defaultValue[i]);
         } else {
             returnValue[i] = atof(elements[i].c_str());
         }
@@ -220,9 +220,9 @@ glm::vec3 SchemaAttribute::EvaluateParamVector3(ProjectStruct* structure, const 
     
     for (int i=0; i<elements.size() && i<3; i++)
     {
-        if (elements[i][0] == '/')
+        if (elements[i][0] == '@')
         {
-            returnValue[i] = structure->GetPropertyFloat(prefix.length() == 0 ? elements[i] : (prefix.substr(0, prefix.length()-1)+elements[i]), defaultValue[i]);
+            returnValue[i] = structure->GetPropertyFloat(prefix.length() == 0 ? elements[i].substr(1) : (prefix.substr(0, prefix.length()-1)+elements[i].substr(1)), defaultValue[i]);
         } else {
             returnValue[i] = atof(elements[i].c_str());
         }
@@ -247,9 +247,9 @@ glm::vec4 SchemaAttribute::EvaluateParamVector4(ProjectStruct* structure, const 
     
     for (int i=0; i<elements.size() && i<4; i++)
     {
-        if (elements[i][0] == '/')
+        if (elements[i][0] == '@')
         {
-            returnValue[i] = structure->GetPropertyFloat(prefix.length() == 0 ? elements[i] : (prefix.substr(0, prefix.length()-1)+elements[i]), defaultValue[i]);
+            returnValue[i] = structure->GetPropertyFloat(prefix.length() == 0 ? elements[i].substr(1) : (prefix.substr(0, prefix.length()-1)+elements[i].substr(1)), defaultValue[i]);
         } else {
             returnValue[i] = atof(elements[i].c_str());
         }
