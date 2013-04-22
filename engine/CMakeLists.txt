@@ -139,6 +139,11 @@ set (ANIMATION_EASING_SOURCES
 	"src/common/pixelboost/animation/easing/ease.h"
 	)
 
+set (ANIMATION_MESSAGE_SOURCES
+	"src/common/pixelboost/animation/message/timeline.cpp"
+	"src/common/pixelboost/animation/message/timeline.h"
+	)
+
 set (ANIMATION_TIMELINE_SOURCES
 	"src/common/pixelboost/animation/timeline/curve.cpp"
 	"src/common/pixelboost/animation/timeline/curve.h"
@@ -494,6 +499,7 @@ set (UTIL_LOCALISATION_SOURCES
 set (PIXELBOOST_SOURCES
 	${ANIMATION_COMPONENT_SOURCES}
 	${ANIMATION_EASING_SOURCES}
+	${ANIMATION_MESSAGE_SOURCES}
 	${ANIMATION_TIMELINE_SOURCES}
 	${AUDIO_SOURCES}
 	${DATA_RESOURCES_SOURCES}
@@ -572,6 +578,7 @@ if (PIXELBOOST_BUILD_PLATFORM_ANDROID)
 endif (PIXELBOOST_BUILD_PLATFORM_ANDROID)
 
 source_group (animation\\component FILES ${ANIMATION_COMPONENT_SOURCES})
+source_group (animation\\message FILES ${ANIMATION_MESSAGE_SOURCES})
 source_group (animation\\easing FILES ${ANIMATION_EASING_SOURCES})
 source_group (animation\\timeline FILES ${ANIMATION_TIMELINE_SOURCES})
 source_group (audio FILES ${AUDIO_SOURCES})

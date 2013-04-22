@@ -1,4 +1,5 @@
 #include "pixelboost/animation/component/timeline.h"
+#include "pixelboost/animation/message/timeline.h"
 #include "pixelboost/animation/timeline/timeline.h"
 #include "pixelboost/logic/message/update.h"
 #include "pixelboost/logic/entity.h"
@@ -12,6 +13,7 @@ TimelineComponent::TimelineComponent(Entity* parent)
 {
     _Timeline = new Timeline();
     _UseGlobalTime = false;
+    _IsPlaying = false;
     
     GetEntity()->RegisterMessageHandler<UpdateMessage>(MessageHandler(this, &TimelineComponent::OnUpdate));
 }
@@ -40,5 +42,16 @@ void TimelineComponent::OnUpdate(const Message& message)
 {
     auto updateMessage = message.As<UpdateMessage>();
     
+    if (_Timeline->IsPlaying() && !_IsPlaying)
+    {
+        _IsPlaying = true;
+        GetEntity()->SendMessage(TimelinePlayingMessage(GetEntity(), this));
+    }
+    
     _Timeline->Update(_UseGlobalTime ? updateMessage.GetTimeDelta() : updateMessage.GetGameDelta());
+    
+    if (!_Timeline->IsPlaying() && _IsPlaying)
+    {
+        GetEntity()->SendMessage(TimelineStoppedMessage(GetEntity(), this));
+    }
 }

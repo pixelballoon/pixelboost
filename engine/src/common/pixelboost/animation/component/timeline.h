@@ -26,6 +26,7 @@ namespace pb
         
         Timeline* _Timeline;
         
+        bool _IsPlaying;
         bool _UseGlobalTime;
     };
 
