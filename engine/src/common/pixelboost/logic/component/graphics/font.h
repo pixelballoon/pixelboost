@@ -30,6 +30,9 @@ namespace pb
         void SetText(const std::string& text);
         void SetTint(const glm::vec4& tint);
         void SetSize(float size);
+
+    private:
+        void OnSetColor(const Message& message);
     };
     
 }
