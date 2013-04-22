@@ -111,23 +111,7 @@ bool Project::OpenConfig(const std::string& filename)
     
     json::String& commonSchema = config["common_schema"];
     _Config.commonSchema = commonSchema;
-    
-    // Image roots
-    json::Array& imageRoots = config["image_roots"];
-    for (json::Array::iterator it = imageRoots.Begin(); it != imageRoots.End(); ++it)
-    {
-        json::String imageRoot = *it;
-        _Config.imageRoots.push_back(_Config.projectRoot + imageRoot.Value());
-    }
-    
-    // Model roots
-    json::Array& modelRoots = config["model_roots"];
-    for (json::Array::iterator it = modelRoots.Begin(); it != modelRoots.End(); ++it)
-    {
-        json::String modelRoot = *it;
-        _Config.modelRoots.push_back(_Config.projectRoot + modelRoot.Value());
-    }
-    
+       
     // Export directory
     json::String& exportDir = config["export_dir"];
     _Config.exportDir = _Location + exportDir.Value();
@@ -136,19 +120,8 @@ bool Project::OpenConfig(const std::string& filename)
     json::Number& pixelUnit = config["pixel_unit"];
     _Config.pixelUnit = pixelUnit.Value();
     
-    json::Object& assets = config["assets"];
-    _Config.assets = assets;
-    
-    for (auto it = _Config.imageRoots.begin(); it != _Config.imageRoots.end(); ++it)
-    {
-        pb::FileSystem::Instance()->MountReadLocation(_Location + *it, "editor_images", true);
-    }
-    for (auto it = _Config.modelRoots.begin(); it != _Config.modelRoots.end(); ++it)
-    {
-        pb::FileSystem::Instance()->MountReadLocation(_Location + *it, "editor_models", true);
-    }
-    
-    pb::FileSystem::Instance()->MountReadLocation(_Location + _Config.projectRoot, "/", true);
+    pb::FileSystem::Instance()->MountReadLocation(_Location + _Config.projectRoot + "data/", "/", true);
+    pb::FileSystem::Instance()->MountReadLocation(_Location + _Config.projectRoot + "/", "/", true);
     
     return true;
 }

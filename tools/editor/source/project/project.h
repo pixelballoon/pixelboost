@@ -44,11 +44,8 @@ public:
         std::string databaseRoot;
         std::string projectRoot;
         std::string commonSchema;
-        std::vector<std::string> imageRoots;
-        std::vector<std::string> modelRoots;
         std::string exportDir;
         unsigned int pixelUnit;
-        json::Object assets;
     };
     
     const ProjectConfig& GetConfig() const;
