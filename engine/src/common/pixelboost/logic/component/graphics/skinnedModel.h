@@ -5,7 +5,6 @@
 #include "glm/glm.hpp"
 
 #include "pixelboost/graphics/renderer/common/renderable.h"
-#include "pixelboost/graphics/renderer/font/fontRenderer.h"
 #include "pixelboost/logic/component/graphics/renderable.h"
 
 namespace pb

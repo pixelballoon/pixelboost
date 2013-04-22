@@ -25,11 +25,11 @@ namespace pb
         kFontAlignRight,
     };
     
-    class FontRenderable : public Renderable
+    class TextRenderable : public Renderable
     {
     public:
-        FontRenderable();
-        ~FontRenderable();
+        TextRenderable();
+        ~TextRenderable();
         
         virtual Uid GetType();
         static Uid GetStaticType();
@@ -68,7 +68,7 @@ namespace pb
         glm::vec4 Tint;
         float Size;
         
-        friend class FontRenderer;
+        friend class TextRenderer;
     };
     
     class Font
@@ -100,13 +100,13 @@ namespace pb
         void AddCharacter(Vertex_P3_C4_UV* buffer, const Font::Character& character, glm::vec2 offset, float baseline, glm::vec4 color, const glm::mat4x4& transform);
     };
     
-    class FontRenderer : public IRenderer
+    class TextRenderer : public IRenderer
     {
     public:
-        FontRenderer(int maxCharacters=1024);
-        virtual ~FontRenderer();
+        TextRenderer(int maxCharacters=1024);
+        virtual ~TextRenderer();
         
-        static FontRenderer* Instance();
+        static TextRenderer* Instance();
         
         Font* LoadFont(const std::string& name, const std::string& filename, bool createMips=true, bool hasPremultipliedAlpha=false);
         
@@ -128,7 +128,7 @@ namespace pb
         IndexBuffer* _IndexBuffer;
         VertexBuffer* _VertexBuffer;
         
-        static FontRenderer* _Instance;
+        static TextRenderer* _Instance;
     };
     
 }

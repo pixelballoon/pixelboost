@@ -11,12 +11,12 @@
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/buffer/bufferRenderer.h"
-#include "pixelboost/graphics/renderer/font/fontRenderer.h"
 #include "pixelboost/graphics/renderer/gui/guiRenderer.h"
 #include "pixelboost/graphics/renderer/model/modelRenderer.h"
 #include "pixelboost/graphics/renderer/particle/particleRenderer.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
+#include "pixelboost/graphics/renderer/text/textRenderer.h"
 #include "pixelboost/input/joystickManager.h"
 #include "pixelboost/input/keyboardManager.h"
 #include "pixelboost/input/mouseManager.h"
@@ -75,7 +75,7 @@ Engine::Engine(void* platformContext, int argc, const char** argv, bool enableNe
     new ParticleRenderer();
     new SpriteRenderer();
     new PrimitiveRenderer();
-    new FontRenderer();
+    new TextRenderer();
     new GuiRenderer();
 
 #ifndef PIXELBOOST_DISABLE_GAMECENTER
@@ -117,7 +117,7 @@ Engine::~Engine()
     
     delete GuiRenderer::Instance();
     delete BufferRenderer::Instance();
-    delete FontRenderer::Instance();
+    delete TextRenderer::Instance();
     delete ModelRenderer::Instance();
     delete ParticleRenderer::Instance();
     delete PrimitiveRenderer::Instance();

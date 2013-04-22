@@ -8,8 +8,8 @@
 #include "pixelboost/graphics/device/program.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
-#include "pixelboost/graphics/renderer/font/fontRenderer.h"
 #include "pixelboost/graphics/renderer/gui/guiRenderer.h"
+#include "pixelboost/graphics/renderer/text/textRenderer.h"
 #include "pixelboost/graphics/resources/shaderResource.h"
 #include "pixelboost/graphics/shader/shader.h"
 #include "pixelboost/maths/matrixHelpers.h"
@@ -159,7 +159,7 @@ void GuiRenderable::RenderText(glm::vec2 position, const std::string& font, cons
 
 glm::vec2 GuiRenderable::MeasureText(const std::string& font, const std::string& string, float size)
 {
-    return FontRenderer::Instance()->MeasureString(font, string, size);
+    return TextRenderer::Instance()->MeasureString(font, string, size);
 }
 
 GuiRenderer::GuiRenderer()
@@ -421,7 +421,7 @@ void GuiRenderer::Render(int count, Renderable** renderables, Uid renderScheme, 
                                         
                     GuiRenderable::GuiCommandText* text = static_cast<GuiRenderable::GuiCommandText*>(command);
                     
-                    Font* font = FontRenderer::Instance()->GetFont(text->Font);
+                    Font* font = TextRenderer::Instance()->GetFont(text->Font);
                     
                     if (font)
                     {

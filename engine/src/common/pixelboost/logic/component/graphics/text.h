@@ -4,23 +4,22 @@
 
 #include "glm/glm.hpp"
 
-#include "pixelboost/graphics/renderer/common/renderable.h"
-#include "pixelboost/graphics/renderer/font/fontRenderer.h"
+#include "pixelboost/graphics/renderer/text/textRenderer.h"
 #include "pixelboost/logic/component/graphics/renderable.h"
 
 namespace pb
 {
     
     class Message;
-    class FontRenderable;
+    class TextRenderable;
     
-    class FontComponent : public RenderableComponent<FontRenderable>
+    class TextComponent : public RenderableComponent<TextRenderable>
     {
         PB_DECLARE_COMPONENT
         
     protected:
-        FontComponent(Entity* parent);
-        virtual ~FontComponent();
+        TextComponent(Entity* parent);
+        virtual ~TextComponent();
         
     public:
         void SetRenderPass(RenderPass renderPass);

@@ -13,7 +13,7 @@ namespace pb
 class BufferRenderer;
 class DebugDatabaseHandler;
 class FileSystem;
-class FontRenderer;
+class TextRenderer;
 class GameCenter;
 class GraphicsDevice;
 class JoystickManager;

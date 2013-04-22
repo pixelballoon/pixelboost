@@ -2,8 +2,8 @@
 
 #include "pixelboost/debug/log.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
-#include "pixelboost/graphics/renderer/font/fontRenderer.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
+#include "pixelboost/graphics/renderer/text/textRenderer.h"
 #include "pixelboost/logic/message/debug/render.h"
 #include "pixelboost/logic/system/debug/render.h"
 #include "pixelboost/logic/scene.h"
@@ -132,9 +132,9 @@ PrimitiveRenderableRectangle* DebugRenderSystem::AddRectangle(RenderPass renderP
     return rectangle;
 }
 
-FontRenderable* DebugRenderSystem::AddText(RenderPass renderPass, int layer, FontAlign alignment, const std::string font, const std::string text, glm::vec3 position, glm::vec3 rotation, float size, float time)
+TextRenderable* DebugRenderSystem::AddText(RenderPass renderPass, int layer, FontAlign alignment, const std::string font, const std::string text, glm::vec3 position, glm::vec3 rotation, float size, float time)
 {
-    FontRenderable* renderable = new FontRenderable();
+    TextRenderable* renderable = new TextRenderable();
     renderable->SetRenderPass(renderPass);
     renderable->SetLayer(layer);
     renderable->SetSize(size);

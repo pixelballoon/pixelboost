@@ -12,7 +12,7 @@
 #include "pixelboost/graphics/device/texture.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
-#include "pixelboost/graphics/renderer/font/fontRenderer.h"
+#include "pixelboost/graphics/renderer/text/textRenderer.h"
 #include "pixelboost/graphics/resources/shaderResource.h"
 #include "pixelboost/graphics/shader/shader.h"
 #include "pixelboost/util/localisation/string.h"
@@ -20,9 +20,9 @@
 
 using namespace pb;
 
-FontRenderer* FontRenderer::_Instance = 0;
+TextRenderer* TextRenderer::_Instance = 0;
 
-FontRenderable::FontRenderable()
+TextRenderable::TextRenderable()
 {
     Offset = 0.f;
     Alignment = kFontAlignCenter;
@@ -30,29 +30,29 @@ FontRenderable::FontRenderable()
     Tint = glm::vec4(1,1,1,1);
 }
 
-FontRenderable::~FontRenderable()
+TextRenderable::~TextRenderable()
 {
 }
 
-Uid FontRenderable::GetType()
+Uid TextRenderable::GetType()
 {
-    return FontRenderable::GetStaticType();
+    return TextRenderable::GetStaticType();
 }
 
-Uid FontRenderable::GetStaticType()
+Uid TextRenderable::GetStaticType()
 {
-    return TypeHash("pb::FontRenderable");
+    return TypeHash("pb::TextRenderable");
 }
 
-void FontRenderable::CalculateBounds()
+void TextRenderable::CalculateBounds()
 {
     glm::vec4 position = GetWorldMatrix() * glm::vec4(0,0,0,1);
-    glm::vec2 size = FontRenderer::Instance()->MeasureString(Font, Text, Size);
+    glm::vec2 size = TextRenderer::Instance()->MeasureString(Font, Text, Size);
     BoundingSphere bounds(glm::vec3(position.x, position.y, position.z), glm::max(size.x, size.y));
     SetBounds(bounds);
 }
 
-void FontRenderable::CalculateWorldMatrix()
+void TextRenderable::CalculateWorldMatrix()
 {
     glm::mat4x4 worldMatrix = glm::scale(glm::mat4x4(), glm::vec3(Size, Size, 1));
     worldMatrix = glm::translate(worldMatrix, glm::vec3(Offset, 0, 0));
@@ -60,7 +60,7 @@ void FontRenderable::CalculateWorldMatrix()
     SetWorldMatrix(worldMatrix);
 }
 
-Shader* FontRenderable::GetShader()
+Shader* TextRenderable::GetShader()
 {
     Shader* baseShader = Renderable::GetShader();
     if (baseShader)
@@ -69,75 +69,75 @@ Shader* FontRenderable::GetShader()
     return ResourceManager::Instance()->GetPool("default")->GetResource<ShaderResource>("/shaders/pb_textured.shc")->GetShader();
 }
 
-void FontRenderable::SetFont(const std::string& font)
+void TextRenderable::SetFont(const std::string& font)
 {
     Font = font;
     CalculateOffset();
 }
 
-const std::string& FontRenderable::GetFont()
+const std::string& TextRenderable::GetFont()
 {
     return Font;
 }
 
-void FontRenderable::SetText(const std::string& text)
+void TextRenderable::SetText(const std::string& text)
 {
     Text = text;
     CalculateOffset();
 }
 
-const std::string& FontRenderable::GetText()
+const std::string& TextRenderable::GetText()
 {
     return Text;
 }
 
-void FontRenderable::SetTint(const glm::vec4& tint)
+void TextRenderable::SetTint(const glm::vec4& tint)
 {
     Tint = tint;
 }
 
-const glm::vec4& FontRenderable::GetTint()
+const glm::vec4& TextRenderable::GetTint()
 {
     return Tint;
 }
 
-void FontRenderable::SetSize(float size)
+void TextRenderable::SetSize(float size)
 {
     Size = size;
     CalculateOffset();
 }
 
-float FontRenderable::GetSize()
+float TextRenderable::GetSize()
 {
     return Size;
 }
 
-void FontRenderable::SetTransform(const glm::mat4x4& transform)
+void TextRenderable::SetTransform(const glm::mat4x4& transform)
 {
     Transform = transform;
     DirtyWorldMatrix();
     DirtyBounds();
 }
 
-const glm::mat4x4& FontRenderable::GetTransform()
+const glm::mat4x4& TextRenderable::GetTransform()
 {
     return Transform;
 }
 
-void FontRenderable::SetAlignment(FontAlign alignment)
+void TextRenderable::SetAlignment(FontAlign alignment)
 {
     Alignment = alignment;
     CalculateOffset();
 }
 
-FontAlign FontRenderable::GetAlignment()
+FontAlign TextRenderable::GetAlignment()
 {
     return Alignment;
 }
 
-void FontRenderable::CalculateOffset()
+void TextRenderable::CalculateOffset()
 {
-    Offset = FontRenderer::Instance()->MeasureString(Font, Text, 1.f).x;
+    Offset = TextRenderer::Instance()->MeasureString(Font, Text, 1.f).x;
     
     switch (Alignment) {
         case kFontAlignLeft:
@@ -261,7 +261,7 @@ void Font::AddCharacter(Vertex_P3_C4_UV* buffer, const Font::Character& characte
     buffer[3].uv[1] = character.uvy + character.uvv;
 }
 
-FontRenderer::FontRenderer(int maxCharacters)
+TextRenderer::TextRenderer(int maxCharacters)
     : _MaxCharacters(maxCharacters)
 {
     PbAssert(!_Instance);
@@ -287,10 +287,10 @@ FontRenderer::FontRenderer(int maxCharacters)
     
     _IndexBuffer->Unlock();
     
-    Renderer::Instance()->SetHandler(FontRenderable::GetStaticType(), this);
+    Renderer::Instance()->SetHandler(TextRenderable::GetStaticType(), this);
 }
 
-FontRenderer::~FontRenderer()
+TextRenderer::~TextRenderer()
 {
     _Instance = 0;
     
@@ -303,12 +303,12 @@ FontRenderer::~FontRenderer()
     }
 }
 
-FontRenderer* FontRenderer::Instance()
+TextRenderer* TextRenderer::Instance()
 {
     return _Instance;
 }
 
-Font* FontRenderer::LoadFont(const std::string& name, const std::string& filename, bool createMips, bool hasPremultipliedAlpha)
+Font* TextRenderer::LoadFont(const std::string& name, const std::string& filename, bool createMips, bool hasPremultipliedAlpha)
 {
     FontMap::iterator it = _Fonts.find(name);
     
@@ -420,7 +420,7 @@ Font* FontRenderer::LoadFont(const std::string& name, const std::string& filenam
     return font;
 }
 
-Font* FontRenderer::GetFont(const std::string& name)
+Font* TextRenderer::GetFont(const std::string& name)
 {
     FontMap::iterator it = _Fonts.find(name);
     
@@ -430,7 +430,7 @@ Font* FontRenderer::GetFont(const std::string& name)
     return 0;
 }
 
-void FontRenderer::Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
+void TextRenderer::Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
 {
     Shader* shader = renderables[0]->GetShader();
     if (!shader)
@@ -453,7 +453,7 @@ void FontRenderer::Render(int count, Renderable** renderables, Uid renderScheme,
     
     for (int i=0; i<count; i++)
     {
-        FontRenderable& renderable = *static_cast<FontRenderable*>(renderables[i]);
+        TextRenderable& renderable = *static_cast<TextRenderable*>(renderables[i]);
 
         Font* font;
         
@@ -496,7 +496,7 @@ void FontRenderer::Render(int count, Renderable** renderables, Uid renderScheme,
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
 }
 
-float FontRenderer::FitString(glm::vec2 region, const std::string& name, const std::string& font, float preferredSize)
+float TextRenderer::FitString(glm::vec2 region, const std::string& name, const std::string& font, float preferredSize)
 {
     glm::vec2 size = MeasureString(name, font, preferredSize);
     
@@ -506,7 +506,7 @@ float FontRenderer::FitString(glm::vec2 region, const std::string& name, const s
     return preferredSize / glm::max(x, y);
 }
 
-glm::vec2 FontRenderer::MeasureString(const std::string& name, const std::string& string, float size)
+glm::vec2 TextRenderer::MeasureString(const std::string& name, const std::string& string, float size)
 {
     Font* font;
     
@@ -557,7 +557,7 @@ glm::vec2 FontRenderer::MeasureString(const std::string& name, const std::string
     return glm::vec2(maxLineLength * size, glm::abs((offsetY-maxLineHeight) * size));
 }
 
-void FontRenderer::SplitString(const std::string& string, char seperator, std::vector<std::string>& output)
+void TextRenderer::SplitString(const std::string& string, char seperator, std::vector<std::string>& output)
 {
     std::string item;
     

@@ -1,5 +1,5 @@
-#include "pixelboost/graphics/renderer/font/fontRenderer.h"
-#include "pixelboost/logic/component/graphics/font.h"
+#include "pixelboost/graphics/renderer/text/textRenderer.h"
+#include "pixelboost/logic/component/graphics/text.h"
 
 #include "project/entity.h"
 #include "project/schema.h"
@@ -23,7 +23,7 @@ void TextViewProperty::Initialise(const std::string &path, const SchemaItem *sch
 {
     ViewProperty::Initialise(path, schemaItem);
     
-    pb::FontComponent* font = CreateComponent<pb::FontComponent>();
+    pb::TextComponent* font = CreateComponent<pb::TextComponent>();
     font->SetLayer(1);
     
     Refresh();
@@ -39,27 +39,27 @@ void TextViewProperty::Refresh()
     
     if (font != _Font)
     {
-        pb::FontRenderer::Instance()->LoadFont(font, "/fonts/" + font);
-        GetComponent<pb::FontComponent>()->SetFont(font);
+        pb::TextRenderer::Instance()->LoadFont(font, "/fonts/" + font);
+        GetComponent<pb::TextComponent>()->SetFont(font);
         _Font = font;
     }
 
     if (text != _Text)
     {
-        GetComponent<pb::FontComponent>()->SetText(text);
+        GetComponent<pb::TextComponent>()->SetText(text);
         _Text = text;
     }
 
     if (size != _Size)
     {
-        GetComponent<pb::FontComponent>()->SetSize(size);
+        GetComponent<pb::TextComponent>()->SetSize(size);
         _Size = size;
     }
 }
 
 pb::BoundingBox TextViewProperty::CalculateBounds()
 {
-    glm::vec3 size(pb::FontRenderer::Instance()->MeasureString(_Font, _Text, _Size), 0);
+    glm::vec3 size(pb::TextRenderer::Instance()->MeasureString(_Font, _Text, _Size), 0);
     size *= GetViewEntity()->GetScale();
     
     glm::vec3 center = glm::vec3(GetViewEntity()->GetPosition()[0], GetViewEntity()->GetPosition()[1], 0);

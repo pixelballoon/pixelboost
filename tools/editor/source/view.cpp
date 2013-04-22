@@ -3,8 +3,7 @@
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/camera/viewport.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
-#include "pixelboost/graphics/renderer/font/fontRenderer.h"
-#include "pixelboost/graphics/renderer/gwen/gwenRenderer.h"
+#include "pixelboost/graphics/renderer/text/textRenderer.h"
 #include "pixelboost/graphics/renderer/model/modelRenderer.h"
 #include "pixelboost/graphics/renderer/sprite/sprite.h"
 #include "pixelboost/graphics/renderer/sprite/spriteRenderer.h"
@@ -305,7 +304,7 @@ void View::Initialise()
     _LevelScene->AddSystem(new pb::GuiSystem());
     _LevelScene->CreateEntity<EditorUi>(0, 0);
     
-    pb::FontRenderer::Instance()->LoadFont("helvetica", "/fonts/helvetica");
+    pb::TextRenderer::Instance()->LoadFont("helvetica", "/fonts/helvetica");
     pb::GraphicsDevice::Instance()->SetClearColor(glm::vec4(43.f/255.f,43.f/255.f,43.f/255.f,1.f));
     
     // Register events

@@ -5,7 +5,6 @@
 #include "glm/glm.hpp"
 
 #include "pixelboost/graphics/renderer/common/renderable.h"
-#include "pixelboost/graphics/renderer/font/fontRenderer.h"
 #include "pixelboost/logic/component.h"
 
 namespace pb
@@ -13,7 +12,6 @@ namespace pb
     
     class Camera;
     class Message;
-    class FontRenderable;
     
     class CameraComponent : public Component
     {

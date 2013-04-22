@@ -280,8 +280,6 @@ set (GRAPHICS_RENDERER_SOURCES
 	"src/common/pixelboost/graphics/renderer/common/renderable.h"
 	"src/common/pixelboost/graphics/renderer/common/renderer.cpp"
 	"src/common/pixelboost/graphics/renderer/common/renderer.h"
-	"src/common/pixelboost/graphics/renderer/font/fontRenderer.cpp"
-	"src/common/pixelboost/graphics/renderer/font/fontRenderer.h"
 	"src/common/pixelboost/graphics/renderer/gui/controls.cpp"
 	"src/common/pixelboost/graphics/renderer/gui/controls.h"	
 	"src/common/pixelboost/graphics/renderer/gui/guiRenderer.cpp"
@@ -296,6 +294,8 @@ set (GRAPHICS_RENDERER_SOURCES
 	"src/common/pixelboost/graphics/renderer/sprite/sprite.h"
 	"src/common/pixelboost/graphics/renderer/sprite/spriteRenderer.cpp"
 	"src/common/pixelboost/graphics/renderer/sprite/spriteRenderer.h"
+	"src/common/pixelboost/graphics/renderer/text/textRenderer.cpp"
+	"src/common/pixelboost/graphics/renderer/text/textRenderer.h"
 	)
 
 set (GRAPHICS_RESOURCES_SOURCES
@@ -342,8 +342,6 @@ set (LOGIC_COMPONENT_GRAPHICS_SOURCES
 	"src/common/pixelboost/logic/component/graphics/camera.h"
 	"src/common/pixelboost/logic/component/graphics/ellipse.cpp"
 	"src/common/pixelboost/logic/component/graphics/ellipse.h"
-	"src/common/pixelboost/logic/component/graphics/font.cpp"
-	"src/common/pixelboost/logic/component/graphics/font.h"
 	"src/common/pixelboost/logic/component/graphics/gui.cpp"
 	"src/common/pixelboost/logic/component/graphics/gui.h"
 	"src/common/pixelboost/logic/component/graphics/line.cpp"
@@ -358,6 +356,8 @@ set (LOGIC_COMPONENT_GRAPHICS_SOURCES
     "src/common/pixelboost/logic/component/graphics/skinnedModel.h"
 	"src/common/pixelboost/logic/component/graphics/sprite.cpp"
 	"src/common/pixelboost/logic/component/graphics/sprite.h"
+	"src/common/pixelboost/logic/component/graphics/text.cpp"
+	"src/common/pixelboost/logic/component/graphics/text.h"
 	"src/common/pixelboost/logic/component/graphics/trail.cpp"
 	"src/common/pixelboost/logic/component/graphics/trail.h"
 	)
