@@ -41,15 +41,17 @@ pb::Uid PhysicsSystem2D::GetStaticType()
 void PhysicsSystem2D::Update(Scene* scene, float totalTime, float gameTime)
 {
     _World->Step(gameTime, _VelocityIterations, _PositionIterations);
-}
-
-void PhysicsSystem2D::Render(Scene* scene, Viewport* viewport, RenderPass renderPass)
-{
+    
     if (_DebugRender)
     {
         _DebugRenderer->SetScene(scene);
         _World->DrawDebugData();
     }
+}
+
+void PhysicsSystem2D::Render(Scene* scene, Viewport* viewport, RenderPass renderPass)
+{
+    
 }
 
 b2World* PhysicsSystem2D::GetPhysicsWorld()

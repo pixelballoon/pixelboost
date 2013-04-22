@@ -1,5 +1,6 @@
 #include "glm/gtc/matrix_transform.hpp"
 
+#include "pixelboost/debug/log.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/font/fontRenderer.h"
 #include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
@@ -49,6 +50,8 @@ void DebugRenderSystem::Update(Scene* scene, float totalTime, float gameTime)
 
 void DebugRenderSystem::Render(Scene* scene, Viewport* viewport, RenderPass renderPass)
 {
+    RenderSystem::Render(scene, viewport, renderPass);
+    
     switch (renderPass)
     {
         case kRenderPassUi:
