@@ -37,72 +37,13 @@ Engine::Engine(void* platformContext, int argc, const char** argv, bool enableNe
     , _PlatformContext(platformContext)
     , _TotalTime(0)
     , _DebugNetwork(0)
+    , _ArgC(argc)
+    , _ArgV(argv)
 {
     PbAssert(!_Instance);
     
+    _NetworkDebugEnabled = enableNetworkDebug;
     _Instance = this;
-    
-    LogSystem::Instance()->AddSubscriber(new LogSubscriberConsole());
-    
-    _FileSystem = new FileSystem(argc > 0 ? argv[0] : "");
-    
-    LogSystem::Instance()->AddSubscriber(new LogSubscriberFile("/pb.log"));
-    
-    if (argc)
-    {
-        enum  optionIndex { kOptionUnknown, kOptionProject, kOptionCount };
-        
-        const option::Descriptor usage[] =
-        {
-            {kOptionUnknown,      0, "", "",         option::Arg::None,     ""},
-            {kOptionProject,      0, "", "project",  option::Arg::Required, "  --project [location]" },
-            {0,0,0,0,0,0}
-        };
-        option::Option options[kOptionCount], buffer[kOptionCount];
-        option::Parser parse(usage, argc-1, &argv[1], options, buffer);
-        
-        if (options[kOptionProject])
-        {
-            _FileSystem->MountReadLocation(std::string(options[kOptionProject].arg) + "data/", "/", true);
-        }
-    }
-    
-    ResourceManager::Instance()->CreatePool("default");
-    
-    new Renderer();
-    new BufferRenderer();
-    new ModelRenderer();
-    new ParticleRenderer();
-    new SpriteRenderer();
-    new PrimitiveRenderer();
-    new TextRenderer();
-    new GuiRenderer();
-
-#ifndef PIXELBOOST_DISABLE_GAMECENTER
-    _GameCenter = new GameCenter();
-    _GameCenter->Connect();
-#endif
-
-    _JoystickManager = new JoystickManager();
-    _KeyboardManager = new KeyboardManager();
-    _MouseManager = new MouseManager();
-    _TouchManager = new TouchManager();
-    
-#if !defined(PIXELBOOST_DISABLE_NETWORKING)
-    new NetworkManager();
-#endif
-    
-#if !defined(PIXELBOOST_DISABLE_NETWORKING) && !defined(PIXELBOOST_DISABLE_DEBUG)
-    if (enableNetworkDebug)
-    {
-        _DebugDiscovery = NetworkManager::Instance()->StartDiscoveryServer(9091);
-        _DebugDiscovery->AddService("pb::debugvariable");
-        _DebugNetwork = NetworkManager::Instance()->StartServer(9090, 8);
-        _DebugDatabaseHandler = new DebugDatabaseHandler();
-        _DebugNetwork->RegisterHandler(_DebugDatabaseHandler);
-        _DebugNetwork->RegisterHandler(DebugVariableManager::Instance());
-    }
-#endif
 }
 
 Engine::~Engine()
@@ -148,7 +89,67 @@ Engine* Engine::Instance()
 
 void Engine::Initialise()
 {
+    LogSystem::Instance()->AddSubscriber(new LogSubscriberConsole());
     
+    _FileSystem = new FileSystem(_ArgC > 0 ? _ArgV[0] : "");
+    
+    LogSystem::Instance()->AddSubscriber(new LogSubscriberFile("/pb.log"));
+    
+    if (_ArgC)
+    {
+        enum  optionIndex { kOptionUnknown, kOptionProject, kOptionCount };
+        
+        const option::Descriptor usage[] =
+        {
+            {kOptionUnknown,      0, "", "",         option::Arg::None,     ""},
+            {kOptionProject,      0, "", "project",  option::Arg::Required, "  --project [location]" },
+            {0,0,0,0,0,0}
+        };
+        option::Option options[kOptionCount], buffer[kOptionCount];
+        option::Parser parse(usage, _ArgC-1, &_ArgV[1], options, buffer);
+        
+        if (options[kOptionProject])
+        {
+            _FileSystem->MountReadLocation(std::string(options[kOptionProject].arg) + "data/", "/", true);
+        }
+    }
+    
+    ResourceManager::Instance()->CreatePool("default");
+    
+    new Renderer();
+    new BufferRenderer();
+    new ModelRenderer();
+    new ParticleRenderer();
+    new SpriteRenderer();
+    new PrimitiveRenderer();
+    new TextRenderer();
+    new GuiRenderer();
+    
+#ifndef PIXELBOOST_DISABLE_GAMECENTER
+    _GameCenter = new GameCenter();
+    _GameCenter->Connect();
+#endif
+    
+    _JoystickManager = new JoystickManager();
+    _KeyboardManager = new KeyboardManager();
+    _MouseManager = new MouseManager();
+    _TouchManager = new TouchManager();
+    
+#if !defined(PIXELBOOST_DISABLE_NETWORKING)
+    new NetworkManager();
+#endif
+    
+#if !defined(PIXELBOOST_DISABLE_NETWORKING) && !defined(PIXELBOOST_DISABLE_DEBUG)
+    if (_NetworkDebugEnabled)
+    {
+        _DebugDiscovery = NetworkManager::Instance()->StartDiscoveryServer(9091);
+        _DebugDiscovery->AddService("pb::debugvariable");
+        _DebugNetwork = NetworkManager::Instance()->StartServer(9090, 8);
+        _DebugDatabaseHandler = new DebugDatabaseHandler();
+        _DebugNetwork->RegisterHandler(_DebugDatabaseHandler);
+        _DebugNetwork->RegisterHandler(DebugVariableManager::Instance());
+    }
+#endif
 }
 
 GameCenter* Engine::GetGameCenter() const

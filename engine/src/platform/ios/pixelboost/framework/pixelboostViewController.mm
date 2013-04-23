@@ -23,6 +23,8 @@
 
 - (void)awakeFromNib
 {
+    app = pb::Engine::Create(self, 0, 0);
+    
     EAGLContext *aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     
     if (!aContext)
@@ -50,17 +52,9 @@
         scale = self.view.contentScaleFactor;
     }
     
-    GLfloat screenWidth = eaglView.framebufferWidth * scale;
-    GLfloat screenHeight = eaglView.framebufferHeight * scale;
-    
-    if ([self shouldAutorotateToInterfaceOrientation:UIInterfaceOrientationPortrait])
-        pb::GraphicsDevice::Instance()->SetDisplayResolution(glm::vec2(screenWidth, screenHeight));
-    else
-        pb::GraphicsDevice::Instance()->SetDisplayResolution(glm::vec2(screenHeight, screenWidth));
-    
     float displayDensity = 16.f;
     
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
     {
         displayDensity = 32.f;
     }
@@ -70,7 +64,17 @@
     
     pb::GraphicsDevice::Instance()->SetDisplayDensity(displayDensity);
     
-    app = pb::Engine::Create(self, 0, 0);
+    GLfloat screenWidth = eaglView.framebufferWidth * scale;
+    GLfloat screenHeight = eaglView.framebufferHeight * scale;
+    
+    if ([self shouldAutorotateToInterfaceOrientation:UIInterfaceOrientationPortrait])
+    {
+        pb::GraphicsDevice::Instance()->SetDisplayResolution(glm::vec2(screenWidth, screenHeight));
+    } else
+    {
+        pb::GraphicsDevice::Instance()->SetDisplayResolution(glm::vec2(screenHeight, screenWidth));
+    }
+    
     app->Initialise();
 }
 
@@ -142,12 +146,18 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
-    return UIInterfaceOrientationIsLandscape(toInterfaceOrientation);
+    if (app && app->IsLandscape())
+    {
+        return UIInterfaceOrientationIsLandscape(toInterfaceOrientation);
+    } else
+    {
+        return UIInterfaceOrientationIsPortrait(toInterfaceOrientation);
+    }
 }
 
 - (NSUInteger)supportedInterfaceOrientations
 {
-    return UIInterfaceOrientationMaskLandscape;
+    return app->IsLandscape() ? UIInterfaceOrientationMaskLandscape : UIInterfaceOrientationMaskPortrait;
 }
 
 - (BOOL)shouldAutorotate

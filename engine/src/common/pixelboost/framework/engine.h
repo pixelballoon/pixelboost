@@ -73,6 +73,9 @@ public:
 private:
 	static Engine* _Instance;
     
+    int _ArgC;
+    const char** _ArgV;    
+    
     FileSystem* _FileSystem;
     
     GameCenter* _GameCenter;
@@ -81,7 +84,8 @@ private:
     KeyboardManager* _KeyboardManager;
     MouseManager* _MouseManager;
 	TouchManager* _TouchManager;
-    
+
+    bool _NetworkDebugEnabled;
     NetworkDiscoveryServer* _DebugDiscovery;
     NetworkServer* _DebugNetwork;
     DebugDatabaseHandler* _DebugDatabaseHandler;
