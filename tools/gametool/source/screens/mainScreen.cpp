@@ -2,7 +2,7 @@
 #include "pixelboost/debug/log.h"
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/camera/viewport.h"
-#include "pixelboost/graphics/renderer/font/fontRenderer.h"
+#include "pixelboost/graphics/renderer/text/textRenderer.h"
 #include "pixelboost/graphics/renderer/gui/controls.h"
 #include "pixelboost/graphics/renderer/gui/guiRenderer.h"
 #include "pixelboost/input/mouseManager.h"
@@ -92,7 +92,7 @@ MainScreen::MainScreen()
 {
     pb::GraphicsDevice::Instance()->SetClearColor(glm::vec4(43.f/255.f,43.f/255.f,43.f/255.f,1.f));
     
-    pb::FontRenderer::Instance()->LoadFont("helvetica", "/fonts/helvetica");
+    pb::TextRenderer::Instance()->LoadFont("helvetica", "/fonts/helvetica");
     
     _DiscoveryClient = pb::NetworkManager::Instance()->ClientDiscover(9091, "pb::debugvariable");
 
