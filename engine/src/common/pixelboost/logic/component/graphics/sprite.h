@@ -23,6 +23,8 @@ namespace pb
         virtual ~SpriteComponent();
         
     public:
+        bool IsReady();
+        
         glm::vec2 GetSize();
         
         void SetSprite(const std::string& file, const std::string& sprite, const std::string& pool = "default");

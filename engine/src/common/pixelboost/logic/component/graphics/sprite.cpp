@@ -32,6 +32,11 @@ SpriteComponent::~SpriteComponent()
     }
 }
 
+bool SpriteComponent::IsReady()
+{
+    return (_SpriteSheet->GetState() == kResourceStateReady);
+}
+
 glm::vec2 SpriteComponent::GetSize()
 {
     if (GetRenderable()->GetSprite())
