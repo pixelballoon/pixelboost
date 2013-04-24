@@ -194,7 +194,7 @@ float Engine::GetTotalTime()
     
 bool Engine::IsLandscape()
 {
-    return false;
+    return true;
 }
 
 bool Engine::AllowFrameskip()
