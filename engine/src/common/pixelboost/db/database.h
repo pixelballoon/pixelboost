@@ -33,9 +33,9 @@ public:
     lua_State* GetLuaState();
     
 public:
-    typedef void*(*CreateStruct)();
-    typedef void(*DestroyStruct)(void* structure);
-    typedef void(*DeserialiseStruct)(Database* database, DbRecord* record, void* data);
+    typedef DbStructData*(*CreateStruct)();
+    typedef void(*DestroyStruct)(DbStructData* structure);
+    typedef void(*DeserialiseStruct)(Database* database, DbRecord* record, DbStructData* data);
     
     void RegisterCreate(Uid type, CreateStruct createStruct);
     void RegisterDestroy(Uid type, DestroyStruct destroyStruct);
@@ -47,9 +47,9 @@ public:
     DbRecord* OpenRecord(Uid recordId);
     bool CloseRecord(Uid recordId);
     
-    void* Create(Uid type);
-    void Destroy(Uid type, void* structure);
-    void Deserialise(Uid type, DbRecord* record, void* data);
+    DbStructData* Create(Uid type);
+    void Destroy(Uid type, DbStructData* structure);
+    void Deserialise(Uid type, DbRecord* record, DbStructData* data);
 	
 	void AddReference(Uid uid, DbReferenceBase* reference);
 	void ResolveReferences();

@@ -2,8 +2,13 @@
 #include "pixelboost/db/struct.h"
 
 using namespace pb;
+
+DbStructData::~DbStructData()
+{
     
-DbStruct::DbStruct(Uid uid, Uid type, void* data)
+}
+    
+DbStruct::DbStruct(Uid uid, Uid type, DbStructData* data)
     : _Uid(uid)
     , _Type(type)
     , _Data(data)
@@ -27,7 +32,7 @@ Uid DbStruct::GetUid() const
     return _Uid;
 }
 
-void* DbStruct::GetData() const
+DbStructData* DbStruct::GetData() const
 {
     return _Data;
 }

@@ -26,7 +26,7 @@ public:
 class DbRecord : public DbStruct
 {
 public:
-    DbRecord(Uid uid, Uid type, void* data);
+    DbRecord(Uid uid, Uid type, DbStructData* data);
     virtual ~DbRecord();
     
     void AddEntity(DbEntity* entity);

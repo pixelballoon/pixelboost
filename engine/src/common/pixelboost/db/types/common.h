@@ -1,22 +1,21 @@
 #pragma once
 
-struct Vector2Definition
-{
-    float X;
-    float Y;
-};
+#include "pixelboost/db/register.h"
 
-struct Vector3Definition
-{
-    float X;
-    float Y;
-    float Z;
-};
+PB_DB_DECLARE_BEGIN_STRUCT(Vector2)
+    PB_DB_DECLARE_FIELD_FLOAT(X)
+    PB_DB_DECLARE_FIELD_FLOAT(Y)
+PB_DB_DECLARE_END_STRUCT
 
-struct ColorDefinition
-{
-    float R;
-    float G;
-    float B;
-    float A;
-};
+PB_DB_DECLARE_BEGIN_STRUCT(Vector3)
+    PB_DB_DECLARE_FIELD_FLOAT(X)
+    PB_DB_DECLARE_FIELD_FLOAT(Y)
+    PB_DB_DECLARE_FIELD_FLOAT(Z)
+PB_DB_DECLARE_END_STRUCT
+
+PB_DB_DECLARE_BEGIN_STRUCT(Color)
+    PB_DB_DECLARE_FIELD_FLOAT(R)
+    PB_DB_DECLARE_FIELD_FLOAT(G)
+    PB_DB_DECLARE_FIELD_FLOAT(B)
+    PB_DB_DECLARE_FIELD_FLOAT(A)
+PB_DB_DECLARE_END_STRUCT

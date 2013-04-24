@@ -1,21 +1,15 @@
 #pragma once
 
-#include <string>
-
 #include "pixelboost/db/register.h"
 
-struct ScriptDefinition
-{
-    std::string Filename;
-};
+PB_DB_DECLARE_BEGIN_STRUCT(Script)
+    PB_DB_DECLARE_FIELD_STRING(Filename)
+PB_DB_DECLARE_END_STRUCT
 
-struct ComponentDefinition
-{
-    
-};
+PB_DB_DECLARE_BEGIN_STRUCT(Component)
+PB_DB_DECLARE_END_STRUCT
 
-struct ScriptComponentDefinition : public ComponentDefinition
-{
-    pb::DbReference<ScriptDefinition> Script;
-    std::string InlineScript;
-};
+PB_DB_DECLARE_BEGIN_STRUCT_DERIVED(ScriptComponent, Component)
+    PB_DB_DECLARE_FIELD_REFERENCE(Script, Script)
+    PB_DB_DECLARE_FIELD_STRING(InlineScript)
+PB_DB_DECLARE_END_STRUCT

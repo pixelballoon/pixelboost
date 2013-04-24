@@ -176,7 +176,7 @@ DbRecord* Database::OpenRecord(Uid recordId)
         return 0;
     }
     
-    void* recordData;
+    DbStructData* recordData;
     
     DbRecord* record;
     
@@ -212,7 +212,7 @@ DbRecord* Database::OpenRecord(Uid recordId)
         {
             Uid uid;
             Uid type;
-            void* entityData;
+            DbStructData* entityData;
             
             lua_rawgeti(_State, -1, i);
             if (!lua_istable(_State, -1))
@@ -324,7 +324,7 @@ bool Database::CloseRecord(Uid recordId)
     return true;
 }
 
-void* Database::Create(Uid type)
+DbStructData* Database::Create(Uid type)
 {
     StructCreateMap::iterator it = _StructCreate.find(type);
     
@@ -334,7 +334,7 @@ void* Database::Create(Uid type)
     return it->second();
 }
 
-void Database::Destroy(Uid type, void* structure)
+void Database::Destroy(Uid type, DbStructData* structure)
 {
     StructDestroyMap::iterator it = _StructDestroy.find(type);
     
@@ -342,7 +342,7 @@ void Database::Destroy(Uid type, void* structure)
         it->second(structure);
 }
 
-void Database::Deserialise(Uid type, DbRecord* record, void* data)
+void Database::Deserialise(Uid type, DbRecord* record, DbStructData* data)
 {
     StructDeserialiseMap::iterator it = _StructDeserialise.find(type);
     

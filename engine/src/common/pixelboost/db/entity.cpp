@@ -5,7 +5,7 @@
 
 using namespace pb;
     
-DbEntity::DbEntity(Uid uid, Uid type, void* data)
+DbEntity::DbEntity(Uid uid, Uid type, DbStructData* data)
     : DbStruct(uid, type, data)
 {
 

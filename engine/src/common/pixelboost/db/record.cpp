@@ -12,7 +12,7 @@ bool DbRecordHandle::IsResolved()
     return false;
 }
     
-DbRecord::DbRecord(Uid uid, Uid type, void* data)
+DbRecord::DbRecord(Uid uid, Uid type, DbStructData* data)
     : DbStruct(uid, type, data)
 {
     
