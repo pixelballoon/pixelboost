@@ -233,15 +233,6 @@ View::View(void* platformContext, int argc, const char** argv)
     , _Record(0)
 {
     _Core = new Core();
-    
-    _KeyboardHandler = new ViewKeyboardHandler();
-    _MouseHandler = new ViewMouseHandler();
-    
-    View::Instance()->GetKeyboardManager()->AddHandler(_KeyboardHandler);
-    View::Instance()->GetMouseManager()->AddHandler(_MouseHandler);
-    
-    pb::GraphicsDevice::Instance()->onDisplayDensityChanged.Connect(this, &View::OnDisplayDensityChanged);
-    pb::GraphicsDevice::Instance()->onDisplayResolutionChanged.Connect(this, &View::OnDisplayResolutionChanged);
 }
 
 View::~View()
@@ -271,6 +262,17 @@ View* View::Instance()
 
 void View::Initialise()
 {
+    pb::Engine::Initialise();
+    
+    _KeyboardHandler = new ViewKeyboardHandler();
+    _MouseHandler = new ViewMouseHandler();
+    
+    View::Instance()->GetKeyboardManager()->AddHandler(_KeyboardHandler);
+    View::Instance()->GetMouseManager()->AddHandler(_MouseHandler);
+    
+    pb::GraphicsDevice::Instance()->onDisplayDensityChanged.Connect(this, &View::OnDisplayDensityChanged);
+    pb::GraphicsDevice::Instance()->onDisplayResolutionChanged.Connect(this, &View::OnDisplayResolutionChanged);
+    
     _Viewports.push_back(new PerspectiveViewport());
     _Viewports.push_back(new OrthographicViewport());
     _Viewports.push_back(new OrthographicViewport());
