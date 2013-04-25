@@ -497,11 +497,15 @@ bool LuaExporter::ExportProperty(std::iostream& output, ProjectStruct* s, const 
             
         case SchemaProperty::kSchemaPropertyPointer:
         {
-            if (!prop || prop->GetType() != Property::kPropertyPointer)
-                return false;
-            
             if (appendPath)
                 output << schemaItem->GetName() << " = ";
+            
+            if (!prop || prop->GetType() != Property::kPropertyPointer)
+            {
+                output << "0";
+                status = true;
+                break;
+            }
             
             const SchemaPropertyPointer* schemaPointer = static_cast<const SchemaPropertyPointer*>(schemaItem);
             const PropertyPointer* pointer = static_cast<const PropertyPointer*>(prop);
@@ -513,11 +517,15 @@ bool LuaExporter::ExportProperty(std::iostream& output, ProjectStruct* s, const 
             
         case SchemaProperty::kSchemaPropertyReference:
         {
-            if (!prop || prop->GetType() != Property::kPropertyReference)
-                return false;
-            
             if (appendPath)
                 output << schemaItem->GetName() << " = ";
+            
+            if (!prop || prop->GetType() != Property::kPropertyReference)
+            {
+                output << "0";
+                status = true;
+                break;
+            }
             
             const SchemaPropertyReference* schemaReference = static_cast<const SchemaPropertyReference*>(schemaItem);
             const PropertyReference* reference = static_cast<const PropertyReference*>(prop);

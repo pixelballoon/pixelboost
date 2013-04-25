@@ -376,13 +376,15 @@ void Database::ResolveReferences()
 		{
 			it->reference->_Record = record->second;
 			it = _References.erase(it);
-		} else {
-			DbRecord* record = OpenRecord(it->uid);
+		} else
+        {
+			DbRecord* record = it->uid > 0 ? OpenRecord(it->uid) : 0;
 			if (record)
 			{
-				it = _References.begin();
-			} else {
-				it = _References.erase(it);
+                it = _References.begin();
+			} else
+            {
+                it = _References.erase(it);
 			}
 		}
 	}
