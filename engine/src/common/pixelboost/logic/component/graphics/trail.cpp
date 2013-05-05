@@ -18,7 +18,8 @@ TrailComponent::TrailComponent(Entity* parent)
 {
     _Length = 0;
     _MaxElements = 5000;
-    _MinDistance = 0.3f;
+    _MinDistance = 1.f;
+    _Width = 10.f;
     
     _IndexBuffer = GraphicsDevice::Instance()->CreateIndexBuffer(pb::kBufferFormatStatic, _MaxElements*6);
     _VertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(pb::kBufferFormatDynamic, pb::kVertexFormat_P3_C4_UV, _MaxElements*4);
@@ -65,6 +66,21 @@ TrailComponent::~TrailComponent()
 void TrailComponent::SetMinDistance(float minDistance)
 {
     _MinDistance = minDistance;
+}
+
+float TrailComponent::GetMinDistance()
+{
+    return _MinDistance;
+}
+
+void TrailComponent::SetWidth(float width)
+{
+    _Width = width;
+}
+
+float TrailComponent::GetWidth()
+{
+    return _Width;
 }
 
 void TrailComponent::SetMaterial(const std::string& resource, const std::string& pool)
@@ -123,16 +139,15 @@ void TrailComponent::OnTransformChanged(const pb::Message& message)
         float prevLength = _Length;
         _Length += glm::distance(point[2], point[1]) / 24.f;
         
-        float width = 0.1f;
         float angle = glm::atan(point[2].y-point[1].y, point[2].x-point[1].x) + glm::radians(90.f);
         
-        vertices[(numPoints*4)-2].position[0] = point[1].x + cos(angle)*width;
-        vertices[(numPoints*4)-2].position[1] = point[1].y + sin(angle)*width;
-        vertices[(numPoints*4)-1].position[0] = point[1].x + cos(angle+M_PI)*width;
-        vertices[(numPoints*4)-1].position[1] = point[1].y + sin(angle+M_PI)*width;
+        vertices[(numPoints*4)-2].position[0] = point[1].x + cos(angle)*_Width;
+        vertices[(numPoints*4)-2].position[1] = point[1].y + sin(angle)*_Width;
+        vertices[(numPoints*4)-1].position[0] = point[1].x + cos(angle+M_PI)*_Width;
+        vertices[(numPoints*4)-1].position[1] = point[1].y + sin(angle+M_PI)*_Width;
         
-        vertices[(numPoints*4)+0].position[0] = point[1].x + cos(angle)*width;
-        vertices[(numPoints*4)+0].position[1] = point[1].y + sin(angle)*width;
+        vertices[(numPoints*4)+0].position[0] = point[1].x + cos(angle)*_Width;
+        vertices[(numPoints*4)+0].position[1] = point[1].y + sin(angle)*_Width;
         vertices[(numPoints*4)+0].position[2] = 0;
         vertices[(numPoints*4)+0].uv[0] = 0;
         vertices[(numPoints*4)+0].uv[1] = prevLength;
@@ -141,8 +156,8 @@ void TrailComponent::OnTransformChanged(const pb::Message& message)
         vertices[(numPoints*4)+0].color[2] = 1.f;
         vertices[(numPoints*4)+0].color[3] = 1.f;
         
-        vertices[(numPoints*4)+1].position[0] = point[1].x + cos(angle+M_PI)*width;
-        vertices[(numPoints*4)+1].position[1] = point[1].y + sin(angle+M_PI)*width;
+        vertices[(numPoints*4)+1].position[0] = point[1].x + cos(angle+M_PI)*_Width;
+        vertices[(numPoints*4)+1].position[1] = point[1].y + sin(angle+M_PI)*_Width;
         vertices[(numPoints*4)+1].position[2] = 0;
         vertices[(numPoints*4)+1].uv[0] = 1;
         vertices[(numPoints*4)+1].uv[1] = prevLength;
@@ -151,8 +166,8 @@ void TrailComponent::OnTransformChanged(const pb::Message& message)
         vertices[(numPoints*4)+1].color[2] = 1.f;
         vertices[(numPoints*4)+1].color[3] = 1.f;
         
-        vertices[(numPoints*4)+2].position[0] = point[2].x + cos(angle)*width;
-        vertices[(numPoints*4)+2].position[1] = point[2].y + sin(angle)*width;
+        vertices[(numPoints*4)+2].position[0] = point[2].x + cos(angle)*_Width;
+        vertices[(numPoints*4)+2].position[1] = point[2].y + sin(angle)*_Width;
         vertices[(numPoints*4)+2].position[2] = 0;
         vertices[(numPoints*4)+2].uv[0] = 0;
         vertices[(numPoints*4)+2].uv[1] = _Length;
@@ -161,8 +176,8 @@ void TrailComponent::OnTransformChanged(const pb::Message& message)
         vertices[(numPoints*4)+2].color[2] = 1.f;
         vertices[(numPoints*4)+2].color[3] = 1.f;
         
-        vertices[(numPoints*4)+3].position[0] = point[2].x + cos(angle+M_PI)*width;
-        vertices[(numPoints*4)+3].position[1] = point[2].y + sin(angle+M_PI)*width;
+        vertices[(numPoints*4)+3].position[0] = point[2].x + cos(angle+M_PI)*_Width;
+        vertices[(numPoints*4)+3].position[1] = point[2].y + sin(angle+M_PI)*_Width;
         vertices[(numPoints*4)+3].position[2] = 0;
         vertices[(numPoints*4)+3].uv[0] = 1;
         vertices[(numPoints*4)+3].uv[1] = _Length;

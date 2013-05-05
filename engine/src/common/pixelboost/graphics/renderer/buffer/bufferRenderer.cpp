@@ -48,15 +48,6 @@ void BufferRenderable::CalculateWorldMatrix()
     SetWorldMatrix(_Transform);
 }
 
-Shader* BufferRenderable::GetShader()
-{
-    Shader* baseShader = Renderable::GetShader();
-    if (baseShader)
-        return baseShader;
-    
-    return ResourceManager::Instance()->GetPool("default")->GetResource<ShaderResource>("/shaders/pb_textured.shc")->GetShader();
-}
-
 void BufferRenderable::SetBounds(BoundingSphere bounds)
 {
     _Bounds = bounds;

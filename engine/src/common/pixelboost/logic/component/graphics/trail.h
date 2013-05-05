@@ -27,6 +27,10 @@ namespace pb
 
     public:
         void SetMinDistance(float minDistance);
+        float GetMinDistance();
+        
+        void SetWidth(float width);
+        float GetWidth();
         
         void SetMaterial(const std::string& file, const std::string& pool = "default");
         std::shared_ptr<MaterialResource> GetMaterial();
@@ -46,6 +50,7 @@ namespace pb
         VertexBuffer* _VertexBuffer;
         
         float _MinDistance;
+        float _Width;
         float _Length;
         std::vector<glm::vec2> _Points;
     };

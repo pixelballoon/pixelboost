@@ -25,8 +25,6 @@ namespace pb
         virtual void CalculateBounds();
         virtual void CalculateWorldMatrix();
         
-        virtual Shader* GetShader();
-        
         void SetBounds(BoundingSphere bounds);
         void SetTransform(const glm::mat4x4& localTransform);
         
