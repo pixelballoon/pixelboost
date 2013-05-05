@@ -10,14 +10,12 @@ class GraphicsDevice;
 struct Vertex_P3
 {
     float position[3];
-    float __padding;
 };
     
 struct Vertex_P3_UV
 {
     float position[3];
     float uv[2];
-    float __padding[3]; // for 32-byte alignment
 };
 
 struct Vertex_P3_C4
@@ -31,7 +29,6 @@ struct Vertex_P3_C4_UV
     float position[3];
     float uv[2];
     float color[4];
-    float __padding[2]; // for 48-byte alignment
 };
 
 struct Vertex_P3_N3_UV
