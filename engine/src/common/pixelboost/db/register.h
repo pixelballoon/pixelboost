@@ -260,8 +260,8 @@ namespace pb
     __PB_DB_PARSE_ARRAY_END(object.field) \
 }
 
-#define PB_DB_FIELD_ARRAY_FLOAT(field, name) { \
-    __PB_DB_PARSE_ARRAY_START(object.field, name, float) \
+#define PB_DB_FIELD_ARRAY_FLOAT(field) { \
+    __PB_DB_PARSE_ARRAY_START(object.field, #field, float) \
     __PB_DB_PARSE_FLOAT(arrayItem) \
     __PB_DB_PARSE_ARRAY_END(object.field) \
 }
