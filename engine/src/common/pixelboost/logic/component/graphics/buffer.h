@@ -21,8 +21,6 @@ namespace pb
         virtual ~BufferComponent();
         
     public:
-        void SetLayer(int layer);
-        
         void SetIndexBuffer(IndexBuffer* indexBuffer);
         IndexBuffer* GetIndexBuffer();
         

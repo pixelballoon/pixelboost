@@ -1,8 +1,5 @@
 #include "pixelboost/graphics/renderer/buffer/bufferRenderer.h"
 #include "pixelboost/logic/component/graphics/buffer.h"
-#include "pixelboost/logic/component/transform.h"
-#include "pixelboost/logic/message/transform.h"
-#include "pixelboost/logic/system/graphics/render/render.h"
 #include "pixelboost/logic/scene.h"
 
 using namespace pb;
@@ -18,11 +15,6 @@ BufferComponent::BufferComponent(Entity* parent)
 BufferComponent::~BufferComponent()
 {
     
-}
-
-void BufferComponent::SetLayer(int layer)
-{
-    GetRenderable()->SetLayer(layer);
 }
 
 void BufferComponent::SetIndexBuffer(IndexBuffer* indexBuffer)
