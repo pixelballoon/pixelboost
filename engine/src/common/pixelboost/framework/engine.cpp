@@ -233,8 +233,10 @@ void Engine::Update(float timeDelta, float gameDelta)
     
     ResourceManager::Instance()->Update(timeDelta);
 
-    if (NetworkManager::Instance())    
+    if (NetworkManager::Instance())
+    {
         NetworkManager::Instance()->Update();
+    }
 }
 
 void Engine::Render()
