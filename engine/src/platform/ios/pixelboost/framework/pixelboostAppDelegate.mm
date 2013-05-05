@@ -1,7 +1,3 @@
-#ifndef PIXELBOOST_DISABLE_TESTFLIGHT
-#import "testflight/Testflight.h"
-#endif
-
 #include "pixelboost/framework/engine.h"
 
 #import "EAGLView.h"
@@ -16,25 +12,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    NSString *reqSysVer = @"6.0";
-    NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
-    
-    if ([currSysVer compare:reqSysVer options:NSNumericSearch] !=NSOrderedAscending)
-    {
-        [self.window setRootViewController:self.viewController];
-    }
-    else
-    {
-        [self.window addSubview:self.viewController.view];
-    }
-    
-#ifndef PIXELBOOST_DISABLE_TESTFLIGHT
-#ifndef PIXELBOOST_DISABLE_DEBUG
-    [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
-#endif
-    
-    [TestFlight takeOff:@""];
-#endif
+    [self.window setRootViewController:self.viewController];
     
     return YES;
 }
