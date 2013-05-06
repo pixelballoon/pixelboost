@@ -231,6 +231,11 @@ set (GRAPHICS_CAMERA_SOURCES
 	"src/common/pixelboost/graphics/camera/viewport.h"
 	)
 
+set (GRAPHICS_COMPONENT_SOURCES
+	"src/common/pixelboost/graphics/component/curve.cpp"
+	"src/common/pixelboost/graphics/component/curve.h"
+	)
+
 set (GRAPHICS_DEVICE_SOURCES
 	"src/common/pixelboost/graphics/device/gl/device.cpp"
 	"src/common/pixelboost/graphics/device/gl/device.h"
@@ -510,6 +515,7 @@ set (PIXELBOOST_SOURCES
 	${FILE_SOURCES}
 	${FRAMEWORK_SOURCES}
 	${GRAPHICS_CAMERA_SOURCES}
+	${GRAPHICS_COMPONENT_SOURCES}
 	${GRAPHICS_DEVICE_SOURCES}
 	${GRAPHICS_MATERIAL_SOURCES}
 	${GRAPHICS_MESSAGE_SOURCES}
@@ -589,6 +595,7 @@ source_group (debug FILES ${DEBUG_SOURCES})
 source_group (file FILES ${FILE_SOURCES})
 source_group (framework FILES ${FRAMEWORK_SOURCES})
 source_group (graphics\\camera FILES ${GRAPHICS_CAMERA_SOURCES})
+source_group (graphics\\component FILES ${GRAPHICS_COMPONENT_SOURCES})
 source_group (graphics\\device FILES ${GRAPHICS_DEVICE_SOURCES})
 source_group (graphics\\material FILES ${GRAPHICS_MATERIAL_SOURCES})
 source_group (graphics\\message FILES ${GRAPHICS_MESSAGE_SOURCES})
