@@ -39,7 +39,10 @@ public:
     void SetSprite(Sprite* sprite);
     
     void SetTransform(const glm::mat4x4& transform);
-    void SetTint(glm::vec4 tint);
+    const glm::mat4x4& GetTransform();
+    
+    void SetTint(const glm::vec4& tint);
+    const glm::vec4& GetTint();
     
 private:
     pb::Sprite* _Sprite;

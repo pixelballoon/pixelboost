@@ -89,9 +89,19 @@ void SpriteRenderable::SetTransform(const glm::mat4x4& transform)
     DirtyWorldMatrix();
 }
 
-void SpriteRenderable::SetTint(glm::vec4 tint)
+const glm::mat4x4& SpriteRenderable::GetTransform()
+{
+    return _Transform;
+}
+
+void SpriteRenderable::SetTint(const glm::vec4& tint)
 {
     _Tint = tint;
+}
+
+const glm::vec4& SpriteRenderable::GetTint()
+{
+    return _Tint;
 }
 
 SpriteRenderer::SpriteRenderer()
