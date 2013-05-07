@@ -83,6 +83,16 @@ float TrailComponent::GetWidth()
     return _Width;
 }
 
+void TrailComponent::SetLengthScale(float lengthScale)
+{
+    _LengthScale = lengthScale;
+}
+
+float TrailComponent::GetLengthScale()
+{
+    return _LengthScale;
+}
+
 void TrailComponent::SetMaterial(const std::string& resource, const std::string& pool)
 {
     if (_Material)
@@ -137,7 +147,7 @@ void TrailComponent::OnTransformChanged(const pb::Message& message)
         point[2] = _Points[numPoints];
         
         float prevLength = _Length;
-        _Length += glm::distance(point[2], point[1]) / 24.f;
+        _Length += glm::distance(point[2], point[1]) / _LengthScale;
         
         float angle = glm::atan(point[2].y-point[1].y, point[2].x-point[1].x) + glm::radians(90.f);
         
