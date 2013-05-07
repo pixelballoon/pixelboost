@@ -115,9 +115,9 @@ bool ShaderResource::ParseShader(std::string& errorDetails)
             {
                 delete shaderPass;
                 status = false;
+            } else {
+                technique->AddPass(shaderPass);
             }
-            
-            technique->AddPass(shaderPass);
             
             pass = pass.next_sibling("pass");
         }
