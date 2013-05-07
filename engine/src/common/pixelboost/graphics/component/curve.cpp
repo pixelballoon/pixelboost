@@ -1,9 +1,11 @@
 #include "glm/gtc/random.hpp"
 
 #include "pixelboost/data/resources/svgResource.h"
+#include "pixelboost/debug/log.h"
 #include "pixelboost/graphics/component/curve.h"
 #include "pixelboost/graphics/device/indexBuffer.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
+#include "pixelboost/graphics/message/color.h"
 #include "pixelboost/logic/component/graphics/buffer.h"
 #include "pixelboost/logic/message/debug/render.h"
 #include "pixelboost/logic/system/debug/render.h"
@@ -17,6 +19,8 @@ PB_DEFINE_COMPONENT(pb::CurveComponent)
 CurveComponent::CurveComponent(Entity* parent)
     : RenderableComponent<BufferRenderable>(parent)
 {
+    _Curve = 0;
+    _LengthScale = 1.f;
     _MinDistance = 1.f;
     _IndexBuffer = 0;
     _VertexBuffer = 0;
@@ -25,11 +29,13 @@ CurveComponent::CurveComponent(Entity* parent)
     GetRenderable()->SetVertexBuffer(_VertexBuffer);
     GetRenderable()->SetNumElements(0);
     
+    GetEntity()->RegisterMessageHandler<SetColorMessage>(MessageHandler(this, &CurveComponent::OnSetColor));
     //GetEntity()->RegisterMessageHandler<DebugRenderMessage>(MessageHandler(this, &CurveComponent::OnDebugRender));
 }
 
 CurveComponent::~CurveComponent()
 {
+    GetEntity()->UnregisterMessageHandler<SetColorMessage>(MessageHandler(this, &CurveComponent::OnSetColor));
     GetEntity()->UnregisterMessageHandler<DebugRenderMessage>(MessageHandler(this, &CurveComponent::OnDebugRender));
 }
 
@@ -41,6 +47,38 @@ void CurveComponent::SetMinDistance(float minDistance)
 float CurveComponent::GetMinDistance()
 {
 	return _MinDistance;
+}
+
+void CurveComponent::SetLengthScale(float lengthScale)
+{
+    _LengthScale = lengthScale;
+}
+
+float CurveComponent::GetLengthScale()
+{
+    return _LengthScale;
+}
+
+void CurveComponent::SetWidth(float width)
+{
+    _Width = width;
+}
+
+float CurveComponent::GetWidth()
+{
+    return _Width;
+}
+
+void CurveComponent::SetTint(const glm::vec4& tint)
+{
+    _Tint = tint;
+    
+    Refresh();
+}
+
+const glm::vec4& CurveComponent::GetTint()
+{
+    return _Tint;
 }
 
 void CurveComponent::SetCurve(const HermiteCurve2D* curve, bool skipRefresh)
@@ -60,14 +98,17 @@ const HermiteCurve2D* CurveComponent::GetCurve()
 
 void CurveComponent::Refresh()
 {
-    if (_IndexBuffer)
+    float t = 0;
+    int size = _Curve ? (_Curve->GetArcLength() / _MinDistance) : 0;
+    
+    if (!_Curve || (_IndexBuffer && _IndexBuffer->GetCurrentSize() != (size * 6 - 4)))
     {
         GetRenderable()->SetIndexBuffer(0);
         GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
         _IndexBuffer = 0;
     }
     
-    if (_VertexBuffer)
+    if (!_Curve || (_VertexBuffer && _VertexBuffer->GetCurrentSize() != (size * 2)))
     {
         GetRenderable()->SetVertexBuffer(0);
         GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
@@ -76,80 +117,59 @@ void CurveComponent::Refresh()
     
     if (_Curve)
     {
-        int size = _Curve->GetArcLength() / _MinDistance;
+        if (!_IndexBuffer)
+        {
+            _IndexBuffer = GraphicsDevice::Instance()->CreateIndexBuffer(pb::kBufferFormatStatic, size*6 - 4);
+        }
         
-        _IndexBuffer = GraphicsDevice::Instance()->CreateIndexBuffer(pb::kBufferFormatStatic, size*6);
-        _VertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(pb::kBufferFormatStatic, pb::kVertexFormat_P3_C4_UV, size*4);
-        
-        GetRenderable()->SetIndexBuffer(_IndexBuffer);
-        GetRenderable()->SetVertexBuffer(_VertexBuffer);
+        if (!_VertexBuffer)
+        {
+            _VertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(pb::kBufferFormatStatic, pb::kVertexFormat_P3_C4_UV, size*2);
+        }
         
         _IndexBuffer->Lock();
         unsigned short* index = _IndexBuffer->GetData();
-        for (int i=0; i<size; i++)
+        for (int i=0; i<size*2; i+=2)
         {
-            index[0] = (i*4);
-            index[1] = (i*4)+1;
-            index[2] = (i*4)+2;
-            index[3] = (i*4)+1;
-            index[4] = (i*4)+2;
-            index[5] = (i*4)+3;
+            index[0] = i;
+            index[1] = i+1;
+            index[2] = i+3;
+            index[3] = i;
+            index[4] = i+2;
+            index[5] = i+3;
             index += 6;
         }
         _IndexBuffer->Unlock();
-
-        float t = 0;
-        glm::vec2 prevPoint = _Curve->EvaluateParam(t);
-        
+                
         _VertexBuffer->Lock();
         pb::Vertex_P3_C4_UV* vertices = static_cast<pb::Vertex_P3_C4_UV*>(_VertexBuffer->GetData());
         for (int i=0; i<size; i++)
         {
             glm::vec2 point = _Curve->EvaluateParam(t);
+            glm::vec2 pointB = _Curve->EvaluateParam(t + 0.1f);
+            
             t += _MinDistance;
             
-            float angle = glm::linearRand(0.f, 180.f);//0.f;
-            float width = 5.f;
+            float angle = glm::atan(pointB.y-point.y, pointB.x-point.x) + glm::radians(90.f);
             
-            for (int p=0; p<2; p++)
+            for (int v=0; v<2; v++)
             {
-                vertices[(i*4)+p].position[0] = prevPoint.x + cos(angle)*width + glm::linearRand(0.f,1.f);
-                vertices[(i*4)+p].position[1] = prevPoint.y + sin(angle)*width + glm::linearRand(0.f,1.f);
-                vertices[(i*4)+p].position[2] = 0;
-                vertices[(i*4)+p].uv[0] = 0;
-                vertices[(i*4)+p].uv[1] = t;
-                vertices[(i*4)+p].color[0] = 1.f;
-                vertices[(i*4)+p].color[1] = 1.f;
-                vertices[(i*4)+p].color[2] = 1.f;
-                vertices[(i*4)+p].color[3] = 1.f;
+                vertices[(i*2)+v].position[0] = point.x + cos(v == 0 ? angle-glm::radians(180.f) : angle)*_Width;
+                vertices[(i*2)+v].position[1] = point.y + sin(v == 0 ? angle-glm::radians(180.f) : angle)*_Width;
+                vertices[(i*2)+v].position[2] = 0;
+                vertices[(i*2)+v].uv[0] = (v == 0 ? 0 : 1);
+                vertices[(i*2)+v].uv[1] = t / _LengthScale;
+                vertices[(i*2)+v].color[0] = _Tint.r;
+                vertices[(i*2)+v].color[1] = _Tint.g;
+                vertices[(i*2)+v].color[2] = _Tint.b;
+                vertices[(i*2)+v].color[3] = _Tint.a;
             }
-            
-            for (int p=2; p<4; p++)
-            {
-                vertices[(i*4)+p].position[0] = point.x + cos(angle)*width + glm::linearRand(0.f,1.f);
-                vertices[(i*4)+p].position[1] = point.y + sin(angle)*width + glm::linearRand(0.f,1.f);
-                vertices[(i*4)+p].position[2] = 0;
-                vertices[(i*4)+p].uv[0] = 0;
-                vertices[(i*4)+p].uv[1] = t;
-                vertices[(i*4)+p].color[0] = 1.f;
-                vertices[(i*4)+p].color[1] = 1.f;
-                vertices[(i*4)+p].color[2] = 1.f;
-                vertices[(i*4)+p].color[3] = 1.f;
-            }
-            
-            for (int p=0; p<4; p++)
-            {
-                vertices[(i*4)+p].position[0] = glm::linearRand(-5.f,5.f);
-                vertices[(i*4)+p].position[1] = glm::linearRand(-5.f,5.f);
-                vertices[(i*4)+p].position[2] = 0;
-            }
-            
-            prevPoint = point;
-//            float i=0; i<_Curve->GetArcLength(); i+=_MinDistance
         }
         _VertexBuffer->Unlock();
         
-        GetRenderable()->SetNumElements(size*6);
+        GetRenderable()->SetIndexBuffer(_IndexBuffer);
+        GetRenderable()->SetVertexBuffer(_VertexBuffer);
+        GetRenderable()->SetNumElements(size*6 - 4);
     }
 }
 
@@ -176,6 +196,13 @@ void CurveComponent::OnDebugRender(const Message& message)
     }
 }
 
+void CurveComponent::OnSetColor(const Message& message)
+{
+    auto setColorMessage = message.As<SetColorMessage>();
+    
+    SetTint(setColorMessage.GetColor());
+}
+
 PB_DEFINE_COMPONENT(pb::CurveComponentSVG)
 
 CurveComponentSVG::CurveComponentSVG(Entity* parent)
@@ -200,11 +227,6 @@ void CurveComponentSVG::SetCurve(const std::string& resource, const std::string&
     {
         OnResourceLoaded(_Resource.get(), false);
     }
-}
-
-void OnUpdate(const Message& message)
-{
-    
 }
 
 void CurveComponentSVG::OnUpdate(const Message& message)

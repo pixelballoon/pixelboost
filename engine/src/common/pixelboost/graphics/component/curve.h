@@ -29,6 +29,15 @@ namespace pb
         void SetMinDistance(float minDistance);
         float GetMinDistance();
         
+        void SetLengthScale(float lengthScale);
+        float GetLengthScale();
+        
+        void SetWidth(float width);
+        float GetWidth();
+        
+        void SetTint(const glm::vec4& tint);
+        const glm::vec4& GetTint();
+        
         void SetCurve(const HermiteCurve2D* curve, bool skipRefresh = false);
         const HermiteCurve2D* GetCurve();
 
@@ -36,8 +45,12 @@ namespace pb
 
     private:
         void OnDebugRender(const Message& message);
+        void OnSetColor(const Message& message);
         
         float _MinDistance;
+        float _LengthScale;
+        float _Width;
+        glm::vec4 _Tint;
 
         const HermiteCurve2D* _Curve;
 
