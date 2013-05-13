@@ -174,6 +174,8 @@ void Renderer::FlushBuffer(const glm::vec4& viewport, Uid renderScheme, const gl
                 start = i;
                 count = 1;
                 type = newType;
+                shader = newShader;
+                material = newMaterial;
             }
         }
         

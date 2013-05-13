@@ -14,6 +14,7 @@
 #include "pixelboost/graphics/device/indexBuffer.h"
 #include "pixelboost/graphics/device/program.h"
 #include "pixelboost/graphics/device/texture.h"
+#include "pixelboost/graphics/material/material.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/model/modelRenderer.h"
 #include "pixelboost/graphics/resources/shaderResource.h"
@@ -26,9 +27,7 @@ ModelRenderer* ModelRenderer::_Instance = 0;
 
 ModelRenderable::ModelRenderable()
 {
-    _AlphaBlend = false;
     _Model = 0;
-    _Texture = 0;
     _Tint = glm::vec4(1,1,1,1);
 }
 
@@ -64,15 +63,6 @@ void ModelRenderable::CalculateWorldMatrix()
     SetWorldMatrix(_Transform);
 }
 
-Shader* ModelRenderable::GetShader()
-{
-    Shader* baseShader = Renderable::GetShader();
-    if (baseShader)
-        return baseShader;
-    
-    return ResourceManager::Instance()->GetPool("default")->GetResource<ShaderResource>("/shaders/pb_textured.shc")->GetShader();
-}
-
 void ModelRenderable::SetModel(Model* model)
 {
     _Model = model;
@@ -83,16 +73,6 @@ Model* ModelRenderable::GetModel()
     return _Model;
 }
 
-void ModelRenderable::SetTexture(Texture* texture)
-{
-    _Texture = texture;
-}
-
-Texture* ModelRenderable::GetTexture()
-{
-    return _Texture;
-}
-
 void ModelRenderable::SetTint(const glm::vec4& tint)
 {
     _Tint = tint;
@@ -101,16 +81,6 @@ void ModelRenderable::SetTint(const glm::vec4& tint)
 const glm::vec4& ModelRenderable::GetTint() const
 {
     return _Tint;
-}
-
-void ModelRenderable::SetAlphaBlend(bool alphaBlend)
-{
-    _AlphaBlend = alphaBlend;
-}
-
-bool ModelRenderable::GetAlphaBlend()
-{
-    return _AlphaBlend;
 }
 
 void ModelRenderable::SetTransform(const glm::mat4x4& transform)
@@ -125,7 +95,7 @@ const glm::mat4x4& ModelRenderable::GetTransform() const
     return _Transform;
 }
 
-SkinnedAnimationState::SkinnedAnimationState(ModelDefinition* model)
+SkinnedAnimationState::SkinnedAnimationState(const ModelDefinition* model)
     : _AnimationTime(0)
     , _Model(model)
 {
@@ -137,19 +107,19 @@ SkinnedAnimationState::~SkinnedAnimationState()
     
 }
 
-void SkinnedAnimationState::SetAnimation(const std::string& animation)
+void SkinnedAnimationState::SetAnimation(const std::string& name)
 {
     _Animation = 0;
     
-    for (std::vector<ModelAnimationDefinition>::iterator it = _Model->Animations.begin(); it != _Model->Animations.end(); ++it)
+    for (const auto& animation : _Model->Animations)
     {
-        if (it->_Name == animation)
-            _Animation = &(*it);
+        if (animation._Name == name)
+            _Animation = &animation;
     }
     
     if (_Animation == 0)
     {
-        PbLogError("pb.graphics.model", "Can't find animation %s on model\n", animation.c_str());
+        PbLogError("pb.graphics.model", "Can't find animation %s on model\n", name.c_str());
     }
     
     _Matrices.clear();
@@ -189,7 +159,7 @@ void SkinnedAnimationState::SoftwareSkin(Model* model)
     for (std::vector<ModelMesh*>::const_iterator it = model->GetMeshes().begin(); it != model->GetMeshes().end(); ++it)
     {
         ModelMesh* mesh = *it;
-        ModelMeshDefinition* definition = mesh->_MeshDefinition;
+        const ModelMeshDefinition* definition = mesh->_MeshDefinition;
         
         mesh->_VertexBuffer->Lock();
         
@@ -227,14 +197,14 @@ void SkinnedAnimationState::UpdateBoneMatrix(const ModelBoneDefinition& bone, in
     _Matrices[bone._Id] = GetBoneMatrix(bone._ParentId) * _Animation->_Frames[frame][bone._Id];
 }
 
-ModelMesh::ModelMesh(const std::string& fileName, ModelMeshDefinition* mesh)
+ModelMesh::ModelMesh(const ModelMeshDefinition* mesh)
     : _IndexBuffer(0)
     , _MeshDefinition(mesh)
     , _VertexBuffer(0)
 {
     if (mesh->Indexed == true)
     {
-        PbLogError("pb.graphics.mesh", "Only non index models are currently supported (%s)", fileName.c_str());
+        PbLogError("pb.graphics.mesh", "Only non index models are currently supported");
         return;
     }
     
@@ -244,16 +214,16 @@ ModelMesh::ModelMesh(const std::string& fileName, ModelMeshDefinition* mesh)
     _VertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(kBufferFormatStatic, kVertexFormat_P3_N3_UV, _NumVertices);
     _VertexBuffer->Lock();
     Vertex_P3_N3_UV* vertexBuffer = static_cast<Vertex_P3_N3_UV*>(_VertexBuffer->GetData());
-    for (std::vector<ModelVertex>::iterator it = mesh->Vertices.begin(); it != mesh->Vertices.end(); ++it)
+    for (const auto& vertex : mesh->Vertices)
     {
-        vertexBuffer->position[0] = it->Position.x;
-        vertexBuffer->position[1] = it->Position.y;
-        vertexBuffer->position[2] = it->Position.z;
-        vertexBuffer->uv[0] = it->UV.x;
-        vertexBuffer->uv[1] = it->UV.y;
-        vertexBuffer->normal[0] = it->Normal.x;
-        vertexBuffer->normal[1] = it->Normal.y;
-        vertexBuffer->normal[2] = it->Normal.z;
+        vertexBuffer->position[0] = vertex.Position.x;
+        vertexBuffer->position[1] = vertex.Position.y;
+        vertexBuffer->position[2] = vertex.Position.z;
+        vertexBuffer->uv[0] = vertex.UV.x;
+        vertexBuffer->uv[1] = vertex.UV.y;
+        vertexBuffer->normal[0] = vertex.Normal.x;
+        vertexBuffer->normal[1] = vertex.Normal.y;
+        vertexBuffer->normal[2] = vertex.Normal.z;
         vertexBuffer++;
     }
     _VertexBuffer->Unlock();
@@ -285,11 +255,19 @@ const BoundingSphere& ModelMesh::GetBounds()
     return _Bounds;
 }
 
-Model::Model()
-    : _ModelDefinition(0)
-    , _RefCount(1)
+Model::Model(const ModelDefinition* definition)
+    : _ModelDefinition(definition)
 {
+    if (_ModelDefinition->Meshes.size() == 0)
+    {
+        PbLogWarn("pb.graphics.model", "Model is empty");
+        return;
+    }
     
+    for (const auto& mesh : _ModelDefinition->Meshes)
+    {
+        _Meshes.push_back(new ModelMesh(&mesh));
+    }
 }
 
 Model::~Model()
@@ -300,33 +278,6 @@ Model::~Model()
     }
     
     delete _ModelDefinition;
-}
-    
-bool Model::Load(const std::string& fileName)
-{
-    PbLogError("pb.assets", "Model loader is currently unimplemented");
-    return false;
-    
-    /*
-    std::string objFilename = fileName;
-    
-    _ModelDefinition = new ModelDefinition();
-    if (!_ModelDefinition->Open(fileName))
-        return false;
-       
-    if (_ModelDefinition->Meshes.size() == 0)
-    {
-        PbLogWarn("pb.assets", "Model (%s) is empty", fileName.c_str());
-        return true;
-    }
-    
-    for (std::vector<ModelMeshDefinition>::iterator it = _ModelDefinition->Meshes.begin(); it != _ModelDefinition->Meshes.end(); ++it)
-    {
-        _Meshes.push_back(new ModelMesh(fileName, &(*it)));
-    }
-    
-    return true;
-    */
 }
 
 const BoundingSphere& Model::GetBounds()
@@ -342,7 +293,7 @@ const BoundingSphere& Model::GetBounds()
     return _Bounds;
 }
 
-ModelDefinition* Model::GetDefinition()
+const ModelDefinition* Model::GetDefinition()
 {
     return _ModelDefinition;
 }
@@ -383,44 +334,32 @@ ModelRenderer* ModelRenderer::Instance()
 
 void ModelRenderer::Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
 {
-    Shader* shader = renderables[0]->GetShader();
-    if (!shader)
+    Material* material = renderables[0]->GetMaterial();
+    
+    if (!material)
         return;
     
-    ShaderTechnique* technique = shader->GetTechnique(renderScheme);
+    ShaderPass* shaderPass = material->Bind(renderScheme, 0, projectionMatrix, viewMatrix);
     
-    if (!technique)
+    if (!shaderPass)
         return;
-    
-    ShaderPass* shaderPass = technique->GetPass(0);
-    shaderPass->Bind();
-    shaderPass->GetShaderProgram()->SetUniform("PB_ProjectionMatrix", projectionMatrix);
-    
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, false);
-    GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, true);
-    
+
     for (int i=0; i<count; i++)
     {
         ModelRenderable& renderable = *static_cast<ModelRenderable*>(renderables[i]);
         
         Model* model = renderable._Model;
-        Texture* texture = renderable._Texture;
         
-        if (!model || !texture || !model->GetMeshes().size())
+        if (!model || !model->GetMeshes().size())
             continue;
-        
-        GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateBlend, renderable._AlphaBlend);
-        GraphicsDevice::Instance()->SetBlendMode(GraphicsDevice::kBlendOne, GraphicsDevice::kBlendOneMinusSourceAlpha);
         
         shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewMatrix", renderable.GetModelViewMatrix());
         shaderPass->GetShaderProgram()->SetUniform("_DiffuseColor", renderable._Tint);
-        shaderPass->GetShaderProgram()->SetUniform("_DiffuseTexture", 0);
         
         for (std::vector<ModelMesh*>::const_iterator it = model->GetMeshes().begin(); it != model->GetMeshes().end(); ++it)
         {
             GraphicsDevice::Instance()->BindIndexBuffer((*it)->_IndexBuffer);
             GraphicsDevice::Instance()->BindVertexBuffer((*it)->_VertexBuffer);
-            GraphicsDevice::Instance()->BindTexture(0, texture);
             
             GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, (*it)->GetNumVertices());
         }
@@ -431,98 +370,4 @@ void ModelRenderer::Render(int count, Renderable** renderables, Uid renderScheme
     GraphicsDevice::Instance()->BindVertexBuffer(0);
   
     GraphicsDevice::Instance()->SetState(GraphicsDevice::kStateDepthTest, false);
-}
-    
-Model* ModelRenderer::LoadModel(const std::string& modelName, const std::string& fileName)
-{
-    ModelMap::iterator it = _Models.find(modelName);
-    
-    if (it != _Models.end())
-    {
-        it->second->_RefCount++;
-        return it->second;
-    }
-    
-    Model* model = new Model();
-    if (!model->Load(fileName))
-    {
-        delete model;
-        return 0;
-    }
-    
-    _Models[modelName] = model;
-    
-    return model;
-}
-
-bool ModelRenderer::UnloadModel(const std::string& modelName)
-{
-    ModelMap::iterator it = _Models.find(modelName);
-    
-    if (it == _Models.end())
-        return false;
-    
-    it->second->_RefCount--;
-    
-    if (it->second->_RefCount == 0)
-    {
-        delete it->second;
-        _Models.erase(it);
-    }
-    
-    return true;
-}
-    
-Texture* ModelRenderer::LoadTexture(const std::string& textureName, const std::string& fileName, bool createMips)
-{
-    TextureMap::iterator it = _Textures.find(textureName);
-    
-    if (it != _Textures.end())
-    {
-        return it->second;
-    }
-    
-    Texture* texture = GraphicsDevice::Instance()->CreateTexture();
-    if (!texture->LoadFromFile(fileName, createMips))
-    {
-        GraphicsDevice::Instance()->DestroyTexture(texture);
-        return 0;
-    }
-    
-    _Textures[textureName] = texture;
-    
-    return texture;
-}
-
-bool ModelRenderer::UnloadTexture(const std::string& textureName)
-{
-    TextureMap::iterator it = _Textures.find(textureName);
-    
-    if (it == _Textures.end())
-        return false;
- 
-    GraphicsDevice::Instance()->DestroyTexture(it->second);
-    _Textures.erase(it);
-    
-    return true;
-}
-    
-Model* ModelRenderer::GetModel(const std::string& modelName)
-{
-    ModelMap::iterator it = _Models.find(modelName);
-    
-    if (it == _Models.end())
-        return 0;
-
-    return it->second;
-}
-    
-Texture* ModelRenderer::GetTexture(const std::string& textureName)
-{
-    TextureMap::iterator it = _Textures.find(textureName);
-    
-    if (it == _Textures.end())
-        return 0;
-    
-    return it->second;
 }

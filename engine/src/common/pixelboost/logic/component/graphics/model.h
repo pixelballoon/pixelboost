@@ -12,6 +12,8 @@ namespace pb
     
     class Message;
     class ModelRenderable;
+    class ModelResource;
+    class Model;
     
     class ModelComponent : public RenderableComponent<ModelRenderable>
     {
@@ -25,15 +27,17 @@ namespace pb
         void SetShader(Shader* shader);
         void SetLayer(int layer);
         
-        void SetModel(Model* model);
+        void SetModel(const std::string& filename);
         Model* GetModel();
         
-        void SetTexture(Texture* texture);
-        Texture* GetTexture();
-        
         void SetTint(const glm::vec4& tint);
+        const glm::vec4& GetTint();
         
-        void SetAlphaBlend(bool alphaBlend);
+    private:
+        void OnResourceLoaded(Resource* resource, bool loaded);
+        void OnResourceUnloading(Resource* resource);
+
+        std::shared_ptr<ModelResource> _Model;
     };
     
 }

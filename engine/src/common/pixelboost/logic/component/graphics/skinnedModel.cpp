@@ -28,11 +28,7 @@ SkinnedModelComponent::SkinnedModelComponent(Entity* parent)
 
 SkinnedModelComponent::~SkinnedModelComponent()
 {
-    if (_SkeletonDebug)
-    {
-        GetEntity()->UnregisterMessageHandler<DebugRenderMessage>(MessageHandler(this, &SkinnedModelComponent::OnDebugRender));
-    }
-    
+    GetEntity()->UnregisterMessageHandler<DebugRenderMessage>(MessageHandler(this, &SkinnedModelComponent::OnDebugRender));
     GetEntity()->UnregisterMessageHandler<UpdateMessage>(MessageHandler(this, &SkinnedModelComponent::OnUpdate));
 
     delete _AnimationState;
@@ -59,19 +55,14 @@ Model* SkinnedModelComponent::GetModel()
     return GetRenderable()->GetModel();
 }
 
-void SkinnedModelComponent::SetTexture(Texture* texture)
-{
-    GetRenderable()->SetTexture(texture);
-}
-
-Texture* SkinnedModelComponent::GetTexture()
-{
-    return GetRenderable()->GetTexture();
-}
-
 void SkinnedModelComponent::SetTint(const glm::vec4& tint)
 {
     GetRenderable()->SetTint(tint);
+}
+
+const glm::vec4& SkinnedModelComponent::GetTint()
+{
+    return GetRenderable()->GetTint();
 }
 
 void SkinnedModelComponent::SetAnimation(const std::string& animation)
@@ -121,17 +112,17 @@ void SkinnedModelComponent::OnDebugRender(const Message& message)
     
     glm::mat4x4 transformMatrix = GetEntity()->GetComponent<TransformComponent>()->GetMatrix() * GetLocalTransform();
     
-    for (std::vector<ModelBoneDefinition>::iterator it = model->GetDefinition()->Bones.begin(); it != model->GetDefinition()->Bones.end(); ++it)
+    for (const auto& bone : model->GetDefinition()->Bones)
     {
-        if (it->_ParentId != -1)
+        if (bone._ParentId != -1)
         {
-            glm::mat4x4 boneTransform = _AnimationState->GetBoneMatrix(it->_Id);
-            glm::mat4x4 parentBoneTransform = _AnimationState->GetBoneMatrix(it->_ParentId);
+            glm::mat4x4 boneTransform = _AnimationState->GetBoneMatrix(bone._Id);
+            glm::mat4x4 parentBoneTransform = _AnimationState->GetBoneMatrix(bone._ParentId);
             
             glm::vec4 posA = transformMatrix * boneTransform * glm::vec4(0,0,0,1);
             glm::vec4 posB = transformMatrix * parentBoneTransform * glm::vec4(0,0,0,1);
             
-            debugMessage.GetDebugRenderSystem()->AddLine(kRenderPassScene, 10, glm::vec3(posA.x, posA.y, posA.z), glm::vec3(posB.x, posB.y, posB.z), glm::vec4(it->_ParentId * 0.2, it->_ParentId * 0.2, it->_ParentId * 0.2, 1));
+            debugMessage.GetDebugRenderSystem()->AddLine(kRenderPassScene, 10, glm::vec3(posA.x, posA.y, posA.z), glm::vec3(posB.x, posB.y, posB.z), glm::vec4(bone._ParentId * 0.2, bone._ParentId * 0.2, bone._ParentId * 0.2, 1));
         }
     }
 }

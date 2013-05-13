@@ -4,6 +4,7 @@
 #include "pixelboost/framework/engine.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
 #include "pixelboost/graphics/renderer/model/modelRenderer.h"
+#include "pixelboost/graphics/resources/modelResource.h"
 #include "pixelboost/logic/component/graphics/model.h"
 #include "pixelboost/logic/component/transform.h"
 #include "pixelboost/logic/message/debug/render.h"
@@ -27,7 +28,12 @@ ModelComponent::ModelComponent(Entity* parent)
 
 ModelComponent::~ModelComponent()
 {
-
+    if (_Model)
+    {
+        _Model->SignalResourceLoaded.Disconnect(this, &ModelComponent::OnResourceLoaded);
+        _Model->SignalResourceUnloading.Disconnect(this, &ModelComponent::OnResourceUnloading);
+        _Model.reset();
+    }
 }
 
 void ModelComponent::SetShader(Shader* shader)
@@ -40,9 +46,23 @@ void ModelComponent::SetLayer(int layer)
     GetRenderable()->SetLayer(layer);
 }
 
-void ModelComponent::SetModel(Model* model)
+void ModelComponent::SetModel(const std::string& filename)
 {
-    GetRenderable()->SetModel(model);
+    if (_Model)
+    {
+        _Model->SignalResourceLoaded.Disconnect(this, &ModelComponent::OnResourceLoaded);
+        _Model->SignalResourceUnloading.Disconnect(this, &ModelComponent::OnResourceUnloading);
+        _Model.reset();
+    }
+    
+    _Model = pb::ResourceManager::Instance()->GetPool("default")->GetResource<pb::ModelResource>(filename);
+    _Model->SignalResourceLoaded.Connect(this, &ModelComponent::OnResourceLoaded);
+    _Model->SignalResourceUnloading.Connect(this, &ModelComponent::OnResourceUnloading);
+    
+    if (_Model->GetState() == kResourceStateReady)
+    {
+        OnResourceLoaded(_Model.get(), false);
+    }
 }
 
 Model* ModelComponent::GetModel()
@@ -50,22 +70,31 @@ Model* ModelComponent::GetModel()
     return GetRenderable()->GetModel();
 }
 
-void ModelComponent::SetTexture(Texture* texture)
-{
-    GetRenderable()->SetTexture(texture);
-}
-
-Texture* ModelComponent::GetTexture()
-{
-    return GetRenderable()->GetTexture();
-}
-
 void ModelComponent::SetTint(const glm::vec4& tint)
 {
     GetRenderable()->SetTint(tint);
 }
 
-void ModelComponent::SetAlphaBlend(bool alphaBlend)
+const glm::vec4& ModelComponent::GetTint()
 {
-    GetRenderable()->SetAlphaBlend(alphaBlend);
+    return GetRenderable()->GetTint();
+}
+
+void ModelComponent::OnResourceLoaded(Resource* resource, bool error)
+{
+    if (!error)
+    {
+        if (resource == _Model.get())
+        {
+            GetRenderable()->SetModel(new Model(&_Model->GetModelDefinition()));
+        }
+    }
+}
+
+void ModelComponent::OnResourceUnloading(Resource* resource)
+{
+    if (resource == _Model.get())
+    {
+        GetRenderable()->SetModel(0);
+    }
 }

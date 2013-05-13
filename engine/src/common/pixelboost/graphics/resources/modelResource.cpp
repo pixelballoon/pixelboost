@@ -24,10 +24,10 @@ ResourceError ModelResource::ProcessResource(ResourcePool* pool, ResourceProcess
     {
         case kResourceProcessLoad:
         {
-            auto file = pb::FileSystem::Instance()->OpenFile(filename);
+            auto file = pb::FileSystem::Instance()->OpenFile(filename + ".mdl");
             if (!file)
             {
-                PbLogError("pb.resource.xml", "Error opening XML file (%s)", filename.c_str());
+                PbLogError("pb.resource.model", "Error opening model file (%s)", filename.c_str());
                 return kResourceErrorNoSuchResource;
             }
             

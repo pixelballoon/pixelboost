@@ -32,10 +32,8 @@ namespace pb
         void SetModel(Model* model);
         Model* GetModel();
         
-        void SetTexture(Texture* texture);
-        Texture* GetTexture();
-        
         void SetTint(const glm::vec4& tint);
+        const glm::vec4& GetTint();
         
         void SetAnimation(const std::string& animation);
         

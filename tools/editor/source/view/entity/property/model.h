@@ -25,5 +25,5 @@ protected:
     
 private:
     std::string _Model;
-    std::string _Texture;
+    std::string _Material;
 };

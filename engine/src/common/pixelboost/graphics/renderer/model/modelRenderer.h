@@ -36,27 +36,17 @@ namespace pb
         virtual void CalculateBounds();
         virtual void CalculateWorldMatrix();
         
-        virtual Shader* GetShader();
-        
         void SetModel(Model* model);
         Model* GetModel();
         
-        void SetTexture(Texture* texture);
-        Texture* GetTexture();
-        
         void SetTint(const glm::vec4& tint);
         const glm::vec4& GetTint() const;
-        
-        void SetAlphaBlend(bool alphaBlend);
-        bool GetAlphaBlend();
         
         void SetTransform(const glm::mat4x4& transform);
         const glm::mat4x4& GetTransform() const;
         
     private:
-        bool _AlphaBlend;
         Model* _Model;
-        Texture* _Texture;
         glm::mat4x4 _Transform;
         glm::vec4 _Tint;
         
@@ -66,11 +56,11 @@ namespace pb
     class SkinnedAnimationState
     {
     public:
-        SkinnedAnimationState(ModelDefinition* model);
+        SkinnedAnimationState(const ModelDefinition* model);
         ~SkinnedAnimationState();
         
     public:
-        void SetAnimation(const std::string& animation);
+        void SetAnimation(const std::string& name);
         
         void AdvanceAnimation(float length);
         
@@ -84,8 +74,8 @@ namespace pb
         void UpdateBoneMatrices(int frame);
         void UpdateBoneMatrix(const ModelBoneDefinition& bone, int frame);
         
-        ModelDefinition* _Model;
-        ModelAnimationDefinition* _Animation;
+        const ModelDefinition* _Model;
+        const ModelAnimationDefinition* _Animation;
         
         std::vector<glm::mat4x4> _Matrices;
         
@@ -95,7 +85,7 @@ namespace pb
     class ModelMesh
     {
     public:
-        ModelMesh(const std::string& filename, ModelMeshDefinition* mesh);
+        ModelMesh(const ModelMeshDefinition* mesh);
         virtual ~ModelMesh();
         
     public:
@@ -113,7 +103,7 @@ namespace pb
         IndexBuffer* _IndexBuffer;
         VertexBuffer* _VertexBuffer;
         
-        ModelMeshDefinition* _MeshDefinition;
+        const ModelMeshDefinition* _MeshDefinition;
         
         friend class ModelRenderer;
         friend class SkinnedAnimationState;
@@ -121,28 +111,23 @@ namespace pb
     
     class Model
     {
-    private:
-        Model();
+    public:
+        Model(const ModelDefinition* definition);
         virtual ~Model();
-        
-        bool Load(const std::string& modelName);
         
     public:
         const BoundingSphere& GetBounds();
         
-        ModelDefinition* GetDefinition();
+        const ModelDefinition* GetDefinition();
         
         const std::vector<ModelMesh*>& GetMeshes();
-        
-    public:
-        unsigned long _RefCount;
         
     private:
         BoundingSphere _Bounds;
         
         std::vector<ModelMesh*> _Meshes;
         
-        ModelDefinition* _ModelDefinition;
+        const ModelDefinition* _ModelDefinition;
         
         friend class ModelRenderer;
     };
@@ -157,16 +142,9 @@ namespace pb
         
         void Render(RenderLayer* layer);
         
-        Model* LoadModel(const std::string& modelName, const std::string& fileName);
-        bool UnloadModel(const std::string& modelName);
-        
-        Texture* LoadTexture(const std::string& textureName, const std::string& fileName, bool createMips=true);
-        bool UnloadTexture(const std::string& textureName);
+        Model* GetModel(const std::string& name, ModelDefinition* definition);
         
         void Render(int count, Renderable** renderables, Uid renderScheme, const glm::vec4& viewport, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix);
-        
-        Model* GetModel(const std::string& modelName);
-        Texture* GetTexture(const std::string& textureName);
         
     private:
         typedef std::map<std::string, Model*> ModelMap;

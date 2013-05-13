@@ -41,16 +41,16 @@ void ModelViewProperty::Refresh()
     if (model != _Model)
     {
         _Model = model;
-        GetComponent<pb::ModelComponent>()->SetModel(pb::ModelRenderer::Instance()->LoadModel(_Model, "editor_models/"+_Model));
+        GetComponent<pb::ModelComponent>()->SetModel(_Model);
         DirtyBounds();
     }
     
-    std::string texture = visualisation->EvaluateParamString(GetProjectEntity(), "texture", GetPath());
+    std::string material = visualisation->EvaluateParamString(GetProjectEntity(), "material", GetPath());
     
-    if (texture != _Texture)
+    if (material != _Material)
     {
-        _Texture = texture;
-        GetComponent<pb::ModelComponent>()->SetTexture(pb::ModelRenderer::Instance()->LoadTexture(_Texture, "editor_images/"+_Texture));
+        _Material = material;
+        GetComponent<pb::ModelComponent>()->SetMaterial(_Material);
     }
     
     if (visualisation->HasParamValue("rotation"))

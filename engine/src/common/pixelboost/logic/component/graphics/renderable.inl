@@ -85,11 +85,13 @@ template <class T> void RenderableComponent<T>::SetMaterial(const std::string& f
 {
     if (_Material)
     {
+        _Renderable->SetMaterial(0);
         _Material->SignalResourceLoaded.Disconnect(this, &RenderableComponent<T>::OnResourceLoaded);
         _Material->SignalResourceUnloading.Disconnect(this, &RenderableComponent<T>::OnResourceUnloading);
     }
 
-    _Material = ResourceManager::Instance()->GetPool(pool)->GetResource<MaterialResource>(filename);
+    auto material = ResourceManager::Instance()->GetPool(pool)->GetResource<MaterialResource>(filename);
+    _Material = material;
     _Material->SignalResourceLoaded.Connect(this, &RenderableComponent<T>::OnResourceLoaded);
     _Material->SignalResourceUnloading.Connect(this, &RenderableComponent<T>::OnResourceUnloading);
     
