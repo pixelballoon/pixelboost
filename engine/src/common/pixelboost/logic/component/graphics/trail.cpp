@@ -1,6 +1,7 @@
 #include "pixelboost/graphics/device/device.h"
 #include "pixelboost/graphics/device/indexBuffer.h"
 #include "pixelboost/graphics/device/vertexBuffer.h"
+#include "pixelboost/graphics/message/color.h"
 #include "pixelboost/graphics/renderer/buffer/bufferRenderer.h"
 #include "pixelboost/graphics/resources/materialResource.h"
 #include "pixelboost/logic/component/graphics/trail.h"
@@ -20,6 +21,7 @@ TrailComponent::TrailComponent(Entity* parent)
     _MaxElements = 5000;
     _MinDistance = 1.f;
     _Width = 10.f;
+    _Tint = glm::vec4(1,1,1,1);
     
     _IndexBuffer = GraphicsDevice::Instance()->CreateIndexBuffer(pb::kBufferFormatStatic, _MaxElements*6);
     _VertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(pb::kBufferFormatDynamic, pb::kVertexFormat_P3_C4_UV, _MaxElements*4);
@@ -47,11 +49,13 @@ TrailComponent::TrailComponent(Entity* parent)
     
     GetScene()->GetSystemByType<RenderSystem>()->AddItem(_Renderable);
     
+    GetEntity()->RegisterMessageHandler<SetColorMessage>(MessageHandler(this, &TrailComponent::OnSetColor));
     GetEntity()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &TrailComponent::OnTransformChanged));
 }
 
 TrailComponent::~TrailComponent()
 {
+    GetEntity()->UnregisterMessageHandler<SetColorMessage>(MessageHandler(this, &TrailComponent::OnSetColor));
     GetEntity()->UnregisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &TrailComponent::OnTransformChanged));
     
     if (_Material)
@@ -93,6 +97,31 @@ float TrailComponent::GetLengthScale()
     return _LengthScale;
 }
 
+void TrailComponent::SetTint(const glm::vec4& tint)
+{
+    _Tint = tint;
+    
+    int numVertices = _VertexBuffer->GetCurrentSize();
+    if (numVertices)
+    {
+        _VertexBuffer->Lock();
+        pb::Vertex_P3_C4_UV* vertices = static_cast<pb::Vertex_P3_C4_UV*>(_VertexBuffer->GetData());
+        for (int i=0; i<numVertices; i++)
+        {
+            vertices[i].color[0] = _Tint.r;
+            vertices[i].color[1] = _Tint.g;
+            vertices[i].color[2] = _Tint.b;
+            vertices[i].color[3] = _Tint.a;
+        }
+        _VertexBuffer->Unlock(numVertices);
+    }
+}
+
+const glm::vec4& TrailComponent::GetTint()
+{
+    return _Tint;
+}
+
 void TrailComponent::SetMaterial(const std::string& resource, const std::string& pool)
 {
     if (_Material)
@@ -121,7 +150,14 @@ BufferRenderable* TrailComponent::GetRenderable()
     return _Renderable;
 }
 
-void TrailComponent::OnTransformChanged(const pb::Message& message)
+void TrailComponent::OnSetColor(const Message& message)
+{
+    auto colorMessage = message.As<SetColorMessage>();
+    
+    SetTint(colorMessage.GetColor());
+}
+
+void TrailComponent::OnTransformChanged(const Message& message)
 {
     TransformComponent* transform = GetEntity()->GetComponent<TransformComponent>();
     
@@ -161,40 +197,40 @@ void TrailComponent::OnTransformChanged(const pb::Message& message)
         vertices[(numPoints*4)+0].position[2] = 0;
         vertices[(numPoints*4)+0].uv[0] = 0;
         vertices[(numPoints*4)+0].uv[1] = prevLength;
-        vertices[(numPoints*4)+0].color[0] = 1.f;
-        vertices[(numPoints*4)+0].color[1] = 1.f;
-        vertices[(numPoints*4)+0].color[2] = 1.f;
-        vertices[(numPoints*4)+0].color[3] = 1.f;
+        vertices[(numPoints*4)+0].color[0] = _Tint.r;
+        vertices[(numPoints*4)+0].color[1] = _Tint.g;
+        vertices[(numPoints*4)+0].color[2] = _Tint.b;
+        vertices[(numPoints*4)+0].color[3] = _Tint.a;
         
         vertices[(numPoints*4)+1].position[0] = point[1].x + cos(angle+M_PI)*_Width;
         vertices[(numPoints*4)+1].position[1] = point[1].y + sin(angle+M_PI)*_Width;
         vertices[(numPoints*4)+1].position[2] = 0;
         vertices[(numPoints*4)+1].uv[0] = 1;
         vertices[(numPoints*4)+1].uv[1] = prevLength;
-        vertices[(numPoints*4)+1].color[0] = 1.f;
-        vertices[(numPoints*4)+1].color[1] = 1.f;
-        vertices[(numPoints*4)+1].color[2] = 1.f;
-        vertices[(numPoints*4)+1].color[3] = 1.f;
+        vertices[(numPoints*4)+1].color[0] = _Tint.r;
+        vertices[(numPoints*4)+1].color[1] = _Tint.g;
+        vertices[(numPoints*4)+1].color[2] = _Tint.b;
+        vertices[(numPoints*4)+1].color[3] = _Tint.a;
         
         vertices[(numPoints*4)+2].position[0] = point[2].x + cos(angle)*_Width;
         vertices[(numPoints*4)+2].position[1] = point[2].y + sin(angle)*_Width;
         vertices[(numPoints*4)+2].position[2] = 0;
         vertices[(numPoints*4)+2].uv[0] = 0;
         vertices[(numPoints*4)+2].uv[1] = _Length;
-        vertices[(numPoints*4)+2].color[0] = 1.f;
-        vertices[(numPoints*4)+2].color[1] = 1.f;
-        vertices[(numPoints*4)+2].color[2] = 1.f;
-        vertices[(numPoints*4)+2].color[3] = 1.f;
+        vertices[(numPoints*4)+2].color[0] = _Tint.r;
+        vertices[(numPoints*4)+2].color[1] = _Tint.g;
+        vertices[(numPoints*4)+2].color[2] = _Tint.b;
+        vertices[(numPoints*4)+2].color[3] = _Tint.a;
         
         vertices[(numPoints*4)+3].position[0] = point[2].x + cos(angle+M_PI)*_Width;
         vertices[(numPoints*4)+3].position[1] = point[2].y + sin(angle+M_PI)*_Width;
         vertices[(numPoints*4)+3].position[2] = 0;
         vertices[(numPoints*4)+3].uv[0] = 1;
         vertices[(numPoints*4)+3].uv[1] = _Length;
-        vertices[(numPoints*4)+3].color[0] = 1.f;
-        vertices[(numPoints*4)+3].color[1] = 1.f;
-        vertices[(numPoints*4)+3].color[2] = 1.f;
-        vertices[(numPoints*4)+3].color[3] = 1.f;
+        vertices[(numPoints*4)+3].color[0] = _Tint.r;
+        vertices[(numPoints*4)+3].color[1] = _Tint.g;
+        vertices[(numPoints*4)+3].color[2] = _Tint.b;
+        vertices[(numPoints*4)+3].color[3] = _Tint.a;
         
         _Renderable->SetNumElements(_Points.size()*6);
     } else {
@@ -209,7 +245,7 @@ void TrailComponent::OnTransformChanged(const pb::Message& message)
     
     _VertexBuffer->Unlock(_Points.size()*4);
 }
-    
+
 void TrailComponent::OnResourceLoaded(Resource* resource, bool error)
 {
     if (error)

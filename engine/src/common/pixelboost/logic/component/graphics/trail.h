@@ -35,13 +35,18 @@ namespace pb
         void SetLengthScale(float lengthScale);
         float GetLengthScale();
         
+        void SetTint(const glm::vec4& tint);
+        const glm::vec4& GetTint();
+        
         void SetMaterial(const std::string& file, const std::string& pool = "default");
         std::shared_ptr<MaterialResource> GetMaterial();
         
         BufferRenderable* GetRenderable();
         
     private:
+        void OnSetColor(const Message& message);
         void OnTransformChanged(const pb::Message& message);
+        
         void OnResourceLoaded(Resource* resource, bool error);
         void OnResourceUnloading(Resource* resource);
         
@@ -57,6 +62,8 @@ namespace pb
         float _LengthScale;
         float _Length;
         std::vector<glm::vec2> _Points;
+        
+        glm::vec4 _Tint;
     };
     
 }
