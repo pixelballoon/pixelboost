@@ -8,26 +8,11 @@
 	<string>${PIXELBOOST_BUILD_NAME}</string>
 	<key>CFBundleIconFiles</key>
 	<array>
-		<string>Icon@2x.png</string>
 		<string>Icon.png</string>
+		<string>Icon@2x.png</string>
 		<string>Icon-72.png</string>
 		<string>Icon-72@2x.png</string>
 	</array>
-	<key>CFBundleIcons</key>
-	<dict>
-		<key>CFBundlePrimaryIcon</key>
-		<dict>
-			<key>CFBundleIconFiles</key>
-			<array>
-				<string>Icon@2x.png</string>
-				<string>Icon.png</string>
-				<string>Icon-72.png</string>
-				<string>Icon-72@2x.png</string>
-			</array>
-			<key>UIPrerenderedIcon</key>
-			<true/>
-		</dict>
-	</dict>
 	<key>CFBundleIdentifier</key>
 	<string>${PIXELBOOST_BUILD_IDENTIFIER}</string>
 	<key>CFBundleInfoDictionaryVersion</key>
