@@ -150,11 +150,14 @@ void ParticleRenderer::Render(int count, Renderable** renderables, Uid renderSch
 
 void ParticleRenderer::RenderSystem(ParticleSystem* system, ShaderPass* shaderPass)
 {
+    if (system->Particles.size() == 0)
+        return;
+    
     pb::Sprite* sprite = system->Definition->RenderSprite->SpriteDefinition;
     
     if (!sprite)
         return;
-        
+    
     _VertexBuffer->Lock();
     
     pb::Vertex_P3_C4_UV* vertexBuffer = static_cast<pb::Vertex_P3_C4_UV*>(_VertexBuffer->GetData());
