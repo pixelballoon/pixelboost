@@ -17,6 +17,11 @@ Resource::~Resource()
     
 }
 
+const std::string& Resource::GetFilename()
+{
+    return _Filename;
+}
+
 void Resource::Load()
 {
     _Pool->LoadResource(_Filename);

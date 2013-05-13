@@ -23,6 +23,8 @@ namespace pb
     public:
         virtual Uid GetResourceType() const = 0;
         
+        const std::string& GetFilename();
+        
         void Load();
         void Unload();
         
