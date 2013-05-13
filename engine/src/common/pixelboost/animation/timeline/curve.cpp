@@ -121,8 +121,11 @@ void TimelineCurveSVG::OnResourceLoaded(Resource* resource, bool error)
         for (const auto& path : group.second.Paths)
         {
             SetCurve(&path.Curve);
+            return;
         }
     }
+    
+    PbLogError("pb.animation.timeline.curve", "No valid curves in SVG resource %s", resource->GetFilename().c_str());
 }
 
 void TimelineCurveSVG::OnResourceUnloading(Resource* resource)
