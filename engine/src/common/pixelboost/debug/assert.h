@@ -1,7 +1,8 @@
 #pragma once
 
 #ifndef PIXELBOOST_DISABLE_DEBUG
-    void PbAssert(int value);
+    #include <assert.h>
+    #define PbAssert(value) assert(value)
 #else
-    #define PbAssert(a) do {} while(0);
+    #define PbAssert(value) do {} while(0);
 #endif
