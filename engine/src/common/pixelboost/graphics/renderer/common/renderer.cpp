@@ -26,10 +26,10 @@ Renderer::Renderer()
     _TechniqueHandler = 0;
     
     ResourcePool* defaultPool = ResourceManager::Instance()->GetPool("default");
-    defaultPool->CacheResource<ShaderResource>("/shaders/pb_solid.shc");
-    defaultPool->CacheResource<ShaderResource>("/shaders/pb_solidColor.shc");
-    defaultPool->CacheResource<ShaderResource>("/shaders/pb_textured.shc");
-    defaultPool->CacheResource<ShaderResource>("/shaders/pb_texturedColor.shc");
+    defaultPool->CacheResource<ShaderResource>("/shaders/pb_solid");
+    defaultPool->CacheResource<ShaderResource>("/shaders/pb_solidColor");
+    defaultPool->CacheResource<ShaderResource>("/shaders/pb_textured");
+    defaultPool->CacheResource<ShaderResource>("/shaders/pb_texturedColor");
 }
 
 Renderer::~Renderer()

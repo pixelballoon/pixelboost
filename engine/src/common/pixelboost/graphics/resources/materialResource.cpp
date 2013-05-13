@@ -70,7 +70,7 @@ ResourceError MaterialResource::ProcessResource(ResourcePool* pool, ResourceProc
     {
         case kResourceProcessLoad:
         {
-            auto file = FileSystem::Instance()->OpenFile(filename);
+            auto file = FileSystem::Instance()->OpenFile(filename+".mtl");
             if (!file)
             {
                 return kResourceErrorNoSuchResource;

@@ -55,7 +55,7 @@ Shader* ParticleRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return ResourceManager::Instance()->GetPool("default")->GetResource<ShaderResource>("/shaders/pb_texturedColor.shc")->GetShader();
+    return ResourceManager::Instance()->GetPool("default")->GetResource<ShaderResource>("/shaders/pb_texturedColor")->GetShader();
 }
 
 void ParticleRenderable::SetSystem(ParticleSystem* system)

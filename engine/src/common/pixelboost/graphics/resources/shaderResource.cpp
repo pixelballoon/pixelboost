@@ -25,7 +25,7 @@ ResourceError ShaderResource::ProcessResource(ResourcePool* pool, ResourceProces
     {
         case kResourceProcessLoad:
         {
-            auto file = FileSystem::Instance()->OpenFile(filename);
+            auto file = FileSystem::Instance()->OpenFile(filename+".shc");
             
             std::string contents;
             

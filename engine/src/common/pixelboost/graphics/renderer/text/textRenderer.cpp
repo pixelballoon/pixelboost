@@ -66,7 +66,7 @@ Shader* TextRenderable::GetShader()
     if (baseShader)
         return baseShader;
     
-    return ResourceManager::Instance()->GetPool("default")->GetResource<ShaderResource>("/shaders/pb_textured.shc")->GetShader();
+    return ResourceManager::Instance()->GetPool("default")->GetResource<ShaderResource>("/shaders/pb_textured")->GetShader();
 }
 
 void TextRenderable::SetFont(const std::string& font)
