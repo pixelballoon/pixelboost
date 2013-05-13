@@ -3,6 +3,7 @@
 #include <map>
 #include <memory>
 #include <mutex>
+#include <set>
 #include <string>
 #include <thread>
 #include <vector>
@@ -83,7 +84,9 @@ namespace pb
         void Process(ResourceState state, bool& handleVariable, std::thread** thread);
         void ProcessResource(std::shared_ptr<Resource> resource, bool& handleVariable);
         
+        void AddStateChange(Resource* resource);
         void AddDeletedResource(Resource* resource);
+        void Notify();
         void Purge();
         void PurgeResource(Resource* resource);
         
@@ -98,13 +101,17 @@ namespace pb
         std::thread* _ProcessingThread;
         std::thread* _PostProcessingThread;
         std::thread* _UnloadingThread;
+        
+        std::mutex _StateMutex;
 
         std::map<std::string, ResourcePool*> _Pools;
         std::map<Uid, ResourceCreator> _ResourceCreation;
+        std::set<Resource*> _StateResources;
         std::vector<Resource*> _DeletedResources;
         
         friend class ResourceHandleBase;
         friend class ResourcePool;
+        friend class Resource;
     };
 
 }

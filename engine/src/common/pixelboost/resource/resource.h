@@ -48,6 +48,8 @@ namespace pb
         static ResourceProcess GetProcessForState(ResourceState state);
         void SetState(ResourceState state);
         
+        void NotifyStateChange();
+        
     private:
         std::mutex _ProcessingMutex;
         

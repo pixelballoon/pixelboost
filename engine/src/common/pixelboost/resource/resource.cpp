@@ -138,6 +138,11 @@ void Resource::SetState(ResourceState state)
 {
     _State = state;
     
+    ResourceManager::Instance()->AddStateChange(this);
+}
+
+void Resource::NotifyStateChange()
+{
     if (_State == kResourceStateReady || _State == kResourceStateError)
     {
         SignalResourceLoaded(this, _State == kResourceStateError);

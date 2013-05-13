@@ -149,6 +149,8 @@ std::shared_ptr<Resource> ResourcePool::GetPending(ResourceState resourceState)
 
 void ResourcePool::ResourceDeallocator(Resource* resource)
 {
+    resource->_Pool->_CachedResources.erase(resource->_Filename);
+    resource->_Pool->_Resources.erase(resource->_Filename);
     ResourceManager::Instance()->AddDeletedResource(resource);
 }
 
@@ -183,10 +185,12 @@ ResourceManager::~ResourceManager()
 void ResourceManager::Update(float timeDelta)
 {
     Purge();
+    Notify();
     Process(kResourceStateLoading, _IsLoading, &_LoadingThread);
     Process(kResourceStateProcessing, _IsProcessing, &_ProcessingThread);
     Process(kResourceStatePostProcessing, _IsPostProcessing, &_PostProcessingThread);
     Process(kResourceStateUnloading, _IsUnloading, &_UnloadingThread);
+    Notify();
 }
 
 ResourcePool* ResourceManager::GetPool(const std::string& name)
@@ -257,6 +261,7 @@ void ResourceManager::Process(ResourceState state, bool& handleVariable, std::th
         }
         
         #ifndef PIXELBOOST_DISABLE_THREADING
+            // Note, we don't need to unlock this mutex as it's unlocked in ProcessResource once processing is complete
             if (resource && resource->_ProcessingMutex.try_lock())
             {
                 handleVariable = true;
@@ -284,27 +289,62 @@ void ResourceManager::ProcessResource(std::shared_ptr<Resource> resource, bool& 
     resource->_ProcessingMutex.unlock();
 }
 
+void ResourceManager::AddStateChange(Resource* resource)
+{
+    _StateMutex.lock();
+    _StateResources.insert(resource);
+    _StateMutex.unlock();
+}
+
 void ResourceManager::AddDeletedResource(Resource* resource)
 {
+    _StateMutex.lock();
     _DeletedResources.push_back(resource);
+    _StateMutex.unlock();
+}
+
+void ResourceManager::Notify()
+{
+    _StateMutex.lock();
+    for (const auto& state : _StateResources)
+    {
+        state->NotifyStateChange();
+    }
+    _StateResources.clear();
+    _StateMutex.unlock();
 }
 
 void ResourceManager::Purge()
 {
-    for (int i=0; i<_DeletedResources.size(); i++)
-    {
-        PurgeResource(_DeletedResources[i]);
-    }
+    _StateMutex.lock();
+    auto deleted = _DeletedResources;
     _DeletedResources.clear();
+    _StateMutex.unlock();
+
+    for (const auto& resource : deleted)
+    {
+        PurgeResource(resource);
+    }
 }
 
 void ResourceManager::PurgeResource(Resource *resource)
 {
     resource->_ProcessingMutex.lock();
-    PbLogDebug("pb.resource", "Purging resource %s", resource->_Filename.c_str());
+    
+    _StateMutex.lock();
+    _StateResources.erase(resource);
+    _StateMutex.unlock();
+    
+    // Because we're manually deleting here, we need to signal the resource unloading handlers
+    resource->SignalResourceUnloading(resource);
+    
+    PbLogDebug("pb.resource", "Purging resource (%s)", resource->_Filename.c_str());
+    
     std::string errorDetails;
     resource->ProcessResource(0, kResourceProcessUnload, "", errorDetails);
+    
     resource->_ProcessingMutex.unlock();
+    
     delete resource;
 }
 
