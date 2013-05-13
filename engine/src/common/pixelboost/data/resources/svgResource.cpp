@@ -29,6 +29,10 @@ public:
         kTokenTypeSmoothRelative,
         kTokenTypeLineToAbsolute,
         kTokenTypeLineToRelative,
+        kTokenTypeHorizontalToAbsolute,
+        kTokenTypeHorizontalToRelative,
+        kTokenTypeVerticalToAbsolute,
+        kTokenTypeVerticalToRelative,
         kTokenTypeNumber,
     };
     
@@ -289,6 +293,12 @@ bool PathTokenizer::Tokenize()
                 } else if (character == 'l')
                 {
                     _Tokens.push(Token(absolute?kTokenTypeLineToAbsolute:kTokenTypeLineToRelative));
+                } else if (character == 'h')
+                {
+                    _Tokens.push(Token(absolute?kTokenTypeHorizontalToAbsolute:kTokenTypeHorizontalToRelative));
+                } else if (character == 'v')
+                {
+                    _Tokens.push(Token(absolute?kTokenTypeVerticalToAbsolute:kTokenTypeVerticalToRelative));
                 } else if ((character >= '0' && character <= '9') || character == '-') {
                     _State = kStateNumber;
                     continue;
@@ -487,13 +497,67 @@ bool PathParser::Parse(SvgPath& path)
                 }
                 break;
             }
+            case PathTokenizer::kTokenTypeHorizontalToAbsolute:
+            {
+                if (numbers.size() == 1)
+                {
+                    Points.push_back(Point(_Position.x, _Position.y, _Position.x, _Position.y, numbers[0], _Position.y, numbers[0], _Position.y));
+                    _Position.x = numbers[0];
+                    numbers.clear();
+                }
+                break;
+            }
+            case PathTokenizer::kTokenTypeVerticalToAbsolute:
+            {
+                if (numbers.size() == 1)
+                {
+                    Points.push_back(Point(_Position.x, _Position.y, _Position.x, _Position.y, _Position.x, numbers[0], _Position.x, numbers[0]));
+                    _Position.y = numbers[0];
+                    numbers.clear();
+                }
+                break;
+            }
             case PathTokenizer::kTokenTypeLineToAbsolute:
             {
-                numbers.clear();
+                if (numbers.size() == 2)
+                {
+                    Points.push_back(Point(_Position.x, _Position.y, _Position.x, _Position.y, numbers[0], numbers[1], numbers[0], numbers[1]));
+                    _Position.x = numbers[0];
+                    _Position.y = numbers[1];
+                    numbers.clear();
+                }
+                break;
+            }
+            case PathTokenizer::kTokenTypeHorizontalToRelative:
+            {
+                if (numbers.size() == 1)
+                {
+                    Points.push_back(Point(_Position.x, _Position.y, _Position.x, _Position.y, _Position.x + numbers[0], _Position.y, _Position.x + numbers[0], _Position.y));
+                    _Position.x = _Position.x + numbers[0];
+                    numbers.clear();
+                }
+                break;
+            }
+            case PathTokenizer::kTokenTypeVerticalToRelative:
+            {
+                if (numbers.size() == 1)
+                {
+                    Points.push_back(Point(_Position.x, _Position.y, _Position.x, _Position.y, _Position.x, _Position.y + numbers[0], _Position.x, _Position.y + numbers[0]));
+                    _Position.y = _Position.y + numbers[0];
+                    numbers.clear();
+                }
+                break;
             }
             case PathTokenizer::kTokenTypeLineToRelative:
             {
-                numbers.clear();
+                if (numbers.size() == 2)
+                {
+                    Points.push_back(Point(_Position.x, _Position.y, _Position.x, _Position.y, _Position.x + numbers[0], _Position.y + numbers[1], _Position.x + numbers[0], _Position.y + numbers[1]));
+                    _Position.x = _Position.x + numbers[0];
+                    _Position.y = _Position.y + numbers[1];
+                    numbers.clear();
+                }
+                break;
             }
             default:
                 break;
