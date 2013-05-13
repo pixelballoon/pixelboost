@@ -605,6 +605,9 @@ void GraphicsDeviceGL::SetScissor(glm::vec4 scissor)
 
 void GraphicsDeviceGL::DrawElements(ElementType elementType, int num)
 {
+    if (num == 0)
+        return;
+    
     _CurrentState.UpdateAll(_DesiredState);
     
     GLuint type;
