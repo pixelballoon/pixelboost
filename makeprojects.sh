@@ -19,8 +19,8 @@ cd osx
 cmake -G Xcode ../../ -DPIXELBOOST_BUILD_PLATFORM_OSX=TRUE
 cd ..
 
-mkdir android
-cd android
+mkdir android_release
+cd android_release
 android create project --name pixelboost --target android-16 \
 	--package com.pixelballoon.pixelboost --activity PixelboostActivity \
 	--path .
@@ -39,16 +39,16 @@ cp -r ../../data assets
 cmake ../../ -DPIXELBOOST_BUILD_PLATFORM_ANDROID=TRUE -DANDROID_STL=gnustl_static -DLIBRARY_OUTPUT_PATH_ROOT="`pwd`" -DCMAKE_TOOLCHAIN_FILE=pixelboost/toolchain/android.toolchain.cmake -DCMAKE_BUILD_TYPE=Release
 cd ..
 
-mkdir emscripten
-cd emscripten
+mkdir emscripten_release
+cd emscripten_release
 cp -r ../../data ./
 cmake ../../ -DPIXELBOOST_BUILD_PLATFORM_EMSCRIPTEN=TRUE -DEMSCRIPTEN=1 -DCMAKE_TOOLCHAIN_FILE=$EMSCRIPTEN/cmake/Platform/Emscripten_unix.cmake -DCMAKE_MODULE_PATH=$EMSCRIPTEN/cmake -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles"
 cd ..
 
-mkdir emscripten_dbg
-cd emscripten_dbg
+mkdir emscripten_debug
+cd emscripten_debug
 cp -r ../../data ./
-cmake ../../ -DPIXELBOOST_BUILD_PLATFORM_EMSCRIPTEN=TRUE -DEMSCRIPTEN=1 -DCMAKE_TOOLCHAIN_FILE=$EMSCRIPTEN/cmake/Platform/Emscripten_unix.cmake -DCMAKE_MODULE_PATH=$EMSCRIPTEN/cmake -G "Unix Makefiles"
+cmake ../../ -DPIXELBOOST_BUILD_PLATFORM_EMSCRIPTEN=TRUE -DEMSCRIPTEN=1 -DCMAKE_TOOLCHAIN_FILE=$EMSCRIPTEN/cmake/Platform/Emscripten_unix.cmake -DCMAKE_MODULE_PATH=$EMSCRIPTEN/cmake -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles"
 cd ..
 
 cd ..
