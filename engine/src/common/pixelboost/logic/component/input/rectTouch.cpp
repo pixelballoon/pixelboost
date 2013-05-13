@@ -4,6 +4,7 @@
 #include "pixelboost/framework/engine.h"
 #include "pixelboost/graphics/camera/camera.h"
 #include "pixelboost/graphics/camera/viewport.h"
+#include "pixelboost/graphics/device/device.h"
 #include "pixelboost/logic/component/input/rectTouch.h"
 #include "pixelboost/logic/component/transform.h"
 #include "pixelboost/logic/message/debug/render.h"
@@ -16,12 +17,24 @@ using namespace pb;
 
 PB_DEFINE_COMPONENT(pb::RectTouchComponent)
 
+RectTouchComponent::TouchInfo::TouchInfo()
+{
+    
+}
+
+RectTouchComponent::TouchInfo::TouchInfo(glm::vec2 startScreenPosition, glm::vec2 startRelativePosition)
+{
+    StartScreenPosition = CurrentScreenPosition = startScreenPosition;
+    StartRelativePosition = CurrentRelativePosition = startRelativePosition;
+}
+
 RectTouchComponent::RectTouchComponent(Entity* parent, bool debugRender)
     : Component(parent)
     , _CaptureEvents(false)
     , _DebugRender(debugRender)
     , _MultiTouch(false)
     , _IsUiComponent(false)
+    , _PressDistance(1.f)
 {
     Engine::Instance()->GetTouchManager()->AddHandler(this);
     
@@ -170,7 +183,7 @@ bool RectTouchComponent::OnTouchMove(TouchEvent touch)
     {
         glm::vec2 touchPosition(result.second.x, result.second.y);
         
-        _Touches[touch.GetId()] = touchPosition;
+        _Touches[touch.GetId()].CurrentRelativePosition = touchPosition;
         
         TouchMoveMessage message(GetEntity(), this, touch.GetId(), touchPosition);
         GetScene()->SendMessage(GetEntityUid(), message);
@@ -189,9 +202,25 @@ bool RectTouchComponent::OnTouchUp(TouchEvent touch)
     
     auto result = plane.GetIntersection(ray);
     
-    RemoveTouch(touch);
-    
     glm::vec2 touchPosition(result.second.x, result.second.y);
+    
+    if (result.first)
+    {
+        glm::vec2 size = _Size/2.f;
+        
+        if (result.second.x > -size.x && result.second.x < size.x &&
+            result.second.y > -size.y && result.second.y < size.y)
+        {
+            glm::vec2 startPos = _Touches[touch.GetId()].StartScreenPosition;
+            if (glm::distance(touch.GetScreenPosition(), startPos) < (_PressDistance*pb::GraphicsDevice::Instance()->GetDisplayDensity()))
+            {
+                TouchPressedMessage message(GetEntity(), this, touch.GetId(), touchPosition);
+                GetScene()->SendMessage(GetEntityUid(), message);
+            }
+        }
+    }
+    
+    RemoveTouch(touch);
     
     TouchUpMessage message(GetEntity(), this, touch.GetId(), touchPosition);
     GetScene()->SendMessage(GetEntityUid(), message);
@@ -201,27 +230,27 @@ bool RectTouchComponent::OnTouchUp(TouchEvent touch)
 
 void RectTouchComponent::OnDebugRender(const pb::Message& message)
 {
-    for (std::map<int, glm::vec2>::iterator it = _Touches.begin(); it != _Touches.end(); ++it)
+    for (const auto& touch : _Touches)
     {
         auto debugRenderMessage = message.As<DebugRenderMessage>();
-        debugRenderMessage.GetDebugRenderSystem()->AddEllipse(pb::kRenderPassUi, 16, glm::vec3(it->second, 0.f), glm::vec3(0,0,0), glm::vec2(0.2,0.2));
-        debugRenderMessage.GetDebugRenderSystem()->AddEllipse(pb::kRenderPassUi, 16, glm::vec3(it->second, 0.f), glm::vec3(0,0,0), glm::vec2(3,3));
+        debugRenderMessage.GetDebugRenderSystem()->AddEllipse(pb::kRenderPassUi, 16, glm::vec3(touch.second.CurrentScreenPosition, 0.f), glm::vec3(0,0,0), glm::vec2(0.2,0.2));
+        debugRenderMessage.GetDebugRenderSystem()->AddEllipse(pb::kRenderPassUi, 16, glm::vec3(touch.second.CurrentScreenPosition, 0.f), glm::vec3(0,0,0), glm::vec2(3,3));
     }
 }
 
-bool RectTouchComponent::AddTouch(TouchEvent touch, glm::vec2 position)
+bool RectTouchComponent::AddTouch(TouchEvent touch, glm::vec2 relativePosition)
 {
     if (_Touches.size() && !_MultiTouch)
         return false;
     
-    _Touches[touch.GetId()] = position;
+    _Touches[touch.GetId()] = TouchInfo(touch.GetScreenPosition(), relativePosition);
     
     return true;
 }
 
 void RectTouchComponent::RemoveTouch(TouchEvent touch)
 {
-    std::map<int, glm::vec2>::iterator it = _Touches.find(touch.GetId());
+    auto it = _Touches.find(touch.GetId());
     if (it != _Touches.end())
         _Touches.erase(it);
 }

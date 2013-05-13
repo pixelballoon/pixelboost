@@ -65,3 +65,16 @@ TouchUpMessage::~TouchUpMessage()
 {
     
 }
+
+PB_DEFINE_MESSAGE(pb::TouchPressedMessage)
+
+TouchPressedMessage::TouchPressedMessage(Entity* entity, Component* component, int touchIndex, glm::vec2 touchPosition)
+    : TouchMessage(entity, component, touchIndex, touchPosition)
+{
+    
+}
+
+TouchPressedMessage::~TouchPressedMessage()
+{
+    
+}

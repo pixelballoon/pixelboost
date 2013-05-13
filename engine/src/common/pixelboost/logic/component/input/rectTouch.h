@@ -2,6 +2,8 @@
 
 #include <set>
 
+#include "glm/glm.hpp"
+
 #include "pixelboost/input/touchManager.h"
 #include "pixelboost/logic/component.h"
 #include "pixelboost/maths/plane.h"
@@ -29,6 +31,8 @@ namespace pb
         void SetMultiTouch(bool multiTouch);
         void SetIsUiComponent(bool isUiComponent);
         
+        void SetPressDistance(float distance);
+        
     private:
         Ray GetTouchRay(TouchEvent touch);
         Plane GetPlane();
@@ -41,7 +45,7 @@ namespace pb
         
         void OnDebugRender(const pb::Message& message);
         
-        bool AddTouch(TouchEvent touch, glm::vec2 position);
+        bool AddTouch(TouchEvent touch, glm::vec2 relativePosition);
         void RemoveTouch(TouchEvent touch);
         bool HasTouch(TouchEvent touch);
         
@@ -51,9 +55,23 @@ namespace pb
         bool _CaptureEvents;
         bool _MultiTouch;
         bool _IsUiComponent;
-        std::map<int, glm::vec2> _Touches;
+        
+        struct TouchInfo
+        {
+            TouchInfo();
+            TouchInfo(glm::vec2 startScreenPosition, glm::vec2 startRelativePosition);
+            
+            glm::vec2 StartScreenPosition;
+            glm::vec2 StartRelativePosition;
+            glm::vec2 CurrentScreenPosition;
+            glm::vec2 CurrentRelativePosition;
+        };
+        
+        std::map<int, TouchInfo> _Touches;
         
         bool _DebugRender;
+        
+        float _PressDistance;
     };
 
 }

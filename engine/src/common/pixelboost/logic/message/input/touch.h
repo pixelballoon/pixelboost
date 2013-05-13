@@ -53,4 +53,13 @@ class Viewport;
         virtual ~TouchUpMessage();
     };
     
+    class TouchPressedMessage : public TouchMessage
+    {
+        PB_DECLARE_MESSAGE
+        
+    public:
+        TouchPressedMessage(Entity* entity, Component* component, int touchIndex, glm::vec2 touchPosition);
+        virtual ~TouchPressedMessage();
+    };
+    
 }
