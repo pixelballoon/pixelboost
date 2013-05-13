@@ -1,6 +1,7 @@
 #pragma once
 
 #include "pixelboost/logic/component/graphics/renderable.h"
+#include "pixelboost/graphics/renderer/buffer/bufferRenderer.h"
 
 namespace pb
 {
