@@ -1,3 +1,4 @@
+#include "pixelboost/debug/log.h"
 #include "pixelboost/framework/engine.h"
 #include "pixelboost/graphics/message/color.h"
 #include "pixelboost/graphics/renderer/common/renderer.h"
@@ -85,7 +86,14 @@ void SpriteComponent::OnResourceLoaded(Resource* resource, bool error)
     {
         if (resource == _SpriteSheet.get())
         {
-            GetRenderable()->SetSprite(_SpriteSheet->GetSpriteSheet()->GetSprite(_SpriteName));
+            Sprite* sprite = _SpriteSheet->GetSpriteSheet()->GetSprite(_SpriteName);
+            
+            if (!sprite)
+            {
+                PbLogError("pb.graphics.component.sprite", "No sprite named %s on sheet %s", _SpriteName.c_str(), _SpriteSheet->GetFilename().c_str());
+            }
+            
+            GetRenderable()->SetSprite(sprite);
         }
     }
 }
