@@ -1,5 +1,6 @@
 #include "glm/gtc/matrix_transform.hpp"
 
+#include "pixelboost/debug/assert.h"
 #include "pixelboost/logic/component/transform.h"
 #include "pixelboost/logic/message/transform.h"
 #include "pixelboost/logic/entity.h"
@@ -38,7 +39,9 @@ const glm::mat4x4& TransformComponent::GetMatrix()
         
         if (GetEntity()->GetParent())
         {
-            _Matrix = GetEntity()->GetParent()->GetComponent<TransformComponent>()->GetMatrix() * _LocalMatrix;
+            pb::TransformComponent* parentTransform = GetEntity()->GetParent()->GetComponent<TransformComponent>();
+            PbAssert(parentTransform && "One or more parents are missing a transform component");
+            _Matrix = parentTransform->GetMatrix() * _LocalMatrix;
         }
     }
     
