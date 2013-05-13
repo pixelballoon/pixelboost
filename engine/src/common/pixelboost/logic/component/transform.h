@@ -31,6 +31,8 @@ namespace pb
         glm::vec3 GetScale();
         void SetScale(const glm::vec3& scale);
         
+        glm::vec3 GetWorldPosition();
+        
         void Dirty(bool dirtyThis);
         
     private:

@@ -95,6 +95,12 @@ void TransformComponent::SetScale(const glm::vec3& scale)
     Dirty(true);
 }
 
+glm::vec3 TransformComponent::GetWorldPosition()
+{
+    glm::vec4 position = _Matrix * glm::vec4(0,0,0,1);
+    return glm::vec3(position.x, position.y, position.z);
+}
+
 void TransformComponent::Dirty(bool dirtyThis)
 {
     if (_Dirty != kDirtyTypeThis)
