@@ -24,7 +24,6 @@ TextRenderer* TextRenderer::_Instance = 0;
 
 TextRenderable::TextRenderable()
 {
-    Offset = 0.f;
     Alignment = kFontAlignCenter;
     Size = 1.f;
     Tint = glm::vec4(1,1,1,1);
@@ -55,7 +54,6 @@ void TextRenderable::CalculateBounds()
 void TextRenderable::CalculateWorldMatrix()
 {
     glm::mat4x4 worldMatrix = glm::scale(glm::mat4x4(), glm::vec3(Size, Size, 1));
-    worldMatrix = glm::translate(worldMatrix, glm::vec3(Offset, 0, 0));
     worldMatrix = Transform * worldMatrix;
     SetWorldMatrix(worldMatrix);
 }
@@ -72,7 +70,7 @@ Shader* TextRenderable::GetShader()
 void TextRenderable::SetFont(const std::string& font)
 {
     Font = font;
-    CalculateOffset();
+    Dirty();
 }
 
 const std::string& TextRenderable::GetFont()
@@ -83,7 +81,7 @@ const std::string& TextRenderable::GetFont()
 void TextRenderable::SetText(const std::string& text)
 {
     Text = text;
-    CalculateOffset();
+    Dirty();
 }
 
 const std::string& TextRenderable::GetText()
@@ -104,7 +102,7 @@ const glm::vec4& TextRenderable::GetTint()
 void TextRenderable::SetSize(float size)
 {
     Size = size;
-    CalculateOffset();
+    Dirty();
 }
 
 float TextRenderable::GetSize()
@@ -127,7 +125,7 @@ const glm::mat4x4& TextRenderable::GetTransform()
 void TextRenderable::SetAlignment(FontAlign alignment)
 {
     Alignment = alignment;
-    CalculateOffset();
+    Dirty();
 }
 
 FontAlign TextRenderable::GetAlignment()
@@ -135,68 +133,68 @@ FontAlign TextRenderable::GetAlignment()
     return Alignment;
 }
 
-void TextRenderable::CalculateOffset()
+void TextRenderable::Dirty()
 {
-    Offset = TextRenderer::Instance()->MeasureString(Font, Text, 1.f).x;
-    
-    switch (Alignment) {
-        case kFontAlignLeft:
-            Offset = 0;
-            break;
-        case kFontAlignCenter:
-            Offset = -Offset/2.f;
-            break;
-        case kFontAlignRight:
-            Offset = -Offset;
-            break;
-    }
-    
     DirtyWorldMatrix();
     DirtyBounds();
 }
 
-int Font::FillVertices(Vertex_P3_C4_UV* vertices, const std::string& string, int maxVertices, glm::vec4 color, const glm::mat4x4& transform, glm::vec2* measuredSize)
+int Font::FillVertices(Vertex_P3_C4_UV* vertices, FontAlign alignment, const std::string& string, int maxVertices, glm::vec4 color, const glm::mat4x4& transform, glm::vec2* measuredSize)
 {
     wstring wideString = UTF8toUTF32(string);
+    
+    std::vector<uint32_t*> lines;
     
     int numCharacters = 0;
     
     float maxLineHeight = 0.f;
     float maxLineLength = 0.f;
-    float offsetX = 0.f;
     float offsetY = 0.f;
+    
+    uint32_t* start = &wideString[0];
+    float lineLength = 0.f;
+    
     for (int i=0; i<wideString.length(); i++)
     {
         if (wideString[i] == '\n')
         {
-            maxLineLength = glm::max(offsetX, maxLineLength);
-            offsetX = 0.f;
+            uint32_t* end = &wideString[i];
+            
+            int charCount = AddCharacters(vertices, alignment, lineLength, start, end, offsetY, base, color, transform);
+            
+            vertices += charCount * 4;
+            numCharacters += charCount;
+            
+            maxLineLength = glm::max(lineLength, maxLineLength);
             offsetY -= 1.f;
+            lineLength = 0.f;
+            start = end+1;
         } else {
             std::map<uint32_t, Font::Character>::iterator charIt = chars.find(wideString[i]);
             
             if (charIt == chars.end())
                 continue;
             
-            AddCharacter(vertices, charIt->second, glm::vec2(offsetX, offsetY), base, color, transform);
-            
-            vertices += 4;
-            numCharacters++;
-            
-            maxLineHeight = glm::max(charIt->second.height, maxLineHeight);
-            offsetX += charIt->second.xAdvance;
+            lineLength += charIt->second.xAdvance;
             
             if (i<wideString.length()-1)
             {
                 std::map<std::pair<uint32_t, uint32_t>, float>::iterator kerningIt = kerning.find(std::pair<uint32_t, uint32_t>(wideString[i], wideString[i+1]));
                 
                 if (kerningIt != kerning.end())
-                    offsetX += kerningIt->second;
+                {
+                    lineLength += kerningIt->second;
+                }
             }
         }
     }
     
-    maxLineLength = glm::max(offsetX, maxLineLength);
+    maxLineLength = glm::max(lineLength, maxLineLength);
+    
+    if (start < &wideString[0]+wideString.length())
+    {
+        numCharacters += AddCharacters(vertices, alignment, lineLength, start, &wideString[wideString.length()-1], offsetY, base, color, transform);
+    }
     
     if (measuredSize)
     {
@@ -260,6 +258,57 @@ void Font::AddCharacter(Vertex_P3_C4_UV* buffer, const Font::Character& characte
     buffer[3].uv[0] = character.uvx + character.uvu;
     buffer[3].uv[1] = character.uvy + character.uvv;
 }
+
+
+int Font::AddCharacters(Vertex_P3_C4_UV* buffer, FontAlign alignment, float lineLength, uint32_t* start, uint32_t* end, float offsetY, float baseline, glm::vec4 color, const glm::mat4x4& transform)
+{
+    int numCharacters = 0;
+    
+    float offsetX;
+    
+    switch (alignment)
+    {
+        case kFontAlignLeft:
+            offsetX = 0.f;
+            break;
+        case kFontAlignCenter:
+            offsetX = -lineLength/2.f;
+            break;
+        case kFontAlignRight:
+            offsetX = -lineLength;
+            break;
+    }
+    
+    glm::vec2 position(offsetX, offsetY);
+    
+    for (uint32_t* character = start; character <= end; character++)
+    {
+        std::map<uint32_t, Font::Character>::iterator charIt = chars.find(*character);
+        
+        if (charIt == chars.end())
+            continue;
+        
+        numCharacters++;
+
+        AddCharacter(buffer, charIt->second, position, baseline, color, transform);
+        buffer += 4;
+        
+        position.x += charIt->second.xAdvance;
+        
+        if (character < end)
+        {
+            std::map<std::pair<uint32_t, uint32_t>, float>::iterator kerningIt = kerning.find(std::pair<uint32_t, uint32_t>(*character, *(character+1)));
+            
+            if (kerningIt != kerning.end())
+            {
+                position.x += kerningIt->second;
+            }
+        }
+    }
+    
+    return numCharacters;
+}
+
 
 TextRenderer::TextRenderer(int maxCharacters)
     : _MaxCharacters(maxCharacters)
@@ -331,7 +380,7 @@ Font* TextRenderer::LoadFont(const std::string& name, const std::string& filenam
     }
 
     std::string fntFilename = filename + modifier + ".fnt";
-    auto file = pb::FileSystem::Instance()->OpenFile(fntFilename);
+    auto file = FileSystem::Instance()->OpenFile(fntFilename);
     
     std::string fontContents;
     
@@ -472,8 +521,8 @@ void TextRenderer::Render(int count, Renderable** renderables, Uid renderScheme,
         font = fontIt->second;
         
         _VertexBuffer->Lock();
-        pb::Vertex_P3_C4_UV* vertices = static_cast<pb::Vertex_P3_C4_UV*>(_VertexBuffer->GetData());
-        int numElements = font->FillVertices(vertices, renderable.Text, _VertexBuffer->GetMaxSize());
+        Vertex_P3_C4_UV* vertices = static_cast<Vertex_P3_C4_UV*>(_VertexBuffer->GetData());
+        int numElements = font->FillVertices(vertices, renderable.Alignment, renderable.Text, _VertexBuffer->GetMaxSize());
         _VertexBuffer->Unlock(numElements);
         
         GraphicsDevice::Instance()->BindVertexBuffer(_VertexBuffer);
@@ -522,7 +571,7 @@ glm::vec2 TextRenderer::MeasureString(const std::string& name, const std::string
     float offsetX = 0.f;
     float offsetY = 0.f;
     
-    wstring wideString = pb::UTF8toUTF32(string);
+    wstring wideString = UTF8toUTF32(string);
     
     for (int i=0; i<wideString.length(); i++)
     {

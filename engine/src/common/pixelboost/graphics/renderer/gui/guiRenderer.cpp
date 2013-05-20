@@ -431,7 +431,7 @@ void GuiRenderer::Render(int count, Renderable** renderables, Uid renderScheme, 
                     {
                         _FontTexture = font->texture;
                         
-                        int numElements = font->FillVertices(&_VertexData[_VertexCount], text->String, _MaxVertices-_VertexCount,
+                        int numElements = font->FillVertices(&_VertexData[_VertexCount], pb::kFontAlignLeft, text->String, _MaxVertices-_VertexCount,
                              glm::vec4(text->Color[0], text->Color[1], text->Color[2], text->Color[3]),
                              pb::CreateTransformMatrix(pb::kRotationOrder_XYZ, glm::vec3(text->Position[0], -text->Position[1]-text->Size, 0.f), glm::vec3(0,0,0), glm::vec3(text->Size,text->Size,1.f)));
                         _VertexCount += numElements;

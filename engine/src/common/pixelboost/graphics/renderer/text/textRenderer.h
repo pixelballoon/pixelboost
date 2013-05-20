@@ -58,9 +58,8 @@ namespace pb
         FontAlign GetAlignment();
         
     private:
-        void CalculateOffset();
+        void Dirty();
         
-        float Offset;
         std::string Font;
         std::string Text;
         glm::mat4x4 Transform;
@@ -94,10 +93,11 @@ namespace pb
         std::map<uint32_t, Character> chars;
         std::map<std::pair<uint32_t, uint32_t>, float> kerning;
         
-        int FillVertices(Vertex_P3_C4_UV* vertices, const std::string& string, int maxVertices, glm::vec4 color = glm::vec4(1,1,1,1), const glm::mat4x4& transform = glm::mat4x4(), glm::vec2* measuredSize = 0);
+        int FillVertices(Vertex_P3_C4_UV* vertices, FontAlign fontAlignment, const std::string& string, int maxVertices, glm::vec4 color = glm::vec4(1,1,1,1), const glm::mat4x4& transform = glm::mat4x4(), glm::vec2* measuredSize = 0);
         
     private:
         void AddCharacter(Vertex_P3_C4_UV* buffer, const Font::Character& character, glm::vec2 offset, float baseline, glm::vec4 color, const glm::mat4x4& transform);
+        int AddCharacters(Vertex_P3_C4_UV* buffer, FontAlign alignment, float lineLength, uint32_t* start, uint32_t* end, float offsetY, float baseline, glm::vec4 color, const glm::mat4x4& transform);
     };
     
     class TextRenderer : public IRenderer
