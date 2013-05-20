@@ -75,11 +75,25 @@ void PhysicsSystem2D::BeginContact(b2Contact* contact)
     pb::PhysicsComponent* actorA = static_cast<pb::PhysicsComponent*>(a->GetUserData());
     pb::PhysicsComponent* actorB = static_cast<pb::PhysicsComponent*>(b->GetUserData());
     
-    b2WorldManifold worldManifold;
-    contact->GetWorldManifold(&worldManifold);
+    glm::vec2 position;
+    glm::vec2 normal;
     
-    glm::vec2 position(worldManifold.points[0].x, worldManifold.points[0].y);
-    glm::vec2 normal(worldManifold.normal.x, worldManifold.normal.y);
+    if (contact->GetManifold()->pointCount)
+    {
+        b2WorldManifold worldManifold;
+        contact->GetWorldManifold(&worldManifold);
+
+        for (int i=0; i<contact->GetManifold()->pointCount; i++)
+        {
+            position += glm::vec2(worldManifold.points[i].x, worldManifold.points[i].y);
+        }
+        position /= contact->GetManifold()->pointCount;
+        
+        normal = glm::vec2(worldManifold.normal.x, worldManifold.normal.y);
+    } else {
+        // If there are no manifold points (because one of the items is a sensor), use the average of the distance between the two items as a collision point
+        position = (glm::vec2(a->GetTransform().p.x, a->GetTransform().p.y) + glm::vec2(b->GetTransform().p.x, b->GetTransform().p.y))/2.f;
+    }
     
     pb::Scene* scene = actorA->GetScene();
     
