@@ -127,7 +127,7 @@ const glm::vec4& TrailComponent::GetTint()
     return _Tint;
 }
 
-void TrailComponent::SetMaterial(const std::string& resource, const std::string& pool)
+void TrailComponent::SetMaterial(const std::string& resource)
 {
     if (_Material)
     {
@@ -135,7 +135,7 @@ void TrailComponent::SetMaterial(const std::string& resource, const std::string&
         _Material->SignalResourceUnloading.Disconnect(this, &TrailComponent::OnResourceUnloading);
     }
     
-    _Material = ResourceManager::Instance()->GetPool(pool)->GetResource<MaterialResource>(resource);
+    _Material = ResourceManager::Instance()->GetPool("default")->GetResource<MaterialResource>(resource);
     _Material->SignalResourceLoaded.Connect(this, &TrailComponent::OnResourceLoaded);
     _Material->SignalResourceUnloading.Connect(this, &TrailComponent::OnResourceUnloading);
     

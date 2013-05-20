@@ -46,12 +46,12 @@ glm::vec2 SpriteComponent::GetSize()
     return glm::vec2(0,0);
 }
 
-void SpriteComponent::SetSprite(const std::string& filename, const std::string& sprite, const std::string& pool)
+void SpriteComponent::SetSprite(const std::string& filename, const std::string& sprite)
 {
     _SpriteName = sprite;
     SetSprite(0);
     
-    _SpriteSheet = pb::ResourceManager::Instance()->GetPool(pool)->GetResource<pb::SpriteSheetResource>(filename);
+    _SpriteSheet = pb::ResourceManager::Instance()->GetPool("default")->GetResource<pb::SpriteSheetResource>(filename);
     _SpriteSheet->SignalResourceLoaded.Connect(this, &SpriteComponent::OnResourceLoaded);
     _SpriteSheet->SignalResourceUnloading.Connect(this, &SpriteComponent::OnResourceUnloading);
     

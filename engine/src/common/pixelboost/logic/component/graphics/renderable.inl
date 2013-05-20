@@ -81,7 +81,7 @@ template <class T> void RenderableComponent<T>::SetLocalTransform(const glm::mat
     UpdateTransform();
 }
 
-template <class T> void RenderableComponent<T>::SetMaterial(const std::string& filename, const std::string& pool)
+template <class T> void RenderableComponent<T>::SetMaterial(const std::string& filename)
 {
     if (_Material)
     {
@@ -90,7 +90,7 @@ template <class T> void RenderableComponent<T>::SetMaterial(const std::string& f
         _Material->SignalResourceUnloading.Disconnect(this, &RenderableComponent<T>::OnResourceUnloading);
     }
 
-    auto material = ResourceManager::Instance()->GetPool(pool)->GetResource<MaterialResource>(filename);
+    auto material = ResourceManager::Instance()->GetPool("default")->GetResource<MaterialResource>(filename);
     _Material = material;
     _Material->SignalResourceLoaded.Connect(this, &RenderableComponent<T>::OnResourceLoaded);
     _Material->SignalResourceUnloading.Connect(this, &RenderableComponent<T>::OnResourceUnloading);

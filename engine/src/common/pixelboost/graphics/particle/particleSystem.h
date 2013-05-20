@@ -296,7 +296,7 @@ namespace pb
     public:
         ParticleSystem* GetSystem();
         
-        void SetSpriteSheet(const std::string& filename, const std::string& pool = "default");
+        void SetSpriteSheet(const std::string& filename);
         void SetUseGlobalTime(bool useGlobalTime);
         
     private:

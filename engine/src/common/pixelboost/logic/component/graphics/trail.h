@@ -38,7 +38,7 @@ namespace pb
         void SetTint(const glm::vec4& tint);
         const glm::vec4& GetTint();
         
-        void SetMaterial(const std::string& file, const std::string& pool = "default");
+        void SetMaterial(const std::string& file);
         std::shared_ptr<MaterialResource> GetMaterial();
         
         BufferRenderable* GetRenderable();

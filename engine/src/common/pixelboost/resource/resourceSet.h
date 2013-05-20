@@ -15,7 +15,7 @@ namespace pb
         ResourceSet();
         ~ResourceSet();
         
-        template<typename T> std::shared_ptr<T> AddResource(const std::string& resource, const std::string& pool = "default");
+        template<typename T> std::shared_ptr<T> AddResource(const std::string& resource);
         
         bool IsLoaded();
         float GetProgress();

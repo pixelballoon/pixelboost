@@ -34,7 +34,7 @@ namespace pb
         const glm::mat4x4& GetLocalTransform() const;
         void SetLocalTransform(const glm::mat4x4& localTransform);
         
-        void SetMaterial(const std::string& filename, const std::string& pool = "default");
+        void SetMaterial(const std::string& filename);
         std::shared_ptr<MaterialResource> GetMaterial();
         
     private:

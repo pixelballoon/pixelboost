@@ -27,7 +27,7 @@ namespace pb
         
         glm::vec2 GetSize();
         
-        void SetSprite(const std::string& file, const std::string& sprite, const std::string& pool = "default");
+        void SetSprite(const std::string& file, const std::string& sprite);
         void SetSprite(Sprite* sprite);
         
     private:

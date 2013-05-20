@@ -338,9 +338,9 @@ ParticleSystem* ParticleComponent::GetSystem()
     return _System;
 }
 
-void ParticleComponent::SetSpriteSheet(const std::string& filename, const std::string& pool)
+void ParticleComponent::SetSpriteSheet(const std::string& filename)
 {
-    _SpriteSheet = ResourceManager::Instance()->GetPool(pool)->GetResource<SpriteSheetResource>(filename);
+    _SpriteSheet = ResourceManager::Instance()->GetPool("default")->GetResource<SpriteSheetResource>(filename);
     _SpriteSheet->SignalResourceLoaded.Connect(this, &ParticleComponent::OnResourceLoaded);
     _SpriteSheet->SignalResourceUnloading.Connect(this, &ParticleComponent::OnResourceUnloading);
     
