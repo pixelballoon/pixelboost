@@ -167,7 +167,7 @@ ResourceError SvgResource::Load(const std::string& filename)
 {
     std::string data;
     
-    auto file = pb::FileSystem::Instance()->OpenFile(filename, pb::kFileModeRead);
+    auto file = pb::FileSystem::Instance()->OpenFile(filename + ".svg", pb::kFileModeRead);
     
     if (!file)
     {
@@ -215,19 +215,26 @@ bool SvgResource::ParseGroup(const std::string& name)
         if (!parser.Parse(path))
             return false;
         
-        if (parser.Points.size() > 1)
+        if (parser.Points.size() > 0)
         {
-            auto pointA = parser.Points[0];
-            auto pointB = parser.Points[1];
-            glm::vec2 pos = glm::vec2(pointA.x1, pointA.y1);
-            path.Curve.AddPoint(HermiteCurve2D::Point(pos, glm::vec2(0,0), (glm::vec2(pointB.cx1, pointB.cy1)-pos)*3.f));
+            auto point = parser.Points[0];
+            glm::vec2 pos = glm::vec2(point.x1, point.y1);
+            path.Curve.AddPoint(HermiteCurve2D::Point(pos, glm::vec2(0,0), (glm::vec2(point.cx1, point.cy1)-pos)*3.f));
         }
+
         for (int i=0; i<parser.Points.size()-1; i++)
         {
             auto pointA = parser.Points[i];
             auto pointB = parser.Points[i+1];
             glm::vec2 pos = glm::vec2(pointB.x1, pointB.y1);
             path.Curve.AddPoint(HermiteCurve2D::Point(pos, (glm::vec2(pointA.cx2, pointA.cy2)-pos)*3.f, (glm::vec2(pointB.cx1, pointB.cy1)-pos)*3.f));
+        }
+        
+        if (parser.Points.size() > 1)
+        {
+            auto point = parser.Points[parser.Points.size()-1];
+            glm::vec2 pos = glm::vec2(point.x2, point.y2);
+            path.Curve.AddPoint(HermiteCurve2D::Point(pos, (glm::vec2(point.cx2, point.cy2)-pos)*3.f, glm::vec2(0,0)));
         }
         
         group.Paths.push_back(path);
