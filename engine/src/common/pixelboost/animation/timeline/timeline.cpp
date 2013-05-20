@@ -56,7 +56,7 @@ void Timeline::AddLabel(const std::string& name, float time)
 void Timeline::OnUpdate(float time, float delta)
 {
     auto start = std::lower_bound(_Elements.begin(), _Elements.end(), time - delta, [](const TimelineElement* element, float time) {return element->GetStartTime() < time;} );
-    auto end = std::upper_bound(_Elements.begin(), _Elements.end(), time, [](float time, const TimelineElement* element) {return time < element->GetStartTime();} );
+    auto end = std::upper_bound(_Elements.begin(), _Elements.end(), time, [](float time, const TimelineElement* element) {return time <= element->GetStartTime();} );
     
     auto it = start;
     
