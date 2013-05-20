@@ -14,6 +14,7 @@ TimelineComponent::TimelineComponent(Entity* parent)
     _Timeline = new Timeline();
     _UseGlobalTime = false;
     _IsPlaying = false;
+    _IsLooping = false;
     
     GetEntity()->RegisterMessageHandler<UpdateMessage>(MessageHandler(this, &TimelineComponent::OnUpdate));
 }
@@ -35,6 +36,16 @@ void TimelineComponent::Play()
     _Timeline->Play();
 }
 
+void TimelineComponent::Stop()
+{
+    _Timeline->Stop();
+}
+
+void TimelineComponent::SetLooping(bool looping)
+{
+    _IsLooping = looping;
+}
+
 void TimelineComponent::SetUseGlobalTime(bool useGlobalTime)
 {
     _UseGlobalTime = useGlobalTime;
@@ -54,6 +65,14 @@ void TimelineComponent::OnUpdate(const Message& message)
     
     if (!_Timeline->IsPlaying() && _IsPlaying)
     {
-        GetEntity()->SendMessage(TimelineStoppedMessage(GetEntity(), this));
+        if (_IsLooping)
+        {
+            _Timeline->Reset();
+            _Timeline->Play();
+        } else
+        {
+            _IsPlaying = false;
+            GetEntity()->SendMessage(TimelineStoppedMessage(GetEntity(), this));
+        }
     }
 }

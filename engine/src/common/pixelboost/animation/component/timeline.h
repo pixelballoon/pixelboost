@@ -18,14 +18,17 @@ namespace pb
         
         Timeline* GetTimeline();
         void Play();
+        void Stop();
         
+        void SetLooping(bool looping);
         void SetUseGlobalTime(bool useGlobalTime);
 
     private:
         void OnUpdate(const Message& message);
         
         Timeline* _Timeline;
-        
+
+        bool _IsLooping;
         bool _IsPlaying;
         bool _UseGlobalTime;
     };
