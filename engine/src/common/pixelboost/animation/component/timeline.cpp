@@ -21,6 +21,8 @@ TimelineComponent::TimelineComponent(Entity* parent)
 TimelineComponent::~TimelineComponent()
 {
     GetEntity()->UnregisterMessageHandler<UpdateMessage>(MessageHandler(this, &TimelineComponent::OnUpdate));
+    
+    delete _Timeline;
 }
 
 Timeline* TimelineComponent::GetTimeline()

@@ -212,6 +212,10 @@ GuiRenderer::GuiRenderer()
 
 GuiRenderer::~GuiRenderer()
 {
+    GraphicsDevice::Instance()->DestroyIndexBuffer(_LineIndexBuffer);
+    GraphicsDevice::Instance()->DestroyIndexBuffer(_TriangleIndexBuffer);
+    GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
+
     _Instance = 0;
 }
 

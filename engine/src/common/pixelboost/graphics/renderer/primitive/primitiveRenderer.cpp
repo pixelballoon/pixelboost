@@ -296,6 +296,15 @@ PrimitiveRenderer::PrimitiveRenderer()
     
 PrimitiveRenderer::~PrimitiveRenderer()
 {
+    GraphicsDevice::Instance()->DestroyIndexBuffer(_BoxIndexBuffer);
+    GraphicsDevice::Instance()->DestroyVertexBuffer(_BoxVertexBuffer);
+    
+    GraphicsDevice::Instance()->DestroyIndexBuffer(_EllipseIndexBuffer);
+    GraphicsDevice::Instance()->DestroyVertexBuffer(_EllipseVertexBuffer);
+    
+    GraphicsDevice::Instance()->DestroyIndexBuffer(_LineIndexBuffer);
+    GraphicsDevice::Instance()->DestroyVertexBuffer(_LineVertexBuffer);
+    
     _Instance = 0;
 }
 

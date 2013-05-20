@@ -65,6 +65,11 @@ TrailComponent::~TrailComponent()
     }
     
     GetScene()->GetSystemByType<RenderSystem>()->RemoveItem(_Renderable);
+    
+    GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
+    GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
+    
+    delete _Renderable;
 }
 
 void TrailComponent::SetMinDistance(float minDistance)

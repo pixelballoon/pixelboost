@@ -211,6 +211,9 @@ ParticleSystemDefinition::ParticleSystemDefinition()
     
     Emitter = 0;
     
+    SubSystemCreate = 0;
+    SubSystemDeath = 0;
+    
     ModifierColor = 0;
     ModifierScale = 0;
     ModifierVelocity = 0;
@@ -229,6 +232,12 @@ ParticleSystemDefinition::~ParticleSystemDefinition()
     if (Emitter)
         delete Emitter;
     
+    if (SubSystemCreate)
+        delete SubSystemCreate;
+    
+    if (SubSystemDeath)
+        delete SubSystemDeath;
+    
     if (ModifierColor)
         delete ModifierColor;
     
@@ -237,6 +246,12 @@ ParticleSystemDefinition::~ParticleSystemDefinition()
     
     if (ModifierVelocity)
         delete ModifierVelocity;
+    
+    if (RenderMesh)
+        delete RenderMesh;
+    
+    if (RenderSprite)
+        delete RenderSprite;
 }
 
 ParticleSystem::ParticleSystem()
@@ -306,6 +321,9 @@ ParticleComponent::ParticleComponent(Entity* parent)
 
 ParticleComponent::~ParticleComponent()
 {
+    GetRenderable()->SetSystem(0);
+    delete _System;
+    
     if (_SpriteSheet)
     {
         _SpriteSheet->SignalResourceLoaded.Disconnect(this, &ParticleComponent::OnResourceLoaded);
