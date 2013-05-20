@@ -106,6 +106,15 @@ TimelineCurveSVG::TimelineCurveSVG(Scene* scene, Uid entityId, float length, con
     }
 }
 
+TimelineCurveSVG::~TimelineCurveSVG()
+{
+    if (_Resource)
+    {
+        _Resource->SignalResourceLoaded.Disconnect(this, &TimelineCurveSVG::OnResourceLoaded);
+        _Resource->SignalResourceUnloading.Disconnect(this, &TimelineCurveSVG::OnResourceUnloading);
+    }
+}
+
 void TimelineCurveSVG::OnResourceLoaded(Resource* resource, bool error)
 {
     if (error)

@@ -55,6 +55,7 @@ namespace pb
     public:
         TimelineCurveSVG(Entity* entity, float length, const std::string& resource, Easing easing = Easing::Linear(), const std::string& pool = "default");
         TimelineCurveSVG(Scene* scene, Uid entityId, float length, const std::string& resource, Easing easing = Easing::Linear(), const std::string& pool = "default");
+        ~TimelineCurveSVG();
         
     private:
         void OnResourceLoaded(Resource* resource, bool error);
