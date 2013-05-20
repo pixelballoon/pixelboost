@@ -9,8 +9,9 @@ using namespace pb;
 
 TextureGL::TextureGL(GraphicsDeviceGL* device)
     : _Device(device)
+    , _Texture(0)
 {
-    
+    glGenTextures(1, &_Texture);
 }
 
 TextureGL::~TextureGL()
@@ -23,13 +24,11 @@ bool TextureGL::LoadFromBytes(const unsigned char* data, int width, int height, 
     if (!Texture::LoadFromBytes(data, width, height, createMips, format))
         return false;
 
-    if (format != kTextureFormatRGBA && format != kTextureFormatRGB)
+    if (format != kTextureFormatRGBA && format != kTextureFormatBGRA && format != kTextureFormatRGB)
     {
-        PbLogWarn("graphics.texture", "Only RGB and RGBA texture formats are currently supported!");
+        PbLogWarn("graphics.texture", "Only RGBA, BGRA and RGB texture formats are currently supported!");
         return false;
     }
-    
-    glGenTextures(1, &_Texture);
     
     Texture* previousTexture = _Device->BindTexture(0, this, true);
     
@@ -50,10 +49,13 @@ bool TextureGL::LoadFromBytes(const unsigned char* data, int width, int height, 
     switch (format)
     {
         case Texture::kTextureFormatRGB:
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, &data[0]);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
             break;
         case Texture::kTextureFormatRGBA:
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+            break;
+        case Texture::kTextureFormatBGRA:
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
             break;
     }
 

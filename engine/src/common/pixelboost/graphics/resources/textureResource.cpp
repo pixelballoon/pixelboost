@@ -141,9 +141,9 @@ bool TextureResource::Decode(const std::string& filename)
         {
             for (int x=0; x<_Width; x++)
             {
-                decodedTemp[0] = rgbTemp[0];
+                decodedTemp[2] = rgbTemp[0];
                 decodedTemp[1] = rgbTemp[1];
-                decodedTemp[2] = rgbTemp[2];
+                decodedTemp[0] = rgbTemp[2];
                 decodedTemp[3] = *alphaTemp;
                 
                 decodedTemp += 4;
@@ -189,13 +189,13 @@ bool TextureResource::Upload()
     
     if (_DecodedCustom)
     {
-        status = _Texture->LoadFromBytes(_DecodedCustom, _Width, _Height, _CreateMips, Texture::kTextureFormatRGBA);
+        status = _Texture->LoadFromBytes(_DecodedCustom, _Width, _Height, _CreateMips, Texture::kTextureFormatBGRA);
         
         delete[] _DecodedCustom;
         _DecodedCustom = 0;
     } else if (_DecodedSTB)
     {
-        status = _Texture->LoadFromBytes(_DecodedSTB, _Width, _Height, _CreateMips, _Components == 3 ? Texture::kTextureFormatRGB : Texture::kTextureFormatRGBA);
+        status = _Texture->LoadFromBytes(_DecodedSTB, _Width, _Height, _CreateMips, _Components == 3 ? Texture::kTextureFormatRGB : Texture::kTextureFormatBGRA);
         
         stbi_image_free(_DecodedSTB);
         _DecodedSTB = 0;

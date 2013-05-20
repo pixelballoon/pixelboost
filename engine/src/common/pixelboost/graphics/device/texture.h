@@ -21,6 +21,7 @@ public:
     {
         kTextureFormatRGB,
         kTextureFormatRGBA,
+        kTextureFormatBGRA,
     };
     
     virtual bool LoadFromBytes(const unsigned char* data, int width, int height, bool createMips, TextureFormat format);

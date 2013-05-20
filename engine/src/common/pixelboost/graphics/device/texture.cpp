@@ -93,9 +93,9 @@ bool Texture::LoadFromFile(const std::string& path, bool createMips)
         {
             for (int x=0; x<width; x++)
             {
-                decodedTemp[0] = rgbTemp[0];
+                decodedTemp[2] = rgbTemp[0];
                 decodedTemp[1] = rgbTemp[1];
-                decodedTemp[2] = rgbTemp[2];
+                decodedTemp[0] = rgbTemp[2];
                 decodedTemp[3] = *alphaTemp;
                 
                 decodedTemp += 4;
@@ -107,7 +107,7 @@ bool Texture::LoadFromFile(const std::string& path, bool createMips)
         stbi_image_free(decodedRgb);
         stbi_image_free(decodedAlpha);
         
-        status = LoadFromBytes(decoded, width, height, createMips, kTextureFormatRGBA);
+        status = LoadFromBytes(decoded, width, height, createMips, kTextureFormatBGRA);
         
         delete[] decoded;
     } else {
@@ -137,7 +137,7 @@ bool Texture::LoadFromFile(const std::string& path, bool createMips)
             }
         }
         
-        status = LoadFromBytes(decoded, width, height, createMips, components == 3 ? kTextureFormatRGB : kTextureFormatRGBA);
+        status = LoadFromBytes(decoded, width, height, createMips, components == 3 ? kTextureFormatRGB : kTextureFormatBGRA);
         
         stbi_image_free(decoded);
     }
