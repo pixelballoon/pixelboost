@@ -124,9 +124,12 @@ void BufferRenderer::Render(int count, Renderable** renderables, Uid renderSchem
         
         shaderPass->GetShaderProgram()->SetUniform("PB_ModelViewMatrix", renderable.GetModelViewMatrix());
         
-        GraphicsDevice::Instance()->BindIndexBuffer(renderable._IndexBuffer);
-        GraphicsDevice::Instance()->BindVertexBuffer(renderable._VertexBuffer);
-        GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, renderable._NumElements);
+        if (renderable._IndexBuffer && renderable._VertexBuffer && renderable._NumElements)
+        {
+            GraphicsDevice::Instance()->BindIndexBuffer(renderable._IndexBuffer);
+            GraphicsDevice::Instance()->BindVertexBuffer(renderable._VertexBuffer);
+            GraphicsDevice::Instance()->DrawElements(GraphicsDevice::kElementTriangles, renderable._NumElements);
+        }
     }
     
     GraphicsDevice::Instance()->BindIndexBuffer(0);
