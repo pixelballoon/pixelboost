@@ -19,7 +19,6 @@ PB_DEFINE_COMPONENT(pb::CurveComponent)
 CurveComponent::CurveComponent(Entity* parent)
     : RenderableComponent<BufferRenderable>(parent)
 {
-    _Curve = 0;
     _LengthScale = 1.f;
     _MinDistance = 1.f;
     _IndexBuffer = 0;
@@ -30,7 +29,7 @@ CurveComponent::CurveComponent(Entity* parent)
     GetRenderable()->SetNumElements(0);
     
     GetEntity()->RegisterMessageHandler<SetColorMessage>(MessageHandler(this, &CurveComponent::OnSetColor));
-    //GetEntity()->RegisterMessageHandler<DebugRenderMessage>(MessageHandler(this, &CurveComponent::OnDebugRender));
+//    GetEntity()->RegisterMessageHandler<DebugRenderMessage>(MessageHandler(this, &CurveComponent::OnDebugRender));
 }
 
 CurveComponent::~CurveComponent()
@@ -81,9 +80,14 @@ const glm::vec4& CurveComponent::GetTint()
     return _Tint;
 }
 
-void CurveComponent::SetCurve(const HermiteCurve2D* curve, bool skipRefresh)
+void CurveComponent::ResetCurves()
 {
-    _Curve = curve;
+    _Curves.clear();
+}
+
+void CurveComponent::AddCurve(const HermiteCurve2D* curve, bool skipRefresh)
+{
+    _Curves.insert(curve);
     
     if (!skipRefresh)
     {
@@ -91,85 +95,117 @@ void CurveComponent::SetCurve(const HermiteCurve2D* curve, bool skipRefresh)
     }
 }
 
-const HermiteCurve2D* CurveComponent::GetCurve()
+void CurveComponent::RemoveCurve(const HermiteCurve2D* curve, bool skipRefresh)
 {
-    return _Curve;
+    _Curves.erase(curve);
+    
+    if (!skipRefresh)
+    {
+        Refresh();
+    }
+}
+
+const std::set<const HermiteCurve2D*>& CurveComponent::GetCurves()
+{
+    return _Curves;
 }
 
 void CurveComponent::Refresh()
 {
-    float t = 0;
-    int size = _Curve ? (_Curve->GetArcLength() / _MinDistance) : 0;
+    std::vector<int> sizes;
+    int totalSize = 0;
     
-    if (!_Curve || (_IndexBuffer && _IndexBuffer->GetCurrentSize() != (size * 6 - 4)))
+    for (const auto& curve : _Curves)
+    {
+        int size = curve->GetArcLength() / _MinDistance;
+        sizes.push_back(size);
+        totalSize += size;
+    }
+    
+    if (_IndexBuffer && _IndexBuffer->GetCurrentSize() != (totalSize * 6))
     {
         GetRenderable()->SetIndexBuffer(0);
         GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
         _IndexBuffer = 0;
     }
     
-    if (!_Curve || (_VertexBuffer && _VertexBuffer->GetCurrentSize() != (size * 2)))
+    if (_VertexBuffer && _VertexBuffer->GetCurrentSize() != (totalSize * 2))
     {
         GetRenderable()->SetVertexBuffer(0);
         GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
         _VertexBuffer = 0;
     }
     
-    if (_Curve)
+    if (_Curves.size())
     {
         if (!_IndexBuffer)
         {
-            _IndexBuffer = GraphicsDevice::Instance()->CreateIndexBuffer(pb::kBufferFormatStatic, size*6 - 4);
+            _IndexBuffer = GraphicsDevice::Instance()->CreateIndexBuffer(pb::kBufferFormatStatic, totalSize*6);
         }
         
         if (!_VertexBuffer)
         {
-            _VertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(pb::kBufferFormatStatic, pb::kVertexFormat_P3_C4_UV, size*2);
+            _VertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(pb::kBufferFormatStatic, pb::kVertexFormat_P3_C4_UV, totalSize*2);
         }
         
         _IndexBuffer->Lock();
         unsigned short* index = _IndexBuffer->GetData();
-        for (int i=0; i<size*2; i+=2)
+        int vertexIndex = 0;
+        for (const auto& size : sizes)
         {
-            index[0] = i;
-            index[1] = i+1;
-            index[2] = i+3;
-            index[3] = i;
-            index[4] = i+2;
-            index[5] = i+3;
-            index += 6;
+            for (int i=0; i<size-1; i++)
+            {
+                index[0] = vertexIndex;
+                index[1] = vertexIndex+1;
+                index[2] = vertexIndex+3;
+                index[3] = vertexIndex;
+                index[4] = vertexIndex+2;
+                index[5] = vertexIndex+3;
+                index += 6;
+                vertexIndex += 2;
+            }
+            vertexIndex += 2;
         }
         _IndexBuffer->Unlock();
                 
         _VertexBuffer->Lock();
         pb::Vertex_P3_C4_UV* vertices = static_cast<pb::Vertex_P3_C4_UV*>(_VertexBuffer->GetData());
-        for (int i=0; i<size; i++)
+        for (const auto& curve : _Curves)
         {
-            glm::vec2 point = _Curve->EvaluateParam(t);
-            glm::vec2 pointB = _Curve->EvaluateParam(t + 0.1f);
+            float t = 0;
+            int size = curve->GetArcLength() / _MinDistance;
             
-            t += _MinDistance;
-            
-            float angle = glm::atan(pointB.y-point.y, pointB.x-point.x) + glm::radians(90.f);
-            
-            for (int v=0; v<2; v++)
+            for (int i=0; i<size; i++)
             {
-                vertices[(i*2)+v].position[0] = point.x + cos(v == 0 ? angle-glm::radians(180.f) : angle)*_Width;
-                vertices[(i*2)+v].position[1] = point.y + sin(v == 0 ? angle-glm::radians(180.f) : angle)*_Width;
-                vertices[(i*2)+v].position[2] = 0;
-                vertices[(i*2)+v].uv[0] = (v == 0 ? 0 : 1);
-                vertices[(i*2)+v].uv[1] = t / _LengthScale;
-                vertices[(i*2)+v].color[0] = _Tint.r;
-                vertices[(i*2)+v].color[1] = _Tint.g;
-                vertices[(i*2)+v].color[2] = _Tint.b;
-                vertices[(i*2)+v].color[3] = _Tint.a;
+                glm::vec2 point = curve->EvaluateParam(t);
+                glm::vec2 pointB = curve->EvaluateParam(t + 0.1f);
+                
+                t += _MinDistance;
+                
+                float angle = glm::atan(pointB.y-point.y, pointB.x-point.x) + glm::radians(90.f);
+                
+                for (int v=0; v<2; v++)
+                {
+                    vertices->position[0] = point.x + cos(v == 0 ? angle-glm::radians(180.f) : angle)*_Width;
+                    vertices->position[1] = point.y + sin(v == 0 ? angle-glm::radians(180.f) : angle)*_Width;
+                    vertices->position[2] = 0;
+                    vertices->uv[0] = (v == 0 ? 0 : 1);
+                    vertices->uv[1] = t / _LengthScale;
+                    vertices->color[0] = _Tint.r;
+                    vertices->color[1] = _Tint.g;
+                    vertices->color[2] = _Tint.b;
+                    vertices->color[3] = _Tint.a;
+                    vertices++;
+                }
             }
         }
         _VertexBuffer->Unlock();
         
         GetRenderable()->SetIndexBuffer(_IndexBuffer);
         GetRenderable()->SetVertexBuffer(_VertexBuffer);
-        GetRenderable()->SetNumElements(size*6 - 4);
+        GetRenderable()->SetNumElements((totalSize-sizes.size())*6);
+    } else {
+        GetRenderable()->SetNumElements(0);
     }
 }
 
@@ -177,16 +213,16 @@ void CurveComponent::OnDebugRender(const Message& message)
 {
     auto debugRenderMessage = message.As<DebugRenderMessage>();
     
-    if (_Curve)
+    for (const auto& curve : _Curves)
     {
-        int size = _Curve->GetArcLength() / _MinDistance;
+        int size = curve->GetArcLength() / _MinDistance;
         float t = 0;
         
-        glm::vec2 prevPoint = _Curve->EvaluateParam(t);
+        glm::vec2 prevPoint = curve->EvaluateParam(t);
     
-        for (int i=0; i<size; i++)
+        for (int i=0; i<=size; i++)
         {
-            glm::vec2 point = _Curve->EvaluateParam(t);
+            glm::vec2 point = curve->EvaluateParam(t);
             t += _MinDistance;
             
             debugRenderMessage.GetDebugRenderSystem()->AddLine(kRenderPassScene, 1, glm::vec3(prevPoint, 0), glm::vec3(point, 0));
@@ -240,9 +276,10 @@ void CurveComponentSVG::OnResourceLoaded(Resource* resource, bool error)
 {
     GetEntity()->RegisterMessageHandler(MessageHandler(this, &CurveComponentSVG::OnUpdate));
     
+    CurveComponent::ResetCurves();
+    
     if (error)
     {
-        CurveComponent::SetCurve(0, true);
         return;
     }
     
@@ -250,15 +287,21 @@ void CurveComponentSVG::OnResourceLoaded(Resource* resource, bool error)
     
     for (const auto& group : svgResource->GetGroups())
     {
-        for (const auto& path : group.second.Paths)
+        if (group.first == _CurveName)
         {
-            CurveComponent::SetCurve(&path.Curve, true);
+            for (const auto& path : group.second.Paths)
+            {
+                CurveComponent::AddCurve(&path.Curve, true);
+            }
+            break;
         }
     }
+    
+    CurveComponent::Refresh();
 
 }
 
 void CurveComponentSVG::OnResourceUnloading(Resource* resource)
 {
-    CurveComponent::SetCurve(0);
+    CurveComponent::ResetCurves();
 }

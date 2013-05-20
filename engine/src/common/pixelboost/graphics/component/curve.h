@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <set>
 #include <string>
 
 #include "pixelboost/logic/component/graphics/renderable.h"
@@ -38,8 +39,10 @@ namespace pb
         void SetTint(const glm::vec4& tint);
         const glm::vec4& GetTint();
         
-        void SetCurve(const HermiteCurve2D* curve, bool skipRefresh = false);
-        const HermiteCurve2D* GetCurve();
+        void ResetCurves();
+        void AddCurve(const HermiteCurve2D* curve, bool skipRefresh = false);
+        void RemoveCurve(const HermiteCurve2D* curve, bool skipRefresh = false);
+        const std::set<const HermiteCurve2D*>& GetCurves();
 
         void Refresh();
 
@@ -52,7 +55,7 @@ namespace pb
         float _Width;
         glm::vec4 _Tint;
 
-        const HermiteCurve2D* _Curve;
+        std::set<const HermiteCurve2D*> _Curves;
 
         IndexBuffer* _IndexBuffer;
         VertexBuffer* _VertexBuffer;
