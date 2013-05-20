@@ -463,6 +463,8 @@ set (MATHS_SOURCES
 	)
 
 set (NETWORK_SOURCES
+	"src/common/pixelboost/network/http/httpHelpers.cpp"
+	"src/common/pixelboost/network/http/httpHelpers.h"
 	"src/common/pixelboost/network/http/httpServer.cpp"
 	"src/common/pixelboost/network/http/httpServer.h"
 	"src/common/pixelboost/network/networkMessage.cpp"
