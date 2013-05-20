@@ -494,6 +494,11 @@ set (SCRIPTING_SOURCES
 	"src/common/pixelboost/scripting/register.cpp"
 	)
 
+set (STORE_SOURCES
+	"src/common/pixelboost/store/store.cpp"
+	"src/common/pixelboost/store/store.h"
+	)
+
 set (UTIL_LOCALISATION_SOURCES
 	"src/common/pixelboost/util/localisation/localisation.cpp"
 	"src/common/pixelboost/util/localisation/localisation.h"
@@ -543,6 +548,7 @@ set (PIXELBOOST_SOURCES
 	${PLATFORM_SOURCES}
 	${RESOURCE_SOURCES}
 	${SCRIPTING_SOURCES}
+	${STORE_SOURCES}
 	${UTIL_LOCALISATION_SOURCES}
 	)
 
@@ -623,4 +629,5 @@ source_group (physics\\2d FILES ${PHYSICS_2D_SOURCES})
 source_group (platform FILES ${PLATFORM_SOURCES})
 source_group (resource FILES ${RESOURCE_SOURCES})
 source_group (scripting FILES ${SCRIPTING_SOURCES})
+source_group (store FILES ${STORE_SOURCES})
 source_group (util\\localisation FILES ${UTIL_LOCALISATION_SOURCES})
