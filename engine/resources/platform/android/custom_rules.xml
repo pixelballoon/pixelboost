@@ -15,6 +15,7 @@
                     nocrunch="${build.packaging.nocrunch}"
                     resourcefilename="${resource.package.file.name}"
                     resourcefilter="${aapt.resource.filter}"
+                    libraryRFileRefid="project.library.bin.r.file.path"
                     libraryResFolderPathRefid="project.library.res.folder.path"
                     libraryPackagesRefid="project.library.packages"
                     previousBuildType="${build.last.target}"
