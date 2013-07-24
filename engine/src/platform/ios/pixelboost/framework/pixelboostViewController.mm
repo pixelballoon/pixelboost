@@ -74,8 +74,6 @@
     {
         pb::GraphicsDevice::Instance()->SetDisplayResolution(glm::vec2(screenHeight, screenWidth));
     }
-    
-    app->Initialise();
 }
 
 - (void)dealloc
@@ -146,7 +144,7 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
-    if (app && app->IsLandscape())
+    if (!app || app->IsLandscape())
     {
         return UIInterfaceOrientationIsLandscape(toInterfaceOrientation);
     } else

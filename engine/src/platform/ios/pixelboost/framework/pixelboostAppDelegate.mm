@@ -14,7 +14,18 @@
 {
     [self.window setRootViewController:self.viewController];
     
+    pb::Engine::Instance()->Initialise();
+    
     return YES;
+}
+
+- (NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
+{
+    if (window == self.window) {
+        return pb::Engine::Instance()->IsLandscape() ? UIInterfaceOrientationMaskLandscape : UIInterfaceOrientationMaskPortrait;
+    }
+    
+    return UIInterfaceOrientationMaskAll;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
