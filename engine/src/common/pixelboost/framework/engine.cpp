@@ -50,7 +50,9 @@ Engine::~Engine()
 {
     _Instance = 0;
     
+#if !defined(PIXELBOOST_DISABLE_NETWORKING)
     delete NetworkManager::Instance();
+#endif
     
 #ifndef PIXELBOOST_DISABLE_GAMECENTER
     delete _GameCenter;
@@ -233,10 +235,12 @@ void Engine::Update(float timeDelta, float gameDelta)
     
     ResourceManager::Instance()->Update(timeDelta);
 
+#if !defined(PIXELBOOST_DISABLE_NETWORKING)
     if (NetworkManager::Instance())
     {
         NetworkManager::Instance()->Update();
     }
+#endif
 }
 
 void Engine::Render()
