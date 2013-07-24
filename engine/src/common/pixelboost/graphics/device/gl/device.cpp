@@ -427,6 +427,16 @@ void GraphicsDeviceGL::DestroyTexture(Texture* texture)
     {
         if (*it == texture)
         {
+            GLuint textureId = texture ? static_cast<TextureGL*>(texture)->_Texture : 0;
+            
+            for (int i=0; i<kNumTextureUnits; i++)
+            {
+                if (_CurrentState.boundTexture[i] == textureId)
+                {
+                    _CurrentState.boundTexture[i] = 0;
+                }
+            }
+            
             _Textures.erase(it);
             GraphicsDevice::DestroyTexture(texture);
             return;
