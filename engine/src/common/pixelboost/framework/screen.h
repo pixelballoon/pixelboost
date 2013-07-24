@@ -15,6 +15,7 @@ namespace pb
         
         virtual void Update(float timeDelta, float gameDelta);
         
+        bool IsActive();
         virtual void SetActive(bool active);
         
     public:

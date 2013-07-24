@@ -24,6 +24,11 @@ void Screen::Update(float timeDelta, float gameDelta)
     
 }
 
+bool Screen::IsActive()
+{
+    return _Active;
+}
+
 void Screen::SetActive(bool active)
 {
     _Active = active;
