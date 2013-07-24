@@ -33,7 +33,7 @@ float Timeline::GetLength()
         }
     }
     
-    return _Length;
+    return _Length + 1.f; // Hack. Make sure the last element is executed
 }
 
 void Timeline::Insert(TimelineElement* element, float time)
