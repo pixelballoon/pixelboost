@@ -285,16 +285,24 @@ void CurveComponentSVG::OnResourceLoaded(Resource* resource, bool error)
     
     auto svgResource = static_cast<SvgResource*>(resource);
     
+    bool curveFound = false;
+    
     for (const auto& group : svgResource->GetGroups())
     {
         if (group.first == _CurveName)
         {
             for (const auto& path : group.second.Paths)
             {
+                curveFound = true;
                 CurveComponent::AddCurve(&path.Curve, true);
             }
             break;
         }
+    }
+    
+    if (!curveFound)
+    {
+        PbLogWarn("graphics.curve", "Curve %s not found on resource %s", _CurveName.c_str(), resource->GetFilename().c_str());
     }
     
     CurveComponent::Refresh();
