@@ -129,7 +129,6 @@ void Engine::Initialise()
     
 #ifndef PIXELBOOST_DISABLE_GAMECENTER
     _GameCenter = new GameCenter();
-    _GameCenter->Connect();
 #endif
     
     _JoystickManager = new JoystickManager();
