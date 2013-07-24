@@ -276,7 +276,7 @@ namespace pb
         inline void UpdateParticle(Particle* particle, float time);
         
     public:
-        ParticleSystemDefinition* Definition;
+        std::shared_ptr<ParticleSystemDefinition> Definition;
         
         std::vector<Particle> Particles;
         std::vector<ParticleSystem*> SubSystem;

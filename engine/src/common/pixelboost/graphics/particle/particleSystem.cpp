@@ -256,13 +256,13 @@ ParticleSystemDefinition::~ParticleSystemDefinition()
 
 ParticleSystem::ParticleSystem()
 {
-    Definition = new ParticleSystemDefinition();
-    Particles.reserve(Definition->MaxParticles);
+    Definition = 0;
+    Particles.reserve(32);
 }
 
 ParticleSystem::~ParticleSystem()
 {
-    delete Definition;
+    
 }
 
 void ParticleSystem::Update(float time)
@@ -313,6 +313,8 @@ ParticleComponent::ParticleComponent(Entity* parent)
     , _UseGlobalTime(false)
 {
     _System = new ParticleSystem();
+
+    _System->Definition = std::shared_ptr<ParticleSystemDefinition>(new ParticleSystemDefinition());
     
     GetRenderable()->SetSystem(_System);
     
