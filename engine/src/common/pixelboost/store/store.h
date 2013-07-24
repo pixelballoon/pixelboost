@@ -1,9 +1,12 @@
 #pragma once
 
 #include <functional>
+#include <map>
+#include <string>
 #include <vector>
 
-#if defined(PIXELBOOST_PLATFORM_IOS) or (PIXELBOOST_PLATFORM_OSX)
+#if defined(PIXELBOOST_PLATFORM_IOS) or defined(PIXELBOOST_PLATFORM_OSX)
+@class SKProduct;
 @class StorePaymentDelegate;
 #endif
 
@@ -13,26 +16,24 @@ namespace pb
     class StoreItem
     {
     public:
-        bool IsConsumable();
-    };
-    
-    class StorePurchasedItem
-    {
-    public:
+        StoreItem(const std::string& identifier, const std::string& description, const std::string& priceString, bool consumable = false);
+        ~StoreItem();
         
-    };
-    
-    class StoreTransaction
-    {
-    public:
-        StoreTransaction(const StoreItem* item);
-        
-        const StoreItem& GetStoreItem();
-        
-        void Finalise(std::function<void(bool)> callback);
+        const std::string& GetIdentifier() const;
+        const std::string& GetDescription() const;
+        const std::string& GetPriceString() const;
+        bool IsConsumable() const;
         
     private:
-        const StoreItem* _StoreItem;
+        std::string _Identifier;
+        std::string _Description;
+        std::string _PriceString;
+        bool _Consumable;
+        
+    public:
+#if defined(PIXELBOOST_PLATFORM_IOS) or defined(PIXELBOOST_PLATFORM_OSX)
+        SKProduct* _Product;
+#endif
     };
     
     class Store
@@ -43,22 +44,32 @@ namespace pb
         
         static Store* Instance();
         
+        bool ArePaymentsAllowed();
+        
+        void AddIdentifier(const std::string& identifier, std::function<void(void)> purchaseCallback);
+        
         void RefreshItems();
         std::vector<StoreItem> GetStoreItems();
+        StoreItem* GetStoreItem(const std::string& identifier);
         
+        void RestorePurchases();
         void PurchaseItem(const StoreItem& item);
         
-        std::vector<StoreTransaction> GetPendingTransactions();
+        void AddItem(const StoreItem& item);
+        
+        bool OnItemPurchased(const std::string& identifier);
     
     private:
         static Store* _Instance;
         
-        std::vector<StoreItem> _Items;
-        std::vector<StoreTransaction> _Pending;
+        std::map<std::string, StoreItem*> _Items;
         
-#if defined(PIXELBOOST_PLATFORM_IOS) or (PIXELBOOST_PLATFORM_OSX)
+#if defined(PIXELBOOST_PLATFORM_IOS) or defined(PIXELBOOST_PLATFORM_OSX)
         StorePaymentDelegate* _Delegate;
 #endif
+        
+        std::vector<std::string> _Identifiers;
+        std::map<std::string, std::function<void(void)>> _Callbacks;
     };
     
 }

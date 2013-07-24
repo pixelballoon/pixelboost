@@ -570,6 +570,7 @@ if (PIXELBOOST_BUILD_PLATFORM_OSX)
 		"-framework OpenGL"
 		"-framework AppKit"
 		"-framework IOKit"
+		"-framework StoreKit"
 		)
 	pixelboost_setup_library(ddhidlib)
 endif (PIXELBOOST_BUILD_PLATFORM_OSX)
@@ -584,6 +585,7 @@ if (PIXELBOOST_BUILD_PLATFORM_IOS)
 		"-framework GameKit"
 		"-framework Foundation"
 		"-framework UIKit"
+		"-framework StoreKit"
 		"-framework OpenGLES")
 endif (PIXELBOOST_BUILD_PLATFORM_IOS)
 
