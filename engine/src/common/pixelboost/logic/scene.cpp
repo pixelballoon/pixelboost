@@ -129,7 +129,10 @@ void Scene::AddEntityPurge(Entity* entity)
 
 void Scene::DestroyEntity(Entity* entity)
 {
-    entity->Destroy();
+    if (entity)
+    {
+        entity->Destroy();
+    }
 }
 
 void Scene::DestroyAllEntities()
