@@ -55,6 +55,12 @@ TimelineCurve* TimelineCurve::SetOrientToCurve(bool orientToCurve)
     return this;
 }
 
+TimelineCurve* TimelineCurve::SetOffset(glm::vec2 offset)
+{
+    _Offset = offset;
+    return this;
+}
+
 void TimelineCurve::OnUpdate(float time, float delta)
 {
     if (_Curve && _Length > 0.f)
@@ -76,7 +82,7 @@ void TimelineCurve::OnUpdate(float time, float delta)
 
 void TimelineCurve::Evaluate(float t)
 {
-    glm::vec2 value = _Curve->EvaluateParam(t);
+    glm::vec2 value = _Curve->EvaluateParam(t) + _Offset;
     _Scene->SendMessage(_EntityId, SetPositionMessage(glm::vec3(value, 0)));
     
     if (_OrientToCurve)

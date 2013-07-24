@@ -30,6 +30,7 @@ namespace pb
         TimelineCurve* SetCurve(const HermiteCurve2D* curve);
         TimelineCurve* SetFixedStep(bool fixedStep, float distance = 1.f);
         TimelineCurve* SetOrientToCurve(bool orientToCurve);
+        TimelineCurve* SetOffset(glm::vec2 offset);
         
     private:
         virtual void OnUpdate(float time, float delta);
@@ -44,6 +45,7 @@ namespace pb
         bool _FixedStep;
         float _FixedStepDistance;
         bool _OrientToCurve;
+        glm::vec2 _Offset;
         
         float _PrevDistance;
         
