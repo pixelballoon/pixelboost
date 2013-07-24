@@ -249,6 +249,11 @@ void GraphicsDeviceGL::DestroyVertexBuffer(VertexBuffer* vertexBuffer)
     GLuint buffer = _VertexBuffers[vertexBuffer];
     glDeleteBuffers(1, &buffer);
     
+    if (_CurrentState.boundVertexBuffer == buffer)
+    {
+        _CurrentState.boundVertexBuffer = 0;
+    }
+    
     _VertexBuffers.erase(vertexBuffer);
     _VertexReverseBuffers.erase(buffer);
     
@@ -355,6 +360,11 @@ void GraphicsDeviceGL::DestroyIndexBuffer(IndexBuffer* indexBuffer)
 {
     GLuint buffer = _IndexBuffers[indexBuffer];
     glDeleteBuffers(1, &buffer);
+    
+    if (_CurrentState.boundIndexBuffer == buffer)
+    {
+        _CurrentState.boundIndexBuffer = 0;
+    }
     
     _IndexBuffers.erase(indexBuffer);
     _IndexReverseBuffers.erase(buffer);
