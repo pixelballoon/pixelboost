@@ -418,6 +418,8 @@ void GameCenter::SubmitAchievement(const std::string& achievementName, float per
       
 void GameCenter::SubmitAchievement(void* achievement)
 {
+    [(GKAchievement*)achievement setShowsCompletionBanner:true];
+    
     [(GKAchievement*)achievement reportAchievementWithCompletionHandler:^(NSError *error)
      {
          // Don't bother handling errors, since we try to submit again later anyway
