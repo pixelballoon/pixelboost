@@ -1,7 +1,9 @@
 package com.pixelballoon.pixelboost;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.content.Context;
@@ -33,6 +35,13 @@ public class PixelboostHelpers
 		File directory = new File(filesDir + "/");
 		directory.mkdirs();
 		return filesDir;
+	}
+
+	public static void openUrl(String url)
+	{
+		Context context = mainActivity.getApplication();
+		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+		context.startActivity(browserIntent);
 	}
 
 	public static void playMusic(String filename, float volume)

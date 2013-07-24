@@ -27,7 +27,7 @@ void HttpHelpers::OpenUrl(const std::string& url)
 #ifdef PIXELBOOST_PLATFORM_ANDROID
 	JNIEnv* env = pb::Jni::GetJniEnv();
 
-    jstring jstr = env->NewStringUTF(fileName.c_str());
+    jstring jstr = env->NewStringUTF(url.c_str());
     jclass classId = env->FindClass("com/pixelballoon/pixelboost/PixelboostHelpers");
 
     jmethodID methodId = env->GetStaticMethodID(classId, "openUrl", "(Ljava/lang/String;)V");
