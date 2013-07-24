@@ -60,7 +60,7 @@ bool Texture::LoadFromBytes(const unsigned char* data, int width, int height, bo
 bool Texture::LoadFromFile(const std::string& path, bool createMips)
 {
     bool status = true;
-
+    
     if (path.length() >= 4 && path.substr(path.length()-4) == ".jpa")
     {
         auto file = pb::FileSystem::Instance()->OpenFile(path);
@@ -89,6 +89,24 @@ bool Texture::LoadFromFile(const std::string& path, bool createMips)
         unsigned char* rgbTemp = decodedRgb;
         unsigned char* alphaTemp = decodedAlpha;
         
+#ifdef PIXELBOOST_PLATFORM_ANDROID
+        for (int y=0; y<height; y++)
+        {
+            for (int x=0; x<width; x++)
+            {
+                decodedTemp[0] = rgbTemp[0];
+                decodedTemp[1] = rgbTemp[1];
+                decodedTemp[2] = rgbTemp[2];
+                decodedTemp[3] = *alphaTemp;
+                
+                decodedTemp += 4;
+                rgbTemp += 3;
+                alphaTemp++;
+            }
+        }
+        
+        TextureFormat format = kTextureFormatRGBA;
+#else
         for (int y=0; y<height; y++)
         {
             for (int x=0; x<width; x++)
@@ -104,10 +122,13 @@ bool Texture::LoadFromFile(const std::string& path, bool createMips)
             }
         }
         
+        TextureFormat format = kTextureFormatBGRA;
+#endif
+        
         stbi_image_free(decodedRgb);
         stbi_image_free(decodedAlpha);
         
-        status = LoadFromBytes(decoded, width, height, createMips, kTextureFormatBGRA);
+        status = LoadFromBytes(decoded, width, height, createMips, format);
         
         delete[] decoded;
     } else {
@@ -137,7 +158,9 @@ bool Texture::LoadFromFile(const std::string& path, bool createMips)
             }
         }
         
-        status = LoadFromBytes(decoded, width, height, createMips, components == 3 ? kTextureFormatRGB : kTextureFormatBGRA);
+        TextureFormat format = components == 3 ? kTextureFormatRGB : kTextureFormatRGBA;
+        
+        status = LoadFromBytes(decoded, width, height, createMips, format);
         
         stbi_image_free(decoded);
     }

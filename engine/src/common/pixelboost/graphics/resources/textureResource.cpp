@@ -137,6 +137,22 @@ bool TextureResource::Decode(const std::string& filename)
         unsigned char* rgbTemp = decodedRgb;
         unsigned char* alphaTemp = decodedAlpha;
         
+#ifdef PIXELBOOST_PLATFORM_ANDROID
+        for (int y=0; y<_Height; y++)
+        {
+            for (int x=0; x<_Width; x++)
+            {
+                decodedTemp[0] = rgbTemp[0];
+                decodedTemp[1] = rgbTemp[1];
+                decodedTemp[2] = rgbTemp[2];
+                decodedTemp[3] = *alphaTemp;
+                
+                decodedTemp += 4;
+                rgbTemp += 3;
+                alphaTemp++;
+            }
+        }
+#else
         for (int y=0; y<_Height; y++)
         {
             for (int x=0; x<_Width; x++)
@@ -151,6 +167,7 @@ bool TextureResource::Decode(const std::string& filename)
                 alphaTemp++;
             }
         }
+#endif
         
         stbi_image_free(decodedRgb);
         stbi_image_free(decodedAlpha);
@@ -189,13 +206,19 @@ bool TextureResource::Upload()
     
     if (_DecodedCustom)
     {
-        status = _Texture->LoadFromBytes(_DecodedCustom, _Width, _Height, _CreateMips, Texture::kTextureFormatBGRA);
+#ifdef PIXELBOOST_PLATFORM_ANDROID
+        Texture::TextureFormat format = Texture::kTextureFormatRGBA;
+#else
+        Texture::TextureFormat format = Texture::kTextureFormatBGRA;
+#endif
+        
+        status = _Texture->LoadFromBytes(_DecodedCustom, _Width, _Height, _CreateMips, format);
         
         delete[] _DecodedCustom;
         _DecodedCustom = 0;
     } else if (_DecodedSTB)
     {
-        status = _Texture->LoadFromBytes(_DecodedSTB, _Width, _Height, _CreateMips, _Components == 3 ? Texture::kTextureFormatRGB : Texture::kTextureFormatBGRA);
+        status = _Texture->LoadFromBytes(_DecodedSTB, _Width, _Height, _CreateMips, _Components == 3 ? Texture::kTextureFormatRGB : Texture::kTextureFormatRGBA);
         
         stbi_image_free(_DecodedSTB);
         _DecodedSTB = 0;

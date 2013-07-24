@@ -32,6 +32,10 @@ bool TextureGL::LoadFromBytes(const unsigned char* data, int width, int height, 
     
     Texture* previousTexture = _Device->BindTexture(0, this, true);
     
+#ifdef PIXELBOOST_PLATFORM_ANDROID
+    createMips = false;
+#endif
+    
     if (createMips)
     {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -55,7 +59,7 @@ bool TextureGL::LoadFromBytes(const unsigned char* data, int width, int height, 
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
             break;
         case Texture::kTextureFormatBGRA:
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, data);
             break;
     }
 
