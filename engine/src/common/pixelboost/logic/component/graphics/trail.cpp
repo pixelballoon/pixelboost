@@ -18,36 +18,16 @@ TrailComponent::TrailComponent(Entity* parent)
     : Component(parent)
 {
     _Length = 0;
-    _MaxElements = 5000;
     _MinDistance = 1.f;
     _Width = 10.f;
     _Tint = glm::vec4(1,1,1,1);
+    _IndexBuffer = 0;
+    _VertexBuffer = 0;
     
-    _IndexBuffer = GraphicsDevice::Instance()->CreateIndexBuffer(pb::kBufferFormatStatic, _MaxElements*6);
-    _VertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(pb::kBufferFormatDynamic, pb::kVertexFormat_P3_C4_UV, _MaxElements*4);
-
     _Renderable = new BufferRenderable();
-    _Renderable->SetIndexBuffer(_IndexBuffer);
-    _Renderable->SetVertexBuffer(_VertexBuffer);
-    
-    _IndexBuffer->Lock();
-    unsigned short* index = _IndexBuffer->GetData();
-    for (int i=0; i<_MaxElements; i++)
-    {
-        index[0] = (i*4);
-        index[1] = (i*4)+1;
-        index[2] = (i*4)+2;
-        index[3] = (i*4)+1;
-        index[4] = (i*4)+2;
-        index[5] = (i*4)+3;
-        index += 6;
-    }
-    _IndexBuffer->Unlock();
-    
-    _VertexBuffer->Lock();
-    _VertexBuffer->Unlock(0);
-    
     GetScene()->GetSystemByType<RenderSystem>()->AddItem(_Renderable);
+    
+    SetMaxSegments(32);
     
     GetEntity()->RegisterMessageHandler<SetColorMessage>(MessageHandler(this, &TrailComponent::OnSetColor));
     GetEntity()->RegisterMessageHandler<TransformChangedMessage>(MessageHandler(this, &TrailComponent::OnTransformChanged));
@@ -70,6 +50,51 @@ TrailComponent::~TrailComponent()
     GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
     
     delete _Renderable;
+}
+
+void TrailComponent::SetMaxSegments(int maxSegments)
+{
+    if (maxSegments == _MaxSegments)
+    {
+        return;
+    }
+    
+    for (int i=0; i<10; i++)
+    
+    {
+    GraphicsDevice::Instance()->DestroyIndexBuffer(_IndexBuffer);
+    GraphicsDevice::Instance()->DestroyVertexBuffer(_VertexBuffer);
+    
+    _MaxSegments = maxSegments;
+    
+    _IndexBuffer = GraphicsDevice::Instance()->CreateIndexBuffer(pb::kBufferFormatStatic, _MaxSegments*6);
+    _VertexBuffer = GraphicsDevice::Instance()->CreateVertexBuffer(pb::kBufferFormatDynamic, pb::kVertexFormat_P3_C4_UV, _MaxSegments*4);
+    
+    _Renderable->SetIndexBuffer(_IndexBuffer);
+    _Renderable->SetVertexBuffer(_VertexBuffer);
+    
+    _IndexBuffer->Lock();
+    unsigned short* index = _IndexBuffer->GetData();
+    for (int i=0; i<_MaxSegments; i++)
+    {
+        index[0] = (i*4);
+        index[1] = (i*4)+1;
+        index[2] = (i*4)+2;
+        index[3] = (i*4)+1;
+        index[4] = (i*4)+2;
+        index[5] = (i*4)+3;
+        index += 6;
+    }
+    _IndexBuffer->Unlock();
+    
+    _VertexBuffer->Lock();
+    _VertexBuffer->Unlock(0);
+    }
+}
+
+int TrailComponent::GetMaxSegments()
+{
+    return _MaxSegments;
 }
 
 void TrailComponent::SetMinDistance(float minDistance)
@@ -170,7 +195,7 @@ void TrailComponent::OnTransformChanged(const Message& message)
     
     glm::vec2 point(position.x, position.y);
     
-    if (_Points.size() && glm::distance(point, _Points.back()) < _MinDistance)
+    if (_Points.size() && (glm::distance(point, _Points.back()) < _MinDistance || _Points.size() >= _MaxSegments))
         return;
     
     _Points.push_back(point);
@@ -178,7 +203,7 @@ void TrailComponent::OnTransformChanged(const Message& message)
     _VertexBuffer->Lock();
     pb::Vertex_P3_C4_UV* vertices = static_cast<pb::Vertex_P3_C4_UV*>(_VertexBuffer->GetData());
     
-    if (_Points.size() > 2 && _Points.size() < _MaxElements)
+    if (_Points.size() > 2 && _Points.size() < _MaxSegments)
     {
         glm::vec2 point[3];
         
@@ -245,6 +270,10 @@ void TrailComponent::OnTransformChanged(const Message& message)
             vertices[i].position[0] = point.x;
             vertices[i].position[1] = point.y;
             vertices[i].position[2] = 0;
+            vertices[i].color[0] = 0;
+            vertices[i].color[1] = 0;
+            vertices[i].color[2] = 0;
+            vertices[i].color[3] = 0;
         }
     }
     

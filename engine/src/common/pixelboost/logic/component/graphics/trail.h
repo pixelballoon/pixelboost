@@ -26,6 +26,9 @@ namespace pb
         virtual ~TrailComponent();
 
     public:
+        void SetMaxSegments(int maxSegments);
+        int GetMaxSegments();
+        
         void SetMinDistance(float minDistance);
         float GetMinDistance();
         
@@ -53,7 +56,7 @@ namespace pb
         BufferRenderable* _Renderable;
         std::shared_ptr<MaterialResource> _Material;
         
-        int _MaxElements;
+        int _MaxSegments;
         IndexBuffer* _IndexBuffer;
         VertexBuffer* _VertexBuffer;
         
