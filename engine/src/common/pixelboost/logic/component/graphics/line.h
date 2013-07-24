@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 #include "pixelboost/logic/component/graphics/renderable.h"
 
 namespace pb

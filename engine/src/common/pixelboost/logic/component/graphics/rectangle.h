@@ -4,7 +4,7 @@
 
 #include "glm/glm.hpp"
 
-#include "pixelboost/graphics/renderer/common/renderable.h"
+#include "pixelboost/graphics/renderer/primitive/primitiveRenderer.h"
 #include "pixelboost/logic/component/graphics/renderable.h"
 
 namespace pb
