@@ -39,6 +39,26 @@ cp -r ../../data assets
 cmake ../../ -DPIXELBOOST_BUILD_PLATFORM_ANDROID=TRUE -DANDROID_STL=gnustl_static -DLIBRARY_OUTPUT_PATH_ROOT="`pwd`" -DCMAKE_TOOLCHAIN_FILE=pixelboost/toolchain/android.toolchain.cmake -DCMAKE_BUILD_TYPE=Release
 cd ..
 
+mkdir android_debug
+cd android_debug
+android create project --name pixelboost --target android-16 \
+	--package com.pixelballoon.pixelboost --activity PixelboostActivity \
+	--path .
+mkdir assets
+cd assets
+mkdir res
+mkdir values
+cd ..
+cp -r ../../pixelboost/engine/resources/platform/android/res/drawable* res/
+if [ -d "../../platform/android/res/drawable-hdpi" ]; then
+	cp -r ../../platform/android/res/drawable* res/
+fi
+cp -r ../../pixelboost/engine/src/platform/android/src .
+cp -r ../../pixelboost/libs/ouya/* libs
+cp -r ../../data assets
+cmake ../../ -DPIXELBOOST_BUILD_PLATFORM_ANDROID=TRUE -DANDROID_STL=gnustl_static -DLIBRARY_OUTPUT_PATH_ROOT="`pwd`" -DCMAKE_TOOLCHAIN_FILE=pixelboost/toolchain/android.toolchain.cmake -DCMAKE_BUILD_TYPE=Debug
+cd ..
+
 mkdir emscripten_release
 cd emscripten_release
 cp -r ../../data ./
