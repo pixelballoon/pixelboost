@@ -24,7 +24,7 @@ AudioManagerSimpleIOS::AudioManagerSimpleIOS()
     _MuteBgm = false;
     _MuteSfx = false;
     
-    [OALSimpleAudio sharedInstance].allowIpod = NO;
+    [OALSimpleAudio sharedInstance].allowIpod = YES;
     [OALSimpleAudio sharedInstance].honorSilentSwitch = YES;
 }
 
