@@ -69,7 +69,7 @@ int main(int argc, const char * argv[])
     unsigned char* rgbBuffer = new unsigned char[rgbBufferSize];
     
     jpge::params params;
-    params.m_quality = 85;
+    params.m_quality = 95;
     params.m_two_pass_flag = true;
     
     jpge::compress_image_to_jpeg_file_in_memory(rgbBuffer, rgbBufferSize, width, height, 3, rgbData, params);
