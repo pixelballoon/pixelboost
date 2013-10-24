@@ -32,10 +32,6 @@ bool TextureGL::LoadFromBytes(const unsigned char* data, int width, int height, 
     
     Texture* previousTexture = _Device->BindTexture(0, this, true);
     
-#ifdef PIXELBOOST_PLATFORM_ANDROID
-    createMips = false;
-#endif
-    
     if (createMips)
     {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

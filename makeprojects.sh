@@ -19,25 +19,37 @@ cd osx
 cmake -G Xcode ../../ -DPIXELBOOST_BUILD_PLATFORM_OSX=TRUE
 cd ..
 
-mkdir android_release
-cd android_release
-android create project --name pixelboost --target android-16 \
-	--package com.pixelballoon.pixelboost --activity PixelboostActivity \
-	--path .
-mkdir assets
-cd assets
-mkdir res
-mkdir values
-cd ..
-cp -r ../../pixelboost/engine/resources/platform/android/res/drawable* res/
-if [ -d "../../platform/android/res/drawable-hdpi" ]; then
-	cp -r ../../platform/android/res/drawable* res/
-fi
-cp -r ../../pixelboost/engine/src/platform/android/src .
-cp -r ../../pixelboost/libs/ouya/* libs
-cp -r ../../data assets
-cmake ../../ -DPIXELBOOST_BUILD_PLATFORM_ANDROID=TRUE -DANDROID_STL=gnustl_static -DLIBRARY_OUTPUT_PATH_ROOT="`pwd`" -DCMAKE_TOOLCHAIN_FILE=pixelboost/toolchain/android.toolchain.cmake -DCMAKE_BUILD_TYPE=Release
-cd ..
+declare -a androidplatforms=(ajagplay rowgplay ajakindle rowkindle)
+
+for platform in ${androidplatforms[@]}
+do
+	mkdir android_release_$platform
+	cd android_release_$platform
+	android create project --name pixelboost --target android-16 \
+	   --package com.pixelballoon.pixelboost --activity PixelboostActivity \
+	   --path .
+	mkdir assets
+	cd assets
+	mkdir res
+	mkdir values
+	cd ..
+	cp -r ../../pixelboost/engine/resources/platform/android/res/drawable* res/
+	if [ -d "../../platform/android/res/drawable-hdpi" ]; then
+	   cp -r ../../platform/android/res/drawable* res/
+	fi
+	cp -r ../../pixelboost/engine/src/platform/android/src .
+	cp -r ../../pixelboost/libs/ouya/* libs
+
+	if [[ $platform == *kindle ]]
+	then
+		ANDROID_STORE_TYPE=AMAZON
+	else
+		ANDROID_STORE_TYPE=GOOGLEPLAY
+	fi
+
+	cmake ../../ -DPIXELBOOST_BUILD_PLATFORM_ANDROID=TRUE -DANDROID_STL=gnustl_static -DLIBRARY_OUTPUT_PATH_ROOT="`pwd`" -DCMAKE_TOOLCHAIN_FILE=pixelboost/toolchain/android.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DPIXELBOOST_ANDROID_TARGET="$platform" -DPIXELBOOST_ANDROID_STORE=$ANDROID_STORE_TYPE
+	cd ..
+done
 
 mkdir android_debug
 cd android_debug
@@ -55,8 +67,7 @@ if [ -d "../../platform/android/res/drawable-hdpi" ]; then
 fi
 cp -r ../../pixelboost/engine/src/platform/android/src .
 cp -r ../../pixelboost/libs/ouya/* libs
-cp -r ../../data assets
-cmake ../../ -DPIXELBOOST_BUILD_PLATFORM_ANDROID=TRUE -DANDROID_STL=gnustl_static -DLIBRARY_OUTPUT_PATH_ROOT="`pwd`" -DCMAKE_TOOLCHAIN_FILE=pixelboost/toolchain/android.toolchain.cmake -DCMAKE_BUILD_TYPE=Debug
+cmake ../../ -DPIXELBOOST_BUILD_PLATFORM_ANDROID=TRUE -DANDROID_STL=gnustl_static -DLIBRARY_OUTPUT_PATH_ROOT="`pwd`" -DCMAKE_TOOLCHAIN_FILE=pixelboost/toolchain/android.toolchain.cmake -DCMAKE_BUILD_TYPE=Debug -DPIXELBOOST_ANDROID_TARGET="debug"
 cd ..
 
 mkdir emscripten_release

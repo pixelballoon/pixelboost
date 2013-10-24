@@ -16,19 +16,17 @@ namespace pb
     class StoreItem
     {
     public:
-        StoreItem(const std::string& identifier, const std::string& description, const std::string& priceString, bool consumable = false);
+        StoreItem(const std::string& identifier, const std::string& description, const std::string& priceString);
         ~StoreItem();
         
         const std::string& GetIdentifier() const;
         const std::string& GetDescription() const;
         const std::string& GetPriceString() const;
-        bool IsConsumable() const;
         
     private:
         std::string _Identifier;
         std::string _Description;
         std::string _PriceString;
-        bool _Consumable;
         
     public:
 #if defined(PIXELBOOST_PLATFORM_IOS) or defined(PIXELBOOST_PLATFORM_OSX)
@@ -46,7 +44,7 @@ namespace pb
         
         bool ArePaymentsAllowed();
         
-        void AddIdentifier(const std::string& identifier, std::function<void(void)> purchaseCallback);
+        void AddIdentifier(const std::string& identifier, std::function<void(void)> purchaseCallback, bool consumable);
         
         void RefreshItems();
         std::vector<StoreItem> GetStoreItems();
@@ -58,6 +56,8 @@ namespace pb
         void AddItem(const StoreItem& item);
         
         bool OnItemPurchased(const std::string& identifier);
+        bool OnIsConsumable(const std::string& identifier);
+        bool OnIsPurchasable(const std::string& identifier);
     
     private:
         static Store* _Instance;
@@ -70,6 +70,7 @@ namespace pb
         
         std::vector<std::string> _Identifiers;
         std::map<std::string, std::function<void(void)>> _Callbacks;
+        std::map<std::string, bool> _Consumable;
     };
     
 }

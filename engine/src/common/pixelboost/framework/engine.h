@@ -44,6 +44,8 @@ public:
 	static Engine* Instance();
 	
 	virtual void Initialise();
+
+    void Quit() const;
     
     GameCenter* GetGameCenter() const;
     NetworkServer* GetDebugNetworkServer() const;
@@ -61,10 +63,13 @@ public:
     
     virtual void OnMemoryWarning();
 
+    virtual void OnAndroidBackButton();
+    virtual void OnAndroidMenuButton();
+
     virtual void OnAppLoseFocus();
     virtual void OnAppGainFocus();
     virtual void OnAppQuit();
-	
+
 	virtual void Update(float timeDelta, float gameDelta);
 	void Render();
     

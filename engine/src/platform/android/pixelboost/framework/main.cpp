@@ -1,4 +1,5 @@
 #include <android/log.h>
+#include <GLES2/gl2.h>
 #include <jni.h>
 #include <pthread.h>
 
@@ -53,6 +54,8 @@ extern "C" {
     JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onSurfaceCreated(JNIEnv * env, jobject obj);
     JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onPause(JNIEnv * env, jobject obj, jboolean quit);
     JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onResume(JNIEnv * env, jobject obj);
+    JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onBackButton(JNIEnv * env, jobject obj);
+    JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onMenuButton(JNIEnv * env, jobject obj);
     JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onPointerDown(JNIEnv * env, jobject obj, jint touchIndex, jint x, jint y);
     JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onPointerMove(JNIEnv * env, jobject obj, jint touchIndex, jint x, jint y);
     JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onPointerUp(JNIEnv * env, jobject obj, jint touchIndex, jint x, jint y);
@@ -65,12 +68,18 @@ JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_init(JNIEn
 {
     env->GetJavaVM(&g_JavaVM);
 
+    int maxTextureSize = 1024;
+    glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
+
     float scale = 1.f;
 
     float displayDensity = 16.f;
 
-    if (width > 480 || height > 320)
-        displayDensity = 32.f;  // TODO: Use correct density
+    if (maxTextureSize >= 2048 && (width >= 640 || height >= 480))
+        displayDensity = 32.f;
+
+    if (maxTextureSize >= 4096 && (width > 1280 || height > 960))
+        displayDensity = 64.f;
 
     PbLogDebug("pixelboost.init", "Display created %d %d\n", width, height);
     
@@ -168,6 +177,22 @@ JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onResume(J
         }
 
         g_Game->OnAppGainFocus();
+    }
+}
+
+JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onBackButton(JNIEnv * env, jobject obj)
+{
+    if (g_Game)
+    {
+        g_Game->OnAndroidBackButton();
+    }
+}
+
+JNIEXPORT void JNICALL Java_com_pixelballoon_pixelboost_PixelboostLib_onMenuButton(JNIEnv * env, jobject obj)
+{
+    if (g_Game)
+    {
+        g_Game->OnAndroidMenuButton();
     }
 }
 

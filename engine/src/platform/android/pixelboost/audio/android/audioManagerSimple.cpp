@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "pixelboost/audio/android/audioManagerSimple.h"
+#include "pixelboost/debug/log.h"
 #include "pixelboost/file/fileHelpers.h"
 #include "pixelboost/misc/jni.h"
 
@@ -30,22 +31,7 @@ AudioManagerSimpleAndroid::~AudioManagerSimpleAndroid()
 
 void AudioManagerSimpleAndroid::Update(float time)
 {
-    /*
-    std::vector<int> inactiveSounds;
     
-    for (std::map<int, void*>::iterator it = _Sounds.begin(); it != _Sounds.end(); ++it)
-    {
-        id<ALSoundSource> src = (id<ALSoundSource>)it->second;
-        
-        if (src.playing == false)
-            inactiveSounds.push_back(it->first);
-    }
-    
-    for (std::vector<int>::iterator it = inactiveSounds.begin(); it != inactiveSounds.end(); ++it)
-    {
-        _Sounds.erase(*it);
-    }
-    */
 }
 
 bool AudioManagerSimpleAndroid::IsBgmMuted()
@@ -156,8 +142,8 @@ AudioManagerSimple::Sound AudioManagerSimpleAndroid::PlaySfx(const std::string& 
     jint soundId = _Sfx[name];
 
     jclass classId = env->FindClass("com/pixelballoon/pixelboost/PixelboostHelpers");
-    jmethodID methodId = env->GetStaticMethodID(classId, "playSound", "(I)I");
-    jint result = env->CallStaticIntMethod(classId, methodId, (jint)soundId);
+    jmethodID methodId = env->GetStaticMethodID(classId, "playSound", "(IFF)I");
+    jint result = env->CallStaticIntMethod(classId, methodId, (jint)soundId, (jfloat)volume, (jfloat)pitch);
 
     if (!result)
         return Sound(0);
@@ -172,72 +158,55 @@ void AudioManagerSimpleAndroid::SfxPlay(Sound& sound)
 
 void AudioManagerSimpleAndroid::SfxStop(Sound& sound)
 {
-    /*
-    std::map<int, void*>::iterator it = _Sounds.find(sound.GetId());
-    
-    if (it == _Sounds.end())
-        return;
-    
-    id<ALSoundSource> src = (id<ALSoundSource>)it->second;
-    
-    [src stop];
-    */
+    JNIEnv* env = pb::Jni::GetJniEnv();
+
+    jint soundId = sound.GetId();
+
+    jclass classId = env->FindClass("com/pixelballoon/pixelboost/PixelboostHelpers");
+    jmethodID methodId = env->GetStaticMethodID(classId, "stopSound", "(I)V");
+    env->CallStaticVoidMethod(classId, methodId, (jint)soundId);
 }
 
 bool AudioManagerSimpleAndroid::SfxIsPlaying(const Sound& sound)
 {
-    /*
-    std::map<int, void*>::iterator it = _Sounds.find(sound.GetId());
+    PbLogWarn("pb.audio", "Checking if a sound is playing isn't possible on Android currently");
     
-    if (it == _Sounds.end())
-        return false;
-    
-    id<ALSoundSource> src = (id<ALSoundSource>)it->second;
-    
-    return src.playing;
-    */
+    return false;
 }
 
 void AudioManagerSimpleAndroid::SfxUpdateLooping(Sound& sound)
 {
-    /*
-    std::map<int, void*>::iterator it = _Sounds.find(sound.GetId());
+    PbLogWarn("pb.audio", "Note: Long samples may not loop on Android");
+
+    JNIEnv* env = pb::Jni::GetJniEnv();
     
-    if (it == _Sounds.end())
-        return;
-    
-    id<ALSoundSource> src = (id<ALSoundSource>)it->second;
-    
-    src.looping = sound.IsLooping();
-    */
+    jint soundId = sound.GetId();
+
+    jclass classId = env->FindClass("com/pixelballoon/pixelboost/PixelboostHelpers");
+    jmethodID methodId = env->GetStaticMethodID(classId, "setSoundLooping", "(IZ)V");
+    env->CallStaticVoidMethod(classId, methodId, (jint)soundId, (jboolean)sound.IsLooping());
 }
 
 void AudioManagerSimpleAndroid::SfxUpdatePitch(Sound& sound)
 {
-    /*
-    std::map<int, void*>::iterator it = _Sounds.find(sound.GetId());
-    
-    if (it == _Sounds.end())
-        return;
-    
-    id<ALSoundSource> src = (id<ALSoundSource>)it->second;
-    
-    src.pitch = sound.GetPitch();
-    */
+    JNIEnv* env = pb::Jni::GetJniEnv();
+
+    jint soundId = sound.GetId();
+
+    jclass classId = env->FindClass("com/pixelballoon/pixelboost/PixelboostHelpers");
+    jmethodID methodId = env->GetStaticMethodID(classId, "setSoundPitch", "(IF)V");
+    env->CallStaticVoidMethod(classId, methodId, (jint)soundId, (jfloat)sound.GetPitch());
 }
 
 void AudioManagerSimpleAndroid::SfxUpdateVolume(Sound& sound)
 {
-    /*
-    std::map<int, void*>::iterator it = _Sounds.find(sound.GetId());
-    
-    if (it == _Sounds.end())
-        return;
-    
-    id<ALSoundSource> src = (id<ALSoundSource>)it->second;
-    
-    src.volume = sound.GetVolume();
-    */
+    JNIEnv* env = pb::Jni::GetJniEnv();
+
+    jint soundId = sound.GetId();
+
+    jclass classId = env->FindClass("com/pixelballoon/pixelboost/PixelboostHelpers");
+    jmethodID methodId = env->GetStaticMethodID(classId, "setSoundVolume", "(IF)V");
+    env->CallStaticVoidMethod(classId, methodId, (jint)soundId, (jfloat)sound.GetVolume());
 }
 
 #endif

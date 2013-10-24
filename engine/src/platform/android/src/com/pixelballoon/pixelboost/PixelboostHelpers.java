@@ -17,6 +17,11 @@ public class PixelboostHelpers
 {
 	public static PixelboostActivity mainActivity;
 
+	public static void quit()
+	{
+		mainActivity.moveTaskToBack(true);
+	}
+
 	public static String getCurrentLocale()
 	{
 		return Locale.getDefault().getLanguage();
@@ -39,9 +44,8 @@ public class PixelboostHelpers
 
 	public static void openUrl(String url)
 	{
-		Context context = mainActivity.getApplication();
 		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-		context.startActivity(browserIntent);
+		mainActivity.startActivity(browserIntent);
 	}
 
 	public static void playMusic(String filename, float volume)
@@ -108,8 +112,28 @@ public class PixelboostHelpers
     	return 0;
 	}
 
-	public static int playSound(int soundId)
+	public static int playSound(int soundId, float volume, float pitch)
 	{
-		return mainActivity.sounds.play(soundId, 1.0f, 1.0f, 0, 0, 1.0f);
+		return mainActivity.sounds.play(soundId, volume, volume, 0, 0, pitch);
+	}
+
+	public static void stopSound(int soundId)
+	{
+		mainActivity.sounds.stop(soundId);
+	}
+
+	public static void setSoundVolume(int soundId, float volume)
+	{
+		mainActivity.sounds.setVolume(soundId, volume, volume);
+	}
+
+	public static void setSoundLooping(int soundId, boolean looping)
+	{
+		mainActivity.sounds.setLoop(soundId, looping ? -1 : 0);
+	}
+
+	public static void setSoundPitch(int soundId, float pitch)
+	{
+		mainActivity.sounds.setRate(soundId, pitch);
 	}
 }

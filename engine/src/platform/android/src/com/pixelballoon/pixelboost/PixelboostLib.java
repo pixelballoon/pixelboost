@@ -38,6 +38,9 @@ public class PixelboostLib {
     public static native void onPause(boolean quit);
     public static native void onResume();
 
+    public static native void onBackButton();
+    public static native void onMenuButton();
+
     public static native void onPointerDown(int index, int width, int height);
     public static native void onPointerMove(int index, int width, int height);
     public static native void onPointerUp(int index, int width, int height);

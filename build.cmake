@@ -1,5 +1,49 @@
 include (config.cmake)
 
+macro(copy_files TARGET_NAME GLOBPAT SOURCE DESTINATION RECUR)
+    IF(${RECUR})
+        SET(RECURSE_PARAM GLOB_RECURSE)
+    ELSEIF(NOT ${RECUR})
+        SET(RECURSE_PARAM GLOB)
+    ENDIF(${RECUR})
+    file(${RECURSE_PARAM} COPY_FILES RELATIVE ${SOURCE} "${SOURCE}/${GLOBPAT}")
+
+  add_custom_target(${TARGET_NAME} ALL COMMENT "Copying files: ${SOURCE}/${GLOBPAT}")
+
+  foreach(FILENAME ${COPY_FILES})
+    set(SRC "${SOURCE}/${FILENAME}")
+    set(DST "${DESTINATION}/${FILENAME}")
+
+    IF(IS_DIRECTORY ${SRC})
+        add_custom_command(TARGET ${TARGET_NAME} COMMAND ${CMAKE_COMMAND} -E make_directory ${DST})
+    ELSE(IS_DIRECTORY ${SRC})
+        add_custom_command(TARGET ${TARGET_NAME} COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SRC} ${DST})
+    ENDIF(IS_DIRECTORY ${SRC})
+  endforeach(FILENAME)
+endmacro(copy_files)
+
+macro(configure_files TARGET_NAME GLOBPAT SOURCE DESTINATION RECUR)
+    IF(${RECUR})
+        SET(RECURSE_PARAM GLOB_RECURSE)
+    ELSEIF(NOT ${RECUR})
+        SET(RECURSE_PARAM GLOB)
+    ENDIF(${RECUR})
+    file(${RECURSE_PARAM} CONFIGURE_FILES RELATIVE ${SOURCE} "${SOURCE}/${GLOBPAT}")
+
+  add_custom_target(${TARGET_NAME} ALL COMMENT "Configuring files: ${SOURCE}/${GLOBPAT}")
+
+  foreach(FILENAME ${CONFIGURE_FILES})
+    set(SRC "${SOURCE}/${FILENAME}")
+    set(DST "${DESTINATION}/${FILENAME}")
+
+    IF(IS_DIRECTORY ${SRC})
+        add_custom_command(TARGET ${TARGET_NAME} COMMAND ${CMAKE_COMMAND} -E make_directory ${DST})
+    ELSE(IS_DIRECTORY ${SRC})
+        configure_file(${SRC} ${DST} @ONLY)
+    ENDIF(IS_DIRECTORY ${SRC})
+  endforeach(FILENAME)
+endmacro(configure_files)
+
 macro(pixelboost_setup_library library)
 	if (PIXELBOOST_BUILD_PLATFORM_OSX OR PIXELBOOST_BUILD_PLATFORM_IOS)
 		set_target_properties(${library} PROPERTIES
@@ -96,8 +140,10 @@ macro(pixelboost_setup_pre pixelboost_dir projectname identifier title)
 						-DPIXELBOOST_DISABLE_MONGOOSE
 						-DPIXELBOOST_DISABLE_NETWORKING
 						-DPIXELBOOST_PLATFORM_ANDROID
+						-DPIXELBOOST_ANDROID_STORE_${PIXELBOOST_ANDROID_STORE}
 						-D_GLIBCXX_HAS_GTHREADS)
 
+		set(PIXELBOOST_ANDROID_STORE_${PIXELBOOST_ANDROID_STORE}_IFDEF "*/")
 		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
 
@@ -105,7 +151,7 @@ macro(pixelboost_setup_pre pixelboost_dir projectname identifier title)
 			set(PIXELBOOST_ANDROID_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/build/android_debug")
 			set(PIXELBOOST_ANDROID_MANIFEST "${PIXELBOOST_ROOT_DIR}/engine/resources/platform/android/AndroidManifest_debug.xml")
 		else ()
-			set(PIXELBOOST_ANDROID_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/build/android_release")
+			set(PIXELBOOST_ANDROID_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/build/android_release_${PIXELBOOST_ANDROID_TARGET}")
 			set(PIXELBOOST_ANDROID_MANIFEST "${PIXELBOOST_ROOT_DIR}/engine/resources/platform/android/AndroidManifest_release.xml")
 		endif ()
 
@@ -140,6 +186,9 @@ macro(pixelboost_setup_post sources)
 		add_library(pixelboost SHARED ${sources}
 			"${PIXELBOOST_ROOT_DIR}/engine/src/platform/android/pixelboost/framework/main.cpp")
 		set (PIXELBOOST_EXE_NAME pixelboost)
+
+		copy_files (${PIXELBOOST_EXE_NAME}_CopyResources * ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/assets/data 1)
+		add_dependencies(${PIXELBOOST_EXE_NAME} ${PIXELBOOST_EXE_NAME}_CopyResources)
 	else (PIXELBOOST_BUILD_PLATFORM_ANDROID)
 		if (PIXELBOOST_BUILD_PLATFORM_EMSCRIPTEN)
 			add_executable(${PIXELBOOST_BUILD_NAME}.html ${sources} "${PIXELBOOST_ROOT_DIR}/engine/src/platform/emscripten/pixelboost/framework/main.cpp")

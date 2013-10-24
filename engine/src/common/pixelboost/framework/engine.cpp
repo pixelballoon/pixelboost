@@ -26,7 +26,9 @@
 #include "pixelboost/resource/resourceManager.h"
 #include "pixelboost/scripting/lua.h"
 
-#include "pixelboost/debug/log.h"
+#if defined(PIXELBOOST_PLATFORM_ANDROID)
+    #include "pixelboost/misc/jni.h"
+#endif
 
 using namespace pb;
 
@@ -153,6 +155,20 @@ void Engine::Initialise()
 #endif
 }
 
+void Engine::Quit() const
+{
+#if defined(PIXELBOOST_PLATFORM_ANDROID)
+    JNIEnv* env = pb::Jni::GetJniEnv();
+    
+    jclass classId = env->FindClass("com/pixelballoon/pixelboost/PixelboostHelpers");
+    jmethodID methodId = env->GetStaticMethodID(classId, "quit", "()V");
+
+    env->CallStaticVoidMethod(classId, methodId);
+#else
+    PbLogWarn("pb.engine", "Quitting is not supported on the current platform");
+#endif
+}
+
 GameCenter* Engine::GetGameCenter() const
 {
     return _GameCenter;
@@ -204,6 +220,16 @@ bool Engine::AllowFrameskip()
 }
     
 void Engine::OnMemoryWarning()
+{
+    
+}
+
+void Engine::OnAndroidBackButton()
+{
+
+}
+
+void Engine::OnAndroidMenuButton()
 {
     
 }

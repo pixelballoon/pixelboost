@@ -20,8 +20,8 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="@PIXELBOOST_BUILD_IDENTIFIER@"
-    android:versionCode="1"
-    android:versionName="1.0"
+    android:versionCode="@PIXELBOOST_VERSION_CODE@"
+    android:versionName="@PIXELBOOST_VERSION_NAME@"
     android:installLocation="auto">
     <application android:debuggable="true" android:icon="@drawable/icon" android:label="@string/PROJECT_NAME">
         <activity android:name="com.pixelballoon.pixelboost.PixelboostActivity"
@@ -35,14 +35,18 @@
                 <category android:name="ouya.intent.category.GAME"/>
             </intent-filter>
         </activity>
+        @PIXELBOOST_ANDROID_ACTIVITIES@
     </application>
     <uses-feature android:glEsVersion="0x00020000"/>
-    <!--uses-feature android:name="android.hardware.touchscreen.multitouch.distinct"/--> <!-- 2 touch -->
-    <uses-feature android:name="android.hardware.touchscreen.multitouch.jazzhand"/> <!-- 5 touch -->
+    <uses-feature android:name="android.hardware.touchscreen.multitouch.distinct"/> <!-- 2 touch -->
+    <!--uses-feature android:name="android.hardware.touchscreen.multitouch.jazzhand"/--> <!-- 5 touch -->
     <supports-screens
                   android:smallScreens="false"
                   android:normalScreens="true"
                   android:largeScreens="true"
+                  android:xlargeScreens="true"
                   android:anyDensity="true"/>
     <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="16"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    @PIXELBOOST_ANDROID_PERMISSIONS@
 </manifest>

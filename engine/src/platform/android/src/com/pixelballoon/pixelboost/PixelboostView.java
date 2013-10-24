@@ -64,13 +64,13 @@ import javax.microedition.khronos.opengles.GL10;
  *   that matches it exactly (with regards to red/green/blue/alpha channels
  *   bit depths). Failure to do so would result in an EGL_BAD_MATCH error.
  */
-class PixelboostView extends GLSurfaceView {
+class PixelboostView extends com.pixelballoon.pixelboost.GLSurfaceView {
     private static String TAG = "PixelboostView";
     private static final boolean DEBUG = false;
 
     public PixelboostView(Context context) {
         super(context);
-        init(false, 16, 0);
+        init(true, 16, 0);
     }
 
     public PixelboostView(Context context, boolean translucent, int depth, int stencil) {
@@ -161,6 +161,13 @@ class PixelboostView extends GLSurfaceView {
         }
 
         return true;
+    }
+
+    public void onWindowFocusChanged(boolean hasFocus)
+    {
+        super.onWindowFocusChanged(hasFocus);
+
+        PixelboostHelpers.mainActivity.onWindowFocusChanged(hasFocus);
     }
 
     private static class ConfigChooser implements GLSurfaceView.EGLConfigChooser {
