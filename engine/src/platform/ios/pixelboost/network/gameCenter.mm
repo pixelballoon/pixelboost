@@ -8,6 +8,12 @@
 
 #import "GameKit/GameKit.h"
 
+#define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
+#define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
+
 @interface MatchDelegate : NSObject<GKMatchDelegate> {
 @private
     bool matchStarted;
@@ -219,52 +225,76 @@ void GameCenter::Connect()
     if (IsAvailable())
     {
         GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
-        [localPlayer authenticateWithCompletionHandler:^(NSError *error)
-         {
-             if (localPlayer.isAuthenticated)
+        
+        if (SYSTEM_VERSION_LESS_THAN(@"6.0"))
+        {
+            // ios 5.x and below
+            [localPlayer authenticateWithCompletionHandler:^(NSError *error)
              {
-                 _IsConnected = true;
-                 
-                 if (_Delegate)
-                     _Delegate->OnAuthenticated();
-                 
-                 [GKAchievementDescription loadAchievementDescriptionsWithCompletionHandler:
-                  ^(NSArray *descriptions, NSError *error) {
-                      if (error != nil)
-                      {
-                          // TODO: Handle errors
-                      }
-                      if (descriptions != nil)
-                      {
-                          for (GKAchievementDescription* description in descriptions)
-                          {
-                              _Delegate->AchievementData([description.identifier UTF8String], [description.title UTF8String], [description.achievedDescription UTF8String]);
-                          }
-                      }
-                  }];
-                 
-                [GKAchievement loadAchievementsWithCompletionHandler:^(NSArray *achievements, NSError *error) {
-                    if (error != nil)
-                    {
-                        NSString* string = [error localizedDescription];
-                        NSLog(@"%@", string);
-                        // TODO: Handle errors
-                    }
-                    if (achievements != nil)
-                    {
-                        for (GKAchievement* achievement in achievements)
-                        {
-                            if (_Delegate)
-                            {
-                                _Delegate->AchievementProgress([achievement.identifier UTF8String], achievement.percentComplete);
-                            }
-                        }
-                    }
-                }];
-                 
-                 ProcessPending();
+                 CheckAuthentication(localPlayer);
+             }];
+        }
+        else
+        {
+            // ios 6.0 and above
+            [localPlayer setAuthenticateHandler:(^(UIViewController* viewController, NSError *error) {
+                if (!error && viewController)
+                {
+                    [((UIViewController*)Engine::Instance()->GetPlatformContext()) presentViewController:viewController animated:YES completion:nil];
+                }
+                else
+                {
+                    CheckAuthentication(localPlayer);
+                }
+            })];
+        }
+    }
+}
+    
+void GameCenter::CheckAuthentication(GKLocalPlayer* localPlayer)
+{
+    if (localPlayer.isAuthenticated)
+    {
+        _IsConnected = true;
+        
+        if (_Delegate)
+            _Delegate->OnAuthenticated();
+        
+        [GKAchievementDescription loadAchievementDescriptionsWithCompletionHandler:
+         ^(NSArray *descriptions, NSError *error) {
+             if (error != nil)
+             {
+                 // TODO: Handle errors
+             }
+             if (descriptions != nil)
+             {
+                 for (GKAchievementDescription* description in descriptions)
+                 {
+                     _Delegate->AchievementData([description.identifier UTF8String], [description.title UTF8String], [description.achievedDescription UTF8String]);
+                 }
              }
          }];
+        
+        [GKAchievement loadAchievementsWithCompletionHandler:^(NSArray *achievements, NSError *error) {
+            if (error != nil)
+            {
+                NSString* string = [error localizedDescription];
+                NSLog(@"%@", string);
+                // TODO: Handle errors
+            }
+            if (achievements != nil)
+            {
+                for (GKAchievement* achievement in achievements)
+                {
+                    if (_Delegate)
+                    {
+                        _Delegate->AchievementProgress([achievement.identifier UTF8String], achievement.percentComplete);
+                    }
+                }
+            }
+        }];
+   
+        ProcessPending();
     }
 }
     

@@ -4,6 +4,8 @@
 
 #include <string>
 
+@class GKLocalPlayer;
+
 namespace pb
 {
     
@@ -46,6 +48,7 @@ public:
     void SubmitAchievement(const std::string& achievement, float percent);
     
 private:
+    void CheckAuthentication(GKLocalPlayer* player);
     void ProcessPending();
     
     void SubmitScore(void* score);
