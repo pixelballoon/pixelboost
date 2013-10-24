@@ -29,7 +29,13 @@ bool TextureGL::LoadFromBytes(const unsigned char* data, int width, int height, 
         PbLogWarn("graphics.texture", "Only RGBA, BGRA and RGB texture formats are currently supported!");
         return false;
     }
-    
+
+    // Disable mip generation on non-square textures
+    if (width != height)
+    {
+        createMips = false;
+    }
+
     Texture* previousTexture = _Device->BindTexture(0, this, true);
     
     if (createMips)
